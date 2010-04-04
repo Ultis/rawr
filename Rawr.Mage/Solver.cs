@@ -9,6 +9,7 @@ using System.Drawing;
 
 namespace Rawr.Mage
 {
+    #region Helper Classes
     public class Segment
     {
         public int Index { get; set; }
@@ -60,54 +61,39 @@ namespace Rawr.Mage
             return cooldown.Mask;
         }
     }
+    #endregion
 
     public sealed partial class Solver
     {
-        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
-        private int cooldownCount;
-        public List<Segment> SegmentList { get; set; }
-        public List<EffectCooldown> CooldownList { get; set; }
-        public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
-        private int[] effectExclusionList;
-        public List<SolutionVariable> SolutionVariable { get; set; }
-        private StackingConstraint[] rowStackingConstraint;
-
-        private List<CastingState> stateList;
-        private List<CycleId> spellList;
-
-        private SolverLP lp;
-        private double[] solution;
-        private double lowerBound;
-        private double upperBound;
-        private int[] segmentColumn;
-        private CharacterCalculationsMage calculationResult;
+        #region Variables
+        // initialized in constructor
         public Character Character { get; set; }
         public MageTalents MageTalents { get; set; }
         public CalculationOptionsMage CalculationOptions { get; set; }
-        public Stats BaseStats { get; set; }
-        public CastingState BaseState { get; set; }
+        private bool segmentCooldowns;
+        private int advancedConstraintsLevel;
+        private bool integralMana;
         private string armor;
+        private bool useIncrementalOptimizations;
+        private bool useGlobalOptimizations;
+        public bool NeedsDisplayCalculations { get; private set; }
+        private bool requiresMIP;
+        private bool needsSolutionVariables;
+        private bool cancellationPending;
 
-        public float StartingMana { get; set; }
-        public Cycle ConjureManaGem { get; set; }
-        public int MaxConjureManaGem { get; set; }
-        public float ChanceToDie { get; set; }
-        public float MeanIncomingDps { get; set; }
-        public Spell Wand { get; set; }
+        public ArraySet ArraySet { get; set; }
 
+        // initialized in Initialize
+        public Stats BaseStats { get; set; }
+        public List<Buff> ActiveBuffs;
+        private List<Buff> autoActivatedBuffs;
+        private TargetDebuffStats targetDebuffs;
         private bool restrictThreat;
 
-        private int advancedConstraintsLevel;
-        private bool segmentCooldowns;
-        private bool segmentNonCooldowns;
-        private bool integralMana;
-        private bool requiresMIP;
-
-        private bool minimizeTime;
-        private bool restrictManaUse;
-        private bool needsTimeExtension;
-        private bool conjureManaGem;
-        //private bool wardsAvailable;
+        public float ManaGemValue;
+        public float ManaPotionValue;
+        public float MaxManaGemValue;
+        public float MaxManaPotionValue;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -127,25 +113,14 @@ namespace Rawr.Mage
         private bool evocationAvailable;
         private bool manaPotionAvailable;
 
+        // initialized in InitializeEffectCooldowns
+        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
+        public List<EffectCooldown> CooldownList { get; set; }
+        public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
+        private int[] effectExclusionList;
+        private int cooldownCount;
         public float ManaGemEffectDuration;
-        public float EvocationDuration;
-        public float EvocationRegen;
-        public float EvocationDurationIV;
-        public float EvocationRegenIV;
-        public float EvocationDurationHero;
-        public float EvocationRegenHero;
-        public float EvocationDurationIVHero;
-        public float EvocationRegenIVHero;
-
-        public int MaxManaPotion;
-        public int MaxManaGem;
-        public float MaxEvocation;
-        public float ManaGemTps;
-        public float ManaPotionTps;
-        public float ManaGemValue;
-        public float MaxManaGemValue;
-        public float ManaPotionValue;
-        public float MaxManaPotionValue;
+        private int availableCooldownMask;
 
         public float CombustionCooldown;
         public float PowerInfusionDuration;
@@ -160,140 +135,18 @@ namespace Rawr.Mage
         public float WaterElementalDuration;
         public float EvocationCooldown;
 
-        private int availableCooldownMask = 0;
+        public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
+        public EffectCooldown[] StackingHasteEffectCooldowns { get; set; }
+        public EffectCooldown[] StackingNonHasteEffectCooldowns { get; set; }
 
-        private float dpsTime;
-
-        #region LP rows
-        private int rowManaRegen = -1;
-        private int rowFightDuration = -1;
-        private int rowEvocation = -1;
-        private int rowEvocationIV = -1;
-        private int rowEvocationHero = -1;
-        private int rowEvocationIVHero = -1;
-        //private int rowEvocationIVActivation = -1;
-        //private int rowEvocationHeroActivation = -1;
-        //private int rowEvocationIVHeroActivation = -1;
-        private int rowPotion = -1;
-        private int rowManaPotion = -1;
-        private int rowConjureManaGem = -1;
-        //private int rowWard = -1;
-        private int rowManaGem = -1;
-        private int rowManaGemMax = -1;
-        private int rowHeroism = -1;
-        private int rowArcanePower = -1;
-        //private int rowHeroismManaGemEffect = -1;
-        //private int rowHeroismArcanePower = -1;
-        private int rowIcyVeins = -1;
-        private int rowWaterElemental = -1;
-        private int rowMirrorImage = -1;
-        private int rowMoltenFury = -1;
-        //private int rowMoltenFuryDestructionPotion = -1;
-        private int rowMoltenFuryIcyVeins = -1;
-        //private int rowMoltenFuryManaGemEffect = -1;
-        //private int rowHeroismDestructionPotion = -1;
-        //private int rowIcyVeinsDestructionPotion = -1;
-        private int rowFlameCap = -1;
-        //private int rowMoltenFuryFlameCap = -1;
-        //private int rowFlameCapDestructionPotion = -1;
-        private int rowManaGemEffect = -1;
-        private int rowManaGemEffectActivation = -1;
-        private int rowDpsTime = -1;
-        private int rowAoe = -1;
-        private int rowFlamestrike = -1;
-        private int rowConeOfCold = -1;
-        private int rowBlastWave = -1;
-        private int rowDragonsBreath = -1;
-        private int rowCombustion = -1;
-        private int rowPowerInfusion = -1;
-        private int rowMoltenFuryCombustion = -1;
-        private int rowHeroismCombustion = -1;
-        private int rowHeroismIcyVeins = -1;
-        private int rowSummonWaterElemental = -1;
-        private int rowSummonWaterElementalCount = -1;
-        private int rowSummonMirrorImage = -1;
-        private int rowSummonMirrorImageCount = -1;
-        //private int rowMoltenFuryBerserking = -1;
-        //private int rowHeroismBerserking = -1;
-        //private int rowIcyVeinsBerserking = -1;
-        //private int rowArcanePowerBerserking = -1;
-        private int rowThreat = -1;
-        //private int rowManaPotionManaGem = -1;
-        private int rowBerserking = -1;
-        private int rowTimeExtension = -1;
-        private int rowAfterFightRegenMana = -1;
-        //private int rowAfterFightRegenHealth = -1;
-        private int rowTargetDamage = -1;
-        //private int rowSegmentMoltenFury = -1;
-        //private int rowSegmentHeroism = -1;
-        private List<SegmentConstraint> rowSegmentArcanePower;
-        private List<SegmentConstraint> rowSegmentPowerInfusion;
-        private List<SegmentConstraint> rowSegmentIcyVeins;
-        private List<SegmentConstraint> rowSegmentWaterElemental;
-        private List<SegmentConstraint> rowSegmentSummonWaterElemental;
-        private List<SegmentConstraint> rowSegmentMirrorImage;
-        private List<SegmentConstraint> rowSegmentSummonMirrorImage;
-        private List<SegmentConstraint> rowSegmentCombustion;
-        private List<SegmentConstraint> rowSegmentBerserking;
-        private List<SegmentConstraint> rowSegmentFlameCap;
-        private List<SegmentConstraint> rowSegmentManaGem;
-        //private int rowSegmentPotion = -1;
-        private List<SegmentConstraint> rowSegmentManaGemEffect;
-        private List<SegmentConstraint> rowSegmentEvocation;
-        private int rowSegment = -1;
-        private int rowSegmentManaOverflow = -1;
-        private int rowSegmentManaUnderflow = -1;
-        private int rowSegmentThreat = -1;
-        #endregion
-
-        private bool useIncrementalOptimizations;
-        private bool useGlobalOptimizations;
-        public bool NeedsDisplayCalculations { get; private set; }
-        private bool needsSolutionVariables;
-
-        private bool cancellationPending;
-
-        internal bool CancellationPending
-        {
-            get
-            {
-                return cancellationPending;
-            }
-        }
-
-        public void CancelAsync()
-        {
-            cancellationPending = true;
-        }
-
-        public List<EffectCooldown> GetEffectList(int effects)
-        {
-            return CooldownList.FindAll(effect => (effects & effect.Mask) == effect.Mask);
-        }
-
-        public string EffectsDescription(int effects)
-        {
-            List<string> buffList = new List<string>();
-            List<EffectCooldown> cooldownList = CooldownList;
-            for (int i = 0; i < cooldownList.Count; i++)
-            {
-                EffectCooldown effect = cooldownList[i];
-                if ((effects & effect.Mask) == effect.Mask)
-                {
-                    buffList.Add(effect.Name);
-                }
-            }
-            return string.Join("+", buffList.ToArray());
-        }
-
+        // initialized in InitializeProcEffects
         public SpecialEffect[] SpellPowerEffects { get; set; }
         public SpecialEffect[] HasteRatingEffects { get; set; }
         public SpecialEffect[] DamageProcEffects { get; set; }
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public SpecialEffect[] Mp5Effects { get; set; }
-        public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
-        public EffectCooldown[] StackingHasteEffectCooldowns { get; set; }
-        public EffectCooldown[] StackingNonHasteEffectCooldowns { get; set; }
+
+        // initialized in CalculateBaseStateStats
 
         #region Base State Stats
         public float BaseSpellHit { get; set; }
@@ -402,6 +255,8 @@ namespace Rawr.Mage
         public float IncomingDamageDps { get; set; }
 
         #endregion
+
+        // initialized in InitializeSpellTemplates
 
         #region Spell Templates
         private WaterboltTemplate _WaterboltTemplate;
@@ -873,10 +728,125 @@ namespace Rawr.Mage
         }
         #endregion
 
-        public List<Buff> ActiveBuffs;
-        private List<Buff> autoActivatedBuffs;
+        // initialized in GenerateStateList
+        private List<CastingState> stateList;
+        public CastingState BaseState { get; set; }
 
-        private TargetDebuffStats targetDebuffs;
+        // initialized in GenerateSpellList
+        private List<CycleId> spellList;
+
+        // initialized in ConstructProblem
+        private bool segmentNonCooldowns;
+        private bool minimizeTime;
+        private bool restrictManaUse;
+        private bool needsTimeExtension;
+        private bool conjureManaGem;
+        private float dpsTime;
+
+        private SolverLP lp;
+        private int[] segmentColumn;
+        public List<SolutionVariable> SolutionVariable { get; set; }
+
+        public float StartingMana { get; set; }
+
+        public Cycle ConjureManaGem { get; set; }
+        public int MaxConjureManaGem { get; set; }
+
+        public Spell Wand { get; set; }
+
+        public float MaxEvocation;
+        public float EvocationDuration;
+        public float EvocationRegen;
+        public float EvocationDurationIV;
+        public float EvocationRegenIV;
+        public float EvocationDurationHero;
+        public float EvocationRegenHero;
+        public float EvocationDurationIVHero;
+        public float EvocationRegenIVHero;
+
+        public int MaxManaPotion;
+        public int MaxManaGem;
+        public float ManaGemTps;
+        public float ManaPotionTps;
+
+        // initialized in ConstructSegments
+        public List<Segment> SegmentList { get; set; }
+
+        // initialized in ConstructRows
+        private StackingConstraint[] rowStackingConstraint;
+
+        #region LP rows
+        private int rowManaRegen;
+        private int rowFightDuration;
+        private int rowEvocation;
+        private int rowEvocationIV;
+        private int rowEvocationHero;
+        private int rowEvocationIVHero;
+        private int rowPotion;
+        private int rowManaPotion;
+        private int rowConjureManaGem;
+        private int rowManaGem;
+        private int rowManaGemMax;
+        private int rowHeroism;
+        private int rowArcanePower;
+        private int rowIcyVeins;
+        private int rowWaterElemental;
+        private int rowMirrorImage;
+        private int rowMoltenFury;
+        private int rowMoltenFuryIcyVeins;
+        private int rowFlameCap;
+        private int rowManaGemEffect;
+        private int rowManaGemEffectActivation;
+        private int rowDpsTime;
+        private int rowAoe;
+        private int rowFlamestrike;
+        private int rowConeOfCold;
+        private int rowBlastWave;
+        private int rowDragonsBreath;
+        private int rowCombustion;
+        private int rowPowerInfusion;
+        private int rowMoltenFuryCombustion;
+        private int rowHeroismCombustion;
+        private int rowHeroismIcyVeins;
+        private int rowSummonWaterElemental;
+        private int rowSummonWaterElementalCount;
+        private int rowSummonMirrorImage;
+        private int rowSummonMirrorImageCount;
+        private int rowThreat;
+        private int rowBerserking;
+        private int rowTimeExtension;
+        private int rowAfterFightRegenMana;
+        private int rowTargetDamage;
+        private int rowSegment;
+        private int rowSegmentManaOverflow;
+        private int rowSegmentManaUnderflow;
+        private int rowSegmentThreat;
+        private List<SegmentConstraint> rowSegmentArcanePower;
+        private List<SegmentConstraint> rowSegmentPowerInfusion;
+        private List<SegmentConstraint> rowSegmentIcyVeins;
+        private List<SegmentConstraint> rowSegmentWaterElemental;
+        private List<SegmentConstraint> rowSegmentSummonWaterElemental;
+        private List<SegmentConstraint> rowSegmentMirrorImage;
+        private List<SegmentConstraint> rowSegmentSummonMirrorImage;
+        private List<SegmentConstraint> rowSegmentCombustion;
+        private List<SegmentConstraint> rowSegmentBerserking;
+        private List<SegmentConstraint> rowSegmentFlameCap;
+        private List<SegmentConstraint> rowSegmentManaGem;
+        private List<SegmentConstraint> rowSegmentManaGemEffect;
+        private List<SegmentConstraint> rowSegmentEvocation;
+        #endregion
+
+        // initialized in RestrictSolution
+        private double[] solution;
+        private double lowerBound;
+        private double upperBound;
+
+        // initialized in EvaluateSurvivability
+        public float ChanceToDie { get; set; }
+        public float MeanIncomingDps { get; set; }
+        #endregion
+
+        #region Public Methods and Properties
         public TargetDebuffStats TargetDebuffs
         {
             get
@@ -896,9 +866,52 @@ namespace Rawr.Mage
             }
         }
 
-        public ArraySet ArraySet { get; set; }
+        internal bool CancellationPending
+        {
+            get
+            {
+                return cancellationPending;
+            }
+        }
+
+        public void CancelAsync()
+        {
+            cancellationPending = true;
+        }
+
+        public List<EffectCooldown> GetEffectList(int effects)
+        {
+            return CooldownList.FindAll(effect => (effects & effect.Mask) == effect.Mask);
+        }
+
+        public string EffectsDescription(int effects)
+        {
+            List<string> buffList = new List<string>();
+            List<EffectCooldown> cooldownList = CooldownList;
+            for (int i = 0; i < cooldownList.Count; i++)
+            {
+                EffectCooldown effect = cooldownList[i];
+                if ((effects & effect.Mask) == effect.Mask)
+                {
+                    buffList.Add(effect.Name);
+                }
+            }
+            return string.Join("+", buffList.ToArray());
+        }
+
+        private static bool IsItemActivatable(ItemInstance item)
+        {
+            if (item == null || item.Item == null) return false;
+            return (item.Item.Stats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.Use));
+        }
+        #endregion
 
         public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        {
+            Construct(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+        }
+
+        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
             this.Character = character;
             this.MageTalents = character.MageTalents;
@@ -913,14 +926,49 @@ namespace Rawr.Mage
             this.requiresMIP = segmentCooldowns || integralMana;
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
+            cancellationPending = false;
         }
 
-        private static bool IsItemActivatable(ItemInstance item)
+        [ThreadStatic]
+        private static Solver threadSolver;
+
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
-            if (item == null || item.Item == null) return false;
-            return (item.Item.Stats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.Use));
+            if (threadSolver == null)
+            {
+                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+            }
+            else
+            {
+                threadSolver.Construct(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+            }
+            return threadSolver.GetCharacterCalculations(additionalItem);
         }
 
+        public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem)
+        {
+            ArraySet = ArrayPool.RequestArraySet(!useIncrementalOptimizations && NeedsDisplayCalculations && segmentCooldowns);
+
+            Initialize(additionalItem);
+
+            GenerateSpellList();
+            GenerateStateList();
+
+            ConstructProblem();
+
+            if (requiresMIP)
+            {
+                RestrictSolution();
+            }
+
+            solution = lp.Solve();
+            ArrayPool.ReleaseArraySet(ArraySet);
+            ArraySet = null;
+
+            return GetCalculationsResult();
+        }
+
+        #region Effect Maximization
         private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
         {
             int bestColdsnap = 0;
@@ -1383,176 +1431,9 @@ namespace Rawr.Mage
 
             return best;
         }
+        #endregion
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
-        {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
-            return solver.GetCharacterCalculations(additionalItem);
-        }
-
-        public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem)
-        {
-            ArraySet = ArrayPool.RequestArraySet(!useIncrementalOptimizations && NeedsDisplayCalculations && segmentCooldowns);
-
-            Initialize(additionalItem);
-
-            GenerateSpellList();
-            GenerateStateList();
-
-            ConstructProblem();
-
-            if (requiresMIP)
-            {
-                RestrictSolution();
-            }
-
-            solution = lp.Solve();
-            ArrayPool.ReleaseArraySet(lp.ArraySet);
-
-            return GetCalculationsResult();
-        }
-
-        private DisplayCalculations GetDisplayCalculations(CharacterCalculationsMage baseCalculations)
-        {
-            DisplayCalculations displayCalculations = new DisplayCalculations();
-
-            displayCalculations.BaseStats = BaseStats;
-            displayCalculations.BaseState = BaseState;
-            displayCalculations.Character = Character;
-            displayCalculations.CalculationOptions = CalculationOptions;
-            displayCalculations.SolutionVariable = SolutionVariable;
-            displayCalculations.MageTalents = MageTalents;
-            displayCalculations.Solution = solution;
-            displayCalculations.BaseCalculations = baseCalculations;
-
-            displayCalculations.RawArcaneHitRate = RawArcaneHitRate;
-            displayCalculations.RawFireHitRate = RawFireHitRate;
-            displayCalculations.RawFrostHitRate = RawFrostHitRate;
-
-            displayCalculations.CooldownList = new List<EffectCooldown>(CooldownList);
-            displayCalculations.EffectCooldown = new Dictionary<int,EffectCooldown>(EffectCooldown);
-            displayCalculations.ItemBasedEffectCooldowns = (EffectCooldown[])ItemBasedEffectCooldowns.Clone();
-
-            displayCalculations.SegmentList = new List<Segment>(SegmentList);
-            
-            displayCalculations.SpellPowerEffects = (SpecialEffect[])SpellPowerEffects.Clone();
-            displayCalculations.HasteRatingEffects = (SpecialEffect[])HasteRatingEffects.Clone();
-
-            displayCalculations.BaseGlobalCooldown = BaseGlobalCooldown;
-
-            displayCalculations.EvocationDuration = EvocationDuration;
-            displayCalculations.EvocationRegen = EvocationRegen;
-            displayCalculations.EvocationDurationIV = EvocationDurationIV;
-            displayCalculations.EvocationRegenIV = EvocationRegenIV;
-            displayCalculations.EvocationDurationHero = EvocationDurationHero;
-            displayCalculations.EvocationRegenHero = EvocationRegenHero;
-            displayCalculations.EvocationDurationIVHero = EvocationDurationIVHero;
-            displayCalculations.EvocationRegenIVHero = EvocationRegenIVHero;
-
-            displayCalculations.MaxManaPotion = MaxManaPotion;
-            displayCalculations.MaxManaGem = MaxManaGem;
-            displayCalculations.MaxEvocation = MaxEvocation;
-            displayCalculations.ManaGemTps = ManaGemTps;
-            displayCalculations.ManaPotionTps = ManaPotionTps;
-            displayCalculations.ManaGemValue = ManaGemValue;
-            displayCalculations.MaxManaGemValue = MaxManaGemValue;
-            displayCalculations.ManaPotionValue = ManaPotionValue;
-            displayCalculations.MaxManaPotionValue = MaxManaPotionValue;
-
-            displayCalculations.CombustionCooldown = CombustionCooldown;
-            displayCalculations.PowerInfusionDuration = PowerInfusionDuration;
-            displayCalculations.PowerInfusionCooldown = PowerInfusionCooldown;
-            displayCalculations.MirrorImageDuration = MirrorImageDuration;
-            displayCalculations.MirrorImageCooldown = MirrorImageCooldown;
-            displayCalculations.IcyVeinsCooldown = IcyVeinsCooldown;
-            displayCalculations.ColdsnapCooldown = ColdsnapCooldown;
-            displayCalculations.ArcanePowerCooldown = ArcanePowerCooldown;
-            displayCalculations.ArcanePowerDuration = ArcanePowerDuration;
-            displayCalculations.WaterElementalCooldown = WaterElementalCooldown;
-            displayCalculations.WaterElementalDuration = WaterElementalDuration;
-            displayCalculations.EvocationCooldown = EvocationCooldown;
-            displayCalculations.ManaGemEffectDuration = ManaGemEffectDuration;
-
-            displayCalculations.StartingMana = StartingMana;
-            displayCalculations.ConjureManaGem = ConjureManaGem;
-            displayCalculations.MaxConjureManaGem = MaxConjureManaGem;
-            displayCalculations.ManaGemEffect = manaGemEffectAvailable;
-            displayCalculations.ChanceToDie = ChanceToDie;
-            displayCalculations.MeanIncomingDps = MeanIncomingDps;
-            displayCalculations.MageArmor = armor;
-            displayCalculations.DamageTakenReduction = DamageTakenReduction;
-            displayCalculations.Wand = Wand;
-
-            if (!requiresMIP)
-            {
-                displayCalculations.UpperBound = lp.Value;
-                displayCalculations.LowerBound = 0.0;
-            }
-            else
-            {
-                displayCalculations.UpperBound = upperBound;
-                if (integralMana && segmentCooldowns && advancedConstraintsLevel >= 5) displayCalculations.LowerBound = lowerBound;
-            }
-
-            float threat = 0;
-            for (int i = 0; i < SolutionVariable.Count; i++)
-            {
-                threat += (float)(SolutionVariable[i].Tps * solution[i]);
-            }
-            displayCalculations.Tps = threat / CalculationOptions.FightDuration;
-
-            return displayCalculations;
-        }
-
-        private OptimizableCalculations GetOptimizableCalculations()
-        {
-            OptimizableCalculations optimizableCalculations = new OptimizableCalculations();
-
-            optimizableCalculations.ArcaneResistance = BaseStats.ArcaneResistance;
-            optimizableCalculations.ChanceToDie = ChanceToDie;
-            optimizableCalculations.FireResistance = BaseStats.FireResistance;
-            optimizableCalculations.FrostResistance = BaseStats.FrostResistance;
-            optimizableCalculations.HasteRating = BaseStats.HasteRating;
-            optimizableCalculations.Health = BaseStats.Health;
-            optimizableCalculations.HitRating = BaseStats.HitRating;
-            optimizableCalculations.MovementSpeed = BaseStats.MovementSpeed;
-            optimizableCalculations.NatureResistance = BaseStats.NatureResistance;
-            optimizableCalculations.PVPTrinket = BaseStats.PVPTrinket;
-            optimizableCalculations.Resilience = BaseStats.Resilience;
-            optimizableCalculations.ShadowResistance = BaseStats.ShadowResistance;
-
-            return optimizableCalculations;
-        }
-
-        private CharacterCalculationsMage GetCalculationsResult()
-        {
-            calculationResult = new CharacterCalculationsMage();
-
-            if (minimizeTime)
-            {
-                calculationResult.SubPoints[0] = -(float)(CalculationOptions.TargetDamage / solution[solution.Length - 1]);
-            }
-            else
-            {
-                calculationResult.SubPoints[0] = ((float)solution[solution.Length - 1] /*+ calculationResult.WaterElementalDamage*/) / CalculationOptions.FightDuration;
-            }
-            calculationResult.SubPoints[1] = EvaluateSurvivability();
-            calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
-
-            if (NeedsDisplayCalculations)
-            {
-                calculationResult.DisplayCalculations = GetDisplayCalculations(calculationResult);
-            }
-            calculationResult.OptimizableCalculations = GetOptimizableCalculations();
-
-            if (autoActivatedBuffs != null)
-            {
-                calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
-            }
-
-            return calculationResult;
-        }
-
+        #region Initialize
         public void Initialize(Item additionalItem)
         {
             Stats rawStats;
@@ -1573,8 +1454,9 @@ namespace Rawr.Mage
                     rawStats.Clear();
                 }
             }
-            
+
             CalculationsMage calculations = CalculationsMage.Instance;
+            targetDebuffs = null;
             calculations.AccumulateRawStats(rawStats, Character, additionalItem, CalculationOptions, out autoActivatedBuffs, armor, out ActiveBuffs);
             BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions);
 
@@ -1632,6 +1514,8 @@ namespace Rawr.Mage
             }
 
             CalculateBaseStateStats();
+
+            InitializeSpellTemplates();
         }
 
         private void InitializeProcEffects()
@@ -2067,8 +1951,12 @@ namespace Rawr.Mage
                     ManaGemEffectDuration = effect.Duration;
                 }
             }
+            {
+                ManaGemEffectDuration = 0;
+            }
 
             EffectCooldown = new Dictionary<int, EffectCooldown>(CooldownList.Count);
+            availableCooldownMask = 0;
             foreach (EffectCooldown cooldown in CooldownList)
             {
                 EffectCooldown[cooldown.Mask] = cooldown;
@@ -2083,9 +1971,6 @@ namespace Rawr.Mage
                 (int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
                 itemBasedMask
             };
-
-            CooldownList = CooldownList;
-            EffectCooldown = EffectCooldown;
         }
 
         private void CalculateBaseStateStats()
@@ -2198,7 +2083,7 @@ namespace Rawr.Mage
                     baseRegen = 0.003345f;
                     break;
             }
-            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * CalculationOptions.LevelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget+ MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
+            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * CalculationOptions.LevelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;
@@ -2215,6 +2100,12 @@ namespace Rawr.Mage
                 SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * CalculationOptions.EffectRegenMultiplier;
                 ManaRegen = SpiritRegen + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + CalculationOptions.ManaTide * 0.24f * baseStats.Mana / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
                 ManaRegen5SR = SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + CalculationOptions.ManaTide * 0.24f * baseStats.Mana / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+            }
+            else
+            {
+                SpiritRegen = 0;
+                ManaRegen = 0;
+                ManaRegen5SR = 0;
             }
             HealthRegen = 0.0312f * baseStats.Spirit + baseStats.Hp5 / 5f;
             HealthRegenCombat = baseStats.Hp5 / 5f;
@@ -2302,84 +2193,48 @@ namespace Rawr.Mage
             BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
         }
 
-        public void CalculateChanceToDie()
+        private void InitializeSpellTemplates()
         {
-            double ampMelee = IncomingDamageAmpMelee;
-            double ampPhysical = IncomingDamageAmpPhysical;
-            double ampArcane = IncomingDamageAmpArcane;
-            double ampFire = IncomingDamageAmpFire;
-            double ampFrost = IncomingDamageAmpFrost;
-            double ampNature = IncomingDamageAmpNature;
-            double ampShadow = IncomingDamageAmpShadow;
-            double ampHoly = IncomingDamageAmpHoly;
-
-            double melee = IncomingDamageDpsMelee;
-            double physical = IncomingDamageDpsPhysical;
-            double arcane = IncomingDamageDpsArcane;
-            double fire = IncomingDamageDpsFire;
-            double frost = IncomingDamageDpsFrost;
-            double nature = IncomingDamageDpsNature;
-            double shadow = IncomingDamageDpsShadow;
-            double holy = IncomingDamageDpsHoly;
-
-            double burstWindow = CalculationOptions.BurstWindow;
-            double burstImpacts = CalculationOptions.BurstImpacts;
-
-            // B(n, p) ~ N(np, np(1-p))
-            // n = burstImpacts
-            // Xi ~ ampi * (dpsi * (1 + B(n, criti) / n * critMulti) + doti)
-            //    ~ ampi * (dpsi * (1 + N(n * criti, n * criti * (1 - criti)) / n * critMulti) + doti)
-            //    ~ N(ampi * (doti + dpsi * (1 + critMulti * criti)), ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
-            // X = sum Xi ~ N(sum ampi * (doti + dpsi * (1 + critMulti * criti)), sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
-            // H = Health + hp5 / 5 * burstWindow
-            // P(burstWindow * sum Xi >= H) = 1 - P(burstWindow * sum Xi <= H) = 1 / 2 * (1 - Erf((H - mu) / (sigma * sqrt(2)))) =
-            //                = 1 / 2 * (1 - Erf((H / burstWindow - [sum ampi * (doti + dpsi * (1 + critMulti * criti))]) / sqrt(2 * [sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti)])))
-
-            double meleeVar = Math.Pow(ampMelee * CalculationOptions.MeleeDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction));
-            double physicalVar = Math.Pow(ampPhysical * CalculationOptions.PhysicalDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction));
-            double arcaneVar = Math.Pow(ampArcane * CalculationOptions.ArcaneDps * (1.75 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction));
-            double fireVar = Math.Pow(ampFire * CalculationOptions.FireDps * (2.1 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction));
-            double frostVar = Math.Pow(ampFrost * CalculationOptions.FrostDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction));
-            double holyVar = Math.Pow(ampHoly * CalculationOptions.HolyDps * (1.5 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction));
-            double natureVar = Math.Pow(ampNature * CalculationOptions.NatureDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction));
-            double shadowVar = Math.Pow(ampShadow * CalculationOptions.ShadowDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction));
-
-            double Xmean = melee + physical + arcane + fire + frost + holy + nature + shadow;
-            double Xvar = meleeVar + physicalVar + arcaneVar + fireVar + frostVar + holyVar + natureVar + shadowVar;
-
-            // T = healing response time ~ N(Tmean, Tvar)
-            // T * X ~ N(Tmean * Xmean, Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar)   // approximation reasonable for high Tmean / sqrt(Tvar)
-            // P(T * X >= H) = 1 / 2 * (1 - Erf((H - mean) / (sigma * sqrt(2)))) =
-            //               = 1 / 2 * (1 - Erf((H - mean) / sqrt(2 * var)))
-            //               = 1 / 2 * (1 - Erf((H - Tmean * Xmean) / sqrt(2 * (Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar))))
-
-            // Tvar := Tk * Tmean^2,   Tk <<< 1
-
-            // P(T * X >= H) = 1 / 2 * (1 - Erf((H / Tmean - Xmean) / sqrt(2 * (Xvar * (Tk + 1) + Xmean^2 * Tk))))
-
-            double Tk = 0.01;
-
-            ChanceToDie = (float)(0.5f * (1f - SpecialFunction.Erf((BaseStats.Health / burstWindow + BaseStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
-            MeanIncomingDps = (float)Xmean;
+            _WaterboltTemplate = null;
+            _MirrorImageTemplate = null;
+            _FireBlastTemplate = null;
+            _LightningBoltTemplate = null;
+            _ThunderBoltTemplate = null;
+            _LightweaveBoltTemplate = null;
+            _ArcaneBoltTemplate = null;
+            _PendulumOfTelluricCurrentsTemplate = null;
+            _FrostboltTemplate = null;
+            _FrostfireBoltTemplate = null;
+            _ArcaneMissilesTemplate = null;
+            _FireballTemplate = null;
+            _PyroblastTemplate = null;
+            _ScorchTemplate = null;
+            _ArcaneBarrageTemplate = null;
+            _DeepFreezeTemplate = null;
+            _ArcaneBlastTemplate = null;
+            _IceLanceTemplate = null;
+            _ArcaneExplosionTemplate = null;
+            _FlamestrikeTemplate = null;
+            _BlizzardTemplate = null;
+            _BlastWaveTemplate = null;
+            _DragonsBreathTemplate = null;
+            _ConeOfColdTemplate = null;
+            _SlowTemplate = null;
+            _LivingBombTemplate = null;
+            _FireWardTemplate = null;
+            _FrostWardTemplate = null;
+            _ConjureManaGemTemplate = null;
+            _ArcaneDamageTemplate = null;
+            _FireDamageTemplate = null;
+            _FrostDamageTemplate = null;
+            _ShadowDamageTemplate = null;
+            _NatureDamageTemplate = null;
+            _HolyDamageTemplate = null;
+            _ValkyrDamageTemplate = null;
         }
+        #endregion
 
-        private float EvaluateSurvivability()
-        {
-            float ret = BaseStats.Health * CalculationOptions.SurvivabilityRating;
-            if (CalculationOptions.ChanceToLiveScore > 0 || NeedsDisplayCalculations)
-            {
-                CalculateChanceToDie();
-
-                //double maxTimeToDie = 1.0 / (1 - calculationOptions.ChanceToLiveLimit / 100.0) - 1;
-                //double timeToDie = Math.Min(1.0 / calculatedStats.ChanceToDie - 1, maxTimeToDie);
-
-                //calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * timeToDie / maxTimeToDie);
-                ret += (float)(CalculationOptions.ChanceToLiveScore * Math.Pow(1 - ChanceToDie, CalculationOptions.ChanceToLiveAttenuation));
-                if (float.IsNaN(ret)) ret = 0f;
-            }
-            return ret;
-        }
-
+        #region Construct Problem
         private void AddSegmentTicks(List<double> ticks, double cooldownDuration)
         {
             for (int i = 0; i * 0.5 * cooldownDuration < CalculationOptions.FightDuration; i++)
@@ -2410,8 +2265,6 @@ namespace Rawr.Mage
 
             ConstructSegments();
 
-            SegmentList = SegmentList;
-
             //segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
             segmentColumn = new int[SegmentList.Count + 1];
 
@@ -2431,12 +2284,14 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
+            restrictManaUse = false;
             if (segmentCooldowns) restrictManaUse = true;
             if (CalculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
                 integralMana = false;
             }
+            segmentNonCooldowns = false;
             if (restrictManaUse) segmentNonCooldowns = true;
             if (restrictThreat) segmentNonCooldowns = true;
 
@@ -2579,6 +2434,10 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                }
+                else
+                {
+                    Wand = null;
                 }
                 #endregion
                 #region Evocation
@@ -2985,11 +2844,23 @@ namespace Rawr.Mage
                         }
                     }
                 }
+                else
+                {
+                    MaxEvocation = 0;
+                    EvocationDuration = 0;
+                    EvocationDurationIV = 0;
+                    EvocationDurationHero = 0;
+                    EvocationDurationIVHero = 0;
+                    EvocationRegen = 0;
+                    EvocationRegenIV = 0;
+                    EvocationRegenHero = 0;
+                    EvocationRegenIVHero = 0;
+                }
                 #endregion
                 #region Mana Potion
-                MaxManaPotion = 1;
                 if (manaPotionAvailable)
                 {
+                    MaxManaPotion = 1;
                     int manaPotionSegments = (segmentCooldowns && (potionOfWildMagicAvailable || restrictManaUse)) ? SegmentList.Count : 1;
                     mps = -(1 + baseStats.BonusManaPotion) * ManaPotionValue;
                     dps = 0;
@@ -3035,6 +2906,11 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                }
+                else
+                {
+                    MaxManaPotion = 0;
+                    ManaPotionTps = 0;
                 }
                 #endregion
                 #region Mana Gem
@@ -3108,6 +2984,11 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                }
+                else
+                {
+                    MaxManaGem = 0;
+                    ManaGemTps = 0;
                 }
                 #endregion
                 #region Summon Water Elemental
@@ -3362,6 +3243,11 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                }
+                else
+                {
+                    ConjureManaGem = null;
+                    MaxConjureManaGem = 0;
                 }
                 #endregion
                 #region Fire/Frost Ward
@@ -3868,7 +3754,8 @@ namespace Rawr.Mage
             {
                 manaConsum = ((calculationOptions.FightDuration - 7800 / manaBurn) / 60f + 2);
             }
-            if (manaGemEffectAvailable && manaConsum < calculationResult.MaxManaGem)*/ manaConsum = MaxManaGem;
+            if (manaGemEffectAvailable && manaConsum < calculationResult.MaxManaGem)*/
+            manaConsum = MaxManaGem;
             //lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40.0);
             lp.SetRHSUnsafe(rowBerserking, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration * 10.0 / 180.0 : 10.0 * (1 + (int)((CalculationOptions.FightDuration - 10) / 180)));
             if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
@@ -4027,6 +3914,67 @@ namespace Rawr.Mage
 
         private int ConstructRows(bool minimizeTime, bool drinkingEnabled, bool needsTimeExtension, bool afterFightRegen)
         {
+            #region Reset Rows
+            rowManaRegen = -1;
+            rowFightDuration = -1;
+            rowEvocation = -1;
+            rowEvocationIV = -1;
+            rowEvocationHero = -1;
+            rowEvocationIVHero = -1;
+            rowPotion = -1;
+            rowManaPotion = -1;
+            rowConjureManaGem = -1;
+            rowManaGem = -1;
+            rowManaGemMax = -1;
+            rowHeroism = -1;
+            rowArcanePower = -1;
+            rowIcyVeins = -1;
+            rowWaterElemental = -1;
+            rowMirrorImage = -1;
+            rowMoltenFury = -1;
+            rowMoltenFuryIcyVeins = -1;
+            rowFlameCap = -1;
+            rowManaGemEffect = -1;
+            rowManaGemEffectActivation = -1;
+            rowDpsTime = -1;
+            rowAoe = -1;
+            rowFlamestrike = -1;
+            rowConeOfCold = -1;
+            rowBlastWave = -1;
+            rowDragonsBreath = -1;
+            rowCombustion = -1;
+            rowPowerInfusion = -1;
+            rowMoltenFuryCombustion = -1;
+            rowHeroismCombustion = -1;
+            rowHeroismIcyVeins = -1;
+            rowSummonWaterElemental = -1;
+            rowSummonWaterElementalCount = -1;
+            rowSummonMirrorImage = -1;
+            rowSummonMirrorImageCount = -1;
+            rowThreat = -1;
+            rowBerserking = -1;
+            rowTimeExtension = -1;
+            rowAfterFightRegenMana = -1;
+            rowTargetDamage = -1;
+            rowSegment = -1;
+            rowSegmentManaOverflow = -1;
+            rowSegmentManaUnderflow = -1;
+            rowSegmentThreat = -1;
+            rowSegmentArcanePower = null;
+            rowSegmentPowerInfusion = null;
+            rowSegmentIcyVeins = null;
+            rowSegmentWaterElemental = null;
+            rowSegmentSummonWaterElemental = null;
+            rowSegmentMirrorImage = null;
+            rowSegmentSummonMirrorImage = null;
+            rowSegmentCombustion = null;
+            rowSegmentBerserking = null;
+            rowSegmentFlameCap = null;
+            rowSegmentManaGem = null;
+            rowSegmentManaGemEffect = null;
+            rowSegmentEvocation = null;
+            #endregion
+
             int rowCount = 0;
 
             if (!CalculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
@@ -4938,7 +4886,7 @@ namespace Rawr.Mage
 
         private void GenerateStateList()
         {
-            BaseState = BaseState = CastingState.New(this, 0, false, 0);
+            BaseState = CastingState.New(this, 0, false, 0);
 
             List<CastingState> list;
 
@@ -4949,7 +4897,7 @@ namespace Rawr.Mage
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
                 {
                     // incremental index is filtered by non-item based cooldowns
-                    int incrementalSetIndex = sortedStates[incrementalSortedIndex];                    
+                    int incrementalSetIndex = sortedStates[incrementalSortedIndex];
                     bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                     bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
                     int itemBasedMax = 1 << ItemBasedEffectCooldowns.Length;
@@ -5022,5 +4970,236 @@ namespace Rawr.Mage
             }
             stateList = list;
         }
+        #endregion
+
+        #region Calculation Result
+        private DisplayCalculations GetDisplayCalculations(CharacterCalculationsMage baseCalculations)
+        {
+            DisplayCalculations displayCalculations = new DisplayCalculations();
+
+            displayCalculations.BaseStats = BaseStats;
+            displayCalculations.BaseState = BaseState;
+            displayCalculations.Character = Character;
+            displayCalculations.CalculationOptions = CalculationOptions;
+            displayCalculations.SolutionVariable = SolutionVariable;
+            displayCalculations.MageTalents = MageTalents;
+            displayCalculations.Solution = solution;
+            displayCalculations.BaseCalculations = baseCalculations;
+
+            displayCalculations.RawArcaneHitRate = RawArcaneHitRate;
+            displayCalculations.RawFireHitRate = RawFireHitRate;
+            displayCalculations.RawFrostHitRate = RawFrostHitRate;
+
+            displayCalculations.CooldownList = new List<EffectCooldown>(CooldownList);
+            displayCalculations.EffectCooldown = new Dictionary<int,EffectCooldown>(EffectCooldown);
+            displayCalculations.ItemBasedEffectCooldowns = (EffectCooldown[])ItemBasedEffectCooldowns.Clone();
+
+            displayCalculations.SegmentList = new List<Segment>(SegmentList);
+            
+            displayCalculations.SpellPowerEffects = (SpecialEffect[])SpellPowerEffects.Clone();
+            displayCalculations.HasteRatingEffects = (SpecialEffect[])HasteRatingEffects.Clone();
+
+            displayCalculations.BaseGlobalCooldown = BaseGlobalCooldown;
+
+            displayCalculations.EvocationDuration = EvocationDuration;
+            displayCalculations.EvocationRegen = EvocationRegen;
+            displayCalculations.EvocationDurationIV = EvocationDurationIV;
+            displayCalculations.EvocationRegenIV = EvocationRegenIV;
+            displayCalculations.EvocationDurationHero = EvocationDurationHero;
+            displayCalculations.EvocationRegenHero = EvocationRegenHero;
+            displayCalculations.EvocationDurationIVHero = EvocationDurationIVHero;
+            displayCalculations.EvocationRegenIVHero = EvocationRegenIVHero;
+
+            displayCalculations.MaxManaPotion = MaxManaPotion;
+            displayCalculations.MaxManaGem = MaxManaGem;
+            displayCalculations.MaxEvocation = MaxEvocation;
+            displayCalculations.ManaGemTps = ManaGemTps;
+            displayCalculations.ManaPotionTps = ManaPotionTps;
+            displayCalculations.ManaGemValue = ManaGemValue;
+            displayCalculations.MaxManaGemValue = MaxManaGemValue;
+            displayCalculations.ManaPotionValue = ManaPotionValue;
+            displayCalculations.MaxManaPotionValue = MaxManaPotionValue;
+
+            displayCalculations.CombustionCooldown = CombustionCooldown;
+            displayCalculations.PowerInfusionDuration = PowerInfusionDuration;
+            displayCalculations.PowerInfusionCooldown = PowerInfusionCooldown;
+            displayCalculations.MirrorImageDuration = MirrorImageDuration;
+            displayCalculations.MirrorImageCooldown = MirrorImageCooldown;
+            displayCalculations.IcyVeinsCooldown = IcyVeinsCooldown;
+            displayCalculations.ColdsnapCooldown = ColdsnapCooldown;
+            displayCalculations.ArcanePowerCooldown = ArcanePowerCooldown;
+            displayCalculations.ArcanePowerDuration = ArcanePowerDuration;
+            displayCalculations.WaterElementalCooldown = WaterElementalCooldown;
+            displayCalculations.WaterElementalDuration = WaterElementalDuration;
+            displayCalculations.EvocationCooldown = EvocationCooldown;
+            displayCalculations.ManaGemEffectDuration = ManaGemEffectDuration;
+
+            displayCalculations.StartingMana = StartingMana;
+            displayCalculations.ConjureManaGem = ConjureManaGem;
+            displayCalculations.MaxConjureManaGem = MaxConjureManaGem;
+            displayCalculations.ManaGemEffect = manaGemEffectAvailable;
+            displayCalculations.ChanceToDie = ChanceToDie;
+            displayCalculations.MeanIncomingDps = MeanIncomingDps;
+            displayCalculations.MageArmor = armor;
+            displayCalculations.DamageTakenReduction = DamageTakenReduction;
+            displayCalculations.Wand = Wand;
+
+            if (!requiresMIP)
+            {
+                displayCalculations.UpperBound = lp.Value;
+                displayCalculations.LowerBound = 0.0;
+            }
+            else
+            {
+                displayCalculations.UpperBound = upperBound;
+                if (integralMana && segmentCooldowns && advancedConstraintsLevel >= 5) displayCalculations.LowerBound = lowerBound;
+            }
+
+            float threat = 0;
+            for (int i = 0; i < SolutionVariable.Count; i++)
+            {
+                threat += (float)(SolutionVariable[i].Tps * solution[i]);
+            }
+            displayCalculations.Tps = threat / CalculationOptions.FightDuration;
+
+            return displayCalculations;
+        }
+
+        private OptimizableCalculations GetOptimizableCalculations()
+        {
+            OptimizableCalculations optimizableCalculations = new OptimizableCalculations();
+
+            optimizableCalculations.ArcaneResistance = BaseStats.ArcaneResistance;
+            optimizableCalculations.ChanceToDie = ChanceToDie;
+            optimizableCalculations.FireResistance = BaseStats.FireResistance;
+            optimizableCalculations.FrostResistance = BaseStats.FrostResistance;
+            optimizableCalculations.HasteRating = BaseStats.HasteRating;
+            optimizableCalculations.Health = BaseStats.Health;
+            optimizableCalculations.HitRating = BaseStats.HitRating;
+            optimizableCalculations.MovementSpeed = BaseStats.MovementSpeed;
+            optimizableCalculations.NatureResistance = BaseStats.NatureResistance;
+            optimizableCalculations.PVPTrinket = BaseStats.PVPTrinket;
+            optimizableCalculations.Resilience = BaseStats.Resilience;
+            optimizableCalculations.ShadowResistance = BaseStats.ShadowResistance;
+
+            return optimizableCalculations;
+        }
+
+        private CharacterCalculationsMage GetCalculationsResult()
+        {
+            CharacterCalculationsMage calculationResult = new CharacterCalculationsMage();
+
+            if (minimizeTime)
+            {
+                calculationResult.SubPoints[0] = -(float)(CalculationOptions.TargetDamage / solution[solution.Length - 1]);
+            }
+            else
+            {
+                calculationResult.SubPoints[0] = ((float)solution[solution.Length - 1] /*+ calculationResult.WaterElementalDamage*/) / CalculationOptions.FightDuration;
+            }
+            calculationResult.SubPoints[1] = EvaluateSurvivability();
+            calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
+
+            if (NeedsDisplayCalculations)
+            {
+                calculationResult.DisplayCalculations = GetDisplayCalculations(calculationResult);
+            }
+            calculationResult.OptimizableCalculations = GetOptimizableCalculations();
+
+            if (autoActivatedBuffs != null)
+            {
+                calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
+            }
+
+            SolutionVariable = null;
+
+            return calculationResult;
+        }
+        #endregion
+
+        #region Survivability
+        public void CalculateChanceToDie()
+        {
+            double ampMelee = IncomingDamageAmpMelee;
+            double ampPhysical = IncomingDamageAmpPhysical;
+            double ampArcane = IncomingDamageAmpArcane;
+            double ampFire = IncomingDamageAmpFire;
+            double ampFrost = IncomingDamageAmpFrost;
+            double ampNature = IncomingDamageAmpNature;
+            double ampShadow = IncomingDamageAmpShadow;
+            double ampHoly = IncomingDamageAmpHoly;
+
+            double melee = IncomingDamageDpsMelee;
+            double physical = IncomingDamageDpsPhysical;
+            double arcane = IncomingDamageDpsArcane;
+            double fire = IncomingDamageDpsFire;
+            double frost = IncomingDamageDpsFrost;
+            double nature = IncomingDamageDpsNature;
+            double shadow = IncomingDamageDpsShadow;
+            double holy = IncomingDamageDpsHoly;
+
+            double burstWindow = CalculationOptions.BurstWindow;
+            double burstImpacts = CalculationOptions.BurstImpacts;
+
+            // B(n, p) ~ N(np, np(1-p))
+            // n = burstImpacts
+            // Xi ~ ampi * (dpsi * (1 + B(n, criti) / n * critMulti) + doti)
+            //    ~ ampi * (dpsi * (1 + N(n * criti, n * criti * (1 - criti)) / n * critMulti) + doti)
+            //    ~ N(ampi * (doti + dpsi * (1 + critMulti * criti)), ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // X = sum Xi ~ N(sum ampi * (doti + dpsi * (1 + critMulti * criti)), sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti))
+            // H = Health + hp5 / 5 * burstWindow
+            // P(burstWindow * sum Xi >= H) = 1 - P(burstWindow * sum Xi <= H) = 1 / 2 * (1 - Erf((H - mu) / (sigma * sqrt(2)))) =
+            //                = 1 / 2 * (1 - Erf((H / burstWindow - [sum ampi * (doti + dpsi * (1 + critMulti * criti))]) / sqrt(2 * [sum ampi^2 * dpsi^2 * critMulti^2 / n * criti * (1 - criti)])))
+
+            double meleeVar = Math.Pow(ampMelee * CalculationOptions.MeleeDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.MeleeCrit / 100.0 - BaseState.PhysicalCritReduction));
+            double physicalVar = Math.Pow(ampPhysical * CalculationOptions.PhysicalDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction) * (1 - Math.Max(0, CalculationOptions.PhysicalCrit / 100.0 - BaseState.PhysicalCritReduction));
+            double arcaneVar = Math.Pow(ampArcane * CalculationOptions.ArcaneDps * (1.75 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ArcaneCrit / 100.0 - BaseState.SpellCritReduction));
+            double fireVar = Math.Pow(ampFire * CalculationOptions.FireDps * (2.1 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FireCrit / 100.0 - BaseState.SpellCritReduction));
+            double frostVar = Math.Pow(ampFrost * CalculationOptions.FrostDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.FrostCrit / 100.0 - BaseState.SpellCritReduction));
+            double holyVar = Math.Pow(ampHoly * CalculationOptions.HolyDps * (1.5 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.HolyCrit / 100.0 - BaseState.SpellCritReduction));
+            double natureVar = Math.Pow(ampNature * CalculationOptions.NatureDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.NatureCrit / 100.0 - BaseState.SpellCritReduction));
+            double shadowVar = Math.Pow(ampShadow * CalculationOptions.ShadowDps * (2 * (1 - BaseState.CritDamageReduction) - 1), 2) / burstImpacts * Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction) * (1 - Math.Max(0, CalculationOptions.ShadowCrit / 100.0 - BaseState.SpellCritReduction));
+
+            double Xmean = melee + physical + arcane + fire + frost + holy + nature + shadow;
+            double Xvar = meleeVar + physicalVar + arcaneVar + fireVar + frostVar + holyVar + natureVar + shadowVar;
+
+            // T = healing response time ~ N(Tmean, Tvar)
+            // T * X ~ N(Tmean * Xmean, Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar)   // approximation reasonable for high Tmean / sqrt(Tvar)
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H - mean) / (sigma * sqrt(2)))) =
+            //               = 1 / 2 * (1 - Erf((H - mean) / sqrt(2 * var)))
+            //               = 1 / 2 * (1 - Erf((H - Tmean * Xmean) / sqrt(2 * (Tvar * Xvar + Tmean^2 * Xvar + Xmean^2 * Tvar))))
+
+            // Tvar := Tk * Tmean^2,   Tk <<< 1
+
+            // P(T * X >= H) = 1 / 2 * (1 - Erf((H / Tmean - Xmean) / sqrt(2 * (Xvar * (Tk + 1) + Xmean^2 * Tk))))
+
+            double Tk = 0.01;
+
+            ChanceToDie = (float)(0.5f * (1f - SpecialFunction.Erf((BaseStats.Health / burstWindow + BaseStats.Hp5 / 5 - Xmean) / Math.Sqrt(2 * (Xvar * (1 + Tk) + Xmean * Xmean * Tk)))));
+            MeanIncomingDps = (float)Xmean;
+        }
+
+        private float EvaluateSurvivability()
+        {
+            float ret = BaseStats.Health * CalculationOptions.SurvivabilityRating;
+            if (CalculationOptions.ChanceToLiveScore > 0 || NeedsDisplayCalculations)
+            {
+                CalculateChanceToDie();
+
+                //double maxTimeToDie = 1.0 / (1 - calculationOptions.ChanceToLiveLimit / 100.0) - 1;
+                //double timeToDie = Math.Min(1.0 / calculatedStats.ChanceToDie - 1, maxTimeToDie);
+
+                //calculatedStats.SubPoints[1] = calculatedStats.BasicStats.Health * calculationOptions.SurvivabilityRating + (float)(calculationOptions.ChanceToLiveScore * timeToDie / maxTimeToDie);
+                ret += (float)(CalculationOptions.ChanceToLiveScore * Math.Pow(1 - ChanceToDie, CalculationOptions.ChanceToLiveAttenuation));
+                if (float.IsNaN(ret)) ret = 0f;
+            }
+            else
+            {
+                ChanceToDie = 0f;
+                MeanIncomingDps = 0f;
+            }
+            return ret;
+        }
+        #endregion
     }
 }

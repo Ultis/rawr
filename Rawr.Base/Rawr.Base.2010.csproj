@@ -276,6 +276,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>..\..\..\sgen.exe $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
