@@ -31,7 +31,7 @@ namespace Rawr.Mage
         public int MaxSegment;
     }
 
-    public class StackingConstraint
+    public struct StackingConstraint
     {
         public int Row;
         public EffectCooldown Effect1;
@@ -153,15 +153,23 @@ namespace Rawr.Mage
         public float EvocationCooldown;
 
         public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
+        public int ItemBasedEffectCooldownsCount;
         public EffectCooldown[] StackingHasteEffectCooldowns { get; set; }
+        public int StackingHasteEffectCooldownsCount;
         public EffectCooldown[] StackingNonHasteEffectCooldowns { get; set; }
+        public int StackingNonHasteEffectCooldownsCount;
 
         // initialized in InitializeProcEffects
         public SpecialEffect[] SpellPowerEffects { get; set; }
+        public int SpellPowerEffectsCount;
         public SpecialEffect[] HasteRatingEffects { get; set; }
+        public int HasteRatingEffectsCount;
         public SpecialEffect[] DamageProcEffects { get; set; }
+        public int DamageProcEffectsCount;
         public SpecialEffect[] ManaRestoreEffects { get; set; }
+        public int ManaRestoreEffectsCount;
         public SpecialEffect[] Mp5Effects { get; set; }
+        public int Mp5EffectsCount;
 
         // initialized in CalculateBaseStateStats
 
@@ -283,7 +291,11 @@ namespace Rawr.Mage
             {
                 if (_WaterboltTemplate == null)
                 {
-                    _WaterboltTemplate = new WaterboltTemplate(this);
+                    _WaterboltTemplate = new WaterboltTemplate();
+                }
+                if (_WaterboltTemplate.Dirty)
+                {
+                    _WaterboltTemplate.Initialize(this);
                 }
                 return _WaterboltTemplate;
             }
@@ -296,7 +308,11 @@ namespace Rawr.Mage
             {
                 if (_MirrorImageTemplate == null)
                 {
-                    _MirrorImageTemplate = new MirrorImageTemplate(this);
+                    _MirrorImageTemplate = new MirrorImageTemplate();
+                }
+                if (_MirrorImageTemplate.Dirty)
+                {
+                    _MirrorImageTemplate.Initialize(this);
                 }
                 return _MirrorImageTemplate;
             }
@@ -309,7 +325,11 @@ namespace Rawr.Mage
             {
                 if (_FireBlastTemplate == null)
                 {
-                    _FireBlastTemplate = new FireBlastTemplate(this);
+                    _FireBlastTemplate = new FireBlastTemplate();
+                }
+                if (_FireBlastTemplate.Dirty)
+                {
+                    _FireBlastTemplate.Initialize(this);
                 }
                 return _FireBlastTemplate;
             }
@@ -322,7 +342,11 @@ namespace Rawr.Mage
             {
                 if (_LightningBoltTemplate == null)
                 {
-                    _LightningBoltTemplate = new LightningBoltTemplate(this);
+                    _LightningBoltTemplate = new LightningBoltTemplate();
+                }
+                if (_LightningBoltTemplate.Dirty)
+                {
+                    _LightningBoltTemplate.Initialize(this);
                 }
                 return _LightningBoltTemplate;
             }
@@ -335,7 +359,11 @@ namespace Rawr.Mage
             {
                 if (_ThunderBoltTemplate == null)
                 {
-                    _ThunderBoltTemplate = new ThunderBoltTemplate(this);
+                    _ThunderBoltTemplate = new ThunderBoltTemplate();
+                }
+                if (_ThunderBoltTemplate.Dirty)
+                {
+                    _ThunderBoltTemplate.Initialize(this);
                 }
                 return _ThunderBoltTemplate;
             }
@@ -348,7 +376,11 @@ namespace Rawr.Mage
             {
                 if (_LightweaveBoltTemplate == null)
                 {
-                    _LightweaveBoltTemplate = new LightweaveBoltTemplate(this);
+                    _LightweaveBoltTemplate = new LightweaveBoltTemplate();
+                }
+                if (_LightweaveBoltTemplate.Dirty)
+                {
+                    _LightweaveBoltTemplate.Initialize(this);
                 }
                 return _LightweaveBoltTemplate;
             }
@@ -361,7 +393,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneBoltTemplate == null)
                 {
-                    _ArcaneBoltTemplate = new ArcaneBoltTemplate(this);
+                    _ArcaneBoltTemplate = new ArcaneBoltTemplate();
+                }
+                if (_ArcaneBoltTemplate.Dirty)
+                {
+                    _ArcaneBoltTemplate.Initialize(this);
                 }
                 return _ArcaneBoltTemplate;
             }
@@ -374,7 +410,11 @@ namespace Rawr.Mage
             {
                 if (_PendulumOfTelluricCurrentsTemplate == null)
                 {
-                    _PendulumOfTelluricCurrentsTemplate = new PendulumOfTelluricCurrentsTemplate(this);
+                    _PendulumOfTelluricCurrentsTemplate = new PendulumOfTelluricCurrentsTemplate();
+                }
+                if (_PendulumOfTelluricCurrentsTemplate.Dirty)
+                {
+                    _PendulumOfTelluricCurrentsTemplate.Initialize(this);
                 }
                 return _PendulumOfTelluricCurrentsTemplate;
             }
@@ -387,7 +427,11 @@ namespace Rawr.Mage
             {
                 if (_FrostboltTemplate == null)
                 {
-                    _FrostboltTemplate = new FrostboltTemplate(this);
+                    _FrostboltTemplate = new FrostboltTemplate();
+                }
+                if (_FrostboltTemplate.Dirty)
+                {
+                    _FrostboltTemplate.Initialize(this);
                 }
                 return _FrostboltTemplate;
             }
@@ -400,7 +444,11 @@ namespace Rawr.Mage
             {
                 if (_FrostfireBoltTemplate == null)
                 {
-                    _FrostfireBoltTemplate = new FrostfireBoltTemplate(this);
+                    _FrostfireBoltTemplate = new FrostfireBoltTemplate();
+                }
+                if (_FrostfireBoltTemplate.Dirty)
+                {
+                    _FrostfireBoltTemplate.Initialize(this);
                 }
                 return _FrostfireBoltTemplate;
             }
@@ -413,7 +461,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneMissilesTemplate == null)
                 {
-                    _ArcaneMissilesTemplate = new ArcaneMissilesTemplate(this);
+                    _ArcaneMissilesTemplate = new ArcaneMissilesTemplate();
+                }
+                if (_ArcaneMissilesTemplate.Dirty)
+                {
+                    _ArcaneMissilesTemplate.Initialize(this);
                 }
                 return _ArcaneMissilesTemplate;
             }
@@ -426,7 +478,11 @@ namespace Rawr.Mage
             {
                 if (_FireballTemplate == null)
                 {
-                    _FireballTemplate = new FireballTemplate(this);
+                    _FireballTemplate = new FireballTemplate();
+                }
+                if (_FireballTemplate.Dirty)
+                {
+                    _FireballTemplate.Initialize(this);
                 }
                 return _FireballTemplate;
             }
@@ -439,7 +495,11 @@ namespace Rawr.Mage
             {
                 if (_PyroblastTemplate == null)
                 {
-                    _PyroblastTemplate = new PyroblastTemplate(this);
+                    _PyroblastTemplate = new PyroblastTemplate();
+                }
+                if (_PyroblastTemplate.Dirty)
+                {
+                    _PyroblastTemplate.Initialize(this);
                 }
                 return _PyroblastTemplate;
             }
@@ -452,7 +512,11 @@ namespace Rawr.Mage
             {
                 if (_ScorchTemplate == null)
                 {
-                    _ScorchTemplate = new ScorchTemplate(this);
+                    _ScorchTemplate = new ScorchTemplate();
+                }
+                if (_ScorchTemplate.Dirty)
+                {
+                    _ScorchTemplate.Initialize(this);
                 }
                 return _ScorchTemplate;
             }
@@ -465,7 +529,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneBarrageTemplate == null)
                 {
-                    _ArcaneBarrageTemplate = new ArcaneBarrageTemplate(this);
+                    _ArcaneBarrageTemplate = new ArcaneBarrageTemplate();
+                }
+                if (_ArcaneBarrageTemplate.Dirty)
+                {
+                    _ArcaneBarrageTemplate.Initialize(this);
                 }
                 return _ArcaneBarrageTemplate;
             }
@@ -478,7 +546,11 @@ namespace Rawr.Mage
             {
                 if (_DeepFreezeTemplate == null)
                 {
-                    _DeepFreezeTemplate = new DeepFreezeTemplate(this);
+                    _DeepFreezeTemplate = new DeepFreezeTemplate();
+                }
+                if (_DeepFreezeTemplate.Dirty)
+                {
+                    _DeepFreezeTemplate.Initialize(this);
                 }
                 return _DeepFreezeTemplate;
             }
@@ -491,7 +563,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneBlastTemplate == null)
                 {
-                    _ArcaneBlastTemplate = new ArcaneBlastTemplate(this);
+                    _ArcaneBlastTemplate = new ArcaneBlastTemplate();
+                }
+                if (_ArcaneBlastTemplate.Dirty)
+                {
+                    _ArcaneBlastTemplate.Initialize(this);
                 }
                 return _ArcaneBlastTemplate;
             }
@@ -504,7 +580,11 @@ namespace Rawr.Mage
             {
                 if (_IceLanceTemplate == null)
                 {
-                    _IceLanceTemplate = new IceLanceTemplate(this);
+                    _IceLanceTemplate = new IceLanceTemplate();
+                }
+                if (_IceLanceTemplate.Dirty)
+                {
+                    _IceLanceTemplate.Initialize(this);
                 }
                 return _IceLanceTemplate;
             }
@@ -517,7 +597,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneExplosionTemplate == null)
                 {
-                    _ArcaneExplosionTemplate = new ArcaneExplosionTemplate(this);
+                    _ArcaneExplosionTemplate = new ArcaneExplosionTemplate();
+                }
+                if (_ArcaneExplosionTemplate.Dirty)
+                {
+                    _ArcaneExplosionTemplate.Initialize(this);
                 }
                 return _ArcaneExplosionTemplate;
             }
@@ -530,7 +614,11 @@ namespace Rawr.Mage
             {
                 if (_FlamestrikeTemplate == null)
                 {
-                    _FlamestrikeTemplate = new FlamestrikeTemplate(this);
+                    _FlamestrikeTemplate = new FlamestrikeTemplate();
+                }
+                if (_FlamestrikeTemplate.Dirty)
+                {
+                    _FlamestrikeTemplate.Initialize(this);
                 }
                 return _FlamestrikeTemplate;
             }
@@ -543,7 +631,11 @@ namespace Rawr.Mage
             {
                 if (_BlizzardTemplate == null)
                 {
-                    _BlizzardTemplate = new BlizzardTemplate(this);
+                    _BlizzardTemplate = new BlizzardTemplate();
+                }
+                if (_BlizzardTemplate.Dirty)
+                {
+                    _BlizzardTemplate.Initialize(this);
                 }
                 return _BlizzardTemplate;
             }
@@ -556,7 +648,11 @@ namespace Rawr.Mage
             {
                 if (_BlastWaveTemplate == null)
                 {
-                    _BlastWaveTemplate = new BlastWaveTemplate(this);
+                    _BlastWaveTemplate = new BlastWaveTemplate();
+                }
+                if (_BlastWaveTemplate.Dirty)
+                {
+                    _BlastWaveTemplate.Initialize(this);
                 }
                 return _BlastWaveTemplate;
             }
@@ -569,7 +665,11 @@ namespace Rawr.Mage
             {
                 if (_DragonsBreathTemplate == null)
                 {
-                    _DragonsBreathTemplate = new DragonsBreathTemplate(this);
+                    _DragonsBreathTemplate = new DragonsBreathTemplate();
+                }
+                if (_DragonsBreathTemplate.Dirty)
+                {
+                    _DragonsBreathTemplate.Initialize(this);
                 }
                 return _DragonsBreathTemplate;
             }
@@ -582,7 +682,11 @@ namespace Rawr.Mage
             {
                 if (_ConeOfColdTemplate == null)
                 {
-                    _ConeOfColdTemplate = new ConeOfColdTemplate(this);
+                    _ConeOfColdTemplate = new ConeOfColdTemplate();
+                }
+                if (_ConeOfColdTemplate.Dirty)
+                {
+                    _ConeOfColdTemplate.Initialize(this);
                 }
                 return _ConeOfColdTemplate;
             }
@@ -595,7 +699,11 @@ namespace Rawr.Mage
             {
                 if (_SlowTemplate == null)
                 {
-                    _SlowTemplate = new SlowTemplate(this);
+                    _SlowTemplate = new SlowTemplate();
+                }
+                if (_SlowTemplate.Dirty)
+                {
+                    _SlowTemplate.Initialize(this);
                 }
                 return _SlowTemplate;
             }
@@ -608,7 +716,11 @@ namespace Rawr.Mage
             {
                 if (_LivingBombTemplate == null)
                 {
-                    _LivingBombTemplate = new LivingBombTemplate(this);
+                    _LivingBombTemplate = new LivingBombTemplate();
+                }
+                if (_LivingBombTemplate.Dirty)
+                {
+                    _LivingBombTemplate.Initialize(this);
                 }
                 return _LivingBombTemplate;
             }
@@ -621,7 +733,11 @@ namespace Rawr.Mage
             {
                 if (_FireWardTemplate == null)
                 {
-                    _FireWardTemplate = new FireWardTemplate(this);
+                    _FireWardTemplate = new FireWardTemplate();
+                }
+                if (_FireWardTemplate.Dirty)
+                {
+                    _FireWardTemplate.Initialize(this);
                 }
                 return _FireWardTemplate;
             }
@@ -634,7 +750,11 @@ namespace Rawr.Mage
             {
                 if (_FrostWardTemplate == null)
                 {
-                    _FrostWardTemplate = new FrostWardTemplate(this);
+                    _FrostWardTemplate = new FrostWardTemplate();
+                }
+                if (_FrostWardTemplate.Dirty)
+                {
+                    _FrostWardTemplate.Initialize(this);
                 }
                 return _FrostWardTemplate;
             }
@@ -647,7 +767,11 @@ namespace Rawr.Mage
             {
                 if (_ConjureManaGemTemplate == null)
                 {
-                    _ConjureManaGemTemplate = new ConjureManaGemTemplate(this);
+                    _ConjureManaGemTemplate = new ConjureManaGemTemplate();
+                }
+                if (_ConjureManaGemTemplate.Dirty)
+                {
+                    _ConjureManaGemTemplate.Initialize(this);
                 }
                 return _ConjureManaGemTemplate;
             }
@@ -660,7 +784,11 @@ namespace Rawr.Mage
             {
                 if (_ArcaneDamageTemplate == null)
                 {
-                    _ArcaneDamageTemplate = new ArcaneDamageTemplate(this);
+                    _ArcaneDamageTemplate = new ArcaneDamageTemplate();
+                }
+                if (_ArcaneDamageTemplate.Dirty)
+                {
+                    _ArcaneDamageTemplate.Initialize(this);
                 }
                 return _ArcaneDamageTemplate;
             }
@@ -673,7 +801,11 @@ namespace Rawr.Mage
             {
                 if (_FireDamageTemplate == null)
                 {
-                    _FireDamageTemplate = new FireDamageTemplate(this);
+                    _FireDamageTemplate = new FireDamageTemplate();
+                }
+                if (_FireDamageTemplate.Dirty)
+                {
+                    _FireDamageTemplate.Initialize(this);
                 }
                 return _FireDamageTemplate;
             }
@@ -686,7 +818,11 @@ namespace Rawr.Mage
             {
                 if (_FrostDamageTemplate == null)
                 {
-                    _FrostDamageTemplate = new FrostDamageTemplate(this);
+                    _FrostDamageTemplate = new FrostDamageTemplate();
+                }
+                if (_FrostDamageTemplate.Dirty)
+                {
+                    _FrostDamageTemplate.Initialize(this);
                 }
                 return _FrostDamageTemplate;
             }
@@ -699,7 +835,11 @@ namespace Rawr.Mage
             {
                 if (_ShadowDamageTemplate == null)
                 {
-                    _ShadowDamageTemplate = new ShadowDamageTemplate(this);
+                    _ShadowDamageTemplate = new ShadowDamageTemplate();
+                }
+                if (_ShadowDamageTemplate.Dirty)
+                {
+                    _ShadowDamageTemplate.Initialize(this);
                 }
                 return _ShadowDamageTemplate;
             }
@@ -712,7 +852,11 @@ namespace Rawr.Mage
             {
                 if (_NatureDamageTemplate == null)
                 {
-                    _NatureDamageTemplate = new NatureDamageTemplate(this);
+                    _NatureDamageTemplate = new NatureDamageTemplate();
+                }
+                if (_NatureDamageTemplate.Dirty)
+                {
+                    _NatureDamageTemplate.Initialize(this);
                 }
                 return _NatureDamageTemplate;
             }
@@ -725,7 +869,11 @@ namespace Rawr.Mage
             {
                 if (_HolyDamageTemplate == null)
                 {
-                    _HolyDamageTemplate = new HolyDamageTemplate(this);
+                    _HolyDamageTemplate = new HolyDamageTemplate();
+                }
+                if (_HolyDamageTemplate.Dirty)
+                {
+                    _HolyDamageTemplate.Initialize(this);
                 }
                 return _HolyDamageTemplate;
             }
@@ -738,7 +886,11 @@ namespace Rawr.Mage
             {
                 if (_ValkyrDamageTemplate == null)
                 {
-                    _ValkyrDamageTemplate = new ValkyrDamageTemplate(this);
+                    _ValkyrDamageTemplate = new ValkyrDamageTemplate();
+                }
+                if (_ValkyrDamageTemplate.Dirty)
+                {
+                    _ValkyrDamageTemplate.Initialize(this);
                 }
                 return _ValkyrDamageTemplate;
             }
@@ -791,6 +943,7 @@ namespace Rawr.Mage
 
         // initialized in ConstructRows
         private StackingConstraint[] rowStackingConstraint;
+        private int rowStackingConstraintCount;
 
         #region LP rows
         private int rowManaRegen;
@@ -1538,70 +1691,75 @@ namespace Rawr.Mage
         private void InitializeProcEffects()
         {
             Stats baseStats = BaseStats;
-            List<SpecialEffect> list = new List<SpecialEffect>();
-            foreach (SpecialEffect effect in baseStats.SpecialEffects())
+            int N = baseStats._rawSpecialEffectDataSize;
+            HasteRatingEffectsCount = 0;
+            if (HasteRatingEffects == null || HasteRatingEffects.Length < N)
             {
+                HasteRatingEffects = new SpecialEffect[N];
+            }
+            SpellPowerEffectsCount = 0;
+            if (SpellPowerEffects == null || SpellPowerEffects.Length < N)
+            {
+                SpellPowerEffects = new SpecialEffect[N];
+            }
+            DamageProcEffectsCount = 0;
+            if (DamageProcEffects == null || DamageProcEffects.Length < N)
+            {
+                DamageProcEffects = new SpecialEffect[N];
+            }
+            ManaRestoreEffectsCount = 0;
+            if (ManaRestoreEffects == null || ManaRestoreEffects.Length < N)
+            {
+                ManaRestoreEffects = new SpecialEffect[N];
+            }
+            Mp5EffectsCount = 0;
+            if (Mp5Effects == null || Mp5Effects.Length < N)
+            {
+                Mp5Effects = new SpecialEffect[N];
+            }
+            for (int i = 0; i < baseStats._rawSpecialEffectDataSize; i++)
+            {
+                SpecialEffect effect = baseStats._rawSpecialEffectData[i];
                 if (effect.Stats.HasteRating > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
                     {
-                        list.Add(effect);
+                        HasteRatingEffects[HasteRatingEffectsCount++] = effect;
                     }
                     else if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
                     {
-                        list.Add(effect);
+                        HasteRatingEffects[HasteRatingEffectsCount++] = effect;
                     }
                 }
-            }
-            HasteRatingEffects = list.ToArray();
-            list.Clear();
-            foreach (SpecialEffect effect in baseStats.SpecialEffects())
-            {
                 if (effect.Stats.SpellPower > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                     {
-                        list.Add(effect);
+                        SpellPowerEffects[SpellPowerEffectsCount++] = effect;
                     }
                 }
-            }
-            SpellPowerEffects = list.ToArray();
-            list.Clear();
-            foreach (SpecialEffect effect in baseStats.SpecialEffects())
-            {
                 if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
                     {
-                        list.Add(effect);
+                        DamageProcEffects[DamageProcEffectsCount++] = effect;
                     }
                 }
-            }
-            DamageProcEffects = list.ToArray();
-            list.Clear();
-            foreach (SpecialEffect effect in baseStats.SpecialEffects())
-            {
                 if (effect.Stats.ManaRestore > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                     {
-                        list.Add(effect);
+                        ManaRestoreEffects[ManaRestoreEffectsCount++] = effect;
                     }
                 }
-            }
-            ManaRestoreEffects = list.ToArray();
-            list.Clear();
-            foreach (SpecialEffect effect in baseStats.SpecialEffects())
-            {
                 if (effect.Stats.Mp5 > 0 && effect.MaxStack == 1)
                 {
                     if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                     {
-                        list.Add(effect);
+                        Mp5Effects[Mp5EffectsCount++] = effect;
                     }
                 }
             }
-            Mp5Effects = list.ToArray();
         }
 
         private bool IsRelevantOnUseEffect(SpecialEffect effect, out bool hasteEffect, out bool stackingEffect)
@@ -1806,7 +1964,14 @@ namespace Rawr.Mage
 
         private void InitializeEffectCooldowns()
         {
-            CooldownList = new List<EffectCooldown>();
+            if (CooldownList == null)
+            {
+                CooldownList = new List<EffectCooldown>();
+            }
+            else
+            {
+                CooldownList.Clear();
+            }
 
             EvocationCooldown = (240.0f - 60.0f * MageTalents.ArcaneFlows);
             ColdsnapCooldown = (8 * 60) * (1 - 0.1f * MageTalents.ColdAsIce);
@@ -1900,9 +2065,22 @@ namespace Rawr.Mage
             cooldownCount = standardEffectCount;
             int mask = 1 << standardEffectCount;
 
-            List<EffectCooldown> itemBasedEffectCooldowns = new List<EffectCooldown>();
-            List<EffectCooldown> stackingHasteEffectCooldowns = new List<EffectCooldown>();
-            List<EffectCooldown> stackingNonHasteEffectCooldowns = new List<EffectCooldown>();
+            int N = BaseStats._rawSpecialEffectDataSize;
+            ItemBasedEffectCooldownsCount = 0;
+            if (ItemBasedEffectCooldowns == null || ItemBasedEffectCooldowns.Length < N)
+            {
+                ItemBasedEffectCooldowns = new EffectCooldown[N];
+            }
+            StackingHasteEffectCooldownsCount = 0;
+            if (StackingHasteEffectCooldowns == null || StackingHasteEffectCooldowns.Length < N)
+            {
+                StackingHasteEffectCooldowns = new EffectCooldown[N];
+            }
+            StackingNonHasteEffectCooldownsCount = 0;
+            if (StackingNonHasteEffectCooldowns == null || StackingNonHasteEffectCooldowns.Length < N)
+            {
+                StackingNonHasteEffectCooldowns = new EffectCooldown[N];
+            }
             int itemBasedMask = 0;
             bool hasteEffect, stackingEffect;
 
@@ -1938,16 +2116,16 @@ namespace Rawr.Mage
                                     cooldown.AutomaticStackingConstraints = true;
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
                                     CooldownList.Add(cooldown);
-                                    itemBasedEffectCooldowns.Add(cooldown);
+                                    ItemBasedEffectCooldowns[ItemBasedEffectCooldownsCount++] = cooldown;
                                     if (stackingEffect)
                                     {
                                         if (hasteEffect)
                                         {
-                                            stackingHasteEffectCooldowns.Add(cooldown);
+                                            StackingHasteEffectCooldowns[StackingHasteEffectCooldownsCount++] = cooldown;
                                         }
                                         else
                                         {
-                                            stackingNonHasteEffectCooldowns.Add(cooldown);
+                                            StackingNonHasteEffectCooldowns[StackingNonHasteEffectCooldownsCount++] = cooldown;
                                         }
                                     }
                                 }
@@ -1976,16 +2154,16 @@ namespace Rawr.Mage
                                     cooldown.AutomaticStackingConstraints = true;
                                     cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
                                     CooldownList.Add(cooldown);
-                                    itemBasedEffectCooldowns.Add(cooldown);
+                                    ItemBasedEffectCooldowns[ItemBasedEffectCooldownsCount++] = cooldown;
                                     if (stackingEffect)
                                     {
                                         if (hasteEffect)
                                         {
-                                            stackingHasteEffectCooldowns.Add(cooldown);
+                                            StackingHasteEffectCooldowns[StackingHasteEffectCooldownsCount++] = cooldown;
                                         }
                                         else
                                         {
-                                            stackingNonHasteEffectCooldowns.Add(cooldown);
+                                            StackingNonHasteEffectCooldowns[StackingNonHasteEffectCooldownsCount++] = cooldown;
                                         }
                                     }
                                 }
@@ -1994,10 +2172,6 @@ namespace Rawr.Mage
                     }
                 }
             }
-
-            ItemBasedEffectCooldowns = itemBasedEffectCooldowns.ToArray();
-            StackingHasteEffectCooldowns = stackingHasteEffectCooldowns.ToArray();
-            StackingNonHasteEffectCooldowns = stackingNonHasteEffectCooldowns.ToArray();
 
             if (manaGemEffectAvailable)
             {
@@ -2024,7 +2198,14 @@ namespace Rawr.Mage
                 ManaGemEffectDuration = 0;
             }
 
-            EffectCooldown = new Dictionary<int, EffectCooldown>(CooldownList.Count);
+            if (EffectCooldown == null)
+            {
+                EffectCooldown = new Dictionary<int, EffectCooldown>(CooldownList.Count);
+            }
+            else
+            {
+                EffectCooldown.Clear();
+            }
             availableCooldownMask = 0;
             foreach (EffectCooldown cooldown in CooldownList)
             {
@@ -2272,42 +2453,42 @@ namespace Rawr.Mage
 
         private void InitializeSpellTemplates()
         {
-            _WaterboltTemplate = null;
-            _MirrorImageTemplate = null;
-            _FireBlastTemplate = null;
-            _LightningBoltTemplate = null;
-            _ThunderBoltTemplate = null;
-            _LightweaveBoltTemplate = null;
-            _ArcaneBoltTemplate = null;
-            _PendulumOfTelluricCurrentsTemplate = null;
-            _FrostboltTemplate = null;
-            _FrostfireBoltTemplate = null;
-            _ArcaneMissilesTemplate = null;
-            _FireballTemplate = null;
-            _PyroblastTemplate = null;
-            _ScorchTemplate = null;
-            _ArcaneBarrageTemplate = null;
-            _DeepFreezeTemplate = null;
-            _ArcaneBlastTemplate = null;
-            _IceLanceTemplate = null;
-            _ArcaneExplosionTemplate = null;
-            _FlamestrikeTemplate = null;
-            _BlizzardTemplate = null;
-            _BlastWaveTemplate = null;
-            _DragonsBreathTemplate = null;
-            _ConeOfColdTemplate = null;
-            _SlowTemplate = null;
-            _LivingBombTemplate = null;
-            _FireWardTemplate = null;
-            _FrostWardTemplate = null;
-            _ConjureManaGemTemplate = null;
-            _ArcaneDamageTemplate = null;
-            _FireDamageTemplate = null;
-            _FrostDamageTemplate = null;
-            _ShadowDamageTemplate = null;
-            _NatureDamageTemplate = null;
-            _HolyDamageTemplate = null;
-            _ValkyrDamageTemplate = null;
+            if (_WaterboltTemplate != null) _WaterboltTemplate.Dirty = true;
+            if (_MirrorImageTemplate != null) _MirrorImageTemplate.Dirty = true;
+            if (_FireBlastTemplate != null) _FireBlastTemplate.Dirty = true;
+            if (_LightningBoltTemplate != null) _LightningBoltTemplate.Dirty = true;
+            if (_ThunderBoltTemplate != null) _ThunderBoltTemplate.Dirty = true;
+            if (_LightweaveBoltTemplate != null) _LightweaveBoltTemplate.Dirty = true;
+            if (_ArcaneBoltTemplate != null) _ArcaneBoltTemplate.Dirty = true;
+            if (_PendulumOfTelluricCurrentsTemplate != null) _PendulumOfTelluricCurrentsTemplate.Dirty = true;
+            if (_FrostboltTemplate != null) _FrostboltTemplate.Dirty = true;
+            if (_FrostfireBoltTemplate != null) _FrostfireBoltTemplate.Dirty = true;
+            if (_ArcaneMissilesTemplate != null) _ArcaneMissilesTemplate.Dirty = true;
+            if (_FireballTemplate != null) _FireballTemplate.Dirty = true;
+            if (_PyroblastTemplate != null) _PyroblastTemplate.Dirty = true;
+            if (_ScorchTemplate != null) _ScorchTemplate.Dirty = true;
+            if (_ArcaneBarrageTemplate != null) _ArcaneBarrageTemplate.Dirty = true;
+            if (_DeepFreezeTemplate != null) _DeepFreezeTemplate.Dirty = true;
+            if (_ArcaneBlastTemplate != null) _ArcaneBlastTemplate.Dirty = true;
+            if (_IceLanceTemplate != null) _IceLanceTemplate.Dirty = true;
+            if (_ArcaneExplosionTemplate != null) _ArcaneExplosionTemplate.Dirty = true;
+            if (_FlamestrikeTemplate != null) _FlamestrikeTemplate.Dirty = true;
+            if (_BlizzardTemplate != null) _BlizzardTemplate.Dirty = true;
+            if (_BlastWaveTemplate != null) _BlastWaveTemplate.Dirty = true;
+            if (_DragonsBreathTemplate != null) _DragonsBreathTemplate.Dirty = true;
+            if (_ConeOfColdTemplate != null) _ConeOfColdTemplate.Dirty = true;
+            if (_SlowTemplate != null) _SlowTemplate.Dirty = true;
+            if (_LivingBombTemplate != null) _LivingBombTemplate.Dirty = true;
+            if (_FireWardTemplate != null) _FireWardTemplate.Dirty = true;
+            if (_FrostWardTemplate != null) _FrostWardTemplate.Dirty = true;
+            if (_ConjureManaGemTemplate != null) _ConjureManaGemTemplate.Dirty = true;
+            if (_ArcaneDamageTemplate != null) _ArcaneDamageTemplate.Dirty = true;
+            if (_FireDamageTemplate != null) _FireDamageTemplate.Dirty = true;
+            if (_FrostDamageTemplate != null) _FrostDamageTemplate.Dirty = true;
+            if (_ShadowDamageTemplate != null) _ShadowDamageTemplate.Dirty = true;
+            if (_NatureDamageTemplate != null) _NatureDamageTemplate.Dirty = true;
+            if (_HolyDamageTemplate != null) _HolyDamageTemplate.Dirty = true;
+            if (_ValkyrDamageTemplate != null) _ValkyrDamageTemplate.Dirty = true;
         }
         #endregion
 
@@ -3238,10 +3419,10 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, CalculationOptions.MoltenFuryPercentage);
                     lp.SetElementUnsafe(rowFlameCap, column, 60f / 180f);
-                    foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                    for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                     {
+                        EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                         lp.SetElementUnsafe(cooldown.Row, column, cooldown.Duration / cooldown.Cooldown);
-
                     }
                     lp.SetElementUnsafe(rowManaGemEffect, column, ManaGemEffectDuration / 120f);
                     lp.SetElementUnsafe(rowDpsTime, column, -(1 - dpsTime));
@@ -3448,7 +3629,7 @@ namespace Rawr.Mage
                                                 break;
                                             }
                                         }
-                                        if (!skip && (c.AffectedByFlameCap || !state.FlameCap))
+                                        if (!skip)
                                         {
                                             placed.Add(c);
                                             column = lp.AddColumnUnsafe();
@@ -3476,8 +3657,9 @@ namespace Rawr.Mage
         {
             // determine which effects only cause a change in haste, thus allowing calculation reuse (only recalculating cast time)
             int recalcCastTime = (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | (int)StandardEffect.PotionOfSpeed | (int)StandardEffect.Berserking | (int)StandardEffect.PowerInfusion;
-            foreach (var effect in ItemBasedEffectCooldowns)
+            for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
             {
+                EffectCooldown effect = ItemBasedEffectCooldowns[i];
                 if (effect.HasteEffect)
                 {
                     recalcCastTime |= effect.Mask;
@@ -3535,7 +3717,14 @@ namespace Rawr.Mage
 
         private void ConstructSegments()
         {
-            SegmentList = new List<Segment>();
+            if (SegmentList == null)
+            {
+                SegmentList = new List<Segment>();
+            }
+            else
+            {
+                SegmentList.Clear();
+            }
             if (segmentCooldowns)
             {
                 List<double> ticks = new List<double>();
@@ -3565,8 +3754,9 @@ namespace Rawr.Mage
                         //if (!coldsnapAvailable) AddEffectTicks(ticks, calculationResult.IcyVeinsCooldown, 20.0);
                     }
                     if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater) AddSegmentTicks(ticks, WaterElementalCooldown);
-                    foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                    for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                     {
+                        EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                         AddSegmentTicks(ticks, cooldown.Cooldown);
                     }
                 }
@@ -3848,9 +4038,9 @@ namespace Rawr.Mage
             }
             lp.SetRHSUnsafe(rowTargetDamage, -CalculationOptions.TargetDamage);
 
-            foreach (StackingConstraint constraint in rowStackingConstraint)
+            for (int i = 0; i < rowStackingConstraintCount; i++)
             {
-                lp.SetRHSUnsafe(constraint.Row, constraint.MaximumStackingDuration);
+                lp.SetRHSUnsafe(rowStackingConstraint[i].Row, rowStackingConstraint[i].MaximumStackingDuration);
             }
 
             if (segmentCooldowns)
@@ -3945,8 +4135,9 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }*/
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                     foreach (SegmentConstraint constraint in cooldown.SegmentConstraints)
                     {
                         lp.SetRHSUnsafe(constraint.Row, cooldown.Duration);
@@ -4158,7 +4349,11 @@ namespace Rawr.Mage
                 rowDpsTime = rowCount++;
             }
 
-            List<StackingConstraint> rowStackingConstraintList = new List<StackingConstraint>(8); // most common observed case has more than 4 stacking constraints, so avoid resizing, specially if using struct
+            rowStackingConstraintCount = 0;
+            if (rowStackingConstraint == null)
+            {
+                rowStackingConstraint = new StackingConstraint[8];
+            }
             for (int i = 0; i < CooldownList.Count; i++)
             {
                 EffectCooldown cooli = CooldownList[i];
@@ -4183,20 +4378,30 @@ namespace Rawr.Mage
                                 double maxDuration = MaximizeStackingDuration(CalculationOptions.FightDuration, cooli.Duration, cooli.Cooldown, coolj.Duration, coolj.Cooldown);
                                 if (maxDuration < cooli.MaximumDuration && maxDuration < coolj.MaximumDuration)
                                 {
-                                    rowStackingConstraintList.Add(new StackingConstraint()
+                                    int scCount = rowStackingConstraintCount;
+                                    if (scCount >= rowStackingConstraint.Length)
                                     {
-                                        Row = rowCount++,
-                                        Effect1 = cooli,
-                                        Effect2 = coolj,
-                                        MaximumStackingDuration = maxDuration,
-                                    });
+                                        StackingConstraint[] newArr = new StackingConstraint[rowStackingConstraint.Length * 2];
+                                        Array.Copy(rowStackingConstraint, 0, newArr, 0, scCount);
+                                        rowStackingConstraint = newArr;
+                                    }
+                                    // Heroism is before IcyVeins in cooldown list in cooldown list (initialized in InitializeEffectCooldowns)
+                                    if (cooli.StandardEffect == StandardEffect.Heroism && coolj.StandardEffect == StandardEffect.IcyVeins)
+                                    {
+                                        rowHeroismIcyVeins = rowCount;
+                                    }
+                                    StackingConstraint[] arr = rowStackingConstraint;
+                                    arr[scCount].Row = rowCount++;
+                                    arr[scCount].MaximumStackingDuration = maxDuration;
+                                    arr[scCount].Effect1 = cooli;
+                                    arr[scCount].Effect2 = coolj;
+                                    rowStackingConstraintCount = scCount + 1;
                                 }
                             }
                         }
                     }
                 }
             }
-            rowStackingConstraint = rowStackingConstraintList.ToArray();
 
             if (coldsnapAvailable)
             {
@@ -4207,11 +4412,6 @@ namespace Rawr.Mage
             else if (icyVeinsAvailable)
             {
                 rowIcyVeins = EffectCooldown[(int)StandardEffect.IcyVeins].Row;
-                if (heroismAvailable)
-                {
-                    StackingConstraint c = rowStackingConstraintList.Find(sc => (sc.Effect1.StandardEffect == StandardEffect.Heroism && sc.Effect2.StandardEffect == StandardEffect.IcyVeins) || (sc.Effect2.StandardEffect == StandardEffect.Heroism && sc.Effect1.StandardEffect == StandardEffect.IcyVeins));
-                    rowHeroismIcyVeins = c.Row;
-                }
             }
             if (heroismAvailable) rowHeroism = EffectCooldown[(int)StandardEffect.Heroism].Row;
             if (arcanePowerAvailable) rowArcanePower = EffectCooldown[(int)StandardEffect.ArcanePower].Row;
@@ -4224,237 +4424,244 @@ namespace Rawr.Mage
             //rowManaPotionManaGem = rowCount++;
             if (segmentCooldowns)
             {
-                // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
-                // mf
-                // heroism
-                // ap
-                if (arcanePowerAvailable)
+                rowCount = ConstructSegmentationRows(rowCount);
+            }
+            return rowCount;
+        }
+
+        private int ConstructSegmentationRows(int rowCount)
+        {
+            // mf, heroism, ap, iv, combustion, drums, flamecap, destruction, t1, t2
+            // mf
+            // heroism
+            // ap
+            if (arcanePowerAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentArcanePower = new List<SegmentConstraint>();
+                double cool = ArcanePowerCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentArcanePower = new List<SegmentConstraint>();
-                    double cool = ArcanePowerCooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                // pi
-                if (powerInfusionAvailable)
+            }
+            // pi
+            if (powerInfusionAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentPowerInfusion = new List<SegmentConstraint>();
+                double cool = PowerInfusionCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentPowerInfusion = new List<SegmentConstraint>();
-                    double cool = PowerInfusionCooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                // iv
-                if (icyVeinsAvailable)
+            }
+            // iv
+            if (icyVeinsAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentIcyVeins = new List<SegmentConstraint>();
+                double cool = IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentIcyVeins = new List<SegmentConstraint>();
-                    double cool = IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                // combustion
-                if (combustionAvailable)
+            }
+            // combustion
+            if (combustionAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentCombustion = new List<SegmentConstraint>();
+                double cool = CombustionCooldown + 15;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentCombustion = new List<SegmentConstraint>();
-                    double cool = CombustionCooldown + 15;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                // berserking
-                if (berserkingAvailable)
+            }
+            // berserking
+            if (berserkingAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentBerserking = new List<SegmentConstraint>();
+                double cool = 120;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentBerserking = new List<SegmentConstraint>();
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+            {
+                List<SegmentConstraint> list = rowSegmentWaterElemental = new List<SegmentConstraint>();
+                double cool = WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0);
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+                list = rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
+                cool = WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0);
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            if (mirrorImageAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentMirrorImage = new List<SegmentConstraint>();
+                double cool = MirrorImageCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+                list = rowSegmentSummonMirrorImage = new List<SegmentConstraint>();
+                cool = MirrorImageCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            // flamecap & mana gem
+            if (flameCapAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentFlameCap = new List<SegmentConstraint>();
+                double cool = 180;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            if (CalculationOptions.ManaGemEnabled)
+            {
+                List<SegmentConstraint> list = rowSegmentManaGem = new List<SegmentConstraint>();
+                double cool = 120;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            // effect potion
+            /*if (effectPotionAvailable)
+            {
+                rowSegmentPotion = rowCount;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    rowCount++;
                     double cool = 120;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                }
+            }*/
+            for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
+            {
+                EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
+                if (cooldown.SegmentConstraints == null) // if there's existing one we guarantee that it is cleared
+                {
+                    cooldown.SegmentConstraints = new List<SegmentConstraint>();
+                }
+                List<SegmentConstraint> list = cooldown.SegmentConstraints;
+                double cool = cooldown.Cooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+            }
+            // mana gem effect
+            if (manaGemEffectAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentManaGemEffect = new List<SegmentConstraint>();
+                double cool = 120.0;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentWaterElemental = new List<SegmentConstraint>();
-                    double cool = WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0);
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                    list = rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
-                    cool = WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0);
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                if (mirrorImageAvailable)
+            }
+            if (evocationAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentEvocation = new List<SegmentConstraint>();
+                double cool = EvocationCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
-                    List<SegmentConstraint> list = rowSegmentMirrorImage = new List<SegmentConstraint>();
-                    double cool = MirrorImageCooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
                     {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                    list = rowSegmentSummonMirrorImage = new List<SegmentConstraint>();
-                    cool = MirrorImageCooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-                // flamecap & mana gem
-                if (flameCapAvailable)
-                {
-                    List<SegmentConstraint> list = rowSegmentFlameCap = new List<SegmentConstraint>();
-                    double cool = 180;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                }
-                if (CalculationOptions.ManaGemEnabled)
-                {
-                    List<SegmentConstraint> list = rowSegmentManaGem = new List<SegmentConstraint>();
-                    double cool = 120;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                }
-                // effect potion
-                /*if (effectPotionAvailable)
-                {
-                    rowSegmentPotion = rowCount;
-                    for (int seg = 0; seg < segments; seg++)
-                    {
-                        rowCount++;
-                        double cool = 120;
-                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
-                    }
-                }*/
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
-                {
-                    if (cooldown.SegmentConstraints == null) // if there's existing one we guarantee that it is cleared
-                    {
-                        cooldown.SegmentConstraints = new List<SegmentConstraint>();
-                    }
-                    List<SegmentConstraint> list = cooldown.SegmentConstraints;
-                    double cool = cooldown.Cooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                }
-                // mana gem effect
-                if (manaGemEffectAvailable)
-                {
-                    List<SegmentConstraint> list = rowSegmentManaGemEffect = new List<SegmentConstraint>();
-                    double cool = 120.0;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                }
-                if (evocationAvailable)
-                {
-                    List<SegmentConstraint> list = rowSegmentEvocation = new List<SegmentConstraint>();
-                    double cool = EvocationCooldown;
-                    for (int seg = 0; seg < SegmentList.Count; seg++)
-                    {
-                        int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
-                        if (maxs == -2) maxs = SegmentList.Count - 1;
-                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
-                        {
-                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
-                        }
-                    }
-                }
-                // max segment time
-                rowSegment = rowCount;
-                rowCount += SegmentList.Count;
-                // mana overflow & underflow (don't need over all segments, that is already verified)
-                if (restrictManaUse)
-                {
-                    rowSegmentManaOverflow = rowCount;
-                    rowCount += SegmentList.Count - 1;
-                    rowSegmentManaUnderflow = rowCount;
-                    rowCount += SegmentList.Count - 1;
-                }
-                if (restrictThreat)
-                {
-                    rowSegmentThreat = rowCount;
-                    rowCount += SegmentList.Count - 1;
-                }
+            }
+            // max segment time
+            rowSegment = rowCount;
+            rowCount += SegmentList.Count;
+            // mana overflow & underflow (don't need over all segments, that is already verified)
+            if (restrictManaUse)
+            {
+                rowSegmentManaOverflow = rowCount;
+                rowCount += SegmentList.Count - 1;
+                rowSegmentManaUnderflow = rowCount;
+                rowCount += SegmentList.Count - 1;
+            }
+            if (restrictThreat)
+            {
+                rowSegmentThreat = rowCount;
+                rowCount += SegmentList.Count - 1;
             }
             return rowCount;
         }
@@ -4507,8 +4714,9 @@ namespace Rawr.Mage
             if (state.FlameCap) lp.SetElementUnsafe(rowFlameCap, column, 1.0);
             //if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
             //if (state.PotionOfWildMagic && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
-            foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+            for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
             {
+                EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                 if (state.EffectsActive(cooldown.Mask))
                 {
                     lp.SetElementUnsafe(cooldown.Row, column, 1.0);
@@ -4571,11 +4779,13 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond * multiplier);
             lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond * multiplier);
 
-            foreach (StackingConstraint constraint in rowStackingConstraint)
+            for (int i = 0; i < rowStackingConstraintCount; i++)
             {
-                if (state.EffectsActive(constraint.Effect1.Mask | constraint.Effect2.Mask))
+                //if (state.EffectsActive(rowStackingConstraint[i].Effect1.Mask | rowStackingConstraint[i].Effect2.Mask))
+                int effects = rowStackingConstraint[i].Effect1.Mask | rowStackingConstraint[i].Effect2.Mask;
+                if ((effects & state.Effects) == effects)
                 {
-                    lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                    lp.SetElementUnsafe(rowStackingConstraint[i].Row, column, 1.0);
                 }
             }
 
@@ -4661,8 +4871,9 @@ namespace Rawr.Mage
                     if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                 }*/
             }
-            foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+            for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
             {
+                EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                 if (state.EffectsActive(cooldown.Mask))
                 {
                     bound = Math.Min(bound, cooldown.Duration);
@@ -4705,11 +4916,18 @@ namespace Rawr.Mage
 
         private void GenerateSpellList()
         {
-            List<CycleId> list = new List<CycleId>();
+            if (spellList == null)
+            {
+                spellList = new List<CycleId>();
+            }
+            else
+            {
+                spellList.Clear();
+            }
 
             if (CalculationOptions.CustomSpellMixEnabled || CalculationOptions.CustomSpellMixOnly)
             {
-                list.Add(CycleId.CustomSpellMix);
+                spellList.Add(CycleId.CustomSpellMix);
             }
             if (!CalculationOptions.CustomSpellMixOnly)
             {
@@ -4725,33 +4943,33 @@ namespace Rawr.Mage
                         {
                             if (MageTalents.LivingBomb > 0)
                             {
-                                list.Add(CycleId.FFBScLBPyro);
+                                spellList.Add(CycleId.FFBScLBPyro);
                             }
-                            list.Add(CycleId.FFBScPyro);
+                            spellList.Add(CycleId.FFBScPyro);
                         }
                         else
                         {
                             if (MageTalents.LivingBomb > 0)
                             {
-                                list.Add(CycleId.FBScLBPyro);
+                                spellList.Add(CycleId.FBScLBPyro);
                             }
-                            list.Add(CycleId.FBScPyro);
+                            spellList.Add(CycleId.FBScPyro);
                         }
                     }
                     else
                     {
                         if (MageTalents.LivingBomb > 0)
                         {
-                            list.Add(CycleId.FBScLBPyro);
-                            list.Add(CycleId.ScLBPyro);
+                            spellList.Add(CycleId.FBScLBPyro);
+                            spellList.Add(CycleId.ScLBPyro);
                         }
-                        list.Add(CycleId.FBScPyro);
+                        spellList.Add(CycleId.FBScPyro);
                         if (CalculationOptions.PlayerLevel >= 75)
                         {
-                            list.Add(CycleId.FFBScPyro);
+                            spellList.Add(CycleId.FFBScPyro);
                             if (MageTalents.LivingBomb > 0)
                             {
-                                list.Add(CycleId.FFBScLBPyro);
+                                spellList.Add(CycleId.FFBScLBPyro);
                             }
                         }
                     }
@@ -4798,107 +5016,107 @@ namespace Rawr.Mage
                         {
                             if (MageTalents.PiercingIce == 3 && MageTalents.IceShards == 3 && CalculationOptions.PlayerLevel >= 75)
                             {
-                                list.Add(CycleId.FFBPyro);
-                                if (MageTalents.LivingBomb > 0) list.Add(CycleId.FFBLBPyro);
+                                spellList.Add(CycleId.FFBPyro);
+                                if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FFBLBPyro);
                             }
                             else
                             {
                                 if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
                                 {
-                                    list.Add(CycleId.FBPyro);
+                                    spellList.Add(CycleId.FBPyro);
                                 }
                                 else
                                 {
-                                    list.Add(CycleId.Fireball);
+                                    spellList.Add(CycleId.Fireball);
                                 }
-                                if (MageTalents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
+                                if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FBLBPyro);
                             }
                         }
                         else if (MageTalents.EmpoweredFrostbolt > 0)
                         {
                             if (MageTalents.BrainFreeze > 0)
                             {
-                                list.Add(CycleId.FrBFB);
-                                list.Add(CycleId.FrBFBIL);
-                                list.Add(CycleId.FrBILFB);
+                                spellList.Add(CycleId.FrBFB);
+                                spellList.Add(CycleId.FrBFBIL);
+                                spellList.Add(CycleId.FrBILFB);
                             }
                             if (MageTalents.DeepFreeze > 0)
                             {
-                                list.Add(CycleId.FrBDFFBIL);
-                                list.Add(CycleId.FrBDFFFB);
+                                spellList.Add(CycleId.FrBDFFBIL);
+                                spellList.Add(CycleId.FrBDFFFB);
                             }
-                            list.Add(CycleId.FrBIL);
-                            list.Add(CycleId.FrostboltFOF);
+                            spellList.Add(CycleId.FrBIL);
+                            spellList.Add(CycleId.FrostboltFOF);
                         }
                         else if (MageTalents.ArcaneEmpowerment > 0)
                         {
-                            list.Add(CycleId.AB2AM);
-                            list.Add(CycleId.AB3AM023MBAM);
-                            list.Add(CycleId.AB4AM0234MBAM);
+                            spellList.Add(CycleId.AB2AM);
+                            spellList.Add(CycleId.AB3AM023MBAM);
+                            spellList.Add(CycleId.AB4AM0234MBAM);
                             if (MageTalents.MissileBarrage > 0)
                             {
-                                list.Add(CycleId.ABSpam0234MBAM);
-                                list.Add(CycleId.ABSpam024MBAM);
-                                list.Add(CycleId.ABSpam034MBAM);
-                                list.Add(CycleId.ABSpam04MBAM);
+                                spellList.Add(CycleId.ABSpam0234MBAM);
+                                spellList.Add(CycleId.ABSpam024MBAM);
+                                spellList.Add(CycleId.ABSpam034MBAM);
+                                spellList.Add(CycleId.ABSpam04MBAM);
                             }
-                            list.Add(CycleId.ArcaneBlastSpam);
+                            spellList.Add(CycleId.ArcaneBlastSpam);
                         }
                         else
                         {
-                            list.Add(CycleId.ArcaneMissiles);
-                            list.Add(CycleId.Fireball);
-                            list.Add(CycleId.FrostboltFOF);
-                            if (CalculationOptions.PlayerLevel >= 75) list.Add(CycleId.FrostfireBoltFOF);
+                            spellList.Add(CycleId.ArcaneMissiles);
+                            spellList.Add(CycleId.Fireball);
+                            spellList.Add(CycleId.FrostboltFOF);
+                            if (CalculationOptions.PlayerLevel >= 75) spellList.Add(CycleId.FrostfireBoltFOF);
                         }
                     }
                     else
                     {
-                        list.Add(CycleId.ArcaneMissiles);
-                        list.Add(CycleId.Scorch);
-                        if (MageTalents.LivingBomb > 0) list.Add(CycleId.ScLBPyro);
+                        spellList.Add(CycleId.ArcaneMissiles);
+                        spellList.Add(CycleId.Scorch);
+                        if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.ScLBPyro);
                         if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
                         {
-                            list.Add(CycleId.FBPyro);
+                            spellList.Add(CycleId.FBPyro);
                         }
                         else
                         {
-                            list.Add(CycleId.Fireball);
+                            spellList.Add(CycleId.Fireball);
                         }
                         if (CalculationOptions.PlayerLevel >= 75)
                         {
-                            list.Add(CycleId.FrostfireBoltFOF);
-                            list.Add(CycleId.FFBPyro);
-                            if (MageTalents.LivingBomb > 0) list.Add(CycleId.FFBLBPyro);
+                            spellList.Add(CycleId.FrostfireBoltFOF);
+                            spellList.Add(CycleId.FFBPyro);
+                            if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FFBLBPyro);
                         }
-                        if (MageTalents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
-                        list.Add(CycleId.FrostboltFOF);
-                        if (MageTalents.BrainFreeze > 0) list.Add(CycleId.FrBFB);
+                        if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FBLBPyro);
+                        spellList.Add(CycleId.FrostboltFOF);
+                        if (MageTalents.BrainFreeze > 0) spellList.Add(CycleId.FrBFB);
                         if (MageTalents.FingersOfFrost > 0)
                         {
                             if (MageTalents.BrainFreeze > 0)
                             {
-                                list.Add(CycleId.FrBFBIL);
-                                list.Add(CycleId.FrBILFB);
+                                spellList.Add(CycleId.FrBFBIL);
+                                spellList.Add(CycleId.FrBILFB);
                             }
-                            list.Add(CycleId.FrBIL);
+                            spellList.Add(CycleId.FrBIL);
                             if (MageTalents.DeepFreeze > 0)
                             {
-                                list.Add(CycleId.FrBDFFBIL);
-                                list.Add(CycleId.FrBDFFFB);
+                                spellList.Add(CycleId.FrBDFFBIL);
+                                spellList.Add(CycleId.FrBDFFFB);
                             }
                         }
-                        list.Add(CycleId.AB2AM);
-                        list.Add(CycleId.AB3AM023MBAM);
-                        list.Add(CycleId.AB4AM0234MBAM);
+                        spellList.Add(CycleId.AB2AM);
+                        spellList.Add(CycleId.AB3AM023MBAM);
+                        spellList.Add(CycleId.AB4AM0234MBAM);
                         if (MageTalents.MissileBarrage > 0)
                         {
-                            list.Add(CycleId.ABSpam0234MBAM);
-                            list.Add(CycleId.ABSpam024MBAM);
-                            list.Add(CycleId.ABSpam034MBAM);
-                            list.Add(CycleId.ABSpam04MBAM);
+                            spellList.Add(CycleId.ABSpam0234MBAM);
+                            spellList.Add(CycleId.ABSpam024MBAM);
+                            spellList.Add(CycleId.ABSpam034MBAM);
+                            spellList.Add(CycleId.ABSpam04MBAM);
                         }
-                        list.Add(CycleId.ArcaneBlastSpam);
+                        spellList.Add(CycleId.ArcaneBlastSpam);
                         /*list.Add(CycleId.ArcaneBlastSpam);
                         list.Add(CycleId.ABAM);
                         list.Add(CycleId.AB2AM);
@@ -4932,16 +5150,15 @@ namespace Rawr.Mage
                 }
                 if (CalculationOptions.AoeDuration > 0)
                 {
-                    list.Add(CycleId.ArcaneExplosion);
-                    list.Add(CycleId.FlamestrikeSpammed);
-                    list.Add(CycleId.FlamestrikeSingle);
-                    list.Add(CycleId.Blizzard);
-                    list.Add(CycleId.ConeOfCold);
-                    if (MageTalents.BlastWave == 1) list.Add(CycleId.BlastWave);
-                    if (MageTalents.DragonsBreath == 1) list.Add(CycleId.DragonsBreath);
+                    spellList.Add(CycleId.ArcaneExplosion);
+                    spellList.Add(CycleId.FlamestrikeSpammed);
+                    spellList.Add(CycleId.FlamestrikeSingle);
+                    spellList.Add(CycleId.Blizzard);
+                    spellList.Add(CycleId.ConeOfCold);
+                    if (MageTalents.BlastWave == 1) spellList.Add(CycleId.BlastWave);
+                    if (MageTalents.DragonsBreath == 1) spellList.Add(CycleId.DragonsBreath);
                 }
-            }
-            spellList = list;
+            }            
         }
 
         // http://tekpool.wordpress.com/category/bit-count/
@@ -4969,19 +5186,24 @@ namespace Rawr.Mage
         {
             BaseState = CastingState.New(this, 0, false, 0);
 
-            List<CastingState> list;
-
+            if (stateList == null)
+            {
+                stateList = new List<CastingState>(64);
+            }
+            else
+            {
+                stateList.Clear();
+            }
             if (useIncrementalOptimizations)
             {
                 int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
-                list = new List<CastingState>(2 * sortedStates.Length);
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
                 {
                     // incremental index is filtered by non-item based cooldowns
                     int incrementalSetIndex = sortedStates[incrementalSortedIndex];
                     bool mf = (incrementalSetIndex & (int)StandardEffect.MoltenFury) != 0;
                     bool heroism = (incrementalSetIndex & (int)StandardEffect.Heroism) != 0;
-                    int itemBasedMax = 1 << ItemBasedEffectCooldowns.Length;
+                    int itemBasedMax = 1 << ItemBasedEffectCooldownsCount;
                     for (int index = 0; index < itemBasedMax; index++)
                     {
                         int combinedIndex = incrementalSetIndex | (index << standardEffectCount);
@@ -5002,11 +5224,11 @@ namespace Rawr.Mage
                                 {
                                     if (combinedIndex == 0)
                                     {
-                                        list.Add(BaseState);
+                                        stateList.Add(BaseState);
                                     }
                                     else
                                     {
-                                        list.Add(CastingState.New(this, combinedIndex, false, 0));
+                                        stateList.Add(CastingState.New(this, combinedIndex, false, 0));
                                     }
                                 }
                             }
@@ -5016,7 +5238,6 @@ namespace Rawr.Mage
             }
             else
             {
-                list = new List<CastingState>(64);
                 for (int incrementalSetIndex = 0; incrementalSetIndex <= availableCooldownMask; incrementalSetIndex++)
                 {
                     if (((incrementalSetIndex) & availableCooldownMask) == (incrementalSetIndex)) // make sure all are available
@@ -5038,18 +5259,17 @@ namespace Rawr.Mage
                             {
                                 if (incrementalSetIndex == 0)
                                 {
-                                    list.Add(BaseState);
+                                    stateList.Add(BaseState);
                                 }
                                 else
                                 {
-                                    list.Add(CastingState.New(this, incrementalSetIndex, false, 0));
+                                    stateList.Add(CastingState.New(this, incrementalSetIndex, false, 0));
                                 }
                             }
                         }
                     }
                 }
             }
-            stateList = list;
         }
         #endregion
 
@@ -5073,12 +5293,15 @@ namespace Rawr.Mage
 
             displayCalculations.CooldownList = new List<EffectCooldown>(CooldownList);
             displayCalculations.EffectCooldown = new Dictionary<int,EffectCooldown>(EffectCooldown);
-            displayCalculations.ItemBasedEffectCooldowns = (EffectCooldown[])ItemBasedEffectCooldowns.Clone();
+            displayCalculations.ItemBasedEffectCooldowns = new EffectCooldown[ItemBasedEffectCooldownsCount];
+            Array.Copy(ItemBasedEffectCooldowns, 0, displayCalculations.ItemBasedEffectCooldowns, 0, ItemBasedEffectCooldownsCount);
 
             displayCalculations.SegmentList = new List<Segment>(SegmentList);
-            
-            displayCalculations.SpellPowerEffects = (SpecialEffect[])SpellPowerEffects.Clone();
-            displayCalculations.HasteRatingEffects = (SpecialEffect[])HasteRatingEffects.Clone();
+
+            displayCalculations.SpellPowerEffects = new SpecialEffect[SpellPowerEffectsCount];
+            Array.Copy(SpellPowerEffects, 0, displayCalculations.SpellPowerEffects, 0, SpellPowerEffectsCount);
+            displayCalculations.HasteRatingEffects = new SpecialEffect[HasteRatingEffectsCount];
+            Array.Copy(HasteRatingEffects, 0, displayCalculations.HasteRatingEffects, 0, HasteRatingEffectsCount);
 
             displayCalculations.BaseGlobalCooldown = BaseGlobalCooldown;
 

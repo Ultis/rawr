@@ -11,7 +11,6 @@ namespace Rawr.Mage
             DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
             float K;
             cycle.Name = "FBPyro";
-            cycle.AffectedByFlameCap = true;
 
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
@@ -199,7 +198,6 @@ namespace Rawr.Mage
             float K;
             float C;
             cycle.Name = "FBLBPyro";
-            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             LB = castingState.GetSpell(SpellId.LivingBomb);
@@ -367,7 +365,6 @@ namespace Rawr.Mage
             float X;
             float K;
             cycle.Name = "FFBLBPyro";
-            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             LB = castingState.GetSpell(SpellId.LivingBomb);
@@ -467,7 +464,6 @@ namespace Rawr.Mage
             float K;
             cycle.Name = "ScLBPyro";
             cycle.ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
-            cycle.AffectedByFlameCap = true;
 
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
@@ -560,7 +556,6 @@ namespace Rawr.Mage
             Spell FFB;
             float K;
             cycle.Name = "FFBPyro";
-            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
@@ -637,7 +632,6 @@ namespace Rawr.Mage
             float X;
             cycle.Name = "FBScPyro";
             cycle.ProvidesScorch = true;
-            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -802,7 +796,6 @@ namespace Rawr.Mage
             float Y;
             cycle.Name = "FBScLBPyro";
             cycle.ProvidesScorch = true;
-            cycle.AffectedByFlameCap = true;
 
             FB = castingState.GetSpell(SpellId.Fireball);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -1040,7 +1033,6 @@ namespace Rawr.Mage
             float Y;
             cycle.Name = "FFBScLBPyro";
             cycle.ProvidesScorch = true;
-            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -1209,7 +1201,6 @@ namespace Rawr.Mage
             float X;
             cycle.Name = "FFBScPyro";
             cycle.ProvidesScorch = true;
-            cycle.AffectedByFlameCap = true;
 
             FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = castingState.GetSpell(SpellId.Scorch);

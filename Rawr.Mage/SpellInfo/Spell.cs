@@ -187,9 +187,6 @@ namespace Rawr.Mage
 
         // Properties pulling data directly from template
         public string Name { get { return template.Name; } }
-        public bool AffectedByFlameCap { get { return template.AffectedByFlameCap; } }
-        public bool ProvidesSnare { get { return template.ProvidesSnare; } }
-        public bool ProvidesScorch { get { return template.ProvidesScorch; } }
         public bool AreaEffect { get { return template.AreaEffect; } }
         public bool Channeled { get { return template.Channeled; } }
         public float Ticks { get { return template.Ticks; } }
@@ -314,7 +311,6 @@ namespace Rawr.Mage
                 damagePerSecond = spell.AverageDamage / spell.CastTime;
                 threatPerSecond = spell.AverageDamage / spell.CastTime;
                 costPerSecond = spell.AverageCost / spell.CastTime;
-                AffectedByFlameCap = spell.AffectedByFlameCap;
                 OO5SR = spell.OO5SR;
                 AreaEffect = spell.AreaEffect;
                 DpsPerSpellPower = spell.DamagePerSpellPower / spell.CastTime;
@@ -531,8 +527,9 @@ namespace Rawr.Mage
             // add crit rate for on use stacking crit effects (would be better if it was computed
             // on cycle level, but right now the architecture doesn't allow that too well)
             // we'd actually need some iterations of this as cast time can depend on crit etc, just ignore that for now
-            foreach (EffectCooldown effectCooldown in castingState.Solver.StackingNonHasteEffectCooldowns)
+            for (int i = 0; i < castingState.Solver.StackingNonHasteEffectCooldownsCount; i++)
             {
+                EffectCooldown effectCooldown = castingState.Solver.StackingNonHasteEffectCooldowns[i];
                 if (castingState.EffectsActive(effectCooldown.Mask))
                 {
                     foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())

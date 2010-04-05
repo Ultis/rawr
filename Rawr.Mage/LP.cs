@@ -1039,63 +1039,7 @@ namespace Rawr.Mage
 
         private bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
         {
-            // w = U \ (L \ A(:,j));
-            int maxcol = V[incoming];
-            if (maxcol < cols)
-            {
-#if SILVERLIGHT
-                int i = 0;
-                for (; i < baseRows; i++)
-                {
-                    w[i] = a[i + maxcol * baseRows];
-                }
-                for (int k = 0; k < numExtraConstraints; k++, i++)
-                {
-                    w[i] = pD[k][maxcol];
-                }
-#else                
-                //Copy(w, a + (maxcol * baseRows), baseRows);
-                const int c = ~3;
-                int trunc = baseRows & c;
-                double* source = a + (maxcol * baseRows);
-                double* wk = w;
-                double* arr1 = wk + trunc;
-                double* arr2 = wk + baseRows;
-                for (; wk < arr1; wk += 4, source += 4)
-                {
-                    wk[0] = source[0];
-                    wk[1] = source[1];
-                    wk[2] = source[2];
-                    wk[3] = source[3];
-                }
-                for (; wk < arr2; wk++, source++)
-                {
-                    *wk = *source;
-                }
-                if (numExtraConstraints > 0)
-                {
-                    //double* wk = w + baseRows;
-                    double* wkend = wk + numExtraConstraints;
-                    double** pdk = pD;
-                    for (; wk < wkend; wk++, pdk++)
-                    {
-                        *wk = (*pdk)[maxcol];
-                    }
-                }
-#endif
-            }
-            else
-            {
-                Zero(w, rows);
-                w[maxcol - cols] = 1.0;
-                /*for (int i = 0; i < rows; i++)
-                {
-                    w[i] = (i == maxcol - cols) ? 1.0 : 0.0;
-                }*/
-            }
-            //lu.FSolve(w);
-            lu.FSolveL(w, ww);
-            lu.FSolveU(ww, w);
+            ComputePrimalRowLimits(incoming);
 
             // min over i of d[i]/w[i] where w[i]>0
             double minrr = double.PositiveInfinity;
@@ -1174,6 +1118,67 @@ namespace Rawr.Mage
                 }
             }
             return true;
+        }
+
+        private void ComputePrimalRowLimits(int incoming)
+        {
+            // w = U \ (L \ A(:,j));
+            int maxcol = V[incoming];
+            if (maxcol < cols)
+            {
+#if SILVERLIGHT
+                int i = 0;
+                for (; i < baseRows; i++)
+                {
+                    w[i] = a[i + maxcol * baseRows];
+                }
+                for (int k = 0; k < numExtraConstraints; k++, i++)
+                {
+                    w[i] = pD[k][maxcol];
+                }
+#else
+                Copy(w, a + (maxcol * baseRows), baseRows);
+                /*const int c = ~3;
+                int trunc = baseRows & c;
+                double* source = a + (maxcol * baseRows);
+                double* wk = w;
+                double* arr1 = wk + trunc;
+                double* arr2 = wk + baseRows;
+                for (; wk < arr1; wk += 4, source += 4)
+                {
+                    wk[0] = source[0];
+                    wk[1] = source[1];
+                    wk[2] = source[2];
+                    wk[3] = source[3];
+                }
+                for (; wk < arr2; wk++, source++)
+                {
+                    *wk = *source;
+                }*/
+                if (numExtraConstraints > 0)
+                {
+                    double* wk = w + baseRows;
+                    double* wkend = wk + numExtraConstraints;
+                    double** pdk = pD;
+                    for (; wk < wkend; wk++, pdk++)
+                    {
+                        *wk = (*pdk)[maxcol];
+                    }
+                }
+#endif
+            }
+            else
+            {
+                Zero(w, rows);
+                w[maxcol - cols] = 1.0;
+                /*for (int i = 0; i < rows; i++)
+                {
+                    w[i] = (i == maxcol - cols) ? 1.0 : 0.0;
+                }*/
+            }
+            //lu.FSolve(w);
+            lu.FSolveL(w, ww);
+            lu.FSolveU(ww, w);
         }
 
         private int SelectDualOutgoing(bool phaseI, out double delta, out int bound)

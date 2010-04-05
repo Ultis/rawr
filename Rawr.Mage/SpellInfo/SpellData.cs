@@ -122,7 +122,7 @@ namespace Rawr.Mage
         private static readonly string[] validBuffs = new string[] { "Ferocious Inspiration", "Sanctified Retribution", "Improved Moonkin Form", "Swift Retribution", "Elemental Oath", "Moonkin Form", "Wrath of Air Totem", "Demonic Pact", "Flametongue Totem", "Enhancing Totems (Spell Power)", "Totem of Wrath (Spell Power)", "Heart of the Crusader", "Master Poisoner", "Totem of Wrath", "Winter's Chill", "Improved Scorch", "Improved Shadow Bolt", "Curse of the Elements", "Earth and Moon", "Ebon Plaguebringer", "Improved Faerie Fire", "Misery" };
         float baseDamage, baseHaste, dpspBase, multiplier;
 
-        public WaterboltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Waterbolt";
             waterElementalBuffs = new Stats();
@@ -148,6 +148,7 @@ namespace Rawr.Mage
             PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, RealResistance, 0));
             multiplier *= PartialResistFactor * (1 + 0.5f * spellCrit);
             dpspBase = ((1f / 3f) * 5f / 6f) * multiplier;
+            Dirty = false;
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -170,7 +171,7 @@ namespace Rawr.Mage
     {
         float baseDamageBlast, baseDamageBolt, boltMultiplier, blastMultiplier, castTime, multiplier, dpsp;
 
-        public MirrorImageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Mirror Image";
             // these buffs are independent of casting state, so things that depend on them can be calculated only once and then reused
@@ -191,6 +192,7 @@ namespace Rawr.Mage
             castTime = (2 * 3.0f + 1.5f) / haste;
             multiplier = (solver.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit);
             dpsp = multiplier * (2 * (1f / 3f * 0.3f) * boltMultiplier + (1f / 3f * 0.15f) * blastMultiplier);
+            Dirty = false;
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -291,7 +293,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public FireBlastTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Fire Blast";
             InitializeCastTime(false, true, 0, 8);
@@ -299,6 +301,7 @@ namespace Rawr.Mage
             Cooldown -= 1.0f * solver.MageTalents.ImprovedFireBlast;
             BaseCritRate += 0.02f * solver.MageTalents.Incineration;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+            Dirty = false;
         }
     }
 
@@ -334,7 +337,7 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public ScorchTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Scorch";
             InitializeCastTime(false, false, 1.5f, 0);
@@ -346,6 +349,7 @@ namespace Rawr.Mage
             {
                 BaseSpellModifier *= 1.2f;
             }
+            Dirty = false;
         }
     }
 
@@ -379,13 +383,14 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public FlamestrikeTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Flamestrike";
             InitializeCastTime(false, false, 2, 0);
             InitializeDamage(solver, true, 30, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions), 1, 1, 8f);
             DotTickInterval = 2;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+            Dirty = false;
         }
     }
 
@@ -411,11 +416,12 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ConjureManaGemTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Conjure Mana Gem";
             InitializeCastTime(false, false, 3, 0);
             InitializeDamage(solver, false, 0, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), 0, 1, 0);
+            Dirty = false;
         }
     }
 
@@ -462,11 +468,12 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public FireWardTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Fire Ward";
             InitializeCastTime(false, true, 0, 30);
             InitializeDamage(solver, false, 0, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions), 0, 1, 0);
+            Dirty = false;
         }
     }
 
@@ -508,11 +515,12 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public FrostWardTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Frost Ward";
             InitializeCastTime(false, true, 0, 30);
             InitializeDamage(solver, false, 0, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions), 0, 1, 0);
+            Dirty = false;
         }
     }
 
@@ -538,11 +546,12 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public FrostNovaTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Frost Nova";
             InitializeCastTime(false, true, 0, 25);
             InitializeDamage(solver, true, 0, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions));
+            Dirty = false;
         }
     }
 
@@ -604,7 +613,7 @@ namespace Rawr.Mage
             return GetSpell(castingState, false);
         }
 
-        public FrostboltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Frostbolt";
             InitializeCastTime(false, false, 3, 0);
@@ -623,6 +632,7 @@ namespace Rawr.Mage
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             NukeProcs = 1;
+            Dirty = false;
         }
     }
 
@@ -651,7 +661,7 @@ namespace Rawr.Mage
         //float fingersOfFrostCritRate;
 
         // 30 sec cooldown!!!
-        public DeepFreezeTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Deep Freeze";
             InitializeCastTime(false, true, 0, 30);
@@ -663,6 +673,7 @@ namespace Rawr.Mage
             // deep freeze can only be cast in frozen state
             //float fof = (calculations.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * calculations.MageTalents.FingersOfFrost);
             //fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (calculations.MageTalents.Shatter == 3 ? 0.5f : 0.17f * calculations.MageTalents.Shatter);
+            Dirty = false;
         }
 
         /*public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
@@ -723,7 +734,7 @@ namespace Rawr.Mage
 
         float tormentTheWeak;
 
-        public FireballTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Fireball";
             InitializeCastTime(false, false, 3.5f, 0);
@@ -742,6 +753,7 @@ namespace Rawr.Mage
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             NukeProcs = 1;
+            Dirty = false;
         }
     }
 
@@ -787,7 +799,7 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public FrostfireBoltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Frostfire Bolt";
             InitializeCastTime(false, false, 3.0f, 0);
@@ -806,6 +818,7 @@ namespace Rawr.Mage
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             NukeProcs = 1;
+            Dirty = false;
         }
     }
 
@@ -852,7 +865,7 @@ namespace Rawr.Mage
 
         float tormentTheWeak;
 
-        public PyroblastTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Pyroblast";
             InitializeCastTime(false, false, 5f, 0);
@@ -862,6 +875,7 @@ namespace Rawr.Mage
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
+            Dirty = false;
         }
     }
 
@@ -911,7 +925,7 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public LivingBombTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Living Bomb";
             InitializeCastTime(false, true, 0f, 0f);
@@ -920,6 +934,7 @@ namespace Rawr.Mage
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier -= 0.02f * solver.MageTalents.FirePower; // Living Bomb dot does not benefit from Fire Power
             BaseDirectDamageModifier *= (1 + 0.02f * solver.MageTalents.FirePower);
+            Dirty = false;
         }
     }
 
@@ -946,11 +961,12 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public SlowTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Slow";
             InitializeCastTime(false, true, 0f, 0f);
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
+            Dirty = false;
         }
     }
 
@@ -982,7 +998,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ConeOfColdTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Cone of Cold";
             InitializeCastTime(false, true, 0, 10);
@@ -992,6 +1008,7 @@ namespace Rawr.Mage
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             BaseCritRate += 0.02f * solver.MageTalents.Incineration;
+            Dirty = false;
         }
     }
 
@@ -1036,13 +1053,14 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public IceLanceTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Ice Lance";
             InitializeCastTime(false, true, 0, 0);
             InitializeDamage(solver, false, 30, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions));
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             BaseSpellModifier *= (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
+            Dirty = false;
         }
     }
 
@@ -1081,7 +1099,7 @@ namespace Rawr.Mage
         private float arcaneBlastDamageMultiplier;
         private float tormentTheWeak;
 
-        public ArcaneBarrageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Barrage";
             InitializeCastTime(false, true, 0, 3);
@@ -1092,6 +1110,7 @@ namespace Rawr.Mage
             {
                 BaseCostAmplifier *= 0.8f; // TODO is it additive or multiplicative?
             }
+            Dirty = false;
         }
     }
 
@@ -1214,7 +1233,7 @@ namespace Rawr.Mage
         private float arcaneBlastDamageMultiplier;
         private float tormentTheWeak;
 
-        public ArcaneBlastTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Blast";
             InitializeCastTime(false, false, 2.5f, 0);
@@ -1230,6 +1249,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
             NukeProcs = 1;
+            Dirty = false;
         }
     }
 
@@ -1408,9 +1428,9 @@ namespace Rawr.Mage
         }
 
         float tormentTheWeak;
-        float arcaneBlastDamageMultiplier;        
+        float arcaneBlastDamageMultiplier;
 
-        public ArcaneMissilesTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Missiles";
             InitializeCastTime(true, false, 5, 0);
@@ -1428,6 +1448,7 @@ namespace Rawr.Mage
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             // Arcane Potency bug
             BaseCritRate -= 0.8f * 0.15f * 0.02f * solver.MageTalents.ArcaneConcentration * solver.MageTalents.ArcanePotency;
+            Dirty = false;
         }
     }
 
@@ -1453,7 +1474,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ArcaneExplosionTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Explosion";
             InitializeCastTime(false, true, 0, 0);
@@ -1461,6 +1482,7 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+            Dirty = false;
         }
     }
 
@@ -1487,13 +1509,14 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public BlastWaveTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Blast Wave";
             InitializeCastTime(false, true, 0, 30);
             InitializeDamage(solver, true, 0, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+            Dirty = false;
         }
     }
 
@@ -1520,12 +1543,13 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public DragonsBreathTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Dragon's Breath";
             InitializeCastTime(false, true, 0, 20);
             InitializeDamage(solver, true, 0, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+            Dirty = false;
         }
     }
 
@@ -1551,7 +1575,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public BlizzardTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
@@ -1564,133 +1588,145 @@ namespace Rawr.Mage
                 //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+            Dirty = false;
         }
     }
 
     // lightning capacitor
     public class LightningBoltTemplate : SpellTemplate
     {
-        public LightningBoltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Lightning Bolt";
             InitializeEffectDamage(solver, MagicSchool.Nature, 694, 806);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            Dirty = false;
         }
     }
 
     // lightning capacitor
     public class ThunderBoltTemplate : SpellTemplate
     {
-        public ThunderBoltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Lightning Bolt";
             InitializeEffectDamage(solver, MagicSchool.Nature, 1181, 1371);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            Dirty = false;
         }
     }
 
     // Shattered Sun Pendant of Acumen
     public class ArcaneBoltTemplate : SpellTemplate
     {
-        public ArcaneBoltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Bolt";
             InitializeEffectDamage(solver, MagicSchool.Arcane, 333, 367);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            Dirty = false;
         }
     }
 
     // Pendulum of Telluric Currents
     public class PendulumOfTelluricCurrentsTemplate : SpellTemplate
     {
-        public PendulumOfTelluricCurrentsTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Pendulum of Telluric Currents";
             InitializeEffectDamage(solver, MagicSchool.Shadow, 1168, 1752);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            Dirty = false;
         }
     }
 
     // Lightweave Embroidery
     public class LightweaveBoltTemplate : SpellTemplate
     {
-        public LightweaveBoltTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Lightweave Bolt";
             InitializeEffectDamage(solver, MagicSchool.Holy, 1000, 1200);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            Dirty = false;
         }
     }
 
     public class ArcaneDamageTemplate : SpellTemplate
     {
-        public ArcaneDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Arcane Damage";
             InitializeEffectDamage(solver, MagicSchool.Arcane, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusArcaneDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
     public class FireDamageTemplate : SpellTemplate
     {
-        public FireDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Fire Damage";
             InitializeEffectDamage(solver, MagicSchool.Fire, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusFireDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
     public class FrostDamageTemplate : SpellTemplate
     {
-        public FrostDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Frost Damage";
             InitializeEffectDamage(solver, MagicSchool.Frost, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusFrostDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
     public class ShadowDamageTemplate : SpellTemplate
     {
-        public ShadowDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Shadow Damage";
             InitializeEffectDamage(solver, MagicSchool.Shadow, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusShadowDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
     public class NatureDamageTemplate : SpellTemplate
     {
-        public NatureDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Nature Damage";
             InitializeEffectDamage(solver, MagicSchool.Nature, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusNatureDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
     public class HolyDamageTemplate : SpellTemplate
     {
-        public HolyDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Holy Damage";
             InitializeEffectDamage(solver, MagicSchool.Holy, 1, 1);
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusHolyDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
+            Dirty = false;
         }
     }
 
@@ -1698,7 +1734,7 @@ namespace Rawr.Mage
     {
         public float Multiplier;
 
-        public ValkyrDamageTemplate(Solver solver)
+        public void Initialize(Solver solver)
         {
             Name = "Valkyr Damage";
             // TODO recheck all buffs that apply
@@ -1707,6 +1743,7 @@ namespace Rawr.Mage
             RealResistance = solver.CalculationOptions.HolyResist;
             PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(solver.CalculationOptions.PlayerLevel, solver.CalculationOptions.TargetLevel, RealResistance, 0));
             Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 0.5f * spellCrit);
+            Dirty = false;
         }
     }
 }

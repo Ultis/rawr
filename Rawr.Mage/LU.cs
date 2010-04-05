@@ -223,9 +223,6 @@ namespace Rawr.Mage
 
 #if SILVERLIGHT
         public void FSolveU(double[] b, double[] c)
-#else
-        public unsafe void FSolveU(double* b, double* c)
-#endif
         {
             int i, k;
             for (i = 0; i < size; i++)
@@ -250,6 +247,64 @@ namespace Rawr.Mage
                 c[Q[i]] = c2[i];
             }
         }
+#else
+        private static unsafe void Copy(double* dest, double* source, int size)
+        {
+            const int c = ~3;
+            int trunc = size & c;
+            double* arr1 = dest + trunc;
+            double* arr2 = dest + size;
+            for (; dest < arr1; dest += 4, source += 4)
+            {
+                dest[0] = source[0];
+                dest[1] = source[1];
+                dest[2] = source[2];
+                dest[3] = source[3];
+            }
+            for (; dest < arr2; dest++, source++)
+            {
+                *dest = *source;
+            }
+        }
+
+        public unsafe void FSolveU(double* b, double* c)
+        {
+            int size = this.size;
+            double* U = this.U;
+            double* c2 = this.c2;
+            Copy(c2, b, size);
+            double* c2i;
+            for (int k = size - 1; k >= 0; k--)
+            {
+                double div = U[k * size + k];
+                double* c2k = c2 + k;
+                double c2kv = *c2k;
+                if (div != 0 && Math.Abs(c2kv) > 0.000001)
+                {
+                    c2kv /= div;
+                    *c2k = c2kv;
+                    c2i = c2;
+                    double* Uik = U + k;
+                    for (; c2i < c2k; c2i++, Uik += size)
+                    {
+                        *c2i -= c2kv * *Uik;
+                    }
+                }
+                else
+                {
+                    *c2k = 0; // value underspecified
+                }
+            }
+            // shuffle Q
+            int* Qi = Q;
+            int* Qend = Qi + size;
+            c2i = c2;
+            for (; Qi < Qend; Qi++, c2i++)
+            {
+                c[*Qi] = *c2i;
+            }
+        }
+#endif
 
 #if SILVERLIGHT
         public void FSolveL(double[] b, double[] c)

@@ -1902,7 +1902,6 @@ namespace Rawr.Mage
             float X;
             Name = "ABABarSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             ABABar = castingState.GetCycle(CycleId.ABABar0C);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -1947,7 +1946,6 @@ namespace Rawr.Mage
             float X;
             Name = "ABABarCSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             ABABarC = castingState.GetCycle(CycleId.ABABar1C);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -1992,7 +1990,6 @@ namespace Rawr.Mage
             float X;
             Name = "ABAMABarSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             ABAMABar = castingState.GetCycle(CycleId.ABAMABar);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -2037,7 +2034,6 @@ namespace Rawr.Mage
             float X;
             Name = "AB3AMABarSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             AB3AMABar = castingState.GetCycle(CycleId.AB3AMABar);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -2082,7 +2078,6 @@ namespace Rawr.Mage
             float X;
             Name = "AB3ABarCSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             AB3ABarC = castingState.GetCycle(CycleId.AB3ABar3C);
             Sc = castingState.GetSpell(SpellId.Scorch);
@@ -2127,7 +2122,6 @@ namespace Rawr.Mage
             float X;
             Name = "AB3MBAMABarSc";
             ProvidesScorch = true;
-            AffectedByFlameCap = true;
 
             AB3MBAMABar = castingState.GetCycle(CycleId.ABSpam3C);
             Sc = castingState.GetSpell(SpellId.Scorch);

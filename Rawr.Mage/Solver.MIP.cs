@@ -723,8 +723,9 @@ namespace Rawr.Mage
                 if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, CombustionCooldown + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
                 if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                     if (!ValidateCooldown(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, true, cooldown.Duration, cooldown.SegmentConstraints, VariableType.None)) return false;
                 }
                 // mana gem effect
@@ -779,8 +780,9 @@ namespace Rawr.Mage
                 if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, CombustionCooldown + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
                 if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                     if (!ValidateCooldown(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, true, cooldown.Duration, cooldown.SegmentConstraints, VariableType.None)) return false;
                 }
                 // mana gem effect
@@ -839,8 +841,9 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced((int)StandardEffect.IcyVeins, 20.0, IcyVeinsCooldown, VariableType.None)) return false;
                 if (powerInfusionAvailable && !ValidateCooldownAdvanced((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, VariableType.None)) return false;
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                     if (!ValidateCooldownAdvanced(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120.0, VariableType.None)) return false;
@@ -866,8 +869,9 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.IcyVeins, 20.0, IcyVeinsCooldown, VariableType.None)) return false;
                 if (powerInfusionAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, VariableType.None)) return false;
-                foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
+                for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
+                    EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                     if (!ValidateCooldownAdvanced2(cooldown.Mask, cooldown.Duration, cooldown.Cooldown, VariableType.None)) return false;
                 }
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120.0, VariableType.None)) return false;
@@ -978,7 +982,7 @@ namespace Rawr.Mage
                     ind = 22;
                     break;
                 default:
-                    for (int i = 0; i < ItemBasedEffectCooldowns.Length; i++)
+                    for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                     {
                         EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
                         if (effectsMask == cooldown.Mask)
@@ -1039,7 +1043,7 @@ namespace Rawr.Mage
         private void AnalyzeSolution()
         {
             manaList = new double[SegmentList.Count];
-            segmentCooldownCount = new double[23 + ItemBasedEffectCooldowns.Length][];
+            segmentCooldownCount = new double[23 + ItemBasedEffectCooldownsCount][];
             hexList = new List<int>[SegmentList.Count];
             segmentFilled = new double[SegmentList.Count];
             hexMask = new int[SegmentList.Count];

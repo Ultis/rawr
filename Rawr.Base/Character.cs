@@ -191,24 +191,36 @@ namespace Rawr //O O . .
 			get 
             {
                 ICalculationOptionBase ret;
-                _calculationOptions.TryGetValue(CurrentModel, out ret);
-                if (ret == null && _serializedCalculationOptions != null && _serializedCalculationOptions.ContainsKey(CurrentModel)) 
+                if (_calculationOptions.TryGetValue(CurrentModel, out ret))
                 {
-                    ret = Calculations.GetModel(CurrentModel)
-                        .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
-
-                    // set parent Character for models that need backward link
-                    ICharacterCalculationOptions characterCalculationOptions =
-                        ret as ICharacterCalculationOptions;
-                    if (characterCalculationOptions != null)
-                        characterCalculationOptions.Character = this;
-
-                    _calculationOptions[CurrentModel] = ret;
+                    return ret;
                 }
-                return ret;
+                else
+                {
+                    return LoadCalculationOptions();
+                }
 			}
 			set { _calculationOptions[CurrentModel] = value; }
 		}
+
+        private ICalculationOptionBase LoadCalculationOptions()
+        {
+            if (_serializedCalculationOptions != null && _serializedCalculationOptions.ContainsKey(CurrentModel))
+            {
+                ICalculationOptionBase ret = Calculations.GetModel(CurrentModel)
+                    .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
+
+                // set parent Character for models that need backward link
+                ICharacterCalculationOptions characterCalculationOptions =
+                    ret as ICharacterCalculationOptions;
+                if (characterCalculationOptions != null)
+                    characterCalculationOptions.Character = this;
+
+                _calculationOptions[CurrentModel] = ret;
+                return ret;
+            }
+            return null;
+        }
 
         [XmlElement("Boss")]
         public BossHandler SerializableBoss {

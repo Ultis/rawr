@@ -543,8 +543,9 @@ namespace Rawr.Mage
             // construct possible proc combinations
             Cycle baseCycle = GetNewCycle(cycleId);
             // on use stacking items
-            foreach (EffectCooldown effectCooldown in Solver.StackingHasteEffectCooldowns)
+            for (int i = 0; i < Solver.StackingHasteEffectCooldownsCount; i++)
             {
+                EffectCooldown effectCooldown = Solver.StackingHasteEffectCooldowns[i];
                 if (EffectsActive(effectCooldown.Mask))
                 {
                     foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
@@ -582,14 +583,16 @@ namespace Rawr.Mage
                     }
                 }
             }
-            int N = Solver.HasteRatingEffects.Length;
+            int N = Solver.HasteRatingEffectsCount;
+            SpecialEffect[] hasteRatingEffects = new SpecialEffect[N];
+            Array.Copy(Solver.HasteRatingEffects, 0, hasteRatingEffects, 0, N);
             if (baseProcHaste == 0 && N == 0) return baseCycle;
             float[] triggerInterval = new float[N];
             float[] triggerChance = new float[N];
             float[] offset = new float[N];
             for (int i = 0; i < N; i++)
             {
-                SpecialEffect effect = Solver.HasteRatingEffects[i];
+                SpecialEffect effect = hasteRatingEffects[i];
                 float procs = 0.0f;
                 switch (effect.Trigger)
                 {
@@ -609,7 +612,7 @@ namespace Rawr.Mage
                 triggerInterval[i] = baseCycle.CastTime / baseCycle.Ticks;
                 triggerChance[i] = procs / baseCycle.Ticks;
             }
-            WeightedStat[] result = SpecialEffect.GetAverageCombinedUptimeCombinations(Solver.HasteRatingEffects, triggerInterval, triggerChance, offset, 3.0f, CalculationOptions.FightDuration, AdditiveStat.HasteRating);
+            WeightedStat[] result = SpecialEffect.GetAverageCombinedUptimeCombinations(hasteRatingEffects, triggerInterval, triggerChance, offset, 3.0f, CalculationOptions.FightDuration, AdditiveStat.HasteRating);
             if (HasteProcs == null)
             {
                 HasteProcs = new CastingState[result.Length];

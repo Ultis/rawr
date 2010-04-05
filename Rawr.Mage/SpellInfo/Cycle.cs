@@ -159,7 +159,6 @@ namespace Rawr.Mage
             DpsPerSpellPower = 0;
             Absorbed = 0;
 
-            AffectedByFlameCap = false;
             ProvidesSnare = false;
             ProvidesScorch = false;
 
@@ -236,7 +235,6 @@ namespace Rawr.Mage
         public float Absorbed;
         public float DpsPerSpellPower;
 
-        public bool AffectedByFlameCap;
         public bool ProvidesSnare;
         public bool ProvidesScorch;
 
@@ -294,8 +292,9 @@ namespace Rawr.Mage
             float spellPower = 0;
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Solver.SpellPowerEffects)
+                for (int i = 0; i < CastingState.Solver.SpellPowerEffectsCount; i++)
                 {
+                    SpecialEffect effect = CastingState.Solver.SpellPowerEffects[i];
                     switch (effect.Trigger)
                     {
                         case Trigger.DamageSpellCrit:
@@ -359,8 +358,9 @@ namespace Rawr.Mage
             }
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Solver.DamageProcEffects)
+                for (int i = 0; i < CastingState.Solver.DamageProcEffectsCount; i++)
                 {
+                    SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
                     float chance = 0;
                     float interval = 0;
                     switch (effect.Trigger)
@@ -492,8 +492,9 @@ namespace Rawr.Mage
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR);
             float fight = CastingState.CalculationOptions.FightDuration;
-            foreach (SpecialEffect effect in CastingState.Solver.ManaRestoreEffects)
+            for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
+                SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
@@ -535,8 +536,9 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            foreach (SpecialEffect effect in CastingState.Solver.Mp5Effects)
+            for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
+                SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
@@ -616,8 +618,9 @@ namespace Rawr.Mage
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             //dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs;
             float fight = CastingState.CalculationOptions.FightDuration;
-            foreach (SpecialEffect effect in CastingState.Solver.ManaRestoreEffects)
+            for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
+                SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
@@ -659,8 +662,9 @@ namespace Rawr.Mage
                         break;
                 }
             }
-            foreach (SpecialEffect effect in CastingState.Solver.Mp5Effects)
+            for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
+                SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
@@ -739,8 +743,9 @@ namespace Rawr.Mage
             }
             if (Ticks > 0)
             {
-                foreach (SpecialEffect effect in CastingState.Solver.DamageProcEffects)
+                for (int i = 0; i < CastingState.Solver.DamageProcEffectsCount; i++)
                 {
+                    SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
                     string name = null;
                     float chance = 0;
                     float interval = 0;

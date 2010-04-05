@@ -471,14 +471,9 @@ namespace Rawr.Mage
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            return GetCharacterCalculations(character, additionalItem, referenceCalculation && calculationOptions.IncrementalOptimizations, significantChange, calculationOptions.SmartOptimization && !significantChange, needsDisplayCalculations);
-        }
-
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet, bool ignoreIncrementalSet, bool useGlobalOptimizations, bool needsDisplayCalculations)
-        {
-            CharacterCalculationsBase ret;
-            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && (!ignoreIncrementalSet || calculationOptions.ForceIncrementalOptimizations);
+            bool computeIncrementalSet = referenceCalculation && calculationOptions.IncrementalOptimizations;
+            bool useGlobalOptimizations = calculationOptions.SmartOptimization && !significantChange;
+            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && (!significantChange || calculationOptions.ForceIncrementalOptimizations);
             if (useIncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
             if (computeIncrementalSet)
             {
@@ -487,7 +482,7 @@ namespace Rawr.Mage
             }
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                return GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
             }
             else if (calculationOptions.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
@@ -500,15 +495,14 @@ namespace Rawr.Mage
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
                 if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
-                ret = calc;
+                return calc;
             }
             else
             {
                 CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
                 if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
-                ret = calc;
+                return calc;
             }
-            return ret;
         }
 
         private void StoreIncrementalSet(Character character, DisplayCalculations calculations)

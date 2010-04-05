@@ -8,46 +8,48 @@ namespace Rawr.Mage
     {
         public string Name;
 
-        public bool AffectedByFlameCap;
-        public bool ProvidesSnare;
-        public bool ProvidesScorch;
-        public bool AreaEffect;
         public bool Channeled;
-        public float Ticks;
-
         public bool Instant;
-        public int BaseCost;
-        public float Range;
         public float BaseCastTime;
         public float BaseUntalentedCastTime;
         public float BaseCooldown;
+        public float Cooldown;
+
+        public bool AreaEffect;
+        public int BaseCost;
         public MagicSchool MagicSchool;
-        public float BaseMinDamage;
-        public float BaseMaxDamage;
-        public float BasePeriodicDamage;
-        public float SpellDamageCoefficient;
-        public float DotDamageCoefficient;
-        public float DotDuration;
-        public float DotTickInterval;
+        public float Ticks;
         public float CastProcs;
         public float CastProcs2;
-        public float NukeProcs;
-        public float HitRate;
+        public float BaseMinDamage;
+        public float BaseMaxDamage;
+        public float SpellDamageCoefficient;
+        public float BasePeriodicDamage;
+        public float DotDamageCoefficient;
+        public float DotDuration;
 
-        public float RealResistance;
-        public float PartialResistFactor;
-        public float ThreatMultiplier;
-        public float CritBonus;
-
-        public float Cooldown;
+        public float BaseDirectDamageModifier;
+        public float BaseDotDamageModifier;
         public float BaseCostModifier;
         public float BaseCostAmplifier;
         public float BaseInterruptProtection;
+
         public float BaseSpellModifier;
         public float BaseAdditiveSpellModifier;
         public float BaseCritRate;
-        public float BaseDirectDamageModifier;
-        public float BaseDotDamageModifier;
+        public float CritBonus;
+        public float HitRate;
+        public float ThreatMultiplier;
+        public float Range;
+
+        public float RealResistance;
+        public float PartialResistFactor;
+
+        // not initialized, but never changed
+        public float DotTickInterval;
+        public float NukeProcs;
+
+        public bool Dirty = true;
 
         public static Dictionary<int, int> BaseMana = new Dictionary<int, int>();
         static SpellTemplate()
@@ -83,7 +85,7 @@ namespace Rawr.Mage
             }
         }
 
-        public virtual float GetEffectAverageDamage(CastingState castingState)
+        public float GetEffectAverageDamage(CastingState castingState)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
@@ -119,13 +121,13 @@ namespace Rawr.Mage
             AreaEffect = areaEffect;
             BaseCost = spellData.Cost - (int)baseStats.SpellsManaReduction;
             MagicSchool = magicSchool;
-            BaseMinDamage = spellData.MinDamage;
-            BaseMaxDamage = spellData.MaxDamage;
-            BasePeriodicDamage = spellData.PeriodicDamage;
-            SpellDamageCoefficient = spellData.SpellDamageCoefficient;
             Ticks = hitProcs;
             CastProcs = castProcs;
             CastProcs2 = castProcs;
+            BaseMinDamage = spellData.MinDamage;
+            BaseMaxDamage = spellData.MaxDamage;
+            SpellDamageCoefficient = spellData.SpellDamageCoefficient;
+            BasePeriodicDamage = spellData.PeriodicDamage;
             DotDamageCoefficient = spellData.DotDamageCoefficient;
             DotDuration = dotDuration;
 
@@ -143,7 +145,6 @@ namespace Rawr.Mage
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
             {
                 baseInterruptProtection += 0.35f * mageTalents.BurningSoul;
-                AffectedByFlameCap = true;
             }
             BaseInterruptProtection = baseInterruptProtection;
 
@@ -409,7 +410,6 @@ namespace Rawr.Mage
 
         public float CalculateCastTime(CastingState castingState, float interruptProtection, float critRate, bool pom, float baseCastTime, out float channelReduction)
         {
-            SpecialEffect[] hasteEffects = castingState.Solver.HasteRatingEffects;
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
             float castingSpeed = castingState.CastingSpeed;
             float spellHasteRating = castingState.SpellHasteRating;
@@ -417,14 +417,19 @@ namespace Rawr.Mage
             float hasteFactor = levelScalingFactor / 1000f;
             float rootCastingSpeed = castingSpeed / (1 + spellHasteRating * hasteFactor);
 
-            if (castingState.IcyVeins) interruptProtection = 1;
-            // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
-            float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
+            float InterruptFactor = 0f;
+            float maxPushback = 0f;
+            if (calculationOptions.InterruptFrequency > 0f)
+            {
+                // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
+                InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * castingSpeed / baseCastTime);
+                if (castingState.IcyVeins) interruptProtection = 1;
+                maxPushback = 0.5f * Math.Max(0, 1 - interruptProtection);
+                if (Channeled) maxPushback = 0.0f;
+            }
 
             if (pom) baseCastTime = 0.0f;
 
-            float maxPushback = 0.5f * Math.Max(0, 1 - interruptProtection);
-            if (Channeled) maxPushback = 0.0f;
             float globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
             float latency;
             if (baseCastTime <= 1.5f || Instant)
@@ -450,8 +455,9 @@ namespace Rawr.Mage
 
             if (!calculationOptions.AdvancedHasteProcs)
             {
-                foreach (SpecialEffect effect in hasteEffects)
+                for (int i = 0; i < castingState.Solver.HasteRatingEffectsCount; i++)
                 {
+                    SpecialEffect effect = castingState.Solver.HasteRatingEffects[i];
                     float procs = 0.0f;
                     int triggers = 0;
                     switch (effect.Trigger)
@@ -524,7 +530,10 @@ namespace Rawr.Mage
                         float proccedSpeed = castingSpeed * (1 + (rawHaste + procHaste) / 1000f * levelScalingFactor);
                         float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
                         float proccedCastTime = baseCastTime / proccedSpeed + latency;
-                        proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        if (InterruptFactor > 0)
+                        {
+                            proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        }
                         if (proccedCastTime < proccedGcd + calculationOptions.LatencyGCD) proccedCastTime = proccedGcd + calculationOptions.LatencyGCD;
                         int chancesToProc = (int)(((int)Math.Floor(effect.Duration / proccedCastTime) + 1) * Ticks);
                         if (!(Instant || pom)) chancesToProc -= 1;
@@ -534,13 +543,17 @@ namespace Rawr.Mage
                         castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                         castTime = baseCastTime / castingSpeed + latency;
-                        castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        if (InterruptFactor > 0)
+                        {
+                            castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                        }
                         if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
                     }
                 }
                 // on use stacking items
-                foreach (EffectCooldown effectCooldown in castingState.Solver.StackingHasteEffectCooldowns)
+                for (int i = 0; i < castingState.Solver.StackingHasteEffectCooldownsCount; i++)
                 {
+                    EffectCooldown effectCooldown = castingState.Solver.StackingHasteEffectCooldowns[i];
                     if (castingState.EffectsActive(effectCooldown.Mask))
                     {
                         foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
@@ -583,7 +596,10 @@ namespace Rawr.Mage
 
                                 globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                                 castTime = baseCastTime / castingSpeed + latency;
-                                castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                                if (InterruptFactor > 0)
+                                {
+                                    castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                                }
                                 if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
                             }
                         }
