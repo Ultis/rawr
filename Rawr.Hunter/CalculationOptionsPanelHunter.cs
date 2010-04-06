@@ -280,7 +280,7 @@ namespace Rawr.Hunter
 
         private PetTalentTree _pettalents = null;
         public PetTalentTree PetTalents {
-            get { return _pettalents; }
+            get { return _pettalents ?? (CalcOpts.PetTalents != null ? new PetTalentTree(CalcOpts.PetTalents.ToString()) : new PetTalentTree()); }
             set {
                 _pettalents = value;
                 CalcOpts.PetTalents = _pettalents;
@@ -866,7 +866,7 @@ namespace Rawr.Hunter
                         spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
                         _savedPetTalents.Add(spec);
                     }
-                    else spec.Spec = _pettalents.ToString();
+                    else spec.Spec = PetTalents.ToString();
                     UpdateSavedTalents();
                     SavePetTalentSpecs();
                     Character.OnCalculationsInvalidated();
