@@ -51,9 +51,9 @@ namespace Rawr.Enhance
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock);
             if (priority > 0)
                 if (_talents.GlyphofShocking)
-                    abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, 1.0f, FSMana * convection * elementalFocus, priority, false, false));
+                    abilities.Add(new Ability(EnhanceAbility.FlameShock, _cs.AverageFSDotTime, 1.0f, FSMana * convection * elementalFocus, priority, false, false));
                 else
-                    abilities.Add(new Ability(EnhanceAbility.FlameShock, 18f, gcd, FSMana * convection * elementalFocus, priority, false, false));
+                    abilities.Add(new Ability(EnhanceAbility.FlameShock, _cs.AverageFSDotTime, gcd, FSMana * convection * elementalFocus, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0 && _talents.Stormstrike == 1)

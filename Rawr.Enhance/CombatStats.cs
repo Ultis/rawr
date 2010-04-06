@@ -130,6 +130,7 @@ namespace Rawr.Enhance
         public float HastedOHSpeed { get { return hastedOHSpeed; } }
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
+        public float AverageFSDotTime { get { return 18f; } } // TODO need to take spell haste into account to get average FS Dot Time
         public float BaseShockSpeed { get { return 6f - .2f * _talents.Reverberation; } }
         public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } } // -(_talents.GlyphofFireNova ? 3f : 0f); } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
