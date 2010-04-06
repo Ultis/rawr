@@ -376,6 +376,7 @@ namespace Rawr.DPSWarr.Skills
         /// Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
         /// and doing [300+AP*0.12] damage to them. Damage increased by attack power.
         /// This ability causes additional threat.
+        /// <para>TODO: BonusCritDamage to 2x instead of 1.5x as it's now considered a ranged attack (3.3.3 notes) other parts implemented already</para>
         /// </summary>
         /// <TalentsAffecting>
         /// Improved Thunder Clap [-(1/2/4) rage cost, +(10*Pts)% Damage, +(ROUNDUP(10-10/3*Pts))% Slowing Effect]
@@ -412,6 +413,7 @@ namespace Rawr.DPSWarr.Skills
             DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
             BonusCritChance = Talents.Incite * 0.05f;
             UseSpellHit = true;
+            CanBeDodged = CanBeParried = false;
             //
             Initialize();
         }
