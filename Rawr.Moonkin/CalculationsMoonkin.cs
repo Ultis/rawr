@@ -709,7 +709,7 @@ namespace Rawr.Moonkin
 
             Stats statsFuror = new Stats()
             {
-                BonusIntellectMultiplier = 0.02f * character.DruidTalents.Furor
+                BonusIntellectMultiplier = character.ActiveBuffsContains("Moonkin Form") ? 0.02f * character.DruidTalents.Furor : 0.0f
             };
 
             Stats statsEarthAndMoon = new Stats()
@@ -719,7 +719,7 @@ namespace Rawr.Moonkin
 
             Stats statsMasterSS = new Stats()
             {
-                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0) ?
+                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form")) ?
                                             0.01f * character.DruidTalents.MasterShapeshifter : 0.0f
             };
 
@@ -741,7 +741,7 @@ namespace Rawr.Moonkin
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
-			if (character.DruidTalents.MoonkinForm > 0)
+            if (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form"))
 			{
 				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor/* + statsEnchants.Armor*/) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
 			}
@@ -771,7 +771,7 @@ namespace Rawr.Moonkin
             if (character.DruidTalents.MoonkinForm > 0)
             {
                 //statsTotal.CritRating += statsTotal.IdolCritRating; // No items/buffs currently use IdolCritRating, stat got removed.
-                statsTotal.SpellDamageFromSpiritPercentage += (0.1f * character.DruidTalents.ImprovedMoonkinForm);
+                statsTotal.SpellDamageFromSpiritPercentage += (character.ActiveBuffsContains("Moonkin Form") ? 0.1f * character.DruidTalents.ImprovedMoonkinForm : 0.0f);
             }
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
             statsTotal.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
