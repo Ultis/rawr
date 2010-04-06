@@ -6,6 +6,7 @@ namespace Rawr.TankDK
 {
     class CombatTable
     {
+        private bool m_bDW;
         public Character character;
 //        public CharacterCalculationsTankDK calcs;
         public DeathKnightTalents talents;
@@ -36,6 +37,7 @@ namespace Rawr.TankDK
 
         public CombatTable(Character c, CharacterCalculationsTankDK calcs, Stats stats, CalculationOptionsTankDK calcOpts)
         {
+            m_bDW = false;
             this.character = c;
 //            this.calcs = calcs;
             this.calcOpts = calcOpts;
@@ -89,8 +91,9 @@ namespace Rawr.TankDK
 
                 if (character.OffHand != null)
                 {
-                    if (character.MainHand != null)
+                    if (character.MainHand != null && character.MainHand.Slot != ItemSlot.TwoHand)
                     {
+                        m_bDW = true;
                         chanceDodged += OH.chanceDodged;
                         chanceDodged /= 2;
                     }
@@ -100,20 +103,16 @@ namespace Rawr.TankDK
                     }
                 }
 
-//                calcs.TargetDodge = chanceDodged;
-
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel-character.Level];
-                if (character.OffHand != null)
+                if (m_bDW)
                 {
                       chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP_DW[calcOpts.TargetLevel-character.Level]; 
                 }
                 chanceMiss -= stats.PhysicalHit;
                 chanceMiss = Math.Max(0f, chanceMiss);
-//                calcs.TargetMiss = chanceMiss;
 
                 chanceAvoided = chanceDodged + chanceMiss;
 
-                chanceDodged = MH.chanceDodged;
                 missedSpecial = chanceMiss;
                 dodgedSpecial = chanceDodged;
 
@@ -127,7 +126,8 @@ namespace Rawr.TankDK
 
                 // Total physical misses
                 totalMHMiss = MH.chanceDodged + chanceMiss;
-                totalOHMiss = OH.chanceDodged + chanceMiss;
+                if (OH != null)
+                    totalOHMiss = OH.chanceDodged + chanceMiss;
                 realDuration = calcOpts.m_Rotation.curRotationDuration;
                 realDuration += ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceDodged * (1.5f)) +
                     ((totalMeleeAbilities - calcOpts.m_Rotation.FrostStrike) * chanceMiss * (1.5f)) +
@@ -150,13 +150,17 @@ namespace Rawr.TankDK
             MH = new Weapon(barehand, stats, calcOpts, 0f);
             OH = new Weapon(barehand, stats, calcOpts, 0f);
 
+            // Set if we're DW or not in 1 place.  
+            // Then use that member var to determine all other DW related issues.
+            if (character.MainHand != null && character.MainHand.Slot != ItemSlot.TwoHand && character.OffHand != null)
+            {
+                m_bDW = true;
+            }
+
             if (character.MainHand != null)
             {
                 MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
-                if (character.MainHand.Item.Type == ItemType.TwoHandAxe
-                    || character.MainHand.Item.Type == ItemType.TwoHandMace
-                    || character.MainHand.Item.Type == ItemType.TwoHandSword
-                    || character.MainHand.Item.Type == ItemType.Polearm)
+                if (character.MainHand.Slot == ItemSlot.TwoHand)
                 {
                     normalizationFactor = 3.3f;
                     MH.damage *= 1f + .02f * talents.TwoHandedWeaponSpecialization;
@@ -165,7 +169,7 @@ namespace Rawr.TankDK
                 else normalizationFactor = 2.4f;
             }
 
-            if (character.OffHand != null)
+            if (m_bDW)
             {
                 OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
 
@@ -187,13 +191,6 @@ namespace Rawr.TankDK
 
         public float GetTotalThreat()
         {
-            bool DW = (character.MainHand != null
-                        && character.OffHand != null
-                        && character.MainHand.Type != ItemType.TwoHandAxe
-                        && character.MainHand.Type != ItemType.TwoHandMace
-                        && character.MainHand.Type != ItemType.TwoHandSword
-                        && character.MainHand.Type != ItemType.Polearm);
-
             //DPS Subgroups
             float fDamWhite = 0f;
             float fDamBCB = 0f;
@@ -283,29 +280,30 @@ namespace Rawr.TankDK
                 calcOpts.m_Rotation.getRP(talents, character);
             }
 
-            /* Threat table as of 3.0.8
-             * http://www.tankspot.com/forums/f200/40485-death-knight-threat-values.html
+            /* Threat table as of 3.3.3a
+             * http://www.tankspot.com/showthread.php?40485-Death-Knight-threat-values&p=397523#post397523
             Anti-Magic Shell ___________________  0
-            Anti-Magic Shell RP gain ___________  5 per RP (approx), unaffected by presence.  See * below.
-            Anti-Magic Zone ____________________  0
-            Abomination's Might ________________  0
-            Blood Aura _________________________  0
+            *Anti-Magic Shell RP gain ___________  5 per RP (approx), unaffected by presence.  See * below.
+            *Anti-Magic Zone ____________________  0
+            *Abomination's Might ________________  0
+            *Blood Aura _________________________  0
+            *Blade Barrier ______________________  20, split between all mobs
             Blood Boil _________________________  damage
-            Blood Caked Blade __________________  damage
+            *Blood Caked Blade __________________  damage
             Blood Plague _______________________  damage
-            Blood Presence reactive healing ____  0
+            *Blood Presence reactive healing ____  0
             Blood Strike _______________________  damage
-            Blood Tap __________________________  0
-            Bloody Vengeance ___________________  0
-            Bloodworms _________________________  0 The DK gains no threat from BW's damage or healing.  See ** below.
-            Bone Shield ________________________  0
-            Butchery RP gains on kills _________  5 per RP, unaffected by presence
-            Chains of Ice ______________________  226
-            Chilblains (all ranks) _____________  2
-            Chill of the Grave RP gains ________  5 per RP, unaffected by presence
-            Corpse Explosion ___________________  damage
-            Crypt Fever ________________________  0
-            Dancing Rune Weapon ________________  0
+            *Blood Tap __________________________  0
+            *Bloody Vengeance ___________________  0
+            *Bloodworms _________________________  0 The DK gains no threat from BW's damage or healing.  See ** below.
+            *Bone Shield ________________________  0
+            *Butchery RP gains on kills _________  5 per RP, unaffected by presence
+            Chains of Ice ______________________ 240
+            *Chilblains (all ranks) _____________  2
+            *Chill of the Grave RP gains ________  5 per RP, unaffected by presence
+            *Corpse Explosion ___________________  damage
+            *Crypt Fever ________________________  0
+            *Dancing Rune Weapon ________________ damage
             Death and Decay ____________________  damage × 1.90
             Deathchill _________________________  55, split between all mobs
             Death Coil _________________________  damage
@@ -314,42 +312,42 @@ namespace Rawr.TankDK
             Death Pact _________________________  0
             Death Strike _______________________  damage
             Death Strike healing _______________  healing × 0.5 × presence, split between all mobs
-            Desecration ________________________  0
-            Dirge RP gains _____________________  5 per RP, unaffected by presence
-            Ebon Plaguebringer _________________  0
+            *Desecration ________________________  0
+            *Dirge RP gains _____________________  5 per RP, unaffected by presence
+            *Ebon Plaguebringer _________________  0
             Empower Rune Weapon ________________  0
             Frost Fever ________________________  damage
             Frost Strike _______________________  damage
             Heart Strike _______________________  damage
             Horn of Winter _____________________  75 ÷ number of units buffed, split between mobs
             Howling Blast ______________________  damage
-            Hungering Cold _____________________  112, split between all mobs affected
-            Hysteria ___________________________  55 (the DK gains the threat, not the target)
+            *Hungering Cold _____________________  112, split between all mobs affected
+            *Hysteria ___________________________  55 (the DK gains the threat, not the target)
             Icebound Fortitude _________________  0
             Icy Talons _________________________  0
             Improved Icy Talons ________________  0
-            Icy Touch __________________________  damage
+            Icy Touch __________________________  damage x7
             Killing Maching ____________________  0
-            Lichborne __________________________  110, split between all mobs
+            *Lichborne __________________________  110, split between all mobs
             Mark of Blood ______________________  0
             Mind Freeze ________________________  0
             Obliterate _________________________  damage
-            Pestilence _________________________  damage + (100 split between all mobs hit)
+            Pestilence _________________________ 0
             Plague Strike ______________________  damage
-            Raise Dead _________________________  57, split between mobs
-            Rime _______________________________  0
-            Rune Strike ________________________  damage × 1.5
-            Rune Tap ___________________________  healing × 0.5 + 55, split between all mobs
+            *Raise Dead _________________________  57, split between mobs
+            *Rime _______________________________  0
+            Rune Strike ________________________  damage × 1.75
+            *Rune Tap ___________________________  healing × 0.5 + 55, split between all mobs
             Scent of Blood _____________________  0
             Scent of Blood RP gains ____________  0
-            Scourge Strike _____________________  damage + 120
-            Strangulate ________________________  158 on application, damage at the end
-            Unholy Blight ______________________  damage
-            Unholy Strength ____________________  healing × 0.5 × presence, split between all mobs
-            Unbreakable Armor __________________  0
-            Vampiric Blood _____________________  0
-            Vendetta healing ___________________  0
-            Wandering Plague ___________________  damage
+            *Scourge Strike _____________________  damage + 120
+            Strangulate ________________________  138 on application
+            *Unholy Blight ______________________  damage
+            *Unholy Strength ____________________  healing × 0.5 × presence, split between all mobs
+            *Unbreakable Armor __________________  0
+            *Vampiric Blood _____________________  0
+            *Vendetta healing ___________________  0
+            *Wandering Plague ___________________  damage
             */
             #region Impurity Application
             {
@@ -429,7 +427,7 @@ namespace Rawr.TankDK
                 #endregion
 
                 #region Off Hand
-                if (DW || (character.MainHand == null && character.OffHand != null))
+                if (m_bDW)
                 {
                     if (this.OH.damage > 0)
                     {
@@ -461,7 +459,7 @@ namespace Rawr.TankDK
             {
                 float fDamMHBCB = 0f;
                 float fDamOHBCB = 0f;
-                if ((OHDam != 0) && (DW || MHDam == 0))
+                if ((OHDam != 0) && m_bDW)
                 {
                     fDamOHBCB = OHDam * (.25f + .125f * calcOpts.m_Rotation.avgDiseaseMult);
                 }
@@ -510,7 +508,6 @@ namespace Rawr.TankDK
                     float ITCritDmgMult = 1.5f * (1f + stats.BonusSpellCritMultiplier);
                     float ITCrit = 1f + ((this.spellCrits + addedCritFromKM + (.05f * (float)talents.Rime)) * ITCritDmgMult);
                     fDamIcyTouch *= ITCrit;
-                    // Using a x7 modifier for right now.  This will probably need to be fine-tuned.
                     fDamIcyTouch *= 7;
 
                 }
@@ -807,7 +804,7 @@ namespace Rawr.TankDK
                 RSDmg += (OHDam +(150 * stats.AttackPower * 10 / 10000)) * (talents.ThreatOfThassarian / 3f) * 0.5f;
                 RSDmg *= (1f + stats.BonusRuneStrikeMultiplier); // Two T8. 
                 // what's the threat modifier?
-                RSDmg *= (1.5f * 1.17f); // 3.3 update to RS Threat.
+                RSDmg *= (1.75f); // 3.3 update to RS Threat.
                 float RSCritDmgMult = 2f * (1f + (.15f * (float)talents.MightOfMograine) + stats.BonusCritMultiplier + (talents.GlyphofRuneStrike ? .1f : 0f));
                 float RSCrit = 1f + ((this.physCrits) * RSCritDmgMult);
                 /*
@@ -866,7 +863,7 @@ namespace Rawr.TankDK
             #region Apply Physical Mitigation
             {
                 float physMit = mitigation;
-                physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
+                physMit *= 1f + (m_bDW ? 0f : .02f * talents.TwoHandedWeaponSpecialization);
 
                 fDamBCB *= physMit;
                 fDamBloodStrike *= physMit;
@@ -889,7 +886,7 @@ namespace Rawr.TankDK
             #region Apply Elemental Strike Mitigation
             {
                 float strikeMit = /*missedSpecial **/ partialResist;
-                strikeMit *= (!DW ? 1f + .02f * talents.TwoHandedWeaponSpecialization : 1f);
+                strikeMit *= (m_bDW ? 1f : 1f + .02f * talents.TwoHandedWeaponSpecialization);
 
                 fDamScourgeStrike *= strikeMit;
                 fDamFrostStrike *= strikeMit * (1f - missedSpecial);
