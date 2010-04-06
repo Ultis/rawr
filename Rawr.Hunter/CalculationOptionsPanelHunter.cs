@@ -672,7 +672,7 @@ namespace Rawr.Hunter
             if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
                  // No Shot Priority set up, use a default based on talent spec
                 CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
-            } else if (rightSpec != 0 && CurrentSpec != rightSpec) {
+            } else if (rightSpec != 0 && CurrentSpec != 0 && CurrentSpec != rightSpec) {
                 // The rotation setup needs to change, user has changed to a totally different spec
                 CB_PriorityDefaults.SelectedIndex = rightSpec;
             }
