@@ -293,7 +293,7 @@ namespace Rawr.Enhance
                 fireTotemUptime = firstPass ? 1.0f : 300f / AbilityCooldown(EnhanceAbility.RefreshTotems); 
             
             float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
-            float flurryHasteBonus = .05f * _talents.Flurry + _stats.Enhance4T7;
+            float flurryHasteBonus = .06f * _talents.Flurry + _stats.Enhance4T7;
             float edCritBonus = .03f * _talents.ElementalDevastation;
             float staticShockChance = (.02f * _character.ShamanTalents.StaticShock + (_stats.Enhance2T9 == 1f ? 0.03f : 0f));
             hitsPerSMHSS = 0f;
