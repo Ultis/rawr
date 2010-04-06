@@ -229,8 +229,6 @@ namespace Rawr.WarlockTmp {
             Mommy = mommy;
             MagicSchool = magicSchool;
             MySpellTree = spellTree;
-            // TODO factor in "mana cost reduction" proc trinket(s?)
-            // TODO factor in mana restore procs (as cost reduction)
             ManaCost = mommy.BaseMana * percentBaseMana;
             BaseCastTime = baseCastTime;
             BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
@@ -253,6 +251,12 @@ namespace Rawr.WarlockTmp {
                 addedTickMultiplier);
             SpellModifiers.AddCritChance(bonusCritChance);
             SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                Mommy.Stats.WarlockFirestoneDirectDamageMultiplier);
+            if (!GetType().Name.StartsWith("Curse")) {
+                SpellModifiers.AddAdditiveTickMultiplier(
+                    Mommy.Stats.WarlockSpellstoneDotDamageMultiplier);
+            }
             if (magicSchool == MagicSchool.Shadow) {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     Mommy.Stats.BonusShadowDamageMultiplier);
@@ -301,10 +305,13 @@ namespace Rawr.WarlockTmp {
 
             string toolTip;
             if (AvgDamagePerCast > 0) {
+                float dps
+                    = numCasts * AvgDamagePerCast / Mommy.Options.Duration;
                 toolTip
                     = string.Format(
-                        "{0:0.0} dps*",
-                        numCasts * AvgDamagePerCast / Mommy.Options.Duration);
+                        "{0:0.0} dps ({1:0.0%})*",
+                        dps,
+                        dps / Mommy.OverallPoints);
             } else {
                 toolTip = string.Format("{0:0.0} casts*", numCasts);
             }
@@ -835,8 +842,7 @@ namespace Rawr.WarlockTmp {
                 (1.2f + mommy.Talents.EmpoweredCorruption * .12f) / 6f
                     + mommy.Talents.EverlastingAffliction
                         * .01f, // tick coefficient
-                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
-                    + mommy.Talents.ImprovedCorruption * .02f
+                mommy.Talents.ImprovedCorruption * .02f
                     + mommy.Talents.Contagion * .01f
                     + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
                 mommy.Talents.Pandemic > 0, // canTickCrit
@@ -988,6 +994,28 @@ namespace Rawr.WarlockTmp {
         }
     }
 
+    public class CurseOfDoom : Spell {
+
+        public CurseOfDoom(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow, // magic school
+                SpellTree.Affliction, // spell tree
+                .15f, // percent base mana
+                0f, // baseCastTime,
+                60f, // recastPeriod,
+                7300f, // baseTickDamage,
+                1f, // numTicks,
+                2f, // tickCoefficient,
+                0f, // addedTickMultiplier,
+                false, //    canTickCrit,
+                0f, // bonusCritChance,
+                0f) { // bonusCritMultiplier)
+
+            GCDBonus = mommy.Talents.AmplifyCurse * .5f;
+        }
+    }
+
     public class CurseOfTheElements : Spell {
 
         public CurseOfTheElements(CharacterCalculationsWarlock mommy)
@@ -1122,8 +1150,7 @@ namespace Rawr.WarlockTmp {
                 785f / 5f, // baseTickDamage,
                 5f, // numTicks,
                 .2f, // tickCoefficient,
-                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
-                    + (mommy.Talents.GlyphImmolate ? .1f : 0f)
+                (mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f
                     + mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
                 true, // canTickCrit,
@@ -1499,8 +1526,7 @@ namespace Rawr.WarlockTmp {
                 5f, // num ticks
                 mommy.Talents.EverlastingAffliction * .01f
                     + 1f / 5f, // tick coefficient
-                mommy.Stats.WarlockSpellstoneDotDamageMultiplier
-                    + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
+                mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
                 mommy.Talents.Pandemic > 0, // canTickCrit
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance

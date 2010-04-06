@@ -92,6 +92,7 @@ namespace Rawr.WarlockTmp {
                         "Basic Stats:Haste Rating",
                         "Affliction:Corruption",
                         "Affliction:Curse Of Agony",
+                        "Affliction:Curse Of Doom",
                         "Affliction:Curse Of The Elements",
                         "Affliction:Haunt",
                         "Affliction:Life Tap",

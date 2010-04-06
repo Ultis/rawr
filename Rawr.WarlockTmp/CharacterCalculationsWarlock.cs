@@ -294,10 +294,6 @@ namespace Rawr.WarlockTmp {
                 Talents.Malediction * .01f);
             SpellModifiers.AddMultiplicativeDirectMultiplier(
                 Talents.DemonicPact * .01f);
-            // The spellstone bonus is added in individual spells, since it
-            // doesn't actually affect Curse of Agony.
-            SpellModifiers.AddAdditiveDirectMultiplier(
-                Stats.WarlockFirestoneDirectDamageMultiplier);
             SpellModifiers.AddCritChance(Stats.SpellCrit);
             SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
             if (CastSpells.ContainsKey("Metamorphosis")) {
