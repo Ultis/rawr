@@ -47,6 +47,7 @@ namespace Rawr.Enhance
         private float hastedMHSpeed = 0f;
         private float unhastedOHSpeed = 0f;
         private float hastedOHSpeed = 0f;
+        private float averageFSDotTime = 18f;
 
         private float secondsToFiveStack = 0f;
         private float hitsPerSOH = 0f;
@@ -130,7 +131,7 @@ namespace Rawr.Enhance
         public float HastedOHSpeed { get { return hastedOHSpeed; } }
 
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
-        public float AverageFSDotTime { get { return 18f; } } // TODO need to take spell haste into account to get average FS Dot Time
+        public float AverageFSDotTime { get { return averageFSDotTime; } } 
         public float BaseShockSpeed { get { return 6f - .2f * _talents.Reverberation; } }
         public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } } // -(_talents.GlyphofFireNova ? 3f : 0f); } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
@@ -389,6 +390,8 @@ namespace Rawr.Enhance
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;
             chanceMeleeHit = meleeAttacksPerSec / (swingsPerSMHMelee + swingsPerSOHMelee + 2f * wfProcsPerSecond + .25f + 1f/6f);
             maxMana = _stats.Mana;
+            float spellhaste = _stats.SpellHaste + StatConversion.GetSpellHasteFromRating(_stats.HasteRating);
+            averageFSDotTime = 18f / (1f + spellhaste);
         }
 
         private void SetCritValues(float chanceCrit)
