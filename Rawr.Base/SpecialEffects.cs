@@ -926,6 +926,32 @@ namespace Rawr {
                     projectileStats.FireDamage = avgdmgperstack;
                 stats.AddSpecialEffect(new SpecialEffect(trigger, projectileStats, 0f, icd));
             }
+            // Shadowmourne
+            // Your melee attacks have a chance to drain a Soul Fragment granting you 30 Strength.  When you have acquired 10 Soul Fragments you will unleash Chaos Bane, dealing 1900 to 2100 Shadow damage split between all enemies within 15 yards and granting you 270 Strength for 10 sec.
+            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to drain a Soul Fragment granting you 30 Strength.")).Success)
+//            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to drain a Soul Fragment granting you (?<StrBuff>\d+) Strength.  When you have acquired (?<stackSize>\d+) Soul Fragments you will unleash Chaos Bane, dealing (?<mindmg>\d+) to (?<maxdmg>\d+) Shadow damage split between all enemies within 15 yards and granting you (?<strBuff2>\d+) Strength for (?<icd>) sec.")).Success)
+            {
+                // Capacitor like procs
+                Stats BuffStats = new Stats();
+                Stats BuffStats2 = new Stats();
+                // How much strength per stack.
+                BuffStats.Strength = 30;
+                // Stack size
+                int stackSize = 10;
+                // Damage of the final proc.
+                int mindmg = 1900;
+                int maxdmg = 2100;
+                float avgdmg = (mindmg + maxdmg) / 2f;
+                // 2ndary Strength Buff
+                BuffStats2.Strength = 270;
+                BuffStats2.ShadowDamage = avgdmg;
+                float icd = 10;
+                Trigger trigger = Trigger.MeleeHit;
+                // At 10 stacks, the stacks proc the 2nd effect, so you would never have 10 stacks.
+                stats.AddSpecialEffect(new SpecialEffect(trigger, BuffStats, 60f, 0f, .2f, (stackSize-1)));
+                stats.AddSpecialEffect(new SpecialEffect(trigger, BuffStats2, icd, 0f, .02f));
+            }
+            
             #endregion
             #endregion
 
