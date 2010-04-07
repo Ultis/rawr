@@ -103,6 +103,7 @@ namespace Rawr.WarlockTmp {
                         "Destruction:Immolate",
                         "Destruction:Incinerate",
                         "Destruction:Incinerate (Under Backdraft)",
+                        "Destruction:Incinerate (Under Molten Core)",
                         "Destruction:Shadow Bolt",
                         "Destruction:Shadow Bolt (Instant)" };
                 return _characterDisplayCalculationLabels;

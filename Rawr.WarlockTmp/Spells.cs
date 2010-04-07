@@ -829,6 +829,15 @@ namespace Rawr.WarlockTmp {
 
     public class Corruption : Spell {
 
+        public static float GetTickPeriod(CharacterCalculationsWarlock mommy) {
+
+            float period = 3.1f; // total guess
+            if (mommy.Talents.GlyphQuickDecay) {
+                period = GetTimeUsed(period, 1f, mommy.Haste, 0f);
+            }
+            return period;
+        }
+
         public Corruption(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
@@ -1123,8 +1132,12 @@ namespace Rawr.WarlockTmp {
 
     public class Immolate : Spell {
 
-        public const float RECAST_PERIOD = 15f;
-        
+        public static float GetRecastPeriod(
+            CharacterCalculationsWarlock mommy) {
+
+            return 15f + mommy.Talents.MoltenCore * 3f;
+        }
+
         public static bool IsClippedByConflagrate(
             CharacterCalculationsWarlock mommy) {
 
@@ -1141,14 +1154,14 @@ namespace Rawr.WarlockTmp {
                 .17f, // percentBaseMana,
                 2f - mommy.Talents.Bane * .1f, // baseCastTime,
                 0f, // cooldown,
-                RECAST_PERIOD, // recastPeriod,
+                GetRecastPeriod(mommy), // recastPeriod,
                 true, // canMiss,
                 460f, // lowDirectDamage,
                 460f, // highDirectDamage,
                 .2f, // directCoefficient,
                 mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
                 785f / 5f, // baseTickDamage,
-                5f, // numTicks,
+                5f + mommy.Talents.MoltenCore, // numTicks,
                 .2f, // tickCoefficient,
                 (mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f
@@ -1266,7 +1279,7 @@ namespace Rawr.WarlockTmp {
             if (Immolate.IsClippedByConflagrate(Mommy)) {
                 return 1f;
             } else {
-                return 1 - GetCastTime(null) / Immolate.RECAST_PERIOD;
+                return 1 - GetCastTime(null) / Immolate.GetRecastPeriod(Mommy);
             }
         }
     }
@@ -1316,6 +1329,67 @@ namespace Rawr.WarlockTmp {
         protected override float GetImmolateUpRate() {
 
             return SimulatedStats["immolate up-chance"].GetValue();
+        }
+    }
+
+    public class Incinerate_UnderMoltenCore : Incinerate {
+
+        public static bool MightCast(
+            WarlockTalents talents, List<string> priorities) {
+
+            return priorities.Contains("Corruption")
+                && talents.MoltenCore > 0;
+        }
+
+        public Incinerate_UnderMoltenCore(CharacterCalculationsWarlock mommy)
+            : base(mommy) {
+
+            BaseCastTime /= 1f + Mommy.Talents.MoltenCore * .1f;
+
+            float procChance = Mommy.Talents.MoltenCore * .04f;
+            float tickPeriod = Corruption.GetTickPeriod(mommy);
+            Cooldown = tickPeriod / procChance;
+        }
+
+        public override bool IsCastable() {
+
+            return MightCast(Mommy.Talents, Mommy.Options.SpellPriority);
+        }
+
+        public override float GetQueueProbability(CastingState state) {
+
+            if (state.ExtraState.ContainsKey("Molten Core")) {
+                return 1f;
+            } else {
+                return base.GetQueueProbability(state);
+            }
+        }
+
+        public override List<CastingState> SimulateCast(CastingState stateBeforeCast, float chanceOfCast) {
+            
+            List<CastingState> states
+                = base.SimulateCast(stateBeforeCast, chanceOfCast);
+            foreach (CastingState state in states) {
+                state.Cooldowns.Remove(this);
+                if (state.ExtraState.ContainsKey("Molten Core")) {
+                    int charges = (int) state.ExtraState["Molten Core"];
+                    if (charges == 1) {
+                        state.ExtraState.Remove("Molten Core");
+                    } else {
+                        state.ExtraState["Molten Core"] = charges - 1;
+                    }
+                } else {
+                    state.ExtraState["Molten Core"] = 2;
+                }
+            }
+            return states;
+        }
+
+        public override void FinalizeSpellModifiers() {
+            
+            base.FinalizeSpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Mommy.Talents.MoltenCore * .06f);
         }
     }
 
@@ -1499,10 +1573,7 @@ namespace Rawr.WarlockTmp {
             if (Mommy.Talents.GlyphCorruption) {
                 procChance += .04f;
             }
-            float tickPeriod = 3.1f; // total guess
-            if (Mommy.Talents.GlyphQuickDecay) {
-                tickPeriod = GetTimeUsed(tickPeriod, 1f, Mommy.Haste, 0f);
-            }
+            float tickPeriod = Corruption.GetTickPeriod(mommy);
             Cooldown = tickPeriod / procChance;
         }
 
