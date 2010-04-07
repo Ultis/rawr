@@ -17,7 +17,7 @@ namespace Rawr.Mage
         private double[] compactSolution = null;
         private bool needsDual;
         private int segments;
-        public StringBuilder Log = new StringBuilder();
+        public StringBuilder Log;
         //public int[] disabledHex;
 
 #if SILVERLIGHT

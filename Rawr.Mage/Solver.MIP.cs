@@ -98,6 +98,8 @@ namespace Rawr.Mage
 
         private void RestrictSolution()
         {
+            lp.Log = new StringBuilder();
+
             ComputeResolutionMaps();
 
 #if DEBUG_BRANCHING

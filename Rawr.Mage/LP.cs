@@ -101,13 +101,18 @@ namespace Rawr.Mage
         private const double epsDrop = 1.0e-14;
 
 #if SILVERLIGHT
-        private static void Zero(double[] array, int size)
+        public static unsafe void Copy(double[] dest, double[] source, int size)
+        {
+            Array.Copy(source, 0, dest, 0, size);
+        }
+
+        public static void Zero(double[] array, int size)
         {
             Array.Clear(array, 0, size);
         }
 #else
-        private static unsafe void Zero(double* array, int size)
-        {
+        public static unsafe void Zero(double* array, int size)
+        {            
             /*long* arr = (long*)array;
             long* arrend = arr + size;
             for (; arr < arrend; arr++)
@@ -133,9 +138,7 @@ namespace Rawr.Mage
             }
         }
 
-        private const int BlockCopySize = 64;
-
-        private static unsafe void Copy(double* dest, double* source, int size)
+        public static unsafe void Copy(double* dest, double* source, int size)
         {
             const int c = ~3;
             int trunc = size & c;
@@ -746,7 +749,7 @@ namespace Rawr.Mage
 
         private void ComputePrimalSolution(bool dualPhaseI)
         {
-            Array.Clear(arraySet._d, 0, rows);
+            Zero(d, rows);
             //int j = 0;
             //for (; j < baseRows; j++)
             //{
@@ -1007,6 +1010,7 @@ namespace Rawr.Mage
             }
             return value;
         }
+
         private int SelectPrimalIncoming(out double direction, bool prepareForDual)
         {
             double maxc = (prepareForDual) ? epsDualI : epsDual;
@@ -1037,10 +1041,8 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private bool SelectPrimalOutgoing(int incoming, double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
+        private bool SelectPrimalOutgoing(double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
         {
-            ComputePrimalRowLimits(incoming);
-
             // min over i of d[i]/w[i] where w[i]>0
             double minrr = double.PositiveInfinity;
             minr = double.PositiveInfinity;
@@ -1233,11 +1235,12 @@ namespace Rawr.Mage
         private bool ComputeDualPivotRow(bool phaseI, int outgoing)
         {
             // x = z <- e_mini*A_B^-1
-            for (int i = 0; i < rows; i++)
+            /*for (int i = 0; i < rows; i++)
             {
                 x[i] = ((i == outgoing) ? 1 : 0);
             }
-            lu.BSolve(x); // TODO exploit nature of x
+            lu.BSolve(x); // TODO exploit nature of x*/
+            lu.BSolveUnit(x, outgoing);
 
 #if SILVERLIGHT
             double eps = phaseI ? epsDualI : epsDual;
@@ -1895,11 +1898,12 @@ namespace Rawr.Mage
             double rd = c[maxj] / w[mini];
 
             // x = z <- e_mini*A_B^-1
-            for (int i = 0; i < rows; i++)
+            /*for (int i = 0; i < rows; i++)
             {
                 x[i] = ((i == mini) ? 1.0 : 0.0);
             }
-            lu.BSolve(x); // TODO exploit nature of x
+            lu.BSolve(x); // TODO exploit nature of x*/
+            lu.BSolveUnit(x, mini);
 
             // update primal and dual
             if (Math.Abs(minr) > epsZero)
@@ -1955,14 +1959,16 @@ namespace Rawr.Mage
                     int* sRow2 = sparseRow + sCol2;
                     double* sValue = sparseValue + sCol1;
                     // TODO reinvestigate moving rd out of the loop once dual is more stable
+                    double sum = 0.0;
                     for (; sRow < sRow2; sRow++, sValue++)
                     {
-                        *cc -= rd * *sValue * x[*sRow];
+                        sum += *sValue * x[*sRow];
                     }
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
-                        *cc -= rd * pD[k][col] * x[baseRows + k];
+                        sum += pD[k][col] * x[baseRows + k];
                     }
+                    *cc -= rd * sum;
                 }
                 else
                 {
@@ -2552,7 +2558,9 @@ namespace Rawr.Mage
                 double minr;
                 int bound;
 
-                if (!SelectPrimalOutgoing(maxj, direction, feasible, out mini, out minr, out bound, eps))
+                ComputePrimalRowLimits(maxj);
+
+                if (!SelectPrimalOutgoing(direction, feasible, out mini, out minr, out bound, eps))
                 {
                     feasible = false;
                     lowestInfeasibility = double.PositiveInfinity;

@@ -164,6 +164,63 @@ namespace Rawr.Mage
         }
 
 #if SILVERLIGHT
+        public void BSolveUnit(double[] b, int col)
+#else
+        public unsafe void BSolveUnit(double* b, int col)
+#endif
+        {
+            BSolveUUnit(col, c);
+            BSolveL(c, b);
+        }
+
+#if SILVERLIGHT
+        public void BSolveUUnit(int col, double[] c)
+#else
+        public unsafe void BSolveUUnit(int col, double* c)
+#endif
+        {
+            int i, k;
+            LP.Zero(c, size);
+            for (i = 0; ; i++)
+            {
+                if (Q[i] == col)
+                {
+                    col = i;
+                    break;
+                }
+            }
+            //c[col] = 1.0;
+            /*for (i = 0; i < size; i++)
+            {
+                c[i] = b[Q[i]]; // shuffle Q
+            }*/
+
+            if (U[col * size + col] != 0)
+            {
+                c[col] = 1.0 / U[col * size + col];
+                for (i = col + 1; i < size; i++)
+                {
+                    c[i] -= c[col] * U[col * size + i];
+                }
+            }
+            else return;
+            //else c[col] = 0; // value underspecified
+
+            for (k = col + 1; k < size; k++)
+            {
+                if (U[k * size + k] != 0 && Math.Abs(c[k]) > 0.000001)
+                {
+                    c[k] /= U[k * size + k];
+                    for (i = k + 1; i < size; i++)
+                    {
+                        c[i] -= c[k] * U[k * size + i];
+                    }
+                }
+                else c[k] = 0; // value underspecified
+            }
+        }
+
+#if SILVERLIGHT
         public void BSolveL(double[] b, double[] c)
 #else
         public unsafe void BSolveL(double* b, double* c)
@@ -267,6 +324,7 @@ namespace Rawr.Mage
             }
         }
 
+        // hand optimized version of the above silverlight code
         public unsafe void FSolveU(double* b, double* c)
         {
             int size = this.size;
@@ -274,26 +332,52 @@ namespace Rawr.Mage
             double* c2 = this.c2;
             Copy(c2, b, size);
             double* c2i;
-            for (int k = size - 1; k >= 0; k--)
+            int k = size - 1;
+            if (k >= 0)
             {
-                double div = U[k * size + k];
                 double* c2k = c2 + k;
-                double c2kv = *c2k;
-                if (div != 0 && Math.Abs(c2kv) > 0.000001)
+                double* Ukk = U + ((size + 1) * k);
+                long Ukkstep = -8 - 8 * size;
+                do
                 {
-                    c2kv /= div;
-                    *c2k = c2kv;
-                    c2i = c2;
-                    double* Uik = U + k;
-                    for (; c2i < c2k; c2i++, Uik += size)
+                    double div = *Ukk;
+                    double c2kv = *c2k;
+                    if (div != 0 && Math.Abs(c2kv) > 0.000001)
                     {
-                        *c2i -= c2kv * *Uik;
+                        c2kv /= div;
+                        *c2k = c2kv;
+                        c2i = c2;
+                        double* Uik = U + k;
+                        /*double* arr1 = c2 + (k & ~3);
+                        if (c2i < arr1)
+                        {
+                            long off1 = size * 8;
+                            long off2 = size * 16;
+                            long off3 = size * 24;
+                            long off4 = size * 32;
+                            do
+                            {
+                                c2i[0] -= c2kv * Uik[0];
+                                c2i[1] -= c2kv * *((double*)((byte*)Uik + off1));
+                                c2i[2] -= c2kv * *((double*)((byte*)Uik + off2));
+                                c2i[3] -= c2kv * *((double*)((byte*)Uik + off3));
+                                c2i += 4;
+                                Uik = (double*)((byte*)Uik + off4);
+                            } while (c2i < arr1);
+                        }*/
+                        for (; c2i < c2k; c2i++, Uik += size)
+                        {
+                            *c2i -= c2kv * *Uik;
+                        }
                     }
-                }
-                else
-                {
-                    *c2k = 0; // value underspecified
-                }
+                    else
+                    {
+                        *c2k = 0; // value underspecified
+                    }
+                    Ukk = (double*)((byte*)Ukk + Ukkstep);
+                    c2k--;
+                    k--;
+                } while (k >= 0);
             }
             // shuffle Q
             int* Qi = Q;
@@ -491,9 +575,6 @@ namespace Rawr.Mage
         // replace column col in basis B with aj
 #if SILVERLIGHT
         public void Update(double[] a, int col, out double pivot)
-#else
-        public unsafe void Update(double* a, int col, out double pivot)
-#endif
         {
             int i, j, k;
             for (j = 0; j < size; j++)
@@ -603,5 +684,146 @@ namespace Rawr.Mage
                 Singular = true;
             }
         }
+#else
+        public unsafe void Update(double* a, int col, out double pivot)
+        {
+            int i, j, k;
+            int* Q = this.Q;
+            double* U = this.U;
+            for (j = 0; ; j++)
+            {
+                if (Q[j] == col) break;
+            }
+            col = j;
+
+            double* Ujj = U + (j * size + j);
+            double ujj = *Ujj;
+
+            // place in column col = j
+            // rotate columns to get upper hessenberg form (col...lastnz)
+            int lastnz = size - 1;
+            for (; lastnz >= 0; lastnz--)
+            {
+                if (Math.Abs(a[lastnz]) > 0.000001) break;
+            }
+            
+            // XXaXXXX    XXXXXaX
+            //  XaXXXX     XXXXaX
+            //   aXXXX      XXXaX   <--- col
+            //   aXXXX  =>  XXXaX
+            //   a XXX       XXaX
+            //   a  XX        XaX   <--- lastnz
+            //       X          X
+
+            int* Qj = Q + col;
+            int Qcol = *Qj;
+            int* Qlastnz = Q + lastnz;
+            for (; Qj < Qlastnz; Qj++)
+            {
+                *Qj = Qj[1];
+            }
+            *Qlastnz = Qcol;
+
+            double* Uijend = U + lastnz;
+            double* Uijendcol = Uijend + col * size;
+            double* Uijendlast = Uijend + lastnz * size;
+            int dif = col - lastnz;
+            for (; Uijend <= Uijendcol; Uijend += size, a++)
+            {
+                //double* Uij = U + (i * size + col);
+                //double* Uijend = U + (i * size + lastnz);
+                for (double* Uij = Uijend + dif; Uij < Uijend; Uij++)
+                {
+                    *Uij = Uij[1];
+                }
+                *Uijend = *a;
+            }
+            for (; Uijend <= Uijendlast; Uijend += size, dif++, a++)
+            {
+                for (double* Uij = Uijend + dif; Uij < Uijend; Uij++)
+                {
+                    *Uij = Uij[1];
+                }
+                *Uijend = *a;
+            }
+
+            // eliminate row at index col up to lastnz using rows below it
+            // we're eliminating on previous diagonals, so we know it is safe (we shouldn't update on a singular basis)
+
+            // E = I + ep eta'
+            // P E P' = I + P ep eta' P'
+            // eta' P' = (P eta)'
+
+            if (etaSize >= arraySet.LUetaMax) throw new InvalidOperationException();
+
+            sLstart[etaSize + 1] = sLstart[etaSize];
+
+            for (j = col; j < lastnz; j++)
+            {
+                int pj = P[j + 1];
+                double f = -U[col * size + j] / U[(j + 1) * size + j];
+                U[col * size + j] = 0;
+                if (Math.Abs(f) > 0.00000001)
+                {
+                    // sparse L construction
+                    sL[sLstart[etaSize + 1]] = f;
+                    sLI[sLstart[etaSize + 1]] = pj;
+                    sLstart[etaSize + 1]++;
+                    // update U
+                    for (k = j + 1; k < size; k++)
+                    {
+                        U[col * size + k] += f * U[(j + 1) * size + k];
+                    }
+                }
+            }
+            LJ[etaSize] = P[col];
+            etaSize++;
+
+            // rotate rows to get upper triangular form (col...lastnz)
+
+            // XXXXXXX    XXXXXXX
+            //  XXXXXX     XXXXXX
+            //      XX      XXXXX   <--- col
+            //   XXXXX  =>   XXXX
+            //    XXXX        XXX
+            //     XXX         XX   <--- lastnz
+            //       X          X
+
+            // store col in temp
+            int Pcol = P[col];
+            double* cj = c + lastnz;
+            double* cend = c + size;
+            long diff = (U + (col * size)) - c;
+            for (; cj < cend; cj++)
+            {
+                *cj = cj[diff];
+            }
+            for (i = col; i < lastnz; i++)
+            {
+                P[i] = P[i + 1];
+                Uijend = U + ((i + 1) * size);
+                double* Uij = Uijend - size + i - 1;
+                if (i == 0)
+                {
+                    Uij++;
+                }
+                for (; Uij < Uijend; Uij++)
+                {
+                    *Uij = Uij[size];
+                }
+            }
+            P[lastnz] = Pcol;
+            if (lastnz > 0) U[lastnz * size + lastnz - 1] = 0.0;
+            for (j = lastnz; j < size; j++)
+            {
+                U[lastnz * size + j] = c[j];
+            }
+            pivot = c[lastnz] / ujj;
+            if (Math.Abs(U[lastnz * size + lastnz]) < 0.000001)
+            {
+                Singular = true;
+            }
+        }
+#endif
     }
 }
