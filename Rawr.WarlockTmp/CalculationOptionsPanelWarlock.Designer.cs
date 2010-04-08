@@ -53,6 +53,7 @@
             this.latencySpinner = new System.Windows.Forms.NumericUpDown();
             this.latencyLabel = new System.Windows.Forms.Label();
             this.infernalCheck = new System.Windows.Forms.CheckBox();
+            this.ProcCheckbox = new System.Windows.Forms.CheckBox();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
@@ -168,7 +169,7 @@
             this.rotationErrorLabel.Name = "rotationErrorLabel";
             this.rotationErrorLabel.Size = new System.Drawing.Size(282, 13);
             this.rotationErrorLabel.TabIndex = 19;
-            this.rotationErrorLabel.Text = "label1";
+            this.rotationErrorLabel.Text = "Error Label";
             // 
             // rotationRenameButton
             // 
@@ -350,10 +351,22 @@
             this.infernalCheck.UseVisualStyleBackColor = true;
             this.infernalCheck.CheckedChanged += new System.EventHandler(this.infernalCheck_CheckedChanged);
             // 
+            // ProcCheckbox
+            // 
+            this.ProcCheckbox.AutoSize = true;
+            this.ProcCheckbox.Location = new System.Drawing.Point(3, 418);
+            this.ProcCheckbox.Name = "ProcCheckbox";
+            this.ProcCheckbox.Size = new System.Drawing.Size(132, 17);
+            this.ProcCheckbox.TabIndex = 17;
+            this.ProcCheckbox.Text = "Disable special effects";
+            this.ProcCheckbox.UseVisualStyleBackColor = true;
+            this.ProcCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ProcCheckbox);
             this.Controls.Add(this.infernalCheck);
             this.Controls.Add(this.latencyLabel);
             this.Controls.Add(this.latencySpinner);
@@ -402,5 +415,6 @@
         private System.Windows.Forms.ListBox rotationMenu;
         private System.Windows.Forms.Label fillerLabel;
         private System.Windows.Forms.ComboBox fillerCombo;
+        private System.Windows.Forms.CheckBox ProcCheckbox;
     }
 }

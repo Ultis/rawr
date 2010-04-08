@@ -292,8 +292,8 @@ namespace Rawr.WarlockTmp {
                 Stats.BonusDamageMultiplier);
             SpellModifiers.AddMultiplicativeMultiplier(
                 Talents.Malediction * .01f);
-            SpellModifiers.AddMultiplicativeDirectMultiplier(
-                Talents.DemonicPact * .01f);
+            SpellModifiers.AddMultiplicativeMultiplier(
+                Talents.DemonicPact * .02f);
             SpellModifiers.AddCritChance(Stats.SpellCrit);
             SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
             if (CastSpells.ContainsKey("Metamorphosis")) {
@@ -310,6 +310,8 @@ namespace Rawr.WarlockTmp {
             }
             if (Talents.ImprovedShadowBolt > 0
                 && Stats.SpellCritOnTarget < .05f) {
+
+                // TODO this should somehow affect Pyroclasm
 
                 // If the 5% crit debuff is not already being maintained by
                 // somebody else (i.e. it's not selected in the buffs tab), we
@@ -372,6 +374,18 @@ namespace Rawr.WarlockTmp {
 
         private void CalcHasteProcs() {
 
+            float nonProcHaste
+                = 1 + Stats.SpellHaste
+                    + StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
+
+            if (Options.NoProcs) {
+                WeightedStat staticHaste = new WeightedStat();
+                staticHaste.Chance = 1f;
+                staticHaste.Value = nonProcHaste;
+                Haste = new WeightedStat[] { staticHaste };
+                return;
+            }
+
             // the trigger rates are all guestimates at this point, since the
             // real values depend on haste (which obviously has not been
             // finalized yet)
@@ -379,10 +393,6 @@ namespace Rawr.WarlockTmp {
             // this method currently calculates non-haste procs, too. future
             // plans are to move them after casting stats are set, so the
             // triggers can be accurate
-
-            float nonProcHaste
-                = 1 + Stats.SpellHaste
-                    + StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
 
             Dictionary<Trigger, float> periods
                 = new Dictionary<Trigger, float>();
@@ -602,14 +612,14 @@ namespace Rawr.WarlockTmp {
                     "Incinerate (Under Backdraft)")) {
 
                 forCalcs.Insert(
-                    forCalcs.Count - 1, "Incinerate (Under Backdraft)");
+                    forCalcs.Count, "Incinerate (Under Backdraft)");
             }
 
             if (Options.Filler.Equals("Shadow Bolt")
                 && !forCalcs.Contains("Shadow Bolt (Instant)")
                 && ShadowBolt_Instant.MightCast(Talents, forCalcs)) {
 
-                forCalcs.Insert(forCalcs.Count - 1, "Shadow Bolt (Instant)");
+                forCalcs.Insert(forCalcs.Count, "Shadow Bolt (Instant)");
             }
 
             return forCalcs;

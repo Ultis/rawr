@@ -333,6 +333,12 @@ namespace Rawr.WarlockTmp {
                         AvgTickCrit,
                         NumTicks);
             }
+            if (AvgDirectCrit > AvgDirectHit || AvgTickCrit > AvgTickHit) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tCrit Chance\r\n",
+                        100 * SpellModifiers.CritChance);
+            }
             toolTip
                 += string.Format(
                     "{0:0.00}s\tCast Time\r\n"
@@ -819,9 +825,10 @@ namespace Rawr.WarlockTmp {
                 stateOnHit.ExtraState["Backdraft Aura"] = 3;
             }
             if (!Mommy.Talents.GlyphConflag) {
-                stateOnHit.Cooldowns[Mommy.GetSpell("Immolate")]
-                    = -GetTimeUsed(stateBeforeCast);
-                // TODO: consume on a miss, too?
+                foreach (CastingState state in states) {
+                    state.Cooldowns[Mommy.GetSpell("Immolate")]
+                        = -GetTimeUsed(stateBeforeCast);
+                }
             }
             return states;
         }

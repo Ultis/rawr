@@ -20,15 +20,16 @@ namespace Rawr.WarlockTmp {
 
         #region properties
 
-        public String Pet { get; set; }
-        public bool UseInfernal { get; set; }
-        public int TargetLevel { get; set; }
-        public float Duration { get; set; }
-        public float Latency { get; set; }
-        public float ManaPotSize { get; set; }
-        public float Replenishment { get; set; }
-        public string Filler { get; set; }
-        public List<string> SpellPriority { get; set; }
+        public String Pet;
+        public bool UseInfernal;
+        public int TargetLevel;
+        public float Duration;
+        public float Latency;
+        public float ManaPotSize;
+        public float Replenishment;
+        public string Filler;
+        public List<string> SpellPriority;
+        public bool NoProcs;
 
         #endregion
 

@@ -273,6 +273,16 @@ namespace Rawr.WarlockTmp {
             Character.OnCalculationsInvalidated();
         }
 
+        private void procCheckbox_CheckedChanged(object sender, EventArgs e) {
+
+            if (_ignoreEvents) {
+                return;
+            }
+
+            _options.NoProcs = ProcCheckbox.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
         #endregion
     }
 }
