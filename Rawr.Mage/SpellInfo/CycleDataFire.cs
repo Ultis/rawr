@@ -6,9 +6,9 @@ namespace Rawr.Mage
 {
     public static class FBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K;
             cycle.Name = "FBPyro";
 
@@ -188,9 +188,9 @@ namespace Rawr.Mage
 
     public static class FBLBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell LB;
             Spell Pyro;
@@ -356,9 +356,9 @@ namespace Rawr.Mage
 
     public static class FFBLBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell LB;
             Spell Pyro;
@@ -454,9 +454,9 @@ namespace Rawr.Mage
 
     public static class ScLBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell Sc;
             Spell LB;
             Spell Pyro;
@@ -550,9 +550,9 @@ namespace Rawr.Mage
 
     public static class FFBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             float K;
             cycle.Name = "FFBPyro";
@@ -622,9 +622,9 @@ namespace Rawr.Mage
 
     public static class FBScPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell Sc;
             Spell Pyro;
@@ -784,9 +784,9 @@ namespace Rawr.Mage
 
     public static class FBScLBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FB;
             Spell Sc;
             Spell LB;
@@ -1021,9 +1021,9 @@ namespace Rawr.Mage
 
     public static class FFBScLBPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell Sc;
             Spell LB;
@@ -1191,9 +1191,9 @@ namespace Rawr.Mage
 
     public static class FFBScPyro
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
             Spell Sc;
             Spell Pyro;

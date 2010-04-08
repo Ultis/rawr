@@ -51,8 +51,8 @@ namespace Rawr.Mage
 
         private int cols;
         private int rows;
-        private int sparseIndex = 0;
-        private int lastCol = 0;
+        private int sparseIndex;
+        private int lastCol;
         private ArraySet arraySet;
 
         private bool finalized;
@@ -83,6 +83,11 @@ namespace Rawr.Mage
 
         public SparseMatrix(int rows, int maxCols, ArraySet arraySet)
         {
+            Initialize(rows, maxCols, arraySet);
+        }
+
+        public void Initialize(int rows, int maxCols, ArraySet arraySet)
+        {
             this.arraySet = arraySet;
             if (rows > arraySet.SparseMatrixMaxRows || maxCols + 20 > arraySet.SparseMatrixMaxCols)
             {
@@ -93,6 +98,10 @@ namespace Rawr.Mage
             this.rows = rows;
             this.cols = 0;
             //Array.Clear(data, 0, rows * cols); // only need to clear what will be used
+
+            sparseIndex = 0;
+            lastCol = 0;
+            finalized = false;
         }
 
         public double this[int row, int col]

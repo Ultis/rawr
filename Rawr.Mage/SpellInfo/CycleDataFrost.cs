@@ -6,9 +6,9 @@ namespace Rawr.Mage
 {
     public static class FrBFB
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB;
             float K;
             cycle.Name = "FrBFB";
@@ -32,9 +32,9 @@ namespace Rawr.Mage
 
     public static class FrBFBIL
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FB, FBS, ILS;
             float KFrB, KFrBS, KFB, KFBS, KILS;
             cycle.Name = "FrBFBIL";
@@ -138,9 +138,9 @@ namespace Rawr.Mage
 
     public static class FrBDFFBIL
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FB, FBS, ILS, DFS;
             float KFrB, KFrBS, KFB, KFBS, KILS, KDFS;
             cycle.Name = "FrBDFFBIL";
@@ -313,9 +313,9 @@ namespace Rawr.Mage
 
     public static class FrBDFFFB
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FFB, FFBS, DFS;
             float KFrB, KFrBS, KFFB, KFFBS, KDFS;
             cycle.Name = "FrBDFFFB";
@@ -494,9 +494,9 @@ namespace Rawr.Mage
 
     public static class FrBILFB
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, FB, ILS;
             float KFrB, KFrBS, KFB, KILS;
             cycle.Name = "FrBILFB";
@@ -594,9 +594,9 @@ namespace Rawr.Mage
 
     public static class FrBIL
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FrB, FrBS, ILS;
             float KFrB, KFrBS, KILS;
             cycle.Name = "FrBIL";

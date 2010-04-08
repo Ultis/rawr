@@ -718,7 +718,11 @@ namespace Rawr.Optimizer
         {
             get
             {
+#if SILVERLIGHT
+                return 4;
+#else
                 return Environment.ProcessorCount;
+#endif
             }
         }
 

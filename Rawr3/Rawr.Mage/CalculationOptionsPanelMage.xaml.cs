@@ -118,12 +118,9 @@ namespace Rawr.Mage
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, false, false);
-            Stats rawStats;
-            Stats baseStats;
-            CharacterCalculationsMage calculationResult = solver.InitializeCalculationResult(null, calculations, out rawStats, out baseStats);
-            calculationResult.NeedsDisplayCalculations = true;
-            CastingState baseState = new CastingState(calculationResult, 0, false, 0);
+            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, true, false);
+            solver.Initialize(null);
+            CastingState baseState = new CastingState(solver, 0, false, 0);
 
             FireCycleGenerator generator = new FireCycleGenerator(baseState);
 

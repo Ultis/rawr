@@ -289,7 +289,7 @@ namespace Rawr.Mage
         public const float GlobalCooldownLimit = 1.0f;
         public const float MaxHitRate = 1.0f;
 
-        private class SpellCycle : Cycle
+        /*private class SpellCycle : Cycle
         {
             private Spell spell;
 
@@ -327,14 +327,22 @@ namespace Rawr.Mage
             {
                 spell.AddManaUsageContribution(dict, spell.CastTime * duration / CastTime);
             }
-        }
+        }*/
 
         private Cycle cycle;
         public static implicit operator Cycle(Spell spell)
         {
             if (spell.cycle == null)
             {
-                spell.cycle = new SpellCycle(spell);
+                bool needsDisplayCalculations = spell.castingState.Solver.NeedsDisplayCalculations;
+                spell.cycle = Cycle.New(needsDisplayCalculations, spell.castingState);
+                spell.cycle.AddSpell(needsDisplayCalculations, spell, 1.0f);
+                spell.cycle.Calculate();
+                if (spell.AreaEffect)
+                {
+                    spell.cycle.AreaEffect = true;
+                    spell.cycle.AoeSpell = spell;
+                }
             }
             return spell.cycle;
         }

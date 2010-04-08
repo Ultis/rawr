@@ -6,9 +6,9 @@ namespace Rawr.Mage
 {
     public static class FrostWardCycle
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "Frost Ward+" + baseCycle.Name;
 
             Spell FrostWard = castingState.GetSpell(SpellId.FrostWard);
@@ -25,9 +25,9 @@ namespace Rawr.Mage
 
     public static class FireWardCycle
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "Fire Ward+" + baseCycle.Name;
 
             Spell FireWard = castingState.GetSpell(SpellId.FireWard);
@@ -44,9 +44,9 @@ namespace Rawr.Mage
 
     public static class ABAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "ABAM";
 
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast0);
@@ -93,9 +93,9 @@ namespace Rawr.Mage
 
     public static class AB3AM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB3AM";
 
             // S0: no proc
@@ -142,9 +142,9 @@ namespace Rawr.Mage
 
     public static class AB4AM234MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB4AM234MBAM";
 
             // S0: no proc
@@ -212,9 +212,9 @@ namespace Rawr.Mage
 
     public static class AB4AM0234MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB4AM0234MBAM";
 
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -364,9 +364,9 @@ namespace Rawr.Mage
 
     public static class AB3AM23MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB3AM23MBAM";
 
             // S0: no proc
@@ -427,9 +427,9 @@ namespace Rawr.Mage
 
     public static class AB3AM023MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB3AM023MBAM";
 
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -562,9 +562,9 @@ namespace Rawr.Mage
 
     public static class AB2AM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB2AM";
 
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -664,9 +664,9 @@ namespace Rawr.Mage
 
     public static class AB3AMABar
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = "AB3AMABar";
 
             // S0: no proc
@@ -705,7 +705,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3AM2MBAM : DynamicCycle
+    class AB3AM2MBAM : Cycle
     {
         public AB3AM2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -750,7 +750,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3AMABar2C : DynamicCycle
+    class AB3AMABar2C : Cycle
     {
         public AB3AMABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -798,7 +798,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar0C : DynamicCycle
+    class ABABar0C : Cycle
     {
         public ABABar0C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -854,7 +854,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar1C : DynamicCycle
+    class ABABar1C : Cycle
     {
         public ABABar1C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -907,7 +907,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar0MBAM : DynamicCycle
+    class ABABar0MBAM : Cycle
     {
         public ABABar0MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -947,7 +947,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABSpam3C : DynamicCycle
+    class ABSpam3C : Cycle
     {
         public ABSpam3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1023,7 +1023,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABSpam03C : DynamicCycle
+    class ABSpam03C : Cycle
     {
         public ABSpam03C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1098,7 +1098,7 @@ namespace Rawr.Mage
         }
     }
 
-    public class ABSpam03MBAM : DynamicCycle
+    public class ABSpam03MBAM : Cycle
     {
         public ABSpam03MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1167,7 +1167,7 @@ namespace Rawr.Mage
         }
     }
 
-    public class ABSpam3MBAM : DynamicCycle
+    public class ABSpam3MBAM : Cycle
     {
         public ABSpam3MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1236,9 +1236,9 @@ namespace Rawr.Mage
 
     public static class ABSpam4MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, S0, S1;
             cycle.Name = "ABSpam4MBAM";
 
@@ -1380,9 +1380,9 @@ namespace Rawr.Mage
 
     public static class ABSpam04MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, S0, S1;
             cycle.Name = "ABSpam04MBAM";
 
@@ -1616,9 +1616,9 @@ namespace Rawr.Mage
 
     public static class ABSpam24MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, S0, S1;
             cycle.Name = "ABSpam24MBAM";
 
@@ -1691,9 +1691,9 @@ namespace Rawr.Mage
 
     public static class ABSpam024MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, S0, S1;
             cycle.Name = "ABSpam024MBAM";
 
@@ -1896,9 +1896,9 @@ namespace Rawr.Mage
 
     public static class ABSpam034MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K7, S0, S1;
             cycle.Name = "ABSpam034MBAM";
 
@@ -2134,9 +2134,9 @@ namespace Rawr.Mage
 
     public static class ABSpam0234MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, K7, S0, S1;
             cycle.Name = "ABSpam0234MBAM";
 
@@ -2350,9 +2350,9 @@ namespace Rawr.Mage
 
     public static class ABSpam234MBAM
     {
-        public static DynamicCycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
         {
-            DynamicCycle cycle = DynamicCycle.New(needsDisplayCalculations, castingState);
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             float K1, K2, K3, K4, K5, K6, K7, S0, S1;
             cycle.Name = "ABSpam234MBAM";
 
@@ -2428,7 +2428,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB2ABar2C : DynamicCycle
+    class AB2ABar2C : Cycle
     {
         public AB2ABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2480,7 +2480,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB2ABar2MBAM : DynamicCycle
+    class AB2ABar2MBAM : Cycle
     {
         public AB2ABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2527,7 +2527,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB2ABar3C : DynamicCycle
+    class AB2ABar3C : Cycle
     {
         public AB2ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2577,7 +2577,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar3C : DynamicCycle
+    class ABABar3C : Cycle
     {
         public ABABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2626,7 +2626,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar2C : DynamicCycle
+    class ABABar2C : Cycle
     {
         public ABABar2C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2673,7 +2673,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar2MBAM : DynamicCycle
+    class ABABar2MBAM : Cycle
     {
         public ABABar2MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2718,7 +2718,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABar1MBAM : DynamicCycle
+    class ABABar1MBAM : Cycle
     {
         public ABABar1MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2761,7 +2761,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3ABar3C : DynamicCycle
+    class AB3ABar3C : Cycle
     {
         public AB3ABar3C(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2821,7 +2821,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3ABar3MBAM : DynamicCycle
+    class AB3ABar3MBAM : Cycle
     {
         public AB3ABar3MBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)

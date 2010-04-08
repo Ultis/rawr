@@ -85,7 +85,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class ABarAM : DynamicCycle
+    class ABarAM : Cycle
     {
         public ABarAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -123,7 +123,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABarSlow : DynamicCycle
+    class ABABarSlow : Cycle
     {
         public ABABarSlow(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -204,7 +204,7 @@ namespace Rawr.Mage
         }
     }
 
-    /*class FBABarSlow : DynamicCycle
+    /*class FBABarSlow : Cycle
     {
         public FBABarSlow(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -275,7 +275,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class FrBABarSlow : DynamicCycle
+    class FrBABarSlow : Cycle
     {
         public FrBABarSlow(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -345,7 +345,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }*/
 
-    /*class ABABarY : DynamicCycle
+    /*class ABABarY : Cycle
     {
         public ABABarY(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -401,7 +401,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class AB2ABarMBAM : DynamicCycle
+    class AB2ABarMBAM : Cycle
     {
         public AB2ABarMBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -462,7 +462,7 @@ namespace Rawr.Mage
         }
     }
 
-    /*class AB3ABar : DynamicCycle
+    /*class AB3ABar : Cycle
     {
         public AB3ABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -575,7 +575,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class AB3ABarX : DynamicCycle
+    class AB3ABarX : Cycle
     {
         public AB3ABarX(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -661,7 +661,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class AB3ABarY : DynamicCycle
+    class AB3ABarY : Cycle
     {
         public AB3ABarY(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -741,7 +741,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class AB2ABar : DynamicCycle
+    class AB2ABar : Cycle
     {
         public AB2ABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -831,7 +831,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class FB2ABar : DynamicCycle
+    class FB2ABar : Cycle
     {
         public FB2ABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -908,7 +908,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class FrB2ABar : DynamicCycle
+    class FrB2ABar : Cycle
     {
         public FrB2ABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -984,7 +984,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }*/
 
-    /*class FBABar : DynamicCycle
+    /*class FBABar : Cycle
     {
         public FBABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1044,7 +1044,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }*/
 
-    /*class FrBABar : DynamicCycle
+    /*class FrBABar : Cycle
     {
         public FrBABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1103,7 +1103,7 @@ namespace Rawr.Mage
         private StaticCycle commonChain;
     }
 
-    class FFBABar : DynamicCycle
+    class FFBABar : Cycle
     {
         public FFBABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1274,7 +1274,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class ABSpamMBAM : DynamicCycle
+    class ABSpamMBAM : Cycle
     {
         public ABSpamMBAM(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1370,7 +1370,7 @@ namespace Rawr.Mage
         }
     }
 
-    /*class AB32AMABar : DynamicCycle
+    /*class AB32AMABar : Cycle
     {
         public AB32AMABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1435,7 +1435,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB2AMABar : DynamicCycle
+    class AB2AMABar : Cycle
     {
         public AB2AMABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1482,7 +1482,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAMABar : DynamicCycle
+    class ABAMABar : Cycle
     {
         public ABAMABar(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1892,7 +1892,7 @@ namespace Rawr.Mage
         }
     }*/
 
-    class ABABarSc : DynamicCycle
+    class ABABarSc : Cycle
     {
         public ABABarSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1936,7 +1936,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABABarCSc : DynamicCycle
+    class ABABarCSc : Cycle
     {
         public ABABarCSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -1980,7 +1980,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAMABarSc : DynamicCycle
+    class ABAMABarSc : Cycle
     {
         public ABAMABarSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2024,7 +2024,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3AMABarSc : DynamicCycle
+    class AB3AMABarSc : Cycle
     {
         public AB3AMABarSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2068,7 +2068,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3ABarCSc : DynamicCycle
+    class AB3ABarCSc : Cycle
     {
         public AB3ABarCSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2112,7 +2112,7 @@ namespace Rawr.Mage
         }
     }
 
-    class AB3MBAMABarSc : DynamicCycle
+    class AB3MBAMABarSc : Cycle
     {
         public AB3MBAMABarSc(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -2156,7 +2156,7 @@ namespace Rawr.Mage
         }
     }
 
-    /*class ABAM3ScCCAM : DynamicCycle
+    /*class ABAM3ScCCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2256,7 +2256,7 @@ namespace Rawr.Mage
     }
 }
 
-class ABAM3Sc2CCAM : DynamicCycle
+class ABAM3Sc2CCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2356,7 +2356,7 @@ class ABAM3Sc2CCAM : DynamicCycle
     }
 }
 
-class ABAM3FrBCCAM : DynamicCycle
+class ABAM3FrBCCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2456,7 +2456,7 @@ class ABAM3FrBCCAM : DynamicCycle
     }
 }
 
-class ABAM3FrBCCAMFail : DynamicCycle
+class ABAM3FrBCCAMFail : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2556,7 +2556,7 @@ class ABAM3FrBCCAMFail : DynamicCycle
     }
 }
 
-class ABAM3FrBScCCAM : DynamicCycle
+class ABAM3FrBScCCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2674,7 +2674,7 @@ class ABAM3FrBScCCAM : DynamicCycle
     }
 }
 
-class ABAMCCAM : DynamicCycle
+class ABAMCCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;
@@ -2754,7 +2754,7 @@ class ABAMCCAM : DynamicCycle
     }
 }
 
-class ABAM3CCAM : DynamicCycle
+class ABAM3CCAM : Cycle
 {
     StaticCycle chain1;
     StaticCycle chain2;

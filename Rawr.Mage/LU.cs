@@ -118,6 +118,11 @@ namespace Rawr.Mage
         // data will be modified, if you need to retain it clean pass a clone
         public LU(int size, ArraySet arraySet)
         {
+            Initialize(size, arraySet);
+        }
+
+        public void Initialize(int size, ArraySet arraySet)
+        {
             this.size = size;
             this.arraySet = arraySet;
             etaSize = 0;
@@ -392,9 +397,6 @@ namespace Rawr.Mage
 
 #if SILVERLIGHT
         public void FSolveL(double[] b, double[] c)
-#else
-        public unsafe void FSolveL(double* b, double* c)
-#endif
         {
             // perform all eta operations and finally apply row permutation P
             int i, j;
@@ -438,6 +440,62 @@ namespace Rawr.Mage
                 c[i] = b[P[i]];
             }
         }
+#else
+        public unsafe void FSolveL(double* b, double* c)
+        {
+            int size = this.size;
+            int* sLstartj = this.sLstart;
+            double* sL = this.sL;
+            int* sLI = this.sLI;
+            int* LJj = this.LJ;
+            int* LJsize = LJj + size;
+            int* LJend = LJj + etaSize;
+            // perform all eta operations and finally apply row permutation P
+            int i;
+            for (; LJj < LJsize; LJj++)
+            {
+                int row = *LJj;
+                // eta columns from initial decomposition
+                // we're updating using row, if element is zero we can skip
+                // b~ = b + eta (erow' b)
+                double f = b[row];
+                int* sLstartjinc = sLstartj + 1;
+                if (Math.Abs(f) >= 0.00000001)
+                {
+                    /*for (i = 0; i < size; i++)
+                    {
+                        b[i] += f * L[j * size + i];
+                    }*/
+                    int maxi = *sLstartjinc;
+                    for (i = *sLstartj; i < maxi; i++)
+                    {
+                        b[sLI[i]] += f * sL[i];
+                    }
+                }
+                sLstartj = sLstartjinc;
+            }
+            for (; LJj < LJend; LJj++)
+            {
+                int row = *LJj;
+                // eta rows from updates
+                // b~ = b + erow (eta' b)
+                // we're updating row element
+                double f = 0.0;
+                int* sLstartjinc = sLstartj + 1;
+                int maxi = *sLstartjinc;
+                for (i = *sLstartj; i < maxi; i++)
+                {
+                    f += b[sLI[i]] * sL[i];
+                }
+                b[row] += f;
+                sLstartj = sLstartjinc;
+            }
+            for (i = 0; i < size; i++)
+            {
+                c[i] = b[P[i]];
+            }
+        }
+#endif
 
         // Performance Log, start, load Kavan, repeat dps time = 1
         // Primal=6.08148534180949E-05, Decompose=3.38125119182951E-05 implementation LU

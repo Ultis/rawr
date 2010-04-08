@@ -124,7 +124,7 @@ namespace Rawr.Mage
         ConeOfCold
     }
 
-    public abstract class Cycle
+    public class Cycle
     {
         public string Name;
         public CycleId CycleId;
@@ -136,13 +136,148 @@ namespace Rawr.Mage
 
         public CastingState CastingState;
 
-        protected Cycle()
+        private List<Spell> Spell;
+        private List<float> SpellWeight;
+
+        public Cycle()
         {
         }
 
-        protected Cycle(CastingState castingState)
+        public Cycle(bool needsDisplayCalculations, CastingState castingState)
         {
             CastingState = castingState;
+            if (needsDisplayCalculations)
+            {
+                Spell = new List<Spell>();
+                SpellWeight = new List<float>();
+            }
+        }
+
+        public static Cycle New(bool needsDisplayCalculations, CastingState castingState)
+        {
+            ArraySet arraySet = castingState.Solver.ArraySet;
+            if (needsDisplayCalculations || arraySet == null)
+            {
+                return new Cycle(needsDisplayCalculations, castingState);
+            }
+            else
+            {
+                Cycle cycle = arraySet.NewCycle();
+                cycle.Initialize(castingState);
+                return cycle;
+            }
+        }
+
+        public void AddCycle(bool needsDisplayCalculations, Cycle cycle, float weight)
+        {
+            if (needsDisplayCalculations)
+            {
+                AddSpellsFromCycle(cycle, weight);
+            }
+            CastTime += weight * cycle.CastTime;
+            CastProcs += weight * cycle.CastProcs;
+            CastProcs2 += weight * cycle.CastProcs2;
+            NukeProcs += weight * cycle.NukeProcs;
+            Ticks += weight * cycle.Ticks;
+            HitProcs += weight * cycle.HitProcs;
+            CritProcs += weight * cycle.CritProcs;
+            IgniteProcs += weight * cycle.IgniteProcs;
+            DotProcs += weight * cycle.DotProcs;
+            TargetProcs += weight * cycle.TargetProcs;
+            DamageProcs += weight * cycle.DamageProcs;
+            Absorbed += weight * cycle.Absorbed;
+            costPerSecond += weight * cycle.CastTime * cycle.costPerSecond;
+            damagePerSecond += weight * cycle.CastTime * cycle.damagePerSecond;
+            threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
+            DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
+        }
+
+        private void AddSpellsFromCycle(Cycle cycle, float weight)
+        {
+            for (int i = 0; i < cycle.Spell.Count; i++)
+            {
+                Spell.Add(cycle.Spell[i]);
+                SpellWeight.Add(weight * cycle.SpellWeight[i]);
+            }
+        }
+
+        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight)
+        {
+            if (needsDisplayCalculations)
+            {
+                Spell.Add(spell);
+                SpellWeight.Add(weight);
+            }
+            CastTime += weight * spell.CastTime;
+            CastProcs += weight * spell.CastProcs;
+            CastProcs2 += weight * spell.CastProcs2;
+            NukeProcs += weight * spell.NukeProcs;
+            Ticks += weight * spell.Ticks;
+            HitProcs += weight * spell.HitProcs;
+            CritProcs += weight * spell.CritProcs;
+            IgniteProcs += weight * spell.IgniteProcs;
+            DotProcs += weight * spell.DotProcs;
+            TargetProcs += weight * spell.TargetProcs;
+            DamageProcs += weight * (spell.HitProcs + spell.DotProcs);
+            Absorbed += weight * spell.TotalAbsorb;
+            costPerSecond += weight * spell.AverageCost;
+            damagePerSecond += weight * spell.AverageDamage;
+            threatPerSecond += weight * spell.AverageThreat;
+            DpsPerSpellPower += weight * spell.DamagePerSpellPower;
+        }
+
+        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight, float dotUptime)
+        {
+            if (needsDisplayCalculations)
+            {
+                Spell.Add(spell);
+                SpellWeight.Add(weight);
+            }
+            CastTime += weight * spell.CastTime;
+            CastProcs += weight * spell.CastProcs;
+            CastProcs2 += weight * spell.CastProcs2;
+            NukeProcs += weight * spell.NukeProcs;
+            Ticks += weight * spell.Ticks;
+            HitProcs += weight * spell.HitProcs;
+            CritProcs += weight * spell.CritProcs;
+            IgniteProcs += weight * spell.IgniteProcs;
+            DotProcs += weight * dotUptime * spell.DotProcs;
+            TargetProcs += weight * spell.TargetProcs;
+            DamageProcs += weight * (spell.HitProcs + dotUptime * spell.DotProcs);
+            Absorbed += weight * spell.TotalAbsorb;
+            costPerSecond += weight * spell.AverageCost;
+            damagePerSecond += weight * (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
+            threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
+            DpsPerSpellPower += weight * (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
+        }
+
+        public void AddPause(float duration, float weight)
+        {
+            CastTime += weight * duration;
+        }
+
+        public void Calculate()
+        {
+            costPerSecond /= CastTime;
+            damagePerSecond /= CastTime;
+            threatPerSecond /= CastTime;
+            DpsPerSpellPower /= CastTime;
+        }
+
+        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
+        {
+            for (int i = 0; i < Spell.Count; i++)
+            {
+                if (Spell[i] != null) Spell[i].AddSpellContribution(dict, SpellWeight[i] * Spell[i].CastTime / CastTime * duration, effectSpellPower);
+            }
+        }
+
+        public virtual void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            for (int i = 0; i < Spell.Count; i++)
+            {
+                if (Spell[i] != null) Spell[i].AddManaUsageContribution(dict, SpellWeight[i] * Spell[i].CastTime / CastTime * duration);
+            }
         }
 
         public void Initialize(CastingState castingState)
@@ -188,7 +323,7 @@ namespace Rawr.Mage
         {
             get
             {
-                Calculate();
+                CalculateEffects();
                 return damagePerSecond + effectDamagePerSecond;
             }
         }
@@ -199,7 +334,7 @@ namespace Rawr.Mage
         {
             get
             {
-                Calculate();
+                CalculateEffects();
                 return threatPerSecond + effectThreatPerSecond;
             }
         }
@@ -209,7 +344,7 @@ namespace Rawr.Mage
         {
             get
             {
-                Calculate();
+                CalculateEffects();
                 return costPerSecond;
             }
         }
@@ -219,7 +354,7 @@ namespace Rawr.Mage
         {
             get
             {
-                Calculate();
+                CalculateEffects();
                 return manaRegenPerSecond;
             }
         }
@@ -260,10 +395,7 @@ namespace Rawr.Mage
             AddEffectContribution(dict, duration);
         }
 
-        public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower);
-        public abstract void AddManaUsageContribution(Dictionary<string, float> dict, float duration);
-
-        private void Calculate()
+        private void CalculateEffects()
         {
             if (!calculated)
             {
@@ -893,7 +1025,7 @@ namespace Rawr.Mage
         }
     }
 
-    public class SpellCustomMix : DynamicCycle
+    public class SpellCustomMix : Cycle
     {
         public SpellCustomMix(bool needsDisplayCalculations, CastingState castingState)
             : base(needsDisplayCalculations, castingState)
@@ -906,145 +1038,6 @@ namespace Rawr.Mage
                 AddSpell(needsDisplayCalculations, castingState.GetSpell(spellWeight.Spell), spellWeight.Weight);
             }
             Calculate();
-        }
-    }
-
-    public class DynamicCycle : Cycle
-    {
-        private List<Cycle> Cycle;
-        private List<float> Weight;
-
-        public DynamicCycle()
-        {
-        }
-
-        public DynamicCycle(bool needsDisplayCalculations, CastingState castingState)
-            : base(castingState)
-        {
-            if (needsDisplayCalculations)
-            {
-                Cycle = new List<Cycle>();
-                Weight = new List<float>();
-            }
-        }
-
-        public static DynamicCycle New(bool needsDisplayCalculations, CastingState castingState)
-        {
-            ArraySet arraySet = castingState.Solver.ArraySet;
-            if (needsDisplayCalculations || arraySet == null)
-            {
-                return new DynamicCycle(needsDisplayCalculations, castingState);
-            }
-            else
-            {
-                DynamicCycle cycle = arraySet.NewDynamicCycle();
-                cycle.Initialize(castingState);
-                return cycle;
-            }
-        }
-
-        public void AddCycle(bool needsDisplayCalculations, Cycle cycle, float weight)
-        {
-            if (needsDisplayCalculations)
-            {
-                Cycle.Add(cycle);
-                Weight.Add(weight);
-            }
-            CastTime += weight * cycle.CastTime;
-            CastProcs += weight * cycle.CastProcs;
-            CastProcs2 += weight * cycle.CastProcs2;
-            NukeProcs += weight * cycle.NukeProcs;
-            Ticks += weight * cycle.Ticks;
-            HitProcs += weight * cycle.HitProcs;
-            CritProcs += weight * cycle.CritProcs;
-            IgniteProcs += weight * cycle.IgniteProcs;
-            DotProcs += weight * cycle.DotProcs;
-            TargetProcs += weight * cycle.TargetProcs;
-            DamageProcs += weight * cycle.DamageProcs;
-            Absorbed += weight * cycle.Absorbed;
-            costPerSecond += weight * cycle.CastTime * cycle.costPerSecond;
-            damagePerSecond += weight * cycle.CastTime * cycle.damagePerSecond;
-            threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
-            DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
-        }
-
-        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight)
-        {
-            if (needsDisplayCalculations)
-            {
-                Cycle.Add(spell);
-                Weight.Add(weight);
-            }
-            CastTime += weight * spell.CastTime;
-            CastProcs += weight * spell.CastProcs;
-            CastProcs2 += weight * spell.CastProcs2;
-            NukeProcs += weight * spell.NukeProcs;
-            Ticks += weight * spell.Ticks;
-            HitProcs += weight * spell.HitProcs;
-            CritProcs += weight * spell.CritProcs;
-            IgniteProcs += weight * spell.IgniteProcs;
-            DotProcs += weight * spell.DotProcs;
-            TargetProcs += weight * spell.TargetProcs;
-            DamageProcs += weight * (spell.HitProcs + spell.DotProcs);
-            Absorbed += weight * spell.TotalAbsorb;
-            costPerSecond += weight * spell.AverageCost;
-            damagePerSecond += weight * spell.AverageDamage;
-            threatPerSecond += weight * spell.AverageThreat;
-            DpsPerSpellPower += weight * spell.DamagePerSpellPower;
-        }
-
-        public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight, float dotUptime)
-        {
-            if (needsDisplayCalculations)
-            {
-                Cycle.Add(spell);
-                Weight.Add(weight);
-            }
-            CastTime += weight * spell.CastTime;
-            CastProcs += weight * spell.CastProcs;
-            CastProcs2 += weight * spell.CastProcs2;
-            NukeProcs += weight * spell.NukeProcs;
-            Ticks += weight * spell.Ticks;
-            HitProcs += weight * spell.HitProcs;
-            CritProcs += weight * spell.CritProcs;
-            IgniteProcs += weight * spell.IgniteProcs;
-            DotProcs += weight * dotUptime * spell.DotProcs;
-            TargetProcs += weight * spell.TargetProcs;
-            DamageProcs += weight * (spell.HitProcs + dotUptime * spell.DotProcs);
-            Absorbed += weight * spell.TotalAbsorb;
-            costPerSecond += weight * spell.AverageCost;
-            damagePerSecond += weight * (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
-            threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
-            DpsPerSpellPower += weight * (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
-        }
-
-        public void AddPause(float duration, float weight)
-        {
-            CastTime += weight * duration;
-        }
-
-        public void Calculate()
-        {
-            costPerSecond /= CastTime;
-            damagePerSecond /= CastTime;
-            threatPerSecond /= CastTime;
-            DpsPerSpellPower /= CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
-        {
-            for (int i = 0; i < Cycle.Count; i++)
-            {
-                if (Cycle[i] != null) Cycle[i].AddSpellContribution(dict, Weight[i] * Cycle[i].CastTime / CastTime * duration, effectSpellPower);
-            }
-        }
-
-        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
-        {
-            for (int i = 0; i < Cycle.Count; i++)
-            {
-                if (Cycle[i] != null) Cycle[i].AddManaUsageContribution(dict, Weight[i] * Cycle[i].CastTime / CastTime * duration);
-            }
         }
     }
 
@@ -1086,7 +1079,7 @@ namespace Rawr.Mage
         }
     }
 
-    public class GenericCycle : DynamicCycle
+    public class GenericCycle : Cycle
     {
         public List<CycleState> StateList;
         public double[] StateWeight;

@@ -33,7 +33,7 @@ namespace Rawr.UI
             get { return character; }
             set
             {
-                if (character != null) character.AvailableItemsChanged -= new EventHandler(character_CalculationsInvalidated);
+                if (character != null) character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
                 character = value;
                 ComparisonItemList.Character = character;
                 if (character != null)

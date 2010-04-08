@@ -458,7 +458,11 @@ namespace Rawr.Optimizer
             get
             {
                 int limit = model.MaxDegreeOfParallelism;
+#if SILVERLIGHT
+                int procCount = 4;
+#else
                 int procCount = Environment.ProcessorCount;
+#endif
                 if (limit == -1)
                 {
                     return procCount;
@@ -760,11 +764,7 @@ namespace Rawr.Optimizer
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
-                System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                sw.Start();
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
-                sw.Stop();
-                System.Diagnostics.Trace.WriteLine("Upgrade List Complete in " + sw.Elapsed.ToString());
             }
             catch (Exception ex)
             {

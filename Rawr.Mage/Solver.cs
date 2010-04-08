@@ -895,10 +895,25 @@ namespace Rawr.Mage
                 return _ValkyrDamageTemplate;
             }
         }
+
+        private WandTemplate _WandTemplate;
+        public WandTemplate WandTemplate
+        {
+            get
+            {
+                if (_WandTemplate == null)
+                {
+                    _WandTemplate = new WandTemplate();
+                }
+                return _WandTemplate;
+            }
+        }
+
         #endregion
 
         // initialized in GenerateStateList
         private List<CastingState> stateList;
+        private List<CastingState> scratchStateList = new List<CastingState>();
         public CastingState BaseState { get; set; }
 
         // initialized in GenerateSpellList
@@ -2524,7 +2539,10 @@ namespace Rawr.Mage
             ConstructSegments();
 
             //segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
-            segmentColumn = new int[SegmentList.Count + 1];
+            if (requiresMIP)
+            {
+                segmentColumn = new int[SegmentList.Count + 1];
+            }
 
             StartingMana = Math.Min(baseStats.Mana, BaseState.ManaRegenDrinking * CalculationOptions.DrinkingTime);
             double maxDrinkingTime = Math.Min(30, (baseStats.Mana - StartingMana) / BaseState.ManaRegenDrinking);
@@ -2564,7 +2582,11 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseFireWard ? 1 : 0) + (CalculationOptions.UseFrostWard ? 1 : 0))) * SegmentList.Count, this, SegmentList.Count);
+            if (lp == null)
+            {
+                lp = new SolverLP();
+            }
+            lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseFireWard ? 1 : 0) + (CalculationOptions.UseFrostWard ? 1 : 0))) * SegmentList.Count, this, SegmentList.Count);
 
             SetCalculationReuseReferences();
             AddWardStates();
@@ -2653,7 +2675,8 @@ namespace Rawr.Mage
                 if (Character.Ranged != null && Character.Ranged.Item.Type == ItemType.Wand)
                 {
                     int wandSegments = (restrictManaUse) ? SegmentList.Count : 1;
-                    Spell w = new WandTemplate(this, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed).GetSpell(BaseState);
+                    WandTemplate.Initialize(this, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed);
+                    Spell w = WandTemplate.GetSpell(BaseState);
                     Wand = w;
                     Cycle wand = w;
                     mps = wand.ManaPerSecond;
@@ -3254,25 +3277,25 @@ namespace Rawr.Mage
                 {
                     int waterElementalSegments = SegmentList.Count; // always segment, we need it to guarantee each block has activation
                     mps = (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown - BaseState.ManaRegen5SR;
-                    List<CastingState> states = new List<CastingState>();
+                    scratchStateList.Clear();
                     bool found = false;
                     // WE = 0x100
                     for (int i = 0; i < stateList.Count; i++)
                     {
                         if (stateList[i].Effects == (int)StandardEffect.WaterElemental)
                         {
-                            states.Add(stateList[i]);
+                            scratchStateList.Add(stateList[i]);
                             found = true;
                             break;
                         }
                     }
                     if (!found)
                     {
-                        states.Add(CastingState.New(this, (int)StandardEffect.WaterElemental, false, 0));
+                        scratchStateList.Add(CastingState.New(this, (int)StandardEffect.WaterElemental, false, 0));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
-                        foreach (CastingState state in states)
+                        foreach (CastingState state in scratchStateList)
                         {
                             Spell waterbolt = state.GetSpell(SpellId.Waterbolt);
                             dps = waterbolt.DamagePerSecond;
@@ -3320,24 +3343,24 @@ namespace Rawr.Mage
                 {
                     int mirrorImageSegments = SegmentList.Count; // always segment, we need it to guarantee each block has activation
                     mps = (int)(0.10 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown - BaseState.ManaRegen5SR;
-                    List<CastingState> states = new List<CastingState>();
+                    scratchStateList.Clear();
                     bool found = false;
                     for (int i = 0; i < stateList.Count; i++)
                     {
                         if (stateList[i].Effects == (int)StandardEffect.MirrorImage)
                         {
-                            states.Add(stateList[i]);
+                            scratchStateList.Add(stateList[i]);
                             found = true;
                             break;
                         }
                     }
                     if (!found)
                     {
-                        states.Add(CastingState.New(this, (int)StandardEffect.MirrorImage, false, 0));
+                        scratchStateList.Add(CastingState.New(this, (int)StandardEffect.MirrorImage, false, 0));
                     }
                     for (int segment = 0; segment < mirrorImageSegments; segment++)
                     {
-                        foreach (CastingState state in states)
+                        foreach (CastingState state in scratchStateList)
                         {
                             Spell mirrorImage = state.GetSpell(SpellId.MirrorImage);
                             dps = mirrorImage.DamagePerSecond;
@@ -3572,11 +3595,14 @@ namespace Rawr.Mage
                                         column = lp.AddColumnUnsafe();
                                         Cycle c = state.GetCycle(CalculationOptions.IncrementalSetSpells[index]);
                                         int seg = CalculationOptions.IncrementalSetSegments[index];
-                                        if (seg != lastSegment)
+                                        if (requiresMIP)
                                         {
-                                            for (; lastSegment < seg; )
+                                            if (seg != lastSegment)
                                             {
-                                                segmentColumn[++lastSegment] = column;
+                                                for (; lastSegment < seg; )
+                                                {
+                                                    segmentColumn[++lastSegment] = column;
+                                                }
                                             }
                                         }
                                         if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
@@ -3586,9 +3612,12 @@ namespace Rawr.Mage
                             }
                         }
                     }
-                    for (; lastSegment < SegmentList.Count; )
+                    if (requiresMIP)
                     {
-                        segmentColumn[++lastSegment] = column + 1;
+                        for (; lastSegment < SegmentList.Count; )
+                        {
+                            segmentColumn[++lastSegment] = column + 1;
+                        }
                     }
                 }
                 else
@@ -3601,7 +3630,10 @@ namespace Rawr.Mage
                     List<Cycle> placed = new List<Cycle>();
                     for (int seg = 0; seg < SegmentList.Count; seg++)
                     {
-                        segmentColumn[seg] = column + 1;
+                        if (requiresMIP)
+                        {
+                            segmentColumn[seg] = column + 1;
+                        }
                         for (int buffset = 0; buffset < stateList.Count; buffset++)
                         {
                             CastingState state = stateList[buffset];
@@ -3641,7 +3673,10 @@ namespace Rawr.Mage
                             }
                         }
                     }
-                    segmentColumn[SegmentList.Count] = column + 1;
+                    if (requiresMIP)
+                    {
+                        segmentColumn[SegmentList.Count] = column + 1;
+                    }
                 }
                 #endregion
 

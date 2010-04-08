@@ -86,8 +86,6 @@ namespace Rawr.Mage
         private int* flags;
         private double* lb;
         private double* ub;
-        private double* beta;
-        private double* betaBackup;
 #endif
 
         private const double epsPrimal = 1.0e-7;
@@ -101,7 +99,7 @@ namespace Rawr.Mage
         private const double epsDrop = 1.0e-14;
 
 #if SILVERLIGHT
-        public static unsafe void Copy(double[] dest, double[] source, int size)
+        public static void Copy(double[] dest, double[] source, int size)
         {
             Array.Copy(source, 0, dest, 0, size);
         }
@@ -482,6 +480,11 @@ namespace Rawr.Mage
 
         public LP(int baseRows, int maxCols, ArraySet arraySet)
         {
+            Initialize(baseRows, maxCols, arraySet);
+        }
+
+        public void Initialize(int baseRows, int maxCols, ArraySet arraySet)
+        {
             this.baseRows = baseRows;
             this.arraySet = arraySet;
             if (baseRows + 10 > arraySet.maxRows || maxCols + 10 > arraySet.maxCols)
@@ -493,18 +496,36 @@ namespace Rawr.Mage
             this.rows = baseRows;
             this.cols = 0;
             maxSize = rows + 500;
+            _lb = null;
             ExtendInstanceArrays();
             if (arraySet.extraReferenceCount != null) Array.Clear(arraySet.extraReferenceCount, 0, arraySet.extraReferenceCount.Length);
             arraySet.extraConstraintMap.Clear();
 
-            A = new SparseMatrix(baseRows, maxCols, arraySet);
-            lu = new LU(rows, arraySet);
+            if (A == null)
+            {
+                A = new SparseMatrix(baseRows, maxCols, arraySet);
+            }
+            else
+            {
+                A.Initialize(baseRows, maxCols, arraySet);
+            }
+            if (lu == null)
+            {
+                lu = new LU(rows, arraySet);
+            }
+            else
+            {
+                lu.Initialize(rows, arraySet);
+            }
             //extraConstraints = new double[cols + rows + 1];
             //extraConstraints[cols + rows - 1] = 1;
             //numExtraConstraints = 1;
             //Array.Clear(_b, 0, baseRows);
 
             ColdStart = true;
+            constructed = false;
+            disabledDirty = false;
+            numExtraConstraints = 0;
         }
 
         private bool ColdStart;
@@ -1041,84 +1062,84 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private bool SelectPrimalOutgoing(double direction, bool feasible, out int mini, out double minr, out int bound, double eps)
+        private bool SelectPrimalOutgoing(double direction, bool feasible, double eps, out int outmini, out double outminr, out int outbound)
         {
             // min over i of d[i]/w[i] where w[i]>0
             double minrr = double.PositiveInfinity;
-            minr = double.PositiveInfinity;
-            mini = -1;
-            bound = 0;
+            double minr = double.PositiveInfinity;
+            int mini = -1;
+            int bound = 0;
             double minv = 0.0;
             //double reducedcost = c[incoming];
             for (int i = 0; i < rows; i++)
             {
-                double v = Math.Abs(w[i]);
-                double wi = direction * w[i];
+                double wi = w[i];
+                double v = Math.Abs(wi);
+                double widir = direction * wi;
                 int col = B[i];
-                bool ifeasiblelb = (d[i] >= lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps);
-                bool ifeasibleub = (d[i] <= ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps);
+                double difflb = d[i] - lb[col];
+                double diffub = d[i] - ub[col];
+                bool ifeasiblelb = (difflb >= -Math.Abs(lb[col]) * epsPrimalRel - eps);
+                bool ifeasibleub = (diffub <= +Math.Abs(ub[col]) * epsPrimalRel + eps);
                 bool ifeasible = ifeasiblelb && ifeasibleub;
                 if (feasible && !ifeasible)
                 {
                     // we lost primal feasibility
                     // fall back to phase I
+                    outmini = mini;
+                    outminr = minr;
+                    outbound = bound;
                     return false;
                 }
                 if (feasible || ifeasible)
                 {
-                    if (wi > epsPivot && (flags[col] & flagLB) != 0)
+                    if (widir > epsPivot && (flags[col] & flagLB) != 0)
                     {
-                        double r = (d[i] - lb[col]) / wi;
-                        if (r < minrr + epsZero && (r < minrr || v > minv))
-                        {
-                            minrr = r;
-                            minr = (d[i] - lb[col]) / w[i];
-                            mini = i;
-                            minv = v;
-                            bound = flagNLB;
-                        }
+                        goto LBCHECK;
                     }
-                    else if (wi < -epsPivot && (flags[col] & flagUB) != 0)
+                    else if (widir < -epsPivot && (flags[col] & flagUB) != 0)
                     {
-                        double r = (d[i] - ub[col]) / wi;
-                        if (r < minrr + epsZero && (r < minrr || v > minv))
-                        {
-                            minrr = r;
-                            minr = (d[i] - ub[col]) / w[i];
-                            mini = i;
-                            minv = v;
-                            bound = flagNUB;
-                        }
+                        goto UBCHECK;
                     }
                 }
                 else
                 {
-                    if (!ifeasibleub && wi > epsPivot)
+                    if (!ifeasibleub && widir > epsPivot)
                     {
-                        double r = (d[i] - ub[col]) / wi;
-                        if (r < minrr + epsZero && (r < minrr || v > minv))
-                        {
-                            minrr = r;
-                            minr = (d[i] - ub[col]) / w[i];
-                            mini = i;
-                            minv = v;
-                            bound = flagNUB;
-                        }
+                        goto UBCHECK;
                     }
-                    else if (!ifeasiblelb && wi < -epsPivot)
+                    else if (!ifeasiblelb && widir < -epsPivot)
                     {
-                        double r = (d[i] - lb[col]) / wi;
-                        if (r < minrr + epsZero && (r < minrr || v > minv))
-                        {
-                            minrr = r;
-                            minr = (d[i] - lb[col]) / w[i];
-                            mini = i;
-                            minv = v;
-                            bound = flagNLB;
-                        }
+                        goto LBCHECK;
                     }
                 }
+                continue;
+            LBCHECK:
+                double r = difflb / widir;
+                if (r < minrr + epsZero && (r < minrr || v > minv))
+                {
+                    minrr = r;
+                    minr = difflb / wi;
+                    mini = i;
+                    minv = v;
+                    bound = flagNLB;
+                }
+                continue;
+            UBCHECK:
+                r = diffub / widir;
+                if (r < minrr + epsZero && (r < minrr || v > minv))
+                {
+                    minrr = r;
+                    minr = diffub / wi;
+                    mini = i;
+                    minv = v;
+                    bound = flagNUB;
+                }
+                continue;
             }
+            outmini = mini;
+            outminr = minr;
+            outbound = bound;
             return true;
         }
 
@@ -1985,6 +2006,17 @@ namespace Rawr.Mage
             int mincol = V[minj];
             if (mincol < cols)
             {
+#if SILVERLIGHT
+                int i = 0;
+                for (; i < baseRows; i++)
+                {
+                    w[i] = a[i + mincol * baseRows];
+                }
+                for (int k = 0; k < numExtraConstraints; k++, i++)
+                {
+                    w[i] = pD[k][mincol];
+                }
+#else
                 double* wi = w;
                 double* ai = a + (mincol * baseRows);
                 double* aend = ai + baseRows;
@@ -1996,6 +2028,7 @@ namespace Rawr.Mage
                 {
                     *wi = pD[k][mincol];
                 }
+#endif
             }
             else
             {
@@ -2560,7 +2593,7 @@ namespace Rawr.Mage
 
                 ComputePrimalRowLimits(maxj);
 
-                if (!SelectPrimalOutgoing(direction, feasible, out mini, out minr, out bound, eps))
+                if (!SelectPrimalOutgoing(direction, feasible, eps, out mini, out minr, out bound))
                 {
                     feasible = false;
                     lowestInfeasibility = double.PositiveInfinity;
@@ -2903,8 +2936,6 @@ namespace Rawr.Mage
                 this.flags = null;
                 this.lb = null;
                 this.ub = null;
-                this.beta = null;
-                this.betaBackup = null;
             }
 
             return ret;

@@ -14,7 +14,7 @@ namespace Rawr.Mage
         private int cCols;
         private Solver solver;
         private LP lp;
-        private double[] compactSolution = null;
+        private double[] compactSolution;
         private bool needsDual;
         private int segments;
         public StringBuilder Log;
@@ -87,7 +87,16 @@ namespace Rawr.Mage
             return clone;
         }
 
+        public SolverLP()
+        {
+        }
+
         public SolverLP(ArraySet arraySet, int baseRows, int maximumColumns, Solver solver, int segments)
+        {
+            Initialize(arraySet, baseRows, maximumColumns, solver, segments);
+        }
+
+        public void Initialize(ArraySet arraySet, int baseRows, int maximumColumns, Solver solver, int segments)
         {
             this.arraySet = arraySet;
             if (baseRows > arraySet.maxSolverRows || maximumColumns > arraySet.maxSolverCols)
@@ -107,7 +116,17 @@ namespace Rawr.Mage
                 arraySet.rowScale[i] = 1.0;
             }
 
-            lp = new LP(cRows, maximumColumns, arraySet);
+            if (lp == null)
+            {
+                lp = new LP(cRows, maximumColumns, arraySet);
+            }
+            else
+            {
+                lp.Initialize(cRows, maximumColumns, arraySet);
+            }
+
+            compactSolution = null;
+            needsDual = false;
         }
 
         public void SetRowScale(int row, double value)

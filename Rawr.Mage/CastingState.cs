@@ -623,7 +623,7 @@ namespace Rawr.Mage
                     HasteProcs[i] = subState;
                 }
             }
-            DynamicCycle c = DynamicCycle.New(Solver.NeedsDisplayCalculations, this);
+            Cycle c = Cycle.New(Solver.NeedsDisplayCalculations, this);
             c.Name = baseCycle.Name;
             for (int i = 0; i < result.Length; i++)
             {

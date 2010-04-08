@@ -197,7 +197,7 @@ namespace Rawr.Mage.Graphs
 
         public void UpdateGraph(CalculationOptionsMage calculationOptions)
         {
-            CharacterCalculationsMage calculations = calculationOptions.Calculations;
+            DisplayCalculations calculations = calculationOptions.Calculations;
 
             Chart.Series.Clear();
             Chart.Axes.Clear();

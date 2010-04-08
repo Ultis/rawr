@@ -213,7 +213,16 @@ namespace Rawr.Mage
     {
         private float speed;
 
+        public WandTemplate()
+        {
+        }
+
         public WandTemplate(Solver solver, MagicSchool school, int minDamage, int maxDamage, float speed)
+        {
+            Initialize(solver, school, minDamage, maxDamage, speed);
+        }
+
+        public void Initialize(Solver solver, MagicSchool school, int minDamage, int maxDamage, float speed)
         {
             Name = "Wand";
             // Tested: affected by Arcane Instability, affected by Chaotic meta, not affected by Arcane Power

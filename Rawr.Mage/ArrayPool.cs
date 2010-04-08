@@ -132,38 +132,38 @@ namespace Rawr.Mage
             return spell;
         }
 
-        public DynamicCycle[] cyclePool = new DynamicCycle[64];
+        public Cycle[] cyclePool = new Cycle[64];
         public int cycleIndex;
 
-        public DynamicCycle NewDynamicCycle()
+        public Cycle NewCycle()
         {
             if (cycleIndex < cyclePool.Length)
             {
-                DynamicCycle cycle = cyclePool[cycleIndex];
+                Cycle cycle = cyclePool[cycleIndex];
                 if (cycle == null) goto COLD;
                 cycleIndex++;
                 return cycle;
             }            
         COLD:
-            return NewDynamicCycleCold();
+            return NewCycleCold();
         }
 
-        private DynamicCycle NewDynamicCycleCold()
+        private Cycle NewCycleCold()
         {
             /*if (cyclePool == null)
             {
-                cyclePool = new DynamicCycle[64];
+                cyclePool = new Cycle[64];
             }
             else */if (cycleIndex >= cyclePool.Length)
             {
-                DynamicCycle[] arr = new DynamicCycle[cyclePool.Length * 2];
+                Cycle[] arr = new Cycle[cyclePool.Length * 2];
                 Array.Copy(cyclePool, arr, cyclePool.Length);
                 cyclePool = arr;
             }
-            DynamicCycle cycle = cyclePool[cycleIndex];
+            Cycle cycle = cyclePool[cycleIndex];
             if (cycle == null)
             {
-                cycle = new DynamicCycle();
+                cycle = new Cycle();
                 cyclePool[cycleIndex] = cycle;
             }
             cycleIndex++;
@@ -402,7 +402,11 @@ namespace Rawr.Mage
 
         private static int createdArraySets = 0;
         private static int waiters = 0;
+#if SILVERLIGHT
+        private static int maximumPoolSize = 2;
+#else
         private static int maximumPoolSize = Environment.ProcessorCount;
+#endif
 
         public static int MaximumPoolSize
         {

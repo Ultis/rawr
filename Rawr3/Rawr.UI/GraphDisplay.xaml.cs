@@ -215,6 +215,7 @@ namespace Rawr.UI
 		{
             SetGraphControl(ComparisonGraph);
 			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
+            ComparisonGraph.Slot = _characterSlot;
 			bool seenEquippedItem = (Character[_characterSlot] == null);
 
             Calculations.ClearCache();

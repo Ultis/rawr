@@ -40,7 +40,7 @@ namespace Rawr.Mage.Graphs
             public double Value { get; set; }
         }
 
-        public void UpdateGraph(CharacterCalculationsMage calculations)
+        public void UpdateGraph(DisplayCalculations calculations)
         {
             Chart.Series.Clear();
             Chart.Axes.Clear();

@@ -5313,23 +5313,31 @@ namespace Rawr {
             if (data._sparseIndices != null)
             {
                 int i = 0;
-                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                float* pRawAdditiveData = this.pRawAdditiveData;
+                int limit = data._sparseAdditiveCount;
+                for (; i < limit; i++)
                 {
                     int index = data._sparseIndices[i];
                     pRawAdditiveData[index] += data._rawAdditiveData[index];
                 }
-                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                float* pRawMultiplicativeData = this.pRawMultiplicativeData;
+                limit += data._sparseMultiplicativeCount;
+                for (; i < limit; i++)
                 {
                     int index = data._sparseIndices[i];
                     float* pa = pRawMultiplicativeData + index;
                     *pa = (1 + *pa) * (1 + data._rawMultiplicativeData[index]) - 1;
                 }
-                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
+                float[] _rawInverseMultiplicativeData = this._rawInverseMultiplicativeData;
+                limit += data._sparseInverseMultiplicativeCount;
+                for (; i < limit; i++)
                 {
                     int index = data._sparseIndices[i];
                     _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - data._rawInverseMultiplicativeData[index]);
                 }
-                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                float* pRawNoStackData = this.pRawNoStackData;
+                limit += data._sparseNoStackCount;
+                for (; i < limit; i++)
                 {
                     int index = data._sparseIndices[i];
                     float* pa = pRawNoStackData + index;
@@ -5339,41 +5347,7 @@ namespace Rawr {
             }
             else
             {
-                fixed (float* add = data._rawAdditiveData)
-                {
-                    float* pa = pRawAdditiveData;
-                    float* paend = pa + AdditiveStatCount;
-                    float* pa2 = add;
-                    for (; pa < paend; pa++, pa2++)
-                    {
-                        *pa += *pa2;
-                    }
-                }
-                fixed (float* add = data._rawMultiplicativeData)
-                {
-                    float* pa = pRawMultiplicativeData;
-                    float* paend = pa + MultiplicativeStatCount;
-                    float* pa2 = add;
-                    for (; pa < paend; pa++, pa2++)
-                    {
-                        *pa = (1 + *pa) * (1 + *pa2) - 1;
-                    }
-                }
-                float[] arr = data._rawInverseMultiplicativeData;
-                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
-                {
-                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - arr[i]);
-                }
-                fixed (float* add = data._rawNoStackData)
-                {
-                    float* pa = pRawNoStackData;
-                    float* paend = pa + NonStackingStatCount;
-                    float* pa2 = add;
-                    for (; pa < paend; pa++, pa2++)
-                    {
-                        if (*pa2 > *pa) *pa = *pa2;
-                    }
-                }
+                AccumulateUnsafeDense(data);
             }
             if (data._rawSpecialEffectDataSize > 0)
             {
@@ -5387,6 +5361,45 @@ namespace Rawr {
                 {
                     Array.Copy(data._rawSpecialEffectData, 0, _rawSpecialEffectData, _rawSpecialEffectDataSize, data._rawSpecialEffectDataSize);
                     _rawSpecialEffectDataSize += data._rawSpecialEffectDataSize;
+                }
+            }
+        }
+
+        private void AccumulateUnsafeDense(Stats data)
+        {
+            fixed (float* add = data._rawAdditiveData)
+            {
+                float* pa = pRawAdditiveData;
+                float* paend = pa + AdditiveStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    *pa += *pa2;
+                }
+            }
+            fixed (float* add = data._rawMultiplicativeData)
+            {
+                float* pa = pRawMultiplicativeData;
+                float* paend = pa + MultiplicativeStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    *pa = (1 + *pa) * (1 + *pa2) - 1;
+                }
+            }
+            float[] arr = data._rawInverseMultiplicativeData;
+            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+            {
+                _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - arr[i]);
+            }
+            fixed (float* add = data._rawNoStackData)
+            {
+                float* pa = pRawNoStackData;
+                float* paend = pa + NonStackingStatCount;
+                float* pa2 = add;
+                for (; pa < paend; pa++, pa2++)
+                {
+                    if (*pa2 > *pa) *pa = *pa2;
                 }
             }
         }

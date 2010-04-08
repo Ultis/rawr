@@ -235,7 +235,7 @@ namespace Rawr.Mage
 
             Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.FromArgb(0xFF, 0x00, 0x00, 0x8B), Color.FromArgb(255, 255, 165, 0), Color.FromArgb(0xFF, 0x80, 0x80, 0x00), Color.FromArgb(255, 154, 205, 50), Color.FromArgb(0xFF, 0x00, 0xFF, 0xFF), Color.FromArgb(255, 0, 0, 255) };
 
-            CharacterCalculationsMage calculations = calculationOptions.Calculations;
+            DisplayCalculations calculations = calculationOptions.Calculations;
 
             List<float> X = new List<float>();
             List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
