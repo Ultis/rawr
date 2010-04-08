@@ -117,4 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="notesBox.Text" xml:space="preserve">
+    <value>The Warlock model you are using is brand new.  It has know problems, and many important features are not yet implemented (such as modeling pets).  However, it should still be usefull for at least Affliction and Destruction Warlocks.
+
+Please help improve this model by giving your feedback.  However, PLEASE also do your research before providing that feedback, to make sure you're actually giving new information.
+
+If you find a problem with a feature that is supposed to be working according to http://rawr.codeplex.com/Thread/View.aspx?ThreadId=205517, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it.  If it has not already been reported create a new issue for it, and be sure to attach your character file.
+
+For other types of welcomed feedback please consult the "Questions I Have" section on the original post at http://rawr.codeplex.com/Thread/View.aspx?ThreadId=205517 (same URL as above).
+
+I appologize for the relative obscurity of this important information, but this is the most prominant place I could put it without modifying more than just the Warlock model.</value>
+  </data>
 </root>

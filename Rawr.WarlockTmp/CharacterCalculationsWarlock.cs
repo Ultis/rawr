@@ -231,7 +231,7 @@ namespace Rawr.WarlockTmp {
 
         private float CalcPersonalDps() {
 
-            if (Options.ActiveRotation.GetError() != null) {
+            if (Options.GetActiveRotation().GetError() != null) {
                 return 0f;
             }
 
@@ -265,7 +265,7 @@ namespace Rawr.WarlockTmp {
             Priorities = new List<Spell>();
             foreach (
                 string spellName
-                in Options.ActiveRotation.GetPrioritiesForCalcs(Talents)) {
+                in Options.GetActiveRotation().GetPrioritiesForCalcs(Talents)) {
 
                 Spell spell = GetSpell(spellName);
                 if (spell.IsCastable()) {
@@ -273,7 +273,7 @@ namespace Rawr.WarlockTmp {
                     CastSpells.Add(spellName, spell);
                 }
             }
-            Spell filler = GetSpell(Options.ActiveRotation.Filler);
+            Spell filler = GetSpell(Options.GetActiveRotation().Filler);
             RecordCollisionDelays(new CastingState(this, filler));
             foreach (Spell spell in Priorities) {
                 float numCasts = spell.GetNumCasts();
@@ -286,7 +286,7 @@ namespace Rawr.WarlockTmp {
                     * lifeTap.AddCastsForRegen(
                         timeRemaining, manaRemaining, filler);
             filler.Spam(timeRemaining);
-            CastSpells.Add(Options.ActiveRotation.Filler, filler);
+            CastSpells.Add(Options.GetActiveRotation().Filler, filler);
             #endregion
 
             #region Calculate spell modifiers
@@ -450,7 +450,7 @@ namespace Rawr.WarlockTmp {
             chances[Trigger.SpellMiss] = 1 - chances[Trigger.SpellHit];
             chances[Trigger.DoTTick] = 1f;
 
-            if (Options.ActiveRotation.Contains("Corruption")) {
+            if (Options.GetActiveRotation().Contains("Corruption")) {
                 periods[Trigger.CorruptionTick] = 3.1f;
                 if (Talents.GlyphQuickDecay) {
                     periods[Trigger.CorruptionTick] /= nonProcHaste;

@@ -11,6 +11,11 @@ namespace Rawr.WarlockTmp {
         public string Filler;
         public List<string> SpellPriority;
 
+        public Rotation() {
+
+            // here for XML deserialization
+        }
+
         public Rotation(
             string name, string filler, params string[] priorities) {
 
@@ -35,6 +40,10 @@ namespace Rawr.WarlockTmp {
             int conf = SpellPriority.IndexOf("Conflagrate");
             if (conf >= 0 && conf < immo) {
                 return "Conflagrate may only appear after Immolate.";
+            }
+
+            if (immo >= 0 && SpellPriority.Contains("Unstable Affliction")) {
+                return "Unstable Affliction and Immolate don't mix.";
             }
 
             return null;
@@ -93,19 +102,9 @@ namespace Rawr.WarlockTmp {
         public float Latency;
         public float ManaPotSize;
         public float Replenishment;
-        public Dictionary<string, Rotation> Rotations;
+        public List<Rotation> Rotations;
+        public int ActiveRotationIndex;
         public bool NoProcs;
-
-        private string _activeRotation;
-        public Rotation ActiveRotation {
-            get {
-                return Rotations[_activeRotation];
-            }
-            set {
-                _activeRotation = value.Name;
-                Rotations[_activeRotation] = value;
-            }
-        }
 
         #endregion
 
@@ -117,27 +116,27 @@ namespace Rawr.WarlockTmp {
             Pet = "None";
             TargetLevel = 83;
             Duration = 300;
-            Rotations = new Dictionary<string, Rotation>();
+            Rotations = new List<Rotation>();
 
-            ActiveRotation
-                = new Rotation(
+            Rotations.Add(
+                new Rotation(
                     "Affliction",
                     "Shadow Bolt",
                     "Haunt",
                     "Corruption",
                     "Unstable Affliction",
-                    "Curse Of Agony");
-            ActiveRotation
-                = new Rotation(
+                    "Curse Of Agony"));
+            Rotations.Add(
+                new Rotation(
                     "Demonology",
                     "Shadow Bolt",
                     "Metamorphosis",
                     "Corruption",
                     "Immolate",
                     "Incinerate (Under Molten Core)",
-                    "Curse Of Agony");
-            ActiveRotation
-                = new Rotation(
+                    "Curse Of Agony"));
+            Rotations.Add(
+                new Rotation(
                     "Destruction",
                     "Incinerate",
                     "Curse Of Doom",
@@ -145,9 +144,7 @@ namespace Rawr.WarlockTmp {
                     "Conflagrate",
                     "Incinerate (Under Backdraft)",
                     "Corruption",
-                    "Chaos Bolt");
-
-            _activeRotation = "Affliction";
+                    "Chaos Bolt"));
         }
 
         #endregion
@@ -155,14 +152,16 @@ namespace Rawr.WarlockTmp {
 
         #region methods
 
+        public Rotation GetActiveRotation() {
+
+            return Rotations[ActiveRotationIndex];
+        }
+
         public void RemoveActiveRotation() {
 
-            Rotations.Remove(_activeRotation);
-            foreach (Rotation rotation in Rotations.Values) {
-                ActiveRotation = rotation;
-                return;
-            }
-            _activeRotation = null;
+            Rotations.RemoveAt(ActiveRotationIndex);
+            ActiveRotationIndex
+                = Math.Min(ActiveRotationIndex, Rotations.Count - 1);
         }
 
         public int GetBaseHitRate() { 

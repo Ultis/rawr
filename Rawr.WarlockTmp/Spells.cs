@@ -262,8 +262,8 @@ namespace Rawr.WarlockTmp {
                     Mommy.Stats.BonusShadowDamageMultiplier);
                 SpellModifiers.AddAdditiveMultiplier(
                     talents.ShadowMastery * .03f);
-                if (Mommy.Options.ActiveRotation.Contains("Shadow Bolt")
-                    || (Mommy.Options.ActiveRotation.Contains("Haunt")
+                if (GetRotation().Contains("Shadow Bolt")
+                    || (GetRotation().Contains("Haunt")
                         && talents.Haunt > 0)) {
 
                     SpellModifiers.AddMultiplicativeTickMultiplier(
@@ -285,6 +285,11 @@ namespace Rawr.WarlockTmp {
         }
         #endregion
 
+
+        protected Rotation GetRotation() {
+
+            return Mommy.Options.GetActiveRotation();
+        }
 
         protected void ApplyImprovedSoulLeech() {
 
@@ -760,7 +765,7 @@ namespace Rawr.WarlockTmp {
 
         public static bool WillBeCast(CharacterCalculationsWarlock mommy) {
 
-            return mommy.Options.ActiveRotation.Contains("Conflagrate")
+            return mommy.Options.GetActiveRotation().Contains("Conflagrate")
                 && mommy.Talents.Conflagrate > 0;
         }
 
@@ -965,7 +970,7 @@ namespace Rawr.WarlockTmp {
         private float GuessRollingTriggerFrequency() {
 
             float freq = 0f;
-            if (Mommy.Options.ActiveRotation.Contains("Shadow Bolt")) {
+            if (GetRotation().Contains("Shadow Bolt")) {
 
                 // assume about 1/2 the time will be spent spamming shadow bolt
                 freq
@@ -976,8 +981,7 @@ namespace Rawr.WarlockTmp {
                             Mommy.Haste,
                             Mommy.Options.Latency);
             }
-            if (Mommy.Options.ActiveRotation.Contains("Haunt")
-                && Mommy.Talents.Haunt > 0) {
+            if (GetRotation().Contains("Haunt") && Mommy.Talents.Haunt > 0) {
 
                 // assume 11 seconds between haunt casts, on average
                 freq += 1f / 11f;
@@ -1369,7 +1373,7 @@ namespace Rawr.WarlockTmp {
         public override bool IsCastable() {
 
             return Mommy.Talents.MoltenCore > 0
-                && Mommy.Options.ActiveRotation.Contains("Corruption");
+                && GetRotation().Contains("Corruption");
         }
 
         public override float GetQueueProbability(CastingState state) {
@@ -1595,8 +1599,7 @@ namespace Rawr.WarlockTmp {
 
         public override bool IsCastable() {
 
-            return IsCastable(
-                Mommy.Talents, Mommy.Options.ActiveRotation.SpellPriority);
+            return IsCastable(Mommy.Talents, GetRotation().SpellPriority);
         }
     }
 

@@ -26,10 +26,10 @@ namespace Rawr.WarlockTmp {
             ++_ignoreCount;
 
             rotationCombo.Items.Clear();
-            foreach (string rotation in _options.Rotations.Keys) {
-                rotationCombo.Items.Add(rotation);
+            foreach (Rotation rotation in _options.Rotations) {
+                rotationCombo.Items.Add(rotation.Name);
             }
-            rotationCombo.SelectedItem = _options.ActiveRotation.Name;
+            rotationCombo.SelectedItem = _options.GetActiveRotation().Name;
 
             rotationMenu.Items.Clear();
             foreach (string spell in Spell.ALL_SPELLS) {
@@ -45,7 +45,7 @@ namespace Rawr.WarlockTmp {
                 rotationList.Items.Add(spell);
             }
 
-            fillerCombo.SelectedItem = _options.ActiveRotation.Filler;
+            fillerCombo.SelectedItem = _options.GetActiveRotation().Filler;
 
             RefreshRotationButtons();
 
@@ -63,7 +63,7 @@ namespace Rawr.WarlockTmp {
                 = curIndex >= 0 && curIndex < itemCount - 1;
             rotationClearButton.Enabled = itemCount > 0;
 
-            rotationErrorLabel.Text = _options.ActiveRotation.GetError();
+            rotationErrorLabel.Text = _options.GetActiveRotation().GetError();
         }
 
         private void RotationSwap(int swapWith) {
@@ -77,7 +77,7 @@ namespace Rawr.WarlockTmp {
 
         private List<string> GetActivePriorities() {
 
-            return _options.ActiveRotation.SpellPriority;
+            return _options.GetActiveRotation().SpellPriority;
         }
 
         private string PromptForRotationName(string title, string start) {
@@ -95,9 +95,17 @@ namespace Rawr.WarlockTmp {
                 }
                 if (name.Length == 0) {
                     error = "The name cannot be blank.  ";
-                } else if (_options.Rotations.ContainsKey(name)) {
-                    error = "That name already exists.  ";
-                } else {
+                    continue;
+                }
+
+                error = null;
+                foreach (Rotation rotation in _options.Rotations) {
+                    if (rotation.Name == name) {
+                        error = "There is already a rotation by that name.  ";
+                        break;
+                    }
+                }
+                if (error == null) {
                     return name;
                 }
             }
@@ -273,7 +281,8 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-            _options.ActiveRotation.Filler = (string) fillerCombo.SelectedItem;
+            _options.GetActiveRotation().Filler
+                = (string) fillerCombo.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 
@@ -294,8 +303,7 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-            _options.ActiveRotation
-                = _options.Rotations[(string) rotationCombo.SelectedItem];
+            _options.ActiveRotationIndex = rotationCombo.SelectedIndex;
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
@@ -310,7 +318,8 @@ namespace Rawr.WarlockTmp {
             if (name == null) {
                 return;
             }
-            _options.ActiveRotation = new Rotation(name, "Shadow Bolt");
+            _options.ActiveRotationIndex = _options.Rotations.Count;
+            _options.Rotations.Add(new Rotation(name, "Shadow Bolt"));
 
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
@@ -322,15 +331,13 @@ namespace Rawr.WarlockTmp {
                 return;
             }
 
-            Rotation rotation = _options.ActiveRotation;
+            Rotation rotation = _options.GetActiveRotation();
             string name
                 = PromptForRotationName("Rename Rotation", rotation.Name);
             if (name == null) {
                 return;
             }
-            _options.RemoveActiveRotation();
             rotation.Name = name;
-            _options.ActiveRotation = rotation;
 
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
@@ -344,8 +351,9 @@ namespace Rawr.WarlockTmp {
 
             _options.RemoveActiveRotation();
             if (_options.Rotations.Count == 0) {
-                _options.ActiveRotation
-                    = new Rotation("New Rotation", "Shadow Bolt");
+                _options.Rotations.Add(
+                    new Rotation("New Rotation", "Shadow Bolt"));
+                _options.ActiveRotationIndex = 0;
             }
 
             RefreshRotationPanel();
