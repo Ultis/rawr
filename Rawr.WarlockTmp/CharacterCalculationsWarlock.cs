@@ -330,6 +330,18 @@ namespace Rawr.WarlockTmp {
                 float benefit = .05f - Stats.SpellCritOnTarget;
                 SpellModifiers.AddCritChance(benefit * uprate);
             }
+            if (Stats.Warlock4T10 > 0) {
+                Spell trigger = null;
+                if (CastSpells.ContainsKey("Immolate")) {
+                    trigger = CastSpells["Immolate"];
+                } else if (CastSpells.ContainsKey("Unstable Affliction")) {
+                    trigger = CastSpells["Unstable Affliction"];
+                }
+                float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
+                float uprate
+                    = Spell.CalcUprate(.15f, 10f, Options.Duration / numTicks);
+                SpellModifiers.AddMultiplicativeMultiplier(.1f * uprate);
+            }
 
             // finilize each spell's modifiers.
             // Start with Conflagrate, since pyroclasm depends on its results.

@@ -812,6 +812,9 @@ namespace Rawr.WarlockTmp {
                 Mommy.Talents.ImprovedImmolate * .1f
                     + (Mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + Mommy.Talents.Aftermath * .03f);
+            if (Mommy.Stats.Warlock2T8 > 0) {
+                SpellModifiers.AddAdditiveMultiplier(.1f);
+            }
         }
 
         public override List<CastingState> SimulateCast(
@@ -862,7 +865,7 @@ namespace Rawr.WarlockTmp {
                     + mommy.Talents.Contagion * .01f
                     + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
                 mommy.Talents.Pandemic > 0, // canTickCrit
-                mommy.Talents.Malediction * .03f
+                (mommy.Talents.Malediction * .03f + mommy.Stats.Warlock2T10)
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { // bonus crit multiplier
 
@@ -907,6 +910,12 @@ namespace Rawr.WarlockTmp {
             }
             NumTicks = RecastPeriod / tc;
             #endregion
+        }
+
+        public override void FinalizeSpellModifiers() {
+
+            base.FinalizeSpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
         }
 
         private static float maleficusDuration(
@@ -1211,6 +1220,15 @@ namespace Rawr.WarlockTmp {
             }
         }
 
+        public override void FinalizeSpellModifiers() {
+            
+            base.FinalizeSpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+            if (Mommy.Stats.Warlock2T8 > 0) {
+                SpellModifiers.AddAdditiveMultiplier(.1f);
+            }
+        }
+
         public override void SetDamageStats(float baseSpellPower) {
 
             if (IsClippedByConflagrate(Mommy)) {
@@ -1264,7 +1282,8 @@ namespace Rawr.WarlockTmp {
                     * .7143f, // directCoefficient,
                 mommy.Talents.GlyphIncinerate
                     ? .05f : 0f, // addedDirectMultiplier,
-                0f, // bonusCritChance,
+                mommy.Stats.Warlock2T10
+                    + mommy.Stats.Warlock4T8, // bonusCritChance,
                 0f) { // bonus crit multiplier
 
             ApplyImprovedSoulLeech();
@@ -1548,8 +1567,8 @@ namespace Rawr.WarlockTmp {
                     * .8571f, // direct coefficient
                 mommy.Talents.ImprovedShadowBolt
                     * .01f, // addedDirectMultiplier
-                mommy.Stats.Warlock4T8
-                    + mommy.Stats.Warlock2T10, // bonus crit chance
+                mommy.Stats.Warlock2T10
+                    + mommy.Stats.Warlock4T8, // bonus crit chance
                 0f) { // bonus crit multiplier
 
             ApplyImprovedSoulLeech();
@@ -1618,6 +1637,15 @@ namespace Rawr.WarlockTmp {
         public override bool IsCastable() {
 
             return Mommy.Talents.UnstableAffliction > 0;
+        }
+
+        public override void FinalizeSpellModifiers() {
+
+            base.FinalizeSpellModifiers();
+            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+            if (Mommy.Stats.Warlock2T8 > 0) {
+                SpellModifiers.AddAdditiveMultiplier(.2f);
+            }
         }
     }
 }
