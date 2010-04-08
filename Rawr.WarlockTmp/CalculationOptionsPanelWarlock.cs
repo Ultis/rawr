@@ -14,7 +14,7 @@ namespace Rawr.WarlockTmp {
         #region properties
 
         private CalculationOptionsWarlock _options;
-        private bool _ignoreEvents;
+        private int _ignoreCount;
 
         #endregion
 
@@ -23,9 +23,17 @@ namespace Rawr.WarlockTmp {
 
         private void RefreshRotationPanel() {
 
+            ++_ignoreCount;
+
+            rotationCombo.Items.Clear();
+            foreach (string rotation in _options.Rotations.Keys) {
+                rotationCombo.Items.Add(rotation);
+            }
+            rotationCombo.SelectedItem = _options.ActiveRotation.Name;
+
             rotationMenu.Items.Clear();
             foreach (string spell in Spell.ALL_SPELLS) {
-                if (!_options.SpellPriority.Contains(spell)
+                if (!GetActivePriorities().Contains(spell)
                     && !fillerCombo.Items.Contains(spell)) {
 
                     rotationMenu.Items.Add(spell);
@@ -33,13 +41,15 @@ namespace Rawr.WarlockTmp {
             }
 
             rotationList.Items.Clear();
-            foreach (string spell in _options.SpellPriority) {
+            foreach (string spell in GetActivePriorities()) {
                 rotationList.Items.Add(spell);
             }
 
-            fillerCombo.SelectedItem = _options.Filler;
+            fillerCombo.SelectedItem = _options.ActiveRotation.Filler;
 
             RefreshRotationButtons();
+
+            --_ignoreCount;
         }
 
         private void RefreshRotationButtons() {
@@ -53,17 +63,44 @@ namespace Rawr.WarlockTmp {
                 = curIndex >= 0 && curIndex < itemCount - 1;
             rotationClearButton.Enabled = itemCount > 0;
 
-            rotationErrorLabel.Text
-                = CharacterCalculationsWarlock.GetError(_options.SpellPriority);
+            rotationErrorLabel.Text = _options.ActiveRotation.GetError();
         }
 
         private void RotationSwap(int swapWith) {
 
             int oldIndex = rotationList.SelectedIndex;
             int newIndex = oldIndex + swapWith;
-            Utilities.SwapElements(_options.SpellPriority, oldIndex, newIndex);
+            Utilities.SwapElements(GetActivePriorities(), oldIndex, newIndex);
             RefreshRotationPanel();
             rotationList.SelectedIndex = newIndex;
+        }
+
+        private List<string> GetActivePriorities() {
+
+            return _options.ActiveRotation.SpellPriority;
+        }
+
+        private string PromptForRotationName(string title, string start) {
+
+            string error = null;
+            while (true) {
+                string message = "Choose a name:";
+                if (error != null) {
+                    message = error + message;
+                }
+                string name
+                    = TextInputDialog.Show(title, message, start);
+                if (name == null) {
+                    return null;
+                }
+                if (name.Length == 0) {
+                    error = "The name cannot be blank.  ";
+                } else if (_options.Rotations.ContainsKey(name)) {
+                    error = "That name already exists.  ";
+                } else {
+                    return name;
+                }
+            }
         }
 
         #endregion
@@ -82,14 +119,14 @@ namespace Rawr.WarlockTmp {
                 Character.CalculationOptions = new CalculationOptionsWarlock();
             }
             _options = (CalculationOptionsWarlock) Character.CalculationOptions;
-            _ignoreEvents = true;
+            ++_ignoreCount;
 
             targetLevelCombo.Text = _options.TargetLevel.ToString();
             fightLengthSpinner.Value = (decimal) _options.Duration;
             latencySpinner.Value = (decimal) _options.Latency * 1000;
             RefreshRotationPanel();
 
-            _ignoreEvents = false;
+            --_ignoreCount;
         }
 
         #endregion
@@ -99,7 +136,7 @@ namespace Rawr.WarlockTmp {
 
         private void petCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -109,7 +146,7 @@ namespace Rawr.WarlockTmp {
 
         private void infernalCheck_CheckedChanged(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
             
@@ -120,7 +157,7 @@ namespace Rawr.WarlockTmp {
         private void targetLevelCombo_SelectedIndexChanged(
             object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -131,7 +168,7 @@ namespace Rawr.WarlockTmp {
         private void fightLengthSpinner_ValueChanged(
             object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -141,7 +178,7 @@ namespace Rawr.WarlockTmp {
 
         private void latencySpinner_ValueChanged(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -149,60 +186,27 @@ namespace Rawr.WarlockTmp {
             Character.OnCalculationsInvalidated();
         }
 
-        private void newRotationButton_Click(object sender, EventArgs e) {
-
-            if (_ignoreEvents) {
-                return;
-            }
-
-
-
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void rotationRenameButton_Click(object sender, EventArgs e) {
-
-            if (_ignoreEvents) {
-                return;
-            }
-
-
-
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void deleteRotationButton_Click(object sender, EventArgs e) {
-
-            if (_ignoreEvents) {
-                return;
-            }
-
-
-
-            Character.OnCalculationsInvalidated();
-        }
-
         private void rotationAddButton_Click(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
-            _ignoreEvents = true;
-            _options.SpellPriority.Add((string) rotationMenu.SelectedItem);
+            ++_ignoreCount;
+            GetActivePriorities().Add((string) rotationMenu.SelectedItem);
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
-            _ignoreEvents = false;
+            --_ignoreCount;
         }
 
         private void rotationRemoveButton_Click(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
             int index = rotationList.SelectedIndex;
-            _options.SpellPriority.RemoveAt(index);
+            GetActivePriorities().RemoveAt(index);
             RefreshRotationPanel();
             int itemCount = rotationList.Items.Count;
             if (itemCount > 0) {
@@ -213,7 +217,7 @@ namespace Rawr.WarlockTmp {
 
         private void rotationUpButton_Click(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -223,7 +227,7 @@ namespace Rawr.WarlockTmp {
 
         private void rotationDownButton_Click(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -233,11 +237,11 @@ namespace Rawr.WarlockTmp {
 
         private void rotationClearButton_Click(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
-            _options.SpellPriority.Clear();
+            GetActivePriorities().Clear();
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
@@ -245,7 +249,7 @@ namespace Rawr.WarlockTmp {
         private void rotationMenu_SelectedIndexChanged(
             object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -255,7 +259,7 @@ namespace Rawr.WarlockTmp {
         private void rotationList_SelectedIndexChanged(
             object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
@@ -265,21 +269,86 @@ namespace Rawr.WarlockTmp {
         private void fillerCombo_SelectedIndexChanged(
             object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
-            _options.Filler = (string) fillerCombo.SelectedItem;
+            _options.ActiveRotation.Filler = (string) fillerCombo.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 
         private void procCheckbox_CheckedChanged(object sender, EventArgs e) {
 
-            if (_ignoreEvents) {
+            if (_ignoreCount > 0) {
                 return;
             }
 
             _options.NoProcs = ProcCheckbox.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void rotationCombo_SelectedIndexChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.ActiveRotation
+                = _options.Rotations[(string) rotationCombo.SelectedItem];
+            RefreshRotationPanel();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void newRotationButton_Click(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            string name = PromptForRotationName("New Rotation", "");
+            if (name == null) {
+                return;
+            }
+            _options.ActiveRotation = new Rotation(name, "Shadow Bolt");
+
+            RefreshRotationPanel();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void rotationRenameButton_Click(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            Rotation rotation = _options.ActiveRotation;
+            string name
+                = PromptForRotationName("Rename Rotation", rotation.Name);
+            if (name == null) {
+                return;
+            }
+            _options.RemoveActiveRotation();
+            rotation.Name = name;
+            _options.ActiveRotation = rotation;
+
+            RefreshRotationPanel();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void deleteRotationButton_Click(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.RemoveActiveRotation();
+            if (_options.Rotations.Count == 0) {
+                _options.ActiveRotation
+                    = new Rotation("New Rotation", "Shadow Bolt");
+            }
+
+            RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
 

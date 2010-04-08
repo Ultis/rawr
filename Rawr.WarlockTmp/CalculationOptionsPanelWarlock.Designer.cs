@@ -61,6 +61,7 @@
             // 
             // petCombo
             // 
+            this.petCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.petCombo.Enabled = false;
             this.petCombo.FormattingEnabled = true;
             this.petCombo.Items.AddRange(new object[] {
@@ -73,24 +74,24 @@
             // 
             // rotationCombo
             // 
-            this.rotationCombo.Enabled = false;
+            this.rotationCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.rotationCombo.FormattingEnabled = true;
             this.rotationCombo.Items.AddRange(new object[] {
             "Destruction"});
             this.rotationCombo.Location = new System.Drawing.Point(6, 19);
             this.rotationCombo.Name = "rotationCombo";
             this.rotationCombo.Size = new System.Drawing.Size(282, 21);
-            this.rotationCombo.TabIndex = 8;
+            this.rotationCombo.TabIndex = 6;
+            this.rotationCombo.SelectedIndexChanged += new System.EventHandler(this.rotationCombo_SelectedIndexChanged);
             // 
             // newRotationButton
             // 
             this.newRotationButton.AutoSize = true;
             this.newRotationButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.newRotationButton.Enabled = false;
             this.newRotationButton.Location = new System.Drawing.Point(132, 46);
             this.newRotationButton.Name = "newRotationButton";
             this.newRotationButton.Size = new System.Drawing.Size(39, 23);
-            this.newRotationButton.TabIndex = 9;
+            this.newRotationButton.TabIndex = 7;
             this.newRotationButton.Text = "New";
             this.newRotationButton.UseVisualStyleBackColor = true;
             this.newRotationButton.Click += new System.EventHandler(this.newRotationButton_Click);
@@ -99,11 +100,10 @@
             // 
             this.deleteRotationButton.AutoSize = true;
             this.deleteRotationButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.deleteRotationButton.Enabled = false;
             this.deleteRotationButton.Location = new System.Drawing.Point(240, 46);
             this.deleteRotationButton.Name = "deleteRotationButton";
             this.deleteRotationButton.Size = new System.Drawing.Size(48, 23);
-            this.deleteRotationButton.TabIndex = 11;
+            this.deleteRotationButton.TabIndex = 9;
             this.deleteRotationButton.Text = "Delete";
             this.deleteRotationButton.UseVisualStyleBackColor = true;
             this.deleteRotationButton.Click += new System.EventHandler(this.deleteRotationButton_Click);
@@ -134,6 +134,7 @@
             // 
             // fillerCombo
             // 
+            this.fillerCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fillerCombo.FormattingEnabled = true;
             this.fillerCombo.Items.AddRange(new object[] {
             "Shadow Bolt",
@@ -141,7 +142,7 @@
             this.fillerCombo.Location = new System.Drawing.Point(43, 235);
             this.fillerCombo.Name = "fillerCombo";
             this.fillerCombo.Size = new System.Drawing.Size(245, 21);
-            this.fillerCombo.TabIndex = 22;
+            this.fillerCombo.TabIndex = 17;
             this.fillerCombo.SelectedIndexChanged += new System.EventHandler(this.fillerCombo_SelectedIndexChanged);
             // 
             // fillerLabel
@@ -159,7 +160,7 @@
             this.rotationMenu.Location = new System.Drawing.Point(6, 82);
             this.rotationMenu.Name = "rotationMenu";
             this.rotationMenu.Size = new System.Drawing.Size(107, 147);
-            this.rotationMenu.TabIndex = 20;
+            this.rotationMenu.TabIndex = 10;
             this.rotationMenu.SelectedIndexChanged += new System.EventHandler(this.rotationMenu_SelectedIndexChanged);
             // 
             // rotationErrorLabel
@@ -175,11 +176,10 @@
             // 
             this.rotationRenameButton.AutoSize = true;
             this.rotationRenameButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rotationRenameButton.Enabled = false;
             this.rotationRenameButton.Location = new System.Drawing.Point(177, 46);
             this.rotationRenameButton.Name = "rotationRenameButton";
             this.rotationRenameButton.Size = new System.Drawing.Size(57, 23);
-            this.rotationRenameButton.TabIndex = 10;
+            this.rotationRenameButton.TabIndex = 8;
             this.rotationRenameButton.Text = "Rename";
             this.rotationRenameButton.UseVisualStyleBackColor = true;
             this.rotationRenameButton.Click += new System.EventHandler(this.rotationRenameButton_Click);
@@ -197,7 +197,7 @@
             this.rotationRemoveButton.Location = new System.Drawing.Point(119, 111);
             this.rotationRemoveButton.Name = "rotationRemoveButton";
             this.rotationRemoveButton.Size = new System.Drawing.Size(56, 23);
-            this.rotationRemoveButton.TabIndex = 15;
+            this.rotationRemoveButton.TabIndex = 13;
             this.rotationRemoveButton.Text = "<";
             this.rotationRemoveButton.UseVisualStyleBackColor = true;
             this.rotationRemoveButton.Click += new System.EventHandler(this.rotationRemoveButton_Click);
@@ -207,7 +207,7 @@
             this.rotationAddButton.Location = new System.Drawing.Point(119, 82);
             this.rotationAddButton.Name = "rotationAddButton";
             this.rotationAddButton.Size = new System.Drawing.Size(56, 23);
-            this.rotationAddButton.TabIndex = 13;
+            this.rotationAddButton.TabIndex = 11;
             this.rotationAddButton.Text = ">";
             this.rotationAddButton.UseVisualStyleBackColor = true;
             this.rotationAddButton.Click += new System.EventHandler(this.rotationAddButton_Click);
@@ -217,7 +217,7 @@
             this.rotationClearButton.Location = new System.Drawing.Point(119, 206);
             this.rotationClearButton.Name = "rotationClearButton";
             this.rotationClearButton.Size = new System.Drawing.Size(56, 23);
-            this.rotationClearButton.TabIndex = 18;
+            this.rotationClearButton.TabIndex = 16;
             this.rotationClearButton.Text = "Clear";
             this.rotationClearButton.UseVisualStyleBackColor = true;
             this.rotationClearButton.Click += new System.EventHandler(this.rotationClearButton_Click);
@@ -227,7 +227,7 @@
             this.rotationDownButton.Location = new System.Drawing.Point(119, 177);
             this.rotationDownButton.Name = "rotationDownButton";
             this.rotationDownButton.Size = new System.Drawing.Size(56, 23);
-            this.rotationDownButton.TabIndex = 17;
+            this.rotationDownButton.TabIndex = 15;
             this.rotationDownButton.Text = "Down";
             this.rotationDownButton.UseVisualStyleBackColor = true;
             this.rotationDownButton.Click += new System.EventHandler(this.rotationDownButton_Click);
@@ -237,7 +237,7 @@
             this.rotationUpButton.Location = new System.Drawing.Point(119, 148);
             this.rotationUpButton.Name = "rotationUpButton";
             this.rotationUpButton.Size = new System.Drawing.Size(56, 23);
-            this.rotationUpButton.TabIndex = 16;
+            this.rotationUpButton.TabIndex = 14;
             this.rotationUpButton.Text = "Up";
             this.rotationUpButton.UseVisualStyleBackColor = true;
             this.rotationUpButton.Click += new System.EventHandler(this.rotationUpButton_Click);
@@ -248,7 +248,7 @@
             this.rotationList.Location = new System.Drawing.Point(181, 82);
             this.rotationList.Name = "rotationList";
             this.rotationList.Size = new System.Drawing.Size(107, 147);
-            this.rotationList.TabIndex = 14;
+            this.rotationList.TabIndex = 12;
             this.rotationList.SelectedIndexChanged += new System.EventHandler(this.rotationList_SelectedIndexChanged);
             // 
             // petLabel
@@ -262,6 +262,7 @@
             // 
             // targetLevelCombo
             // 
+            this.targetLevelCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.targetLevelCombo.FormattingEnabled = true;
             this.targetLevelCombo.Items.AddRange(new object[] {
             "83",
@@ -357,7 +358,7 @@
             this.ProcCheckbox.Location = new System.Drawing.Point(3, 418);
             this.ProcCheckbox.Name = "ProcCheckbox";
             this.ProcCheckbox.Size = new System.Drawing.Size(132, 17);
-            this.ProcCheckbox.TabIndex = 17;
+            this.ProcCheckbox.TabIndex = 18;
             this.ProcCheckbox.Text = "Disable special effects";
             this.ProcCheckbox.UseVisualStyleBackColor = true;
             this.ProcCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);

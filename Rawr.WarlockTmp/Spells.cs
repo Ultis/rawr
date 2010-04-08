@@ -262,8 +262,8 @@ namespace Rawr.WarlockTmp {
                     Mommy.Stats.BonusShadowDamageMultiplier);
                 SpellModifiers.AddAdditiveMultiplier(
                     talents.ShadowMastery * .03f);
-                if (Mommy.Options.Filler.Equals("Shadow Bolt")
-                    || (Mommy.Options.SpellPriority.Contains("Haunt")
+                if (Mommy.Options.ActiveRotation.Contains("Shadow Bolt")
+                    || (Mommy.Options.ActiveRotation.Contains("Haunt")
                         && talents.Haunt > 0)) {
 
                     SpellModifiers.AddMultiplicativeTickMultiplier(
@@ -760,7 +760,7 @@ namespace Rawr.WarlockTmp {
 
         public static bool WillBeCast(CharacterCalculationsWarlock mommy) {
 
-            return mommy.Options.SpellPriority.Contains("Conflagrate")
+            return mommy.Options.ActiveRotation.Contains("Conflagrate")
                 && mommy.Talents.Conflagrate > 0;
         }
 
@@ -965,7 +965,7 @@ namespace Rawr.WarlockTmp {
         private float GuessRollingTriggerFrequency() {
 
             float freq = 0f;
-            if (Mommy.Options.Filler.Equals("Shadow Bolt")) {
+            if (Mommy.Options.ActiveRotation.Contains("Shadow Bolt")) {
 
                 // assume about 1/2 the time will be spent spamming shadow bolt
                 freq
@@ -976,7 +976,7 @@ namespace Rawr.WarlockTmp {
                             Mommy.Haste,
                             Mommy.Options.Latency);
             }
-            if (Mommy.Options.SpellPriority.Contains("Haunt")
+            if (Mommy.Options.ActiveRotation.Contains("Haunt")
                 && Mommy.Talents.Haunt > 0) {
 
                 // assume 11 seconds between haunt casts, on average
@@ -1157,9 +1157,7 @@ namespace Rawr.WarlockTmp {
         public static bool IsClippedByConflagrate(
             CharacterCalculationsWarlock mommy) {
 
-            return mommy.Options.SpellPriority.Contains("Conflagrate")
-                && mommy.Talents.Conflagrate > 0
-                && !mommy.Talents.GlyphConflag;
+            return Conflagrate.WillBeCast(mommy) && !mommy.Talents.GlyphConflag;
         }
 
         public Immolate(CharacterCalculationsWarlock mommy)
@@ -1317,9 +1315,7 @@ namespace Rawr.WarlockTmp {
 
         public override bool IsCastable() {
 
-            return Mommy.Talents.Backdraft > 0
-                && Mommy.Options.SpellPriority.Contains("Conflagrate")
-                && Mommy.Talents.Conflagrate > 0;
+            return Mommy.Talents.Backdraft > 0 && Conflagrate.WillBeCast(Mommy);
         }
 
         public override float GetQueueProbability(CastingState state) {
@@ -1360,13 +1356,6 @@ namespace Rawr.WarlockTmp {
 
     public class Incinerate_UnderMoltenCore : Incinerate {
 
-        public static bool MightCast(
-            WarlockTalents talents, List<string> priorities) {
-
-            return priorities.Contains("Corruption")
-                && talents.MoltenCore > 0;
-        }
-
         public Incinerate_UnderMoltenCore(CharacterCalculationsWarlock mommy)
             : base(mommy) {
 
@@ -1379,7 +1368,8 @@ namespace Rawr.WarlockTmp {
 
         public override bool IsCastable() {
 
-            return MightCast(Mommy.Talents, Mommy.Options.SpellPriority);
+            return Mommy.Talents.MoltenCore > 0
+                && Mommy.Options.ActiveRotation.Contains("Corruption");
         }
 
         public override float GetQueueProbability(CastingState state) {
@@ -1577,7 +1567,7 @@ namespace Rawr.WarlockTmp {
 
     public class ShadowBolt_Instant : ShadowBolt {
 
-        public static bool MightCast(
+        public static bool IsCastable(
             WarlockTalents talents, List<string> priorities) {
 
             return priorities.Contains("Corruption")
@@ -1605,7 +1595,8 @@ namespace Rawr.WarlockTmp {
 
         public override bool IsCastable() {
 
-            return MightCast(Mommy.Talents, Mommy.Options.SpellPriority);
+            return IsCastable(
+                Mommy.Talents, Mommy.Options.ActiveRotation.SpellPriority);
         }
     }
 

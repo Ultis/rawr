@@ -231,7 +231,7 @@ namespace Rawr.WarlockTmp {
 
         private float CalcPersonalDps() {
 
-            if (GetError(Options.SpellPriority) != null) {
+            if (Options.ActiveRotation.GetError() != null) {
                 return 0f;
             }
 
@@ -263,14 +263,17 @@ namespace Rawr.WarlockTmp {
 
             #region Calculate NumCasts for each spell
             Priorities = new List<Spell>();
-            foreach (string spellName in PrepForCalcs(Options.SpellPriority)) {
+            foreach (
+                string spellName
+                in Options.ActiveRotation.GetPrioritiesForCalcs(Talents)) {
+
                 Spell spell = GetSpell(spellName);
                 if (spell.IsCastable()) {
                     Priorities.Add(spell);
                     CastSpells.Add(spellName, spell);
                 }
             }
-            Spell filler = GetSpell(Options.Filler);
+            Spell filler = GetSpell(Options.ActiveRotation.Filler);
             RecordCollisionDelays(new CastingState(this, filler));
             foreach (Spell spell in Priorities) {
                 float numCasts = spell.GetNumCasts();
@@ -283,7 +286,7 @@ namespace Rawr.WarlockTmp {
                     * lifeTap.AddCastsForRegen(
                         timeRemaining, manaRemaining, filler);
             filler.Spam(timeRemaining);
-            CastSpells.Add(Options.Filler, filler);
+            CastSpells.Add(Options.ActiveRotation.Filler, filler);
             #endregion
 
             #region Calculate spell modifiers
@@ -447,7 +450,7 @@ namespace Rawr.WarlockTmp {
             chances[Trigger.SpellMiss] = 1 - chances[Trigger.SpellHit];
             chances[Trigger.DoTTick] = 1f;
 
-            if (Options.SpellPriority.Contains("Corruption")) {
+            if (Options.ActiveRotation.Contains("Corruption")) {
                 periods[Trigger.CorruptionTick] = 3.1f;
                 if (Talents.GlyphQuickDecay) {
                     periods[Trigger.CorruptionTick] /= nonProcHaste;
@@ -585,56 +588,6 @@ namespace Rawr.WarlockTmp {
                 = (Spell) Activator.CreateInstance(type, new object[] { this });
             Spells[spellName] = spell;
             return spell;
-        }
-
-        public static string GetError(List<string> spellPriority) {
-
-            bool foundCurse = false;
-            foreach (string spell in spellPriority) {
-                if (spell.StartsWith("Curse")) {
-                    if (foundCurse) {
-                        return "You may only include one curse.";
-                    }
-                    foundCurse = true;
-                }
-            }
-
-            int immo = spellPriority.IndexOf("Immolate");
-            int conf = spellPriority.IndexOf("Conflagrate");
-            if (conf >= 0 && conf < immo) {
-                return "Conflagrate may only appear after Immolate.";
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets a modified version of the user's spell priorities, for internal
-        /// purposes.
-        /// </summary>
-        /// <param name="spellPriority"></param>
-        /// <returns></returns>
-        private List<string> PrepForCalcs(List<string> spellPriority) {
-
-            List<string> forCalcs = new List<string>(spellPriority);
-
-            if (Options.SpellPriority.Contains("Conflagrate")
-                && Talents.Backdraft > 0
-                && !Options.SpellPriority.Contains(
-                    "Incinerate (Under Backdraft)")) {
-
-                forCalcs.Insert(
-                    forCalcs.Count, "Incinerate (Under Backdraft)");
-            }
-
-            if (Options.Filler.Equals("Shadow Bolt")
-                && !forCalcs.Contains("Shadow Bolt (Instant)")
-                && ShadowBolt_Instant.MightCast(Talents, forCalcs)) {
-
-                forCalcs.Insert(forCalcs.Count, "Shadow Bolt (Instant)");
-            }
-
-            return forCalcs;
         }
 
         public bool IsPriorityOrdered(Spell s1, Spell s2) {

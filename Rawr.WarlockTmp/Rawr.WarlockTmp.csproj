@@ -107,9 +107,18 @@
     <Compile Include="SimulatedStat.cs" />
     <Compile Include="Spells.cs" />
     <Compile Include="SpellModifiers.cs" />
+    <Compile Include="TextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextInputDialog.Designer.cs">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CalculationOptionsPanelWarlock.resx">
       <DependentUpon>CalculationOptionsPanelWarlock.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextInputDialog.resx">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
