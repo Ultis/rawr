@@ -170,13 +170,7 @@ namespace Rawr.Rogue
         {
             switch (calculation)
             {
-                case "Health": return BasicStats.Health;
-                case "Avoided Attacks %": return AvoidedAttacks;
-                case "Nature Resist": return BasicStats.NatureResistance;
-                case "Fire Resist": return BasicStats.FireResistance;
-                case "Frost Resist": return BasicStats.FrostResistance;
-                case "Shadow Resist": return BasicStats.ShadowResistance;
-                case "Arcane Resist": return BasicStats.ArcaneResistance;
+                case "Avoided Yellow Attacks %": return AvoidedAttacks;
                 case "Custom Rotation DPS": return CustomRotation.DPS;
             }
             return 0f;

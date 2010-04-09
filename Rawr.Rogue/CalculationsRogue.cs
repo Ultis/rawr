@@ -134,19 +134,8 @@ namespace Rawr.Rogue
             get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                        "Health",
-                        "Armor",
-                        "Strength",
-                        "Attack Power",
-                        "Agility",
-                        "Crit %",
-                        "Haste %",
-					    "Armor Penetration %",
-                        "% Chance to Miss (White)",
-                        "% Chance to Miss (Yellow)",
-                        "% Chance to be Dodged",
-                        "% Chance to be Parried",
-                        "% Chance to be Avoided (Yellow/Dodge)",
+                        "Avoided Yellow Attacks %",
+                        "Custom Rotation DPS",
 					};
                 return _optimizableCalculationLabels;
             }
