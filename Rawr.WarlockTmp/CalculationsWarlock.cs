@@ -616,6 +616,14 @@ namespace Rawr.WarlockTmp {
             return s;
         }
 
+        public override bool IsBuffRelevant(Buff buff, Character character) {
+
+            if (!buff.AllowedClasses.Contains(CharacterClass.Warlock)) {
+                return false;
+            }
+            return base.IsBuffRelevant(buff, character);
+        }
+
         protected bool RelevantTrinket(SpecialEffect effect) {
             if (effect.Trigger == Trigger.Use ||
                 effect.Trigger == Trigger.DamageSpellCast ||

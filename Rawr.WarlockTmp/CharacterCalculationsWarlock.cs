@@ -340,10 +340,13 @@ namespace Rawr.WarlockTmp {
                 } else if (CastSpells.ContainsKey("Unstable Affliction")) {
                     trigger = CastSpells["Unstable Affliction"];
                 }
-                float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
-                float uprate
-                    = Spell.CalcUprate(.15f, 10f, Options.Duration / numTicks);
-                SpellModifiers.AddMultiplicativeMultiplier(.1f * uprate);
+                if (trigger != null) {
+                    float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
+                    float uprate
+                        = Spell.CalcUprate(
+                            .15f, 10f, Options.Duration / numTicks);
+                    SpellModifiers.AddMultiplicativeMultiplier(.1f * uprate);
+                }
             }
 
             // finilize each spell's modifiers.
@@ -390,8 +393,10 @@ namespace Rawr.WarlockTmp {
         private void CalcHasteProcs() {
 
             float nonProcHaste
-                = 1 + Stats.SpellHaste
-                    + StatConversion.GetSpellHasteFromRating(Stats.HasteRating);
+                = (1 + Stats.SpellHaste)
+                    * (1
+                        + StatConversion.GetSpellHasteFromRating(
+                            Stats.HasteRating));
 
             if (Options.NoProcs) {
                 WeightedStat staticHaste = new WeightedStat();
@@ -532,7 +537,8 @@ namespace Rawr.WarlockTmp {
                     Haste[f].Value
                         = (1 + percentages[p].Value)
                             * (1 + StatConversion.GetSpellHasteFromRating(
-                                    ratings[r].Value + Stats.HasteRating));
+                                    ratings[r].Value + Stats.HasteRating))
+                            * (1 + Stats.SpellHaste);
                 }
             }
         }
