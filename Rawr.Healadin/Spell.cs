@@ -400,11 +400,6 @@ namespace Rawr.Healadin
             BaseCost = 219f;
         }
 
-        public float ManaRestored(float AttackSpeed)
-        {
-            return Talents.GlyphOfSealOfWisdom ? 0.04f * Stats.Mana * (15f * AttackSpeed / 60f) : 0f;
-        }
-
         public override float CastTime()
         {
             return 1.5f;

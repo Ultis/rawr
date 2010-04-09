@@ -73,7 +73,6 @@ namespace Rawr.Healadin
             calc.ManaPotion = (1 + Stats.BonusManaPotion) * CalcOpts.ManaAmt;
             calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
-            calc.ManaOther += jotp.Casts() * jotp.ManaRestored(Character.MainHand == null ? 1.8f : Character.MainHand.Speed);
             if (Stats.HighestStat > 0)
             {
                 float greatnessMana = Stats.HighestStat * StatConversion.RATING_PER_MANA;
