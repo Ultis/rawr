@@ -1,4 +1,4 @@
-namespace Rawr.Warlock
+namespace Rawr.WarlockOld
 {
     /// <summary>
     /// A class to track our combat statistics.

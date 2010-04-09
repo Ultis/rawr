@@ -7,7 +7,7 @@ using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
     public partial class CalculationOptionsPanelWarlock
         : CalculationOptionsPanelBase {
 

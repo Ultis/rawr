@@ -9,9 +9,9 @@ using System.Windows.Media;
 using System.Drawing;
 #endif
 
-namespace Rawr.Warlock 
+namespace Rawr.WarlockOld 
 {
-    [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", CharacterClass.Warlock)]
+    [Rawr.Calculations.RawrModelInfo("WarlockOld", "Spell_Nature_FaerieFire", CharacterClass.Warlock)]
     public class CalculationsWarlock : CalculationsBase 
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates 

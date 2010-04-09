@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 #endif
 
-namespace Rawr.Warlock 
+namespace Rawr.WarlockOld 
 {
     public enum SpellTree { Affliction, Demonology, Destruction }
 

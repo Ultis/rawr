@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     public class Spell {
 
@@ -14,7 +14,7 @@ namespace Rawr.WarlockTmp {
 
         static Spell() {
 
-            Type spellType = Type.GetType("Rawr.WarlockTmp.Spell");
+            Type spellType = Type.GetType("Rawr.Warlock.Spell");
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes()) {
                 if (type.IsSubclassOf(spellType)) {
                     string name = type.Name;

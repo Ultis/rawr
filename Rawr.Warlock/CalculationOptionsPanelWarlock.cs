@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rawr.Warlock 
+namespace Rawr.WarlockOld 
 {
     public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase 
     {

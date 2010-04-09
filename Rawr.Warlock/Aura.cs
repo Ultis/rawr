@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Rawr.Warlock
+namespace Rawr.WarlockOld
 {
     /// <summary>
     /// A generic class for modelling auras that proc during combat.

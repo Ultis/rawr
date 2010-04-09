@@ -5623,11 +5623,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by [1 * Pts]%, and reduces all periodic healing done to the target by [3 * Pts]%. Lasts for 12 sec. Stacks up to 2 times.
         /// </summary>
         [TalentData(13, "Shadow Embrace", 5, 0, 1, 5, -1, new[] {
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 3%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 2%, and reduces all periodic healing done to the target by 6%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 3%, and reduces all periodic healing done to the target by 9%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 4%, and reduces all periodic healing done to the target by 12%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 5%, and reduces all periodic healing done to the target by 15%. Lasts for 12 sec. Stacks up to 2 times.",}, "spell_shadow_shadowembrace")]
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 2%. Lasts for 12 sec. Stacks up to 3 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 2%, and reduces all periodic healing done to the target by 4%. Lasts for 12 sec. Stacks up to 3 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 3%, and reduces all periodic healing done to the target by 6%. Lasts for 12 sec. Stacks up to 3 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 4%, and reduces all periodic healing done to the target by 8%. Lasts for 12 sec. Stacks up to 3 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 5%, and reduces all periodic healing done to the target by 10%. Lasts for 12 sec. Stacks up to 3 times.",}, "spell_shadow_shadowembrace")]
         public int ShadowEmbrace { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
         /// When you deal damage with your Corruption spell, you are instantly healed for 40% of the damage done. In addition, the damage done by your Corruption, Seed of Corruption and Unstable Affliction damage over time effects is increased by 5%.
@@ -5721,11 +5721,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
         /// Your Corruption and Unstable Affliction spells gain an additional [1 * Pts]% of your bonus spell damage, and your Drain Life and Haunt spells have a [20 * Pts]% chance to reset the duration of your Corruption spell on the target.
         /// </summary>
         [TalentData(26, "Everlasting Affliction", 5, 0, 2, 10, -1, new[] {
-@"Your Corruption and Unstable Affliction spells gain an additional 1% of your bonus spell damage, and your Drain Life and Haunt spells have a 20% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 2% of your bonus spell damage, and your Drain Life and Haunt spells have a 40% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 3% of your bonus spell damage, and your Drain Life and Haunt spells have a 60% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 4% of your bonus spell damage, and your Drain Life and Haunt spells have a 80% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 5% of your bonus spell damage, and your Drain Life and Haunt spells have a 100% chance to reset the duration of your Corruption spell on the target.",}, "ability_warlock_everlastingaffliction")]
+@"Your Corruption and Unstable Affliction spells gain an additional 1% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 20% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 2% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 40% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 3% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 60% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 4% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 80% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 5% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 100% chance to reset the duration of your Corruption spell on the target.",}, "ability_warlock_everlastingaffliction")]
         public int EverlastingAffliction { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
         /// You send a ghostly soul into the target, dealing 405 to 473 Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target.
@@ -5996,14 +5996,14 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 30%.",}, "spell_shadow_demonicempathy")]
         public int Nemesis { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
-        /// Increases your spell damage by [1 * Pts]%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by [2 * Pts]% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.
+        /// Increases your spell damage by [2 * Pts]%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by [2 * Pts]% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.
         /// </summary>
         [TalentData(53, "Demonic Pact", 5, 1, 2, 10, -1, new[] {
-@"Increases your spell damage by 1%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 2%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 3%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 4%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 5%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 12 sec.  Does not work on Enslaved demons.",}, "spell_shadow_demonicpact")]
+@"Increases your spell damage by 2%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
+@"Increases your spell damage by 4%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
+@"Increases your spell damage by 6%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
+@"Increases your spell damage by 8%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
+@"Increases your spell damage by 10%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",}, "spell_shadow_demonicpact")]
         public int DemonicPact { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.

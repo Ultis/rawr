@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Rawr.Warlock
+namespace Rawr.WarlockOld
 {
     /// <summary>
     /// This class is a modified version of Sven de Groot's generic PriorityQueue data structure for .NET.

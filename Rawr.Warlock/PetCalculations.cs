@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.Warlock 
+namespace Rawr.WarlockOld 
 {
     //class PetCalculations 
     //{

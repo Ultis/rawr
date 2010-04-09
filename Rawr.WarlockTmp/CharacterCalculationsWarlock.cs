@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     /// <summary>
     /// Calculates a Warlock's DPS and Spell Stats.
@@ -589,7 +589,7 @@ namespace Rawr.WarlockTmp {
             string className = spellName.Replace(" ", "");
             className = className.Replace("(", "_");
             className = className.Replace(")", "");
-            Type type = Type.GetType("Rawr.WarlockTmp." + className);
+            Type type = Type.GetType("Rawr.Warlock." + className);
             Spell spell
                 = (Spell) Activator.CreateInstance(type, new object[] { this });
             Spells[spellName] = spell;

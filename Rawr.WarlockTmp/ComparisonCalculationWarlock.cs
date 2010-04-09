@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     /// <summary>
     /// Data container class for the results of a comparison of two 

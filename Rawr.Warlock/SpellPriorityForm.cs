@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace Rawr.Warlock {
+namespace Rawr.WarlockOld {
     public partial class SpellPriorityForm : Form 
     {
         private readonly ListBox _spellPriority;

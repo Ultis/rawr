@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
     
     public class CastingState {
 

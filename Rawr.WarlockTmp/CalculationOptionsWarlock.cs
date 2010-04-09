@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     public class Rotation {
 

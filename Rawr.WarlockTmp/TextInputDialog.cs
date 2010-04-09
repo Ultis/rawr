@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
     public partial class TextInputDialog : Form {
 
         public static string Show(string title, string message, string start) {

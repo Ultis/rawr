@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Rawr.Warlock 
+namespace Rawr.WarlockOld 
 {
     public class CharacterCalculationsWarlock : CharacterCalculationsBase
     {

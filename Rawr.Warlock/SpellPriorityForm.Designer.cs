@@ -1,4 +1,4 @@
-﻿namespace Rawr.Warlock
+﻿namespace Rawr.WarlockOld
 {
     partial class SpellPriorityForm
     {

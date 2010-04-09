@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     public class SpellModifiers {
 

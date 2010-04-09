@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rawr.Warlock
+namespace Rawr.WarlockOld
 {
     /// <summary>
     /// The base class from which all warlock pets are derived.

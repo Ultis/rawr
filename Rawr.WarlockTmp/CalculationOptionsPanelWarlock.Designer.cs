@@ -1,4 +1,4 @@
-﻿namespace Rawr.WarlockTmp
+﻿namespace Rawr.Warlock
 {
     partial class CalculationOptionsPanelWarlock
     {

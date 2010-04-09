@@ -5,13 +5,13 @@ using System.Drawing;
 using System.Xml.Serialization;
 using System.IO;
 
-namespace Rawr.WarlockTmp {
+namespace Rawr.Warlock {
 
     /// <summary>
     /// Core class representing the Rawr.Warlock model
     /// </summary>
     [Rawr.Calculations.RawrModelInfo(
-        "WarlockTmp",
+        "Warlock",
         "Spell_Nature_FaerieFire",
         CharacterClass.Warlock)]
     public class CalculationsWarlock : CalculationsBase {
