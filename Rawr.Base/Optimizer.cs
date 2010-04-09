@@ -335,6 +335,7 @@ namespace Rawr.Optimizer
 
             slotItemsRandom = new List<KeyedList<KeyedList<ItemInstance>>>[characterSlots];
             minJeweler = new int[characterSlots];
+            SupportsRecycling = true;
         }
 
         public void InitializeItemCache(Character character, CalculationsBase model, AvailableItemGenerator itemGenerator)
@@ -1457,10 +1458,25 @@ namespace Rawr.Optimizer
             return individual.Items;
         }
 
-        protected override OptimizerCharacter GenerateIndividual(object[] items, bool canUseArray)
+        protected override object[] GetRecycledItems(OptimizerCharacter recycledIndividual)
+        {
+            if (recycledIndividual == null) return null;
+            return recycledIndividual.Items;
+        }
+
+        protected override OptimizerCharacter GenerateIndividual(object[] items, bool canUseArray, OptimizerCharacter recycledIndividual)
         {
             items = canUseArray ? items : (object[])items.Clone();
-            Character character = new Character(_character, items, characterSlots);
+            Character character;
+            if (recycledIndividual == null)
+            {
+                character = new Character(_character, items, characterSlots);
+            }
+            else
+            {
+                character = recycledIndividual.Character;
+                character.InitializeCharacter(items, characterSlots);
+            }
             if (optimizeFood)
             {
                 Buff food = (Buff)items[characterSlots];
@@ -1550,7 +1566,16 @@ namespace Rawr.Optimizer
             {
                 character.CurrentTalents = (TalentsBase)items[characterSlots + 3];
             }
-            return new OptimizerCharacter() { Character = character, Items = items };
+            if (recycledIndividual == null)
+            {
+                return new OptimizerCharacter() { Character = character, Items = items };
+            }
+            else
+            {
+                recycledIndividual.Character = character;
+                recycledIndividual.Items = items;
+                return recycledIndividual;
+            }
         }
 
         private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, List<OptimizationRequirement> requirements, out float nonJewelerValue)
@@ -1676,7 +1701,7 @@ namespace Rawr.Optimizer
             {
                 object[] itemList = (object[])GetItems(bestIndividual).Clone();
                 itemList[slot] = null;
-                swappedIndividual = GenerateIndividual(itemList, true);
+                swappedIndividual = GenerateIndividual(itemList, true, null);
                 float bestBlueValue = float.NegativeInfinity;
                 Item bestBlueGem = null;
                 float bestYellowValue = float.NegativeInfinity;
@@ -1999,7 +2024,7 @@ namespace Rawr.Optimizer
                 directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
                 if (IsIndividualValid(directValuationsTemplate))
                 {
-                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
                     swappedIndividual.DirectUpgradeEntry = entry;
                 }
             }
@@ -2037,7 +2062,7 @@ namespace Rawr.Optimizer
                         directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
                         if (IsIndividualValid(directValuationsTemplate))
                         {
-                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false);
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
                             swappedIndividual.DirectUpgradeEntry = entry;
                         }
                         else
@@ -2116,7 +2141,7 @@ namespace Rawr.Optimizer
                             itemList[slot] = entry.ItemInstance;
                             if (IsIndividualValid(itemList))
                             {
-                                swappedIndividual = GenerateIndividual(itemList, false);
+                                swappedIndividual = GenerateIndividual(itemList, false, null);
                                 CharacterCalculationsBase valuation;
                                 value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
                                 ItemInstance itemInstance = entry.ItemInstance;
@@ -2184,7 +2209,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        protected override OptimizerCharacter BuildChildIndividual(OptimizerCharacter father, OptimizerCharacter mother)
+        protected override OptimizerCharacter BuildChildIndividual(OptimizerCharacter father, OptimizerCharacter mother, OptimizerCharacter recycledIndividual)
         {
             // jewelcrafter preserving crossover
             // an alternative option would be to add optimizer constraints that restarted character construction if jewelcrafter
@@ -2242,7 +2267,8 @@ namespace Rawr.Optimizer
                     {
                         return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                     }
-                });
+                },
+                recycledIndividual);
         }
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
@@ -2271,9 +2297,10 @@ namespace Rawr.Optimizer
             public ItemSlot Socket;
         }
 
-        private OptimizerCharacter BuildReplaceGemMutantCharacter(OptimizerCharacter parent, out bool successful)
+        private OptimizerCharacter BuildReplaceGemMutantCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual, out bool successful)
         {
-            object[] items = new object[slotCount];
+            object[] items = GetRecycledItems(recycledIndividual) ?? new object[slotCount];
+            //object[] items = new object[slotCount];
             Array.Copy(parent.Items, items, slotCount);
             successful = false;
 
@@ -2327,12 +2354,13 @@ namespace Rawr.Optimizer
             }
 
             // create character
-            return GenerateIndividual(items, true);
+            return GenerateIndividual(items, true, recycledIndividual);
         }
 
-        private OptimizerCharacter BuildSwapGemMutantCharacter(OptimizerCharacter parent, out bool successful)
+        private OptimizerCharacter BuildSwapGemMutantCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual, out bool successful)
         {
-            object[] items = new object[slotCount];
+            object[] items = GetRecycledItems(recycledIndividual) ?? new object[slotCount];
+            //object[] items = new object[slotCount];
             Array.Copy(parent.Items, items, slotCount);
             successful = false;
 
@@ -2409,38 +2437,38 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                return GenerateIndividual(items, true);
+                return GenerateIndividual(items, true, recycledIndividual);
             }
             return null;
         }
 
-        protected override OptimizerCharacter BuildMutantIndividual(OptimizerCharacter parent)
+        protected override OptimizerCharacter BuildMutantIndividual(OptimizerCharacter parent, OptimizerCharacter recycledIndividual)
         {
             bool successful;
             OptimizerCharacter mutant = null;
             Random rand = Rnd;
             if (optimizeTalents && mutateTalents && rand.NextDouble() < 0.5)
             {
-                return BuildMutateTalentsCharacter(parent);
+                return BuildMutateTalentsCharacter(parent, recycledIndividual);
             }
             else if (itemGenerator == null || rand.NextDouble() < 0.9)
             {
-                return base.BuildMutantIndividual(parent);
+                return base.BuildMutantIndividual(parent, recycledIndividual);
             }
             else if (rand.NextDouble() < 0.5)
             {
-                mutant = BuildReplaceGemMutantCharacter(parent, out successful);
+                mutant = BuildReplaceGemMutantCharacter(parent, recycledIndividual, out successful);
                 if (!successful)
                 {
-                    return base.BuildMutantIndividual(parent);
+                    return base.BuildMutantIndividual(parent, recycledIndividual);
                 }
             }
             else
             {
-                mutant = BuildSwapGemMutantCharacter(parent, out successful);
+                mutant = BuildSwapGemMutantCharacter(parent, recycledIndividual, out successful);
                 if (!successful)
                 {
-                    return base.BuildMutantIndividual(parent);
+                    return base.BuildMutantIndividual(parent, recycledIndividual);
                 }
             }
             return mutant;
@@ -2456,9 +2484,9 @@ namespace Rawr.Optimizer
         private TalentItem[] talentItem = new TalentItem[100];
         private int talentItemCount;
 
-        private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent)
+        private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual)
         {
-            OptimizerCharacter optCharacter = GenerateIndividual(parent.Items, false);
+            OptimizerCharacter optCharacter = GenerateIndividual(parent.Items, false, recycledIndividual);
             object[] items = optCharacter.Items;
             Character character = optCharacter.Character;
 #if RAWR3
@@ -2544,6 +2572,7 @@ namespace Rawr.Optimizer
         }
     }
 
+    #region ItemOptimizer
     public class ItemOptimizer : OptimizerBase<object, Character, CharacterCalculationsBase>
     {
         private Character _character;
@@ -3414,7 +3443,7 @@ namespace Rawr.Optimizer
             return items;
         }
 
-        protected override Character GenerateIndividual(object[] items, bool canUseArray)
+        protected override Character GenerateIndividual(object[] items, bool canUseArray, Character recycledIndividual)
         {
             Item[] gems = new Item[3];
             ItemInstance[] itemInstances = new ItemInstance[characterSlots];
@@ -3614,4 +3643,5 @@ namespace Rawr.Optimizer
             return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
         }
     }
+#endregion
 }

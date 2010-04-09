@@ -541,7 +541,7 @@ namespace Rawr.Optimizer
                         bool injected;
                         object[] genes = (object[])startIndividual.Items.Clone();
                         genes[itemList.Count] = upgradeItems[0];
-                        BatchIndividual batch = GenerateIndividual(genes, true);
+                        BatchIndividual batch = GenerateIndividual(genes, true, null);
                         bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
                         if (best > baseValue)
                         {
@@ -622,7 +622,7 @@ namespace Rawr.Optimizer
                 bool injected;
                 object[] genes = (object[])startIndividual.Items.Clone();
                 genes[itemList.Count] = upgradeItems[0];
-                BatchIndividual batch = GenerateIndividual(genes, true);
+                BatchIndividual batch = GenerateIndividual(genes, true, null);
                 bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
                 RemoveUpgradeItems(item.Item);
                 upgradeValue = best - baseValue;
@@ -841,25 +841,25 @@ namespace Rawr.Optimizer
             return individual.Items;
         }
 
-        protected override BatchIndividual GenerateIndividual(object[] items, bool canUseArray)
+        protected override BatchIndividual GenerateIndividual(object[] items, bool canUseArray, BatchIndividual recycledIndividual)
         {
             return new BatchIndividual(canUseArray ? items : (object[])items.Clone(), itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
         }
 
-        protected override BatchIndividual BuildMutantIndividual(BatchIndividual parent)
+        protected override BatchIndividual BuildMutantIndividual(BatchIndividual parent, BatchIndividual recycledIndividual)
         {
             bool successful;
             BatchIndividual mutant = null;
             if (Rnd.NextDouble() < 0.9)
             {
-                return base.BuildMutantIndividual(parent);
+                return base.BuildMutantIndividual(parent, recycledIndividual);
             }
             else
             {
                 mutant = BuildSwapGemMutantCharacter(parent, out successful);
                 if (!successful)
                 {
-                    return base.BuildMutantIndividual(parent);
+                    return base.BuildMutantIndividual(parent, recycledIndividual);
                 }
             }
             return mutant;
@@ -1116,7 +1116,7 @@ namespace Rawr.Optimizer
 
             if (successful)
             {
-                return GenerateIndividual(items, true);
+                return GenerateIndividual(items, true, null);
             }
             return null;
         }
@@ -1170,7 +1170,7 @@ namespace Rawr.Optimizer
             return ok;
         }
 
-        protected override BatchIndividual BuildChildIndividual(BatchIndividual father, BatchIndividual mother)
+        protected override BatchIndividual BuildChildIndividual(BatchIndividual father, BatchIndividual mother, BatchIndividual recycledIndividual)
         {
             return GeneratorBuildIndividual(
                 delegate(int slot, object[] items)
@@ -1184,7 +1184,8 @@ namespace Rawr.Optimizer
                     {
                         return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                     }
-                });
+                },
+                recycledIndividual);
         }
     }
 }

@@ -1943,6 +1943,17 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
+        /// <summary>
+        /// This is a variant of the above constructor used when recycling Character, assuming
+        /// it was first created with the above constructor and same baseCharacter.
+        /// </summary>
+        internal void InitializeCharacter(object[] items, int count)
+        {
+            gemCountValid = false;
+            Array.Copy(items, _item, count);
+            RecalculateSetBonuses();
+        }
+
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
             ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
