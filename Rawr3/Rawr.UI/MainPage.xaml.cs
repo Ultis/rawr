@@ -462,14 +462,14 @@ namespace Rawr.UI
                 {
                     HelpMenu.IsDropDownOpen = false;
                     HelpMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowHelp("http://rawr.codeplex.com/documentation");
+                    /*if (newIndex == 1) ShowHelp("http://rawr.codeplex.com/documentation");
                     else if (newIndex == 2) ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
                     else if (newIndex == 3) ShowHelp("http://rawr.codeplex.com/wikipage?title=Gemmings");
                     else if (newIndex == 4) ShowHelp("http://rawr.codeplex.com/wikipage?title=GearOptimization");
                     else if (newIndex == 5) ShowHelp("http://rawr.codeplex.com/wikipage?title=ItemFiltering");
                     else if (newIndex == 7) ShowHelp("http://rawr.codeplex.com/");
                     else if (newIndex == 8) ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
+                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();*/
                 }
             }
         }

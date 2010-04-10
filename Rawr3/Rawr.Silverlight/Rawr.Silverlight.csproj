@@ -177,10 +177,6 @@
       <Project>{E5177B6E-4D62-4506-BD70-E657540A9C4D}</Project>
       <Name>Rawr.UI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Warlock\Rawr.Warlock.csproj">
-      <Project>{EE625724-2A4E-45F7-806D-584449250C11}</Project>
-      <Name>Rawr.Warlock</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\OutOfBrowserSettings.xml" />

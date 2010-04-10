@@ -51,14 +51,14 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.Warlock\Aura.cs">
+      <Link>Aura.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Warlock\CalculationOptionsWarlock.cs">
       <Link>CalculationOptionsWarlock.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Warlock\CalculationsWarlock.cs">
       <Link>CalculationsWarlock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\CastingState.cs">
-      <Link>CastingState.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Warlock\CharacterCalculationsWarlock.cs">
       <Link>CharacterCalculationsWarlock.cs</Link>
@@ -66,17 +66,20 @@
     <Compile Include="..\..\Rawr.Warlock\ComparisonCalculationWarlock.cs">
       <Link>ComparisonCalculationWarlock.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Warlock\Pets.cs">
-      <Link>Pets.cs</Link>
+    <Compile Include="..\..\Rawr.Warlock\Pet.cs">
+      <Link>Pet.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Warlock\SimulatedStat.cs">
-      <Link>SimulatedStat.cs</Link>
+    <Compile Include="..\..\Rawr.Warlock\PetCalculations.cs">
+      <Link>PetCalculations.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Warlock\SpellModifiers.cs">
-      <Link>SpellModifiers.cs</Link>
+    <Compile Include="..\..\Rawr.Warlock\PriorityQueue.cs">
+      <Link>PriorityQueue.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Warlock\Spells.cs">
-      <Link>Spells.cs</Link>
+    <Compile Include="..\..\Rawr.Warlock\Spell.cs">
+      <Link>Spell.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Warlock\SpellStatistics.cs">
+      <Link>SpellStatistics.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelWarlock.xaml.cs">
       <DependentUpon>CalculationOptionsPanelWarlock.xaml</DependentUpon>
