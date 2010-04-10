@@ -289,7 +289,7 @@ namespace Rawr.UI
         {
             OptimizeButton.IsEnabled = UpgradesButton.IsEnabled = OverrideRegemCheck.IsEnabled =
                 OverrideReenchantCheck.IsEnabled = ThoroughnessSlider.IsEnabled = MixologyCheck.IsEnabled =
-                ElixirsFlasksCheck.IsEnabled = FoodCheck.IsEnabled = TalentsCheck.IsEnabled =
+                ElixirsFlasksCheck.IsEnabled = FoodCheck.IsEnabled = TalentsCheck.IsEnabled = TalentSpecsCheck.IsEnabled =
                 CalculationToOptimizeCombo.IsEnabled = AddRequirementButton.IsEnabled = enabled;
             MaxScoreLabel.Text = string.Empty;
             AltProgress.Value = MainProgress.Value = 0;

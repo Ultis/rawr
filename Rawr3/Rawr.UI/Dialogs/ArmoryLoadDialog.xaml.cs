@@ -104,7 +104,7 @@ namespace Rawr.UI
                 "Silver Hand",
                 "The Scryers",
                 "Wyrmrest Accord",
-                "The Venture Co.",
+                "The Venture Co",
                 "Azjol-Nerub",
                 "Doomhammer",
                 "Icecrown",
