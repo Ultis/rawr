@@ -23,10 +23,12 @@ namespace Rawr.UI
 
         private Dictionary<string, CheckBox> templateGroupChecks;
         private Dictionary<string, StackPanel> templateItems;
+        private Character character;
         public GemmingTemplates(Character c)
         {
             isLoading = true;
-            InitializeComponent();
+            character = c;
+            InitializeComponent();            
             
             GemmingsShownNum.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
 
@@ -62,6 +64,11 @@ namespace Rawr.UI
                     groupExpander.Content = stack;
                     templateItems[template.Group] = stack;
                 }              
+                templateItems[template.Group].Children.Add(templateItem);
+            }
+            foreach (GemmingTemplate template in character.CustomGemmingTemplates)
+            {
+                GemmingTemplateItem templateItem = new GemmingTemplateItem(this, template);
                 templateItems[template.Group].Children.Add(templateItem);
             }
             isLoading = false;
@@ -178,7 +185,7 @@ namespace Rawr.UI
         private void AddTemplate(object sender, RoutedEventArgs e)
         {
             GemmingTemplate newTemplate = new GemmingTemplate() { Group = "Custom", Enabled = true, Model = Calculations.Instance.Name };
-            GemmingTemplate.CurrentTemplates.Add(newTemplate);
+            character.CustomGemmingTemplates.Add(newTemplate);
             
             GemmingTemplateItem newItem = new GemmingTemplateItem(this, newTemplate);
             CustomStack.Children.Add(newItem);
@@ -190,7 +197,7 @@ namespace Rawr.UI
             if (item.isCustom)
             {
                 CustomStack.Children.Remove(item);
-                GemmingTemplate.CurrentTemplates.Remove(item.template);
+                character.CustomGemmingTemplates.Remove(item.template);
                 UpdateGroupChecked(item.template.Group);
             }
         }

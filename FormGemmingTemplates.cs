@@ -105,6 +105,19 @@ namespace Rawr
 				}
 				if (allDisabled) buttonExpand.Text = "+";
 			}
+            foreach (GemmingTemplate gemmingTemplate in _currentCharacter.CustomGemmingTemplates)
+            {
+                if (gemmingTemplate.Model == _currentCharacter.CurrentModel)
+                {
+                    GemmingTemplateControl gemmingTemplateControl = new GemmingTemplateControl();
+                    gemmingTemplateControl.Dock = DockStyle.Top;
+                    gemmingTemplateControl.GemmingTemplate = gemmingTemplate;
+                    gemmingTemplateControl.GemmingTemplateEnabledChanged += new EventHandler(gemmingTemplateControl_GemmingTemplateEnabledChanged);
+                    gemmingTemplateControl.DeleteClicked += new EventHandler(gemmingTemplateControl_DeleteClicked);
+                    panelGemmingTemplates.Controls.Add(gemmingTemplateControl);
+                    gemmingTemplateControl.BringToFront();
+                }
+            }
 
 			_panelAddGemmingTemplate = new Panel();
 			_panelAddGemmingTemplate.Height = 50;
@@ -164,7 +177,7 @@ namespace Rawr
 		{
 			SuspendLayout();
 			GemmingTemplate gemmingTemplate = new GemmingTemplate() { Group = "Custom", Enabled = true, Model = Calculations.Instance.Name };
-			GemmingTemplate.CurrentTemplates.Add(gemmingTemplate);
+            _currentCharacter.CustomGemmingTemplates.Add(gemmingTemplate);
 
 			GemmingTemplateControl gemmingTemplateControl = new GemmingTemplateControl();
 			gemmingTemplateControl.Dock = DockStyle.Top;
@@ -185,7 +198,7 @@ namespace Rawr
 		void gemmingTemplateControl_DeleteClicked(object sender, EventArgs e)
 		{
 			GemmingTemplateControl gemmingTemplateControl = (sender as GemmingTemplateControl);
-			GemmingTemplate.CurrentTemplates.Remove(gemmingTemplateControl.GemmingTemplate);
+            _currentCharacter.CustomGemmingTemplates.Remove(gemmingTemplateControl.GemmingTemplate);
 			panelGemmingTemplates.Controls.Remove(gemmingTemplateControl);
 		}
 

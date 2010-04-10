@@ -1289,6 +1289,17 @@ namespace Rawr.Optimizer
 							if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
 						}
 					}
+                    foreach (GemmingTemplate template in characters[index].CustomGemmingTemplates)
+                    {
+                        if (template.Enabled && template.Model == models[index].Name)
+                        {
+                            if (!templateGems.Contains(template.RedId.ToString())) templateGems.Add(template.RedId.ToString());
+                            if (!templateGems.Contains(template.YellowId.ToString())) templateGems.Add(template.YellowId.ToString());
+                            if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
+                            if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
+                            if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                        }
+                    }
 				}
 				foreach (string gem in templateGems)
 				{

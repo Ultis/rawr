@@ -733,10 +733,14 @@ namespace Rawr
             FormGemmingTemplates GemControl = new FormGemmingTemplates();
             GemControl.ShowDialog(this);
             this.Cursor = Cursors.Default;
+            List<GemmingTemplate> copy = new List<GemmingTemplate>(Character.CustomGemmingTemplates);
             if (GemControl.DialogResult.Equals(DialogResult.OK))
             {
-                GemmingTemplate.SaveTemplates();
                 ItemCache.OnItemsChanged();
+            }
+            else
+            {
+                Character.CustomGemmingTemplates = copy;
             }
         }
 		

@@ -91,9 +91,6 @@
     <Content Include="ClientBin\Armory.php">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ClientBin\GemmingTemplates.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ClientBin\ItemFilter.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

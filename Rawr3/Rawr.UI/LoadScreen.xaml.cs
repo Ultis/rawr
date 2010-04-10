@@ -31,7 +31,7 @@ namespace Rawr.UI
             Classes["BuffCache.xml"] = typeof(Buff);
             Classes["ItemSource.xml"] = typeof(LocationFactory);
             Classes["ItemFilter.xml"] = typeof(ItemFilter);
-            Classes["GemmingTemplates.xml"] = typeof(GemmingTemplate);
+            //Classes["GemmingTemplates.xml"] = typeof(GemmingTemplate);
             Classes["Settings.xml"] = typeof(Settings);
         }
 

@@ -177,6 +177,7 @@ namespace Rawr //O O . .
 		[XmlElement("EnforceMetagemRequirements")]
 		public bool _enforceMetagemRequirements = false;
 		public int Level { get { return 80; } }
+        public List<GemmingTemplate> CustomGemmingTemplates { get; set; }
 
         public string CalculationToOptimize { get; set; }
 
@@ -726,6 +727,14 @@ namespace Rawr //O O . .
 								if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
 							}
                         }
+                        foreach (GemmingTemplate template in CustomGemmingTemplates)
+                        {
+                            if (template.Enabled && template.Model == CurrentModel)
+                            {
+                                ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+                                if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                            }
+                        }
                         items.AddRange(itemInstances);
                     }
                 }
@@ -783,6 +792,14 @@ namespace Rawr //O O . .
                                 foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
                                 {
                                     if (template.Enabled)
+                                    {
+                                        ItemInstance instance = template.GetItemInstance(item, enchant, blacksmithingSocket);
+                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    }
+                                }
+                                foreach (GemmingTemplate template in CustomGemmingTemplates)
+                                {
+                                    if (template.Enabled && template.Model == CurrentModel)
                                     {
                                         ItemInstance instance = template.GetItemInstance(item, enchant, blacksmithingSocket);
                                         if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
@@ -1767,6 +1784,7 @@ namespace Rawr //O O . .
             _availableItems = new List<string>();
             _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
             _customItemInstances = new List<ItemInstance>();
+            CustomGemmingTemplates = new List<GemmingTemplate>();
             _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
             _relevantItems = new Dictionary<CharacterSlot, List<Item>>();
         }
