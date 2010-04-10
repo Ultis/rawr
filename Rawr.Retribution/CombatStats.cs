@@ -78,7 +78,7 @@ namespace Rawr.Retribution
             float drNoAW = dr;
             ArmorReduction = 1f - drAW;
 
-            BaseWeaponSpeed = _character.MainHand == null ? 3.5f : _character.MainHand.Speed;
+            BaseWeaponSpeed = (_character.MainHand == null || _character.MainHand.Speed == 0.0f) ? 3.5f : _character.MainHand.Speed; // NOTE by Kavan: added a check against speed == 0, it can happen when item data is still being downloaded
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = BaseWeaponSpeed / ((1f + _stats.PhysicalHaste) * bloodlustHaste);
             WeaponDamage = baseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
