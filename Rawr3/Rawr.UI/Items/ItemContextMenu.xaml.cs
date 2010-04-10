@@ -51,6 +51,7 @@ namespace Rawr.UI
 
 #if SILVERLIGHT
                     ContextItemName.Content = selectedItemInstance.Item.Name;
+                    ContextOpenWowhead.NavigateUri = new Uri("http://www.wowhead.com/?item=" + selectedItemInstance.Id);
 #else
                     ContextItemName.Header = selectedItemInstance.Item.Name;
 #endif
@@ -113,10 +114,10 @@ namespace Rawr.UI
                 {
                     Character[Slot] = SelectedItemInstance;
                 }
-                else if (contextItem == ContextOpenWowhead)
+                /*else if (contextItem == ContextOpenWowhead)
                 {
                     System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
-                }
+                }*/
                 else if (contextItem == ContextAddCustom)
                 {
                     CustomItemInstance custom = new CustomItemInstance(Character, SelectedItemInstance);
@@ -155,7 +156,7 @@ namespace Rawr.UI
         private void OpenInWowhead(object sender, RoutedEventArgs e)
         {
 #if SILVERLIGHT
-            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
+            //System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + SelectedItemInstance.Id), "_blank");
 #else
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + SelectedItemInstance.Id));
 #endif
