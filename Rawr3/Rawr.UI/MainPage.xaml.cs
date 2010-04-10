@@ -57,10 +57,16 @@ namespace Rawr.UI
                     if (character != null)
                     {
                         character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
+                        character.AvailableItemsChanged -= new EventHandler(character_AvailableItemsChanged);
                         character.ClassChanged -= new EventHandler(character_ClassChanged);
                     }
 
                     character = value;
+                    if (_batchCharacter != null && _batchCharacter.Character != character)
+                    {
+                        // we're loading a character that is not a batch character
+                        _batchCharacter = null;
+                    }
                     character.IsLoading = true;
 
                     DataContext = character;
@@ -89,19 +95,28 @@ namespace Rawr.UI
                     TalentPicker.Character = character;
 
                     BuffControl.Character = character;
-                    ComparisonGraph.Character = character;
 
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                     character.ClassChanged += new EventHandler(character_ClassChanged);
+                    character.AvailableItemsChanged += new EventHandler(character_AvailableItemsChanged);
 
                     character_ClassChanged(this, EventArgs.Empty);
 
-					//character_CalculationsInvalidated(this, EventArgs.Empty); //Fired by ItemCache.OnItemsChanged();
 					Character.IsLoading = false;
-                    ItemCache.OnItemsChanged();
-                    Character.IsLoading = false;
+                    character_CalculationsInvalidated(this, EventArgs.Empty);
+
+                    // it's important that ComparisonGraph hooks CalculationsInvalidated event after we do because
+                    // the reference calculation must happen first
+                    // it also triggers update graph when we change character so make sure we've already done 
+                    // the reference calculation
+                    ComparisonGraph.Character = character;
                 }
             }
+        }
+
+        void character_AvailableItemsChanged(object sender, EventArgs e)
+        {
+            //_unsavedChanges = true;
         }
 
         private Character _storedCharacter;

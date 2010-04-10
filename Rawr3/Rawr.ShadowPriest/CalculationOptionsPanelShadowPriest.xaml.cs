@@ -43,6 +43,11 @@ namespace Rawr.ShadowPriest
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsShadowPriest();
 
+            CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+
+            if (calcOpts.SpellPriority == null)
+                calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
+
 			_loadingCalculationOptions = false;
 		}
 		#endregion
