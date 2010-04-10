@@ -74,7 +74,7 @@ namespace Rawr
 
 				if (xdoc.Root.Name == "queue")
 				{
-					Progress = "Queued (Postion: " + xdoc.Root.Attribute("position").Value + ")";
+					Progress = "Queued (Position: " + xdoc.Root.Attribute("position").Value + ")";
 					_queueTimer.Start();
 				}
 				else if (xdoc.Root.Name == "characterInfo")
