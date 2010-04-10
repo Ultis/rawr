@@ -520,10 +520,15 @@ namespace Rawr
             }
         }
 
+        internal static bool IsJewelersGemId(int id)
+        {
+            return (id == 42142 || id == 36766 || id == 42148 || id == 42143 || id == 42152 || id == 42153 || id == 42146 || id == 42158 || id == 42154 || id == 42150 || id == 42156 || id == 42144 || id == 42149 || id == 36767 || id == 42145 || id == 42155 || id == 42151 || id == 42157);
+        }
+
         private void UpdateGemInformation()
         {
             _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
-            _isJewelersGem = (Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157);
+            _isJewelersGem = IsJewelersGemId(Id);
             _isRedGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Red);
             _isYellowGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Yellow);
             _isBlueGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Blue);
@@ -1113,14 +1118,9 @@ namespace Rawr
         private void UpdateJewelerCount()
         {
             int jewelerCount = 0;
-            for (int index = 1; index <= 3; index++)
-            {
-                Item gem = GetGem(index);
-                if (gem != null && gem.IsJewelersGem)
-                {
-                    jewelerCount++;
-                }
-            }
+            if (Item.IsJewelersGemId(_gem1Id)) jewelerCount++;
+            if (Item.IsJewelersGemId(_gem2Id)) jewelerCount++;
+            if (Item.IsJewelersGemId(_gem3Id)) jewelerCount++;
             JewelerCount = jewelerCount;
         }
 
