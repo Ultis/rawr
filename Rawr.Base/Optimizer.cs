@@ -1666,7 +1666,7 @@ namespace Rawr.Optimizer
             {
                 itemGenerator.NormalizeCharacter(bestIndividual.Character, false); // this makes it nonnormal, but i don't think it should create any problems
             }
-            if (!bestIndividual.Character.CurrentCalculations.IncludeOffHandInCalculations(bestIndividual.Character))
+            if (lockedSlot != CharacterSlot.OffHand && !bestIndividual.Character.CurrentCalculations.IncludeOffHandInCalculations(bestIndividual.Character))
             {
                 bestIndividual.Character[CharacterSlot.OffHand] = null;
             }
