@@ -159,6 +159,7 @@
     <Compile Include="ItemFilter.cs" />
     <Compile Include="ItemLocation.cs" />
     <Compile Include="ItemUpdater.cs" />
+    <Compile Include="JsonParser.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Algorithms\MarkovProcess.cs" />
     <Compile Include="Optimizer.cs" />
