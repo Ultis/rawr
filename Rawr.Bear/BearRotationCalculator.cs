@@ -68,6 +68,117 @@ namespace Rawr.Bear
 		/// <param name="useLacerate">Whether to use Lacerate</param>
 		public BearRotationCalculation GetRotationCalculations(bool? useMaul, bool useMangle, bool useSwipe, bool useFaerieFire, bool useLacerate)
 		{
+			//Dictionary<BearAttack, int> attackCounts = new Dictionary<BearAttack, int>();
+			//attackCounts[BearAttack.Mangle] = attackCounts[BearAttack.FaerieFire] = 
+			//    attackCounts[BearAttack.Lacerate] = attackCounts[BearAttack.Swipe] = 0;
+
+			//float rotationDuration = 0f;
+			//if (useMangle)
+			//{
+			//    int mangleCooldown = (int)Math.Round(MangleCooldown * 10f);
+			//    if (mangleCooldown == 60)
+			//    { //0 iMangle - MFLSMFSS/12
+			//        rotationDuration = 12f;
+					
+			//        //M slots
+			//        attackCounts[BearAttack.Mangle] = 2;
+
+			//        //F slots
+			//        attackCounts[useFaerieFire ? BearAttack.FaerieFire :
+			//            (useSwipe ? BearAttack.Swipe :
+			//            (useLacerate ? BearAttack.Lacerate :
+			//            BearAttack.None))] += 2;
+
+			//        //L slots
+			//        attackCounts[useLacerate ? BearAttack.Lacerate :
+			//            (useSwipe ? BearAttack.Swipe :
+			//            BearAttack.None)] += 1;
+
+			//        //S slots
+			//        attackCounts[useSwipe ? BearAttack.Swipe :
+			//            (useLacerate ? BearAttack.Lacerate :
+			//            BearAttack.None)] += 3;
+			//    }
+			//    if (mangleCooldown == 55 || mangleCooldown == 50)
+			//    { //1 or 2 iMangle - MFLSMFSS/11 WRONG
+			//        rotationDuration = 11f;
+
+			//        //M slots
+			//        attackCounts[BearAttack.Mangle] = 2;
+
+			//        //F slots
+			//        attackCounts[useFaerieFire ? BearAttack.FaerieFire :
+			//            (useSwipe ? BearAttack.Swipe :
+			//            (useLacerate ? BearAttack.Lacerate :
+			//            BearAttack.None))] += 2;
+
+			//        //L slots
+			//        attackCounts[useLacerate ? BearAttack.Lacerate :
+			//            (useSwipe ? BearAttack.Swipe :
+			//            BearAttack.None)] += 1;
+
+			//        //S slots
+			//        attackCounts[useSwipe ? BearAttack.Swipe :
+			//            (useLacerate ? BearAttack.Lacerate :
+			//            BearAttack.None)] += 3;
+			//    }
+			//    if (mangleCooldown == 45)
+			//    {
+			//        if (useFaerieFire)
+			//        { //3 iMangle, with FF - MFLMSFMSLMFSMSFMLSMFSMLFMSS/40.5
+			//            rotationDuration = 40.5f;
+
+			//            //M slots
+			//            attackCounts[BearAttack.Mangle] = 9;
+
+			//            //F slots
+			//            attackCounts[useFaerieFire ? BearAttack.FaerieFire :
+			//                (useSwipe ? BearAttack.Swipe :
+			//                (useLacerate ? BearAttack.Lacerate :
+			//                BearAttack.None))] += 6;
+
+			//            //L slots
+			//            attackCounts[useLacerate ? BearAttack.Lacerate :
+			//                (useSwipe ? BearAttack.Swipe :
+			//                BearAttack.None)] += 4;
+
+			//            //S slots
+			//            attackCounts[useSwipe ? BearAttack.Swipe :
+			//                (useLacerate ? BearAttack.Lacerate :
+			//                BearAttack.None)] += 8;
+			//        }
+			//        else
+			//        { //3 iMangle, without FF - MLSMSSMSLMSSMSS/22.5
+			//            rotationDuration = 22.5f;
+
+			//            //M slots
+			//            attackCounts[BearAttack.Mangle] = 5;
+
+			//            //L slots
+			//            attackCounts[useLacerate ? BearAttack.Lacerate :
+			//                (useSwipe ? BearAttack.Swipe :
+			//                BearAttack.None)] += 2;
+
+			//            //S slots
+			//            attackCounts[useSwipe ? BearAttack.Swipe :
+			//                (useLacerate ? BearAttack.Lacerate :
+			//                BearAttack.None)] += 8;
+			//        }
+			//    }
+			//}
+			//else
+			//{
+			//    if (useFaerieFire)
+			//    { //No Mangle, with FF - FLSSFSSS/12
+					
+			//    }
+			//    else
+			//    {
+			//    }
+			//}
+
+
+
 			//36 GCDs, 54 sec
 			BearAttack[] attacks = new BearAttack[36];
 

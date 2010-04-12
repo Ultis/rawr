@@ -1867,10 +1867,10 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="CraftedItem">
-          <Skill>Tailoring</Skill>
+          <Skill>Unknown</Skill>
           <Level>0</Level>
-          <Bind>None</Bind>
-          <SpellName>NAME</SpellName>
+          <Bind>BoE</Bind>
+          <SpellName>Red Linen Shirt</SpellName>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -2041,10 +2041,10 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="CraftedItem">
-          <Skill>Tailoring</Skill>
+          <Skill>Unknown</Skill>
           <Level>0</Level>
-          <Bind>None</Bind>
-          <SpellName>NAME</SpellName>
+          <Bind>BoE</Bind>
+          <SpellName>Red Swashbuckler's Shirt</SpellName>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -87072,7 +87072,4098 @@
     </key>
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>10055</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Pink Mageweave Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>10054</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Lavender Mageweave Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>10056</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Orange Mageweave Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>17723</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Green Holiday Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6795</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>White Swashbuckler's Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>3426</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Lisbeth Schneider</VendorName>
+          <VendorArea>Stormwind City</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>4332</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Bright Yellow Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6390</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="ContainerItem">
+          <Heroic>false</Heroic>
+          <Area>The Barrens</Area>
+          <Container>Alliance Strongbox</Container>
+          <MinLevel>0</MinLevel>
+          <Party>0</Party>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6384</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Stylish Blue Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6385</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Stylish Green Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6833</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Teldrassil</Area>
+          <Heroic>false</Heroic>
+          <Boss>Noblegarden Vendor</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>4330</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Stylish Red Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>16060</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Andra</VendorName>
+          <VendorArea>Silvermoon City</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>2587</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Gray Woolen Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>2579</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Green Linen Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>4344</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Brown Linen Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>2576</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>White Linen Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52019</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area />
+          <Heroic>false</Heroic>
+          <Boss />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6097</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>quot;Silvermoonquot; Harry</VendorName>
+          <VendorArea>Howling Fjord</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42365</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42371</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6096</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Thomas Yance</VendorName>
+          <VendorArea>Old Hillsbrad Foothills</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41249</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Blue Lumberjack Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42374</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41253</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Blue Workman's Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6125</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42361</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42370</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42360</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42369</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45668</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42363</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42373</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41250</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Green Lumberjack Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42375</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41255</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Green Workman's Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45666</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45672</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>154</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42377</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>38</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Thomas Yance</VendorName>
+          <VendorArea>Old Hillsbrad Foothills</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41248</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Red Lumberjack Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42378</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41252</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Red Workman's Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42178</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area />
+          <Heroic>false</Heroic>
+          <Boss />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>41254</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Rustic Workman's Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>14617</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Scholomance</Area>
+          <Heroic>false</Heroic>
+          <Boss>Doctor Theolen Krastinov</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42368</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42372</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45669</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45664</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45667</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>6136</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45673</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>127</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>10034</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Tuxedo Shirt</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>45674</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Broxel Goldgrasp</VendorName>
+          <VendorArea>Icecrown</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>42376</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Karandonna</VendorName>
+          <VendorArea>Crystalsong Forest</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>24143</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>20897</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>18231</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>20901</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51570</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Wintergrasp</Area>
+          <Heroic>false</Heroic>
+          <Boss>Marshal Magruder</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51571</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Wintergrasp</Area>
+          <Heroic>false</Heroic>
+          <Boss>Marshal Magruder</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51334</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51348</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51330</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51346</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51332</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51354</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51356</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51344</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51341</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51369</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51360</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51363</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51375</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51372</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51351</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51338</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51328</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51366</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52572</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50402</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50400</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52570</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52569</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>Choose Your Path</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50403</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50397</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>52571</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50401</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50399</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Icecrown Citadel</Area>
+          <Quest>A Change of Heart</Quest>
+          <MinLevel>80</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51336</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51358</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51407</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51396</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51408</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51409</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51461</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51428</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51416</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51539</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51422</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51495</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51506</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51512</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51485</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51471</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51544</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51500</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51490</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51477</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51466</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51436</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50427</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50732</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51801</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51941</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50428</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50734</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51803</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51939</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51798</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51944</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51406</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51398</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51453</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51524</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51399</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51523</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51454</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51397</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51808</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area />
+          <Heroic>false</Heroic>
+          <Boss />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51568</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Wintergrasp</Area>
+          <Heroic>false</Heroic>
+          <Boss>Marshal Magruder</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51569</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Wintergrasp</Area>
+          <Heroic>false</Heroic>
+          <Boss>Marshal Magruder</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51335</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51349</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51331</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51347</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51333</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51353</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51355</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51357</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51445</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51525</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51440</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51442</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51528</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51439</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51529</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51444</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51530</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51443</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51527</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51446</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="UnknownItem" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51447</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51441</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51526</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51448</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50012</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50737</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50426</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50736</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49997</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50738</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51800</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51942</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51795</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51947</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51515</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51516</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51522</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51519</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51517</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51521</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51518</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51520</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49981</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50733</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51802</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51940</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51532</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51411</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51394</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51531</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51395</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51412</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51449</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51450</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51410</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51451</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51429</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51437</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51423</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51478</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51472</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51417</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51507</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51513</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51501</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51452</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51455</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51533</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51534</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="PvpItem">
+          <PointType>Arena</PointType>
+          <Points>550</Points>
+          <TokenCount>0</TokenCount>
+          <PointsA>0</PointsA>
+          <RequiredArenaRating>2300</RequiredArenaRating>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51535</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51377</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49312</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50429</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50731</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50070</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50730</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51799</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51943</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50425</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>50735</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>49888</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="CraftedItem">
+          <Skill>Unknown</Skill>
+          <Level>0</Level>
+          <Bind>BoE</Bind>
+          <SpellName>Shadow's Edge</SpellName>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51797</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51945</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51796</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51946</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Icecrown Citadel (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>The Lich King</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51403</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="UnknownItem">
+          <Note>Arena Points</Note>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51404</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51390</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51393</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51401</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51391</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51388</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51456</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51402</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51432</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51392</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51481</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51457</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51480</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51405</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51431</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51389</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Blazzek the Biter</VendorName>
+          <VendorArea>Tanaris</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51400</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Kezzik the Striker</VendorName>
+          <VendorArea>Netherstorm</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51343</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51340</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51368</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51337</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51327</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51365</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51359</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51362</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51374</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51371</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51350</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51345</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51342</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51370</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51361</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51364</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51339</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51329</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51367</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51376</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51373</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>51352</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="VendorItem">
+          <Count>0</Count>
+          <Cost>0</Cost>
+          <VendorName>Doris Volanthius</VendorName>
+          <VendorArea>Orgrimmar</VendorArea>
+        </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
     </value>

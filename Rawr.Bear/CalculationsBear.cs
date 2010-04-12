@@ -576,6 +576,8 @@ the Threat Scale defined on the Options tab.",
             float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel-80]; //0.2335774f;
             float glanceMultiplier = 0.7f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+			float chanceResisted = Math.Max(0f, ((new float[] { 0.04f, 0.05f, 0.06f, 0.17f })[targetLevel - 80]) -
+				(StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Druid) + stats.SpellHit));
 
             float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Druid)
                                 + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Druid)
@@ -583,6 +585,11 @@ the Threat Scale defined on the Options tab.",
                                 + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel-80];
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
+			float rawChanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Druid)
+								+ StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Druid)
+								+ stats.SpellCrit + stats.SpellCritOnTarget
+								+ StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
+			float chanceCritSpell = rawChanceCritSpell * (1f - chanceResisted);
 			
 			calculatedStats.DodgedAttacks = chanceDodge;
             calculatedStats.ParriedAttacks = chanceParry;
@@ -596,7 +603,7 @@ the Threat Scale defined on the Options tab.",
 			float maulDamageRaw = (baseDamage + 578) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMaulDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
 			float mangleDamageRaw = (baseDamage * 1.15f + 299) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
 			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * (1f + stats.BonusBearSwipeDamageMultiplier) * modArmor;
-			float faerieFireDamageRaw = (stats.AttackPower * 0.15f + 1f) * (1f + stats.BonusDamageMultiplier);
+			float faerieFireDamageRaw = (stats.AttackPower * 0.15f + 1f) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
 			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
 			float lacerateDamageDotRaw = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
 
@@ -607,7 +614,7 @@ the Threat Scale defined on the Options tab.",
 			float maulDamageAverage = (chanceCrit * (maulDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (maulDamageRaw));
 			float mangleDamageAverage = (chanceCrit * (mangleDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (mangleDamageRaw));
 			float swipeDamageAverage = (chanceCrit * (swipeDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (swipeDamageRaw));
-			float faerieFireDamageAverage = (0.25f * (faerieFireDamageRaw * spellCritMultiplier)) + (0.65f * (faerieFireDamageRaw)); //TODO: Assumes 25% spell crit and 10% spell miss
+			float faerieFireDamageAverage = (chanceCritSpell * (faerieFireDamageRaw * spellCritMultiplier)) + ((1f - chanceCritSpell - chanceResisted) * (faerieFireDamageRaw));
 			float lacerateDamageAverage = (chanceCrit * (lacerateDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (lacerateDamageRaw));
 			float lacerateDamageDotAverage = (chanceCritBleed * (lacerateDamageDotRaw * critMultiplier)) + ((1f - chanceCritBleed) * (lacerateDamageDotRaw));
 
@@ -622,11 +629,11 @@ the Threat Scale defined on the Options tab.",
 			
 			//Calculate the average threat of each attack, including crits
 			float meleeThreatAverage = bearThreatMultiplier * meleeDamageAverage;
-			float maulThreatAverage = bearThreatMultiplier * (maulDamageAverage + (424f * (1 - chanceAvoided)) / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
-			float mangleThreatAverage = bearThreatMultiplier * mangleDamageAverage * (1 + stats.BonusMangleBearThreat);
+			float maulThreatAverage = bearThreatMultiplier * (maulDamageAverage + (424f * (1f - chanceAvoided)) / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
+			float mangleThreatAverage = bearThreatMultiplier * mangleDamageAverage * (1f + stats.BonusMangleBearThreat);
 			float swipeThreatAverage = bearThreatMultiplier * swipeDamageAverage * 1.5f;
-			float faerieFireThreatAverage = bearThreatMultiplier * (faerieFireDamageAverage + (632f * (.9f))); //TODO: Assumes 10% spell miss rate
-			float lacerateThreatAverage = bearThreatMultiplier * (lacerateDamageAverage + (1031f * (1 - chanceAvoided))) / 2f;
+			float faerieFireThreatAverage = bearThreatMultiplier * (faerieFireDamageAverage + (632f * (1f - chanceResisted)));
+			float lacerateThreatAverage = bearThreatMultiplier * (lacerateDamageAverage + (1031f * (1f - chanceAvoided))) / 2f;
 			float lacerateDotThreatAverage = bearThreatMultiplier * lacerateDamageDotAverage / 2f;
 			
 			//Calculate effective rage costs for the possible outcomes of each ability, and the average
@@ -812,8 +819,8 @@ the Threat Scale defined on the Options tab.",
 				BonusStrengthMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusAttackPowerMultiplier = 0.02f * talents.ProtectorOfThePack,
-				BonusPhysicalDamageMultiplier = (1f + 0.02f * talents.Naturalist) * (1f + 0.02f * talents.MasterShapeshifter) - 1,
-				BonusMangleDamageMultiplier = 0.1f * talents.SavageFury,
+				BonusPhysicalDamageMultiplier = (1f + 0.02f * talents.Naturalist) * (1f + 0.02f * talents.MasterShapeshifter) - 1f,
+				BonusMangleDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (talents.GlyphOfMangle ? 1.1f : 1.0f) - 1f,
 				BonusMaulDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (1f + 0.04f * talents.RendAndTear) - 1f,
 				BonusEnrageDamageMultiplier = 0.05f * talents.KingOfTheJungle,
 				MangleCooldownReduction = (0.5f * talents.ImprovedMangle),
@@ -1364,6 +1371,11 @@ the Threat Scale defined on the Options tab.",
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
+				SpellCrit = stats.SpellCrit,
+				SpellCritOnTarget = stats.SpellCritOnTarget,
+				Intellect = stats.Intellect,
+				BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+				SpellHit = stats.SpellHit
 			};
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
@@ -1396,7 +1408,10 @@ the Threat Scale defined on the Options tab.",
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
                  + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
-                 + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier) != 0;
+                 + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier
+				 + stats.SpellCrit + stats.SpellCritOnTarget + stats.Intellect + stats.BonusNatureDamageMultiplier
+				 + stats.SpellHit
+				 ) != 0;
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{

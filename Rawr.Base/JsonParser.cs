@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Globalization;
 
@@ -137,7 +136,7 @@ namespace Rawr
                 }
             }
             string num = json.Substring(startindex, index - startindex);
-            if (num.Contains('.'))
+            if (num.Contains("."))
             {
                 return double.Parse(num, CultureInfo.InvariantCulture);
             }

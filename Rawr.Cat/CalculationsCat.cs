@@ -420,7 +420,7 @@ namespace Rawr.Cat
 
 			float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
 			float lagVariance = (float)calcOpts.LagVariance / 1000f;
-			float mangleDurationUptime = (character.DruidTalents.GlyphOfMangle ? 18f : 12f);
+			float mangleDurationUptime = 60f;// (character.DruidTalents.GlyphOfMangle ? 18f : 12f);
 			float mangleDurationAverage = mangleDurationUptime - timeToReapplyDebuffs - lagVariance;
 			float rakeDurationUptime = 9f + stats.BonusRakeDuration;
 			float rakeDurationAverage = rakeDurationUptime + timeToReapplyDebuffs + lagVariance;
@@ -625,7 +625,7 @@ namespace Rawr.Cat
 				BonusAttackPowerMultiplier = 0.02f * talents.HeartOfTheWild,
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusPhysicalDamageMultiplier = 0.02f * talents.Naturalist,
-				BonusMangleDamageMultiplier = 0.1f * talents.SavageFury,
+				BonusMangleDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (talents.GlyphOfMangle ? 1.1f : 1.0f) - 1f,
 				BonusRakeDamageMultiplier = 0.1f * talents.SavageFury,
 				BonusShredDamageMultiplier = 0.04f * talents.RendAndTear,
 				BonusFerociousBiteCrit = 0.05f * talents.RendAndTear,
