@@ -1543,7 +1543,7 @@ namespace Rawr.Optimizer
 				bool isRelevant = false;
 				foreach (CalculationsBase model in models)
 				{
-					if (item != null && model.RelevantItemTypes.Contains(item.Type))
+					if (item != null && ItemFilter.GetRelevantItemTypesList(model).Contains(item.Type))
 					{
 						isRelevant = true;
 						break;
