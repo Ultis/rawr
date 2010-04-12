@@ -52,7 +52,7 @@ namespace Rawr
 		public void CreateGemmingTemplateControls()
 		{
 			_groups.Clear();
-			foreach (GemmingTemplate gemmingTemplate in GemmingTemplate.CurrentTemplates)
+			foreach (GemmingTemplate gemmingTemplate in _currentCharacter.CurrentGemmingTemplates)
             	if (!_groups.Contains(gemmingTemplate.Group)) 
 					_groups.Add(gemmingTemplate.Group);
 			if (!_groups.Contains("Custom")) _groups.Add("Custom");
@@ -89,7 +89,7 @@ namespace Rawr
 				panelGroupHeader.BringToFront();
 
 				bool allDisabled = group != "Custom";
-				foreach (GemmingTemplate gemmingTemplate in GemmingTemplate.CurrentTemplates)
+                foreach (GemmingTemplate gemmingTemplate in _currentCharacter.CurrentGemmingTemplates)
 				{
 					if (gemmingTemplate.Group == group)
 					{

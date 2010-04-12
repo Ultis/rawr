@@ -103,7 +103,6 @@ namespace Rawr
             set { _tokenMap = value; }
         }
 
-        //static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
         private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
 
         public int Cost { get; set; }

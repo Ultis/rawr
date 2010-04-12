@@ -178,6 +178,76 @@ namespace Rawr //O O . .
 		public bool _enforceMetagemRequirements = false;
 		public int Level { get { return 80; } }
         public List<GemmingTemplate> CustomGemmingTemplates { get; set; }
+        public List<GemmingTemplate> GemmingTemplateOverrides { get; set; }
+
+        private string gemmingTemplateModel;
+        private List<GemmingTemplate> currentGemmingTemplates;
+
+
+        [XmlIgnore]
+        public List<GemmingTemplate> CurrentGemmingTemplates
+        {
+            get
+            {
+                if (currentGemmingTemplates == null || CurrentModel != gemmingTemplateModel)
+                {
+                    SaveGemmingTemplateOverrides();
+                    GenerateGemmingTemplates();
+                }
+                return currentGemmingTemplates;
+            }
+        }
+
+        private void SaveGemmingTemplateOverrides()
+        {
+            if (currentGemmingTemplates == null) return;
+            List<GemmingTemplate> defaults = GemmingTemplate.AllTemplates[gemmingTemplateModel];
+            GemmingTemplateOverrides.RemoveAll(template => template.Model == gemmingTemplateModel);
+            foreach (GemmingTemplate template in defaults)
+            {
+                foreach (GemmingTemplate overrideTemplate in currentGemmingTemplates)
+                {
+                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
+                    {
+                        if (template.Enabled != overrideTemplate.Enabled)
+                        {
+                            GemmingTemplateOverrides.Add(overrideTemplate);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GenerateGemmingTemplates()
+        {
+            List<GemmingTemplate> defaults = GemmingTemplate.CurrentTemplates;
+            currentGemmingTemplates = new List<GemmingTemplate>();
+            foreach (GemmingTemplate template in defaults)
+            {
+                GemmingTemplate toCopy = template;
+                foreach (GemmingTemplate overrideTemplate in GemmingTemplateOverrides)
+                {
+                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
+                    {
+                        toCopy = overrideTemplate;
+                        break;
+                    }
+                }
+                currentGemmingTemplates.Add(new GemmingTemplate()
+                {
+                    BlueId = toCopy.BlueId,
+                    Enabled = toCopy.Enabled,
+                    Group = toCopy.Group,
+                    MetaId = toCopy.MetaId,
+                    Model = toCopy.Model,
+                    PrismaticId = toCopy.PrismaticId,
+                    RedId = toCopy.RedId,
+                    YellowId = toCopy.YellowId,
+                });
+            }
+            gemmingTemplateModel = CurrentModel;
+        }
 
         public string CalculationToOptimize { get; set; }
 
@@ -719,7 +789,7 @@ namespace Rawr //O O . .
                     {
                         itemChecked[item.Id] = true;
                         List<ItemInstance> itemInstances = new List<ItemInstance>();
-                        foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
+                        foreach (GemmingTemplate template in CurrentGemmingTemplates)
                         {
 							if (template.Enabled)
 							{
@@ -789,7 +859,7 @@ namespace Rawr //O O . .
                                     enchant = Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, this);
                                 }
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
-                                foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
+                                foreach (GemmingTemplate template in CurrentGemmingTemplates)
                                 {
                                     if (template.Enabled)
                                     {
@@ -1785,6 +1855,7 @@ namespace Rawr //O O . .
             _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
             _customItemInstances = new List<ItemInstance>();
             CustomGemmingTemplates = new List<GemmingTemplate>();
+            GemmingTemplateOverrides = new List<GemmingTemplate>();
             _relevantItemInstances = new Dictionary<CharacterSlot, List<ItemInstance>>();
             _relevantItems = new Dictionary<CharacterSlot, List<Item>>();
         }
@@ -2021,6 +2092,7 @@ namespace Rawr //O O . .
         public void Save(Stream writer)
         {
             SerializeCalculationOptions();
+            SaveGemmingTemplateOverrides();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
@@ -2031,6 +2103,7 @@ namespace Rawr //O O . .
         public void Save(string path)
         {
 			SerializeCalculationOptions();
+            SaveGemmingTemplateOverrides();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
             if(ArmoryPets!=null)
                 ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));

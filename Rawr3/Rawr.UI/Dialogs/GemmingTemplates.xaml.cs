@@ -45,7 +45,7 @@ namespace Rawr.UI
             templateGroupChecks = new Dictionary<string, CheckBox>();
             templateGroupChecks["Custom"] = CustomCheck;
            
-            foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
+            foreach (GemmingTemplate template in character.CurrentGemmingTemplates)
             {
                 GemmingTemplateItem templateItem = new GemmingTemplateItem(this, template);
                 if (!templateItems.ContainsKey(template.Group))

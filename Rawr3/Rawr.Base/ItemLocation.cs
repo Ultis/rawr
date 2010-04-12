@@ -132,8 +132,14 @@ namespace Rawr
     public class VendorItem : ItemLocation
     {
 
-        public string Token { get; set; }
-        public int Count { get; set; }
+        public SerializableDictionary<string, int> TokenMap
+        {
+            get { return _tokenMap; }
+            set { _tokenMap = value; }
+        }
+
+        private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
+
         public int Cost { get; set; }
         public string VendorName { get; set; }
         public string VendorArea { get; set; }
@@ -178,9 +184,31 @@ namespace Rawr
         {
             get
             {
-                if (!string.IsNullOrEmpty(Token))
+                if (_tokenMap.Count > 0)
                 {
-                    return string.Format("Purchasable with {0} [{1}]{2}{3}", Count, Token, Cost > 0 ? " and" : "", CostString);
+                    StringBuilder sb = new StringBuilder();
+                    bool first = true;
+                    foreach (string key in _tokenMap.Keys)
+                    {
+                        if (!first)
+                        {
+                            sb.Append("and ");
+                        }
+                        sb.AppendFormat("{0} [{1}] ", _tokenMap[key], key);
+                        first = false;
+                    }
+                    if (Cost > 0)
+                    {
+                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString());
+                    }
+                    else
+                    {
+                        return string.Format("Purchasable with {0}", sb.ToString());
+                    }
+                }
+                else if (Cost > 0)
+                {
+                    return string.Format("Purchasable with {0}", CostString);
                 }
                 else
                 {
@@ -239,18 +267,8 @@ namespace Rawr
 						Boss = _idToBossMap[tokenId];
 						Area = _bossToAreaMap[Boss];
 					}
-					if (Area != "*")
-					{
-						return new StaticDrop()
-						{
-							Area = Area,
-							Boss = Boss,
-							Heroic = false
-						};
-					}
 
-					Count = count;
-					Token = Boss;
+                    _tokenMap[Boss] = count;
 				}
                 else
                 {
