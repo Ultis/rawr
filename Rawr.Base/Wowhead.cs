@@ -790,6 +790,10 @@ namespace Rawr
                     }
                     catch { }
                     #endregion
+                    VendorItem vendorItem = new VendorItem()
+                    {
+                        Cost = cost,
+                    };
                     for (int i = 0; i < 2; i++)
                     {
                         if (i == 1 && tokenIds[i] == null) { continue; } // break out if we're one 2 and there's only 1 or for some reason there's 0
@@ -802,30 +806,14 @@ namespace Rawr
                                 TokenType = tokenNames[i]
                             };
                             LocationFactory.Add(item.Id.ToString(), locInfo);
+                            vendorItem = null;
+                            break;
                             #endregion
                         }
                         else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
                         {
                             #region It's a PvE Token that we've seen before and it's from a Vendor
-                            VendorItem locInfo = new VendorItem()
-                            {
-                                Cost = cost,
-                                Count = tokenCounts[i],
-                                Token = tokenNames[i]
-                            };
-                            if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
-                            if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
-                            {
-                                locInfo.VendorArea = GetZoneName(tmp.ToString());
-                            }
-                            if (i == 1)
-                            {
-                                LocationFactory.Add(item.Id.ToString(), new VendorItem[] { (VendorItem)item.LocationInfo[0], locInfo }, true);
-                            }
-                            else
-                            {
-                                LocationFactory.Add(item.Id.ToString(), locInfo);
-                            }
+                            vendorItem.TokenMap[tokenNames[i]] = tokenCounts[i];
                             #endregion
                         }
                         else if (tokenIds[i] != null)
@@ -844,7 +832,8 @@ namespace Rawr
                                 {
                                     tokenNames[i] = docToken.SelectSingleNode("wowhead/item/name").InnerText;
 
-                                    string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
+                                    // we don't want token => boss propagation anymore, otherwise you get weird stuff like 277 gloves dropping from Toravon
+                                    /*string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
 
                                     string tokenSource = string.Empty;
                                     if (tokenJson.Contains("\"source\":["))
@@ -904,7 +893,11 @@ namespace Rawr
                                             }
                                         }
                                     }
-                                    if (boss == null) { boss = "Unknown Boss (Wowhead lacks data)"; }
+                                    if (boss == null) 
+                                    { 
+                                        //boss = "Unknown Boss (Wowhead lacks data)";
+                                        area = null; // if boss is null prefer treating this as pve token
+                                    }*/
                                     _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
                                 }
                                 #endregion
@@ -932,6 +925,8 @@ namespace Rawr
                                         Heroic = heroic
                                     };
                                     LocationFactory.Add(item.Id.ToString(), locInfo);
+                                    vendorItem = null;
+                                    break;
                                 }
                                 else
                                 {
@@ -942,24 +937,15 @@ namespace Rawr
                                         Heroic = heroic
                                     };
                                     LocationFactory.Add(item.Id.ToString(), locInfo);
+                                    vendorItem = null;
+                                    break;
                                 }
                                 #endregion
                             }
                             else
                             {
                                 #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
-                                VendorItem locInfo = new VendorItem()
-                                {
-                                    Cost = cost,
-                                    Count = tokenCounts[i],
-                                    Token = tokenNames[i]
-                                };
-                                if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
-                                if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
-                                {
-                                    locInfo.VendorArea = GetZoneName(tmp.ToString());
-                                }
-                                LocationFactory.Add(item.Id.ToString(), locInfo);
+                                vendorItem.TokenMap[tokenNames[i]] = tokenCounts[i];
                                 #endregion
                             }
                             #endregion
@@ -977,6 +963,8 @@ namespace Rawr
                                     Cost = cost,
                                 };
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
+                                vendorItem = null;
+                                break;
                             }
                             else
                             {
@@ -990,9 +978,20 @@ namespace Rawr
                                     locInfo.VendorArea = GetZoneName(tmp.ToString());
                                 }
                                 LocationFactory.Add(item.Id.ToString(), locInfo);
+                                vendorItem = null;
+                                break;
                             }
                             #endregion
                         }
+                    }
+                    if (vendorItem != null)
+                    {
+                        if (!string.IsNullOrEmpty(n)) vendorItem.VendorName = n;
+                        if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
+                        {
+                            vendorItem.VendorArea = GetZoneName(tmp.ToString());
+                        }
+                        LocationFactory.Add(item.Id.ToString(), vendorItem);
                     }
                     #endregion
                 }

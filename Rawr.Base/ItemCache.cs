@@ -337,10 +337,9 @@ namespace Rawr
                 if (item.LocationInfo[0].Source == ItemSource.Vendor)
                 {
                     VendorItem vendor = item.LocationInfo[0] as VendorItem;
-                    if (vendor.Token == token)
-                    {
-                        item.Cost = vendor.Count;
-                    }
+                    int count;
+                    vendor.TokenMap.TryGetValue(token, out count);
+                    item.Cost = count;
                 }
             }
             // don't need to invalidate relevant caches, but still trigger event to refresh graphs etc.

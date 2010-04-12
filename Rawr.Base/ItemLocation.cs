@@ -97,8 +97,15 @@ namespace Rawr
     
     public class VendorItem : ItemLocation
     {
-        public string Token { get; set; }
-        public int Count { get; set; }
+        public SerializableDictionary<string, int> TokenMap
+        {
+            get { return _tokenMap; }
+            set { _tokenMap = value; }
+        }
+
+        //static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
+        private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
+
         public int Cost { get; set; }
         public string VendorName { get; set; }
         public string VendorArea { get; set; }
@@ -131,9 +138,34 @@ namespace Rawr
         public override string Description
         {
             get {
-                if (!string.IsNullOrEmpty(Token)) {
-                    return string.Format("Purchasable with {0} [{1}]{2}{3}", Count, Token, Cost > 0 ? " and" : "", CostString);
-                } else {
+                if (_tokenMap.Count > 0)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    bool first = true;
+                    foreach (string key in _tokenMap.Keys)
+                    {
+                        if (!first)
+                        {
+                            sb.Append("and ");
+                        }
+                        sb.AppendFormat("{0} [{1}] ", _tokenMap[key], key);
+                        first = false;
+                    }
+                    if (Cost > 0)
+                    {
+                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString());
+                    }
+                    else
+                    {
+                        return string.Format("Purchasable with {0}", sb.ToString());
+                    }
+                }
+                else if (Cost > 0)
+                {
+                    return string.Format("Purchasable with {0}", CostString);
+                }
+                else
+                {
                     return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
                 }
             }
@@ -146,84 +178,41 @@ namespace Rawr
 
 			if (doc != null)
 			{
-				XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
-				if (subNode != null)
+                // Save the informations of the vendor.
+                string _vendorName = "Unknown";
+                string _vendorArea = "*";
+                XmlNodeList listVendor = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
+                if (listVendor.Count > 0)
+                {
+                    _vendorName = listVendor[0].Attributes["name"].Value.Replace("quot;", "'");
+                    _vendorArea = listVendor[0].Attributes["area"].Value;
+                }
+
+                foreach (XmlNode subNode in doc.SelectNodes("/page/itemInfo/item/cost/token"))
 				{
 					string tokenId = subNode.Attributes["id"].Value;
 					int count = int.Parse(subNode.Attributes["count"].Value);
 
-					// Save the informations of the vendor.
-					string _vendorName = "Unknown";
-					string _vendorArea = "*";
-					XmlNodeList listVendor = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
-					if (listVendor.Count > 0)
-					{
-						_vendorName = listVendor[0].Attributes["name"].Value.Replace("quot;", "'");
-						_vendorArea = listVendor[0].Attributes["area"].Value;
-					}
+					string tokenName = null;
 
-					string Boss = null;
-					string Area = null;
-
-					if (!_idToBossMap.ContainsKey(tokenId))
+					if (!_idToNameMap.TryGetValue(tokenId, out tokenName))
 					{
 						doc = wrw.DownloadItemInformation(int.Parse(tokenId));
 
-						XmlNodeList list = doc.SelectNodes("/page/itemInfo/item/dropCreatures/creature");
-
-						subNode = list[0];
-						if (list.Count == 1)
-						{
-							Boss = subNode.Attributes["name"].Value;
-							Area = subNode.Attributes["area"].Value;
-							_idToBossMap[tokenId] = Boss;
-							_bossToAreaMap[Boss] = Area;
-						}
-						else if (list.Count > 1)
-						{
-							Boss = subNode.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
-							Area = "*";
-						}
-						else
-						{
-							Boss = _vendorName;
-							Area = _vendorArea;
-						}
-
-						_idToBossMap[tokenId] = Boss;
-						_bossToAreaMap[Boss] = Area;
-					}
-					else
-					{
-						Boss = _idToBossMap[tokenId];
-						Area = _bossToAreaMap[Boss];
-					}
-					if (Area != "*")
-					{
-                        // Change this to a drop from a Boss
-						return new StaticDrop()
-						{
-							Area = Area,
-							Boss = Boss,
-							Heroic = false
-						};
+						_idToNameMap[tokenId] = tokenName = doc.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
 					}
 
-					Count = count;
-					Token = Boss;
+                    _tokenMap[tokenName] = count;
 				}
-                else
+
+                if (listVendor.Count > 0)
                 {
-                    XmlNodeList list = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
-                    if (list.Count > 0)
-                    {
-                        VendorName = list[0].Attributes["name"].Value;
-                        VendorArea = list[0].Attributes["area"].Value;
-                    }
-                    else
-                    {
-                        return new ItemLocation("Vendor");
-                    }
+                    VendorName = _vendorName;
+                    VendorArea = _vendorArea;
+                }
+                else if (_tokenMap.Count == 0)
+                {
+                    return new ItemLocation("Vendor");
                 }
 			}
 
@@ -235,7 +224,7 @@ namespace Rawr
             return item;
         }
 
-        static SortedList<string, string> _idToBossMap = new SortedList<string, string>();
+        static SortedList<string, string> _idToNameMap = new SortedList<string, string>();
         static SortedList<string, string> _bossToAreaMap = new SortedList<string, string>();
     }
     
@@ -243,7 +232,8 @@ namespace Rawr
     {
         [XmlIgnore]
         public string CostString {
-            get {
+            get 
+            {
                 int total = Cost;
                 int gold = total / 10000;
                 total -= gold * 10000;
@@ -257,20 +247,26 @@ namespace Rawr
                 }
                 return string.Format("{2}c", gold, silver, total);
             }
-
         }
-        public string FactionName {get;set;}
-        public ReputationLevel Level{get;set;}
-        public int Cost{get;set;}
-        public SerializableDictionary<string, int> TokenMap {
+
+        public string FactionName { get; set; }
+        public ReputationLevel Level { get; set; }
+        public int Cost { get; set; }
+
+        public SerializableDictionary<string, int> TokenMap 
+        {
             get { return _tokenMap; }
             set { _tokenMap = value; }
         }
+
         static SortedList<string, string> tokenIDMap = new SortedList<string, string>();
         private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
+
         public FactionItem() { Source = ItemSource.Faction; }
+
         public override string Description {
-            get {
+            get 
+            {
                 if (_tokenMap.Count > 0) {
                     StringBuilder sb = new StringBuilder();
                     foreach (string key in _tokenMap.Keys) {
@@ -288,6 +284,7 @@ namespace Rawr
                 }
             }
         }
+
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
             WebRequestWrapper wrw = new WebRequestWrapper();
@@ -311,15 +308,19 @@ namespace Rawr
             {
                 int Count = int.Parse(token.Attributes["count"].Value);
                 string id = token.Attributes["id"].Value;
-                if(!tokenIDMap.ContainsKey(id))
+                string tokenName;
+                lock (tokenIDMap)
                 {
-                    WebRequestWrapper wrw2 = new WebRequestWrapper();
-                    XmlDocument doc2 = wrw.DownloadItemInformation(int.Parse(id));
+                    if (!tokenIDMap.TryGetValue(id, out tokenName))
+                    {
+                        WebRequestWrapper wrw2 = new WebRequestWrapper();
+                        XmlDocument doc2 = wrw.DownloadItemInformation(int.Parse(id));
 
-                    tokenIDMap[id] =doc2.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
+                        tokenIDMap[id] = tokenName = doc2.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
+                    }
                 }
 
-                _tokenMap[tokenIDMap[id]] = Count;
+                _tokenMap[tokenName] = Count;
             }
 
             subNode = node.SelectSingleNode("/page/itemTooltips/itemTooltip/requiredFaction");

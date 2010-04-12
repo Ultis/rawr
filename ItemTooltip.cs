@@ -368,10 +368,10 @@ namespace Rawr
                             if (_currentItem.Quality != ItemQuality.Temp) {
                                 if (_currentItem.LocationInfo != null) {
                                     location =  _currentItem.LocationInfo[0].Description;
-                                    if (_currentItem.LocationInfo[1] != null) {
+                                    /*if (_currentItem.LocationInfo[1] != null) {
                                         location += " and" + _currentItem.LocationInfo[1].Description.Replace("Purchasable with", "");
                                         //extraLocation += 13;
-                                    }
+                                    }*/
                                 }
                                 SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
                                 if (locationSize.Width > 300) {
