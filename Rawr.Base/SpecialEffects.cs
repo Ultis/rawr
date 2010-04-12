@@ -802,9 +802,9 @@ namespace Rawr {
             }
             #endregion
             #region Mp5
-            else if ((match = new Regex(@"Each time you cast a helpful spell, you gain (?<amount>\d\d*) mana per 5 sec for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
+            else if ((match = new Regex(@"Each time you cast a spell, you gain (?<amount>\d\d*) mana per 5 sec for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Solace of the Defeated
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
                     new Stats() { Mp5 = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
@@ -1184,7 +1184,7 @@ namespace Rawr {
             }
             #endregion
             #region Icecrown Weapon Procs
-            else if ((match = Regex.Match(line, @"Your weapon swings have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional (?<amount>\d+)% damage as shadow damage.")).Success)
+            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you Necrotic Touch for 10 sec, causing all your melee attacks to deal an additional (?<amount>\d+)% damage as shadow damage.")).Success)
             {
                 // Black Bruise
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusPhysicalDamageMultiplier = int.Parse(match.Groups["amount"].Value) / 100f }, 10f, 0f, 0.033f));

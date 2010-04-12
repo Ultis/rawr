@@ -18,13 +18,24 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.13.0
- - Rawr now properly reports if Armory cannot find a character.
- - Rawr.Hunter: Pets should no longer gain double benefit from buffs on both the hunter and the pet.
- - Rawr.Rogue: Mangle and Trauma debuffs should now properly increase bleed damage. 3.3.3 changes implemented in PTR mode. Deadly and Instant Poison damage and crit rate is now more accurate.
- - Rawr.DPSDK: Scourge Strike updated for 3.3.3 values.
- - Rawr.Mage: Support for Arcane + Scorch DPS Cycles removed.
- - Rawr.SPriest: Phylactery of the Nameless Lich finally modeled correctly.";
+			labelVersionHistory.Text = @"v2.3.14.0
+ - Rawr3: Tons of fixes for Rawr3 compatability and UI.
+ - Significant performance improvements all around.
+ - More fixes and improvements to Wowhead/Armory parsing.
+ - Gemming Template settings (enabled/disabled and custom templates) are now stored *per character*, instead of globally. You'll need to recreate any custom gemming templates you've made.
+ - Rawr.Warlock: The current Rawr.Warlock model has been dormant and abandoned for a while now. It has now been replaced with a brand new model that should be much more accurate and useful. It still has some incomplete parts, but they're actively being worked on. Please post any feedback you have! (in before ""zomg u broke warlocks agian wtf!!!1"")
+ - Rawr.Rogue: Fixes for Lightning Reflexes numbers, white damage, Glyph of Rupture, Rupture damage without Mangle, poison crit chance, target crit buffs, Relentless Strikes, Ruthlessness, Spell Hit.
+ - Rawr.Mage: Significant performance improvements. Added partial resists of Ignite. Fixes for Glyph of Fireball tooltip.
+ - Rawr.Healadin: Fix for stat buffs with spirits being ignored.
+ - Rawr.Moonkin: Updated ability formulae for 3.3.3.
+ - Rawr.Cat: Updated ability formulae for 3.3.3.
+ - Rawr.Bear: Updated ability formulae for 3.3.3.
+ - Rawr.TankDK: Fix for a couple UI issues. Fix for Armor calculations. Updated ability formulae for 3.3.3.
+ - Rawr.ProtWarr: Updated ability formulae for 3.3.3.
+ - Rawr.DPSWarr: Updated ability formulae for 3.3.3.
+ - Rawr.Elemental: Updated ability formulae for 3.3.3.
+ - Rawr.Enhance: Updated ability formulae for 3.3.3.
+ - Rawr.Hunter: Fix for a few UI-related bugs/crashes.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
