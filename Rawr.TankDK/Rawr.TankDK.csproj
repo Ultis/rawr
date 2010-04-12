@@ -84,10 +84,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DKAbilities\AbilityDK.Base.cs" />
+    <Compile Include="DKAbilities\AbilityDK.BloodBoil.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodPlague.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodStrike.cs" />
+    <Compile Include="DKAbilities\AbilityDK.DeathNDecay.cs" />
     <Compile Include="DKAbilities\AbilityDK.FrostFever.cs" />
+    <Compile Include="DKAbilities\AbilityDK.FrostStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.IcyTouch.cs" />
+    <Compile Include="DKAbilities\AbilityDK.Pestilence.cs" />
     <Compile Include="DKAbilities\AbilityDK.PlagueStrike.cs" />
     <Compile Include="CalculationOptionsPanelTankDK.cs">
       <SubType>UserControl</SubType>
@@ -105,6 +109,7 @@
     <Compile Include="DKAbilities\AbilityDK.HeartStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.DeathCoil.cs" />
     <Compile Include="DKAbilities\AbilityDK.CorpseExplosion.cs" />
+    <Compile Include="DKAbilities\AbilityDK.RuneStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.ScourgeStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.Obliterate.cs" />
     <Compile Include="DKAbilities\CombatTable2.cs" />

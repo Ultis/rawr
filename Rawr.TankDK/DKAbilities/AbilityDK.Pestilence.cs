@@ -7,25 +7,25 @@ namespace Rawr.TankDK
     /// <summary>
     /// This class is the implmentation of the Howling Blast Ability based on the AbilityDK_Base class.
     /// </summary>
-    class AbilityDK_HowlingBlast : AbilityDK_Base
+    class AbilityDK_Pestilence : AbilityDK_Base
     {
-        public AbilityDK_HowlingBlast(Stats s)
+        public AbilityDK_Pestilence(Stats s)
         {
             this.sStats = s;
-            this.szName = "Howling Blast";
-            this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uMinDamage = 518;
-            this.uMaxDamage = 562;
-            this.tDamageType = ItemDamageType.Frost;
+            this.szName = "Pestilence";
+            this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.uMinDamage = 0;
+            this.uMaxDamage = 0;
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 0;
             this.bTriggersGCD = true;
-            this.uRange = 20;
+            this.uRange = 0;
             this.uArea = 10;
             // TODO: AOE - need to have target numbers.
-            
+            // Glyph - Refreshes disease
+            // Glyph - extends range
+
         }
     }
 }

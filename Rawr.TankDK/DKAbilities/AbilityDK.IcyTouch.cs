@@ -26,6 +26,8 @@ namespace Rawr.TankDK
             this.tDamageType = ItemDamageType.Frost;
             this.Cooldown = 1500;
             this.bTriggersGCD = true;
+            // 3.3.3 IT now hits alot harder for threat.
+            this.ThreatMultiplier = 7;
         }
     }
 }

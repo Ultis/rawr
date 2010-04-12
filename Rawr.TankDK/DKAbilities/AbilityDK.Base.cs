@@ -9,6 +9,7 @@ namespace Rawr.TankDK
         Blood = 0,
         Frost,
         UnHoly,
+        Death, // Have abilities that convert runes to death runes provide a negative value here just like RP.
         RunicPower,
         // TIME is in ms to keep the int structure.
         CastTime, // How long does it cost to activate the ability?
@@ -142,6 +143,11 @@ namespace Rawr.TankDK
         /// </summary>
         public uint uRange { get; set; }
         /// <summary>
+        /// What's the size of the area of a given ability?
+        /// The idea is that we want to quantify the area buffing talents.
+        /// </summary>
+        public uint uArea { get; set; }
+        /// <summary>
         /// What type of damage does this ability do?
         /// </summary>
         public ItemDamageType tDamageType  { get; set; }
@@ -243,6 +249,7 @@ namespace Rawr.TankDK
             int iDamage = (int)this.uBaseDamage;
             // TODO: Apply modifiers.
             iDamage += this.DamageAdditiveModifer;
+            iDamage = iDamage * (1 + DamageMultiplierModifer);
             return iDamage;
         }
 
@@ -287,6 +294,22 @@ namespace Rawr.TankDK
             }
         }
 
+        private int _DamageMultiplierModifer;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        virtual public int DamageMultiplierModifer
+        {
+            get
+            {
+                return _DamageMultiplierModifer;
+            }
+            set
+            {
+                _DamageMultiplierModifer = value;
+            }
+        }
+
         /// <summary>
         /// How much to multiply the damage by to generate threat.
         /// </summary>
@@ -307,7 +330,7 @@ namespace Rawr.TankDK
         /// <summary>
         /// Get the full effect of threat over the lifetime of the ability.
         /// </summary>
-        /// <returns>float that is GetTotalDamage * ThreatModifiers</returns>
+        /// <returns>float that is (GetTotalDamage * ThreatModifiers) * Threat For Frost Presence</returns>
         public float GetTotalThreat() { return TotalThreat; } 
         public float TotalThreat
         {
