@@ -171,6 +171,7 @@ namespace Rawr.Elemental
                     "Attacks:Flame Shock",
                     "Attacks:Earth Shock",
                     "Attacks:Frost Shock",
+                    "Attacks:Fire Nova",
 					
 					"Simulation:Simulation",
 					"Simulation:Rotation",
@@ -701,6 +702,7 @@ namespace Rawr.Elemental
         public Spell FlameShock;
         public Spell EarthShock;
         public Spell FrostShock;
+        public Spell FireNova;
 
         public float ManaRegenInFSR;
         public float ManaRegenOutFSR;
@@ -802,6 +804,7 @@ namespace Rawr.Elemental
             dictValues.Add("Flame Shock", Math.Round(FlameShock.AvgHit).ToString() + " / " + Math.Round(FlameShock.AvgCrit).ToString() + " + " + Math.Round(FlameShock.PeriodicTick).ToString() + " (dot)*Duration: " + FlameShock.Duration + "\nTicks every " + Math.Round(FlameShock.PeriodicTickTime, 2).ToString()+ "s\nMana cost: " + Math.Round(FlameShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FlameShock.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_FlameShock, 2).ToString() + " %");
             dictValues.Add("Earth Shock", Math.Round(EarthShock.MinHit).ToString() + "-" + Math.Round(EarthShock.MaxHit).ToString() + " / " + Math.Round(EarthShock.MinCrit).ToString() + "-" + Math.Round(EarthShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(EarthShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * EarthShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * EarthShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(EarthShock.CastTime, 2) + " sec.\n");
             dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FrostShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FrostShock.CastTime, 2) + " sec.\n");
+            dictValues.Add("Fire Nova", Math.Round(FireNova.MinHit).ToString() + "-" + Math.Round(FireNova.MaxHit).ToString() + " / " + Math.Round(FireNova.MinCrit).ToString() + "-" + Math.Round(FireNova.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FireNova.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FireNova.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FireNova.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FireNova.CastTime, 2) + " sec.\n");
 
             dictValues.Add("Simulation", Math.Round(RotationDPS).ToString() + ((Math.Abs(RotationDPS - TotalDPS) >= 1) ? (" (" + Math.Round(TotalDPS).ToString() + ")") : "") + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastsPerSecond, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritsPerSecond, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissesPerSecond, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n" + Math.Round(60f * LatencyPerSecond, 1).ToString() + " seconds lost to latency per minute\n");
             dictValues.Add("Rotation", Rotation + "*" + RotationDetails);

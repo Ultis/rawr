@@ -20,10 +20,10 @@ namespace Rawr.Elemental
                 "Trinkets, Elemental Mastery and Clearcasting are modelled by calculating their average value during the fight.\r\n" +
                 "\r\n" +
                 "Assumed rotation:\r\n"+
-                "- Lava Burst whenever off cooldown and only with Flame Shock on.\r\n" +
-                "- In case of no Glyph of Flameshock, recast Flame Shock immediately after Lava Burst, else cast Flame Shock only when the DoT falls off.\r\n" +
+                "- Flame shock up.\n"+
+                "- Lava Burst whenever off cooldown.\r\n" +
                 "- Cast Thunderstorm whenever available if using Thunderstorm\r\n" +
-                "- Cast Lightning Bolt whenever there's nothing else to do.";
+                "- Cast the highest DPS option between lightning bolt, fire nova, and chain lightning.";
         }
 
         protected override void LoadCalculationOptions()
@@ -139,6 +139,5 @@ namespace Rawr.Elemental
             lbTargets.Text = "Number of Targets: " + trkTargets.Value;
             Character.OnCalculationsInvalidated();
         }
-
     }
 }

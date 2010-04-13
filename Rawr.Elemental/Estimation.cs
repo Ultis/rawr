@@ -169,6 +169,7 @@ namespace Rawr.Elemental
             calculatedStats.LavaBurst = rot.LvB;
             calculatedStats.EarthShock = rot.ES;
             calculatedStats.FrostShock = rot.FrS;
+            calculatedStats.FireNova = rot.FN;
             calculatedStats.TimeToOOM = TimeUntilOOM;
             calculatedStats.CastRegenFraction = CastFraction;
             calculatedStats.CastsPerSecond = rot.getCastsPerSecond();

@@ -169,7 +169,6 @@
             // 
             this.trkTargets.LargeChange = 1;
             this.trkTargets.Location = new System.Drawing.Point(9, 99);
-            this.trkTargets.Maximum = 5;
             this.trkTargets.Minimum = 1;
             this.trkTargets.Name = "trkTargets";
             this.trkTargets.Size = new System.Drawing.Size(262, 45);

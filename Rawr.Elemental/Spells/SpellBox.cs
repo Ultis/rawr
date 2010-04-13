@@ -11,7 +11,8 @@ namespace Rawr.Elemental.Spells
         FlameShock,
         EarthShock,
         FrostShock,
-        Thunderstorm
+        Thunderstorm,
+        FireNova
     }
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace Rawr.Elemental.Spells
 
         public SpellBox(ISpellArgs args)
         {
-            spells = new Spell[8];
+            spells = new Spell[9];
             spells[(int)SpellIndex.LightningBolt] = new LightningBolt(args);
             spells[(int)SpellIndex.ChainLightning] = new ChainLightning(args);
             spells[(int)SpellIndex.LavaBurst] = new LavaBurst(args, 0);
@@ -34,6 +35,7 @@ namespace Rawr.Elemental.Spells
             spells[(int)SpellIndex.EarthShock] = new EarthShock(args);
             spells[(int)SpellIndex.FrostShock] = new FrostShock(args);
             spells[(int)SpellIndex.Thunderstorm] = new Thunderstorm(args);
+            spells[(int)SpellIndex.FireNova] = new FireNova(args);
         }
 
         public void Update(ISpellArgs args)
@@ -112,6 +114,11 @@ namespace Rawr.Elemental.Spells
         public Thunderstorm TS
         {
             get { return (Thunderstorm)spells[(int)SpellIndex.Thunderstorm]; }
+        }
+
+        public FireNova FN
+        {
+            get { return (FireNova)spells[(int)SpellIndex.FireNova]; }
         }
         #endregion
     }

@@ -111,6 +111,7 @@ namespace Rawr.Elemental
         public FlameShock FS;
         public EarthShock ES;
         public FrostShock FrS;
+        public FireNova FN;
 
         public ShamanTalents Talents;
 
@@ -130,6 +131,7 @@ namespace Rawr.Elemental
             FS = spellBox.FS;
             ES = spellBox.ES;
             FrS = spellBox.FrS;
+            FN = spellBox.FN;
 
             CalculateRotation();
         }
@@ -169,9 +171,13 @@ namespace Rawr.Elemental
             spells.Clear();
             Invalidate();
 
-            float LvBreadyAt = 0, FSdropsAt = 0;
+            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0;
+            float currentTime = 0;
+            int passes = 0;
             while (true)
             {
+                passes++;
+                currentTime = GetTime();
                 if (GetTime() >= LvBreadyAt) //LvB is ready
                 {
                     if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt) //the LvB cast will be finished before FS runs out
@@ -180,7 +186,7 @@ namespace Rawr.Elemental
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
                         if (LvBFS.ElementalT10 && GetTime() <= FSdropsAt)
                         {
-                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6);
+                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(FS.PeriodicTickTime * 2);
                         }
                     }
                     else if (FSdropsAt == 0) //the first FS
@@ -195,27 +201,68 @@ namespace Rawr.Elemental
                 {
                     if (GetTime() + LvB.CastTime > FSdropsAt) //FS will run out
                     {
-                        if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime) //there is enough time to fit in another LB and a FS before LvB is ready
+                        if(LB.DpCT > (Math.Max(clReadyAt < GetTime() ? CL.DpCT : 0, 
+                                fnReadyAt < GetTime() ? FN.DpCT : 0))) // LB is the best option available
                         {
-                            AddSpell(LB);
+                            if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime) //there is enough time to fit in another LB and a FS before LvB is ready
+                            {
+                                AddSpell(LB);
+                            }
+                            else //if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2) //FS would still fit in before LvB is ready
+                            {
+                                AddSpell(LB);
+                                break; //FS recast nescessary -> done
+                            }
                         }
-                        else if (LvBreadyAt - (GetTime() + FS.CastTime) > 0 && addlb2) //FS would still fit in before LvB is ready
+                        else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
+                            (fnReadyAt < GetTime() ? FN.DpCT : 0))
                         {
-                            AddSpell(LB);
-                            break; //FS recast nescessary -> done
+                            if (LvBreadyAt - (GetTime() + FS.CastTime) > CL.CastTime) // Can fit another CL and FS
+                            {
+                                AddSpell(CL);
+                                clReadyAt = GetTime() + CL.Cooldown;
+                            }
+                            else
+                            {
+                                AddSpell(CL);
+                                clReadyAt = GetTime() + CL.Cooldown;
+                                break;
+                            }
                         }
                         else
                         {
-                            float waitTime = LvBreadyAt - (GetTime() + FS.CastTime);
-                            if (waitTime > 0f)
-                                AddSpell(new Wait(waitTime));
-                            break; //FS recast nescessary -> done
+                            if (LvBreadyAt - (GetTime() + FS.CastTime) > FN.CastTime) // Can fit another FN and FS
+                            {
+                                AddSpell(FN);
+                                fnReadyAt = GetTime() + FN.Cooldown;
+                            }
+                            else
+                            {
+                                AddSpell(FN);
+                                fnReadyAt = GetTime() + FN.Cooldown;
+                                break;
+                            }
                         }
                     }
                     else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1) //time before the next LvB is lower than LB cast time
                         AddSpell(new Wait(LvBreadyAt - GetTime()));
                     else //LvB is on cooldown, FS won't run out soon
-                        AddSpell(LB);
+                        if (LB.DpCT > (Math.Max(clReadyAt < GetTime() ? CL.DpCT : 0,
+                                fnReadyAt < GetTime() ? FN.DpCT : 0)))
+                        {
+                            AddSpell(LB);
+                        }
+                        else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
+                            (fnReadyAt < GetTime() ? FN.DpCT : 0))
+                        {
+                            AddSpell(CL);
+                            clReadyAt = GetTime() + CL.Cooldown;
+                        }
+                        else
+                        {
+                            AddSpell(FN);
+                            fnReadyAt = GetTime() + FN.Cooldown;
+                        }
                 }
             }
         }
