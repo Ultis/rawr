@@ -2730,7 +2730,7 @@ namespace Rawr.Mage
                         evoBaseState = BaseState.Tier10TwoPieceState;
                     }
                     int evocationSegments = (restrictManaUse) ? SegmentList.Count : 1;
-                    float evocationDuration = (8f + baseStats.EvocationExtension) / evoBaseState.CastingSpeed;
+                    float evocationDuration = (8f/* + baseStats.EvocationExtension*/) / evoBaseState.CastingSpeed;
                     EvocationDuration = evocationDuration;
                     EvocationDurationIV = evocationDuration / 1.2f;
                     EvocationDurationHero = evocationDuration / 1.3f;

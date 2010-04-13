@@ -1007,7 +1007,7 @@ namespace Rawr.Enhance
 
         private bool irrelevantStats(Stats stats)
         {
-            return (stats.TigersFuryCooldownReduction + stats.BonusRageGen + stats.ArcaneBlastBonus) > 0;
+            return (stats.TigersFuryCooldownReduction + stats.BonusRageGen) > 0;
         }
         #endregion
 

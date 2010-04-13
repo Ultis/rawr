@@ -660,12 +660,6 @@ namespace Rawr {
                     new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 0, 0.50f));
             }
-            else if ((match = new Regex(@"Your harmful spells have a chance to increase your spell haste rating by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
-                    new Stats() { SpellHasteRating = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 45, 0.10f));
-            }
             else if ((match = new Regex(@"Your spells have a chance to increase your haste rating by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Embrace of the Spider
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
@@ -1864,7 +1858,7 @@ namespace Rawr {
                 // stats.BonusHealingReceived = 58 * 4;                
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusHealingReceived = 58 * 4f }, 30, 120));
             }
-            else if (line.StartsWith("Your heals each cost "))
+            /*else if (line.StartsWith("Your heals each cost "))
             {
                 // Lower City Prayerbook
                 Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec");
@@ -1873,7 +1867,7 @@ namespace Rawr {
                 {
                     stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
                 }
-            }
+            }*/
             else if (line.StartsWith("Gain 250 mana each sec for "))
             {
                 //stats.ManaregenFor8SecOnUse5Min += 250;
@@ -1945,7 +1939,7 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 20.0f, 120.0f));
             }
-			else if (line.StartsWith("Your heals each cost "))
+			/*else if (line.StartsWith("Your heals each cost "))
 			{
 				// Lower City Prayerbook
 				Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec");
@@ -1954,7 +1948,7 @@ namespace Rawr {
 				{
 					stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
 				}
-			}
+			}*/
 			else if (line.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec"))
 			{
 				// The Skull of Gul'dan

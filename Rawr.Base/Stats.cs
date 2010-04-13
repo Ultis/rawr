@@ -46,19 +46,15 @@ namespace Rawr {
         InsectSwarmDmg,
         Intellect,
         InterruptProtection,
-        LightweaveEmbroideryProc,
         WarlockFelArmor,
         WarlockDemonArmor,
         WarlockSpellstoneHasteRating,
         WarlockFirestoneSpellCritRating,
         Mana,
         ManaRestore,
-        ManaRestorePerCast,
         ManaRestoreOnCast_5_15,
-        ManaRestoreOnCast_10_45,
         ManaRestoreFromBaseManaPPM,
         ManaRestoreFromMaxManaPerSecond,
-        ManaRestoreOnCrit_25_45,
         ManaorEquivRestore,
         MangleCostReduction,
         Paragon,
@@ -73,7 +69,6 @@ namespace Rawr {
         NatureResistance,
         Parry,
         ParryRating,
-        PendulumOfTelluricCurrentsProc,
         ExtractOfNecromanticPowerProc,
         DarkmoonCardDeathProc,
         PVPTrinket,
@@ -88,16 +83,13 @@ namespace Rawr {
         SpellCombatManaRegeneration,
         SpellCrit,
         SpellCritOnTarget,
-        SpellCritRating,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
         SpellPowerFromAttackPowerPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
-        SpellHasteRating,
         SpellHit,
-        SpellHitRating,
         SpellNatureDamageRating,
         SpellPenetration,
         SpellShadowDamageRating,
@@ -113,7 +105,6 @@ namespace Rawr {
         WeaponDamage,
         WindfuryAPBonus,
         WrathDmg,
-        SpiritFor20SecOnUse2Min,
         ManacostReduceWithin15OnHealingCast,
         SpellPower,
         BonusRageOnCrit,
@@ -131,7 +122,6 @@ namespace Rawr {
         BonusObliterateMultiplier,
         BonusInsectSwarmDamage,
         BonusNukeCritChance,
-        BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
         SpellReflectChance,
         MoteOfAnger,
@@ -171,10 +161,7 @@ namespace Rawr {
         PriestDPS_T10_4pc,
         #endregion
         #region Added by Rawr.Mage
-        AldorRegaliaInterruptProtection,
-        ArcaneBlastBonus,
         BonusManaGem,
-        EvocationExtension,
         MageIceArmor,
         MageMageArmor,
         MageMoltenArmor,
@@ -450,9 +437,6 @@ namespace Rawr {
         BonusBloodStrikeDamageMultiplier, // T9_2p
         BonusHeartStrikeDamageMultiplier, // T9_2p
         #endregion
-        #region Added by Rawr.Mage
-        BonusMageNukeMultiplier,    // T6 setbonus. set parsing no longer applies this. Consider cleanup.
-        #endregion
         #region Added by Rawr.Feral
         BonusLacerateDamageMultiplier,
         BonusSwipeDamageMultiplier,
@@ -523,7 +507,6 @@ namespace Rawr {
         MovementSpeed,
         GreatnessProc,
         HighestStat,
-        ManacostReduceWithin15OnUse1Min,
         ShieldFromHealed,
         RighteousVengeanceCanCrit,
         DeathbringerProc,
@@ -1354,39 +1337,6 @@ namespace Rawr {
         }
         #endregion
 
-        #region Deprecated
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Spell Crit Rating")]
-        [CommonStat]
-        public float SpellCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellCritRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Spell Hit Rating")]
-        [CommonStat]
-        public float SpellHitRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHitRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
-        [DisplayName("Spell Haste Rating")]
-        [CommonStat]
-        public float SpellHasteRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteRating] = value; }
-        }
-
-        #endregion
-
         #region Spell Combat Ratings
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
@@ -1456,16 +1406,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.InterruptProtection]; }
             set { _rawAdditiveData[(int)AdditiveStat.InterruptProtection] = value; }
         }
-
-        #region Mage Bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Mage")]
-        public float AldorRegaliaInterruptProtection
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AldorRegaliaInterruptProtection] = value; }
-        }
-        #endregion
 
         #region Rogue Set Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2287,14 +2227,6 @@ namespace Rawr {
         #endregion
 
         #region Old Equipment Procs
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Old Equipment Procs")]
-        public float ManaRestorePerCast
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast] = value; }
-        }
-
         // 5% proc rate, 15 sec internal cooldown
         [DisplayName("Mana Restore On Cast (5%)")]
         [Category("Old Equipment Procs")]
@@ -2305,50 +2237,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_5_15] = value; }
         }
 
-        // 10% proc rate, 45 sec internal cooldown
-        [DisplayName("Mana Restore On Cast (10%)")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestoreOnCast_10_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Restore on Crit (25%, 45sec)")]
-        [Category("Old Equipment Procs")]
-        public float ManaRestoreOnCrit_25_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Old Equipment Procs")]
-        public float LightweaveEmbroideryProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightweaveEmbroideryProc] = value; }
-        }
-        [DisplayName("Pendulum of Telluric Currents proc")]
-        [Category("Old Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float PendulumOfTelluricCurrentsProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spirit for 20 sec. (2 min cd)")]
-        [Category("Old Equipment Procs")]
-        public float SpiritFor20SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Mana cost of next spell reduce (within 15 sec.)")]
         [Category("Old Equipment Procs")]
@@ -2356,15 +2244,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManacostReduceWithin15OnHealingCast] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Extra heal over time from direct healing spells")]
-        [Category("Old Equipment Procs")]
-        public float BonusHoTOnDirectHeals
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals] = value; }
         }
         #endregion
 
@@ -2387,15 +2266,6 @@ namespace Rawr {
         }
         #endregion
         #region Added by Rawr.Mage
-        [Percentage]
-        [DisplayName("% Arcane Blast Bonus")]
-        [Category("Mage")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ArcaneBlastBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ArcaneBlastBonus] = value; }
-        }
 
         [DisplayName("Kirin Tor Garb 4 Piece Bonus")]
         [Category("Mage")]
@@ -2450,13 +2320,7 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusManaGem]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusManaGem] = value; }
         }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Mage")]
-        public float EvocationExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.EvocationExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.EvocationExtension] = value; }
-        }
+
         [DisplayName("Ice Armor")]
         [Category("Mage")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3864,16 +3728,6 @@ namespace Rawr {
         }
         #endregion
 
-        #region Added by Rawr.Mage
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Mage")]
-        public float BonusMageNukeMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMageNukeMultiplier] = value; }
-        }
-        #endregion
         #region Added by Rawr.Warlock
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -4869,15 +4723,6 @@ namespace Rawr {
         {
             get { return _rawNoStackData[(int)NonStackingStat.MovementSpeed]; }
             set { _rawNoStackData[(int)NonStackingStat.MovementSpeed] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Less mana per spell (15 sec/1 min)")]
-        [Category("Old Equipment Procs")]
-        public float ManacostReduceWithin15OnUse1Min
-        {
-            get { return _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min]; }
-            set { _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min] = value; }
         }
 
         #endregion

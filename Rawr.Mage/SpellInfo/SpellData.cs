@@ -636,7 +636,7 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * solver.MageTalents.EmpoweredFrostbolt;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFrostbolt;
-            BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier) * (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
+            BaseSpellModifier *= /*(1 + solver.BaseStats.BonusMageNukeMultiplier) * */(1 + 0.01f * solver.MageTalents.ChilledToTheBone);
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
@@ -758,7 +758,7 @@ namespace Rawr.Mage
             DotTickInterval = 2;
             BaseCastTime -= 0.1f * solver.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
-            BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
+            //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             NukeProcs = 1;
@@ -1250,10 +1250,10 @@ namespace Rawr.Mage
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
-            BaseCostModifier += baseStats.ArcaneBlastBonus;
+            //BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            BaseAdditiveSpellModifier += baseStats.ArcaneBlastBonus + 0.02f * mageTalents.SpellImpact;
+            BaseAdditiveSpellModifier += /*baseStats.ArcaneBlastBonus + */0.02f * mageTalents.SpellImpact;
             tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
@@ -1452,7 +1452,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient += 0.15f * solver.MageTalents.ArcaneEmpowerment;
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
+            //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             BaseInterruptProtection += 0.2f * solver.MageTalents.ArcaneStability;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             // Arcane Potency bug
