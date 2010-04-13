@@ -340,21 +340,18 @@ namespace Rawr.Elemental
 			
 		}
 
+        //slowly being moved back into GetCharacterStats to reduce Stats
         public Stats GetTalentStats(ShamanTalents talents)
         {
             Stats statsTalents = new Stats()
             {
                 #region Elemental
                 SpellHit = .01f * talents.ElementalPrecision,
-                ManaRegenIntPer5 = .04f * talents.UnrelentingStorm,
                 #endregion
                 #region Enhancement
                 BonusIntellectMultiplier = .02f * talents.AncestralKnowledge,
                 PhysicalCrit = .01f * talents.ThunderingStrikes,
                 SpellCrit =0.01f * talents.ThunderingStrikes,
-                BonusFlametongueDamage = .1f * talents.ElementalWeapons,
-                SpellPowerFromAttackPowerPercentage = .1f * talents.MentalQuickness,
-                ShockManaCostReduction = .45f * talents.ShamanisticFocus,
                 #endregion
                 #region Glyphs
                 SpellPower = talents.GlyphofTotemofWrath ? talents.TotemOfWrath * 84 : 0
@@ -399,7 +396,7 @@ namespace Rawr.Elemental
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
 
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.AttackPower * statsTotal.SpellPowerFromAttackPowerPercentage);
+            statsTotal.SpellPower += (float)Math.Round(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness);
 
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
@@ -407,7 +404,7 @@ namespace Rawr.Elemental
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusHealthMultiplier);
 
-            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * statsTotal.ManaRegenIntPer5);
+            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * .04f * character.ShamanTalents.UnrelentingStorm);
 
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);

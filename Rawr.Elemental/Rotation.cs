@@ -172,12 +172,10 @@ namespace Rawr.Elemental
             Invalidate();
 
             float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0;
-            float currentTime = 0;
             int passes = 0;
             while (true)
             {
                 passes++;
-                currentTime = GetTime();
                 if (GetTime() >= LvBreadyAt) //LvB is ready
                 {
                     if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt) //the LvB cast will be finished before FS runs out
@@ -186,7 +184,7 @@ namespace Rawr.Elemental
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
                         if (LvBFS.ElementalT10 && GetTime() <= FSdropsAt)
                         {
-                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(FS.PeriodicTickTime * 2);
+                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6); //Research showed that the closest amount of ticks to 6s will be added.
                         }
                     }
                     else if (FSdropsAt == 0) //the first FS
@@ -215,7 +213,7 @@ namespace Rawr.Elemental
                             }
                         }
                         else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
-                            (fnReadyAt < GetTime() ? FN.DpCT : 0))
+                            (fnReadyAt < GetTime() ? FN.DpCT : 0)) // CL > FN
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > CL.CastTime) // Can fit another CL and FS
                             {
@@ -229,7 +227,7 @@ namespace Rawr.Elemental
                                 break;
                             }
                         }
-                        else
+                        else //FN > CL
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > FN.CastTime) // Can fit another FN and FS
                             {
@@ -248,17 +246,17 @@ namespace Rawr.Elemental
                         AddSpell(new Wait(LvBreadyAt - GetTime()));
                     else //LvB is on cooldown, FS won't run out soon
                         if (LB.DpCT > (Math.Max(clReadyAt < GetTime() ? CL.DpCT : 0,
-                                fnReadyAt < GetTime() ? FN.DpCT : 0)))
+                                fnReadyAt < GetTime() ? FN.DpCT : 0))) //Is LB Dmg per cast time bigger than the Dpct of CL or FN and are these spells ready?
                         {
                             AddSpell(LB);
                         }
                         else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
-                            (fnReadyAt < GetTime() ? FN.DpCT : 0))
+                            (fnReadyAt < GetTime() ? FN.DpCT : 0)) //CL > FN
                         {
                             AddSpell(CL);
                             clReadyAt = GetTime() + CL.Cooldown;
                         }
-                        else
+                        else //FN > CL
                         {
                             AddSpell(FN);
                             fnReadyAt = GetTime() + FN.Cooldown;

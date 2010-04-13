@@ -85,7 +85,6 @@ namespace Rawr {
         SpellCritOnTarget,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
-        SpellPowerFromAttackPowerPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
@@ -202,21 +201,12 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
-        BonusThunderCritChance,
-        BonusShamanHit,
-        ManaRegenIntPer5,
-        ShamanCastTimeReduction,
-        LightningOverloadProc,
         BonusLavaBurstCritDamage,
-        ChainLightningCooldownReduction,
         BonusFlameShockDoTDamage,
         BonusFlameShockDuration,
-        BonusFlametongueDamage,
-        ShockManaCostReduction,
         LightningBoltDamageModifier,
         LightningBoltCostReduction,
         LightningSpellPower,
-        LightningBoltHasteProc_15_45,
         LavaBurstBonus,
         LightningBoltCritDamageModifier,
         Elemental2T10,
@@ -1922,14 +1912,6 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Misc")]
-        public float SpellPowerFromAttackPowerPercentage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage] = value; }
-        }
         #endregion
 
         #region Deprecated
@@ -3130,60 +3112,12 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float BonusThunderCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusThunderCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusThunderCritChance] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float BonusShamanHit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusShamanHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusShamanHit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float ManaRegenIntPer5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRegenIntPer5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRegenIntPer5] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float ShamanCastTimeReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShamanCastTimeReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShamanCastTimeReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float LightningOverloadProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightningOverloadProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightningOverloadProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% bonus critical strike damage for Lava Burst")]
         [Category("Elemental")]
         public float BonusLavaBurstCritDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusLavaBurstCritDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusLavaBurstCritDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float ChainLightningCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ChainLightningCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ChainLightningCooldownReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3200,22 +3134,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDoTDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDoTDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float BonusFlametongueDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusFlametongueDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusFlametongueDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float ShockManaCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3240,14 +3158,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningSpellPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Elemental")]
-        public float LightningBoltHasteProc_15_45
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
