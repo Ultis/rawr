@@ -851,10 +851,10 @@ namespace Rawr.Mage
             int Pcol = P[col];
             double* cj = c + lastnz;
             double* cend = c + size;
-            long diff = (U + (col * size)) - c;
+            long diff = (byte*)(U + (col * size)) - (byte*)c;
             for (; cj < cend; cj++)
             {
-                *cj = cj[diff];
+                *cj = *(double*)((byte*)cj + diff);
             }
             for (i = col; i < lastnz; i++)
             {
