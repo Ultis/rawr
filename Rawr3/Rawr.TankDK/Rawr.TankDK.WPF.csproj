@@ -113,6 +113,21 @@
     <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.ScourgeStrike.cs">
       <Link>DKAbilities\AbilityDK.ScourgeStrike.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.BloodBoil.cs">
+      <Link>DKAbilities\AbilityDK.BloodBoil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.DeathNDecay.cs">
+      <Link>DKAbilities\AbilityDK.DeathNDecay.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.Pestilence.cs">
+      <Link>DKAbilities\AbilityDK.Pestilence.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.RuneStrike.cs">
+      <Link>DKAbilities\AbilityDK.RuneStrike.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.TankDK\DKAbilities\AbilityDK.FrostStrike.cs">
+      <Link>DKAbilities\AbilityDK.FrostStrike.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.TankDK\DKAbilities\CombatTable2.cs">
       <Link>DKAbilities\CombatTable2.cs</Link>
     </Compile>

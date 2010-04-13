@@ -75,46 +75,49 @@
       <Link>Rotation.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ChainLightning.cs">
-      <Link>ChainLightning.cs</Link>
+      <Link>Spells\ChainLightning.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\EarthShock.cs">
-      <Link>EarthShock.cs</Link>
+      <Link>Spells\EarthShock.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ElementalMastery.cs">
-      <Link>ElementalMastery.cs</Link>
+      <Link>Spells\ElementalMastery.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\FlameShock.cs">
-      <Link>FlameShock.cs</Link>
+      <Link>Spells\FlameShock.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\FrostShock.cs">
-      <Link>FrostShock.cs</Link>
+      <Link>Spells\FrostShock.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ILightningOverload.cs">
-      <Link>ILightningOverload.cs</Link>
+      <Link>Spells\ILightningOverload.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ISpellArgs.cs">
-      <Link>ISpellArgs.cs</Link>
+      <Link>Spells\ISpellArgs.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\LavaBurst.cs">
-      <Link>LavaBurst.cs</Link>
+      <Link>Spells\LavaBurst.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\LightningBolt.cs">
-      <Link>LightningBolt.cs</Link>
+      <Link>Spells\LightningBolt.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\Shock.cs">
-      <Link>Shock.cs</Link>
+      <Link>Spells\Shock.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\Spell.cs">
-      <Link>Spell.cs</Link>
+      <Link>Spells\Spell.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\SpellBox.cs">
-      <Link>SpellBox.cs</Link>
+      <Link>Spells\SpellBox.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\Thunderstorm.cs">
-      <Link>Thunderstorm.cs</Link>
+      <Link>Spells\Thunderstorm.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\Wait.cs">
-      <Link>Wait.cs</Link>
+      <Link>Spells\Wait.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\FireNova.cs">
+      <Link>Spells\FireNova.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelElemental.xaml.cs">
       <DependentUpon>CalculationOptionsPanelElemental.WPF.xaml</DependentUpon>
