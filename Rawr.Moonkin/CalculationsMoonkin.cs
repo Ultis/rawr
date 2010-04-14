@@ -1082,7 +1082,6 @@ namespace Rawr.Moonkin
             Stats s = new Stats()
             {
                 Stamina = stats.Stamina,
-                Agility = stats.Agility,
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
                 Health = stats.Health,
@@ -1100,15 +1099,14 @@ namespace Rawr.Moonkin
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 Mana = stats.Mana,
                 Armor = stats.Armor,
+                Resilience = stats.Resilience,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 StarfireDmg = stats.StarfireDmg,
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
-                //IdolCritRating = stats.IdolCritRating,
                 UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
                 InnervateCooldownReduction = stats.InnervateCooldownReduction,
                 StarfireBonusWithDot = stats.StarfireBonusWithDot,
@@ -1223,19 +1221,21 @@ namespace Rawr.Moonkin
                     }
                 }
             }
-
-            return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health
-                + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.HasteRating + stats.SpellHaste
-                + stats.HitRating + stats.SpellHit + stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier
+            float moonkinStats = stats.Intellect + stats.Spirit + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating
+                + stats.Mp5 + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.SpellHaste
+                + stats.SpellHit + stats.BonusIntellectMultiplier
                 + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
-                + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier
+                + stats.BonusNatureDamageMultiplier + stats.BonusSpiritMultiplier
                 + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM
                 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.StarfireDmg
-                + stats.MoonfireDmg + stats.WrathDmg + /*stats.IdolCritRating +*/ stats.UnseenMoonDamageBonus
+                + stats.MoonfireDmg + stats.WrathDmg + stats.UnseenMoonDamageBonus
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot) > 0;
+                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot; 
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
+            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
+            return moonkinStats > 0 || (commonStats > 0 && ignoreStats == 0.0f);
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsMoonkin calcOpts) {
