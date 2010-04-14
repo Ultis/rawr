@@ -673,7 +673,16 @@ namespace Rawr.Retribution
                     return new Stats();
             }
 
-            if (effect.MaxStack > 1)
+            if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectData != null)
+            {
+                // Run Recursive Effects (like Victor's Call)
+                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0],rot,seal,baseWeaponSpeed,fightLength,stackTrinketReset);
+                float upTime = effect.GetAverageUptime(trigger,procChance);
+                Stats retVal = new Stats();
+                retVal.Accumulate(SubStats, upTime);
+                return retVal;
+            }
+            else if (effect.MaxStack > 1)
             {
                 if (effect.Stats.MoteOfAnger > 0)
                 {
