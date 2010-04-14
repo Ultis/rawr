@@ -4327,7 +4327,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValue(0f)]
         [Category("Elemental")]
-        [DisplayName("The cooldown on your Lava Burst ability is reduced by 1.5 sec.")]
+        [DisplayName("Your Lava Burst spell causes your Flame Shock effect on the target to deal at least two additional periodic damage ticks before expiring.")]
         public float Elemental4T10
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Elemental4T10]; }
