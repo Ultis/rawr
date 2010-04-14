@@ -2243,7 +2243,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgeborne Battlegear 2 Piece Bonus",
+                Name = "Scourgeborne Battlegear (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2258,7 +2258,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgeborne Battlegear 4 Piece Bonus",
+                Name = "Scourgeborne Battlegear (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2275,7 +2275,7 @@ namespace Rawr
             #region Plate
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgeborne Plate 2 Piece Bonus",
+                Name = "Scourgeborne Plate (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusPlagueStrikeCrit = 0.10f },
@@ -2285,7 +2285,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgeborne Plate 4 Piece Bonus",
+                Name = "Scourgeborne Plate (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusIceboundFortitudeDuration = 3f },
@@ -2299,7 +2299,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Darkruned Battlegear 2 Piece Bonus",
+                Name = "Darkruned Battlegear (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2313,7 +2313,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Darkruned Battlegear 4 Piece Bonus",
+                Name = "Darkruned Battlegear (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2331,7 +2331,7 @@ namespace Rawr
             #region Plate
             defaultBuffs.Add(new Buff()
             {
-                Name = "Darkruned Plate 2 Piece Bonus",
+                Name = "Darkruned Plate (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusRuneStrikeMultiplier = 0.10f },
@@ -2341,7 +2341,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Darkruned Plate 4 Piece Bonus",
+                Name = "Darkruned Plate (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusAntiMagicShellDamageReduction = 0.10f },
@@ -2358,7 +2358,7 @@ namespace Rawr
             DK2T9.AddSpecialEffect(new SpecialEffect(Trigger.HeartStrikeHit, new Stats() { Strength = 180f }, 15f, 45f, .5f));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thassarian's Battlegear 2 Piece Bonus",
+                Name = "Thassarian's Battlegear (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = DK2T9,
@@ -2368,7 +2368,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thassarian's Battlegear 4 Piece Bonus",
+                Name = "Thassarian's Battlegear (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2384,7 +2384,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 // Decreases the cooldown on your Dark Command ability by 2 sec and increases the damage done by your Blood Strike and Heart Strike abilities by 5%.
-                Name = "Koltira's Plate 2 Piece Bonus",
+                Name = "Koltira's Plate (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { 
@@ -2398,7 +2398,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff()
             {
                 // Decreases the cooldown on your Unbreakable Armor, Vampiric Blood, and Bone Shield abilities by 10 sec.
-                Name = "Koltira's Plate 4 Piece Bonus",
+                Name = "Koltira's Plate (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
@@ -2409,7 +2409,7 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thassarian's Plate 2 Piece Bonus",
+                Name = "Thassarian's Plate (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2423,7 +2423,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thassarian's Plate 4 Piece Bonus",
+                Name = "Thassarian's Plate (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { },
@@ -2432,13 +2432,12 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             #endregion
-
             #endregion
             #region Tier 10 | Scourgelord's
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgelord's Battlegear 2T10",
+                Name = "Scourgelord's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2453,7 +2452,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgelord's Battlegear 4T10",
+                Name = "Scourgelord's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
@@ -2469,7 +2468,7 @@ namespace Rawr
             #region Plate
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgelord's Plate 2T10",
+                Name = "Scourgelord's Plate (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = {
@@ -2481,7 +2480,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Scourgelord's Plate 4T10",
+                Name = "Scourgelord's Plate (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { 
@@ -4178,7 +4177,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Regalia 2 Piece Bonus",
+                Name = "Earthshatter Regalia (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Regalia",
@@ -4188,7 +4187,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Regalia 4 Piece Bonus",
+                Name = "Earthshatter Regalia (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Regalia",
@@ -4200,7 +4199,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Battlegear 2 Piece Bonus",
+                Name = "Earthshatter Battlegear (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Battlegear",
@@ -4210,7 +4209,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Battlegear 4 Piece Bonus",
+                Name = "Earthshatter Battlegear (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Battlegear",
@@ -4222,7 +4221,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Garb 2 Piece Bonus",
+                Name = "Earthshatter Garb (T7) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Garb",
@@ -4232,7 +4231,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Earthshatter Garb 4 Piece Bonus",
+                Name = "Earthshatter Garb (T7) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Garb",
@@ -4246,7 +4245,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Regalia 2 Piece Bonus",
+                Name = "Worldbreaker Regalia (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Regalia",
@@ -4256,7 +4255,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Regalia 4 Piece Bonus",
+                Name = "Worldbreaker Regalia (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Regalia",
@@ -4268,7 +4267,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Battlegear 2 Piece Bonus",
+                Name = "Worldbreaker Battlegear (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Battlegear",
@@ -4278,7 +4277,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Battlegear 4 Piece Bonus",
+                Name = "Worldbreaker Battlegear (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Battlegear",
@@ -4290,7 +4289,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Garb 2 Piece Bonus",
+                Name = "Worldbreaker Garb (T8) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Garb",
@@ -4300,7 +4299,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Worldbreaker Garb 4 Piece Bonus",
+                Name = "Worldbreaker Garb (T8) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Worldbreaker Garb",
@@ -4314,7 +4313,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thrall's/Nobundo's Garb 2 Piece Bonus",
+                Name = "Thrall's/Nobundo's Garb (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Nobundo's Garb",
@@ -4324,7 +4323,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thrall's/Nobundo's Garb 4 Piece Bonus",
+                Name = "Thrall's/Nobundo's Garb (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Nobundo's Garb",
@@ -4336,7 +4335,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thrall's/Nobundo's Regalia 2 Piece Bonus",
+                Name = "Thrall's/Nobundo's Regalia (T9) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Nobundo's Regalia",
@@ -4346,7 +4345,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Thrall's/Nobundo's Regalia 4 Piece Bonus",
+                Name = "Thrall's/Nobundo's Regalia (T9) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Nobundo's Regalia",
@@ -4358,7 +4357,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(buff = new Buff()
             {
-				Name = "Nobundo's Battlegear 2 Piece",
+                Name = "Nobundo's Battlegear (T9) 2 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance2T9 = 1 },
@@ -4368,7 +4367,7 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-				Name = "Nobundo's Battlegear 4 Piece",
+                Name = "Nobundo's Battlegear (T9) 4 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance4T9 = 1 },
@@ -4382,7 +4381,7 @@ namespace Rawr
             #region Battlegear
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Frost Witch's Battlegear 2 Piece",
+                Name = "Frost Witch's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance2T10 = 1 },
@@ -4392,7 +4391,7 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Frost Witch's Battlegear 4 Piece",
+                Name = "Frost Witch's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance4T10 = 1 },
@@ -4404,7 +4403,7 @@ namespace Rawr
             #region Garb
             defaultBuffs.Add(new Buff()
             {
-                Name = "Frost Witch's Garb 2 Piece Bonus",
+                Name = "Frost Witch's Garb (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Frost Witch's Garb",
@@ -4414,7 +4413,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Frost Witch's Garb 4 Piece Bonus",
+                Name = "Frost Witch's Garb (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Frost Witch's Garb",
@@ -4426,7 +4425,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Frost Witch's Regalia (T10) 2 Piece Set Bonus",
+                Name = "Frost Witch's Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Elemental2T10 = 1 },
@@ -4436,7 +4435,7 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Frost Witch's Regalia (T10) 4 Piece Set Bonus",
+                Name = "Frost Witch's Regalia (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Elemental4T10 = 1 },

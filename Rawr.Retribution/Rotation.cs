@@ -541,6 +541,8 @@ namespace Rawr.Retribution
         {
 			//TODO: Redo this whole model to not be a simulator
 
+            if (swingSpeed == 0) { swingSpeed = 2.0f; } // This is to prevent accidental infinite loops
+
             const float divineStormCooldown = 10;
 
             for (
