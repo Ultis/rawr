@@ -1487,7 +1487,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>10 Man Raids</Name>
-          <Pattern>(?&lt;! Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)$| \(10</Pattern>
+          <Pattern>(?&lt;! Heroic.*)(Naxxramas|Eye of Eternity|Obsidian Sanctum)$|\(10</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1969,7 +1969,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>25 Man Raids</Name>
-          <Pattern>Heroic.*(Naxxramas|Eye of Eternity|Obsidian Sanctum|Archavon)$|\(25|Sartharion in $|Alexstrasza's Gift in $</Pattern>
+          <Pattern>Heroic.*(Naxxramas|Eye of Eternity|Obsidian Sanctum)$|\(25|Sartharion in $|Alexstrasza's Gift in $</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1986,7 +1986,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 7 Raids (10/25)</Name>
+      <Name>Tier 7 Raids (10/25) Nax/EoE/OS</Name>
       <Pattern>Naxxramas|Eye of Eternity|Obsidian Sanctum</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
@@ -2654,7 +2654,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 8 Raids (10/25)</Name>
+      <Name>Tier 8 Raids (10/25) ULD</Name>
       <Pattern>Ulduar</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
@@ -3231,7 +3231,7 @@
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 9 Raids (10/25)</Name>
+      <Name>Tier 9 Raids (10/25) ToC/ToGC</Name>
       <Pattern>Trial of the Crusader|Champions' Cache in $</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
@@ -4700,9 +4700,28 @@
           <AppliesToGems>true</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Trash</Name>
+          <Pattern>Trash</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>true</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Tier 10 Raids (10/25)</Name>
+      <Name>Tier 10 Raids (10/25) ICC</Name>
       <Pattern>Icecrown Citadel</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
@@ -4801,7 +4820,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>10 Man Raids</Name>
-          <Pattern>(?&lt;! Heroic.*)(Archavon)$| \(10</Pattern>
+          <Pattern>(?&lt;! Heroic.*)Archavon$|\(10</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -4897,7 +4916,7 @@
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>25 Man Raids</Name>
-          <Pattern>Heroic.*(Archavon)$|\(25</Pattern>
+          <Pattern>Heroic.*Archavon$|\(25</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5051,7 +5070,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Heroism</Name>
-          <Pattern>Emblem of Heroism|Arcanist Ivrenne</Pattern>
+          <Pattern>Emblem of Heroism|Arcanist Ivrenne|Enchanter Erodin</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5105,10 +5124,30 @@
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <RegexList />
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Trophy of the Crusade</Name>
+              <Pattern>Trophy of the Crusade</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Triumph</Name>
-          <Pattern>(?&lt;! 1 \[)Emblem of Triumph</Pattern>
+          <Pattern>Emblem of Triumph</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5124,10 +5163,30 @@
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <RegexList />
+          <RegexList>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Class Token</Name>
+              <Pattern>Mark of Sanctification|Sanctified|Witch's|Lasherweave|and</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>true</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+          </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Frost</Name>
-          <Pattern>Emblem of Frost</Pattern>
+          <Pattern>Emblem of Frost|Mark of Sanctification|Sanctified|Witch's|Lasherweave</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5184,7 +5243,7 @@
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Armor Tokens</Name>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification|Sanctified|Champion Isimode</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Emblem of Triumph|Mark of Sanctification|Sanctified|Champion Isimode|Witch's|Lasherweave</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5202,7 +5261,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Special Currency (Badges, Rings, etc.)</Name>
-      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot|Champion Isimode|Arcanist Firael|Arcanist Adurin</Pattern>
+      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot|Champion Isimode|Arcanist Firael|Arcanist Adurin|Enchanter Erodin</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5718,7 +5777,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
-      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia</Pattern>
+      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia|Wintergrasp</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5832,7 +5891,7 @@
       <RegexList />
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Seasonal</Name>
-      <Pattern>Coren Direbrew|Headless Horseman</Pattern>
+      <Pattern>Coren Direbrew|Headless Horseman|Apothecary Hummel</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5890,7 +5949,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Unknown (Refresh)</Name>
-      <Pattern>(?&gt;!Onyxia.*)Unknown|Drops from  in $|Lady Palanseer|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $</Pattern>
+      <Pattern>(?&gt;!Onyxia.*)Unknown|Drops from  in $|Lady Palanseer|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $|Unknown Location, please refresh</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -6016,7 +6075,7 @@
           <MinItemQuality>Epic</MinItemQuality>
           <MaxItemQuality>Epic</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
+          <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
