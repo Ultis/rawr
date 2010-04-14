@@ -167,8 +167,8 @@ namespace Rawr
                         }
                         if (characterRace == CharacterRace.NightElf)
                         {
-                            S.Strength = 86;
-                            S.Agility = 87;
+                            S.Strength = 85;
+                            S.Agility = 86;
                             S.Stamina = 97;
                             S.Intellect = 143;
                             S.Spirit = 159;
