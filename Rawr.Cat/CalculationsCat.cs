@@ -667,6 +667,7 @@ namespace Rawr.Cat
 			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility + fap + predatoryStrikesAP;
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f+ statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
 			statsTotal.Armor += 2f * statsTotal.Agility;
 			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
@@ -921,6 +922,7 @@ namespace Rawr.Cat
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
 					BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                    BonusHealthMultiplier = stats.BonusHealthMultiplier,
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,

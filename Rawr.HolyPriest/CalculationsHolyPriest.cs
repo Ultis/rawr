@@ -520,6 +520,7 @@ namespace Rawr.HolyPriest
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
@@ -768,6 +769,7 @@ namespace Rawr.HolyPriest
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
