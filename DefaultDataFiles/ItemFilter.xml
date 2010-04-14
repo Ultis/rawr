@@ -5777,7 +5777,7 @@
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>PVP</Name>
-      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia|Wintergrasp</Pattern>
+      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP.*|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia|Wintergrasp</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>

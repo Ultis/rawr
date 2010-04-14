@@ -346,6 +346,8 @@ namespace Rawr
         public string PointTypeA { get; set; }
         public int PointsA { get; set; }
         public int RequiredArenaRating { get; set; }
+        public string VendorName { get; set; }
+        public string VendorArea { get; set; }
 
         public PvpItem() {
             Source = ItemSource.PVP;
@@ -365,6 +367,8 @@ namespace Rawr
                     return string.Format("Purchasable for {0} {1} Points and {2} {3} Points" + RAR, Points, PointType, PointsA, PointTypeA);
                 } else if (Points > 0) {
                     return string.Format("Purchasable for {0} {1} Points" + RAR, Points, PointType);
+                } else if (VendorName != null) {
+                    return string.Format("PvP item sold by {0} at {1}" + RAR, VendorName, VendorArea);
                 }
                 return "Purchasable PvP Item" + RAR;
             }
@@ -379,6 +383,7 @@ namespace Rawr
             XmlNode subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/@honor");
             XmlNode subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
             XmlNode subNodeRAR = node.SelectSingleNode("page/itemTooltips/itemTooltip/requiredPersonalArenaRating/@personalArenaRating");
+            XmlNodeList vendorList = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
 
             if (subNodeRAR != null) {
                 RequiredArenaRating = int.Parse(subNodeRAR.InnerText);
@@ -429,6 +434,9 @@ namespace Rawr
                         _tokenMap[TokenId] = TokenType;
                     }
                 }
+            } else if (vendorList.Count > 0) {
+                VendorName = vendorList[0].Attributes["name"].Value;
+                VendorArea = vendorList[0].Attributes["area"].Value;
             } else {
                 subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
                 if(subNodeA != null) {
@@ -468,10 +476,29 @@ namespace Rawr
 
         public override ItemLocation Fill(XmlNode node, string itemId)
         {
-            XmlNode subNode = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource");
-            Area = subNode.Attributes["areaName"].Value;
-            Heroic = ("h" == subNode.Attributes["difficulty"].Value);
-            Boss = subNode.Attributes["creatureName"].Value;
+            //XmlNode subNode = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource");
+            //Area = subNode.Attributes["areaName"].Value;
+            //Heroic = ("h" == subNode.Attributes["difficulty"].Value);
+            //Boss = subNode.Attributes["creatureName"].Value;
+            WebRequestWrapper wrw = new WebRequestWrapper();
+            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
+
+            XmlNode subNodeArea = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@area");
+            if (subNodeArea != null)
+            {
+                Area = subNodeArea.InnerText;
+            }
+            XmlNode subNodeHeroic = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@heroic");
+            if (subNodeHeroic != null)
+            {
+                Heroic = (subNodeHeroic.InnerText == "1");
+            }
+
+            XmlNode subNodeBoss = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@name");
+            if (subNodeBoss != null)
+            {
+                Boss = subNodeBoss.InnerText;
+            }
             return this;
         }
         public static new ItemLocation Construct()
@@ -863,6 +890,24 @@ namespace Rawr
                 if (node != null && node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource") != null)
                 {
                     string sourceType = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource").Attributes["value"].Value;
+
+                    // If the armory has an item source set to creatureDrop, check to see if it might also be a vendor sold item
+                    // and if so, switch it's type to vendor
+                    if (sourceType == "sourceType.creatureDrop")
+                    {
+                        WebRequestWrapper wrw = new WebRequestWrapper();
+                        XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
+
+			            if (doc != null)
+			            {
+				            XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
+                            if (subNode != null)
+                            {
+                                sourceType = "sourceType.vendor";
+                            }
+                        }
+                    }
+
                     if (_LocationFactory.ContainsKey(sourceType))
                     {
                         item = _LocationFactory[sourceType]();
