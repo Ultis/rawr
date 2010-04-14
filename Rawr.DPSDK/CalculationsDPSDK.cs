@@ -337,8 +337,10 @@ namespace Rawr.DPSDK
                 {
                     float targetArmor = calcOpts.BossArmor;
 
+                    float arpenBuffs = talents.BloodGorged * 2f / 100;
+
                     mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                    stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+                                        stats.ArmorPenetration, arpenBuffs, Math.Max(0, stats.ArmorPenetrationRating));
 
                     calcs.EnemyMitigation = 1f - mitigation;
                     calcs.EffectiveArmor = mitigation;
@@ -585,7 +587,7 @@ namespace Rawr.DPSDK
                             // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
                             int targetArmor = calcOpts.BossArmor;
                             float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                                stats.ArmorPenetration, 0f, 0f * stats.ArmorPenetrationRating);
+                                0f/*stats.ArmorPenetration*/, 0f, 0f * stats.ArmorPenetrationRating);
 
                             dpsGhoul *= modArmor;
                             dpsGhoul *= 1f - (.0065f * missedSpecial);	// pet expertise now scales with player hit rating. Hopefully goes off of melee rather than spell hit.
@@ -612,7 +614,7 @@ namespace Rawr.DPSDK
                         physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
 
                         dpsBCB *= physMit;
-                        dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, 0f, 0f);
+                        dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, 0f/*stats.ArmorPenetration*/, 0f, 0f);
 
                         WhiteMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
                         BCBMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
@@ -866,7 +868,7 @@ namespace Rawr.DPSDK
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
-                ArmorPenetration = talents.BloodGorged * .02f,
+                //ArmorPenetration = talents.BloodGorged * 2f / 100,
                 PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons
             };
             if (talents.UnbreakableArmor > 0)
@@ -887,13 +889,15 @@ namespace Rawr.DPSDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    if (effect.Stats.ArmorPenetrationRating > 0f && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating +
-                        (StatConversion.RATING_PER_ARMORPENETRATION / 100) * 2f * talents.BloodGorged > StatConversion.RATING_PER_ARMORPENETRATION)
+                    float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
+                    if (effect.Stats.ArmorPenetrationRating > 0f
+                        && ((effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating) > tempCap))
                     {
                         Stats tempStats = new Stats();
                         tempStats += effect.Stats;
                         SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, tempStats, effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-                        tempEffect.Stats.ArmorPenetrationRating = (StatConversion.RATING_PER_ARMORPENETRATION - statsTotal.ArmorPenetrationRating - (StatConversion.RATING_PER_ARMORPENETRATION / 100f) * 2f * talents.BloodGorged > 0f ? StatConversion.RATING_PER_ARMORPENETRATION - statsTotal.ArmorPenetrationRating - (StatConversion.RATING_PER_ARMORPENETRATION/100f) * 2f * talents.BloodGorged : 0f);
+                        tempEffect.Stats.ArmorPenetrationRating =
+                            (tempCap - statsTotal.ArmorPenetrationRating > 0f ? tempCap - statsTotal.ArmorPenetrationRating : 0f);
                         se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
                         statsTotal += se.getSpecialEffects(calcOpts, tempEffect);
                     }
@@ -1003,11 +1007,14 @@ namespace Rawr.DPSDK
                             }
                             uptimeMult /= calcOpts.FightLength * 60f / abilityCooldown;
                         }
-                        if (effect.Stats.ArmorPenetrationRating > 0f && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating + 12.31623993f * 2f * talents.BloodGorged > 1232f)
+                        float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
+                        if (effect.Stats.ArmorPenetrationRating > 0f
+                            && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating > tempCap)
                         {
                             Stats tempStats = new Stats();
                             tempStats += effect.Stats;
-                            tempStats.ArmorPenetrationRating = (1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged > 0f ? 1232f - statsTotal.ArmorPenetrationRating - 12.31623993f * 2f * talents.BloodGorged : 0f);
+                            tempStats.ArmorPenetrationRating =
+                                (tempCap - statsTotal.ArmorPenetrationRating > 0f ? tempCap - statsTotal.ArmorPenetrationRating : 0f);
                             statsTotal += tempStats * uptimeMult;
                         }
                         else

@@ -128,7 +128,6 @@ namespace Rawr.DPSWarr {
                         ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
                         (!CalcOpts.FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
-                    //return Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,CalcOpts.TargetArmor,StatS.ArmorPenetration,arpenBuffs,StatS.ArmorPenetrationRating));
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
                 }
                 return _DamageReduction;

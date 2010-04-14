@@ -76,8 +76,10 @@ namespace Rawr.DPSDK
 
                 float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
 
+                float arpBuffs = talents.BloodGorged * 2f / 100;
+
                 physicalMitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+                    stats.ArmorPenetration, arpBuffs, stats.ArmorPenetrationRating);
 
                 calcs.EnemyMitigation = 1f - physicalMitigation;
                 calcs.EffectiveArmor = physicalMitigation;
