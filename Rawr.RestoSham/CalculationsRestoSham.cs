@@ -299,7 +299,7 @@ namespace Rawr.RestoSham
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
             #region Intellect and MP5 Based Calcs
-            float CritPenalty = 1 - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + LHWOverheal + AAOverheal) / 6) / 2);
+            float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + LHWOverheal + AAOverheal) / 6f) / 2f);
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             stats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
@@ -778,7 +778,7 @@ namespace Rawr.RestoSham
                 + (stats.ManaRestore / FightSeconds)
                 + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD && character.ShamanTalents.ManaTideTotem > 0 ? 1 : 0)) / FightSeconds)
                 + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * (options.ReplenishmentPercentage * .01f))
-                + (stats.Mp5 / 5)
+                + (stats.Mp5 / 5f)
                 + (options.Innervates * 7866f / FightSeconds)
                 + statsProcs2.ManaRestore
                 + ((RTCPerSec * Orb) * castingActivity * ESDowntime)
@@ -819,10 +819,10 @@ namespace Rawr.RestoSham
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
             if (statModifier != null)
                 statsTotal += statModifier;
-            statsTotal += GetProcStats(statsTotal.SpecialEffects());
+            statsTotal.Accumulate(GetProcStats(statsTotal.SpecialEffects()));
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
 
-            float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
+            float IntMultiplier = (1f + statsTotal.BonusIntellectMultiplier) * (1f + character.ShamanTalents.AncestralKnowledge * 2f / 100);
             if (IntMultiplier > 1)
             {
                 statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) +
@@ -831,9 +831,9 @@ namespace Rawr.RestoSham
                     statsTotal.Intellect += (float)Math.Floor((statModifier.Intellect) * IntMultiplier);
             }
 
-            statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
+            statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * 0.05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
-            statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
+            statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1f + statsTotal.BonusHealthMultiplier);
             #endregion
             return statsTotal;
         }
@@ -914,38 +914,51 @@ namespace Rawr.RestoSham
             Stats statsProcs = new Stats();
             foreach (SpecialEffect effect in specialEffects)
             {
-                switch (effect.Trigger)
-                {
-                    case (Trigger.HealingSpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.HealingSpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case (Trigger.SpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs, (1f / CritPerSec), 1f, 0f, FightSeconds);
-                        break;
-                    case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 0f, FightSeconds, effect.MaxStack);
-                        break;
-                }
+                statsProcs.Accumulate(GetProcStats_Inner(effect));
             }
             return statsProcs;
+        }
+
+        private Stats GetProcStats_Inner(SpecialEffect effect) {
+            Stats procStats = new Stats();
+            switch (effect.Trigger)
+            {
+                case (Trigger.HealingSpellCast):
+                    if (HealPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / HealPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case (Trigger.HealingSpellHit):
+                    if (HealHitPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case (Trigger.HealingSpellCrit):
+                    if (CritPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / CritPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case (Trigger.SpellCast):
+                    if (HealPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / HealPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case (Trigger.SpellHit):
+                    if (HealHitPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case (Trigger.SpellCrit):
+                    if (CritPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / CritPerSec), 1f, 0f, FightSeconds);
+                    break;
+                case Trigger.Use:
+                    if (effect.Stats._rawSpecialEffectData != null) {
+                        // Handles Recursive Effects
+                        Stats SubStats = GetProcStats_Inner(effect.Stats._rawSpecialEffectData[0]);
+                        float upTime = effect.GetAverageUptime(0f, 1f, 0f, FightSeconds);
+                        procStats.Accumulate(SubStats,upTime);
+                    } else {
+                        procStats = effect.GetAverageStats(0f, 1f, 0f, FightSeconds);
+                    }
+                    break;
+            }
+            return procStats;
         }
         
         /// <summary>
