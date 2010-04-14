@@ -134,6 +134,15 @@ namespace Rawr.Elemental
 			}
 		}
 
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        {
+            if (slot == CharacterSlot.OffHand
+                && character.ShamanTalents.DualWield < 1
+                && item.Type != ItemType.Shield)
+            { return false; }
+            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+        }
+
 		private string[] _characterDisplayCalculationLabels = null;
 		public override string[] CharacterDisplayCalculationLabels
 		{
