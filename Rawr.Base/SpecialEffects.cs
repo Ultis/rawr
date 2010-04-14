@@ -220,6 +220,7 @@ namespace Rawr {
             while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
             while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
             while (line.Contains("  ")) { line = line.Replace("  ", " "); }
+            while (line.EndsWith(".")) { line = line.Substring(0, line.Length-1); }
             #endregion
             if (false) { /*Never run, this is just to make all the stuff below uniform with an 'else if' line start*/ }
             #region Class Specific
@@ -1302,7 +1303,7 @@ namespace Rawr {
                  * Your Rune Strike ability grants [Amount] [stat] for [duration] sec.  Stacks up to [stack] times.
             */
                 // Single Ability.
-                Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec(\.\s*Stacks up to (?<stack>\d*) times)?");
+                Regex regex = new Regex(@"Your (?<ability>\w+\s*\w*) (ability )?(also )?grants (you )?(?<amount>\d*) (?<stat>\w+\s*\w*) for (?<duration>\d*) sec(\s*Stacks up to (?<stack>\d*) times)?");
                 match = regex.Match(line);
                 if (match.Success)
                 {
