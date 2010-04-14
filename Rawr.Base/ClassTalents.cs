@@ -284,11 +284,11 @@ namespace Rawr
 @"Gives your Hamstring ability a 15% chance to immobilize the target for 5 sec.",}, "ability_shockwave")]
         public int ImprovedHamstring { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
-        /// Your melee critical strikes increase the effectiveness of Bleed effects on the target by [15 * Pts]% for 15 sec.
+        /// Your melee critical strikes increase the effectiveness of Bleed effects on the target by [15 * Pts]% for 1 min.
         /// </summary>
         [TalentData(18, "Trauma", 2, 0, 4, 6, -1, new[] {
-@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 15% for 15 sec.",
-@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 30% for 15 sec.",}, "ability_warrior_bloodnova")]
+@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 15% for 1 min.",
+@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 30% for 1 min.",}, "ability_warrior_bloodnova")]
         public int Trauma { get { return _data[18]; } set { _data[18] = value; } }
         /// <summary>
         /// Whenever you are struck by a Stun or Immobilize effect you will generate [10 * Pts] rage and [5 * Pts]% of your total health over 10 sec.
@@ -526,10 +526,10 @@ namespace Rawr
 @"Reduces the cooldown of your Bloodrage, Berserker Rage, Recklessness and Death Wish abilities by 33%.",}, "ability_warrior_endlessrage")]
         public int IntensifyRage { get { return _data[48]; } set { _data[48] = value; } }
         /// <summary>
-        /// Instantly attack the target causing 13 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.
+        /// Instantly attack the target causing 5 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.
         /// </summary>
         [TalentData(49, "Bloodthirst", 1, 1, 2, 7, 44, new[] {
-@"Instantly attack the target causing 13 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.",}, "spell_nature_bloodlust")]
+@"Instantly attack the target causing 5 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.",}, "spell_nature_bloodlust")]
         public int Bloodthirst { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
         /// Increases the damage of your Whirlwind ability by [10 * Pts]%.
@@ -562,10 +562,10 @@ namespace Rawr
 @"Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.",}, "ability_heroicleap")]
         public int HeroicFury { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
-        /// Your melee critical hits cause you to go on a rampage, increasing ranged and melee critical hit chance of all party and raid members within 45 yds by 5%.  Lasts 10 sec.
+        /// Increases ranged and melee critical hit chance of all party and raid members within 100 yds by 5%.
         /// </summary>
         [TalentData(54, "Rampage", 1, 1, 2, 9, 49, new[] {
-@"Your melee critical hits cause you to go on a rampage, increasing ranged and melee critical hit chance of all party and raid members within 45 yds by 5%.  Lasts 10 sec.",}, "ability_warrior_rampage")]
+@"Increases ranged and melee critical hit chance of all party and raid members within 100 yds by 5%.",}, "ability_warrior_rampage")]
         public int Rampage { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
         /// Your Heroic Strike, Bloodthirst, and Whirlwind hits have a [20 / 3 * Pts]% chance of making your next Slam instant for 5 sec.
@@ -641,7 +641,7 @@ namespace Rawr
 @"When activated, this ability temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.",}, "spell_holy_ashestoashes")]
         public int LastStand { get { return _data[63]; } set { _data[63] = value; } }
         /// <summary>
-        /// Increases damage of your Revenge ability by [30 * Pts]% and causes Revenge to strike an additional target for [50 * Pts]% damage.
+        /// Increases damage of your Revenge ability by [30 * Pts]% and causes Revenge to strike an additional target.
         /// </summary>
         [TalentData(64, "Improved Revenge", 2, 2, 2, 3, -1, new[] {
 @"Increases damage of your Revenge ability by 30% and causes Revenge to strike an additional target for 50% damage.",
@@ -694,10 +694,10 @@ namespace Rawr
 @"Reduces the cooldown of your Shield Wall, Retaliation and Recklessness abilities by 60 secs.",}, "ability_warrior_shieldwall")]
         public int ImprovedDisciplines { get { return _data[70]; } set { _data[70] = value; } }
         /// <summary>
-        /// Stuns the opponent for 5 sec and deals 20 damage (based on attack power).
+        /// Stuns the opponent for 5 sec and deals 4 damage (based on attack power).
         /// </summary>
         [TalentData(71, "Concussion Blow", 1, 2, 2, 5, -1, new[] {
-@"Stuns the opponent for 5 sec and deals 20 damage (based on attack power).",}, "ability_thunderbolt")]
+@"Stuns the opponent for 5 sec and deals 4 damage (based on attack power).",}, "ability_thunderbolt")]
         public int ConcussionBlow { get { return _data[71]; } set { _data[71] = value; } }
         /// <summary>
         /// Gives your Shield Bash and Heroic Throw abilities a [50 * Pts]% chance to silence the target for 3 sec and increases the damage of your Shield Slam ability by [5 * Pts]%.
@@ -738,12 +738,12 @@ namespace Rawr
 @"Reduces the rage cost of your offensive abilities by 3.",}, "ability_warrior_focusedrage")]
         public int FocusedRage { get { return _data[76]; } set { _data[76] = value; } }
         /// <summary>
-        /// Increases your total Strength and Stamina by [2 * Pts]% and your Expertise by [2 * Pts]
+        /// Increases your total Strength by [2 * Pts]%, Stamina by [3 * Pts]% and your Expertise by [2 * Pts]
         /// </summary>
         [TalentData(77, "Vitality", 3, 2, 2, 8, -1, new[] {
-@"Increases your total Strength and Stamina by 2% and your Expertise by 2.",
-@"Increases your total Strength and Stamina by 4% and your Expertise by 4.",
-@"Increases your total Strength and Stamina by 6% and your Expertise by 6.",}, "inv_helmet_21")]
+@"Increases your total Strength by 2%, Stamina by 3% and your Expertise by 2.",
+@"Increases your total Strength by 4%, Stamina by 6% and your Expertise by 4.",
+@"Increases your total Strength by 6%, Stamina by 9% and your Expertise by 6.",}, "inv_helmet_21")]
         public int Vitality { get { return _data[77]; } set { _data[77] = value; } }
         /// <summary>
         /// Reduces damage taken by the target of your Intervene ability by [15 * Pts]% for 6 sec.
@@ -753,16 +753,16 @@ namespace Rawr
 @"Reduces damage taken by the target of your Intervene ability by 30% for 6 sec.",}, "ability_warrior_safeguard")]
         public int Safeguard { get { return _data[78]; } set { _data[78] = value; } }
         /// <summary>
-        /// Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Charge, Intercept and Intervene abilities will remove all movement impairing effects.
+        /// Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.
         /// </summary>
         [TalentData(79, "Warbringer", 1, 2, 1, 9, -1, new[] {
-@"Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Charge, Intercept and Intervene abilities will remove all movement impairing effects.",}, "ability_warrior_warbringer")]
+@"Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.",}, "ability_warrior_warbringer")]
         public int Warbringer { get { return _data[79]; } set { _data[79] = value; } }
         /// <summary>
-        /// Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 100% of weapon damage plus 48 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 5 times.
+        /// Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 120% of weapon damage plus 58 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 5 times.
         /// </summary>
         [TalentData(80, "Devastate", 1, 2, 2, 9, -1, new[] {
-@"Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 100% of weapon damage plus 48 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 5 times.",}, "inv_sword_11")]
+@"Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 120% of weapon damage plus 58 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 5 times.",}, "inv_sword_11")]
         public int Devastate { get { return _data[80]; } set { _data[80] = value; } }
         /// <summary>
         /// Your successful blocks have a [20 * Pts]% chance to block double the normal amount and increases your chance to critically hit with your Shield Slam ability by an additional [5 * Pts]%.
@@ -788,10 +788,10 @@ namespace Rawr
 @"Whenever you take damage from or block a melee attack you cause damage equal to 20% of your block value.",}, "inv_shield_31")]
         public int DamageShield { get { return _data[83]; } set { _data[83] = value; } }
         /// <summary>
-        /// Sends a wave of force in front of the warrior, causing 20 damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
+        /// Sends a wave of force in front of the warrior, causing 8 damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
         /// </summary>
         [TalentData(84, "Shockwave", 1, 2, 2, 11, -1, new[] {
-@"Sends a wave of force in front of the warrior, causing 20 damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",}, "ability_warrior_shockwave")]
+@"Sends a wave of force in front of the warrior, causing 8 damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",}, "ability_warrior_shockwave")]
         public int Shockwave { get { return _data[84]; } set { _data[84] = value; } }
     }
 
@@ -1098,11 +1098,11 @@ namespace Rawr
 @"Increases your armor value from items by 10% and reduces the duration of all movement slowing effects by 30%.",}, "spell_holy_devotion")]
         public int Toughness { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
-        /// When Divine Sacrifice is actived, your party and raid members within 30 yards take [10 * Pts]% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by [50 * Pts]% and the amount absorbed by [10 * Pts]%.
+        /// When Divine Sacrifice is activated, your party and raid members within 30 yards take [10 * Pts]% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by [50 * Pts]% and the amount absorbed by [10 * Pts]%.
         /// </summary>
         [TalentData(34, "Divine Guardian", 2, 1, 1, 4, 31, new[] {
-@"When Divine Sacrifice is actived, your party and raid members within 30 yards take 10% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by 50% and the amount absorbed by 10%.",
-@"When Divine Sacrifice is actived, your party and raid members within 30 yards take 20% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by 100% and the amount absorbed by 20%.",}, "spell_holy_powerwordbarrier")]
+@"When Divine Sacrifice is activated, your party and raid members within 30 yards take 10% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by 50% and the amount absorbed by 10%.",
+@"When Divine Sacrifice is activated, your party and raid members within 30 yards take 20% reduced damage for 6 sec.  In addition, increases the duration of your Sacred Shield by 100% and the amount absorbed by 20%.",}, "spell_holy_powerwordbarrier")]
         public int DivineGuardian { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
         /// Decreases the cooldown of your Hammer of Justice spell by [10 * Pts] sec.
@@ -1136,7 +1136,7 @@ namespace Rawr
 @"Gives you a 10% chance after blocking or being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack.",}, "spell_holy_blessingofstrength")]
         public int Reckoning { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
-        /// Increases your total Stamina by [4 * Pts]%, reduces the cooldown of your Divine Shield and Divine Protection spells by [30 * Pts] sec.
+        /// Increases your total Stamina by [2 * Pts]%, reduces the cooldown of your Divine Shield and Divine Protection spells by [30 * Pts] sec.
         /// </summary>
         [TalentData(39, "Sacred Duty", 2, 1, 1, 6, -1, new[] {
 @"Increases your total Stamina by 2%, reduces the cooldown of your Divine Shield and Divine Protection spells by 30 sec.",
@@ -1196,10 +1196,10 @@ namespace Rawr
 @"Increases your spell power by an amount equal to 60% of your Strength and increases the amount healed by your critical heals by 30%.",}, "ability_paladin_touchedbylight")]
         public int TouchedByTheLight { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
-        /// Hurls a holy shield at the enemy, dealing 442 to 538 Holy damage, Dazing them and then jumping to additional nearby enemies.  Affects 3 total targets.  Lasts 10 sec.
+        /// Hurls a holy shield at the enemy, dealing 441 to 537 Holy damage, Dazing them and then jumping to additional nearby enemies.  Affects 3 total targets.  Lasts 10 sec.
         /// </summary>
         [TalentData(47, "Avenger's Shield", 1, 1, 2, 9, 42, new[] {
-@"Hurls a holy shield at the enemy, dealing 442 to 538 Holy damage, Dazing them and then jumping to additional nearby enemies.  Affects 3 total targets.  Lasts 10 sec.",}, "spell_holy_avengersshield")]
+@"Hurls a holy shield at the enemy, dealing 441 to 537 Holy damage, Dazing them and then jumping to additional nearby enemies.  Affects 3 total targets.  Lasts 10 sec.",}, "spell_holy_avengersshield")]
         public int AvengersShield { get { return _data[47]; } set { _data[47] = value; } }
         /// <summary>
         /// Reduces spell damage taken by [3 * Pts]% and gives a [50 * Pts]% chance to refresh the duration of your Divine Plea when you hit an enemy.  In addition, your Divine Plea spell is [50 * Pts]% less likely to be dispelled.
@@ -1289,12 +1289,12 @@ namespace Rawr
 @"Increases your chance to get a critical strike with all spells and attacks by 5%.",}, "spell_holy_retributionaura")]
         public int Conviction { get { return _data[58]; } set { _data[58] = value; } }
         /// <summary>
-        /// All melee attacks deal 3 to 4 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 4 to 4 Holy damage.
+        /// All melee attacks deal 2 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.<br/><br/>Unleashing this Seal's energy will judge an enemy, instantly causing 2 to 2 Holy damage.
         /// </summary>
         [TalentData(59, "Seal of Command", 1, 2, 3, 3, -1, new[] {
-@"All melee attacks deal 3 to 4 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.
+@"All melee attacks deal 2 to 3 additional Holy damage.  When used with attacks or abilities that strike a single target, this additional Holy damage will strike up to 2 additional targets.  Lasts 30 min.
 
-Unleashing this Seal's energy will judge an enemy, instantly causing 4 to 4 Holy damage.",}, "ability_warrior_innerrage")]
+Unleashing this Seal's energy will judge an enemy, instantly causing 2 to 2 Holy damage.",}, "ability_warrior_innerrage")]
         public int SealOfCommand { get { return _data[59]; } set { _data[59] = value; } }
         /// <summary>
         /// Reduces the duration of all Disarm effects by [25 * Pts]% and increases movement and mounted movement speed by [15 / 2 * Pts]%.  This does not stack with other movement speed increasing effects.
@@ -1363,10 +1363,10 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 4 to 4 Holy
 @"Increases the damage of your Judgement, Crusader Strike and Divine Storm abilities by 10% and when your melee attacks critically hit your next Flash of Light  or Exorcism spell becomes instant cast.",}, "ability_paladin_artofwar")]
         public int TheArtOfWar { get { return _data[68]; } set { _data[68] = value; } }
         /// <summary>
-        /// Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.
+        /// Puts the enemy target in a state of meditation, incapacitating them for up to 1 min, and removing the effect of Righteous Vengeance.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.
         /// </summary>
         [TalentData(69, "Repentance", 1, 2, 2, 7, -1, new[] {
-@"Puts the enemy target in a state of meditation, incapacitating them for up to 1 min.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.",}, "spell_holy_prayerofhealing")]
+@"Puts the enemy target in a state of meditation, incapacitating them for up to 1 min, and removing the effect of Righteous Vengeance.  Any damage caused will awaken the target.  Usable against Demons, Dragonkin, Giants, Humanoids and Undead.",}, "spell_holy_prayerofhealing")]
         public int Repentance { get { return _data[69]; } set { _data[69] = value; } }
         /// <summary>
         /// Your damaging Judgement spells have a [100 / 3 * Pts]% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec, and to immediately grant you 25% of your base mana.
@@ -1592,12 +1592,12 @@ Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Ha
 @"Gives your pet a 100% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",}, "inv_misc_monsterclaw_03")]
         public int Frenzy { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
-        /// When your pet scores a critical hit, all party and raid members have all damage increased by [1 * Pts]% for 10 sec.  In addition, increases the damage dealt by Arcane Shot by [3 * Pts]%.
+        /// All party and raid members have all damage increased by [1 * Pts]% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by [3 * Pts]%.
         /// </summary>
         [TalentData(16, "Ferocious Inspiration", 3, 0, 1, 7, -1, new[] {
-@"When your pet scores a critical hit, all party and raid members have all damage increased by 1% for 10 sec.  In addition, increases the damage dealt by Arcane Shot by 3%.",
-@"When your pet scores a critical hit, all party and raid members have all damage increased by 2% for 10 sec.  In addition, increases the damage dealt by Arcane Shot by 6%.",
-@"When your pet scores a critical hit, all party and raid members have all damage increased by 3% for 10 sec.  In addition, increases the damage dealt by Arcane Shot by 9%.",}, "ability_hunter_ferociousinspiration")]
+@"All party and raid members have all damage increased by 1% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 3%.",
+@"All party and raid members have all damage increased by 2% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 6%.",
+@"All party and raid members have all damage increased by 3% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 9%.",}, "ability_hunter_ferociousinspiration")]
         public int FerociousInspiration { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
         /// Send your pet into a rage causing 50% additional damage for 10 sec.  While enraged, the beast does not feel pity or remorse or fear and it cannot be stopped unless killed.
@@ -1810,10 +1810,10 @@ Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Ha
 @"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 30% of the damage dealt over 8 sec.",}, "ability_hunter_piercingshots")]
         public int PiercingShots { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
-        /// Increases the attack power of party and raid members within 45 yards by 10%.  Lasts until cancelled.
+        /// Increases the attack power of party and raid members within 100 yards by 10%.  Lasts until cancelled.
         /// </summary>
         [TalentData(44, "Trueshot Aura", 1, 1, 2, 7, 39, new[] {
-@"Increases the attack power of party and raid members within 45 yards by 10%.  Lasts until cancelled.",}, "ability_trueshot")]
+@"Increases the attack power of party and raid members within 100 yards by 10%.  Lasts until cancelled.",}, "ability_trueshot")]
         public int TrueshotAura { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
         /// Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by [4 * Pts]% and reduces the pushback suffered from damaging attacks while channeling Volley by [100 / 3 * Pts]%.
@@ -2016,10 +2016,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases your critical strike chance with all attacks by 3%.",}, "spell_holy_blessingofstamina")]
         public int KillerInstinct { get { return _data[67]; } set { _data[67] = value; } }
         /// <summary>
-        /// A strike that becomes active after parrying an opponent's attack.  This attack deals 53 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
+        /// A strike that becomes active after parrying an opponent's attack.  This attack deals 50 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
         /// </summary>
         [TalentData(68, "Counterattack", 1, 2, 3, 5, 62, new[] {
-@"A strike that becomes active after parrying an opponent's attack.  This attack deals 53 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",}, "ability_warrior_challange")]
+@"A strike that becomes active after parrying an opponent's attack.  This attack deals 50 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",}, "ability_warrior_challange")]
         public int Counterattack { get { return _data[68]; } set { _data[68] = value; } }
         /// <summary>
         /// Increases your Agility by [3 * Pts]%.
@@ -2349,10 +2349,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Your Eviscerate and Envenom abilities have a 100% chance to refresh your Slice and Dice duration to its 5 combo point maximum.",}, "ability_rogue_cuttothechase")]
         public int CutToTheChase { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
-        /// Enrages you, increasing all damage caused by 15%.  Requires a bleed effect to be active on the target.  Lasts 1 min.
+        /// Enrages you, increasing all damage caused by 5%.  Requires a bleed effect to be active on the target.  Lasts 1 min.
         /// </summary>
         [TalentData(26, "Hunger For Blood", 1, 0, 2, 11, -1, new[] {
-@"Enrages you, increasing all damage caused by 15%.  Requires a bleed effect to be active on the target.  Lasts 1 min.",}, "ability_rogue_hungerforblood")]
+@"Enrages you, increasing all damage caused by 5%.  Requires a bleed effect to be active on the target.  Lasts 1 min.",}, "ability_rogue_hungerforblood")]
         public int HungerForBlood { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
         /// Increases the effect duration of your Gouge ability by [0.5 * Pts] sec.
@@ -2628,18 +2628,18 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the cooldown of your Vanish and Blind abilities by 60 sec and your Cloak of Shadows ability by 30 sec.",}, "spell_magic_lesserinvisibilty")]
         public int Elusiveness { get { return _data[61]; } set { _data[61] = value; } }
         /// <summary>
-        /// A strike that deals 125% weapon damage and increases your chance to dodge by 15% for 7 sec.  Awards 1 combo point.
+        /// A strike that deals 125% weapon damage (180% if a dagger is equipped) and increases your chance to dodge by 15% for 7 sec.  Awards 1 combo point.
         /// </summary>
         [TalentData(62, "Ghostly Strike", 1, 2, 2, 3, -1, new[] {
-@"A strike that deals 125% weapon damage and increases your chance to dodge by 15% for 7 sec.  Awards 1 combo point.",}, "spell_shadow_curse")]
+@"A strike that deals 125% weapon damage (180% if a dagger is equipped) and increases your chance to dodge by 15% for 7 sec.  Awards 1 combo point.",}, "spell_shadow_curse")]
         public int GhostlyStrike { get { return _data[62]; } set { _data[62] = value; } }
         /// <summary>
-        /// Causes your attacks to ignore 0 of your target's Armor and increases the damage dealt by your Rupture ability by [10 * Pts]%.  The amount of Armor reduced increases with your level.
+        /// Causes your attacks to ignore up to [3 * Pts]% of your target's Armor and increases the damage dealt by your Rupture ability by [10 * Pts]%.
         /// </summary>
         [TalentData(63, "Serrated Blades", 3, 2, 3, 3, -1, new[] {
-@"Causes your attacks to ignore 0 of your target's Armor and increases the damage dealt by your Rupture ability by 10%.  The amount of Armor reduced increases with your level.",
-@"Causes your attacks to ignore 0 of your target's Armor and increases the damage dealt by your Rupture ability by 20%.  The amount of Armor reduced increases with your level.",
-@"Causes your attacks to ignore 0 of your target's Armor and increases the damage dealt by your Rupture ability by 30%.  The amount of Armor reduced increases with your level.",}, "inv_sword_17")]
+@"Causes your attacks to ignore up to 3% of your target's Armor and increases the damage dealt by your Rupture ability by 10%.",
+@"Causes your attacks to ignore up to 6% of your target's Armor and increases the damage dealt by your Rupture ability by 20%.",
+@"Causes your attacks to ignore up to 9% of your target's Armor and increases the damage dealt by your Rupture ability by 30%.",}, "inv_sword_17")]
         public int SerratedBlades { get { return _data[63]; } set { _data[63] = value; } }
         /// <summary>
         /// Gives you a [100 / 3 * Pts]% chance to add a combo point to your target after dodging their attack or fully resisting one of their spells.  This cannot happen more than once per second.
@@ -2685,10 +2685,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the Energy cost of your Cheap Shot and Garrote abilities by 20.  Additionally, your special abilities cause 20% more damage against targets below 35% health.",}, "spell_shadow_summonsuccubus")]
         public int DirtyDeeds { get { return _data[69]; } set { _data[69] = value; } }
         /// <summary>
-        /// An instant strike that deals 110% weapon damage and causes the target to hemorrhage, increasing any Physical damage dealt to the target by up to 110.  Lasts 10 charges or 15 sec.  Awards 1 combo point.
+        /// An instant strike that deals 110% weapon damage (160% if a dagger is equipped) and causes the target to hemorrhage, increasing any Physical damage dealt to the target by up to 13.  Lasts 10 charges or 15 sec.  Awards 1 combo point.
         /// </summary>
         [TalentData(70, "Hemorrhage", 1, 2, 4, 5, 63, new[] {
-@"An instant strike that deals 110% weapon damage and causes the target to hemorrhage, increasing any Physical damage dealt to the target by up to 110.  Lasts 10 charges or 15 sec.  Awards 1 combo point.",}, "spell_shadow_lifedrain")]
+@"An instant strike that deals 110% weapon damage (160% if a dagger is equipped) and causes the target to hemorrhage, increasing any Physical damage dealt to the target by up to 13.  Lasts 10 charges or 15 sec.  Awards 1 combo point.",}, "spell_shadow_lifedrain")]
         public int Hemorrhage { get { return _data[70]; } set { _data[70] = value; } }
         /// <summary>
         /// Attacks made while stealthed and for 6 seconds after breaking stealth cause an additional [10 / 3 * Pts]% damage.
@@ -2741,11 +2741,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases your total Agility by 15% and increases the percentage damage bonus of Backstab and Hemorrhage by an additional 10%.",}, "ability_rogue_sinistercalling")]
         public int SinisterCalling { get { return _data[76]; } set { _data[76] = value; } }
         /// <summary>
-        /// Your Ambush critical hits have a [50 * Pts]% chance to reduce the target's melee and ranged attack speed by 20%, movement speed by 70% for 8 sec.
+        /// Your Ambush and Backstab hits have a [50 * Pts]% chance to unbalance a target, increasing the time between their melee and ranged attacks by 20%, and reducing movement speed by 50% for 8 sec.
         /// </summary>
         [TalentData(77, "Waylay", 2, 2, 3, 8, -1, new[] {
-@"Your Ambush critical hits have a 50% chance to reduce the target's melee and ranged attack speed by 20%, movement speed by 70% for 8 sec.",
-@"Your Ambush critical hits have a 100% chance to reduce the target's melee and ranged attack speed by 20%, movement speed by 70% for 8 sec.",}, "ability_rogue_waylay")]
+@"Your Ambush and Backstab hits have a 50% chance to unbalance a target, increasing the time between their melee and ranged attacks by 20%, and reducing movement speed by 50% for 8 sec.",
+@"Your Ambush and Backstab hits have a 100% chance to unbalance a target, increasing the time between their melee and ranged attacks by 20%, and reducing movement speed by 50% for 8 sec.",}, "ability_rogue_waylay")]
         public int Waylay { get { return _data[77]; } set { _data[77] = value; } }
         /// <summary>
         /// When anyone in your group critically hits with a damage or healing spell or ability, you have a [100 / 3 * Pts]% chance to gain a combo point on your current target.  This effect cannot occur more than once every second.
@@ -2762,21 +2762,21 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Attempts to step through the shadows and reappear behind your enemy and increases movement speed by 70% for 3 sec.  The damage of your next ability is increased by 20% and the threat caused is reduced by 50%.  Lasts 10 sec.",}, "ability_rogue_shadowstep")]
         public int Shadowstep { get { return _data[79]; } set { _data[79] = value; } }
         /// <summary>
-        /// Reduces the cooldown of your Tricks of the Trade and Distract abilities by [5 * Pts] secs and Preparation by [3 / 2 * Pts] min.
+        /// Reduces the cooldown by [5 * Pts] sec and energy cost by [5 * Pts] of your Tricks of the Trade, Distract and Shadowstep abilities and reduces the cooldown of Preparation by [3 / 2 * Pts] min.
         /// </summary>
         [TalentData(80, "Filthy Tricks", 2, 2, 3, 9, -1, new[] {
-@"Reduces the cooldown of your Tricks of the Trade and Distract abilities by 5 secs and Preparation by 1.5 min.",
-@"Reduces the cooldown of your Tricks of the Trade and Distract abilities by 10 secs and Preparation by 3 min.",}, "ability_rogue_wrongfullyaccused")]
+@"Reduces the cooldown by 5 sec and energy cost by 5 of your Tricks of the Trade, Distract and Shadowstep abilities and reduces the cooldown of Preparation by 1.5 min.",
+@"Reduces the cooldown by 10 sec and energy cost by 10 of your Tricks of the Trade, Distract and Shadowstep abilities and reduces the cooldown of Preparation by 3 min.",}, "ability_rogue_wrongfullyaccused")]
         public int FilthyTricks { get { return _data[80]; } set { _data[80] = value; } }
         /// <summary>
-        /// Reduces the energy cost of your Backstab and Ambush abilities by [3 * Pts] and the energy cost of your Hemorrhage by [1 * Pts]
+        /// Reduces the energy cost of your Backstab and Ambush abilities by [4 * Pts] and the energy cost of your Hemorrhage by [1 * Pts] and increases all damage done by [1 * Pts]%.
         /// </summary>
         [TalentData(81, "Slaughter from the Shadows", 5, 2, 2, 10, -1, new[] {
-@"Reduces the energy cost of your Backstab and Ambush abilities by 3 and the energy cost of your Hemorrhage by 1.",
-@"Reduces the energy cost of your Backstab and Ambush abilities by 6 and the energy cost of your Hemorrhage by 2.",
-@"Reduces the energy cost of your Backstab and Ambush abilities by 9 and the energy cost of your Hemorrhage by 3.",
-@"Reduces the energy cost of your Backstab and Ambush abilities by 12 and the energy cost of your Hemorrhage by 4.",
-@"Reduces the energy cost of your Backstab and Ambush abilities by 15 and the energy cost of your Hemorrhage by 5.",}, "ability_rogue_slaughterfromtheshadows")]
+@"Reduces the energy cost of your Backstab and Ambush abilities by 4 and the energy cost of your Hemorrhage by 1, and increases all damage done by 1%.",
+@"Reduces the energy cost of your Backstab and Ambush abilities by 8 and the energy cost of your Hemorrhage by 2, and increases all damage done by 2%.",
+@"Reduces the energy cost of your Backstab and Ambush abilities by 12 and the energy cost of your Hemorrhage by 3, and increases all damage done by 3%.",
+@"Reduces the energy cost of your Backstab and Ambush abilities by 16 and the energy cost of your Hemorrhage by 4, and increases all damage done by 4%.",
+@"Reduces the energy cost of your Backstab and Ambush abilities by 20 and the energy cost of your Hemorrhage by 5, and increases all damage done by 5%.",}, "ability_rogue_slaughterfromtheshadows")]
         public int SlaughterFromTheShadows { get { return _data[81]; } set { _data[81] = value; } }
         /// <summary>
         /// Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Cheap Shot, Premeditation, Pickpocket and Disarm Trap regardless of being stealthed.
@@ -2971,11 +2971,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the mana cost of your Flash Heal by 15%, and increases the critical effect chance of your Flash Heal by 10% on friendly targets at or below 50% health.",}, "spell_holy_chastise")]
         public int ImprovedFlashHeal { get { return _data[19]; } set { _data[19] = value; } }
         /// <summary>
-        /// Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by [2 * Pts]% on targets afflicted by the Weakened Soul effect, and you have a [50 * Pts]% chance to reduce all damage taken by 3% for 20 sec to all friendly party and raid targets when you cast Power Word: Shield.
+        /// Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by [2 * Pts]% on targets afflicted by the Weakened Soul effect, and you have a [50 * Pts]% chance to reduce all damage taken by 3% for 1 min to all friendly party and raid targets when you cast Power Word: Shield. This effect has a 15 sec cooldown.
         /// </summary>
         [TalentData(20, "Renewed Hope", 2, 0, 1, 8, -1, new[] {
-@"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by 2% on targets afflicted by the Weakened Soul effect, and you have a 50% chance to reduce all damage taken by 3% for 20 sec to all friendly party and raid targets when you cast Power Word: Shield.",
-@"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by 4% on targets afflicted by the Weakened Soul effect, and you have a 100% chance to reduce all damage taken by 3% for 20 sec to all friendly party and raid targets when you cast Power Word: Shield.",}, "spell_holy_holyprotection")]
+@"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by 2% on targets afflicted by the Weakened Soul effect, and you have a 50% chance to reduce all damage taken by 3% for 1 min to all friendly party and raid targets when you cast Power Word: Shield. This effect has a 15 sec cooldown.",
+@"Increases the critical effect chance of your Flash Heal, Greater Heal and Penance (Heal) spells by 4% on targets afflicted by the Weakened Soul effect, and you have a 100% chance to reduce all damage taken by 3% for 1 min to all friendly party and raid targets when you cast Power Word: Shield. This effect has a 15 sec cooldown.",}, "spell_holy_holyprotection")]
         public int RenewedHope { get { return _data[20]; } set { _data[20] = value; } }
         /// <summary>
         /// When your Power Word: Shield is completely absorbed or dispelled you are instantly energized with [1.5 * Pts]% of your total mana, and you have a [100 / 3 * Pts]% chance to energize your shielded target with 2% total mana, 8 rage, 16 energy or 32 runic power. This effect can only occur once every 12 sec.
@@ -3167,10 +3167,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Your mana regeneration from spirit is increased by 50% for 8 sec after you critically heal with Flash Heal, Greater Heal, Binding Heal or Empowered Renew.",}, "spell_holy_fanaticism")]
         public int HolyConcentration { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
-        /// Creates a Holy Lightwell.  Members of your raid or party can click the Lightwell to restore 801 health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
+        /// Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore 801 health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.
         /// </summary>
         [TalentData(45, "Lightwell", 1, 1, 2, 7, 40, new[] {
-@"Creates a Holy Lightwell.  Members of your raid or party can click the Lightwell to restore 801 health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.",}, "spell_holy_summonlightwell")]
+@"Creates a Holy Lightwell.  Friendly players can click the Lightwell to restore 801 health over 6 sec.  Attacks done to you equal to 30% of your total health will cancel the effect. Lightwell lasts for 3 min or 10 charges.",}, "spell_holy_summonlightwell")]
         public int Lightwell { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
         /// Increases the effectiveness of your healing spells by [1 * Pts]%, and critical hits made against you have a [20 * Pts]% chance to prevent you from being critically hit again for 6 sec.
@@ -3605,7 +3605,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Gives you a 3% bonus to physical damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability.  This effect stacks up to 3 times.",}, "ability_backstab")]
         public int BloodyVengeance { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
-        /// Your Blood Strikes and Heart Strikes have a [25 * Pts]% chance and your Death Strikes and Obliterates have a [50 * Pts]% chance to increase the attack power by 10% of party and raid members within 45 yards for 10 sec.  Also increases your total Strength by [1 * Pts]%.
+        /// Increases the attack power by [5 * Pts]% of party and raid members within 100 yards.  Also increases your total Strength by [1 * Pts]%.
         /// </summary>
         [TalentData(16, "Abomination's Might", 2, 0, 3, 6, -1, new[] {
 @"Increases the attack power by 5% of party and raid members within 100 yards.  Also increases your total Strength by 1%.",
@@ -3654,7 +3654,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Temporarily grants the Death Knight 15% of maximum health and increases the amount of health generated through spells and effects by 35% for 10 sec.  After the effect expires, the health is lost.",}, "spell_shadow_lifedrain")]
         public int VampiricBlood { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
-        /// Damage that would take you below 35% health or taken while you are at 35% health is reduced by [5 * Pts]%.  This effect cannot occur more often than once every 15 sec and cannot be triggered by damage which deals less than 5% of your health.
+        /// Damage that would take you below 35% health or taken while you are at 35% health is reduced by [5 * Pts]%.
         /// </summary>
         [TalentData(23, "Will of the Necropolis", 3, 0, 1, 9, -1, new[] {
 @"Damage that would take you below 35% health or taken while you are at 35% health is reduced by 5%.",
@@ -3734,7 +3734,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases your Frost and Shadow damage by 10%.",}, "spell_shadow_darkritual")]
         public int BlackIce { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
-        /// Increases your chance to hit with one-handed melee weapons by [1 * Pts]% and increases the damage done by your offhand weapon by [5 * Pts]%.
+        /// Increases your chance to hit with one-handed melee weapons by [1 * Pts]% and increases the damage done by your offhand weapon by [25 / 3 * Pts]%.
         /// </summary>
         [TalentData(33, "Nerves of Cold Steel", 3, 1, 4, 2, -1, new[] {
 @"Increases your chance to hit with one-handed melee weapons by 1% and increases the damage done by your offhand weapon by 8%.",
@@ -3783,7 +3783,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Your Chains of Ice, Howling Blast, Icy Touch and Obliterate generate 5 additional runic power.",}, "spell_frost_frostshock")]
         public int ChillOfTheGrave { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
-        /// Your Chains of Ice has a [50 * Pts]% chance to cause Frost Fever and the cost of your Mind Freeze is reduced to [10 * Pts] runic power.
+        /// Your strength is increased by [2 * Pts]% and your Mind Freeze no longer costs runic power.
         /// </summary>
         [TalentData(39, "Endless Winter", 2, 1, 4, 4, -1, new[] {
 @"Your strength is increased by 2% and the cost of your Mind Freeze is reduced to 10 runic power.",
@@ -3812,10 +3812,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"When activated, makes your next Icy Touch, Howling Blast, Frost Strike or Obliterate a critical hit if used within 30 sec.",}, "spell_shadow_soulleech_2")]
         public int Deathchill { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
-        /// Your Icy Talons effect increases the melee haste of your group or raid by 20% for the next 20 sec.  In addition, increases your haste by 5% at all times.
+        /// Increases the melee haste of all party and raid members within 100 yds by 20% and your haste by an additional 5%.
         /// </summary>
         [TalentData(43, "Improved Icy Talons", 1, 1, 1, 6, 34, new[] {
-@"Increases the melee haste of all party and raid members within 100 yds by 20% and your haste by an additional 5%",}, "spell_deathknight_icytalons")]
+@"Increases the melee haste of all party and raid members within 100 yds by 20% and your haste by an additional 5%.",}, "spell_deathknight_icytalons")]
         public int ImprovedIcyTalons { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional [6 * Pts]% damage when striking targets with less than 35% health.
@@ -3847,11 +3847,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Purges the earth around the Death Knight of all heat.  Enemies within 10 yards are trapped in ice, preventing them from performing any action for 10 sec and infecting them with Frost Fever.  Enemies are considered Frozen, but any damage other than diseases will break the ice.",}, "inv_staff_15")]
         public int HungeringCold { get { return _data[47]; } set { _data[47] = value; } }
         /// <summary>
-        /// While in Blood Presence or Unholy Presence, you retain [3 * Pts]% stamina from Frost Presence, and damage done to you is decreased by an additional [1 * Pts]% in Frost Presence.
+        /// While in Blood Presence or Unholy Presence, you retain [4 * Pts]% stamina from Frost Presence, and damage done to you is decreased by an additional [1 * Pts]% in Frost Presence.
         /// </summary>
         [TalentData(48, "Improved Frost Presence", 2, 1, 3, 7, -1, new[] {
-@"While in Blood Presence or Unholy Presence, you retain 3% stamina from Frost Presence, and damage done to you is decreased by an additional 1% in Frost Presence.",
-@"While in Blood Presence or Unholy Presence, you retain 6% stamina from Frost Presence, and damage done to you is decreased by an additional 2% in Frost Presence.",}, "spell_deathknight_frostpresence")]
+@"While in Blood Presence or Unholy Presence, you retain 4% stamina from Frost Presence, and damage done to you is decreased by an additional 1% in Frost Presence.",
+@"While in Blood Presence or Unholy Presence, you retain 8% stamina from Frost Presence, and damage done to you is decreased by an additional 2% in Frost Presence.",}, "spell_deathknight_frostpresence")]
         public int ImprovedFrostPresence { get { return _data[48]; } set { _data[48] = value; } }
         /// <summary>
         /// When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a [100 / 3 * Pts]% chance to also deal damage with your offhand weapon.
@@ -3870,7 +3870,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases Blood Strike and Frost Strike damage by 10%.  In addition, whenever you hit with Blood Strike or Pestilence there is a 100% chance that the Blood Rune will become a Death Rune when it activates.  Death Runes count as a Blood, Frost or Unholy Rune.",}, "inv_weapon_shortblade_79")]
         public int BloodOfTheNorth { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
-        /// Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 10% for 20 sec.
+        /// Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 20% for 20 sec.
         /// </summary>
         [TalentData(51, "Unbreakable Armor", 1, 1, 3, 8, -1, new[] {
 @"Reinforces your armor with a thick coat of ice, increasing your armor by 25% and increasing your Strength by 20% for 20 sec.",}, "inv_armor_helm_plate_naxxramas_raidwarrior_c_01")]
@@ -4015,7 +4015,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the cooldown on Raise Dead by 90 sec and the cooldown on Army of the Dead by 4 min.  Also reduces the damage your pet takes from creature area of effect attacks by 90%.",}, "spell_deathknight_armyofthedead")]
         public int NightOfTheDead { get { return _data[69]; } set { _data[69] = value; } }
         /// <summary>
-        /// Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec.
+        /// Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
         /// </summary>
         [TalentData(70, "Unholy Blight", 1, 2, 1, 5, -1, new[] {
 @"Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.",}, "spell_shadow_contagion")]
@@ -4077,10 +4077,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Your Blood Strikes cause you to deal 5% additional damage with all attacks for the next 20 sec.",}, "spell_shadow_unholyfrenzy")]
         public int Desolation { get { return _data[77]; } set { _data[77] = value; } }
         /// <summary>
-        /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10052 spell damage.
+        /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10020 spell damage.
         /// </summary>
         [TalentData(78, "Anti-Magic Zone", 1, 2, 2, 7, 74, new[] {
-@"Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10052 spell damage.",}, "spell_deathknight_antimagiczone")]
+@"Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs 10020 spell damage.",}, "spell_deathknight_antimagiczone")]
         public int AntiMagicZone { get { return _data[78]; } set { _data[78] = value; } }
         /// <summary>
         /// While in Blood Presence or Frost Presence, you retain [15 / 2 * Pts]% increased movement speed from Unholy Presence, and your runes finish their cooldowns [5 * Pts]% faster in Unholy Presence.
@@ -4126,10 +4126,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Your Crypt Fever morphs into Ebon Plague, which increases magic damage taken by 13% in addition to increasing disease damage taken.  Improves your critical strike chance with weapons and spells by 3% at all times.",}, "ability_creature_cursed_03")]
         public int EbonPlaguebringer { get { return _data[84]; } set { _data[84] = value; } }
         /// <summary>
-        /// An unholy strike that deals 50% of weapon damage as Physical damage plus 170.  In addition, for each of your diseases on your target, you deal an additional 25% of the Physical damage done as Shadow damage.
+        /// An unholy strike that deals 70% of weapon damage as Physical damage plus 238.  In addition, for each of your diseases on your target, you deal an additional 12% of the Physical damage done as Shadow damage.
         /// </summary>
         [TalentData(85, "Scourge Strike", 1, 2, 3, 9, -1, new[] {
-@"An unholy strike that deals 70% of weapon damage as Physical damage plus 560.  In addition, for each of your diseases on your target, you deal an additional 12% of the Physical damage done as Shadow damage.",}, "spell_deathknight_scourgestrike")]
+@"An unholy strike that deals 70% of weapon damage as Physical damage plus 238.  In addition, for each of your diseases on your target, you deal an additional 12% of the Physical damage done as Shadow damage.",}, "spell_deathknight_scourgestrike")]
         public int ScourgeStrike { get { return _data[85]; } set { _data[85] = value; } }
         /// <summary>
         /// Your spells and abilities deal [2 * Pts]% more damage to targets infected with Blood Plague.  Also increases your expertise by [1 * Pts]
@@ -4324,11 +4324,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the cooldown of your Flame Shock and Frost Shock spells by an additional 2 sec., and increases the direct damage done by your Flame Shock and Frost Shock spells by an additional 20%.",}, "spell_fire_blueflamering")]
         public int BoomingEchoes { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
-        /// Your non-periodic spell critical strikes grant your party or raid members within 100 yards Elemental Oath, increasing spell critical strike chance by [5 / 2 * Pts]%.  In addition, while Clearcasting from Elemental Focus is active, you deal [5 * Pts]% more spell damage.  Lasts 15 sec.
+        /// While Clearcasting from Elemental Focus is active, you deal [5 * Pts]% more spell damage. In addition, party and raid members within 100 yards receive a [5 / 2 * Pts]% bonus to their spell critical strike chance.
         /// </summary>
         [TalentData(18, "Elemental Oath", 2, 0, 2, 8, 15, new[] {
-@"Your non-periodic spell critical strikes grant your party or raid members within 100 yards Elemental Oath, increasing spell critical strike chance by 3%.  In addition, while Clearcasting from Elemental Focus is active, you deal 5% more spell damage.  Lasts 15 sec.",
-@"Your non-periodic spell critical strikes grant your party or raid members within 100 yards Elemental Oath, increasing spell critical strike chance by 5%.  In addition, while Clearcasting from Elemental Focus is active, you deal 10% more spell damage.  Lasts 15 sec.",}, "spell_shaman_elementaloath")]
+@"While Clearcasting from Elemental Focus is active, you deal 5% more spell damage. In addition, party and raid members within 100 yards receive a 3% bonus to their spell critical strike chance.",
+@"While Clearcasting from Elemental Focus is active, you deal 10% more spell damage. In addition, party and raid members within 100 yards receive a 5% bonus to their spell critical strike chance.",}, "spell_shaman_elementaloath")]
         public int ElementalOath { get { return _data[18]; } set { _data[18] = value; } }
         /// <summary>
         /// Gives your Lightning Bolt and Chain Lightning spells a [11 * Pts]% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.
@@ -4497,12 +4497,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases your Attack Power by 100% of your Intellect.",}, "spell_nature_bloodlust")]
         public int MentalDexterity { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
-        /// Increases your expertise by [3 * Pts] and causes your critical hits with melee attacks to increase all party and raid members' attack power by [10 / 3 * Pts]% if within 45 yards of the Shaman.  Lasts 10 sec.
+        /// Increases your expertise by [3 * Pts] and increases all party and raid members' attack power by [10 / 3 * Pts]% while within 100 yards of the Shaman.
         /// </summary>
         [TalentData(40, "Unleashed Rage", 3, 1, 1, 6, -1, new[] {
-@"Increases your expertise by 3, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 4% if within 45 yards of the Shaman.  Lasts 10 sec.",
-@"Increases your expertise by 6, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 7% if within 45 yards of the Shaman.  Lasts 10 sec.",
-@"Increases your expertise by 9, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 10% if within 45 yards of the Shaman.  Lasts 10 sec.",}, "spell_nature_unleashedrage")]
+@"Increases your expertise by 3, and increases all party and raid members' attack power by 4% while within 100 yards of the Shaman.",
+@"Increases your expertise by 6, and increases all party and raid members' attack power by 7% while within 100 yards of the Shaman.",
+@"Increases your expertise by 9, and increases all party and raid members' attack power by 10% while within 100 yards of the Shaman.",}, "spell_nature_unleashedrage")]
         public int UnleashedRage { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
         /// Increases the damage you deal with all weapons by [10 / 3 * Pts]%.
@@ -4936,12 +4936,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Allows 50% of your mana regeneration to continue while casting.",}, "spell_shadow_siphonmana")]
         public int ArcaneMeditation { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
-        /// Your Frostbolt, Fireball, Frostfire Bolt, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal [4 * Pts]% more damage to snared or slowed targets.
+        /// Your Frostbolt, Fireball, Frostfire Bolt, Pyroblast, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal [4 * Pts]% more damage to snared or slowed targets.
         /// </summary>
         [TalentData(13, "Torment the Weak", 3, 0, 4, 4, -1, new[] {
-@"Your Frostbolt, Fireball, Frostfire Bolt, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 4% more damage to snared or slowed targets.",
-@"Your Frostbolt, Fireball, Frostfire Bolt, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 8% more damage to snared or slowed targets.",
-@"Your Frostbolt, Fireball, Frostfire Bolt, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 12% more damage to snared or slowed targets.",}, "ability_mage_tormentoftheweak")]
+@"Your Frostbolt, Fireball, Frostfire Bolt, Pyroblast, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 4% more damage to snared or slowed targets.",
+@"Your Frostbolt, Fireball, Frostfire Bolt, Pyroblast, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 8% more damage to snared or slowed targets.",
+@"Your Frostbolt, Fireball, Frostfire Bolt, Pyroblast, Arcane Missiles, Arcane Blast, and Arcane Barrage abilities deal 12% more damage to snared or slowed targets.",}, "ability_mage_tormentoftheweak")]
         public int TormentTheWeak { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
         /// Reduces the mana cost of Blink by [25 * Pts]% and for 4 sec after casting your chance to be hit by all attacks and spells is reduced by [15 * Pts]%.
@@ -4990,12 +4990,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases the critical strike chance of your next damaging spell by 30% after gaining Clearcasting or Presence of Mind.",}, "spell_arcane_arcanepotency")]
         public int ArcanePotency { get { return _data[19]; } set { _data[19] = value; } }
         /// <summary>
-        /// Increases the damage of your Arcane Missiles spell by an amount equal to [15 * Pts]% of your spell power and the damage of your Arcane Blast by [3 * Pts]% of your spell power.  In addition, when you score a critical hit with Arcane Missiles, Arcane Explosion, Arcane Blast, or Arcane Barrage all party and raid members have all damage increased by [1 * Pts]% for 10 sec.
+        /// Increases the damage of your Arcane Missiles spell by an amount equal to [15 * Pts]% of your spell power and the damage of your Arcane Blast by [3 * Pts]% of your spell power.  In addition, increases the damage of all party and raid members within 100 yds by [1 * Pts]%.
         /// </summary>
         [TalentData(20, "Arcane Empowerment", 3, 0, 1, 7, -1, new[] {
-@"Increases the damage of your Arcane Missiles spell by an amount equal to 15% of your spell power and the damage of your Arcane Blast by 3% of your spell power.  In addition, when you score a critical hit with Arcane Missiles, Arcane Explosion, Arcane Blast, or Arcane Barrage all party and raid members have all damage increased by 1% for 10 sec.",
-@"Increases the damage of your Arcane Missiles spell by an amount equal to 30% of your spell power and the damage of your Arcane Blast by 6% of your spell power.  In addition, when you score a critical hit with Arcane Missiles, Arcane Explosion, Arcane Blast, or Arcane Barrage all party and raid members have all damage increased by 2% for 10 sec.",
-@"Increases the damage of your Arcane Missiles spell by an amount equal to 45% of your spell power and the damage of your Arcane Blast by 9% of your spell power.  In addition, when you score a critical hit with Arcane Missiles, Arcane Explosion, Arcane Blast, or Arcane Barrage all party and raid members have all damage increased by 3% for 10 sec.",}, "spell_nature_starfall")]
+@"Increases the damage of your Arcane Missiles spell by an amount equal to 15% of your spell power and the damage of your Arcane Blast by 3% of your spell power.  In addition, increases the damage of all party and raid members within 100 yds by 1%.",
+@"Increases the damage of your Arcane Missiles spell by an amount equal to 30% of your spell power and the damage of your Arcane Blast by 6% of your spell power.  In addition, increases the damage of all party and raid members within 100 yds by 2%.",
+@"Increases the damage of your Arcane Missiles spell by an amount equal to 45% of your spell power and the damage of your Arcane Blast by 9% of your spell power.  In addition, increases the damage of all party and raid members within 100 yds by 3%.",}, "spell_nature_starfall")]
         public int ArcaneEmpowerment { get { return _data[20]; } set { _data[20] = value; } }
         /// <summary>
         /// When activated, your spells deal 20% more damage while costing 20% more mana to cast.  This effect lasts 15 sec.
@@ -5004,12 +5004,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"When activated, your spells deal 20% more damage while costing 20% more mana to cast.  This effect lasts 15 sec.",}, "spell_nature_lightning")]
         public int ArcanePower { get { return _data[21]; } set { _data[21] = value; } }
         /// <summary>
-        /// When you absorb damage your spell damage is increased by [5 * Pts]% of the amount absorbed for 10 sec.  Total spell damage increase cannot exceed 5% of your health.
+        /// When your Mana Shield, Frost Ward, Fire Ward, or Ice Barrier absorbs damage your spell damage is increased by [5 * Pts]% of the amount absorbed for 10 sec.
         /// </summary>
         [TalentData(22, "Incanter's Absorption", 3, 0, 3, 7, -1, new[] {
-@"When you absorb damage your spell damage is increased by 5% of the amount absorbed for 10 sec.  Total spell damage increase cannot exceed 5% of your health.",
-@"When you absorb damage your spell damage is increased by 10% of the amount absorbed for 10 sec.  Total spell damage increase cannot exceed 5% of your health.",
-@"When you absorb damage your spell damage is increased by 15% of the amount absorbed for 10 sec.  Total spell damage increase cannot exceed 5% of your health.",}, "ability_mage_incantersabsorbtion")]
+@"When your Mana Shield, Frost Ward, Fire Ward, or Ice Barrier absorbs damage your spell damage is increased by 5% of the amount absorbed for 10 sec.",
+@"When your Mana Shield, Frost Ward, Fire Ward, or Ice Barrier absorbs damage your spell damage is increased by 10% of the amount absorbed for 10 sec.",
+@"When your Mana Shield, Frost Ward, Fire Ward, or Ice Barrier absorbs damage your spell damage is increased by 15% of the amount absorbed for 10 sec.",}, "ability_mage_incantersabsorbtion")]
         public int IncantersAbsorption { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Presence of Mind, Arcane Power and Invisibility spells by [15 * Pts]% and the cooldown of your Evocation spell by [1 * Pts] min.
@@ -5137,11 +5137,11 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Hurls an immense fiery boulder that causes 141 to 187 Fire damage and an additional 56 Fire damage over 12 sec.",}, "spell_fire_fireball02")]
         public int Pyroblast { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
-        /// Reduces the pushback suffered from damaging attacks while casting Fire spells by [35 * Pts]% and reduces the threat caused by your Fire spells by [5 * Pts]%.
+        /// Reduces the pushback suffered from damaging attacks while casting Fire spells by [35 * Pts]% and reduces the threat caused by your Fire spells by [10 * Pts]%.
         /// </summary>
         [TalentData(39, "Burning Soul", 2, 1, 4, 3, -1, new[] {
-@"Reduces the pushback suffered from damaging attacks while casting Fire spells by 35% and reduces the threat caused by your Fire spells by 5%.",
-@"Reduces the pushback suffered from damaging attacks while casting Fire spells by 70% and reduces the threat caused by your Fire spells by 10%.",}, "spell_fire_fire")]
+@"Reduces the pushback suffered from damaging attacks while casting Fire spells by 35% and reduces the threat caused by your Fire spells by 10%.",
+@"Reduces the pushback suffered from damaging attacks while casting Fire spells by 70% and reduces the threat caused by your Fire spells by 20%.",}, "spell_fire_fire")]
         public int BurningSoul { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
         /// Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional [1 * Pts]% and your damaging Scorch spells have a [100 / 3 * Pts]% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5% and lasts 30 sec.
@@ -5234,12 +5234,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"When below 35% health all damage taken is reduced by 20% and your Pyroblast spell's cast time is reduced by 3.5 secs while the cooldown is increased by 5 secs.  In addition, melee and ranged attacks made against you have a 10% chance to disarm your attacker's main hand and ranged weapons.",}, "ability_mage_fierypayback")]
         public int FieryPayback { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// Increases the damage of your Fireball and Frostfire Bolt spells by an amount equal to [5 * Pts]% of your spell power.  In addition, each time your Ignite talent causes damage, you have a [100 / 3 * Pts]% chance to regain 2% of your base mana.
+        /// Increases the damage of your Fireball, Frostfire Bolt and Pyroblast spells by an amount equal to [5 * Pts]% of your spell power.  In addition, each time your Ignite talent causes damage, you have a [100 / 3 * Pts]% chance to regain 2% of your base mana.
         /// </summary>
         [TalentData(52, "Empowered Fire", 3, 1, 3, 8, -1, new[] {
-@"Increases the damage of your Fireball and Frostfire Bolt spells by an amount equal to 5% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 33% chance to regain 2% of your base mana.",
-@"Increases the damage of your Fireball and Frostfire Bolt spells by an amount equal to 10% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 67% chance to regain 2% of your base mana.",
-@"Increases the damage of your Fireball and Frostfire Bolt spells by an amount equal to 15% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 100% chance to regain 2% of your base mana.",}, "spell_fire_flamebolt")]
+@"Increases the damage of your Fireball, Frostfire Bolt and Pyroblast spells by an amount equal to 5% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 33% chance to regain 2% of your base mana.",
+@"Increases the damage of your Fireball, Frostfire Bolt and Pyroblast spells by an amount equal to 10% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 67% chance to regain 2% of your base mana.",
+@"Increases the damage of your Fireball, Frostfire Bolt and Pyroblast spells by an amount equal to 15% of your spell power.  In addition, each time your Ignite talent causes damage, you have a 100% chance to regain 2% of your base mana.",}, "spell_fire_flamebolt")]
         public int EmpoweredFire { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Your damaging Blast Wave and Dragon's Breath spells have a [50 * Pts]% chance to make your next Flamestrike spell instant cast and cost no mana.  Lasts 10 sec.
@@ -5455,12 +5455,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Gives your Chill effects a 15% chance to grant you the Fingers of Frost effect, which treats your next 2 spells cast as if the target were Frozen.  Lasts 15 sec.",}, "ability_mage_wintersgrasp")]
         public int FingersOfFrost { get { return _data[80]; } set { _data[80] = value; } }
         /// <summary>
-        /// Your Frost damage spells with chilling effects have a [5 * Pts]% chance to cause your next Fireball spell to be instant cast and cost no mana.
+        /// Your Frost damage spells with chilling effects have a [5 * Pts]% chance to cause your next Fireball or Frostfire Bolt spell to be instant cast and cost no mana.
         /// </summary>
         [TalentData(81, "Brain Freeze", 3, 2, 1, 9, -1, new[] {
-@"Your Frost damage spells with chilling effects have a 5% chance to cause your next Fireball spell to be instant cast and cost no mana.",
-@"Your Frost damage spells with chilling effects have a 10% chance to cause your next Fireball spell to be instant cast and cost no mana.",
-@"Your Frost damage spells with chilling effects have a 15% chance to cause your next Fireball spell to be instant cast and cost no mana.",}, "ability_mage_brainfreeze")]
+@"Your Frost damage spells with chilling effects have a 5% chance to cause your next Fireball or Frostfire Bolt spell to be instant cast and cost no mana.",
+@"Your Frost damage spells with chilling effects have a 10% chance to cause your next Fireball or Frostfire Bolt spell to be instant cast and cost no mana.",
+@"Your Frost damage spells with chilling effects have a 15% chance to cause your next Fireball or Frostfire Bolt spell to be instant cast and cost no mana.",}, "ability_mage_brainfreeze")]
         public int BrainFreeze { get { return _data[81]; } set { _data[81] = value; } }
         /// <summary>
         /// Summon a Water Elemental to fight for the caster for 45 sec.
@@ -5469,12 +5469,12 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Summon a Water Elemental to fight for the caster for 45 sec.",}, "spell_frost_summonwaterelemental_2")]
         public int SummonWaterElemental { get { return _data[82]; } set { _data[82] = value; } }
         /// <summary>
-        /// Increases the duration of your Summon Water Elemental spell by [5 * Pts] sec and your Frostbolt spell has a [100 / 3 * Pts]% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec.  This effect cannot occur more often than once every 6 sec.
+        /// Increases the duration of your Summon Water Elemental spell by [5 * Pts] sec and your Frostbolt spell has a [100 / 3 * Pts]% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec.  This effect cannot occur more often than once every 6 sec.
         /// </summary>
         [TalentData(83, "Enduring Winter", 3, 2, 3, 9, 82, new[] {
-@"Increases the duration of your Summon Water Elemental spell by 5 sec and your Frostbolt spell has a 33% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec.  This effect cannot occur more often than once every 6 sec.",
-@"Increases the duration of your Summon Water Elemental spell by 10 sec and your Frostbolt spell has a 66% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec.  This effect cannot occur more often than once every 6 sec.",
-@"Increases the duration of your Summon Water Elemental spell by 15 sec and your Frostbolt spell has a 100% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second for 15 sec.  This effect cannot occur more often than once every 6 sec.",}, "spell_frost_summonwaterelemental_2")]
+@"Increases the duration of your Summon Water Elemental spell by 5 sec and your Frostbolt spell has a 33% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec.  This effect cannot occur more often than once every 6 sec.",
+@"Increases the duration of your Summon Water Elemental spell by 10 sec and your Frostbolt spell has a 66% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec.  This effect cannot occur more often than once every 6 sec.",
+@"Increases the duration of your Summon Water Elemental spell by 15 sec and your Frostbolt spell has a 100% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana per 5 sec for 15 sec.  This effect cannot occur more often than once every 6 sec.",}, "spell_frost_summonwaterelemental_2")]
         public int EnduringWinter { get { return _data[83]; } set { _data[83] = value; } }
         /// <summary>
         /// Increases the damage caused by your Frostbolt, Frostfire Bolt and Ice Lance spells by [1 * Pts]% and reduces the movement speed of all chilled targets by an additional [2 * Pts]%.
@@ -5620,10 +5620,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases the damage of your Corruption spell by an amount equal to 36% of your spell power.",}, "spell_shadow_abominationexplosion")]
         public int EmpoweredCorruption { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
-        /// Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by [1 * Pts]%, and reduces all periodic healing done to the target by [3 * Pts]%. Lasts for 12 sec. Stacks up to 2 times.
+        /// Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by [1 * Pts]%, and reduces all periodic healing done to the target by [2 * Pts]%. Lasts for 12 sec. Stacks up to 3 times.
         /// </summary>
         [TalentData(13, "Shadow Embrace", 5, 0, 1, 5, -1, new[] {
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 2%. Lasts for 12 sec. Stacks up to 3 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 2%. Lasts for 12 sec. Stacks up to 3  times.",
 @"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 2%, and reduces all periodic healing done to the target by 4%. Lasts for 12 sec. Stacks up to 3 times.",
 @"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 3%, and reduces all periodic healing done to the target by 6%. Lasts for 12 sec. Stacks up to 3 times.",
 @"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 4%, and reduces all periodic healing done to the target by 8%. Lasts for 12 sec. Stacks up to 3 times.",
@@ -5642,10 +5642,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Reduces the target's movement speed by 30% for 12 sec.  Only one Curse per Warlock can be active on any one target.",}, "spell_shadow_grimward")]
         public int CurseOfExhaustion { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
-        /// Your Felhunter regains 8% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by [2 * Pts] sec.  In addition, increases the effect of your Felhunter's Fel Intelligence by [5 * Pts]%.
+        /// Your Felhunter regains [4 * Pts]% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by [2 * Pts] sec.  In addition, increases the effect of your Felhunter's Fel Intelligence by [5 * Pts]%.
         /// </summary>
         [TalentData(16, "Improved Felhunter", 2, 0, 1, 6, -1, new[] {
-@"Your Felhunter regains 8% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by 2 sec.  In addition, increases the effect of your Felhunter's Fel Intelligence by 5%.",
+@"Your Felhunter regains 4% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by 2 sec.  In addition, increases the effect of your Felhunter's Fel Intelligence by 5%.",
 @"Your Felhunter regains 8% of its maximum mana each time it hits with its Shadow Bite ability and the cooldown on that ability is reduced by 4 sec.  In addition, increases the effect of your Felhunter's Fel Intelligence by 10%.",}, "spell_shadow_summonfelhunter")]
         public int ImprovedFelhunter { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
@@ -5706,10 +5706,10 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Increases the amount drained by your Drain Life by 30% while your health is at or below 20% health, and increases the damage done by your Shadow spells by 12% when your target is at or below 35% health.",}, "spell_shadow_deathsembrace")]
         public int DeathsEmbrace { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
-        /// Shadow energy slowly destroys the target, causing 550 damage over 15 sec.  In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec.
+        /// Shadow energy slowly destroys the target, causing 550 damage over 15 sec.  In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec. Only one Unstable Affliction or Immolate per Warlock can be active on any one target.
         /// </summary>
         [TalentData(24, "Unstable Affliction", 1, 0, 2, 9, 19, new[] {
-@"Shadow energy slowly destroys the target, causing 550 damage over 15 sec.  In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec.",}, "spell_shadow_unstableaffliction_3")]
+@"Shadow energy slowly destroys the target, causing 550 damage over 15 sec.  In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec. Only one Unstable Affliction or Immolate per Warlock can be active on any one target.",}, "spell_shadow_unstableaffliction_3")]
         public int UnstableAffliction { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
         /// Grants the periodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage, and increases the critical strike damage bonus of your Haunt spell by 100%.
@@ -5718,14 +5718,14 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 @"Grants the periodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage, and increases the critical strike damage bonus of your Haunt spell by 100%.",}, "spell_shadow_unstableaffliction_2")]
         public int Pandemic { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
-        /// Your Corruption and Unstable Affliction spells gain an additional [1 * Pts]% of your bonus spell damage, and your Drain Life and Haunt spells have a [20 * Pts]% chance to reset the duration of your Corruption spell on the target.
+        /// Your Corruption and Unstable Affliction spells gain an additional [1 * Pts]% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a [20 * Pts]% chance to reset the duration of your Corruption spell on the target.
         /// </summary>
         [TalentData(26, "Everlasting Affliction", 5, 0, 2, 10, -1, new[] {
-@"Your Corruption and Unstable Affliction spells gain an additional 1% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 20% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 2% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 40% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 3% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 60% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 4% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 80% chance to reset the duration of your Corruption spell on the target.",
-@"Your Corruption and Unstable Affliction spells gain an additional 5% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt and Haunt spells have a 100% chance to reset the duration of your Corruption spell on the target.",}, "ability_warlock_everlastingaffliction")]
+@"Your Corruption and Unstable Affliction spells gain an additional 1% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 20% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 2% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 40% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 3% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 60% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 4% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 80% chance to reset the duration of your Corruption spell on the target.",
+@"Your Corruption and Unstable Affliction spells gain an additional 5% of your bonus spell damage, and your Drain Life, Drain Soul, Shadow Bolt, and Haunt spells have a 100% chance to reset the duration of your Corruption spell on the target.",}, "ability_warlock_everlastingaffliction")]
         public int EverlastingAffliction { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
         /// You send a ghostly soul into the target, dealing 405 to 473 Shadow damage and increasing all damage done by your Shadow damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target.
@@ -5996,14 +5996,14 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 30%.",}, "spell_shadow_demonicempathy")]
         public int Nemesis { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
-        /// Increases your spell damage by [2 * Pts]%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by [2 * Pts]% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.
+        /// Increases your spell damage by [2 * Pts]%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by [2 * Pts]% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.
         /// </summary>
         [TalentData(53, "Demonic Pact", 5, 1, 2, 10, -1, new[] {
-@"Increases your spell damage by 2%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 4%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 6%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 8%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",
-@"Increases your spell damage by 10%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 45 sec.  Does not work on Enslaved demons.",}, "spell_shadow_demonicpact")]
+@"Increases your spell damage by 2%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.",
+@"Increases your spell damage by 4%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.",
+@"Increases your spell damage by 6%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.",
+@"Increases your spell damage by 8%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.",
+@"Increases your spell damage by 10%, and your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 45 sec. This effect has a 20 sec cooldown. Does not work on Enslaved demons.",}, "spell_shadow_demonicpact")]
         public int DemonicPact { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.
@@ -6012,14 +6012,14 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"You transform into a Demon for 30 sec.  This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%.  You gain some unique demon abilities in addition to your normal abilities. 3 minute cooldown.",}, "spell_shadow_demonform")]
         public int Metamorphosis { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
-        /// Increases the damage done by your Shadow Bolt spell by [1 * Pts]%, and your Shadow Bolt has a [20 * Pts]% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.
+        /// Increases the damage done by your Shadow Bolt spell by [2 * Pts]%, and your Shadow Bolt has a [20 * Pts]% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.
         /// </summary>
         [TalentData(55, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new[] {
-@"Increases the damage done by your Shadow Bolt spell by 1%, and your Shadow Bolt has a 20% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
-@"Increases the damage done by your Shadow Bolt spell by 2%, and your Shadow Bolt has a 40% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
-@"Increases the damage done by your Shadow Bolt spell by 3%, and your Shadow Bolt has a 60% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
-@"Increases the damage done by your Shadow Bolt spell by 4%, and your Shadow Bolt has a 80% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
-@"Increases the damage done by your Shadow Bolt spell by 5%, and your Shadow Bolt has a 100% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",}, "spell_shadow_shadowbolt")]
+@"Increases the damage done by your Shadow Bolt spell by 2%, and your Shadow Bolt has a 20% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 4%, and your Shadow Bolt has a 40% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 6%, and your Shadow Bolt has a 60% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 8%, and your Shadow Bolt has a 80% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 10%, and your Shadow Bolt has a 100% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",}, "spell_shadow_shadowbolt")]
         public int ImprovedShadowBolt { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
         /// Reduces the casting time of your Shadow Bolt. Chaos Bolt and Immolate spells by [0.1 * Pts] sec and your Soul Fire spell by [0.4 * Pts] sec.
@@ -6140,10 +6140,10 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"Increases the damage done by your Fire spells by 15% and reduces the cast time of your Incinerate spell by 0.25 sec.",}, "spell_fire_selfdestruct")]
         public int Emberstorm { get { return _data[70]; } set { _data[70] = value; } }
         /// <summary>
-        /// Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 60% of your Immolate or Shadowflame, and causes an additional 20% damage over 6 sec.
+        /// Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 60% of your Immolate or Shadowflame, and causes an additional 40% damage over 6 sec.
         /// </summary>
         [TalentData(71, "Conflagrate", 1, 2, 2, 7, 67, new[] {
-@"Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 60% of your Immolate or Shadowflame, and causes an additional 20% damage over 6 sec.",}, "spell_fire_fireball")]
+@"Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 60% of your Immolate or Shadowflame, and causes an additional 40% damage over 6 sec.",}, "spell_fire_fireball")]
         public int Conflagrate { get { return _data[71]; } set { _data[71] = value; } }
         /// <summary>
         /// Gives your Shadow Bolt, Shadowburn, Chaos Bolt, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a [10 * Pts]% chance to return health equal to 20% of the damage caused.
@@ -6193,12 +6193,12 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"Shadowfury is unleashed, causing 343 to 407 Shadow damage and stunning all enemies within 8 yds for 3 sec.",}, "spell_shadow_shadowfury")]
         public int Shadowfury { get { return _data[77]; } set { _data[77] = value; } }
         /// <summary>
-        /// Increases the damage done by your Imp by [5 * Pts]%, and all critical hits done by your Imp have a [100 / 3 * Pts]% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.
+        /// Increases the damage done by your Imp by [10 * Pts]%, and all critical hits done by your Imp have a [100 / 3 * Pts]% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.
         /// </summary>
         [TalentData(78, "Empowered Imp", 3, 2, 3, 9, -1, new[] {
-@"Increases the damage done by your Imp by 5%, and all critical hits done by your Imp have a 33% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
-@"Increases the damage done by your Imp by 10%, and all critical hits done by your Imp have a 66% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
-@"Increases the damage done by your Imp by 15%, and all critical hits done by your Imp have a 100% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",}, "ability_warlock_empoweredimp")]
+@"Increases the damage done by your Imp by 10%, and all critical hits done by your Imp have a 33% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
+@"Increases the damage done by your Imp by 20%, and all critical hits done by your Imp have a 66% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",
+@"Increases the damage done by your Imp by 30%, and all critical hits done by your Imp have a 100% chance to increase your spell critical hit chance for your next spell by 100%. This effect lasts 8 sec.",}, "ability_warlock_empoweredimp")]
         public int EmpoweredImp { get { return _data[78]; } set { _data[78] = value; } }
         /// <summary>
         /// Increases the damage done by your Incinerate and Chaos Bolt spells to targets afflicted by your Immolate by [2 * Pts]%, and the critical strike chance of your Conflagrate spell is increased by [5 * Pts]%.
@@ -6382,10 +6382,10 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 @"Increases your chance to hit with all spells by 4% and reduces your damage taken from all spells by 6%.",}, "ability_druid_balanceofpower")]
         public int BalanceOfPower { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
-        /// Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can not cast healing or resurrection spells while shapeshifted.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
+        /// Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 100 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can not cast healing or resurrection spells while shapeshifted.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
         /// </summary>
         [TalentData(17, "Moonkin Form", 1, 0, 2, 7, -1, new[] {
-@"Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 45 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can not cast healing or resurrection spells while shapeshifted.
+@"Shapeshift into Moonkin Form.  While in this form the armor contribution from items is increased by 370%, damage taken while stunned is reduced by 15%, and all party and raid members within 100 yards have their spell critical chance increased by 5%.  Single target spell critical strikes in this form have a chance to instantly regenerate 2% of your total mana.  The Moonkin can not cast healing or resurrection spells while shapeshifted.
 
 The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "spell_nature_forceofnature")]
         public int MoonkinForm { get { return _data[17]; } set { _data[17] = value; } }
@@ -6451,18 +6451,18 @@ The act of shapeshifting frees the caster of Polymorph and Movement Impairing ef
 @"Increases damage done by your Hurricane and Typhoon spells by 30%, and increases the range of your Cyclone spell by 4 yards.",}, "ability_druid_galewinds")]
         public int GaleWinds { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
-        /// Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by [13 / 3 * Pts]% for 12 sec.  Also increases your spell damage by [1 * Pts]%.
+        /// Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by [13 / 3 * Pts]% for 12 sec.  Also increases your spell damage by [2 * Pts]%.
         /// </summary>
         [TalentData(26, "Earth and Moon", 3, 0, 2, 10, -1, new[] {
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by 4% for 12 sec.  Also increases your spell damage by 1%.",
-@"Your Wrath and Starfire spells have a 100% chance to  apply the Earth and Moon effect, which increases spell damage taken by 9% for 12 sec.  Also increases your spell damage by 2%.",
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by 13% for 12 sec.  Also increases your spell damage by 3%.",}, "ability_druid_earthandsky")]
+@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by 4% for 12 sec.  Also increases your spell damage by 2%.",
+@"Your Wrath and Starfire spells have a 100% chance to  apply the Earth and Moon effect, which increases spell damage taken by 9% for 12 sec.  Also increases your spell damage by 4%.",
+@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases spell damage taken by 13% for 12 sec.  Also increases your spell damage by 6%.",}, "ability_druid_earthandsky")]
         public int EarthAndMoon { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
-        /// You summon a flurry of stars from the sky on all targets within 30 yards of the caster, each dealing 111 to 129 Arcane damage. Also causes 20 Arcane damage to all other enemies within 5 yards of the enemy target. Maximum 20 stars. Lasts 10 sec.  Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.
+        /// You summon a flurry of stars from the sky on all targets within 30 yards of the caster, each dealing 145 to 167 Arcane damage. Also causes 26 Arcane damage to all other enemies within 5 yards of the enemy target. Maximum 20 stars. Lasts 10 sec.  Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.
         /// </summary>
         [TalentData(27, "Starfall", 1, 0, 2, 11, -1, new[] {
-@"You summon a flurry of stars from the sky on all targets within 30 yards of the caster, each dealing 111 to 129 Arcane damage. Also causes 20 Arcane damage to all other enemies within 5 yards of the enemy target. Maximum 20 stars. Lasts 10 sec.  Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.",}, "ability_druid_starfall")]
+@"You summon a flurry of stars from the sky on all targets within 30 yards of the caster, each dealing 145 to 167 Arcane damage. Also causes 26 Arcane damage to all other enemies within 5 yards of the enemy target. Maximum 20 stars. Lasts 10 sec.  Shapeshifting into an animal form or mounting cancels the effect. Any effect which causes you to lose control of your character will suppress the starfall effect.",}, "ability_druid_starfall")]
         public int Starfall { get { return _data[27]; } set { _data[27] = value; } }
         /// <summary>
         /// Reduces the cost of your Maul, Swipe, Claw, Rake and Mangle abilities by [1 * Pts] Rage or Energy.
@@ -6608,10 +6608,10 @@ Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 
 @"Increases all attributes by 6%, reduces the chance you'll be critically hit by melee attacks by 6%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 33%.",}, "ability_druid_enrage")]
         public int SurvivalOfTheFittest { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// While in Cat, Bear or Dire Bear Form, the Leader of the Pack increases ranged and melee critical chance of all party and raid members within 45 yards by 5%.
+        /// While in Cat, Bear or Dire Bear Form, the Leader of the Pack increases ranged and melee critical chance of all party and raid members within 100 yards by 5%.
         /// </summary>
         [TalentData(46, "Leader of the Pack", 1, 1, 2, 7, -1, new[] {
-@"While in Cat, Bear or Dire Bear Form, the Leader of the Pack increases ranged and melee critical chance of all party and raid members within 45 yards by 5%.",}, "spell_nature_unyeildingstamina")]
+@"While in Cat, Bear or Dire Bear Form, the Leader of the Pack increases ranged and melee critical chance of all party and raid members within 100 yards by 5%.",}, "spell_nature_unyeildingstamina")]
         public int LeaderOfThePack { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// Your Leader of the Pack ability also causes affected targets to heal themselves for [2 * Pts]% of their total health when they critically hit with a melee or ranged attack.  The healing effect cannot occur more than once every 6 sec.  In addition, you gain [4 * Pts]% of your maximum mana when you benefit from this heal.
@@ -6661,10 +6661,10 @@ Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 
 @"While using your Enrage ability in Bear Form or Dire Bear Form, your damage is increased by 15%, and your Tiger's Fury ability also instantly restores 60 energy.  In addition, the mana cost of Bear Form, Cat Form, and Dire Bear Form is reduced by 60%.",}, "ability_druid_kingofthejungle")]
         public int KingOfTheJungle { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
-        /// Mangle the target, inflicting damage and causing the target to take additional damage from bleed effects for 12 sec.  This ability can be used in Cat Form or Dire Bear Form.
+        /// Mangle the target, inflicting damage and causing the target to take additional damage from bleed effects for 1 min.  This ability can be used in Cat Form or Dire Bear Form.
         /// </summary>
         [TalentData(53, "Mangle", 1, 1, 2, 9, 46, new[] {
-@"Mangle the target, inflicting damage and causing the target to take additional damage from bleed effects for 12 sec.  This ability can be used in Cat Form or Dire Bear Form.",}, "ability_druid_mangle2")]
+@"Mangle the target, inflicting damage and causing the target to take additional damage from bleed effects for 1 min.  This ability can be used in Cat Form or Dire Bear Form.",}, "ability_druid_mangle2")]
         public int Mangle { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Mangle (Bear) ability by [0.5 * Pts] sec., and reduces the energy cost of your Mangle (Cat) ability by [2 * Pts]
@@ -6893,10 +6893,10 @@ Tree of Life Form - Increases healing by 4%.",}, "ability_druid_mastershapeshift
 @"Your Rejuvenation and Wild Growth spells have a 15% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",}, "ability_druid_replenish")]
         public int Revitalize { get { return _data[79]; } set { _data[79] = value; } }
         /// <summary>
-        /// Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
+        /// Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 100 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.<br/><br/>The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.
         /// </summary>
         [TalentData(80, "Tree of Life", 1, 2, 2, 9, 77, new[] {
-@"Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.
+@"Reduces the mana cost of your healing over time spells by 20% and grants the ability to shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 100 yards, and you can only cast Restoration spells in addition to Innervate, Barkskin, Nature's Grasp and Thorns spells.
 
 The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",}, "ability_druid_treeoflife")]
         public int TreeOfLife { get { return _data[80]; } set { _data[80] = value; } }
