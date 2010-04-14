@@ -622,9 +622,17 @@ namespace Rawr.Moonkin
             calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
             calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
 
+            // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
+            float spellDamageFromSpiritPercent = 0.0f;
+            if (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form"))
+            {
+                spellDamageFromSpiritPercent = 0.1f * character.DruidTalents.ImprovedMoonkinForm;
+            }
+            // All spells: Damage +(0.04 * Lunar Guidance * Int)
+            float spellDamageFromIntPercent = 0.04f * character.DruidTalents.LunarGuidance;
             // Fix for rounding error in converting partial points of int/spirit to spell power
-            float spellPowerFromStats = (float)Math.Floor(stats.SpellDamageFromIntellectPercentage * stats.Intellect) +
-                (float)Math.Floor(stats.SpellDamageFromSpiritPercentage * stats.Spirit);
+            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * stats.Intellect) +
+                (float)Math.Floor(spellDamageFromSpiritPercent * stats.Spirit);
             calcs.SpellPower = stats.SpellPower + spellPowerFromStats;
 
             calcs.Latency = calcOpts.Latency;
@@ -765,16 +773,6 @@ namespace Rawr.Moonkin
             statsTotal.SpellCrit += 0.01f * character.DruidTalents.NaturalPerfection;
             // All spells: Haste% + (0.01 * Celestial Focus)
             statsTotal.SpellHaste += 0.01f * character.DruidTalents.CelestialFocus;
-
-            // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
-            // Add the crit bonus from the idol, if present
-            if (character.DruidTalents.MoonkinForm > 0)
-            {
-                //statsTotal.CritRating += statsTotal.IdolCritRating; // No items/buffs currently use IdolCritRating, stat got removed.
-                statsTotal.SpellDamageFromSpiritPercentage += (character.ActiveBuffsContains("Moonkin Form") ? 0.1f * character.DruidTalents.ImprovedMoonkinForm : 0.0f);
-            }
-            // All spells: Damage +(0.04 * Lunar Guidance * Int)
-            statsTotal.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
             if (character.ActiveBuffsContains("Faerie Fire"))
             {
@@ -1095,8 +1093,6 @@ namespace Rawr.Moonkin
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-                SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
-                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
@@ -1226,8 +1222,7 @@ namespace Rawr.Moonkin
                 + stats.SpellHit + stats.BonusIntellectMultiplier
                 + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
                 + stats.BonusNatureDamageMultiplier + stats.BonusSpiritMultiplier
-                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM
-                + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.StarfireDmg
+                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM + stats.StarfireDmg
                 + stats.MoonfireDmg + stats.WrathDmg + stats.UnseenMoonDamageBonus
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
