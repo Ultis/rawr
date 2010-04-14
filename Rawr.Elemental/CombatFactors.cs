@@ -7,16 +7,23 @@ namespace Rawr.Elemental
     /// This class holds all combat relevant information.
     /// It is used as argument to a Spell or Spellbox in order to Initialize its values.
     /// </summary>
-    public class CombatFactors : ISpellArgs
+    public class CombatFactors : ISpellArgs, IRotationOptions
     {
 
-        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd)
+        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd) : this(talents, stats, additionalTargets, latencyCast, latencyGcd, true, true)
+        {
+        }
+
+        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd, bool useFireNova, bool useChainLightning)
         {
             Talents = talents;
             Stats = stats;
             AdditionalTargets = additionalTargets;
             LatencyCast = latencyCast;
             LatencyGCD = latencyGcd;
+            UseFireNova = useFireNova;
+            UseChainLightning = useChainLightning;
+
         }
 
         #region ISpellArgs Member
@@ -46,6 +53,22 @@ namespace Rawr.Elemental
         }
 
         public int AdditionalTargets
+        {
+            get;
+            set;
+        }
+
+        #endregion
+
+        #region IRotationOptions Member
+        
+        public bool UseFireNova
+        {
+            get;
+            set;
+        }
+
+        public bool UseChainLightning
         {
             get;
             set;

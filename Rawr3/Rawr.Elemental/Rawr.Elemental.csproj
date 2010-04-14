@@ -66,6 +66,12 @@
     <Compile Include="..\..\Rawr.Elemental\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\IRotationOptions.cs">
+      <Link>IRotationOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\RotationOptions.cs">
+      <Link>RotationOptions.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\ChainLightning.cs">
       <Link>Spells\ChainLightning.cs</Link>
     </Compile>

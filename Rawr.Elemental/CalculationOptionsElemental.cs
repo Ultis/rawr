@@ -25,6 +25,9 @@ namespace Rawr.Elemental
 
         public int NumberOfTargets = 1;
 
+        public bool UseFireNova = true;
+        public bool UseChainLightning = true;
+
 		public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));

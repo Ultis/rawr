@@ -85,7 +85,7 @@ public class ChainLightning : Spell, ILightningOverload
 
         public override float CCCritChance
         {
-            get { return Math.Min(1f, CritChance * (1f + LOChance())); }
+            get { return Math.Min(1f, CritChance * (1f + AdditionalTargets) * (1f + LOChance())); }
         }
 
         public override float MinHit

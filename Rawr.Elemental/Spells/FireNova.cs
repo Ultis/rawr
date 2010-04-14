@@ -33,6 +33,12 @@ namespace Rawr.Elemental.Spells
         public override void Initialize(ISpellArgs args)
         {
             additionalTargets = args.AdditionalTargets;
+            if (additionalTargets < 0)
+                additionalTargets = 0;
+            if (additionalTargets > 10)
+                additionalTargets = 10;
+
+            totalCoef *= 1f + additionalTargets;
 
             shortName = "FN" + (1 + additionalTargets);
 
@@ -46,36 +52,14 @@ namespace Rawr.Elemental.Spells
             base.Initialize(args);
         }
 
-        public override float MinHit
+        public int AdditionalTargets
         {
-            get
-            {
-                return (base.MinHit * (1 + additionalTargets));
-            }
+            get { return additionalTargets; }
         }
 
-        public override float MaxHit
+        public override float CCCritChance
         {
-            get
-            {
-                return (base.MaxHit * (1 + additionalTargets));
-            }
-        }
-
-        public float MinCrit
-        {
-            get
-            {
-                return (base.MinCrit * (1 + additionalTargets));
-            }
-        }
-
-        public float MaxCrit
-        {
-            get
-            {
-                return (base.MaxCrit * (1 + additionalTargets));
-            }
+            get { return Math.Min(1f, CritChance * (1f + AdditionalTargets) ); }
         }
     }
 }

@@ -46,6 +46,9 @@
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbFireNova = new System.Windows.Forms.CheckBox();
+            this.cbChainLightning = new System.Windows.Forms.CheckBox();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -55,6 +58,7 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabControl1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage4
@@ -82,6 +86,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Controls.Add(this.groupBox7);
             this.tabPage1.Controls.Add(this.groupBox2);
@@ -96,7 +101,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbThunderstorm);
-            this.groupBox3.Location = new System.Drawing.Point(6, 308);
+            this.groupBox3.Location = new System.Drawing.Point(6, 357);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 41);
             this.groupBox3.TabIndex = 54;
@@ -247,6 +252,39 @@
             this.tabControl1.Size = new System.Drawing.Size(297, 553);
             this.tabControl1.TabIndex = 23;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cbChainLightning);
+            this.groupBox1.Controls.Add(this.cbFireNova);
+            this.groupBox1.Location = new System.Drawing.Point(6, 308);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(277, 43);
+            this.groupBox1.TabIndex = 55;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Rotation options";
+            // 
+            // cbFireNova
+            // 
+            this.cbFireNova.AutoSize = true;
+            this.cbFireNova.Location = new System.Drawing.Point(9, 19);
+            this.cbFireNova.Name = "cbFireNova";
+            this.cbFireNova.Size = new System.Drawing.Size(94, 17);
+            this.cbFireNova.TabIndex = 51;
+            this.cbFireNova.Text = "Use Fire Nova";
+            this.cbFireNova.UseVisualStyleBackColor = true;
+            this.cbFireNova.CheckedChanged += new System.EventHandler(this.cbFireNova_CheckedChanged);
+            // 
+            // cbChainLightning
+            // 
+            this.cbChainLightning.AutoSize = true;
+            this.cbChainLightning.Location = new System.Drawing.Point(116, 19);
+            this.cbChainLightning.Name = "cbChainLightning";
+            this.cbChainLightning.Size = new System.Drawing.Size(121, 17);
+            this.cbChainLightning.TabIndex = 52;
+            this.cbChainLightning.Text = "Use Chain Lightning";
+            this.cbChainLightning.UseVisualStyleBackColor = true;
+            this.cbChainLightning.CheckedChanged += new System.EventHandler(this.cbChainLightning_CheckedChanged);
+            // 
             // CalculationOptionsPanelElemental
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,6 +306,8 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -292,6 +332,9 @@
         private System.Windows.Forms.Label lblLatencyGcd;
         private System.Windows.Forms.TextBox textBoxCastLatency;
         private System.Windows.Forms.Label lblLatencyCast;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox cbChainLightning;
+        private System.Windows.Forms.CheckBox cbFireNova;
 
     }
 }

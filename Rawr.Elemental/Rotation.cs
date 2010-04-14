@@ -120,7 +120,7 @@ namespace Rawr.Elemental
             spells = new List<Spell>(15);
         }
 
-        public Rotation(ShamanTalents talents, SpellBox spellBox)
+        public Rotation(ShamanTalents talents, SpellBox spellBox, IRotationOptions rotOpt)
             : this()
         {
             Talents = talents;
@@ -133,7 +133,7 @@ namespace Rawr.Elemental
             FrS = spellBox.FrS;
             FN = spellBox.FN;
 
-            CalculateRotation();
+            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning);
         }
 
         /// <summary>
@@ -154,19 +154,19 @@ namespace Rawr.Elemental
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation()
+        public void CalculateRotation(bool useFN, bool useCL)
         {
-            if (LB == null || FS == null || LvBFS == null || LvB == null)
+            if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null)
                 return;
-            CalculateRotation(true, true);
+            CalculateRotation(true, true, useFN, useCL);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool addlb1, bool addlb2)
+        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL)
         {
-            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null)
+            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null)
                 return;
             spells.Clear();
             Invalidate();
@@ -199,8 +199,8 @@ namespace Rawr.Elemental
                 {
                     if (GetTime() + LvB.CastTime > FSdropsAt) //FS will run out
                     {
-                        if(LB.DpCT > (Math.Max(clReadyAt < GetTime() ? CL.DpCT : 0, 
-                                fnReadyAt < GetTime() ? FN.DpCT : 0))) // LB is the best option available
+                        if(LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0, 
+                                (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0))) // LB is the best option available
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime) //there is enough time to fit in another LB and a FS before LvB is ready
                             {
@@ -212,8 +212,8 @@ namespace Rawr.Elemental
                                 break; //FS recast nescessary -> done
                             }
                         }
-                        else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
-                            (fnReadyAt < GetTime() ? FN.DpCT : 0)) // CL > FN
+                        else if (((useCL &&clReadyAt < GetTime()) ? CL.DpCT : 0) >
+                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) // CL > FN
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > CL.CastTime) // Can fit another CL and FS
                             {
@@ -245,13 +245,13 @@ namespace Rawr.Elemental
                     else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1) //time before the next LvB is lower than LB cast time
                         AddSpell(new Wait(LvBreadyAt - GetTime()));
                     else //LvB is on cooldown, FS won't run out soon
-                        if (LB.DpCT > (Math.Max(clReadyAt < GetTime() ? CL.DpCT : 0,
-                                fnReadyAt < GetTime() ? FN.DpCT : 0))) //Is LB Dmg per cast time bigger than the Dpct of CL or FN and are these spells ready?
+                        if (LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0,
+                                (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0))) //Is LB Dmg per cast time bigger than the Dpct of CL or FN and are these spells ready?
                         {
                             AddSpell(LB);
                         }
-                        else if ((clReadyAt < GetTime() ? CL.DpCT : 0) >
-                            (fnReadyAt < GetTime() ? FN.DpCT : 0)) //CL > FN
+                        else if (((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0) >
+                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) //CL > FN
                         {
                             AddSpell(CL);
                             clReadyAt = GetTime() + CL.Cooldown;

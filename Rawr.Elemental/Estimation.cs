@@ -22,7 +22,7 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets-1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets-1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning);
             spellbox = new SpellBox(combatFactors);
         }
 
@@ -42,7 +42,7 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets - 1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets - 1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning);
             spellbox.Update(combatFactors);
         }
 
@@ -56,7 +56,7 @@ namespace Rawr.Elemental
              */
             #endregion
             
-            return new Rotation(talents, spellbox);
+            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning));
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts)

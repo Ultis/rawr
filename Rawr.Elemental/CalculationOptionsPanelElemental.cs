@@ -57,6 +57,8 @@ namespace Rawr.Elemental
             textBoxGCDLatency.Text = calcOpts.LatencyGcd.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
+            cbFireNova.Checked = calcOpts.UseFireNova;
+            cbChainLightning.Checked = calcOpts.UseChainLightning;
 
             loading = false;
         }
@@ -137,6 +139,22 @@ namespace Rawr.Elemental
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.NumberOfTargets = trkTargets.Value;
             lbTargets.Text = "Number of Targets: " + trkTargets.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbFireNova_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseFireNova = cbFireNova.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbChainLightning_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseChainLightning = cbChainLightning.Checked;
             Character.OnCalculationsInvalidated();
         }
     }
