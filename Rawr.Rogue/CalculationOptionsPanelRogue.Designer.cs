@@ -549,12 +549,13 @@
             // checkBoxPTR
             // 
             this.checkBoxPTR.AutoSize = true;
+            this.checkBoxPTR.Enabled = false;
             this.checkBoxPTR.Location = new System.Drawing.Point(9, 408);
             this.checkBoxPTR.Name = "checkBoxPTR";
             this.checkBoxPTR.Size = new System.Drawing.Size(82, 17);
             this.checkBoxPTR.TabIndex = 11;
             this.checkBoxPTR.Text = "PTR Mode*";
-            this.toolTip1.SetToolTip(this.checkBoxPTR, "Enable the PTR mode (patch 3.3.3)");
+            this.toolTip1.SetToolTip(this.checkBoxPTR, "Enable the PTR mode (no PTR mode available)");
             this.checkBoxPTR.UseVisualStyleBackColor = true;
             this.checkBoxPTR.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
