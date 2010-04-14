@@ -121,11 +121,14 @@
       <DependentUpon>CalculationOptionsPanelElemental.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsElemental.cs" />
+    <Compile Include="IRotationOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
+    <Compile Include="RotationOptions.cs" />
     <Compile Include="Spells\ChainLightning.cs" />
     <Compile Include="Spells\EarthShock.cs" />
     <Compile Include="Spells\ElementalMastery.cs" />
+    <Compile Include="Spells\FireNova.cs" />
     <Compile Include="Spells\FlameShock.cs" />
     <Compile Include="Spells\FrostShock.cs" />
     <Compile Include="Spells\ILightningOverload.cs" />
