@@ -70,7 +70,6 @@ namespace Rawr.Enhance
 					"Complex Stats:Avg MH Speed",
                     "Complex Stats:Avg OH Speed",
 					"Complex Stats:Armor Mitigation",
-                    "Complex Stats:UR Uptime*Unleashed Rage Uptime percentage.",
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
@@ -281,7 +280,7 @@ namespace Rawr.Enhance
                 !character.ActiveBuffsContains("Abomination's Might"))
             {
                 float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
-                                                        (stats.AttackPower * unleashedRage * cs.URUptime);
+                                                        (stats.AttackPower * unleashedRage);
                 stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
                 stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
             }
@@ -542,8 +541,8 @@ namespace Rawr.Enhance
                 float enhTotems = character.ActiveBuffsContains("Enhancing Totems (Agility/Strength)") ? 23f : 0f;
                 float dogsStr = 331f + soeBuff + enhTotems; // base str = 331 plus SoE totem if active giving extra 178 str buff
                 float dogsAgi = 113f + soeBuff + enhTotems; 
-                float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * cs.URUptime * (1f + unleashedRage);
-                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritChance);
+                float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * (1f + unleashedRage);
+                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritMultiplier);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
                 float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
@@ -569,7 +568,7 @@ namespace Rawr.Enhance
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
                 float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - spellHitBonus);
                 float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
-                float petCritRate = critbuffs * (1 + stats.BonusCritChance);
+                float petCritRate = critbuffs * (1 + stats.BonusCritMultiplier);
                 calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
                         petCritRate, petMeleeMissRate, petMeleeMultipliers, petSpellMissRate, petSpellMultipliers);
             }
@@ -603,7 +602,6 @@ namespace Rawr.Enhance
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
             calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
             calculatedStats.EDUptime = cs.EDUptime * 100f;
-            calculatedStats.URUptime = cs.URUptime * 100f;
             calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
             calculatedStats.MHEnchantUptime = se.GetMHUptime() * 100f;
@@ -735,6 +733,7 @@ namespace Rawr.Enhance
             character.ActiveBuffsAdd("Blessing of Sanctuary");
             character.ActiveBuffsAdd("Swift Retribution");
             character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Unleashed Rage");
             character.ActiveBuffsAdd("Commanding Shout");
             character.ActiveBuffsAdd("Commanding Presence (Health)");
             character.ActiveBuffsAdd("Leader of the Pack");

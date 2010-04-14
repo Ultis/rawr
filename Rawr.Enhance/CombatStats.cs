@@ -61,7 +61,6 @@ namespace Rawr.Enhance
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
-        private float urUptime = 0f;
         private float fireTotemUptime = 0f;
 
         private float meleeAttacksPerSec = 0f;
@@ -151,7 +150,6 @@ namespace Rawr.Enhance
         public float PecentageBehindBoss { get { return _calcOpts.InBackPerc / 100f; } }
         public float PecentageInfrontBoss { get { return 1f - _calcOpts.InBackPerc / 100f; } }
 
-        public float URUptime { get { return urUptime; } }
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
@@ -250,7 +248,8 @@ namespace Rawr.Enhance
             chanceYellowMissMH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeMH + chanceParryMH; // base miss 8% now
             chanceYellowMissOH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeOH + chanceParryOH; // base miss 8% now
             
-            SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            // SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
+            SetCritValues(baseMeleeCrit + meleeCritModifier + .00005f); //fudge factor for rounding
             // set two export values so that ED crit isn't included
             exportMeleeCritMH = chanceWhiteCritMH + whiteCritDepression;
             exportMeleeCritOH = chanceWhiteCritOH + whiteCritDepression;
@@ -268,7 +267,8 @@ namespace Rawr.Enhance
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SpellMissRate);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) + 
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.ThunderingStrikes;
-            chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
+            //chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
+            chanceSpellCrit = Math.Min(0.75f, baseSpellCrit + spellCritModifier + .00005f); //fudge factor for rounding
 
             float hasteBonus = StatConversion.GetHasteFromRating(_stats.HasteRating, _character.Class);
             unhastedMHSpeed = _character.MainHand == null ? 3.0f : _character.MainHand.Item.Speed;
@@ -282,7 +282,6 @@ namespace Rawr.Enhance
             //--------------
             flurryUptime = 1f;
             edUptime = 0f;
-            urUptime = 0f;
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
@@ -317,7 +316,6 @@ namespace Rawr.Enhance
             float averageMeleeCritChance = (chanceWhiteCritMH + chanceWhiteCritOH + chanceYellowCritMH + chanceYellowCritOH) / 4f;
             float averageMeleeHitChance = ((1f - chanceWhiteMissMH - chanceDodgeMH - chanceParryMH) + (1f - chanceWhiteMissOH - chanceDodgeOH - chanceParryOH)) / 2f;
             float averageMeleeMissChance = (chanceWhiteMissMH + chanceWhiteMissOH) / 2f;
-            float couldCritSwingsPerSecond = 0f;
             float whiteHitsPerSMH = 0f;
             float whiteHitsPerSOH = 0f;
             float yellowHitsPerSMH = 0f;
@@ -374,15 +372,14 @@ namespace Rawr.Enhance
                 edUptime = 1f - (float)Math.Pow(1 - chanceSpellCrit, 10 * couldCritSpellsPerS);
                 averageMeleeCritChance = (chanceWhiteCritMH + chanceWhiteCritOH + chanceYellowCritMH + chanceYellowCritOH) / 4f + edUptime * edCritBonus;
             }
-            couldCritSwingsPerSecond = whiteHitsPerSMH + whiteHitsPerSOH + yellowHitsPerSMH + yellowHitsPerSOH; 
-            urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS;
             if (_character.ShamanTalents.DualWield == 1 && unhastedMHSpeed != 0)
                 yellowAttacksPerSecond += hitsPerSOHSS;
 
             // set output variables
             edBonusCrit = edUptime * edCritBonus;
-            SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + edBonusCrit + .00005f); //fudge factor for rounding
+            //SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + edBonusCrit + .00005f); //fudge factor for rounding
+            SetCritValues(baseMeleeCrit + meleeCritModifier + edBonusCrit + .00005f); //fudge factor for rounding
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
             meleeCritsPerSec = (whiteHitsPerSMH * chanceWhiteCritMH) + (whiteHitsPerSOH * chanceWhiteCritOH) + (yellowHitsPerSMH * chanceYellowCritMH) + (yellowHitsPerSOH * chanceYellowCritOH);
             spellCritsPerSec = spellAttacksPerSec * ChanceSpellCrit;

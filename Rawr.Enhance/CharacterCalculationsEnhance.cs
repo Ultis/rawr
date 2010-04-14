@@ -182,13 +182,6 @@ namespace Rawr.Enhance
 			set { _armorMitigation = value; }
 		}
 
-        private float _urUptime;
-        public float URUptime
-        {
-            get { return _urUptime; }
-            set { _urUptime = value; }
-        }
-
         private float _edUptime;
         public float EDUptime
         {
@@ -482,7 +475,6 @@ namespace Rawr.Enhance
             dictValues.Add("Avg OH Speed", AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%*Amount of physical damage lost due to boss armor");
             					
-            dictValues.Add("UR Uptime", URUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("ED Uptime", String.Format("{0}%*{1}% ED Bonus Crit",
                 EDUptime.ToString("F2", CultureInfo.InvariantCulture),
                 EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
