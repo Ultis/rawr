@@ -603,6 +603,14 @@ namespace Rawr.Healadin
         bool useIrrelevancy = false;
         public override bool IsItemRelevant(Item item)
         {
+            if ( // Manual override for +X to all Stats gems
+                   item.Name == "Nightmare Tear"
+                || item.Name == "Enchanted Tear"
+                || item.Name == "Enchanted Pearl"
+                || item.Name == "Chromatic Sphere")
+            {
+                return true;
+            }
             useIrrelevancy = true;
             bool result = base.IsItemRelevant(item);
             useIrrelevancy = false;
