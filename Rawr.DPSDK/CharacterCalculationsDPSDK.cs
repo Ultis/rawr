@@ -333,7 +333,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Attack Power",      attackPower.ToString("N0"));
             dictValues.Add("Crit Rating",       string.Format("{0:0}*Provides {1:P} crit chance", critRating, StatConversion.GetCritFromRating(critRating, CharacterClass.DeathKnight)));
             dictValues.Add("Hit Rating",        string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, StatConversion.GetPhysicalHitFromRating(hitRating, CharacterClass.DeathKnight), StatConversion.GetSpellHitFromRating(hitRating,CharacterClass.DeathKnight)));
-            dictValues.Add("Expertise",         string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, StatConversion.GetDodgeParryReducFromExpertise(MHExpertise), StatConversion.GetDodgeParryReducFromExpertise(OHExpertise)));
+            dictValues.Add("Expertise",         string.Format("{0:0.00} / {1:0.00}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, StatConversion.GetDodgeParryReducFromExpertise(MHExpertise), StatConversion.GetDodgeParryReducFromExpertise(OHExpertise)));
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
             dictValues.Add("Armor Penetration Rating", armorPenetrationRating.ToString("N0"));
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));

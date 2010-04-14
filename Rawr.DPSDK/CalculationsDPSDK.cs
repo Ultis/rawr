@@ -881,7 +881,7 @@ namespace Rawr.DPSDK
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
-            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsGearEnchantsBuffs.ExpertiseRating);
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
 
@@ -980,7 +980,7 @@ namespace Rawr.DPSDK
             statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
-            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsBaseGear.ExpertiseRating);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsGearEnchantsBuffs.ExpertiseRating);
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
             int temp = 0;
