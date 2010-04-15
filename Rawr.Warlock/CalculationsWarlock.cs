@@ -34,11 +34,10 @@ namespace Rawr.Warlock {
         /// Panel to be placed on the Options tab of the main form
         /// </summary>
 #if RAWR3
-        public override ICalculationOptionsPanel CalculationOptionsPanel
+        public override ICalculationOptionsPanel CalculationOptionsPanel {
 #else
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
+        public override CalculationOptionsPanelBase CalculationOptionsPanel {
 #endif
-        {
             get {
                 if (_calculationOptionsPanel == null) {
                     _calculationOptionsPanel
@@ -79,7 +78,12 @@ namespace Rawr.Warlock {
 
         public const float AVG_UNHASTED_CAST_TIME = 2f; // total SWAG
 
-        public override void SetDefaults(Character character) { }
+        public override void SetDefaults(Character character) {
+
+            character.ActiveBuffsAdd("Fel Armor");
+            character.ActiveBuffsAdd("Grand Spellstone");
+            character.WarlockTalents.GlyphLifeTap = true;
+        }
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -294,7 +298,8 @@ namespace Rawr.Warlock {
                     new SpecialEffect(
                         Trigger.CorruptionTick,
                         new Stats() {
-                            SpellHaste = talentValues[talents.Eradication] },
+                            SpellHaste = talentValues[talents.Eradication]
+                        },
                         6f,
                         0f,
                         .06f));
@@ -305,72 +310,6 @@ namespace Rawr.Warlock {
             stats.Accumulate(statsItem);
             stats.Accumulate(statsBuffs);
             stats.Accumulate(statsTalents);
-
-            //make sure that the bonus multipliers have been applied to each
-            //stat
-            stats.Stamina = stats.Stamina * (1f + stats.BonusStaminaMultiplier);
-            stats.Intellect
-                = stats.Intellect * (1f + stats.BonusIntellectMultiplier);
-            stats.Spirit = stats.Spirit * (1f + stats.BonusSpiritMultiplier);
-            stats.Strength
-                = stats.Strength * (1f + stats.BonusStrengthMultiplier);
-            stats.Agility = stats.Agility * (1f + stats.BonusAgilityMultiplier);
-            stats.Armor = stats.Armor * (1f + stats.BonusArmorMultiplier);
-
-            //Agility increases Armor by 2 per point
-            //(http://www.wowwiki.com/Agility#Agility)
-            stats.BonusArmor += stats.Agility * 2;
-            stats.Armor += stats.BonusArmor;
-
-            //Health is calculated from stamina rating first, then its bonus
-            //multiplier (in this case, "Fel Vitality" talent) gets applied
-            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina);
-            stats.Health *= 1 + stats.BonusHealthMultiplier;
-
-            //Mana is calculated from intellect rating first, then its bonus
-            //multiplier (in this case, "Expansive Mind" - Gnome racial) is
-            //applied
-            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect);
-            stats.Mana *= 1 + stats.BonusManaMultiplier;
-
-            //Crit rating - the MasterConjuror talent improves the firestone
-            float conjuror = 1f + talents.MasterConjuror * 1.5f;
-            stats.CritRating
-                += stats.WarlockFirestoneSpellCritRating * conjuror;
-            stats.SpellCrit
-                += StatConversion.GetSpellCritFromIntellect(stats.Intellect)
-                    + StatConversion.GetSpellCritFromRating(stats.CritRating)
-                    + stats.BonusCritChance
-                    + stats.SpellCritOnTarget;
-
-            //Haste rating - the MasterConjuror talent improves the spellstone
-            stats.HasteRating += stats.WarlockSpellstoneHasteRating * conjuror;
-
-            //Hit rating 
-            stats.SpellHit
-                += StatConversion.GetSpellHitFromRating(stats.HitRating);
-
-            // Bonuses from armor choice
-            if (stats.WarlockFelArmor > 0) {
-                float aegis = 1 + talents.DemonicAegis * 0.10f;
-                stats.SpellPower += stats.WarlockFelArmor * aegis;
-                stats.SpellDamageFromSpiritPercentage += 0.30f * aegis;
-                stats.Hp5 += stats.Health * .02f * aegis;
-            } else if (stats.WarlockDemonArmor > 0) {
-                float aegis = 1 + talents.DemonicAegis * 0.10f;
-                stats.Armor += stats.WarlockDemonArmor * aegis;
-                stats.HealingReceivedMultiplier += 0.2f * aegis;
-            }
-
-            // Spell Power
-            stats.SpellPower
-                += stats.SpellDamageFromSpiritPercentage * stats.Spirit;
-            stats.SpellPower *= 1f + stats.BonusSpellPowerMultiplier;
-
-            if (talents.DemonicKnowledge > 0) {
-                //PetCalculations pet = new PetCalculations(statsTotal, character);
-                //statsTotal.SpellPower += (pet.petStats.Intellect + pet.petStats.Stamina) * talents.DemonicKnowledge * 0.04f;
-            }
 
             return stats;
         }
@@ -603,9 +542,9 @@ namespace Rawr.Warlock {
                 //These stats can be used by warlocks, but they dont affect our dps calculations at all.
                 //Included for display purposes only.
                 Stamina = stats.Stamina,
-                //Health = stats.Health,
-                //Mana = stats.Mana,
-                //Mp5 = stats.Mp5,
+                Health = stats.Health,
+                Mana = stats.Mana,
+                Mp5 = stats.Mp5,
 
                 //The following are custom stat properties belonging to buffs, items (or procs) that can be used/applied to warlocks.
                 HighestStat = stats.HighestStat,                                    //trinket - darkmoon card: greatness
@@ -634,6 +573,7 @@ namespace Rawr.Warlock {
         }
 
         protected bool RelevantTrinket(SpecialEffect effect) {
+
             if (effect.Trigger == Trigger.Use ||
                 effect.Trigger == Trigger.DamageSpellCast ||
                 effect.Trigger == Trigger.DamageSpellCrit ||
@@ -697,8 +637,8 @@ namespace Rawr.Warlock {
             ) > 0;
 
             bool maybe = (
-                //can be used by warlocks, but it does not affect our DPS calculations
                 stats.Stamina
+                + stats.Mana + stats.Mp5
 
                 //miscellaneous stats belonging to items (or trinket procs) that can be used/applied to warlocks
                 //these stats are listed here so that those items (which supply them) can be listed
@@ -715,7 +655,6 @@ namespace Rawr.Warlock {
             bool no = (
                 //ignore items with any of these stats
                 stats.Health
-                + stats.Mana + stats.Mp5
                 + stats.Resilience
                 + stats.Armor + stats.BonusArmor + stats.Agility
                 + stats.ArmorPenetration + stats.ArmorPenetrationRating
@@ -724,11 +663,6 @@ namespace Rawr.Warlock {
                 + stats.Dodge + stats.DodgeRating
                 + stats.Parry + stats.ParryRating
                 + stats.Defense + stats.DefenseRating
-                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
-                + stats.FireResistance + stats.FireResistanceBuff
-                + stats.FrostResistance + stats.FrostResistanceBuff
-                + stats.NatureResistance + stats.NatureResistanceBuff
-                + stats.ShadowResistance + stats.ShadowResistanceBuff
                 + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
             ) > 0;
 

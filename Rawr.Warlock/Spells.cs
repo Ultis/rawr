@@ -251,32 +251,7 @@ namespace Rawr.Warlock {
                 addedTickMultiplier);
             SpellModifiers.AddCritChance(bonusCritChance);
             SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
-            SpellModifiers.AddAdditiveDirectMultiplier(
-                Mommy.Stats.WarlockFirestoneDirectDamageMultiplier);
-            if (!GetType().Name.StartsWith("Curse")) {
-                SpellModifiers.AddAdditiveTickMultiplier(
-                    Mommy.Stats.WarlockSpellstoneDotDamageMultiplier);
-            }
-            if (magicSchool == MagicSchool.Shadow) {
-                SpellModifiers.AddMultiplicativeMultiplier(
-                    Mommy.Stats.BonusShadowDamageMultiplier);
-                SpellModifiers.AddAdditiveMultiplier(
-                    talents.ShadowMastery * .03f);
-                if (GetRotation().Contains("Shadow Bolt")
-                    || (GetRotation().Contains("Haunt")
-                        && talents.Haunt > 0)) {
-
-                    SpellModifiers.AddMultiplicativeTickMultiplier(
-                        Mommy.Talents.ShadowEmbrace * .01f * 3f);
-                }
-            } else if (magicSchool == MagicSchool.Fire) {
-                SpellModifiers.AddMultiplicativeMultiplier(
-                    Mommy.Stats.BonusFireDamageMultiplier);
-                SpellModifiers.AddAdditiveMultiplier(talents.Emberstorm * .03f);
-            }
             if (spellTree == SpellTree.Destruction) {
-                SpellModifiers.AddCritBonusMultiplier(talents.Ruin * .2f);
-                SpellModifiers.AddCritChance(talents.Devastation * .05f);
                 float[] talentAffects = { 0f, .04f, .07f, .1f };
                 ManaCost *= (1 - talentAffects[Mommy.Talents.Cataclysm]);
             } else if (spellTree == SpellTree.Affliction) {
@@ -294,7 +269,7 @@ namespace Rawr.Warlock {
         protected void ApplyImprovedSoulLeech() {
 
             float reductionOnProc
-                = Mommy.Stats.Mana * Mommy.Talents.ImprovedSoulLeech * .01f;
+                = Mommy.CalcMana() * Mommy.Talents.ImprovedSoulLeech * .01f;
             ManaCost -= .3f * reductionOnProc;
         }
 
@@ -634,12 +609,42 @@ namespace Rawr.Warlock {
         public virtual void FinalizeSpellModifiers() {
 
             SpellModifiers.Accumulate(Mommy.SpellModifiers);
-            if (MagicSchool == MagicSchool.Shadow
-                && Mommy.CastSpells.ContainsKey("Haunt")) {
+            SpellModifiers.AddAdditiveDirectMultiplier(
+                Mommy.CalcWarlockFirestoneDirectDamageMultiplier());
+            if (!GetType().Name.StartsWith("Curse")) {
+                SpellModifiers.AddAdditiveTickMultiplier(
+                    Mommy.CalcWarlockSpellstoneDotDamageMultiplier());
+            }
+            switch (MagicSchool) {
+                case MagicSchool.Shadow:
+                    SpellModifiers.AddMultiplicativeMultiplier(
+                        Mommy.CalcBonusShadowDamageMultiplier());
+                    SpellModifiers.AddAdditiveMultiplier(
+                        Mommy.Talents.ShadowMastery * .03f);
+                    if (GetRotation().Contains("Shadow Bolt")
+                        || (GetRotation().Contains("Haunt")
+                            && Mommy.Talents.Haunt > 0)) {
 
-                SpellModifiers.AddMultiplicativeTickMultiplier(
-                    ((Haunt) Mommy.CastSpells["Haunt"]).GetAvgTickBonus());
-                //.2f);
+                        SpellModifiers.AddMultiplicativeTickMultiplier(
+                            Mommy.Talents.ShadowEmbrace * .01f * 3f);
+                    }
+                    if (Mommy.CastSpells.ContainsKey("Haunt")) {
+                        SpellModifiers.AddMultiplicativeTickMultiplier(
+                            ((Haunt) Mommy.CastSpells["Haunt"])
+                                .GetAvgTickBonus());
+                    }
+                    break;
+                case MagicSchool.Fire:
+                    SpellModifiers.AddMultiplicativeMultiplier(
+                        Mommy.CalcBonusFireDamageMultiplier());
+                    SpellModifiers.AddAdditiveMultiplier(
+                        Mommy.Talents.Emberstorm * .03f);
+                    break;
+            }
+            if (MySpellTree == SpellTree.Destruction) {
+                SpellModifiers.AddCritBonusMultiplier(Mommy.Talents.Ruin * .2f);
+                SpellModifiers.AddCritChance(Mommy.Talents.Devastation * .05f);
+                float[] talentAffects = { 0f, .04f, .07f, .1f };
             }
             if (CanGetPyroclasm()) {
                 Spell conflagrate = Mommy.CastSpells["Conflagrate"];
@@ -1063,7 +1068,7 @@ namespace Rawr.Warlock {
 
         public override bool IsCastable() {
 
-            return Mommy.Stats.BonusShadowDamageMultiplier == 0;
+            return Mommy.CalcBonusShadowDamageMultiplier() == 0;
         }
     }
 
@@ -1433,7 +1438,7 @@ namespace Rawr.Warlock {
                 false) { // can miss
 
             ManaCost
-                = (-2000f - mommy.Stats.SpellPower * .5f)
+                = (-2000f - mommy.CalcSpellPower() * .5f)
                     * (1f + mommy.Talents.ImprovedLifeTap * .1f);
         }
 
@@ -1482,7 +1487,7 @@ namespace Rawr.Warlock {
             float uprate
                 = Math.Min(
                     1f, (NumCasts + .8f) * 40f / Mommy.Options.Duration);
-            return uprate * Mommy.Stats.Spirit * .2f;
+            return uprate * Mommy.CalcSpirit() * .2f;
         }
     }
 
