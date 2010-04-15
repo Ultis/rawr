@@ -540,8 +540,10 @@ namespace Rawr.Mage
                 EffectCooldown effectCooldown = castingState.Solver.StackingNonHasteEffectCooldowns[i];
                 if (castingState.EffectsActive(effectCooldown.Mask))
                 {
-                    foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
+                    Stats stats = effectCooldown.SpecialEffect.Stats;
+                    for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                     {
+                        SpecialEffect effect = stats._rawSpecialEffectData[j];
                         if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit))
                         {
                             if (effect.Stats.CritRating < 0 && effectCooldown.SpecialEffect.Stats.CritRating > 0)

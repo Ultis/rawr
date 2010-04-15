@@ -639,8 +639,9 @@ namespace Rawr.Mage
 
             AccumulateBuffsStats(stats, activeBuffs);
 
-            foreach (SpecialEffect effect in stats.SpecialEffects())
+            for (int i = 0; i < stats._rawSpecialEffectDataSize; i++)
             {
+                SpecialEffect effect = stats._rawSpecialEffectData[i];
                 if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
                 {
                     effect.Stats.GenerateSparseData();

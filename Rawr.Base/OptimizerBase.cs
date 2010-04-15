@@ -778,7 +778,7 @@ namespace Rawr.Optimizer
                 directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
                 if (IsIndividualValid(directValuationsTemplate))
                 {
-                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false, swappedIndividual);
                 }
             }
 
@@ -796,7 +796,7 @@ namespace Rawr.Optimizer
                     {
                         bestDirectValue = value;
                         bestDirectValuation = valuation;
-                        bestDirectIndividual = swappedIndividual;
+                        bestDirectIndividual = BuildCopyIndividual(swappedIndividual, bestDirectIndividual);
                         directValuationFoundUpgrade = true;
                     }
                     if (directValuationsComplete >= directValuationsList.Count)
@@ -814,7 +814,7 @@ namespace Rawr.Optimizer
                         directValuationsTemplate[directValuationsSlot] = directValuationsList[directValuationsIndex++];
                         if (IsIndividualValid(directValuationsTemplate))
                         {
-                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false, swappedIndividual);
                         }
                         else
                         {

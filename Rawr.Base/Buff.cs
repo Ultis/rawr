@@ -133,7 +133,8 @@ namespace Rawr
             }
         }
 
-        private static void LoadBuffs() {
+        private static void LoadBuffs() 
+        {
             try {
                 List<Buff> loadedBuffs = new List<Buff>();
                 try {
@@ -173,17 +174,26 @@ namespace Rawr
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             } catch { }
         }
+
         private static void CacheSetBonuses() {
-            foreach (Buff buff in AllBuffs) {
+            Dictionary<string, List<Buff>> listDict = new Dictionary<string, List<Buff>>();
+            foreach (Buff buff in AllBuffs) 
+            {
                 string setName = buff.SetName;
-                if (!string.IsNullOrEmpty(setName)) {
+                if (!string.IsNullOrEmpty(setName)) 
+                {
                     List<Buff> setBonuses;
-                    if (!setBonusesByName.TryGetValue(setName, out setBonuses)) {
+                    if (!listDict.TryGetValue(setName, out setBonuses))
+                    {
                         setBonuses = new List<Buff>();
-                        setBonusesByName[setName] = setBonuses;
+                        listDict[setName] = setBonuses;
                     }
                     setBonuses.Add(buff);
                 }
+            }
+            foreach (var kvp in listDict)
+            {
+                setBonusesByName[kvp.Key] = kvp.Value.ToArray();
             }
         }
 
@@ -234,12 +244,11 @@ namespace Rawr
             }
         }
 
-        private static Dictionary<string, List<Buff>> setBonusesByName = new Dictionary<string, List<Buff>>();
-        public static List<Buff> GetSetBonuses(string setName) {
-            List<Buff> setBonuses;
-            if (!setBonusesByName.TryGetValue(setName, out setBonuses)) {
-                return new List<Buff>(); // if it's not cached we know we don't have any
-            }
+        private static Dictionary<string, Buff[]> setBonusesByName = new Dictionary<string, Buff[]>();
+        public static Buff[] GetSetBonuses(string setName) {
+            Buff[] setBonuses;
+            // if it's not cached we know we don't have any
+            setBonusesByName.TryGetValue(setName, out setBonuses);
             return setBonuses;
         }
 

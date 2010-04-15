@@ -1121,8 +1121,6 @@ namespace Rawr.Optimizer
             ItemAvailabilityInformation iai = item.Item.AvailabilityInformation;
             if (iai == null) return;
 			// make all other gemmings/enchantings of this item unavailable
-			iai.ItemAvailable.Clear();
-			iai.ItemAvailable[item.GemmedId] = true;
 			iai.ItemList.Clear();
 			iai.ItemList.Add(item);
 			DirectUpgradeEntry singleEntry = null;
@@ -1135,16 +1133,18 @@ namespace Rawr.Optimizer
 				iai.SingleDirectUpgradeList.Add(singleEntry);
 				iai.GenerativeEnchants.Clear();
 			}
-			List<string> allKeys = new List<string>(itemAvailable.Keys);
-			string keyRoot = item.Id.ToString() + ".";
-			foreach (string key in allKeys)
-			{
-				if (key.StartsWith(keyRoot, StringComparison.Ordinal) && key != item.GemmedId)
-				{
-					itemAvailable.Remove(key);
-				}
-			}
-			foreach (int slot in iai.ValidSlots)
+            // we know that itemAvailable has to contain exactly the values from
+            // item.AvailabilityInformation.ItemAvailable
+            foreach (string key in iai.ItemAvailable.Keys)
+            {
+                if (key != item.GemmedId)
+                {
+                    itemAvailable.Remove(key);
+                }
+            }
+            iai.ItemAvailable.Clear();
+            iai.ItemAvailable[item.GemmedId] = true;
+            foreach (int slot in iai.ValidSlots)
 			{
 				slotItems[slot].RemoveAll(i => i != null && i.Id == item.Id && i.GemmedId != item.GemmedId);
 				if (generateDirectUpgrades)

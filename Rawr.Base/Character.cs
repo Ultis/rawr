@@ -1642,30 +1642,44 @@ namespace Rawr //O O . .
 				ClassChanged(this, EventArgs.Empty);
 		}
 
+        [XmlIgnore]
+        public Dictionary<string, int> SetBonusCount { get; private set; }
+
 		public void RecalculateSetBonuses()
         {
+            if (SetBonusCount == null)
+            {
+                SetBonusCount = new Dictionary<string, int>();
+            }
+            else
+            {
+                SetBonusCount.Clear();
+            }
             //Compute Set Bonuses
-            Dictionary<string, int> setCounts = new Dictionary<string, int>();
             for (int slot = 0; slot < _item.Length; slot++)
             {
                 ItemInstance item = _item[slot];
                 if ((object)item != null && !string.IsNullOrEmpty(item.Item.SetName))
                 {
                     int count;
-                    setCounts.TryGetValue(item.Item.SetName, out count);
-                    setCounts[item.Item.SetName] = count + 1;
+                    SetBonusCount.TryGetValue(item.Item.SetName, out count);
+                    SetBonusCount[item.Item.SetName] = count + 1;
                 }
             }
 
             // eliminate searching in active buffs: first remove all set bonuses, then add active ones
             ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-            foreach (KeyValuePair<string, int> pair in setCounts)
+            foreach (KeyValuePair<string, int> pair in SetBonusCount)
             {
-                foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
+                Buff[] setBonuses = Buff.GetSetBonuses(pair.Key);
+                if (setBonuses != null)
                 {
-                    if (pair.Value >= buff.SetThreshold)
+                    foreach (Buff buff in setBonuses)
                     {
-                        ActiveBuffs.Add(buff);
+                        if (pair.Value >= buff.SetThreshold)
+                        {
+                            ActiveBuffs.Add(buff);
+                        }
                     }
                 }
             }

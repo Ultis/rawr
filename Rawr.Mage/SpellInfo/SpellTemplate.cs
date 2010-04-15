@@ -556,8 +556,10 @@ namespace Rawr.Mage
                     EffectCooldown effectCooldown = castingState.Solver.StackingHasteEffectCooldowns[i];
                     if (castingState.EffectsActive(effectCooldown.Mask))
                     {
-                        foreach (SpecialEffect effect in effectCooldown.SpecialEffect.Stats.SpecialEffects())
+                        Stats stats = effectCooldown.SpecialEffect.Stats;
+                        for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                         {
+                            SpecialEffect effect = stats._rawSpecialEffectData[j];
                             float procHaste = effect.Stats.HasteRating;
                             if (procHaste > 0)
                             {

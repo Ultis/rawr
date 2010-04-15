@@ -1782,8 +1782,10 @@ namespace Rawr.Mage
             // check if it is a stacking use effect
             stackingEffect = false;
             hasteEffect = false;
-            foreach (SpecialEffect e in effect.Stats.SpecialEffects())
+            Stats effectStats = effect.Stats;
+            for (int i = 0; i < effectStats._rawSpecialEffectDataSize; i++)
             {
+                SpecialEffect e = effectStats._rawSpecialEffectData[i];
                 if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
                 {
                     if (e.Stats.HasteRating > 0)
@@ -2111,8 +2113,10 @@ namespace Rawr.Mage
                         Item item = itemInstance.Item;
                         if (item != null)
                         {
-                            foreach (SpecialEffect effect in item.Stats.SpecialEffects())
+                            Stats stats = item.Stats;
+                            for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                             {
+                                SpecialEffect effect = stats._rawSpecialEffectData[j];
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = NewEffectCooldown();
@@ -2149,8 +2153,10 @@ namespace Rawr.Mage
                         Enchant enchant = itemInstance.Enchant;
                         if (enchant != null)
                         {
-                            foreach (SpecialEffect effect in enchant.Stats.SpecialEffects())
+                            Stats stats = enchant.Stats;
+                            for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                             {
+                                SpecialEffect effect = stats._rawSpecialEffectData[j];
                                 if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = NewEffectCooldown();
@@ -2254,17 +2260,19 @@ namespace Rawr.Mage
             int targetLevel = CalculationOptions.TargetLevel;
             int playerLevel = CalculationOptions.PlayerLevel;
 
-            RawArcaneHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit + 0.01f * MageTalents.ArcaneFocus;
-            RawFireHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit;
-            RawFrostHitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit;
+            float hitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit;
+            RawArcaneHitRate = hitRate + 0.01f * MageTalents.ArcaneFocus;
+            RawFireHitRate = hitRate;
+            RawFrostHitRate = hitRate;
+            hitRate = Math.Min(Spell.MaxHitRate, hitRate);
 
             BaseArcaneHitRate = Math.Min(Spell.MaxHitRate, RawArcaneHitRate);
-            BaseFireHitRate = Math.Min(Spell.MaxHitRate, RawFireHitRate);
-            BaseFrostHitRate = Math.Min(Spell.MaxHitRate, RawFrostHitRate);
-            BaseNatureHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit);
-            BaseShadowHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit);
-            BaseFrostFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit);
-            BaseHolyHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit);
+            BaseFireHitRate = hitRate;
+            BaseFrostHitRate = hitRate;
+            BaseNatureHitRate = hitRate;
+            BaseShadowHitRate = hitRate;
+            BaseFrostFireHitRate = hitRate;
+            BaseHolyHitRate = hitRate;
 
             float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
 
@@ -2356,7 +2364,8 @@ namespace Rawr.Mage
                     baseRegen = 0.003345f;
                     break;
             }
-            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * CalculationOptions.LevelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
+            float levelScalingFactor = CalculationOptions.LevelScalingFactor;
+            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;
@@ -2367,7 +2376,6 @@ namespace Rawr.Mage
             BaseShadowCritRate = spellCrit;
             BaseHolyCritRate = spellCrit;
 
-            float levelScalingFactor = CalculationOptions.LevelScalingFactor;
             if (!CalculationOptions.EffectDisableManaSources)
             {
                 SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * CalculationOptions.EffectRegenMultiplier;
@@ -2413,13 +2421,15 @@ namespace Rawr.Mage
 
             IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * 0.08f * MageTalents.Ignite;
 
-            BaseArcaneCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage));
-            BaseFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
-            BaseFrostCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage));
-            BaseFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
-            BaseNatureCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * MageTalents.SpellPower + baseStats.CritBonusDamage)); // unknown if affected by burnout
-            BaseShadowCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * MageTalents.SpellPower + baseStats.CritBonusDamage));
-            BaseHolyCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * MageTalents.SpellPower + baseStats.CritBonusDamage));
+            float mult = (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
+            float baseAddMult = (1 + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage);
+            BaseArcaneCritBonus = (1 + mult * baseAddMult);
+            BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
+            BaseFrostCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f));
+            BaseFrostFireCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f)) * (1 + IgniteFactor);
+            BaseNatureCritBonus = 
+            BaseShadowCritBonus =
+            BaseHolyCritBonus = (1 + mult * baseAddMult); // unknown if affected by burnout
 
             float combustionCritBonus = 0.5f;
 

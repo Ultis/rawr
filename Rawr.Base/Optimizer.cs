@@ -1466,7 +1466,6 @@ namespace Rawr.Optimizer
 
         protected override OptimizerCharacter GenerateIndividual(object[] items, bool canUseArray, OptimizerCharacter recycledIndividual)
         {
-            items = canUseArray ? items : (object[])items.Clone();
             Character character;
             if (recycledIndividual == null)
             {
@@ -1568,12 +1567,30 @@ namespace Rawr.Optimizer
             }
             if (recycledIndividual == null)
             {
-                return new OptimizerCharacter() { Character = character, Items = items };
+                return new OptimizerCharacter() 
+                { 
+                    Character = character,
+                    Items = canUseArray ? items : (object[])items.Clone()
+                };
             }
             else
             {
                 recycledIndividual.Character = character;
-                recycledIndividual.Items = items;
+                if (canUseArray)
+                {
+                    recycledIndividual.Items = items;
+                }
+                else
+                {
+                    if (recycledIndividual.Items != null)
+                    {
+                        Array.Copy(items, 0, recycledIndividual.Items, 0, items.Length);
+                    }
+                    else
+                    {
+                        recycledIndividual.Items = (object[])items.Clone();
+                    }
+                }
                 return recycledIndividual;
             }
         }
@@ -2003,6 +2020,7 @@ namespace Rawr.Optimizer
         private void ThreadPoolDirectUpgradeValuationSingleChanges(object ignore)
         {
             OptimizerCharacter swappedIndividual = null;
+            DirectUpgradeEntry directUpgradeEntry = null;
             float value = 0;
             CharacterCalculationsBase valuation = null;
             // get initial work item
@@ -2024,12 +2042,12 @@ namespace Rawr.Optimizer
                     startedThreads++;
                     ThreadPool.QueueUserWorkItem(ThreadPoolDirectUpgradeValuationSingleChanges);
                 }
-                DirectUpgradeEntry entry = directValuationsListSingleChanges[directValuationsIndex++];
-                directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
+                directUpgradeEntry = directValuationsListSingleChanges[directValuationsIndex++];
+                directValuationsTemplate[directValuationsSlot] = directUpgradeEntry.ItemInstance;
                 if (IsIndividualValid(directValuationsTemplate))
                 {
-                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
-                    swappedIndividual.DirectUpgradeEntry = entry;
+                    swappedIndividual = GenerateIndividual(directValuationsTemplate, false, swappedIndividual);
+                    //swappedIndividual.DirectUpgradeEntry = entry;
                 }
             }
 
@@ -2047,7 +2065,8 @@ namespace Rawr.Optimizer
                     {
                         bestDirectValue = value;
                         bestDirectValuation = valuation;
-                        bestDirectIndividual = swappedIndividual;
+                        bestDirectIndividual = BuildCopyIndividual(swappedIndividual, bestDirectIndividual);
+                        bestDirectIndividual.DirectUpgradeEntry = directUpgradeEntry;
                         directValuationFoundUpgrade = true;
                     }
                     if (directValuationsComplete >= directValuationsListSingleChanges.Count)
@@ -2062,12 +2081,12 @@ namespace Rawr.Optimizer
                     // get more work
                     if (directValuationsIndex < directValuationsListSingleChanges.Count)
                     {
-                        DirectUpgradeEntry entry = directValuationsListSingleChanges[directValuationsIndex++];
-                        directValuationsTemplate[directValuationsSlot] = entry.ItemInstance;
+                        directUpgradeEntry = directValuationsListSingleChanges[directValuationsIndex++];
+                        directValuationsTemplate[directValuationsSlot] = directUpgradeEntry.ItemInstance;
                         if (IsIndividualValid(directValuationsTemplate))
                         {
-                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false, null);
-                            swappedIndividual.DirectUpgradeEntry = entry;
+                            swappedIndividual = GenerateIndividual(directValuationsTemplate, false, swappedIndividual);
+                            //swappedIndividual.DirectUpgradeEntry = entry;
                         }
                         else
                         {
