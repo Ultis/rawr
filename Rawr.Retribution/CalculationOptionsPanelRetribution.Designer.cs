@@ -98,6 +98,7 @@
             this.cmbRotations = new System.Windows.Forms.ComboBox();
             this.tabMisc = new System.Windows.Forms.TabPage();
             this.textExperimental = new System.Windows.Forms.TextBox();
+            this.buttonStatGraph = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -121,7 +122,7 @@
             this.label28 = new System.Windows.Forms.Label();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.buttonStatGraph = new System.Windows.Forms.Button();
+            this.buttonEcdGraph = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudWait)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudHoW20)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudExo20)).BeginInit();
@@ -1189,6 +1190,7 @@
             // 
             this.tabMisc.Controls.Add(this.textExperimental);
             this.tabMisc.Controls.Add(this.label32);
+            this.tabMisc.Controls.Add(this.buttonEcdGraph);
             this.tabMisc.Controls.Add(this.buttonStatGraph);
             this.tabMisc.Location = new System.Drawing.Point(4, 22);
             this.tabMisc.Name = "tabMisc";
@@ -1205,6 +1207,17 @@
             this.textExperimental.Size = new System.Drawing.Size(180, 20);
             this.textExperimental.TabIndex = 1;
             this.textExperimental.TextChanged += new System.EventHandler(this.textExperimental_TextChanged);
+            // 
+            // buttonStatGraph
+            // 
+            this.buttonStatGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonStatGraph.Location = new System.Drawing.Point(9, 32);
+            this.buttonStatGraph.Name = "buttonStatGraph";
+            this.buttonStatGraph.Size = new System.Drawing.Size(75, 23);
+            this.buttonStatGraph.TabIndex = 5;
+            this.buttonStatGraph.Text = "Stat Graph";
+            this.buttonStatGraph.UseVisualStyleBackColor = true;
+            this.buttonStatGraph.Click += new System.EventHandler(this.btnStatGraph_Click);
             // 
             // label15
             // 
@@ -1494,16 +1507,16 @@
             0,
             0});
             // 
-            // buttonStatGraph
+            // buttonEcdGraph
             // 
-            this.buttonStatGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonStatGraph.Location = new System.Drawing.Point(9, 32);
-            this.buttonStatGraph.Name = "buttonStatGraph";
-            this.buttonStatGraph.Size = new System.Drawing.Size(75, 23);
-            this.buttonStatGraph.TabIndex = 5;
-            this.buttonStatGraph.Text = "Stat Graph";
-            this.buttonStatGraph.UseVisualStyleBackColor = true;
-            this.buttonStatGraph.Click += new System.EventHandler(this.btnGraph_Click);
+            this.buttonEcdGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonEcdGraph.Location = new System.Drawing.Point(9, 61);
+            this.buttonEcdGraph.Name = "buttonEcdGraph";
+            this.buttonEcdGraph.Size = new System.Drawing.Size(75, 23);
+            this.buttonEcdGraph.TabIndex = 5;
+            this.buttonEcdGraph.Text = "Ecd Graph";
+            this.buttonEcdGraph.UseVisualStyleBackColor = true;
+            this.buttonEcdGraph.Click += new System.EventHandler(this.btnEcdGraph_Click);
             // 
             // CalculationOptionsPanelRetribution
             // 
@@ -1647,6 +1660,7 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox textExperimental;
         private System.Windows.Forms.Button buttonStatGraph;
+        private System.Windows.Forms.Button buttonEcdGraph;
 
     }
 }

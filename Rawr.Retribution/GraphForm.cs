@@ -13,9 +13,12 @@ namespace Rawr.Retribution
         private Graphics gfx;
         private Bitmap bmp = null;
 
-        public GraphForm(Character character)
+        public GraphForm(Character character, bool bStats)
         {
             InitializeComponent();
+
+            if (!bStats)
+                Text = "Effective Cooldown Graph";
 
             // Create ARGB bitmap matching the size of the picturebox and associate with picturebox
             bmp = new Bitmap(pictureBoxGraph.Size.Width, pictureBoxGraph.Size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -75,41 +78,133 @@ namespace Rawr.Retribution
             #endregion
 
             #region Define and calculate charts
-            ChartData[] aCharts = new ChartData[] {
-                new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 0), "1 Strength", new Stats() { Strength = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 192, 192, 96), "1.167 Spell Power", new Stats() { SpellPower = 7/6 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 0, 0, 192), "1 Armor Pen.", new Stats() { ArmorPenetrationRating = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 192), "1 Hit Rating", new Stats() { HitRating = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 0, 192, 0), "1 Expertise Rating", new Stats() { ExpertiseRating = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 96), "1 Agility", new Stats() { Agility = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 0), "2 Attack Power", new Stats() { AttackPower = 2 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 96, 127, 192), "1 Crit Rating", new Stats() { CritRating = 1 }),
-                new ChartData(rcChart.Width, Color.FromArgb(255, 0, 0, 0), "1 Haste Rating", new Stats() { HasteRating = 1 }),
-            };
-
-            // Calculate charts
-            CalculationsRetribution Calc = new CalculationsRetribution();
-            float DpsMax = 0;
-            float DpsMin = 999999999;
-            foreach (ChartData cd in aCharts)
+            ChartData[] aCharts;
+            float DpsMax;
+            float DpsMin;
+            float DpsScaling;
+            if (bStats)
             {
+                aCharts = new ChartData[] {
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 0), "1 Strength", new Stats() { Strength = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 192, 96), "1.167 Spell Power", new Stats() { SpellPower = 7/6 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 0, 0, 192), "1 Armor Pen.", new Stats() { ArmorPenetrationRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 192), "1 Hit Rating", new Stats() { HitRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 0, 192, 0), "1 Expertise Rating", new Stats() { ExpertiseRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 96), "1 Agility", new Stats() { Agility = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 0), "2 Attack Power", new Stats() { AttackPower = 2 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 96, 127, 192), "1 Crit Rating", new Stats() { CritRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 0, 0, 0), "1 Haste Rating", new Stats() { HasteRating = 1 }),
+                };
+
+                // Calculate charts
+                CalculationsRetribution Calc = new CalculationsRetribution();
+                DpsMax = 0;
+                DpsMin = 999999999;
+                foreach (ChartData cd in aCharts)
+                {
+                    for (int count = 0; count < rcChart.Width; count++)
+                    {
+                        Stats chartstats = cd.stats.Clone();
+                        chartstats *= count - (rcChart.Width / 2);
+
+                        CharacterCalculationsRetribution chartCalc = Calc.GetCharacterCalculations(character, new Item() { Stats = chartstats }) as CharacterCalculationsRetribution;
+                        float Dps = chartCalc.DPSPoints;
+
+                        if (Dps > DpsMax)
+                            DpsMax = Dps;
+                        if (Dps < DpsMin)
+                            DpsMin = Dps;
+
+                        cd.dps[count] = Dps;
+                    }
+                }
+                DpsScaling = (rcChart.Height - 2 * YChartMargin/* some extra margin*/) / (DpsMax - DpsMin);
+            }
+            else 
+            {
+                aCharts = new ChartData[] {
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 0), "White", new Stats() { HasteRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 192, 96), "CS", new Stats() { HasteRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 0, 0, 192), "J", new Stats() { HasteRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 0, 192), "DS", new Stats() { HasteRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 0, 192, 0), "Cons", new Stats() { HasteRating = 1 }),
+                    new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 96), "Exo", new Stats() { HasteRating = 1 }),
+                    //new ChartData(rcChart.Width, Color.FromArgb(255, 192, 127, 0), "HoW", new Stats() { HasteRating = 1 }),
+                };
+
+                // Calculate charts
+                CalculationsRetribution Calc = new CalculationsRetribution();
+                DpsMax = 0;
+                DpsMin = 999999999;
+                Stats stats = new Stats() { HasteRating = 1 };
                 for (int count = 0; count < rcChart.Width; count++)
                 {
-                    Stats chartstats = cd.stats.Clone();
+                    Stats chartstats = stats.Clone();
                     chartstats *= count - (rcChart.Width / 2);
 
                     CharacterCalculationsRetribution chartCalc = Calc.GetCharacterCalculations(character, new Item() { Stats = chartstats }) as CharacterCalculationsRetribution;
-                    float Dps = chartCalc.DPSPoints;
+                    float Ecd;
 
-                    if (Dps > DpsMax)
-                        DpsMax = Dps;
-                    if (Dps < DpsMin)
-                        DpsMin = Dps;
+                    Ecd = chartCalc.AttackSpeed;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[0].dps[count] = Ecd;
 
-                    cd.dps[count] = Dps;
+                    Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.CrusaderStrike);
+                    if (Ecd > 50)  // infinity fix
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[1].dps[count] = Ecd;
+
+                    Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.Judgement);
+                    if (Ecd > 50)
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[2].dps[count] = Ecd;
+
+                    Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.DivineStorm);
+                    if (Ecd > 50)
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[3].dps[count] = Ecd;
+                    Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.Consecration);
+                    if (Ecd > 50)
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[4].dps[count] = Ecd;
+                    Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.Exorcism);
+                    if (Ecd > 50)
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[5].dps[count] = Ecd;
+                    /*Ecd = 1 / chartCalc.Solution.GetAbilityUsagePerSecond(Ability.HammerOfWrath);
+                    if (Ecd > 50)
+                        Ecd = 0;
+                    if (Ecd > DpsMax)
+                        DpsMax = Ecd;
+                    if (Ecd < DpsMin)
+                        DpsMin = Ecd;
+                    aCharts[6].dps[count] = Ecd;     */
                 }
+                DpsScaling = (rcChart.Height - 2 * YChartMargin/* some extra margin*/) / (DpsMax - DpsMin);
             }
-            float DpsScaling = (rcChart.Height - 2*YChartMargin/* some extra margin*/) / (DpsMax - DpsMin);
             #endregion
 
             #region Fonts, Pens, Brushes and other helper variables
@@ -193,11 +288,11 @@ namespace Rawr.Retribution
             
             // Y Axis
             gfx.DrawLine(penBlack, 0, 0, 0, -rcChart.Height);
-            gfx.DrawString("DPS", fntTitle, brBlack, 5, -(rcChart.Height - 5), fmtLAlignTop);
+            gfx.DrawString(bStats ? "DPS" : "ECD", fntTitle, brBlack, 5, -(rcChart.Height - 5), fmtLAlignTop);
 
             // X-axis
             gfx.DrawLine(penBlack, 0, 0, rcChart.Width, 0); 
-            gfx.DrawString("Stats", fntTitle, brBlack, rcChart.Width - 5, -5, fmtRAlignBottom);
+            gfx.DrawString(bStats ? "Stats" : "Haste Rating", fntTitle, brBlack, rcChart.Width - 5, -5, fmtRAlignBottom);
 
             // Center Y Axis.
             gfx.DrawLine(penBlack, rcChart.Width / 2, 0, rcChart.Width / 2, -rcChart.Height);

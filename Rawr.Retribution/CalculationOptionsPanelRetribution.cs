@@ -81,8 +81,11 @@ namespace Rawr.Retribution
             CalculationsRetribution.Experimental = calcOpts.Experimental;
 
 #if DEBUG
+            buttonStatGraph.Visible = true;
+            buttonEcdGraph.Visible = true;
 #else
-            buttonStatGraph.Visible = false;            
+            buttonStatGraph.Visible = true;            
+            buttonEcdGraph.Visible = true;            
 #endif
             loading = false;
         }
@@ -528,9 +531,15 @@ namespace Rawr.Retribution
             }
         }
 
-        private void btnGraph_Click(object sender, EventArgs e)
+        private void btnStatGraph_Click(object sender, EventArgs e)
         {
-            GraphForm graphForm = new GraphForm(Character);
+            GraphForm graphForm = new GraphForm(Character, true);
+            graphForm.Show();
+        }
+
+        private void btnEcdGraph_Click(object sender, EventArgs e)
+        {
+            GraphForm graphForm = new GraphForm(Character, false);
             graphForm.Show();
         }
     }
