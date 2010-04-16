@@ -6,6 +6,7 @@ namespace Rawr.Moonkin
     // The interface public class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
     public class MoonkinSolver
     {
+        private const int NUM_SPELL_DETAILS = 14;
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
         // A list of all the damage spells
@@ -241,7 +242,7 @@ namespace Rawr.Moonkin
                 rot.Solver = this;
                 float accumulatedDamage = 0.0f;
                 float totalUpTime = 0.0f;
-                float[] spellDetails = new float[6];
+                float[] spellDetails = new float[NUM_SPELL_DETAILS];
                 List<ProcEffect> activatedEffects = new List<ProcEffect>();
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
                 // Separate stat-boosting proc trinkets into their own list
@@ -295,6 +296,14 @@ namespace Rawr.Moonkin
                         spellDetails[3] = InsectSwarm.DotEffect.DamagePerHit;
                         spellDetails[4] = Starfire.CastTime;
                         spellDetails[5] = Wrath.CastTime;
+                        spellDetails[6] = Moonfire.CastTime;
+                        spellDetails[7] = InsectSwarm.CastTime;
+                        spellDetails[8] = Starfire.NGCastTime;
+                        spellDetails[9] = Wrath.NGCastTime;
+                        spellDetails[10] = Starfire.ManaCost;
+                        spellDetails[11] = Wrath.ManaCost;
+                        spellDetails[12] = Moonfire.ManaCost;
+                        spellDetails[13] = InsectSwarm.ManaCost;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -329,14 +338,14 @@ namespace Rawr.Moonkin
                         // Cache the results to be calculated later
                         cachedUptimes[pairs] = tempUpTime;
                         cachedDamages[pairs] = tempDPS;
-                        cachedDetails[pairs] = new float[6];
-                        Array.Copy(spellDetails, cachedDetails[pairs], 6);
+                        cachedDetails[pairs] = new float[NUM_SPELL_DETAILS];
+                        Array.Copy(spellDetails, cachedDetails[pairs], NUM_SPELL_DETAILS);
                         totalUpTime += sign * tempUpTime;
                     }
                     sign = -sign;
                 }
                 float accumulatedDPS = 0.0f;
-                for (int i = 0; i < 6; ++i)
+                for (int i = 0; i < NUM_SPELL_DETAILS; ++i)
                 {
                     spellDetails[i] = 0.0f;
                 }
@@ -344,7 +353,7 @@ namespace Rawr.Moonkin
                 foreach (KeyValuePair<int, float> kvp in cachedUptimes)
                 {
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
-                    for (int i = 0; i < 6; ++i)
+                    for (int i = 0; i < NUM_SPELL_DETAILS; ++i)
                     {
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
@@ -357,6 +366,14 @@ namespace Rawr.Moonkin
                 spellDetails[3] += (1 - totalUpTime) * InsectSwarm.DotEffect.DamagePerHit;
                 spellDetails[4] += (1 - totalUpTime) * Starfire.CastTime;
                 spellDetails[5] += (1 - totalUpTime) * Wrath.CastTime;
+                spellDetails[6] += (1 - totalUpTime) * Moonfire.CastTime;
+                spellDetails[7] += (1 - totalUpTime) * InsectSwarm.CastTime;
+                spellDetails[8] += (1 - totalUpTime) * Starfire.NGCastTime;
+                spellDetails[9] += (1 - totalUpTime) * Wrath.NGCastTime;
+                spellDetails[10] += (1 - totalUpTime) * Starfire.ManaCost;
+                spellDetails[11] += (1 - totalUpTime) * Wrath.ManaCost;
+                spellDetails[12] += (1 - totalUpTime) * Moonfire.ManaCost;
+                spellDetails[13] += (1 - totalUpTime) * InsectSwarm.ManaCost;
 
                 accumulatedDamage += accumulatedDPS * rot.Duration;
 
@@ -379,6 +396,14 @@ namespace Rawr.Moonkin
                 rot.InsectSwarmAvgHit = spellDetails[3];
                 rot.StarfireAvgCast = spellDetails[4];
                 rot.WrathAvgCast = spellDetails[5];
+                rot.MoonfireCastTime = spellDetails[6];
+                rot.InsectSwarmCastTime = spellDetails[7];
+                rot.StarfireNGCastTime = spellDetails[8];
+                rot.WrathNGCastTime = spellDetails[9];
+                rot.StarfireManaCost = spellDetails[10];
+                rot.WrathManaCost = spellDetails[11];
+                rot.MoonfireManaCost = spellDetails[12];
+                rot.InsectSwarmManaCost = spellDetails[13];
 
                 // Update the sustained DPS rotation if any one of the following three cases is true:
                 // 1) No user rotation is selected and sustained DPS is maximum

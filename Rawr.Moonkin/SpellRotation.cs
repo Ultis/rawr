@@ -29,14 +29,27 @@ namespace Rawr.Moonkin
         public float WrathCount { get; set; }
         public float WrathAvgHit { get; set; }
         public float WrathAvgCast { get; set; }
+        public float WrathNGCastTime { get; set; }
+        public float WrathManaCost { get; set; }
         public float StarfireCount { get; set; }
         public float StarfireAvgHit { get; set; }
         public float StarfireAvgCast { get; set; }
+        public float StarfireNGCastTime { get; set; }
+        public float StarfireNonEclipseCrit { get; set; }
+        public float StarfireEclipseCrit { get; set; }
+        public float StarfireManaCost { get; set; }
         public float InsectSwarmTicks { get; set; }
+        public float InsectSwarmCasts { get; set; }
         public float InsectSwarmAvgHit { get; set; }
+        public float InsectSwarmDuration { get; set; }
+        public float InsectSwarmCastTime { get; set; }
+        public float InsectSwarmManaCost { get; set; }
         public float MoonfireCasts { get; set; }
         public float MoonfireTicks { get; set; }
         public float MoonfireAvgHit { get; set; }
+        public float MoonfireDuration { get; set; }
+        public float MoonfireCastTime { get; set; }
+        public float MoonfireManaCost { get; set; }
 
         // Calculate damage and casting time for a single, direct-damage spell.
         private void DoMainNuke(DruidTalents talents, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
@@ -463,6 +476,7 @@ namespace Rawr.Moonkin
             InsectSwarmTicks = insectSwarmTicks;
             MoonfireTicks = moonfireTicks;
             MoonfireCasts = moonfireCasts;
+            InsectSwarmCasts = insectSwarmCasts;
             CastCount = castsToProcLunar + (lunarTime / lunarEclipseCast.CastTime) + castsToProcSolar + (solarTime / solarEclipseCast.CastTime) + moonfireCasts + insectSwarmCasts;
 
             WrathCount = castsToProcLunar + (solarTime / solarEclipseCast.CastTime);
@@ -470,6 +484,18 @@ namespace Rawr.Moonkin
 
             ManaUsed = preSolarManaUsed + solarManaUsed + preLunarManaUsed + lunarManaUsed + moonfireManaUsed + insectSwarmManaUsed;
             ManaGained = castsToProcSolar * preSolarManaGained + (solarTime / solarEclipseCast.CastTime) * solarManaGained + castsToProcLunar * preLunarManaGained + (lunarTime / lunarEclipseCast.CastTime) * lunarManaGained;
+
+            if (spellCrit + lunarEclipseCast.CriticalChanceModifier > StarfireEclipseCrit)
+            {
+                StarfireEclipseCrit = spellCrit + lunarEclipseCast.CriticalChanceModifier;
+            }
+            if (spellCrit + preSolarCast.CriticalChanceModifier > StarfireNonEclipseCrit)
+            {
+                StarfireNonEclipseCrit = spellCrit + preSolarCast.CriticalChanceModifier;
+            }
+
+            InsectSwarmDuration = insectSwarm != null ? insectSwarm.DotEffect.Duration : 0.0f;
+            MoonfireDuration = moonfire != null ? moonfire.DotEffect.Duration : 0.0f;
 
             float mfSavingsFromOoC = moonfire != null ? (moonfire.BaseManaCost - (moonfire.BaseManaCost *
                 (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
