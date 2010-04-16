@@ -437,12 +437,12 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower)
-                * (Talents.GlyphOfConsecration ? 10f : 8f) * (CalcOpts.ConsEff);
+                * TickCount() * (CalcOpts.ConsEff);
         }
 
         public override float AbilityCritChance()
         {
-            return -1f;
+            return -1f; // -1 = can't crit.
         }
 
         public override float Targets()
@@ -452,8 +452,8 @@ namespace Rawr.Retribution
 
         public override float TickCount()
         {
-            // Every second for 8 seconds
-            return 8;
+            // Every second for 8 seconds (10 seconds with glyph)
+            return Talents.GlyphOfConsecration ? 10f : 8f;
         }
 
     }
