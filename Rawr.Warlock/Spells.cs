@@ -930,6 +930,13 @@ namespace Rawr.Warlock {
 
             base.FinalizeSpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+
+            // stack crit trinkets at the front of a rolling corruption
+            if (NumCasts < 2) {
+                float crit = Mommy.CalcSpellCrit();
+                SpellModifiers.AddCritChance(-crit);
+                SpellModifiers.AddCritChance(Mommy.MaxCritChance);
+            }
         }
 
         private static float maleficusDuration(

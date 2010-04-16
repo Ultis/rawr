@@ -32,6 +32,7 @@ namespace Rawr.Warlock {
         public float BaseMana { get; private set; }
         public float HitChance { get; private set; }
         public float AvgTimeUsed { get; private set; }
+        public float MaxCritChance { get; private set; }
 
         public List<Spell> Priorities { get; private set; }
         public Dictionary<string, Spell> Spells { get; private set; }
@@ -489,6 +490,7 @@ namespace Rawr.Warlock {
         private void CalcHasteAndManaProcs() {
 
             PreProcStats = Stats.Clone();
+            MaxCritChance = CalcSpellCrit();
             float nonProcHaste = GetSpellHaste(PreProcStats);
 
             if (Options.NoProcs) {
@@ -603,6 +605,11 @@ namespace Rawr.Warlock {
                     proc.ManaRestore *= Options.Duration;
                 }
                 procStats.Accumulate(proc);
+                if (effect.Trigger == Trigger.Use) {
+                    MaxCritChance += GetSpellCrit(effect.Stats);
+                } else {
+                    MaxCritChance += GetSpellCrit(proc);
+                }
                 if (effect.Stats.HasteRating > 0) {
                     hasteRatingEffects.Add(effect);
                     hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
