@@ -507,49 +507,51 @@ namespace Rawr.Warlock {
             // future plans are to move them after casting stats are set, so the
             // triggers can be more accurate
 
-            Dictionary<Trigger, float> periods
-                = new Dictionary<Trigger, float>();
-            Dictionary<Trigger, float> chances
-                = new Dictionary<Trigger, float>();
-            periods[Trigger.Use] = 0f;
-            periods[Trigger.SpellHit]
-                = periods[Trigger.SpellCrit]
-                = periods[Trigger.SpellCast]
-                = periods[Trigger.SpellMiss]
-                = periods[Trigger.DamageSpellHit]
-                = periods[Trigger.DamageSpellCrit]
-                = periods[Trigger.DamageSpellCast]
+            Dictionary<int, float> periods
+                = new Dictionary<int, float>();
+            Dictionary<int, float> chances
+                = new Dictionary<int, float>();
+            periods[(int) Trigger.Use] = 0f;
+            periods[(int) Trigger.SpellHit]
+                = periods[(int) Trigger.SpellCrit]
+                = periods[(int) Trigger.SpellCast]
+                = periods[(int) Trigger.SpellMiss]
+                = periods[(int) Trigger.DamageSpellHit]
+                = periods[(int) Trigger.DamageSpellCrit]
+                = periods[(int) Trigger.DamageSpellCast]
                 = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
                     + Options.Latency;
-            periods[Trigger.DoTTick] = 1.5f;
-            periods[Trigger.DamageDone]
-                = periods[Trigger.DamageOrHealingDone]
+            periods[(int) Trigger.DoTTick] = 1.5f;
+            periods[(int) Trigger.DamageDone]
+                = periods[(int) Trigger.DamageOrHealingDone]
                 = 1f
-                    / (1f / periods[Trigger.DoTTick]
-                        + 1f / periods[Trigger.SpellHit]);
+                    / (1f / periods[(int) Trigger.DoTTick]
+                        + 1f / periods[(int) Trigger.SpellHit]);
 
-            chances[Trigger.Use] = 1f;
-            chances[Trigger.SpellHit]
-                = chances[Trigger.DamageSpellHit]
-                = chances[Trigger.DamageDone]
-                = chances[Trigger.DamageOrHealingDone]
+            chances[(int) Trigger.Use] = 1f;
+            chances[(int) Trigger.SpellHit]
+                = chances[(int) Trigger.DamageSpellHit]
+                = chances[(int) Trigger.DamageDone]
+                = chances[(int) Trigger.DamageOrHealingDone]
                 = HitChance;
-            chances[Trigger.SpellCrit]
-                = chances[Trigger.DamageSpellCrit]
-                = CalcSpellCrit() * chances[Trigger.SpellHit];
-            chances[Trigger.SpellCast] = chances[Trigger.DamageSpellCast] = 1f;
-            chances[Trigger.SpellMiss] = 1 - chances[Trigger.SpellHit];
-            chances[Trigger.DoTTick] = 1f;
+            chances[(int) Trigger.SpellCrit]
+                = chances[(int) Trigger.DamageSpellCrit]
+                = CalcSpellCrit() * chances[(int) Trigger.SpellHit];
+            chances[(int) Trigger.SpellCast]
+                = chances[(int) Trigger.DamageSpellCast] = 1f;
+            chances[(int) Trigger.SpellMiss]
+                = 1 - chances[(int) Trigger.SpellHit];
+            chances[(int) Trigger.DoTTick] = 1f;
 
             if (Options.GetActiveRotation().Contains("Corruption")) {
-                periods[Trigger.CorruptionTick] = 3.1f;
+                periods[(int) Trigger.CorruptionTick] = 3.1f;
                 if (Talents.GlyphQuickDecay) {
-                    periods[Trigger.CorruptionTick] /= nonProcHaste;
+                    periods[(int) Trigger.CorruptionTick] /= nonProcHaste;
                 }
-                chances[Trigger.CorruptionTick] = 1f;
+                chances[(int) Trigger.CorruptionTick] = 1f;
             } else {
-                periods[Trigger.CorruptionTick] = 0f;
-                chances[Trigger.CorruptionTick] = 0f;
+                periods[(int) Trigger.CorruptionTick] = 0f;
+                chances[(int) Trigger.CorruptionTick] = 0f;
             }
 
             List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
@@ -566,7 +568,7 @@ namespace Rawr.Warlock {
             List<float> hasteRatingValues = new List<float>();
             Stats procStats = new Stats();
             foreach (SpecialEffect effect in Stats.SpecialEffects()) {
-                if (!periods.ContainsKey(effect.Trigger)) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
                     continue;
                 }
 
@@ -574,27 +576,27 @@ namespace Rawr.Warlock {
                 // during a short window.
                 if (effect.Stats._rawSpecialEffectDataSize == 1
                     && periods.ContainsKey(
-                        effect.Stats._rawSpecialEffectData[0].Trigger)) {
+                        (int) effect.Stats._rawSpecialEffectData[0].Trigger)) {
 
                     SpecialEffect inner = effect.Stats._rawSpecialEffectData[0];
                     Stats innerStats
                         = inner.GetAverageStats(
-                            periods[inner.Trigger],
-                            chances[inner.Trigger],
+                            periods[(int) inner.Trigger],
+                            chances[(int) inner.Trigger],
                             1f,
                             effect.Duration);
                     float upTime
                         = effect.GetAverageUptime(
-                            periods[effect.Trigger],
-                            chances[effect.Trigger],
+                            periods[(int) effect.Trigger],
+                            chances[(int) effect.Trigger],
                             1f,
                             Options.Duration);
                     procStats.Accumulate(innerStats, upTime);
                 }
 
                 Stats proc = effect.GetAverageStats(
-                    periods[effect.Trigger],
-                    chances[effect.Trigger],
+                    periods[(int) effect.Trigger],
+                    chances[(int) effect.Trigger],
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                     Options.Duration);
                 if (proc.ManaRestore > 0) {
@@ -603,16 +605,16 @@ namespace Rawr.Warlock {
                 procStats.Accumulate(proc);
                 if (effect.Stats.HasteRating > 0) {
                     hasteRatingEffects.Add(effect);
-                    hasteRatingIntervals.Add(periods[effect.Trigger]);
-                    hasteRatingChances.Add(chances[effect.Trigger]);
+                    hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
+                    hasteRatingChances.Add(chances[(int) effect.Trigger]);
                     hasteRatingOffsets.Add(0f);
                     hasteRatingScales.Add(1f);
                     hasteRatingValues.Add(effect.Stats.HasteRating);
                 }
                 if (effect.Stats.SpellHaste > 0) {
                     hasteEffects.Add(effect);
-                    hasteIntervals.Add(periods[effect.Trigger]);
-                    hasteChances.Add(chances[effect.Trigger]);
+                    hasteIntervals.Add(periods[(int) effect.Trigger]);
+                    hasteChances.Add(chances[(int) effect.Trigger]);
                     hasteOffsets.Add(0f);
                     hasteScales.Add(1f);
                     hasteValues.Add(effect.Stats.SpellHaste);

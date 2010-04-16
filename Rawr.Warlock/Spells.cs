@@ -12,6 +12,9 @@ namespace Rawr.Warlock {
 
         public static List<string> ALL_SPELLS = new List<String>();
 
+        public static int BACKDRAFT_AURA = 0;
+        public static int MOLTEN_CORE = 0;
+
         static Spell() {
 
             Type spellType = Type.GetType("Rawr.Warlock.Spell");
@@ -71,6 +74,9 @@ namespace Rawr.Warlock {
         public float BaseTickDamage { get; protected set; }
         public float TickCoefficient { get; protected set; }
         public bool CanTickCrit { get; protected set; }
+
+        // set via constructor but only used for internal optimizations
+        public bool RecordMissesSeparately = false;
 
         // set via constructor but sometimes modified via RecordCollisionDelay()
         public float Cooldown { get; protected set; }
@@ -447,7 +453,9 @@ namespace Rawr.Warlock {
             }
             float newCooldown
                 = Cooldown - timeUsed + GetCastTime(stateBeforeCast);
-            if (CanMiss && hitChance < 1f) {
+            if (CanMiss
+                && hitChance < 1f
+                && (RecordMissesSeparately || Cooldown < RecastPeriod)) {
 
                 // state when spell hits
                 PopulateNextState(
@@ -509,14 +517,14 @@ namespace Rawr.Warlock {
             nextState.Cooldowns[this] = cooldownAfterAdvance;
 
             if (MySpellTree == SpellTree.Destruction
-                && nextState.ExtraState.ContainsKey("Backdraft Aura")) {
+                && nextState.ExtraState.ContainsKey(BACKDRAFT_AURA)) {
 
                 int nextCharges
-                    = (int) nextState.ExtraState["Backdraft Aura"] - 1;
+                    = (int) nextState.ExtraState[BACKDRAFT_AURA] - 1;
                 if (nextCharges == 0) {
-                    nextState.ExtraState.Remove("Backdraft Aura");
+                    nextState.ExtraState.Remove(BACKDRAFT_AURA);
                 } else {
-                    nextState.ExtraState["Backdraft Aura"] = nextCharges;
+                    nextState.ExtraState[BACKDRAFT_AURA] = nextCharges;
                 }
             }
 
@@ -547,7 +555,7 @@ namespace Rawr.Warlock {
         private float MaybeApplyBackdraft(float time, CastingState state) {
 
             if (state != null
-                && state.ExtraState.ContainsKey("Backdraft Aura")
+                && state.ExtraState.ContainsKey(BACKDRAFT_AURA)
                 && MySpellTree == SpellTree.Destruction) {
 
                 time /= 1f + Mommy.Talents.Backdraft * .1f;
@@ -579,6 +587,10 @@ namespace Rawr.Warlock {
         /// Assumes the effect == requeue time.
         /// </summary>
         public float GetUprate(CastingState state, Spell spell) {
+
+            // if this method is going to be called, be sure to enable
+            // RecordMissesSeparately
+            Debug.Assert(RecordMissesSeparately);
 
             float castTime = spell.GetCastTime(state);
             if (state.Cooldowns.ContainsKey(this)) {
@@ -797,6 +809,7 @@ namespace Rawr.Warlock {
                 0f) { // bonusCritMultiplier) {
 
             ApplyImprovedSoulLeech();
+            RecordMissesSeparately = true;
         }
 
         public override bool IsCastable() {
@@ -835,7 +848,7 @@ namespace Rawr.Warlock {
 
             CastingState stateOnHit = states[0];
             if (Mommy.Talents.Backdraft > 0) {
-                stateOnHit.ExtraState["Backdraft Aura"] = 3;
+                stateOnHit.ExtraState[BACKDRAFT_AURA] = 3;
             }
             if (!Mommy.Talents.GlyphConflag) {
                 foreach (CastingState state in states) {
@@ -1191,7 +1204,10 @@ namespace Rawr.Warlock {
                     + mommy.Talents.Aftermath * .03f, // addedTickMultiplier,
                 true, // canTickCrit,
                 0f, // bonusCritChance,
-                0f) { } // bonusCritMultiplier) {
+                0f) { // bonusCritMultiplier) {
+
+            RecordMissesSeparately = true;
+        }
 
         public override float GetQueueProbability(CastingState state) {
 
@@ -1329,7 +1345,7 @@ namespace Rawr.Warlock {
 
         public override float GetQueueProbability(CastingState state) {
 
-            if (state.ExtraState.ContainsKey("Backdraft Aura")) {
+            if (state.ExtraState.ContainsKey(BACKDRAFT_AURA)) {
                 return 1f;
             } else {
                 return 0f;
@@ -1383,7 +1399,7 @@ namespace Rawr.Warlock {
 
         public override float GetQueueProbability(CastingState state) {
 
-            if (state.ExtraState.ContainsKey("Molten Core")) {
+            if (state.ExtraState.ContainsKey(MOLTEN_CORE)) {
                 return 1f;
             } else {
                 return base.GetQueueProbability(state);
@@ -1396,15 +1412,15 @@ namespace Rawr.Warlock {
                 = base.SimulateCast(stateBeforeCast, chanceOfCast);
             foreach (CastingState state in states) {
                 state.Cooldowns.Remove(this);
-                if (state.ExtraState.ContainsKey("Molten Core")) {
-                    int charges = (int) state.ExtraState["Molten Core"];
+                if (state.ExtraState.ContainsKey(MOLTEN_CORE)) {
+                    int charges = (int) state.ExtraState[MOLTEN_CORE];
                     if (charges == 1) {
-                        state.ExtraState.Remove("Molten Core");
+                        state.ExtraState.Remove(MOLTEN_CORE);
                     } else {
-                        state.ExtraState["Molten Core"] = charges - 1;
+                        state.ExtraState[MOLTEN_CORE] = charges - 1;
                     }
                 } else {
-                    state.ExtraState["Molten Core"] = 2;
+                    state.ExtraState[MOLTEN_CORE] = 2;
                 }
             }
             return states;

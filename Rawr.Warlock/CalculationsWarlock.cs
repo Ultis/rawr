@@ -238,8 +238,8 @@ namespace Rawr.Warlock {
             CalculationOptionsWarlock options
                 = character.CalculationOptions as CalculationOptionsWarlock;
 
-            Stats statsBase = BaseStats.GetBaseStats(character);
-            Stats statsItem = GetItemStats(character, additionalItem);
+            Stats stats = BaseStats.GetBaseStats(character);
+            AccumulateItemStats(stats, character, additionalItem);
 
             ////Potion of Speed is a consumable that can only be used once per fight even tho its tooltip / wowhead info indicates it has a 1 min cooldown.
             ////This means that its actual cooldown is equal to the length of the fight.
@@ -270,7 +270,7 @@ namespace Rawr.Warlock {
             //    }
             //}
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            AccumulateBuffsStats(stats, character.ActiveBuffs);
 
             float[] talentValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
@@ -304,11 +304,6 @@ namespace Rawr.Warlock {
                         0f,
                         .06f));
             }
-
-            Stats stats = new Stats();
-            stats.Accumulate(statsBase);
-            stats.Accumulate(statsItem);
-            stats.Accumulate(statsBuffs);
             stats.Accumulate(statsTalents);
 
             return stats;
