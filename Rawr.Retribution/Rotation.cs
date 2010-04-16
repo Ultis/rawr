@@ -193,7 +193,7 @@ namespace Rawr.Retribution
         }
 
         public float GetAbilityHitsPerSecond(Skill skill)
-		{//TODO: Redo this whole model to not be a simulator
+		{
             return 
                 GetAbilityUsagePerSecond(skill) *
                 skill.ChanceToLand() * 
@@ -208,7 +208,7 @@ namespace Rawr.Retribution
                 skill.ChanceToCrit() * 
                 skill.Targets() * 
                 skill.TickCount();
-		}//TODO: Redo this whole model to not be a simulator
+		}
 
         public float GetCrusaderStrikeCD()
         {
@@ -307,6 +307,17 @@ namespace Rawr.Retribution
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
                 GetAbilityCritsPerSecond(Judge) +
                 GetAbilityCritsPerSecond(HoW);
+        }
+
+        public float GetSpellCritsPerSec()
+        {
+            // Spell hit procs can be triggered by:
+            // - Exorcism crits
+            // - Consecration crits (first tick)
+            return
+                GetAbilityCritsPerSecond(Exo) +
+                GetAbilityCritsPerSecond(Cons) / Cons.TickCount();
+            //GetAbilityHitsPerSecond(Judge); There was some talk about Judgement also triggering this, but that would make Judgement be both spell and melee hit?
         }
 
         public float GetAttacksPerSec()
