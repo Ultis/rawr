@@ -12,9 +12,6 @@ namespace Rawr.Warlock {
 
         public static List<string> ALL_SPELLS = new List<String>();
 
-        public static int BACKDRAFT_AURA = 0;
-        public static int MOLTEN_CORE = 0;
-
         static Spell() {
 
             Type spellType = Type.GetType("Rawr.Warlock.Spell");
@@ -517,15 +514,9 @@ namespace Rawr.Warlock {
             nextState.Cooldowns[this] = cooldownAfterAdvance;
 
             if (MySpellTree == SpellTree.Destruction
-                && nextState.ExtraState.ContainsKey(BACKDRAFT_AURA)) {
+                && nextState.BackdraftCharges > 0) {
 
-                int nextCharges
-                    = (int) nextState.ExtraState[BACKDRAFT_AURA] - 1;
-                if (nextCharges == 0) {
-                    nextState.ExtraState.Remove(BACKDRAFT_AURA);
-                } else {
-                    nextState.ExtraState[BACKDRAFT_AURA] = nextCharges;
-                }
+                --nextState.BackdraftCharges;
             }
 
             results.Add(nextState);
@@ -555,7 +546,7 @@ namespace Rawr.Warlock {
         private float MaybeApplyBackdraft(float time, CastingState state) {
 
             if (state != null
-                && state.ExtraState.ContainsKey(BACKDRAFT_AURA)
+                && state.BackdraftCharges > 0
                 && MySpellTree == SpellTree.Destruction) {
 
                 time /= 1f + Mommy.Talents.Backdraft * .1f;
@@ -848,7 +839,7 @@ namespace Rawr.Warlock {
 
             CastingState stateOnHit = states[0];
             if (Mommy.Talents.Backdraft > 0) {
-                stateOnHit.ExtraState[BACKDRAFT_AURA] = 3;
+                stateOnHit.BackdraftCharges = 3;
             }
             if (!Mommy.Talents.GlyphConflag) {
                 foreach (CastingState state in states) {
@@ -1345,7 +1336,7 @@ namespace Rawr.Warlock {
 
         public override float GetQueueProbability(CastingState state) {
 
-            if (state.ExtraState.ContainsKey(BACKDRAFT_AURA)) {
+            if (state.BackdraftCharges > 0) {
                 return 1f;
             } else {
                 return 0f;
@@ -1399,7 +1390,7 @@ namespace Rawr.Warlock {
 
         public override float GetQueueProbability(CastingState state) {
 
-            if (state.ExtraState.ContainsKey(MOLTEN_CORE)) {
+            if (state.MoltenCoreCharges > 0) {
                 return 1f;
             } else {
                 return base.GetQueueProbability(state);
@@ -1412,15 +1403,10 @@ namespace Rawr.Warlock {
                 = base.SimulateCast(stateBeforeCast, chanceOfCast);
             foreach (CastingState state in states) {
                 state.Cooldowns.Remove(this);
-                if (state.ExtraState.ContainsKey(MOLTEN_CORE)) {
-                    int charges = (int) state.ExtraState[MOLTEN_CORE];
-                    if (charges == 1) {
-                        state.ExtraState.Remove(MOLTEN_CORE);
-                    } else {
-                        state.ExtraState[MOLTEN_CORE] = charges - 1;
-                    }
+                if (state.MoltenCoreCharges > 0) {
+                    --state.MoltenCoreCharges;
                 } else {
-                    state.ExtraState[MOLTEN_CORE] = 2;
+                    state.MoltenCoreCharges = 2;
                 }
             }
             return states;

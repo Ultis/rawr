@@ -15,7 +15,9 @@ namespace Rawr.Warlock {
         public List<int> SeriesPriorities;
         public List<float> SeriesTimes;
         public List<bool> SeriesHits;
-        public Dictionary<int, object> ExtraState;
+
+        public int BackdraftCharges;
+        public int MoltenCoreCharges;
 
         public CastingState(
             CharacterCalculationsWarlock mommy, Spell precedingSpell) {
@@ -27,7 +29,6 @@ namespace Rawr.Warlock {
             Series = new List<Spell>();
             SeriesTimes = new List<float>();
             SeriesHits = new List<bool>();
-            ExtraState = new Dictionary<int, object>();
 
             if (precedingSpell != null) {
                 Elapsed = precedingSpell.GetAvgTimeUsed();
@@ -43,7 +44,9 @@ namespace Rawr.Warlock {
             Series = new List<Spell>(toCopy.Series);
             SeriesTimes = new List<float>(toCopy.SeriesTimes);
             SeriesHits = new List<bool>(toCopy.SeriesHits);
-            ExtraState = new Dictionary<int, object>(toCopy.ExtraState);
+
+            BackdraftCharges = toCopy.BackdraftCharges;
+            MoltenCoreCharges = toCopy.MoltenCoreCharges;
         }
 
         public float GetMaxTimeQueued(Spell spell) {
