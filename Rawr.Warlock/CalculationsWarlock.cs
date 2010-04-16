@@ -110,7 +110,7 @@ namespace Rawr.Warlock {
                         "Affliction:Haunt",
                         "Affliction:Life Tap",
                         "Affliction:Unstable Affliction",
-                        "Demonology:Metamorphosis",
+                        "Demonology:Immolation Aura",
                         "Destruction:Chaos Bolt",
                         "Destruction:Conflagrate",
                         "Destruction:Immolate",

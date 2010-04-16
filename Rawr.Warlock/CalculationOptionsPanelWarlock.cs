@@ -124,7 +124,8 @@ namespace Rawr.Warlock {
         protected override void LoadCalculationOptions() {
 
             if (Character.CalculationOptions == null) {
-                Character.CalculationOptions = new CalculationOptionsWarlock();
+                Character.CalculationOptions
+                    = CalculationOptionsWarlock.MakeDefaultOptions();
             }
             _options = (CalculationOptionsWarlock) Character.CalculationOptions;
             ++_ignoreCount;
@@ -357,6 +358,7 @@ namespace Rawr.Warlock {
         private void procCheckbox_CheckedChanged(object sender, EventArgs e) {
 
             _options.NoProcs = ProcCheckbox.Checked;
+            Character.OnCalculationsInvalidated();
         }
 
         private void TimerButton_Click(object sender, EventArgs e) {

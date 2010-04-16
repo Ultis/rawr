@@ -50,10 +50,11 @@ namespace Rawr.Warlock {
             Character = character;
             Options = (CalculationOptionsWarlock) character.CalculationOptions;
             if (Options == null) {
-                Options = new CalculationOptionsWarlock();
+                Options = CalculationOptionsWarlock.MakeDefaultOptions();
             }
             Talents = character.WarlockTalents;
             Stats = stats;
+            PreProcStats = Stats.Clone();
             BaseMana = BaseStats.GetBaseStats(character).Mana;
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
@@ -426,10 +427,9 @@ namespace Rawr.Warlock {
             SpellModifiers.AddCritChance(CalcSpellCrit());
             SpellModifiers.AddCritOverallMultiplier(
                 Stats.BonusCritMultiplier);
-            if (CastSpells.ContainsKey("Metamorphosis")) {
+            if (Talents.Metamorphosis > 0) {
                 SpellModifiers.AddMultiplicativeMultiplier(
-                    ((Metamorphosis) CastSpells["Metamorphosis"])
-                        .GetAvgBonusMultiplier());
+                    GetMetamorphosisBonus());
             }
             if (Stats.Warlock4T10 > 0) {
                 Spell trigger = null;
@@ -489,7 +489,6 @@ namespace Rawr.Warlock {
 
         private void CalcHasteAndManaProcs() {
 
-            PreProcStats = Stats.Clone();
             MaxCritChance = CalcSpellCrit();
             float nonProcHaste = GetSpellHaste(PreProcStats);
 
@@ -696,6 +695,20 @@ namespace Rawr.Warlock {
             }
 
             //System.Console.WriteLine(state.ToString());
+        }
+
+        public float GetMetamorphosisBonus() {
+
+            if (Talents.Metamorphosis == 0) {
+                return 0;
+            }
+
+            float cooldown = 180f * (1f - Talents.Nemesis * .1f);
+            float duration = 30f;
+            if (Talents.GlyphMetamorphosis) {
+                duration += 6f;
+            }
+            return .2f * duration / cooldown;
         }
 
         #endregion

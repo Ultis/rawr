@@ -177,6 +177,7 @@ namespace Rawr.Warlock {
             SpellTree spellTree,
             float percentBaseMana,
             float baseCastTime,
+            float cooldown,
             float recastPeriod,
             float baseTickDamage,
             float numTicks,
@@ -191,7 +192,7 @@ namespace Rawr.Warlock {
                 spellTree,
                 percentBaseMana,
                 baseCastTime,
-                0f, // cooldown
+                cooldown,
                 recastPeriod,
                 true,
                 0f, // direct low damage
@@ -869,6 +870,7 @@ namespace Rawr.Warlock {
                 SpellTree.Affliction, // spell tree
                 .14f, // percent base mana
                 0f, // cast time
+                0f, // cooldown
                 18f, // recast period
                 1080f / 6f, // damage per tick
                 6f, // num ticks
@@ -1015,6 +1017,7 @@ namespace Rawr.Warlock {
                 SpellTree.Affliction, // spell tree
                 .1f, // percent base mana
                 0f, // cast time
+                0f, // cooldown
                 mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
 
                 // Glyph of Curse of Agony raises the *average* tick to
@@ -1048,7 +1051,8 @@ namespace Rawr.Warlock {
                 SpellTree.Affliction, // spell tree
                 .15f, // percent base mana
                 0f, // baseCastTime,
-                60f, // recastPeriod,
+                60f, // cooldown,
+                0f, // recastPeriod,
                 7300f, // baseTickDamage,
                 1f, // numTicks,
                 2f, // tickCoefficient,
@@ -1286,6 +1290,40 @@ namespace Rawr.Warlock {
         }
     }
 
+    public class ImmolationAura : Spell {
+
+        public ImmolationAura(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Fire,
+                SpellTree.Demonology,
+                .64f, // percentBaseMana,
+                0f, // baseCastTime,
+                180f * (1f - mommy.Talents.Nemesis * .1f), // cooldown,
+                0f, // recastPeriod,
+                251f, // baseTickDamage,
+                15f, // numTicks,
+                2.14f / 15f, // tickCoefficient,
+                0f, // addedTickMultiplier,
+                false, // canTickCrit,
+                0f, // bonusCritChance,
+                0f) { } // bonusCritMultiplier)
+
+        public override bool IsCastable() {
+            
+            return Mommy.Talents.Metamorphosis > 0;
+        }
+
+        public override void FinalizeSpellModifiers() {
+            
+            base.FinalizeSpellModifiers();
+
+            // immolation aura always gets the full metamorphosis bonus
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                1.2f / (1 + Mommy.GetMetamorphosisBonus()) - 1);
+        }
+    }
+
     public class Incinerate : Spell {
 
         public Incinerate(CharacterCalculationsWarlock mommy)
@@ -1500,58 +1538,6 @@ namespace Rawr.Warlock {
         }
     }
 
-    public class Metamorphosis : Spell {
-
-        public Metamorphosis(CharacterCalculationsWarlock mommy)
-            : base(
-                mommy, // options
-                0, // magic school
-                SpellTree.Demonology, // spell tree
-                0f, // percent base mana
-                0f, // cast time
-                180f
-                    * (1f
-                        - mommy.Talents.Nemesis * .1f), // cooldown
-                0f, // recast period
-                false) { } // can miss
-
-        public override bool IsCastable() {
-
-            return Mommy.Talents.Metamorphosis > 0;
-        }
-
-        //public override void SetCastingStats(
-        //    float timeRemaining, float manaRemaining) {
-
-        //    base.SetCastingStats(timeRemaining, manaRemaining);
-
-        //    // Discretize NumCasts.  This makes sense becasue of this spell's
-        //    // long cooldown, so that it's (correctly) modelled as more
-        //    // valuable in a 4 minute fight than in a 5 minute fight.
-
-        //    float maxUprate = GetSpellDuration() / Cooldown;
-        //    float wholeCasts = (float) Math.Floor(NumCasts);
-        //    float partialCast = NumCasts - wholeCasts;
-        //    NumCasts = wholeCasts + Math.Min(1f, partialCast / maxUprate);
-        //}
-
-        public float GetAvgBonusMultiplier() {
-
-            float uprate
-                = NumCasts * GetSpellDuration() / Mommy.Options.Duration;
-            return .2f * uprate;
-        }
-
-        private float GetSpellDuration() {
-
-            if (Mommy.Talents.GlyphMetamorphosis) {
-                return 36f;
-            } else {
-                return 30f;
-            }
-        }
-    }
-
     public class ShadowBolt : Spell {
 
         public static float GetBaseCastTime(
@@ -1626,6 +1612,7 @@ namespace Rawr.Warlock {
                 SpellTree.Affliction,
                 .15f, // percent base mana
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                0f, // cooldown
                 15f, // recast period
                 1150f / 5f, // tick damage
                 5f, // num ticks
@@ -1657,3 +1644,4 @@ namespace Rawr.Warlock {
         }
     }
 }
+//3456789 223456789 323456789 423456789 523456789 623456789 723456789 8234567890

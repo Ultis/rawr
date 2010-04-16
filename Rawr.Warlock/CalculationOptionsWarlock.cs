@@ -28,6 +28,9 @@ namespace Rawr.Warlock {
 
             bool foundCurse = false;
             foreach (string spell in SpellPriority) {
+                if (!Spell.ALL_SPELLS.Contains(spell)) {
+                    return spell + " can no longer be prioritized.";
+                }
                 if (spell.StartsWith("Curse")) {
                     if (foundCurse) {
                         return "You may only include one curse.";
@@ -85,6 +88,46 @@ namespace Rawr.Warlock {
     /// </summary>
     public class CalculationOptionsWarlock : ICalculationOptionBase {
 
+        public static CalculationOptionsWarlock MakeDefaultOptions() {
+
+            CalculationOptionsWarlock options = new CalculationOptionsWarlock();
+            options.Pet = "None";
+            options.TargetLevel = 83;
+            options.Duration = 300;
+            options.Rotations = new List<Rotation>();
+
+            options.Rotations.Add(
+                new Rotation(
+                    "Affliction",
+                    "Shadow Bolt",
+                    "Haunt",
+                    "Corruption",
+                    "Unstable Affliction",
+                    "Curse Of Agony"));
+            options.Rotations.Add(
+                new Rotation(
+                    "Demonology",
+                    "Shadow Bolt",
+                    "Immolation Aura",
+                    "Corruption",
+                    "Immolate",
+                    "Incinerate (Under Molten Core)",
+                    "Curse Of Agony"));
+            options.Rotations.Add(
+                new Rotation(
+                    "Destruction",
+                    "Incinerate",
+                    "Immolate",
+                    "Conflagrate",
+                    "Incinerate (Under Backdraft)",
+                    "Corruption",
+                    "Chaos Bolt",
+                    "Curse Of Doom"));
+
+            return options;
+        }
+
+
         #region constants
 
         private static readonly int[] hitRatesByLevelDifference 
@@ -105,47 +148,6 @@ namespace Rawr.Warlock {
         public List<Rotation> Rotations;
         public int ActiveRotationIndex;
         public bool NoProcs;
-
-        #endregion
-
-
-        #region constructors
-
-        public CalculationOptionsWarlock() {
-
-            Pet = "None";
-            TargetLevel = 83;
-            Duration = 300;
-            Rotations = new List<Rotation>();
-
-            Rotations.Add(
-                new Rotation(
-                    "Affliction",
-                    "Shadow Bolt",
-                    "Haunt",
-                    "Corruption",
-                    "Unstable Affliction",
-                    "Curse Of Agony"));
-            Rotations.Add(
-                new Rotation(
-                    "Demonology",
-                    "Shadow Bolt",
-                    "Metamorphosis",
-                    "Corruption",
-                    "Immolate",
-                    "Incinerate (Under Molten Core)",
-                    "Curse Of Agony"));
-            Rotations.Add(
-                new Rotation(
-                    "Destruction",
-                    "Incinerate",
-                    "Immolate",
-                    "Conflagrate",
-                    "Incinerate (Under Backdraft)",
-                    "Corruption",
-                    "Chaos Bolt",
-                    "Curse Of Doom"));
-        }
 
         #endregion
 
@@ -171,9 +173,12 @@ namespace Rawr.Warlock {
 
         public string GetXml() {
 
-            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
+            XmlSerializer serializer
+                = new XmlSerializer(typeof(CalculationOptionsWarlock));
             StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer = new System.IO.StringWriter(xml, System.Globalization.CultureInfo.InvariantCulture);
+            System.IO.StringWriter writer
+                = new System.IO.StringWriter(
+                    xml, System.Globalization.CultureInfo.InvariantCulture);
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
