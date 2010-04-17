@@ -8,48 +8,149 @@ namespace Rawr.Healadin
     {
 
         #region Model Properties
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
-                ////Relevant Gem IDs
-                //Green
-                int[] dazzling = { 39984, 40094, 40175 };
+        public override List<GemmingTemplate> DefaultGemmingTemplates {
+            get {
+                // Relevant Gem IDs for Healadin
+                // Red
+                int[] runed = { 39911, 39998, 40113, 42144 };       // Spell Power
 
-                //Yellow
-                int[] brilliant = { 39912, 40012, 40123, 42148 };
+                // Purple
+                int[] royal = { 39943, 40027, 40134, 40134 };       // Spell Power + MP5
 
-                //Orange
-                int[] luminous = { 39946, 40047, 40151 };
+                // Blue
+                int[] lustrous = { 39927, 40010, 40121, 42146 };    // MP5
 
-                //Meta
+                // Green
+                int[] dazzling = { 39984, 40094, 40175, 40175 };    // Intellect + MP5
+                int[] energized = { 39989, 40105, 40179, 40179 };   // Haste + MP5
+                int[] sundered = { 39985, 40096, 40176, 40176 };    // Crit + MP5
+
+                // Yellow
+                int[] brilliant = { 39912, 40012, 40123, 42148 };   // Intellect
+                int[] quick = { 39918, 40017, 40128, 42150 };       // Haste
+                int[] smooth = { 39914, 40013, 40124, 42149 };      // Crit
+
+                // Orange
+                int[] luminous = { 39946, 40047, 40151, 40151 };    // Spell Power + Intellect
+                int[] potent = { 39956, 40048, 40152, 40152 };      // Spell Power + Crit
+                int[] reckless = { 39959, 40051, 40155, 40155 };    // Spell Power + Haste
+
+                // Prismatic
+                int[] allStats = { 42701, 42702, 49110, 49110 };    // All Stats
+
+                // Meta
                 int insightful = 41401;
-                // int revitalizing = 41376;
+                int revitalizing = 41376;
 
-                return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
-						RedId = brilliant[0], YellowId = brilliant[0], BlueId = brilliant[0], PrismaticId = brilliant[0], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
-						RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful },
+                string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
+                string[] typeGroupNames = new string[] { "MP5", "Spell Power", "Intellect", "Haste", "Critical" };
 
-					new GemmingTemplate() { Model = "Healadin", Group = "Rare",
-						RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Rare",
-						RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
-						
-					new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
-						RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
-						RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
-						
-					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-						RedId = brilliant[2], YellowId = brilliant[3], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
-					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
-						RedId = luminous[2], YellowId = brilliant[3], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
-				};
+                int[] metaTemplates = new int[] { insightful, revitalizing };
+
+                //    Red           Yellow      Blue        Prismatic
+                int[,][] mp5Templates = new int[,][]
+                { // MP5
+                    { lustrous,     lustrous,   lustrous,   lustrous },
+                    { royal,        dazzling,   lustrous,   lustrous },
+                };
+
+                int[,][] spellPowerTemplates = new int[,][]
+                { // Spell Power
+                    { runed,        runed,      runed,      runed },
+                    { runed,        luminous,   royal,      runed },
+                };
+
+                int[,][] intellectTemplates = new int[,][]
+                { // Intellect
+                    { brilliant,    brilliant,  brilliant,  brilliant },
+                    { allStats,     brilliant,  brilliant,  brilliant },
+                    { brilliant,    allStats,   brilliant,  brilliant },
+                    { brilliant,    brilliant,  allStats,   brilliant },
+                    { brilliant,    brilliant,  brilliant,  allStats, },
+                    { luminous,     brilliant,  dazzling,   brilliant },
+                };
+
+                int[,][] hasteTemplates = new int[,][]
+                { // Haste
+                    { quick,        quick,      quick,      quick },
+                    { reckless,     quick,      energized,  quick },
+                };
+
+                int[,][] critTemplates = new int[,][]
+                { // Crit
+                    { smooth,       smooth,     smooth,     smooth },
+                    { potent,       smooth,     sundered,   smooth },
+                };
+
+                int[][,][] gemmingTemplates = new int[][,][] { mp5Templates, spellPowerTemplates, intellectTemplates, hasteTemplates, critTemplates };
+
+                // Generate List of Gemming Templates
+                List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
+                for (int qualityId = 0; qualityId <= qualityGroupNames.GetUpperBound(0); qualityId++) {
+                    for (int typeId = 0; typeId <= typeGroupNames.GetUpperBound(0); typeId++) {
+                        for (int templateId = 0; templateId <= gemmingTemplates[typeId].GetUpperBound(0); templateId++) {
+                            for (int metaId = 0; metaId <= metaTemplates.GetUpperBound(0); metaId++) {
+                                gemmingTemplate.Add(new GemmingTemplate()
+                                {
+                                    Model = "Healadin",
+                                    Group = string.Format("{0} - {1}", qualityGroupNames[qualityId], typeGroupNames[typeId]),
+                                    RedId = gemmingTemplates[typeId][templateId, 0][qualityId],
+                                    YellowId = gemmingTemplates[typeId][templateId, 1][qualityId],
+                                    BlueId = gemmingTemplates[typeId][templateId, 2][qualityId],
+                                    PrismaticId = gemmingTemplates[typeId][templateId, 3][qualityId],
+                                    MetaId = metaTemplates[metaId],
+                                    Enabled = qualityGroupNames[qualityId] == "Epic" && typeGroupNames[typeId] == "Intellect",
+                                });
+                            }
+                        }
+                    }
+                }
+                return gemmingTemplate;
             }
         }
+        
+        //public override List<GemmingTemplate> DefaultGemmingTemplates
+        //{
+        //    get
+        //    {
+        //        ////Relevant Gem IDs
+        //        //Green
+        //        int[] dazzling = { 39984, 40094, 40175 };
+
+        //        //Yellow
+        //        int[] brilliant = { 39912, 40012, 40123, 42148 };
+
+        //        //Orange
+        //        int[] luminous = { 39946, 40047, 40151 };
+
+        //        //Meta
+        //        int insightful = 41401;
+        //        // int revitalizing = 41376;
+
+        //        return new List<GemmingTemplate>()
+        //        {
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
+        //                RedId = brilliant[0], YellowId = brilliant[0], BlueId = brilliant[0], PrismaticId = brilliant[0], MetaId = insightful },
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
+        //                RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful },
+
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Rare",
+        //                RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Rare",
+        //                RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
+						
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
+        //                RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
+        //                RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
+						
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
+        //                RedId = brilliant[2], YellowId = brilliant[3], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
+        //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
+        //                RedId = luminous[2], YellowId = brilliant[3], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
+        //        };
+        //    }
+        //}
 
         public override void SetDefaults(Character character)
         {
