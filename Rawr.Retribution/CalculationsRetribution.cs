@@ -402,13 +402,9 @@ namespace Rawr.Retribution
                 GetCharacterRotation(character, additionalItem));
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(
-            Character character,
-            Item additionalItem,
-            Rotation rot)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Rotation rot)
         {
-            CalculationOptionsRetribution calcOpts =
-                character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
             PaladinTalents talents = character.PaladinTalents;
             CombatStats combats = rot.Combats;
@@ -424,8 +420,11 @@ namespace Rawr.Retribution
             calc.ToResist = CombatStats.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
 
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
-                + new MagicDamage(combats, stats.FireDamage).AverageDamage()
-                + new MagicDamage(combats, stats.ShadowDamage).AverageDamage();
+                          + new MagicDamage(combats, stats.FireDamage).AverageDamage()
+                          + new MagicDamage(combats, stats.ShadowDamage).AverageDamage();
+                          + new MagicDamage(combats, stats.FrostDamage).AverageDamage();
+                          + new MagicDamage(combats, stats.NatureDamage).AverageDamage();
+                          + new MagicDamage(combats, stats.HolyDamage).AverageDamage();
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 
@@ -988,6 +987,7 @@ namespace Rawr.Retribution
                 ArcaneDamage = stats.ArcaneDamage,
                 ShadowDamage = stats.ShadowDamage,
                 NatureDamage = stats.NatureDamage,
+                HolyDamage = stats.HolyDamage,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1102,7 +1102,8 @@ namespace Rawr.Retribution
                                   stats.FrostDamage > 0 ||
                                   stats.ArcaneDamage > 0 ||
                                   stats.ShadowDamage > 0 ||
-                                  stats.NatureDamage > 0;
+                                  stats.NatureDamage > 0 ||
+                                  stats.HolyDamage > 0;
 
 
             if (!SecondaryStats)
@@ -1126,7 +1127,7 @@ namespace Rawr.Retribution
         /// </summary>
         public bool HasExtraStats(Stats stats)
         {
-            bool ExtraStats = stats.Health > 0 ||
+            bool ExtraStats =   stats.Health > 0 ||
                                 stats.Mana > 0 ||
                                 stats.Stamina > 0 ||
                                 stats.BonusStaminaMultiplier > 0;
