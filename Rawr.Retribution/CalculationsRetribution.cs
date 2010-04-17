@@ -421,9 +421,9 @@ namespace Rawr.Retribution
 
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.ShadowDamage).AverageDamage();
-                          + new MagicDamage(combats, stats.FrostDamage).AverageDamage();
-                          + new MagicDamage(combats, stats.NatureDamage).AverageDamage();
+                          + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
+                          + new MagicDamage(combats, stats.FrostDamage).AverageDamage()
+                          + new MagicDamage(combats, stats.NatureDamage).AverageDamage()
                           + new MagicDamage(combats, stats.HolyDamage).AverageDamage();
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
