@@ -739,14 +739,11 @@ focus on Survival Points.",
                 }
             }
 
-            // Darkmoon card greatness procs
-            if (statsSpecialEffects.HighestStat > 0 || statsSpecialEffects.Paragon > 0)
-            {
-                if (statsSpecialEffects.Strength >= statsSpecialEffects.Agility) { statsSpecialEffects.Strength += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon; }
-                else if (statsSpecialEffects.Agility > statsSpecialEffects.Strength) { statsSpecialEffects.Agility += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon; }
-                statsSpecialEffects.HighestStat = 0;
-                statsSpecialEffects.Paragon = 0;
-            }
+            // Darkmoon card greatness & Paragon procs
+            // These should always increase strength, which is going to be the Paladin's top stat outside of stamina
+            statsSpecialEffects.Strength += statsSpecialEffects.HighestStat + statsSpecialEffects.Paragon;
+            statsSpecialEffects.HighestStat = 0;
+            statsSpecialEffects.Paragon = 0;
 
             // Base Stats
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
