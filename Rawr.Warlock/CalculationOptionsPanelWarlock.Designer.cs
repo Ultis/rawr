@@ -59,8 +59,8 @@
             this.notesBox = new System.Windows.Forms.TextBox();
             this.optionsPage = new System.Windows.Forms.TabPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.ProcCheckbox = new System.Windows.Forms.CheckBox();
             this.TimerButton = new System.Windows.Forms.Button();
+            this.ProcCheckbox = new System.Windows.Forms.CheckBox();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
@@ -438,6 +438,16 @@
             this.tabPage1.Text = "Debug";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // TimerButton
+            // 
+            this.TimerButton.Location = new System.Drawing.Point(6, 29);
+            this.TimerButton.Name = "TimerButton";
+            this.TimerButton.Size = new System.Drawing.Size(105, 23);
+            this.TimerButton.TabIndex = 20;
+            this.TimerButton.Text = "Time Computations";
+            this.TimerButton.UseVisualStyleBackColor = true;
+            this.TimerButton.Click += new System.EventHandler(this.TimerButton_Click);
+            // 
             // ProcCheckbox
             // 
             this.ProcCheckbox.AutoSize = true;
@@ -448,16 +458,6 @@
             this.ProcCheckbox.Text = "Disable special effects";
             this.ProcCheckbox.UseVisualStyleBackColor = true;
             this.ProcCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);
-            // 
-            // TimerButton
-            // 
-            this.TimerButton.Location = new System.Drawing.Point(6, 29);
-            this.TimerButton.Name = "TimerButton";
-            this.TimerButton.Size = new System.Drawing.Size(105, 23);
-            this.TimerButton.TabIndex = 20;
-            this.TimerButton.Text = "Time Computations";
-            this.TimerButton.UseVisualStyleBackColor = true;
-            this.TimerButton.Click += new System.EventHandler(this.TimerButton_Click);
             // 
             // CalculationOptionsPanelWarlock
             // 
