@@ -27,7 +27,7 @@ namespace Rawr.Warlock {
         public CalculationOptionsWarlock Options { get; private set; }
         public WarlockTalents Talents { get; private set; }
         public SpellModifiers SpellModifiers { get; private set; }
-        public WeightedStat[] Haste { get; private set; }
+        public List<WeightedStat> Haste { get; private set; }
 
         public float BaseMana { get; private set; }
         public float HitChance { get; private set; }
@@ -219,7 +219,7 @@ namespace Rawr.Warlock {
 
             return 1
                 + stats.SpellHaste
-                + StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+                + StatConversion.GetSpellHasteFromRating(GetHasteRating(stats));
         }
 
         #endregion
@@ -496,7 +496,7 @@ namespace Rawr.Warlock {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
                 staticHaste.Value = nonProcHaste;
-                Haste = new WeightedStat[] { staticHaste };
+                Haste = new List<WeightedStat> { staticHaste };
                 return;
             }
 
@@ -604,16 +604,24 @@ namespace Rawr.Warlock {
                     proc.ManaRestore *= Options.Duration;
                 }
                 procStats.Accumulate(proc);
-                if (effect.Trigger == Trigger.Use) {
+
+                bool doublePot
+                    = effect.Cooldown == 1200f && effect.Duration == 14f;
+                if (effect.Trigger == Trigger.Use && ! doublePot) {
                     MaxCritChance += GetSpellCrit(effect.Stats);
                 } else {
                     MaxCritChance += GetSpellCrit(proc);
                 }
+
                 if (effect.Stats.HasteRating > 0) {
                     hasteRatingEffects.Add(effect);
                     hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
                     hasteRatingChances.Add(chances[(int) effect.Trigger]);
-                    hasteRatingOffsets.Add(0f);
+                    if (doublePot) {
+                        hasteRatingOffsets.Add(.75f * Options.Duration);
+                    } else {
+                        hasteRatingOffsets.Add(0f);
+                    }
                     hasteRatingScales.Add(1f);
                     hasteRatingValues.Add(effect.Stats.HasteRating);
                 }
@@ -650,15 +658,24 @@ namespace Rawr.Warlock {
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                     Options.Duration,
                     hasteValues.ToArray());
-            Haste = new WeightedStat[ratings.Length * percentages.Length];
+            float staticRating = CalcHasteRating();
+            Haste = new List<WeightedStat>();
             for (int p = percentages.Length, f = 0; --p >= 0; ) {
+                if (percentages[p].Chance == 0) {
+                    continue;
+                }
                 for (int r = ratings.Length; --r >= 0; ++f) {
-                    Haste[f].Chance = percentages[p].Chance * ratings[r].Chance;
-                    Haste[f].Value
+                    if (ratings[r].Chance == 0) {
+                        continue;
+                    }
+                    WeightedStat s = new WeightedStat();
+                    s.Chance = percentages[p].Chance * ratings[r].Chance;
+                    s.Value
                         = (1 + percentages[p].Value)
                             * (1 + StatConversion.GetSpellHasteFromRating(
-                                    ratings[r].Value + Stats.HasteRating))
+                                    ratings[r].Value + staticRating))
                             * (1 + Stats.SpellHaste);
+                    Haste.Add(s);
                 }
             }
         }

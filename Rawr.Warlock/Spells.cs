@@ -43,7 +43,7 @@ namespace Rawr.Warlock {
         public static float GetTimeUsed(
             float baseCastTime,
             float gcdBonus,
-            WeightedStat[] haste,
+            List<WeightedStat> haste,
             float lag) {
 
             float minGCD = 1f - gcdBonus;

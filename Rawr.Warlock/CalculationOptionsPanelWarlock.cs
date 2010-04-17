@@ -369,7 +369,7 @@ namespace Rawr.Warlock {
                 = (CalculationsWarlock) Calculations.Instance;
             Character character = Character;
             clock.Start();
-            for (int i = 0; i < 2000; i++) {
+            for (int i = 0; i < 4000; i++) {
                 calculations.GetCharacterCalculations(character);
             }
             clock.Stop();
