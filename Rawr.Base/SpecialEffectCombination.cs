@@ -83,15 +83,25 @@ namespace Rawr
                         {
                             v[j] = value[i];
                         }
-                        d[j] = effects[i].Duration / triggerInterval[i];
                         p[j] = triggerChance[i] * effects[i].GetChance(attackSpeed);
-                        c[j] = effects[i].Cooldown / triggerInterval[i];
-                        if (discretizationCorrection)
+                        if (triggerInterval[i] == 0.0f)
                         {
-                            c[j] += 0.5f;
+                            // on use effects
+                            d[j] = effects[i].Duration;
+                            c[j] = effects[i].Cooldown;
+                            o[j] = offset[i];
                         }
-                        if (c[j] < 1.0f) c[j] = 0.0f; // no cooldown model, WARNING: we currently don't support the case where 0 < cooldown < duration
-                        o[j] = offset[i] / triggerInterval[i];
+                        else
+                        {
+                            d[j] = effects[i].Duration / triggerInterval[i];
+                            c[j] = effects[i].Cooldown / triggerInterval[i];
+                            if (discretizationCorrection)
+                            {
+                                c[j] += 0.5f;
+                            }
+                            if (c[j] < 1.0f) c[j] = 0.0f; // no cooldown model, WARNING: we currently don't support the case where 0 < cooldown < duration
+                            o[j] = offset[i] / triggerInterval[i];
+                        }
                         j++;
                     }
                 }
@@ -609,35 +619,50 @@ namespace Rawr
 
             for (int i = 0; i < p.N; i++)
             {
-                float x = t / p.triggerInterval[i] - p.o[i];
-
-                if (p.c[i] == 0.0f)
+                if (p.triggerInterval[i] == 0.0f)
                 {
-                    // support for cooldown = 0
-                    if (p.d[i] <= 1.0f)
+                    float x = t - p.o[i]; // on use effects start straight on offset and then every cooldown
+                    if (x % p.c[i] < p.d[i])
                     {
-                        p.uptime[i] = p.d[i] * p.p[i];
+                        p.uptime[i] = 1.0f;
                     }
                     else
                     {
-                        p.uptime[i] = 1.0f - (float)Math.Pow(1f - p.p[i], Math.Min(x, p.d[i]));
+                        p.uptime[i] = 0.0f;
                     }
                 }
                 else
                 {
-                    // normal case for duration < cooldown
-                    p.uptime[i] = 0.0f;
-                    int r = 1;
-                    while (x > 0)
+                    float x = t / p.triggerInterval[i] - p.o[i];
+
+                    if (p.c[i] == 0.0f)
                     {
-                        p.uptime[i] += p.Ibeta(r, x, p.p[i]);
-                        float xd = x - p.d[i];
-                        if (xd > 0)
+                        // support for cooldown = 0
+                        if (p.d[i] <= 1.0f)
                         {
-                            p.uptime[i] -= p.Ibeta(r, xd, p.p[i]);
+                            p.uptime[i] = p.d[i] * p.p[i];
                         }
-                        r++;
-                        x -= p.c[i];
+                        else
+                        {
+                            p.uptime[i] = 1.0f - (float)Math.Pow(1f - p.p[i], Math.Min(x, p.d[i]));
+                        }
+                    }
+                    else
+                    {
+                        // normal case for duration < cooldown
+                        p.uptime[i] = 0.0f;
+                        int r = 1;
+                        while (x > 0)
+                        {
+                            p.uptime[i] += p.Ibeta(r, x, p.p[i]);
+                            float xd = x - p.d[i];
+                            if (xd > 0)
+                            {
+                                p.uptime[i] -= p.Ibeta(r, xd, p.p[i]);
+                            }
+                            r++;
+                            x -= p.c[i];
+                        }
                     }
                 }
             }
