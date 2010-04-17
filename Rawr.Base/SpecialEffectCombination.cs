@@ -622,7 +622,7 @@ namespace Rawr
                 if (p.triggerInterval[i] == 0.0f)
                 {
                     float x = t - p.o[i]; // on use effects start straight on offset and then every cooldown
-                    if (x % p.c[i] < p.d[i])
+                    if (x >= 0 && x % p.c[i] < p.d[i])
                     {
                         p.uptime[i] = 1.0f;
                     }
