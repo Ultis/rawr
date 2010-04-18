@@ -1,119 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Rawr.Warlock {
 
     public abstract class Pet {
 
-        public float BaseStrength { get; private set; }
-        public float BaseAgility { get; private set; }
-        public float BaseStamina { get; private set; }
-        public float BaseIntellect { get; private set; }
-        public float BaseHealth { get; private set; }
-        public float BaseMana { get; private set; }
-        public float BaseMp5 { get; private set; }
-        public float BaseAttackPower { get; private set; }
+        public static List<string> ALL_PETS = new List<String>();
 
-        public float HealthPerStamina { get; private set; }
-        public float ManaPerIntellect { get; private set; }
-        public float Mp5PerIntellect { get; private set; }
-        public float AttackPowerPerStrength { get; private set; }
+        static Pet() {
 
-        #region constructor for normal pets
-        public Pet(
-            float baseHealth,
-            float baseMana,
-            float baseMp5,
-            float baseAttackPower,
-            float healthPerStamina,
-            float manaPerIntellect,
-            float mp5PerIntellect,
-            float attackPowerPerStrength)
-            : this(
-                314f, // strength
-                90f, // agility
-                328f, // stamina
-                150f, // intellect
-                baseHealth,
-                baseMana,
-                baseMp5,
-                baseAttackPower,
-                healthPerStamina,
-                manaPerIntellect,
-                mp5PerIntellect,
-                attackPowerPerStrength) { }
-        #endregion
-
-        #region kitchen sink constructor
-        public Pet(
-            float baseStrength,
-            float baseAgility,
-            float baseStamina,
-            float baseIntellect,
-            float baseHealth,
-            float baseMana,
-            float baseMp5,
-            float baseAttackPower,
-            float healthPerStamina,
-            float manaPerIntellect,
-            float mp5PerIntellect,
-            float attackPowerPerStrength) {
-
-            BaseStrength = baseStrength;
-            BaseAgility = baseAgility;
-            BaseStamina = baseStamina;
-            BaseIntellect = baseIntellect;
-            BaseHealth = baseHealth;
-            BaseMana = baseMana;
-            BaseMp5 = baseMp5;
-            BaseAttackPower = baseAttackPower;
-            HealthPerStamina = healthPerStamina;
-            ManaPerIntellect = manaPerIntellect;
-            Mp5PerIntellect = mp5PerIntellect;
-            attackPowerPerStrength = AttackPowerPerStrength;
+            Type petType = Type.GetType("Rawr.Warlock.Pet");
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes()) {
+                if (type.IsSubclassOf(petType)) {
+                    ALL_PETS.Add(type.Name);
+                }
+            }
         }
-        #endregion
-    }
 
-    public class Imp : Pet {
+        public CharacterCalculationsWarlock Mommy { get; protected set; }
 
-        public Imp()
-            : base(
-                297f, // float baseStrength,
-                79f, // float baseAgility,
-                118f, // float baseStamina,
-                369f, // float baseIntellect,
-                2877f, // float baseHealth,
-                1082f, // float baseMana,
-                0f, // float baseMp5,
-                574f, // float baseAttackPower,
-                8.4f, // float healthPerStamina,
-                5.0f, // float manaPerIntellect,
-                .02f, // float mp5PerIntellect,
-                0f) { // float attackPowerPerStrength,
+        public float BaseStamina { get; protected set; }
+        public float StaminaCoef { get; protected set; }
+        public float HealthPerStamina { get; protected set; }
+        public float BaseHealth { get; protected set; }
 
-            // real firebolt avg hit, naked untalented = 236, NOT whatever the
-            // tooltip indicates
+        public float BaseIntellect { get; protected set; }
+        public float IntellectCoef { get; protected set; }
+        public float ManaPerIntellect { get; protected set; }
+        public float BaseMana { get; protected set; }
+        public float SpellCritPerIntellect { get; protected set; }
+        public float BaseSpellCrit { get; protected set; }
+
+        public Pet(
+            CharacterCalculationsWarlock mommy,
+            float baseHealth,
+            float healthPerStamina) {
+
+            Mommy = mommy;
+
+            BaseStamina = 328f;
+            StaminaCoef = .75f;
+            HealthPerStamina = healthPerStamina;
+            BaseHealth = baseHealth;
+
+            BaseIntellect = 150f;
+            IntellectCoef = .3f;
+            ManaPerIntellect = 11.55f;
+            BaseMana = 1343f;
+            SpellCritPerIntellect = .006f;
+            BaseSpellCrit = 3.333f;
+        }
+
+        public float CalcStamina() {
+
+            return BaseStamina + StaminaCoef * Mommy.CalcStamina();
+        }
+
+        public float CalcIntellect() {
+
+            return BaseIntellect + IntellectCoef * Mommy.CalcIntellect();
+        }
+
+        public float CalcHealth() {
+
+            return BaseHealth + HealthPerStamina * CalcStamina();
         }
     }
 
     public class Felhunter : Pet {
 
-        public Felhunter()
+        public Felhunter(CharacterCalculationsWarlock mommy)
             : base(
-                314f, // float baseStrength,
-                90f, // float baseAgility,
-                328f, // float baseStamina,
-                150f, // float baseIntellect,
-                1672f, // float baseHealth,
-                1344f, // float baseMana,
-                0f, // float baseMp5,
-                574f, // float baseAttackPower,
-                9.5f, // float healthPerStamina,
-                11.6f, // float manaPerIntellect,
-                0f, // float mp5PerIntellect,
-                0f) { } // float attackPowerPerStrength,
+                mommy,
+                1671f, // baseHealth,
+                9.5f) { // healthPerStamina,
+
+
+        }
+    }
+
+    public class Imp : Pet {
+
+        public Imp(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                2877f, // baseHealth,
+                8.4f) { // healthPerStamina,
+
+            BaseStamina = 118f;
+            BaseIntellect = 368f;
+            ManaPerIntellect = 4.95f;
+            BaseMana = 1052f;
+            BaseSpellCrit = 1f;
+
+            // real firebolt avg hit, naked untalented = 236, NOT whatever the
+            // tooltip indicates
+        }
     }
 
     //public class Felguard : Pet {
@@ -129,37 +113,25 @@ namespace Rawr.Warlock {
     //}
 
     public class Succubus : Pet {
-        public Succubus()
+        public Succubus(CharacterCalculationsWarlock mommy)
             : base(
-                314f, // float baseStrength,
-                90f, // float baseAgility,
-                328f, // float baseStamina,
-                150f, // float baseIntellect,
-                1622f, // float baseHealth,
-                1344f, // float baseMana,
-                4.8f, // float baseMp5,
-                574f, // float baseAttackPower,
-                9f, // float healthPerStamina,
-                11.6f, // float manaPerIntellect,
-                .02f, // float mp5PerIntellect,
-                0f) { } // float attackPowerPerStrength,
+                mommy,
+                1671f, // baseHealth,
+                9f) { // healthPerStamina,
+
+
+        }
     }
 
     public class Voidwalker : Pet {
-        public Voidwalker()
+        public Voidwalker(CharacterCalculationsWarlock mommy)
             : base(
-                314f, // float baseStrength,
-                90f, // float baseAgility,
-                328f, // float baseStamina,
-                150f, // float baseIntellect,
-                1820f, // float baseHealth,
-                1344f, // float baseMana,
-                4.8f, // float baseMp5,
-                574f, // float baseAttackPower,
-                11f, // float healthPerStamina,
-                11.6f, // float manaPerIntellect,
-                .02f, // float mp5PerIntellect,
-                0f) { } // float attackPowerPerStrength,
+                mommy,
+                1671f, // baseHealth,
+                11f) { // healthPerStamina,
+
+
+        }
     }
 
     //public class Doomguard : Pet {

@@ -22,6 +22,7 @@ namespace Rawr.Warlock {
         public float PetDps { get { return SubPoints[1]; } }
 
         public Character Character { get; private set; }
+        public Pet Pet { get; private set; }
         public Stats PreProcStats { get; private set; }
         public Stats Stats { get; private set; }
         public CalculationOptionsWarlock Options { get; private set; }
@@ -62,6 +63,12 @@ namespace Rawr.Warlock {
                 = Math.Min(
                     1f,
                     Options.GetBaseHitRate() / 100f + CalcSpellHit());
+
+            if (!Options.Pet.Equals("None")) {
+                Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
+                Pet = (Pet) Activator.CreateInstance(
+                        type, new object[] { this });
+            }
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
@@ -245,20 +252,20 @@ namespace Rawr.Warlock {
             Dictionary<string, string> dictValues
                 = new Dictionary<string, string>();
 
-            dictValues.Add("Personal DPS", String.Format("{0:0}", PersonalDps));
-            dictValues.Add("Pet DPS", String.Format("{0:0}", PetDps));
-            dictValues.Add("Total DPS", String.Format("{0:0}", OverallPoints));
+            dictValues.Add("Personal DPS", string.Format("{0:0}", PersonalDps));
+            dictValues.Add("Pet DPS", string.Format("{0:0}", PetDps));
+            dictValues.Add("Total DPS", string.Format("{0:0}", OverallPoints));
 
             dictValues.Add(
-                "Health", String.Format("{0:0.0}", CalcHealth()));
+                "Health", string.Format("{0:0.0}", CalcHealth()));
             dictValues.Add(
-                "Mana", String.Format("{0:0.0}", CalcMana()));
+                "Mana", string.Format("{0:0.0}", CalcMana()));
             dictValues.Add(
-                "Spirit", String.Format("{0:0.0}", CalcSpirit()));
+                "Spirit", string.Format("{0:0.0}", CalcSpirit()));
 
             dictValues.Add(
                 "Bonus Damage",
-                String.Format(
+                string.Format(
                     "{0:0.0}*{1:0.0}\tBefore Procs",
                     CalcSpellPower(),
                     GetSpellPower(PreProcStats)));
@@ -276,7 +283,7 @@ namespace Rawr.Warlock {
             float missChance = totalHit > 1 ? 0 : (1 - totalHit);
             dictValues.Add(
                 "Hit Rating",
-                String.Format(
+                string.Format(
                     "{0}*{1:0.00%} Hit Chance (max 100%) | {2:0.00%} Miss Chance \r\n\r\n"
                         + "{3:0.00%}\t Base Hit Chance on a Level {4:0} target\r\n"
                         + "{5:0.00%}\t from {6:0} Hit Rating [gear, food and/or flasks]\r\n"
@@ -305,14 +312,14 @@ namespace Rawr.Warlock {
 
             dictValues.Add(
                 "Crit Chance",
-                String.Format(
+                string.Format(
                     "{0:0.00%}*{1:0.00%}\tBefore Procs",
                     CalcSpellCrit(),
                     GetSpellCrit(PreProcStats)));
 
             dictValues.Add(
                 "Haste Rating",
-                String.Format(
+                string.Format(
                     "{0:0.00}%*"
                         + "{1:0.00}s\tGlobal Cooldown\n"
                         + "{2:0.00}%\tBefore Procs",
@@ -320,6 +327,25 @@ namespace Rawr.Warlock {
                     Math.Max(1.0f, 1.5f / CalcSpellHaste()),
                     (GetSpellHaste(PreProcStats) - 1) * 100f));
 
+            // Pet Stats
+            if (Pet == null) {
+                dictValues.Add("Pet Stamina", "-");
+                dictValues.Add("Pet Intellect", "-");
+                dictValues.Add("Pet Health", "-");
+            } else {
+                dictValues.Add(
+                    "Pet Stamina",
+                    string.Format("{0:0.0}", Pet.CalcStamina()));
+                dictValues.Add(
+                    "Pet Intellect",
+                    string.Format("{0:0.0}", Pet.CalcIntellect()));
+                dictValues.Add(
+                    "Pet Health",
+                    string.Format("{0:0.0}", Pet.CalcHealth()));
+            }
+
+
+            // Spell Stats
             foreach (string spellName in Spell.ALL_SPELLS) {
                 if (CastSpells.ContainsKey(spellName)) {
                     dictValues.Add(

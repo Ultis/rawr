@@ -119,6 +119,11 @@ namespace Rawr.Warlock {
         public CalculationOptionsPanelWarlock() {
 
             InitializeComponent();
+
+            petCombo.Items.Add("None");
+            foreach (string pet in Pet.ALL_PETS) {
+                petCombo.Items.Add(pet);
+            }
         }
 
         protected override void LoadCalculationOptions() {
@@ -129,6 +134,8 @@ namespace Rawr.Warlock {
             }
             _options = (CalculationOptionsWarlock) Character.CalculationOptions;
             ++_ignoreCount;
+
+            petCombo.SelectedItem = _options.Pet;
 
             targetLevelCombo.Text = _options.TargetLevel.ToString();
             fightLengthSpinner.Value = (decimal) _options.Duration;
@@ -149,7 +156,7 @@ namespace Rawr.Warlock {
                 return;
             }
 
-
+            _options.Pet = (string) petCombo.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
 

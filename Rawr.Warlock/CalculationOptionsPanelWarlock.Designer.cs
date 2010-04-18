@@ -74,10 +74,7 @@
             // 
             this.petCombo.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.petCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.petCombo.Enabled = false;
             this.petCombo.FormattingEnabled = true;
-            this.petCombo.Items.AddRange(new object[] {
-            "None"});
             this.petCombo.Location = new System.Drawing.Point(180, 6);
             this.petCombo.Name = "petCombo";
             this.petCombo.Size = new System.Drawing.Size(106, 21);
@@ -359,6 +356,7 @@
             // 
             // infernalCheck
             // 
+            this.infernalCheck.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.infernalCheck.AutoSize = true;
             this.infernalCheck.Enabled = false;
             this.infernalCheck.Location = new System.Drawing.Point(180, 33);
