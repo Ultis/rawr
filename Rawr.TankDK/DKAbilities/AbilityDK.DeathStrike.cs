@@ -22,6 +22,7 @@ namespace Rawr.TankDK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .75f;
             this.bTriggersGCD = true;
+            // TODO: # diseases on Target.
             this.sStats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
         }
     }

@@ -753,6 +753,7 @@ namespace Rawr.TankDK
                     fDamDeathStrike *= DSCrit; 
                     // Add in threat from Healing.
                     fDamDeathStrike += ((stats.Health * .05f * calcOpts.m_Rotation.numDisease) / calcOpts.uNumberTargets / 2); // threat from Healing divided by number of targets.
+                    stats.HealthRestoreFromMaxHealth += .05f * calcOpts.m_Rotation.numDisease;
                 }
             }
             #endregion

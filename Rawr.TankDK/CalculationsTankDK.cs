@@ -457,11 +457,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             Stats sPaperDoll = stats.Clone();
 
             CombatTable ct = new CombatTable(character, calcs, stats, opts);
-            if (opts.bExperimental)
-            {
-                // Setup for new combat table using the new ability objects.
-                CombatTable2 ct2 = new CombatTable2(character, stats, calcs, opts);
-            }
+            // Setup for new combat table using the new ability objects.
+            CombatTable2 ct2 = new CombatTable2(character, stats, calcs, opts);
+
             // Now that we have the combat table, we should be able to integrate the Special effects.
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
@@ -584,6 +582,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // refresh Combat table w/ the new stats.
             ct = new CombatTable(character, calcs, stats, opts);
+            if (opts.bExperimental)
+            {
+                // Setup for new combat table using the new ability objects.
+                ct2 = new CombatTable2(character, stats, calcs, opts);
+            }
 
             #region Talents with general reach that aren't already in stats.
             #region Talent: Bone Shield
@@ -773,19 +776,35 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             #region ***** Threat Rating *****
             float fRotDuration = ct.calcOpts.m_Rotation.getRotationDuration();
+            float DSperSec = ct.calcOpts.m_Rotation.DeathStrike / fRotDuration;
             float fThreatTotal = 0f;
             float fThreatPS = 0f;
 
             fThreatTotal = ct.GetTotalThreat();
             fThreatPS = fThreatTotal / fRotDuration;
+            if (opts.bExperimental)
+            {
+                // Setup for new combat table using the new ability objects.
+                fThreatTotal = ct2.m_TPS;
+                fRotDuration = (float)ct2.m_RotationDuration / 1000;
+
+                fThreatPS = fThreatTotal / fRotDuration;
+            }
 
             calcs.Threat = fThreatPS;
             // Improved Blood Presence
             if (character.DeathKnightTalents.ImprovedBloodPresence > 0)
             {
-                float fDamageDone = fThreatPS / 2.035f; // reducing the TPS by the multiplier for Frost presence for basic DPS number - not the most accurate, but it gets us closer.
-                // FullCharacterStats.HealingReceivedMultiplier += 0.5f * character.DeathKnightTalents.ImprovedBloodPresence;
-                stats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
+                if (opts.bExperimental)
+                {
+                    float fDamageDone = ct2.m_DPS;
+                    stats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
+                }
+                else
+                {
+                    float fDamageDone = fThreatPS / 2.035f; // reducing the TPS by the multiplier for Frost presence for basic DPS number - not the most accurate, but it gets us closer.
+                    stats.Healed += (fDamageDone * 0.02f * character.DeathKnightTalents.ImprovedBloodPresence);
+                }
             }
 
             // Factor in damage procs.
@@ -971,7 +990,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fTotalMitigation += fSegmentMitigation;
             #endregion
 
-            // Let's make sure we don't go into negative damage here.
+            // Let's make sure we don't go into negative damage here
             fMagicDamageDPS = Math.Max(0f, fMagicDamageDPS);
             fPhyDamageDPS = Math.Max(0f, fPhyDamageDPS);
 
@@ -991,9 +1010,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion
 
             // Mitigation is the difference between what damage would have been before and what it is once you factor in mitigation effects.
-            fTotalMitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
-            fTotalMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
-            fTotalMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
+            fSegmentMitigation = 0;
+            fSegmentMitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+            fSegmentMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
+            fSegmentMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
+            // Health Returned by DS and other sources:
+            fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health) * DSperSec, stats.HealingReceivedMultiplier);
+            fTotalMitigation += fSegmentMitigation;
 
             calcs.Mitigation = fTotalMitigation;
             calcs.MitigationWeight = opts.MitigationWeight;

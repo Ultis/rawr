@@ -14,12 +14,16 @@ namespace Rawr.TankDK
         /// Base damage 0
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
-        public AbilityDK_BloodPlague(Stats s)
+        public AbilityDK_BloodPlague(Stats s, uint Epidemic)
         {
             this.szName = "Blood Plague";
             this.sStats = s;
             this.tDamageType = ItemDamageType.Shadow;
-            this.uDuration = 15000;
+            if (Epidemic >= 3)
+                // error
+                this.uDuration = 15000;
+            else
+                this.uDuration = 15000 + (Epidemic * 3000);
             this.uTickRate = 3000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
@@ -44,6 +48,8 @@ namespace Rawr.TankDK
                 _DamageAdditiveModifer = value;
             }
         }
+
+        // TODO: if (Epidemic): this.uDuration += 3000;
 
     }
 }

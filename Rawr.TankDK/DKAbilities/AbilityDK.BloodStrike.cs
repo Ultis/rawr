@@ -21,7 +21,25 @@ namespace Rawr.TankDK
             this.fWeaponDamageModifier = 0.4f;
             this.bWeaponRequired = true;
             this.bTriggersGCD = true;
-            // Damage increased by 12.5% per disease on target.
+
+        }
+
+        // TODO: Damage increased by 12.5% per disease on target.
+        private float _DamageMultiplierModifer;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+//                return .125 * uNumDiseases;
+                return _DamageMultiplierModifer;
+            }
+            set
+            {
+                _DamageMultiplierModifer = value;
+            }
         }
     }
 }

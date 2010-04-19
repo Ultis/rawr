@@ -123,7 +123,7 @@ namespace Rawr.UnitTests.TankDK
             Stats FFTestStats = new Stats();
             FFTestStats.AttackPower = 100;
             // Frost Fever application.
-            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(FFTestStats);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(FFTestStats, 0);
             // FF can be reapplied w/o any cooldown.
             // A disease dealing [0 + AP * 0.055 * 1.15] Frost damage every 3 sec and reducing the target's melee and ranged attack speed by 14% for 15 sec.  Caused by Icy Touch and other spells. 
             // Base damage 0
@@ -163,7 +163,7 @@ namespace Rawr.UnitTests.TankDK
             AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w, null);
 
             // Blood Plauge application.
-            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(FFTestStats);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(FFTestStats, 0);
 
             // A disease dealing [0 + AP * 0.055 * 1.15] Shadow damage every 3 sec . 
             // Base damage 0

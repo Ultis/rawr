@@ -249,7 +249,7 @@ namespace Rawr.TankDK
             int iDamage = (int)this.uBaseDamage;
             // TODO: Apply modifiers.
             iDamage += this.DamageAdditiveModifer;
-            iDamage = iDamage * (1 + DamageMultiplierModifer);
+            iDamage = (int)Math.Floor((float)iDamage * (1 + DamageMultiplierModifer));
             return iDamage;
         }
 
@@ -294,11 +294,11 @@ namespace Rawr.TankDK
             }
         }
 
-        private int _DamageMultiplierModifer;
+        private float _DamageMultiplierModifer;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
-        virtual public int DamageMultiplierModifer
+        virtual public float DamageMultiplierModifer
         {
             get
             {

@@ -19,20 +19,21 @@ namespace Rawr.TankDK
         List<AbilityDK_Base> ml_Rot;
 
         #region Output Values
-        private float _TPS;
+        private float _TotalDamage;
+        private float _TotalThreat;
+
         public float m_TPS // readonly
         {
             get
             {
-                return _TPS;
+                return _TotalThreat/_RotationDuration;
             }
         }
-        private float _DPS;
         public float m_DPS // readonly
         {
             get
             {
-                return _DPS;
+                return _TotalDamage/_RotationDuration;
             }
         }
         private int _RotationDuration;
@@ -70,7 +71,39 @@ namespace Rawr.TankDK
             else
                 MH = null;
 
+            // BuildRotation();
+
             CompileRotation(calcOpts.m_Rotation);
+        }
+
+        /// <summary>
+        /// Generate a rotation based on available resources.
+        /// </summary>
+        public void BuildRotation()
+        {
+            // TODO: need to setup a CombatState object. 
+            // Setup an instance of each ability.
+            // Single Runes:
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_Stats);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_Stats, MH, OH);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic);
+            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_Stats, MH, OH);
+            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_Stats, MH, OH);
+            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_Stats);
+            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_Stats);
+            // Multi Runes:
+            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_Stats, MH, OH);
+            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_Stats);
+            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_Stats, MH, OH);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_Stats, MH, OH);
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_Stats);
+
+            // RP:
+            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_Stats, MH, OH);
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_Stats);
+            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_Stats, MH, OH);
+
         }
 
         /// <summary>
@@ -90,7 +123,7 @@ namespace Rawr.TankDK
                 for (i = (int)Rot.IcyTouch; i > 0; i--)
                 {
                     ml_Rot.Add(new AbilityDK_IcyTouch(m_Stats));
-                    ml_Rot.Add(new AbilityDK_FrostFever(m_Stats));
+                    ml_Rot.Add(new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
                 }
             }
             #endregion
@@ -100,7 +133,7 @@ namespace Rawr.TankDK
                 for (i = (int)Rot.PlagueStrike; i > 0; i--)
                 {
                     ml_Rot.Add(new AbilityDK_PlagueStrike(m_Stats, MH, OH));
-                    ml_Rot.Add(new AbilityDK_BloodPlague(m_Stats));
+                    ml_Rot.Add(new AbilityDK_BloodPlague(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
                 }
             }
             #endregion
@@ -118,8 +151,16 @@ namespace Rawr.TankDK
             }
             if (Rot.HeartStrike > 0)
             {
-                for (i = (int)Rot.HeartStrike; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_HeartStrike(m_Stats, MH, OH));
+                if (m_Char.DeathKnightTalents.HeartStrike > 0)
+                {
+                    for (i = (int)Rot.HeartStrike; i > 0; i--)
+                        ml_Rot.Add(new AbilityDK_HeartStrike(m_Stats, MH, OH));
+                }
+                else
+                {
+                    // Error
+                    // Shot in rotation but not talented for.
+                }
             }
             if (Rot.BloodBoil > 0)
             {
@@ -168,9 +209,25 @@ namespace Rawr.TankDK
                     ml_Rot.Add(new AbilityDK_HowlingBlast(m_Stats));
                     if (m_Char.DeathKnightTalents.GlyphofHowlingBlast)
                     {
-                        ml_Rot.Add(new AbilityDK_FrostFever(m_Stats));
+                        ml_Rot.Add(new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
                     }
                 }
+            }
+            if (Rot.ScourgeStrike > 0)
+            {
+                if (m_Char.DeathKnightTalents.ScourgeStrike > 0)
+                {
+                    for (i = (int)Rot.ScourgeStrike; i > 0; i--)
+                    {
+                        ml_Rot.Add(new AbilityDK_ScourgeStrike(m_Stats, MH, OH));
+                    }
+                }
+                else
+                {
+                    // Error
+                    // Shot in rotation but not talented for.
+                }
+
             }
             #endregion
             #region BloodFrostUnholy
@@ -196,8 +253,16 @@ namespace Rawr.TankDK
             }
             if (Rot.FrostStrike > 0)
             {
-                for (i = (int)Rot.FrostStrike; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_FrostStrike(m_Stats, MH, OH));
+                if (m_Char.DeathKnightTalents.FrostStrike > 0)
+                {
+                    for (i = (int)Rot.FrostStrike; i > 0; i--)
+                        ml_Rot.Add(new AbilityDK_FrostStrike(m_Stats, MH, OH));
+                }
+                else
+                {
+                    // Error
+                    // Shot in rotation, but not available via talents.
+                }
             }
             #endregion
 
@@ -274,12 +339,12 @@ namespace Rawr.TankDK
             }
 
             #region Sum of DPS & Threat
-            this._DPS = 0;
-            this._TPS = 0;
+            this._TotalDamage = 0;
+            this._TotalThreat = 0;
             foreach (AbilityDK_Base ability in ml_Rot)
             {
-                this._DPS += ability.GetTotalDamage();
-                this._TPS += ability.GetTotalThreat();
+                this._TotalDamage += ability.GetTotalDamage();
+                this._TotalThreat += ability.GetTotalThreat();
             }
             #endregion
 

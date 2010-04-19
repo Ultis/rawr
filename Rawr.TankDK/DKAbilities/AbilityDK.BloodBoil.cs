@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.TankDK
 {
     /// <summary>
-    /// This class is the implmentation of the Howling Blast Ability based on the AbilityDK_Base class.
+    /// This class is the implmentation of the BloodBoil Ability based on the AbilityDK_Base class.
     /// </summary>
     class AbilityDK_BloodBoil : AbilityDK_Base
     {
@@ -24,7 +24,27 @@ namespace Rawr.TankDK
             this.uRange = 0;
             this.uArea = 10;
             // TODO: AOE - need to have target numbers.
-
         }
+
+        private int _DamageAdditiveModifer = 95;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                // AP Scaling
+                int AdditionalDamage = (int)(this.sStats.AttackPower * 0.04);
+                // TODO: Additional Disease Damage:
+                // if (uNumDiseases > 0): 95 + (0.035 × Attack Power).
+                return (int)(this.sStats.AttackPower * 0.035) + this._DamageAdditiveModifer + AdditionalDamage;
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
+        }
+        
     }
 }
