@@ -68,6 +68,10 @@ namespace Rawr.Warlock {
                 Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
                 Pet = (Pet) Activator.CreateInstance(
                         type, new object[] { this });
+                Stats.SpellPower
+                    += Talents.DemonicKnowledge
+                        * .04f
+                        * (Pet.CalcStamina() + Pet.CalcIntellect());
             }
 
             float personalDps = CalcPersonalDps();
@@ -257,9 +261,17 @@ namespace Rawr.Warlock {
             dictValues.Add("Total DPS", string.Format("{0:0}", OverallPoints));
 
             dictValues.Add(
-                "Health", string.Format("{0:0.0}", CalcHealth()));
+                "Health",
+                string.Format(
+                    "{0:0.0}*{1:0.0} stamina",
+                    CalcHealth(),
+                    CalcStamina()));
             dictValues.Add(
-                "Mana", string.Format("{0:0.0}", CalcMana()));
+                "Mana",
+                string.Format(
+                    "{0:0.0}*{1:0.0} intellect",
+                    CalcMana(),
+                    CalcIntellect()));
             dictValues.Add(
                 "Spirit", string.Format("{0:0.0}", CalcSpirit()));
 

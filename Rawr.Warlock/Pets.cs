@@ -55,17 +55,29 @@ namespace Rawr.Warlock {
 
         public float CalcStamina() {
 
-            return BaseStamina + StaminaCoef * Mommy.CalcStamina();
+            return (BaseStamina + StaminaCoef * Mommy.CalcStamina())
+                * (1f + Mommy.Talents.FelVitality * .05f);
         }
 
         public float CalcIntellect() {
 
-            return BaseIntellect + IntellectCoef * Mommy.CalcIntellect();
+            return (BaseIntellect + IntellectCoef * Mommy.CalcIntellect())
+                * (1f + Mommy.Talents.FelVitality * .05f);
         }
 
         public float CalcHealth() {
 
             return BaseHealth + HealthPerStamina * CalcStamina();
+        }
+    }
+
+    public class Felguard : Pet {
+        public Felguard(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                1820f, // baseHealth,
+                11f) { // healthPerStamina
+
         }
     }
 
@@ -99,18 +111,6 @@ namespace Rawr.Warlock {
             // tooltip indicates
         }
     }
-
-    //public class Felguard : Pet {
-    //    public Felguard()
-    //        : base("Felguard") {
-    //        BaseHealth = 1627;
-    //        BaseMana = 3331;
-
-    //        BaseAttackPower = -20;
-
-    //        //melee = new melee_t(this);
-    //    }
-    //}
 
     public class Succubus : Pet {
         public Succubus(CharacterCalculationsWarlock mommy)

@@ -243,36 +243,6 @@ namespace Rawr.Warlock {
 
             Stats stats = BaseStats.GetBaseStats(character);
             AccumulateItemStats(stats, character, additionalItem);
-
-            ////Potion of Speed is a consumable that can only be used once per fight even tho its tooltip / wowhead info indicates it has a 1 min cooldown.
-            ////This means that its actual cooldown is equal to the length of the fight.
-            ////At the moment, it has been hardcoded [in Buff.cs (rawr.base)] for a 20min fight, so we have to correct it here to get the appropriate +haste bonus effect.
-            //if (character.ActiveBuffsContains("Potion of Speed"))
-            //{
-            //    //get the fight length
-            //    CalculationOptionsWarlock options = (CalculationOptionsWarlock)character.CalculationOptions;
-            //    float fightLength = (options.Duration * 60); //i.e. in seconds
-
-            //    //remove the existing speedpotion buff (which has the incorrect cooldown)
-            //    Buff speedpotion = Buff.GetBuffByName("Potion of Speed");
-            //    character.ActiveBuffs.Remove(speedpotion);
-
-            //    //redefine its stats (this time using the correct cooldown)
-            //    speedpotion.Stats = new Stats();
-            //    speedpotion.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats { HasteRating = 500f }, 15f, fightLength));
-            //    character.ActiveBuffs.Add(speedpotion);
-
-            //    //now repeat the process with the if the pot trick buff had been selected
-            //    if (character.ActiveBuffsContains("Potion of Speed (Double Pot Trick)"))
-            //    {
-            //        speedpotion = Buff.GetBuffByName("Potion of Speed (Double Pot Trick)");
-            //        character.ActiveBuffs.Remove(speedpotion);
-            //        speedpotion.Stats = new Stats();
-            //        speedpotion.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats { HasteRating = 500f }, (15f - 1f), fightLength));
-            //        character.ActiveBuffs.Add(speedpotion);
-            //    }
-            //}
-
             AccumulateBuffsStats(stats, character.ActiveBuffs);
 
             float[] talentValues = { 0f, .04f, .07f, .1f };
