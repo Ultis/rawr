@@ -550,6 +550,22 @@ namespace Rawr.Moonkin
             }
         }
 
+#if !RAWR3
+        // for RAWR3 include all charts in CustomChartNames
+        private string[] _customRenderedChartNames = null;
+        public override string[] CustomRenderedChartNames
+        {
+            get
+            {
+                if (_customRenderedChartNames == null)
+                {
+                    _customRenderedChartNames = new string[] { "Stats Graph" };
+                }
+                return _customRenderedChartNames;
+            }
+        }
+#endif
+
 #if RAWR3
         private ICalculationOptionsPanel calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
@@ -1005,6 +1021,33 @@ namespace Rawr.Moonkin
             }
             return new ComparisonCalculationBase[0];
         }
+
+#if !RAWR3
+        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+        {
+            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Hit Rating", "10 Crit Rating", "10 Haste Rating", "10 Intellect", "10 Spirit" };
+            System.Drawing.Color[] statColors = new System.Drawing.Color[] { System.Drawing.Color.FromArgb(255, 255, 0, 0), System.Drawing.Color.DarkBlue, System.Drawing.Color.DarkRed, System.Drawing.Color.FromArgb(255, 255, 165, 0), System.Drawing.Color.Olive, System.Drawing.Color.FromArgb(255, 154, 205, 50), System.Drawing.Color.Aqua };
+
+
+            height -= 2;
+            switch (chartName)
+            {
+                case "Stats Graph":
+                    Stats[] statsList = new Stats[] {
+                        new Stats() { SpellPower = 1 },
+                        new Stats() { Mp5 = 1 },
+                        new Stats() { HitRating = 1 },
+                        new Stats() { CritRating = 1 },
+                        new Stats() { HasteRating = 1 },
+                        new Stats() { Intellect = 1 },
+                        new Stats() { Spirit = 1 },
+                    };
+
+                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statColors, 40, "", "Sustained Damage", Base.Graph.Style.Mage);
+                    break;
+            }
+        }
+#endif
 
         private string LookupDruidTalentName(int index)
         {
