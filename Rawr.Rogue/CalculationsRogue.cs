@@ -245,6 +245,7 @@ namespace Rawr.Rogue
             float bonusBackstabCrit = 0.1f * character.RogueTalents.PuncturingWounds;
             float bonusBackstabDamageMultiplier = 0.03f * character.RogueTalents.Aggression + 0.05f * character.RogueTalents.BladeTwisting + 0.1f * character.RogueTalents.SurpriseAttacks + 0.1f * character.RogueTalents.Opportunity + 0.02f * character.RogueTalents.SinisterCalling;
             float bonusCPGCritDamageMultiplier = 0.06f * character.RogueTalents.Lethality;
+            float bonusCPGCrit = 0.02f * character.RogueTalents.TurnTheTables;
             float bonusEnvenomDamageMultiplier = 0.07f * character.RogueTalents.VilePoisons;
             float bonusEvisCrit = character.RogueTalents.GlyphOfEviscerate ? 0.1f : 0f;
             float bonusEvisDamageMultiplier = (character.RogueTalents.ImprovedEviscerate == 3 ? 0.2f : 0.07f * character.RogueTalents.ImprovedEviscerate) + 0.03f * character.RogueTalents.Aggression;
@@ -350,19 +351,19 @@ namespace Rawr.Rogue
                 float cpPerCPGTemp = (chanceHitYellowTemp + chanceCritYellowTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Backstab - Identical to Yellow, with higher crit chance
-                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bonusBackstabCrit + stats.BonusCPGCritChance);
+                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bonusBackstabCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitBackstabTemp = 1f - chanceCritBackstabTemp;
 
                 //Mutilate - Identical to Yellow, with higher crit chance
-                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + bonusMutiCrit + stats.BonusCPGCritChance);
+                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + bonusMutiCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitMutiTemp = 1f - chanceCritMutiTemp;
 
                 //Sinister Strike - Identical to Yellow, with higher crit chance
-                float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
+                float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
 
                 //Hemorrhage - Identical to Yellow, with higher crit chance
-                float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
+                float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitHemoTemp = 1f - chanceCritHemoTemp;
 
                 //Eviscerate - Identical to Yellow, with higher crit chance
