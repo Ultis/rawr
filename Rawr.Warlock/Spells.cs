@@ -621,28 +621,10 @@ namespace Rawr.Warlock {
             }
             switch (MagicSchool) {
                 case MagicSchool.Shadow:
-                    SpellModifiers.AddMultiplicativeMultiplier(
-                        Mommy.CalcBonusShadowDamageMultiplier());
-                    SpellModifiers.AddAdditiveMultiplier(
-                        Mommy.Talents.ShadowMastery * .03f);
-                    if (GetRotation().Contains("Shadow Bolt")
-                        || (GetRotation().Contains("Haunt")
-                            && Mommy.Talents.Haunt > 0)) {
-
-                        SpellModifiers.AddMultiplicativeTickMultiplier(
-                            Mommy.Talents.ShadowEmbrace * .01f * 3f);
-                    }
-                    if (Mommy.CastSpells.ContainsKey("Haunt")) {
-                        SpellModifiers.AddMultiplicativeTickMultiplier(
-                            ((Haunt) Mommy.CastSpells["Haunt"])
-                                .GetAvgTickBonus());
-                    }
+                    Mommy.AddShadowModifiers(SpellModifiers);
                     break;
                 case MagicSchool.Fire:
-                    SpellModifiers.AddMultiplicativeMultiplier(
-                        Mommy.CalcBonusFireDamageMultiplier());
-                    SpellModifiers.AddAdditiveMultiplier(
-                        Mommy.Talents.Emberstorm * .03f);
+                    Mommy.AddFireModifiers(SpellModifiers);
                     break;
             }
             if (MySpellTree == SpellTree.Destruction) {

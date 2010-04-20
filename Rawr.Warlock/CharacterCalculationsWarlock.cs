@@ -64,7 +64,10 @@ namespace Rawr.Warlock {
                     1f,
                     Options.GetBaseHitRate() / 100f + CalcSpellHit());
 
-            if (!Options.Pet.Equals("None")) {
+            if (!Options.Pet.Equals("None")
+                && (!Options.Pet.Equals("Felguard")
+                    || Talents.SummonFelguard > 0)) {
+
                 Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
                 Pet = (Pet) Activator.CreateInstance(
                         type, new object[] { this });
@@ -427,8 +430,12 @@ namespace Rawr.Warlock {
                 // If the raid is already providing this debuff, the curse will
                 // not actually end up casting, so this will not double-count
                 // the debuff.
-                Stats.BonusFireDamageMultiplier = .13f;
-                Stats.BonusShadowDamageMultiplier = .13f;
+                Stats.BonusFireDamageMultiplier
+                    = Stats.BonusShadowDamageMultiplier
+                    = Stats.BonusHolyDamageMultiplier 
+                    = Stats.BonusFrostDamageMultiplier
+                    = Stats.BonusNatureDamageMultiplier
+                    = .13f;
             }
             if (Talents.ImprovedShadowBolt > 0
                 && Stats.SpellCritOnTarget < .05f) {
@@ -469,6 +476,10 @@ namespace Rawr.Warlock {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     GetMetamorphosisBonus());
             }
+            if (Pet is Felguard) {
+                SpellModifiers.AddMultiplicativeMultiplier(
+                    Talents.MasterDemonologist * .01f);
+            }
             if (Stats.Warlock4T10 > 0) {
                 Spell trigger = null;
                 if (CastSpells.ContainsKey("Immolate")) {
@@ -497,8 +508,9 @@ namespace Rawr.Warlock {
             }
             #endregion
 
+            float damageDone = CalcRemainingProcs();
+
             #region Calculate damage done for each spell
-            float damageDone = 0f;
             Spell conflagrate = null;
             float spellPower = CalcSpellPower();
             foreach (KeyValuePair<string, Spell> pair in CastSpells) {
@@ -527,13 +539,10 @@ namespace Rawr.Warlock {
 
         private void CalcHasteAndManaProcs() {
 
-            MaxCritChance = CalcSpellCrit();
-            float nonProcHaste = GetSpellHaste(PreProcStats);
-
             if (Options.NoProcs) {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
-                staticHaste.Value = nonProcHaste;
+                staticHaste.Value = GetSpellHaste(PreProcStats);
                 Haste = new List<WeightedStat> { staticHaste };
                 return;
             }
@@ -542,56 +551,11 @@ namespace Rawr.Warlock {
             // real values depend on haste (which obviously has not been
             // finalized yet)
 
-            // this method currently calculates non-haste/non-mana procs, too.
-            // future plans are to move them after casting stats are set, so the
-            // triggers can be more accurate
-
             Dictionary<int, float> periods
                 = new Dictionary<int, float>();
             Dictionary<int, float> chances
                 = new Dictionary<int, float>();
-            periods[(int) Trigger.Use] = 0f;
-            periods[(int) Trigger.SpellHit]
-                = periods[(int) Trigger.SpellCrit]
-                = periods[(int) Trigger.SpellCast]
-                = periods[(int) Trigger.SpellMiss]
-                = periods[(int) Trigger.DamageSpellHit]
-                = periods[(int) Trigger.DamageSpellCrit]
-                = periods[(int) Trigger.DamageSpellCast]
-                = CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
-                    + Options.Latency;
-            periods[(int) Trigger.DoTTick] = 1.5f;
-            periods[(int) Trigger.DamageDone]
-                = periods[(int) Trigger.DamageOrHealingDone]
-                = 1f
-                    / (1f / periods[(int) Trigger.DoTTick]
-                        + 1f / periods[(int) Trigger.SpellHit]);
-
-            chances[(int) Trigger.Use] = 1f;
-            chances[(int) Trigger.SpellHit]
-                = chances[(int) Trigger.DamageSpellHit]
-                = chances[(int) Trigger.DamageDone]
-                = chances[(int) Trigger.DamageOrHealingDone]
-                = HitChance;
-            chances[(int) Trigger.SpellCrit]
-                = chances[(int) Trigger.DamageSpellCrit]
-                = CalcSpellCrit() * chances[(int) Trigger.SpellHit];
-            chances[(int) Trigger.SpellCast]
-                = chances[(int) Trigger.DamageSpellCast] = 1f;
-            chances[(int) Trigger.SpellMiss]
-                = 1 - chances[(int) Trigger.SpellHit];
-            chances[(int) Trigger.DoTTick] = 1f;
-
-            if (Options.GetActiveRotation().Contains("Corruption")) {
-                periods[(int) Trigger.CorruptionTick] = 3.1f;
-                if (Talents.GlyphQuickDecay) {
-                    periods[(int) Trigger.CorruptionTick] /= nonProcHaste;
-                }
-                chances[(int) Trigger.CorruptionTick] = 1f;
-            } else {
-                periods[(int) Trigger.CorruptionTick] = 0f;
-                chances[(int) Trigger.CorruptionTick] = 0f;
-            }
+            PopulateTriggers(periods, chances);
 
             List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
             List<float> hasteIntervals = new List<float>();
@@ -611,51 +575,11 @@ namespace Rawr.Warlock {
                     continue;
                 }
 
-                // Handle "recursive effects" - i.e. those that *enable* a proc
-                // during a short window.
-                if (effect.Stats._rawSpecialEffectDataSize == 1
-                    && periods.ContainsKey(
-                        (int) effect.Stats._rawSpecialEffectData[0].Trigger)) {
-
-                    SpecialEffect inner = effect.Stats._rawSpecialEffectData[0];
-                    Stats innerStats
-                        = inner.GetAverageStats(
-                            periods[(int) inner.Trigger],
-                            chances[(int) inner.Trigger],
-                            1f,
-                            effect.Duration);
-                    float upTime
-                        = effect.GetAverageUptime(
-                            periods[(int) effect.Trigger],
-                            chances[(int) effect.Trigger],
-                            1f,
-                            Options.Duration);
-                    procStats.Accumulate(innerStats, upTime);
-                }
-
-                Stats proc = effect.GetAverageStats(
-                    periods[(int) effect.Trigger],
-                    chances[(int) effect.Trigger],
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    Options.Duration);
-                if (proc.ManaRestore > 0) {
-                    proc.ManaRestore *= Options.Duration;
-                }
-                procStats.Accumulate(proc);
-
-                bool doublePot
-                    = effect.Cooldown == 1200f && effect.Duration == 14f;
-                if (effect.Trigger == Trigger.Use && ! doublePot) {
-                    MaxCritChance += GetSpellCrit(effect.Stats);
-                } else {
-                    MaxCritChance += GetSpellCrit(proc);
-                }
-
                 if (effect.Stats.HasteRating > 0) {
                     hasteRatingEffects.Add(effect);
                     hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
                     hasteRatingChances.Add(chances[(int) effect.Trigger]);
-                    if (doublePot) {
+                    if (IsDoublePot(effect)) {
                         hasteRatingOffsets.Add(.75f * Options.Duration);
                     } else {
                         hasteRatingOffsets.Add(0f);
@@ -672,9 +596,6 @@ namespace Rawr.Warlock {
                     hasteValues.Add(effect.Stats.SpellHaste);
                 }
             }
-            procStats.HasteRating = 0;
-            procStats.SpellHaste = 0;
-            Stats.Accumulate(procStats);
             WeightedStat[] ratings
                 = SpecialEffect.GetAverageCombinedUptimeCombinations(
                     hasteRatingEffects.ToArray(),
@@ -716,6 +637,236 @@ namespace Rawr.Warlock {
                     Haste.Add(s);
                 }
             }
+        }
+
+        private float CalcRemainingProcs() {
+
+            float procdDamage = 0f;
+            MaxCritChance = CalcSpellCrit();
+
+            if (Options.NoProcs) {
+                return procdDamage;
+            }
+
+            Dictionary<int, float> periods
+                = new Dictionary<int, float>();
+            Dictionary<int, float> chances
+                = new Dictionary<int, float>();
+            PopulateTriggers(periods, chances);
+            Stats procStats = new Stats();
+            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
+                    continue;
+                }
+
+                float interval = periods[(int) effect.Trigger];
+                float chance = chances[(int) effect.Trigger];
+
+                Stats effectStats = effect.Stats;
+                if (effectStats.ValkyrDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.AddCritChance(.05f + Stats.SpellCritOnTarget);
+                    mods.AddMultiplicativeMultiplier(
+                        Stats.BonusHolyDamageMultiplier);
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effect.Stats.ValkyrDamage,
+                            periods[(int) Trigger.DamageDone],
+                            chance,
+                            mods);
+                } else if (effectStats.ShadowDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.Accumulate(SpellModifiers);
+                    mods.AddAdditiveDirectMultiplier(
+                        CalcWarlockFirestoneDirectDamageMultiplier());
+                    AddShadowModifiers(mods);
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effect.Stats.ShadowDamage,
+                            interval,
+                            chance,
+                            mods);
+                } else if (effectStats.FireDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.Accumulate(SpellModifiers);
+                    mods.AddAdditiveDirectMultiplier(
+                        CalcWarlockFirestoneDirectDamageMultiplier());
+                    AddShadowModifiers(mods);
+                    AddFireModifiers(mods);
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effect.Stats.FireDamage,
+                            interval,
+                            chance,
+                            mods);
+                } else if (
+                    effectStats.NatureDamage > 0
+                        || effectStats.HolyDamage > 0
+                        || effectStats.FrostDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.Accumulate(SpellModifiers);
+                    mods.AddAdditiveDirectMultiplier(
+                        CalcWarlockFirestoneDirectDamageMultiplier());
+                    AddShadowModifiers(mods);
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effectStats.NatureDamage
+                                + effectStats.HolyDamage
+                                + effectStats.FrostDamage,
+                            interval,
+                            chance,
+                            mods);
+                } else {
+                    Stats proc = effect.GetAverageStats(
+                        interval,
+                        chance,
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                        Options.Duration);
+                    procStats.Accumulate(proc);
+
+                    if (effect.Trigger != Trigger.Use || IsDoublePot(effect)) {
+                        MaxCritChance += GetSpellCrit(proc);
+                    } else {
+                        MaxCritChance += GetSpellCrit(effect.Stats);
+                    }
+
+                    // Handle "recursive effects" - i.e. those that *enable* a
+                    // proc during a short window.
+                    if (effect.Stats._rawSpecialEffectDataSize == 1
+                        && periods.ContainsKey(
+                            (int) effect.Stats._rawSpecialEffectData[0].Trigger)) {
+
+                        SpecialEffect inner
+                            = effect.Stats._rawSpecialEffectData[0];
+                        Stats innerStats
+                            = inner.GetAverageStats(
+                                periods[(int) inner.Trigger],
+                                chances[(int) inner.Trigger],
+                                1f,
+                                effect.Duration);
+                        float upTime
+                            = effect.GetAverageUptime(
+                                periods[(int) effect.Trigger],
+                                chances[(int) effect.Trigger],
+                                1f,
+                                Options.Duration);
+                        procStats.Accumulate(innerStats, upTime);
+                    }
+                }
+            }
+
+            procStats.HasteRating
+                = procStats.SpellHaste
+                = procStats.Mana
+                = procStats.ManaCostPerc
+                = procStats.ManacostReduceWithin15OnHealingCast
+                = procStats.ManaGainOnGreaterHealOverheal
+                = procStats.ManaorEquivRestore
+                = procStats.ManaRestore
+                = procStats.ManaRestoreFromBaseManaPPM
+                = procStats.ManaRestoreFromMaxManaPerSecond
+                = procStats.ManaRestoreOnCast_5_15
+                = procStats.ManaSpringMp5Increase
+                = 0;
+            Stats.Accumulate(procStats);
+
+            return procdDamage;
+        }
+
+        private float CalcDamageProc(
+            SpecialEffect effect,
+            float damagePerProc,
+            float interval,
+            float chance,
+            SpellModifiers modifiers) {
+
+            damagePerProc *=
+                (1  + (modifiers.GetFinalCritMultiplier() - 1)
+                        * modifiers.CritChance)
+                    * modifiers.GetFinalDirectMultiplier()
+                    * (1
+                        - StatConversion.GetAverageResistance(
+                            80, Options.TargetLevel, 0f, 0f));
+            float numProcs
+                = Options.Duration
+                    * effect.GetAverageProcsPerSecond(
+                        interval,
+                        chance,
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                        Options.Duration);
+            return numProcs * damagePerProc;
+        }
+
+        private bool IsDoublePot(SpecialEffect effect) {
+
+            return effect.Cooldown == 1200f && effect.Duration == 14f;
+        }
+
+        private void PopulateTriggers(
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances) {
+
+            // this is a temporary method until non-guestimate triggers are
+            // implemented
+            float nonProcHaste = GetSpellHaste(PreProcStats);
+            float corruptionPeriod = 0f;
+            if (Options.GetActiveRotation().Contains("Corruption")) {
+                corruptionPeriod = 3.1f;
+                if (Talents.GlyphQuickDecay) {
+                    corruptionPeriod /= nonProcHaste;
+                }
+            }
+            PopulateTriggers(
+                periods,
+                chances,
+                CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
+                    + Options.Latency,
+                1 / 1.5f,
+                corruptionPeriod);
+        }
+
+        private void PopulateTriggers(
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances,
+            float castPeriod,
+            float dotFrequency,
+            float corruptionPeriod) {
+
+            periods[(int) Trigger.Use] = 0f;
+            periods[(int) Trigger.SpellHit]
+                = periods[(int) Trigger.SpellCrit]
+                = periods[(int) Trigger.SpellCast]
+                = periods[(int) Trigger.SpellMiss]
+                = periods[(int) Trigger.DamageSpellHit]
+                = periods[(int) Trigger.DamageSpellCrit]
+                = periods[(int) Trigger.DamageSpellCast]
+                = castPeriod;
+            periods[(int) Trigger.DoTTick] = 1 / dotFrequency;
+            periods[(int) Trigger.DamageDone]
+                = periods[(int) Trigger.DamageOrHealingDone]
+                = 1f / (dotFrequency + 1f / periods[(int) Trigger.SpellHit]);
+            periods[(int) Trigger.CorruptionTick] = corruptionPeriod;
+
+            chances[(int) Trigger.Use] = 1f;
+            chances[(int) Trigger.SpellHit]
+                = chances[(int) Trigger.DamageSpellHit]
+                = chances[(int) Trigger.DamageDone]
+                = chances[(int) Trigger.DamageOrHealingDone]
+                = HitChance;
+            chances[(int) Trigger.SpellCrit]
+                = chances[(int) Trigger.DamageSpellCrit]
+                = CalcSpellCrit() * chances[(int) Trigger.SpellHit];
+            chances[(int) Trigger.SpellCast]
+                = chances[(int) Trigger.DamageSpellCast] = 1f;
+            chances[(int) Trigger.SpellMiss]
+                = 1 - chances[(int) Trigger.SpellHit];
+            chances[(int) Trigger.DoTTick] = 1f;
+            chances[(int) Trigger.CorruptionTick]
+                = corruptionPeriod == 0f ? 0f : 1f;
         }
 
         // This technique assumes that if you pick a random time during filler
@@ -764,6 +915,42 @@ namespace Rawr.Warlock {
                 duration += 6f;
             }
             return .2f * duration / cooldown;
+        }
+
+        public void AddShadowModifiers(SpellModifiers modifiers) {
+
+            modifiers.AddMultiplicativeMultiplier(
+                CalcBonusShadowDamageMultiplier());
+            modifiers.AddAdditiveMultiplier(
+                Talents.ShadowMastery * .03f);
+            if (Options.GetActiveRotation().Contains("Shadow Bolt")
+                || (Options.GetActiveRotation().Contains("Haunt")
+                    && Talents.Haunt > 0)) {
+
+                modifiers.AddMultiplicativeTickMultiplier(
+                    Talents.ShadowEmbrace * .01f * 3f);
+            }
+            if (CastSpells.ContainsKey("Haunt")) {
+                modifiers.AddMultiplicativeTickMultiplier(
+                    ((Haunt) CastSpells["Haunt"]).GetAvgTickBonus());
+            }
+            if (Pet is Succubus) {
+                float bonus = Talents.MasterDemonologist * .01f;
+                modifiers.AddMultiplicativeMultiplier(bonus);
+                modifiers.AddCritChance(bonus);
+            }
+        }
+
+        public void AddFireModifiers(SpellModifiers modifiers) {
+
+            modifiers.AddMultiplicativeMultiplier(
+                CalcBonusFireDamageMultiplier());
+            modifiers.AddAdditiveMultiplier(Talents.Emberstorm * .03f);
+            if (Pet is Imp) {
+                float bonus = Talents.MasterDemonologist * .01f;
+                modifiers.AddMultiplicativeMultiplier(bonus);
+                modifiers.AddCritChance(bonus);
+            }
         }
 
         #endregion

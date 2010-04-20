@@ -120,9 +120,7 @@
   <data name="notesBox.Text" xml:space="preserve">
     <value>The Warlock model you are using is still new.  It has known problems, and many important features are not yet implemented (such as everything to do with pets).  However, it should still be usefull for at least Affliction and Destruction Warlocks.
 
-If you find a problem with a feature that is supposed to be working according to http://rawr.codeplex.com/wikipage?title=Rawr.Warlock, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it.  If it has not already been reported create a new issue for it, and be sure to attach your character file.
-
-There is other useful information at the URL above, such as notes about the options and a list of planned features.
+Please visit http://rawr.codeplex.com/wikipage?title=Rawr.Warlock.  It will be updated with known problems, warnings and info about the model.  If you find a problem with a feature that is supposed to be working according to that page, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it.  If it has not already been reported create a new issue for it, and be sure to attach your character file.
 
 I appologize for the relative obscurity of this important information, but this is the most prominant place I could put it without modifying more than just the Warlock model.</value>
   </data>
