@@ -33,7 +33,8 @@ namespace Rawr.Warlock {
         public float BaseMana { get; private set; }
         public float HitChance { get; private set; }
         public float AvgTimeUsed { get; private set; }
-        public float MaxCritChance { get; private set; }
+        public float ExtraCritAtMax { get; private set; }
+        public float AvgHaste { get; private set; }
 
         public List<Spell> Priorities { get; private set; }
         public Dictionary<string, Spell> Spells { get; private set; }
@@ -333,13 +334,13 @@ namespace Rawr.Warlock {
                     GetSpellCrit(PreProcStats)));
 
             dictValues.Add(
-                "Haste Rating",
+                "Average Haste",
                 string.Format(
                     "{0:0.00}%*"
                         + "{1:0.00}s\tGlobal Cooldown\n"
                         + "{2:0.00}%\tBefore Procs",
-                    (CalcSpellHaste() - 1) * 100f,
-                    Math.Max(1.0f, 1.5f / CalcSpellHaste()),
+                    (AvgHaste - 1) * 100f,
+                    Math.Max(1.0f, 1.5f / AvgHaste),
                     (GetSpellHaste(PreProcStats) - 1) * 100f));
 
             // Pet Stats
@@ -539,23 +540,38 @@ namespace Rawr.Warlock {
 
         private void CalcHasteAndManaProcs() {
 
+            float nonProcHaste = GetSpellHaste(PreProcStats);
             if (Options.NoProcs) {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
-                staticHaste.Value = GetSpellHaste(PreProcStats);
+                staticHaste.Value = nonProcHaste;
                 Haste = new List<WeightedStat> { staticHaste };
+                AvgHaste = nonProcHaste;
                 return;
             }
 
             // the trigger rates are all guestimates at this point, since the
             // real values depend on haste (which obviously has not been
             // finalized yet)
-
             Dictionary<int, float> periods
                 = new Dictionary<int, float>();
             Dictionary<int, float> chances
                 = new Dictionary<int, float>();
-            PopulateTriggers(periods, chances);
+            float corruptionPeriod = 0f;
+            if (Options.GetActiveRotation().Contains("Corruption")) {
+                corruptionPeriod = 3.1f;
+                if (Talents.GlyphQuickDecay) {
+                    corruptionPeriod /= nonProcHaste;
+                }
+            }
+            PopulateTriggers(
+                periods,
+                chances,
+                CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
+                    + Options.Latency,
+                1 / 1.5f,
+                corruptionPeriod,
+                1f);
 
             List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
             List<float> hasteIntervals = new List<float>();
@@ -635,24 +651,59 @@ namespace Rawr.Warlock {
                                     ratings[r].Value + staticRating))
                             * (1 + Stats.SpellHaste);
                     Haste.Add(s);
+                    AvgHaste += s.Chance * s.Value;
                 }
             }
         }
 
         private float CalcRemainingProcs() {
 
-            float procdDamage = 0f;
-            MaxCritChance = CalcSpellCrit();
-
             if (Options.NoProcs) {
-                return procdDamage;
+                return 0f;
             }
 
             Dictionary<int, float> periods
                 = new Dictionary<int, float>();
             Dictionary<int, float> chances
                 = new Dictionary<int, float>();
-            PopulateTriggers(periods, chances);
+            float totalCasts = 0f;
+            float totalTicks = 0f;
+            float corruptionTicks = 0f;
+            SimulatedStat castsPerCrittable = new SimulatedStat();
+            foreach (Spell spell in CastSpells.Values) {
+                if (spell.BaseDamage == 0 && spell.BaseTickDamage == 0) {
+                    continue;
+                }
+
+                float numCasts = spell.GetNumCasts();
+                float numTicks = HitChance * numCasts * spell.NumTicks;
+                totalCasts += numCasts;
+                totalTicks += numTicks;
+
+                float numCrittables = 0f;
+                if (spell.BaseDamage > 0) {
+                    numCrittables += HitChance * numCasts;
+                }
+                if (spell.BaseTickDamage > 0 && spell.CanTickCrit) {
+                    numCrittables += numTicks;
+                }
+                castsPerCrittable.AddSample(
+                    numCrittables == 0 ? 0f : numCasts / numCrittables,
+                    numCasts);
+
+                if (spell is Corruption) {
+                    corruptionTicks += numTicks;
+                }
+            }
+            PopulateTriggers(
+                periods,
+                chances,
+                Options.Duration / totalCasts,
+                totalTicks / Options.Duration,
+                corruptionTicks == 0 ? -1 : Options.Duration / corruptionTicks,
+                castsPerCrittable.GetValue());
+
+            float procdDamage = 0f;
             Stats procStats = new Stats();
             foreach (SpecialEffect effect in Stats.SpecialEffects()) {
                 if (!periods.ContainsKey((int) effect.Trigger)) {
@@ -726,13 +777,6 @@ namespace Rawr.Warlock {
                         chance,
                         CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                         Options.Duration);
-                    procStats.Accumulate(proc);
-
-                    if (effect.Trigger != Trigger.Use || IsDoublePot(effect)) {
-                        MaxCritChance += GetSpellCrit(proc);
-                    } else {
-                        MaxCritChance += GetSpellCrit(effect.Stats);
-                    }
 
                     // Handle "recursive effects" - i.e. those that *enable* a
                     // proc during a short window.
@@ -754,7 +798,13 @@ namespace Rawr.Warlock {
                                 chances[(int) effect.Trigger],
                                 1f,
                                 Options.Duration);
-                        procStats.Accumulate(innerStats, upTime);
+                        proc.Accumulate(innerStats, upTime);
+                    }
+
+                    procStats.Accumulate(proc);
+                    if (effect.Trigger == Trigger.Use && !IsDoublePot(effect)) {
+                        ExtraCritAtMax
+                            += GetSpellCrit(effect.Stats) - GetSpellCrit(proc);
                     }
                 }
             }
@@ -806,49 +856,40 @@ namespace Rawr.Warlock {
             return effect.Cooldown == 1200f && effect.Duration == 14f;
         }
 
-        private void PopulateTriggers(
-            Dictionary<int, float> periods,
-            Dictionary<int, float> chances) {
-
-            // this is a temporary method until non-guestimate triggers are
-            // implemented
-            float nonProcHaste = GetSpellHaste(PreProcStats);
-            float corruptionPeriod = 0f;
-            if (Options.GetActiveRotation().Contains("Corruption")) {
-                corruptionPeriod = 3.1f;
-                if (Talents.GlyphQuickDecay) {
-                    corruptionPeriod /= nonProcHaste;
-                }
-            }
-            PopulateTriggers(
-                periods,
-                chances,
-                CalculationsWarlock.AVG_UNHASTED_CAST_TIME / nonProcHaste
-                    + Options.Latency,
-                1 / 1.5f,
-                corruptionPeriod);
-        }
-
+        /// <param name="castPeriod">
+        /// SHOULD include casts that miss
+        /// </param>
+        /// <param name="dotFrequency">
+        /// Should NOT include casts that miss
+        /// </param>
+        /// <param name="corruptionPeriod">
+        /// Should NOT include casts that miss
+        /// </param>
+        /// <param name="castsPerCrittable">
+        /// SHOULD include casts that miss
+        /// </param>
         private void PopulateTriggers(
             Dictionary<int, float> periods,
             Dictionary<int, float> chances,
             float castPeriod,
             float dotFrequency,
-            float corruptionPeriod) {
+            float corruptionPeriod,
+            float castsPerCrittable) {
 
             periods[(int) Trigger.Use] = 0f;
             periods[(int) Trigger.SpellHit]
-                = periods[(int) Trigger.SpellCrit]
                 = periods[(int) Trigger.SpellCast]
                 = periods[(int) Trigger.SpellMiss]
                 = periods[(int) Trigger.DamageSpellHit]
-                = periods[(int) Trigger.DamageSpellCrit]
                 = periods[(int) Trigger.DamageSpellCast]
                 = castPeriod;
+            periods[(int) Trigger.SpellCrit]
+                = periods[(int) Trigger.DamageSpellCrit]
+                = castPeriod * castsPerCrittable;
             periods[(int) Trigger.DoTTick] = 1 / dotFrequency;
             periods[(int) Trigger.DamageDone]
                 = periods[(int) Trigger.DamageOrHealingDone]
-                = 1f / (dotFrequency + 1f / periods[(int) Trigger.SpellHit]);
+                = 1f / (dotFrequency + 1f / castPeriod);
             periods[(int) Trigger.CorruptionTick] = corruptionPeriod;
 
             chances[(int) Trigger.Use] = 1f;
@@ -859,11 +900,12 @@ namespace Rawr.Warlock {
                 = HitChance;
             chances[(int) Trigger.SpellCrit]
                 = chances[(int) Trigger.DamageSpellCrit]
-                = CalcSpellCrit() * chances[(int) Trigger.SpellHit];
+                = CalcSpellCrit();
             chances[(int) Trigger.SpellCast]
-                = chances[(int) Trigger.DamageSpellCast] = 1f;
+                = chances[(int) Trigger.DamageSpellCast]
+                = 1f;
             chances[(int) Trigger.SpellMiss]
-                = 1 - chances[(int) Trigger.SpellHit];
+                = 1 - HitChance;
             chances[(int) Trigger.DoTTick] = 1f;
             chances[(int) Trigger.CorruptionTick]
                 = corruptionPeriod == 0f ? 0f : 1f;

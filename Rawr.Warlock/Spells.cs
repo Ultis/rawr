@@ -840,7 +840,7 @@ namespace Rawr.Warlock {
 
             float period = 3.1f; // total guess
             if (mommy.Talents.GlyphQuickDecay) {
-                period = GetTimeUsed(period, 1f, mommy.Haste, 0f);
+                period /= mommy.AvgHaste;
             }
             return period;
         }
@@ -869,11 +869,7 @@ namespace Rawr.Warlock {
 
             WarlockTalents talents = Mommy.Talents;
             if (talents.GlyphQuickDecay) {
-                float avgHaste = 0f;
-                foreach (WeightedStat h in Mommy.Haste) {
-                    avgHaste += h.Chance * h.Value;
-                }
-                RecastPeriod /= avgHaste;
+                RecastPeriod /= Mommy.AvgHaste;
             }
 
             #region rolling corruption
@@ -914,13 +910,16 @@ namespace Rawr.Warlock {
 
             base.FinalizeSpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+        }
+
+        public override void SetDamageStats(float baseSpellPower) {
 
             // stack crit trinkets at the front of a rolling corruption
             if (NumCasts < 2) {
-                float crit = Mommy.CalcSpellCrit();
-                SpellModifiers.AddCritChance(-crit);
-                SpellModifiers.AddCritChance(Mommy.MaxCritChance);
+                SpellModifiers.AddCritChance(Mommy.ExtraCritAtMax);
             }
+            
+            base.SetDamageStats(baseSpellPower);
         }
 
         private static float maleficusDuration(
@@ -1234,16 +1233,12 @@ namespace Rawr.Warlock {
             if (Mommy.Stats.Warlock2T8 > 0) {
                 SpellModifiers.AddAdditiveMultiplier(.1f);
             }
-        }
-
-        public override void SetDamageStats(float baseSpellPower) {
 
             if (IsClippedByConflagrate(Mommy)) {
                 float downtime = SimulatedStats["downtime"].GetValue();
                 float uptime = GetAvgTimeBetweenCasts() - downtime;
                 NumTicks = uptime / 3f;
             }
-            base.SetDamageStats(baseSpellPower);
         }
 
         /// <summary>

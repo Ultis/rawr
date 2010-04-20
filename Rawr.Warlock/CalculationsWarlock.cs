@@ -102,7 +102,7 @@ namespace Rawr.Warlock {
                         "Basic Stats:Bonus Damage",
                         "Basic Stats:Hit Rating",
                         "Basic Stats:Crit Chance",
-                        "Basic Stats:Haste Rating",
+                        "Basic Stats:Average Haste",
                         "Pet Stats:Pet Stamina",
                         "Pet Stats:Pet Intellect",
                         "Pet Stats:Pet Health",
