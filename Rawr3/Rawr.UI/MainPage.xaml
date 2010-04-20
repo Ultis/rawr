@@ -298,7 +298,7 @@
     		</controls:TabControl>
     	</toolkit:DockPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
-            <TextBlock VerticalAlignment="Center" Text="b5" Foreground="#99999999" Margin="0,4,8,4"/>
+            <TextBlock VerticalAlignment="Center" Text="b7" Foreground="#99999999" Margin="0,4,8,4"/>
             <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
            <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
          </StackPanel>

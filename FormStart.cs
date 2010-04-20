@@ -18,24 +18,18 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.14.0
- - Rawr3: Tons of fixes for Rawr3 compatability and UI.
- - Significant performance improvements all around.
- - More fixes and improvements to Wowhead/Armory parsing.
- - Gemming Template settings (enabled/disabled and custom templates) are now stored *per character*, instead of globally. You'll need to recreate any custom gemming templates you've made.
- - Rawr.Warlock: The current Rawr.Warlock model has been dormant and abandoned for a while now. It has now been replaced with a brand new model that should be much more accurate and useful. It still has some incomplete parts, but they're actively being worked on. Please post any feedback you have! (in before ""zomg u broke warlocks agian wtf!!!1"")
- - Rawr.Rogue: Fixes for Lightning Reflexes numbers, white damage, Glyph of Rupture, Rupture damage without Mangle, poison crit chance, target crit buffs, Relentless Strikes, Ruthlessness, Spell Hit.
- - Rawr.Mage: Significant performance improvements. Added partial resists of Ignite. Fixes for Glyph of Fireball tooltip.
- - Rawr.Healadin: Fix for stat buffs with spirits being ignored.
- - Rawr.Moonkin: Updated ability formulae for 3.3.3.
- - Rawr.Cat: Updated ability formulae for 3.3.3.
- - Rawr.Bear: Updated ability formulae for 3.3.3.
- - Rawr.TankDK: Fix for a couple UI issues. Fix for Armor calculations. Updated ability formulae for 3.3.3.
- - Rawr.ProtWarr: Updated ability formulae for 3.3.3.
- - Rawr.DPSWarr: Updated ability formulae for 3.3.3.
- - Rawr.Elemental: Updated ability formulae for 3.3.3.
- - Rawr.Enhance: Updated ability formulae for 3.3.3.
- - Rawr.Hunter: Fix for a few UI-related bugs/crashes.";
+			labelVersionHistory.Text = @"v2.3.15.0
+ - Improvements to Wowhead/Armory parsing.
+ - Rawr.Mage: Fix for calculations being broken on 32bit OSes.
+ - Rawr.Warlock: Lots more work on fleshing out missing parts of the model. (Pets are somewhat workings; yes, we know it's very important, and are actively working on it)
+ - Rawr.TankDK: Further improvements to ability usage mechanics.
+ - Rawr.Elemental: Added Chain Lightning and Fire Nova usage.
+ - Rawr.Moonkin: Updated relevancy logic. Couple fixes for spell damage displays.
+ - Rawr.Healadin: Updated relevancy logic.
+ - Rawr.Retribution: Fix for a couple crashes. Added support for a few more special effect types.
+ - Rawr.Cat: Fix for base stats for Night Elves.
+ - Rawr.DPSDK: Fix for ArPen calculations with Blood Gorged. Fix for expertise calculations.
+ - Rawr.Rogue: Added Turn the Tables support.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
