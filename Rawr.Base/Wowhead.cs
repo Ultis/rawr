@@ -2594,11 +2594,18 @@ namespace Rawr
                         doc.InnerXml = docUpgradeSearch.Substring(startpos, endpos - startpos + 6);
                         XmlNodeList nodeList = doc.SelectNodes("//a/@href");
 
+                        Regex toMatch = new Regex("(\\d{5})");
+                        Match match;
+
                         for (int i = 0; i < nodeList.Count; i++)
                         {
-                            StatusMessaging.UpdateStatus("ImportWowheadFilter", string.Format("Downloading definition {0} of {1} items", i, nodeList.Count));
-                            string id = nodeList[i].Value.Substring(7);
-                            //if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
+                            StatusMessaging.UpdateStatus("ImportWowheadFilter",
+                                string.Format("Downloading definition {0} of {1} items", i, nodeList.Count));
+                            //string id = nodeList[i].Value.Substring(7);
+                            // This new code will let it find the item id without worrying
+                            // about wowhead messing with the specifics of the string
+                            match = toMatch.Match(nodeList[i].Value);
+                            string id = match.Value;
                             {
                                 Item item = GetItem(site, id, true);
                                 if (item != null)
