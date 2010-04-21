@@ -655,7 +655,9 @@ namespace Rawr
 			_splash.Dispose();
             SetTitle();
 
-			MessageBox.Show(
+            if (!Properties.GeneralSettings.Default.SeenRawr3Note)
+            {
+                MessageBox.Show(
 @"We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're using right now), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
 
     - You can run Rawr3 in your web browser.
@@ -664,9 +666,12 @@ namespace Rawr
     - You can optionally install it locally with 2 clicks from the web version, if you want to have it locally for offline use.
     - Lots more.
 
- So give Rawr3 a try today! Get started at:   http://elitistjerks.com/rawr.php
- Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!", "A Message from the Rawr Development Team");
-
+So give Rawr3 a try today! Get started at: http://elitistjerks.com/rawr.php
+Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!",
+                "A Message from the Rawr Development Team");
+                Properties.GeneralSettings.Default.SeenRawr3Note = true;
+                Properties.GeneralSettings.Default.Save();
+            }
 
 			//if (Properties.Recent.Default.SeenIntroVersion < INTRO_VERSION)
 			//{
