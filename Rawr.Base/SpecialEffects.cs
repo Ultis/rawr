@@ -1483,6 +1483,12 @@ namespace Rawr {
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
             Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)?(<a.*q2.*>) for (?<duration>\d\d*) sec \((?<cooldown>\d\d*) Min Cooldown\)");
+            /*#region Prep the line, if it needs it
+            while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
+            while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
+            while (line.Contains("  ")) { line = line.Replace("  ", " "); }
+            while (line.EndsWith(".")) { line = line.Substring(0, line.Length-1); }
+            #endregion*/
             Match match = regex.Match(line);
             if (match.Success)
             {
@@ -1512,7 +1518,7 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
             }
             // Victor's Call and Vengeance of the Forsaken (232 & 245)
-            else if ((match = new Regex(@"Each time you strike an enemy.*, you gain (?<amount>\d\d\d*) attack power. Stacks up to 5 times. Entire effect lasts 20 sec*").Match(line)).Success)
+            else if ((match = new Regex(@"Each time you strike an enemy.*, you gain (?<amount>\d+) attack power. Stacks up to 5 times. Entire effect lasts 20 sec.*").Match(line.Replace("  "," "))).Success)
             {
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 20f, 2f * 60f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = (float)int.Parse(match.Groups["amount"].Value) }, 20f, 0f, 1f, 5);
@@ -1879,7 +1885,7 @@ namespace Rawr {
                 // Shifting Naaru Sliver
 				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 320 }, 15f, 90.0f));
             }
-            else if ((match = Regex.Match(line, @"Each spell cast within 20 seconds will grant a stacking bonus of (?<mp5>\d+) mana regen per 5 sec. Expires after (?<duration>\d+) seconds.")).Success)
+            else if ((match = Regex.Match(line, @"Each spell cast within 20 seconds will grant a stacking bonus of (?<mp5>\d+) mana regen per 5 sec.? Expires after (?<duration>\d+) seconds.*")).Success)
             {
                 int mp5 = int.Parse(match.Groups["mp5"].Value);
                 // Meteorite Crystal and Pendant of the Violet Eye
@@ -1900,7 +1906,9 @@ namespace Rawr {
                 primary.Stats.AddSpecialEffect(secondary);
                 stats.AddSpecialEffect(primary);
             }
-            else if ((match = Regex.Match(line, @"Each time you cast a harmful spell, you gain (?<hasteRating>\d+) haste rating\. .*Stacks up to (?<stacks>\d+) times\. .*Entire effect lasts (?<duration>\d+) sec\.( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
+            else if ((match = Regex.Match(line,
+@"Each time you cast a harmful spell, you gain (?<hasteRating>\d+) haste rating.? .*Stacks up to (?<stacks>\d+) times.? .*Entire effect lasts (?<duration>\d+) sec.?( \((?<cooldown>\d+) Min Cooldown\))?")).Success)
+//@"Each time you cast a harmful spell, you gain 64                  haste rating.? Stacks up to 8 times. Entire effect lasts 20 sec (2 Min Cooldown)"
             {
                 // Fetish of Volatile Power
                 // armory doesn't give cooldown info

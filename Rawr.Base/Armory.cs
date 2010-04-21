@@ -609,10 +609,12 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.HitRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.HasteRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPower")) { stats.SpellPower = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPenetration")) { stats.SpellPenetration = int.Parse(node.InnerText); }
 
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHealthRegen")) { stats.Hp5 = int.Parse(node.InnerText); }
 
                 // With WoWArmory providing the armorBonus bit in the XML, we only need to call this function
                 // when that bit is set to true.
