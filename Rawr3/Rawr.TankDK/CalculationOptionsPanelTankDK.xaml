@@ -32,6 +32,7 @@
                     <RowDefinition x:Name="SingleTarget_SingleRune3" Height="auto"/>
                     <RowDefinition x:Name="SingleTarget_MultiRune" Height="auto"/>
                     <RowDefinition x:Name="SingleTarget_MultiRune1" Height="auto"/>
+                    <RowDefinition x:Name="SingleTarget_MultiRune2" Height="auto"/>
                     <RowDefinition x:Name="MultiTarget" Height="auto"/>
                     <RowDefinition x:Name="MultiTarget1" Height="auto"/>
                     <RowDefinition x:Name="MultiTarget2" Height="auto"/>

@@ -160,7 +160,7 @@ namespace Rawr.UnitTests.TankDK
             CalculationOptionsTankDK c = new CalculationOptionsTankDK();
             c.talents = new DeathKnightTalents();
             Weapon w = new Weapon(i, FFTestStats, c, 0f);
-            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w, null);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w, null, 0);
 
             // Blood Plauge application.
             AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(FFTestStats, 0);

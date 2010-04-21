@@ -1,7 +1,16 @@
 ﻿Tracking doc for status of Rawr.Tank Module.
 
 Currently targeting: 
-* Wow version 3.3.3
+* Wow version 3.3.3a
+
+2.3.16:
+* Defect 16231: [EXPERIMETNAL] Additional work on the new abilities work-flow.  Additional data available in the summary pane to support improved visability, only available when the new code is enabled.  Fleshing out a number of the abilities on the rotation.  Optimizer results make slightly more sense when optimizing for Talents, which is a bit disturbing since it's in-complete.
+* Removed a bunch of "TODOs" that are being handled by the re-work.
+
+2.3.15:
+* No Defect: DS health restore was not contributing to mitigation, which it should be.
+* Defect 16231: Additional work on the new abilities work-flow.  
+* No Defect: Another wave of base abilities checked in for new combattable.  Still have more to do, and they aren't complete,  but this gets placeholders for most of what's on the rotation UI.
 
 2.3.14:
 * No Defect: Fix a couple UI related issues. 

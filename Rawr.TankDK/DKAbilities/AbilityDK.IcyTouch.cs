@@ -24,7 +24,6 @@ namespace Rawr.TankDK
             this.uMinDamage = 227;
             this.uRange = 20;
             this.tDamageType = ItemDamageType.Frost;
-            this.Cooldown = 1500;
             this.bTriggersGCD = true;
             // 3.3.3 IT now hits alot harder for threat.
             this.ThreatMultiplier = 7;

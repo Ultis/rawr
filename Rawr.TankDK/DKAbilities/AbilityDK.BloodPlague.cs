@@ -24,7 +24,7 @@ namespace Rawr.TankDK
                 this.uDuration = 15000;
             else
                 this.uDuration = 15000 + (Epidemic * 3000);
-            this.uTickRate = 3000;
+            this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
             this.CastTime = 0;

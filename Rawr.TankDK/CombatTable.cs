@@ -258,7 +258,6 @@ namespace Rawr.TankDK
             */
 
             //spell AP multipliers, for diseases its per tick
-            // TODO: Factor in BB & CE values for Multi-Target Tank roations
 //            float BloodBoilAPMult = .04f;
             float BloodPlagueAPMult = 0.055f;
 //            float CorpseExplosionAPMult = .0475f;
@@ -529,8 +528,6 @@ namespace Rawr.TankDK
                     fDamPlagueStrike *= (talents.GlyphofPlagueStrike ? 1.2f : 1f);
 
                     fDamPlagueStrike *= 1f + (.1f * (float)talents.Outbreak);
-
-                    // TODO: Add PS triggers here.
                 }
             }
             #endregion
@@ -542,7 +539,6 @@ namespace Rawr.TankDK
                     // Frost Fever is renewed with every Icy Touch/HB and starts a new cd
                     // So how many applications of FF do we have through the rotation?
                     float FFCount = calcOpts.m_Rotation.IcyTouch + (talents.GlyphofHowlingBlast ? calcOpts.m_Rotation.HowlingBlast : 0f);
-                    // TODO: Not sure what's going on right here.
                     float FFCD = 3f / (calcOpts.m_Rotation.diseaseUptime / 100f);
                     int tempF = (int)Math.Floor(FFCount / FFCD);
                     FFCD = ((calcOpts.m_Rotation.IcyTouch - ((float)tempF * FFCD)) / ((float)tempF + 1f)) + FFCD;
@@ -586,8 +582,6 @@ namespace Rawr.TankDK
 
             #region Pestilence
             {
-                // TODO: This needs some improvement since with only 1 application of Pestilence, 
-                // the duration of the diseases will run out before being refreshed.
                 if (calcOpts.m_Rotation.Pestilence > 0f )
                 {
                     fDamBloodPlague *= calcOpts.uNumberTargets;
@@ -1087,7 +1081,6 @@ namespace Rawr.TankDK
             DPSPoints += fDamRuneStrike;
 
             // Multiply by Frost Presence modifier:
-            // TODO: this may be causing a double factoring of frost presence.
             DPSPoints *= 2.0735f;
             // Figure out how much damage may have been done when factoring in missrate.
             // This currenty is just physicalhit not spell hit.  Need to fix that.

@@ -25,6 +25,7 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             this.uRange = 30;
             this.uArea = 10;
+            this.uTickRate = 1 * 1000;
             this.uDuration = 10 * 1000;
             this.Cooldown = 30 * 1000;
             // TODO: AOE - need to have target numbers.

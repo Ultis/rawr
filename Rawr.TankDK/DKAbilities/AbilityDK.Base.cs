@@ -100,7 +100,6 @@ namespace Rawr.TankDK
         /// 6 INTs representing the 3 Rune Types & Runic Power & Time
         /// Use enum (int)DKCostTypes for placement.
         /// Negative costs mean they grant that item.
-        /// TODO: Determine death rune functionality.
         /// </summary>
         public int[] AbilityCost = new int[(int)DKCostTypes.NumCostTypes];
 
@@ -118,17 +117,23 @@ namespace Rawr.TankDK
         /// Get the average value between Max and Min damage
         /// For DOTs damage is on a per-tick basis.
         /// </summary>
-        public uint uBaseDamage { 
+        virtual public uint uBaseDamage { 
             get
             {
                 uint AvgDam = (this.uMinDamage + this.uMaxDamage) / 2;
                 uint WDam = 0;
                 // Handle non-weapon based effects:
                 if (null != this.wMH)
+                {
                     WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
-                // TODO: Off hand stuff w/ talents.
+                }
                 // Average out the min & max damage, then add in baseDamage from the weapon.
-                return (AvgDam + WDam);
+                // Factor in miss rate based on HIT
+                float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
+                chanceMiss -= sStats.PhysicalHit;
+                chanceMiss = Math.Max(0f, chanceMiss);
+
+                return (uint)((AvgDam + WDam) * (1 - chanceMiss));
             }
             set 
             {
@@ -247,7 +252,7 @@ namespace Rawr.TankDK
         {
             // Start w/ getting the base damage values.
             int iDamage = (int)this.uBaseDamage;
-            // TODO: Apply modifiers.
+            // Apply modifiers.
             iDamage += this.DamageAdditiveModifer;
             iDamage = (int)Math.Floor((float)iDamage * (1 + DamageMultiplierModifer));
             return iDamage;

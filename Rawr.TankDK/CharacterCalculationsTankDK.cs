@@ -68,6 +68,7 @@ namespace Rawr.TankDK {
 
         public float Expertise { get; set; }
 
+        #region Subpoints
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints 
         {
@@ -87,6 +88,23 @@ namespace Rawr.TankDK {
                 _subPoints = value; 
             }
         }
+        #endregion
+
+        #region Experimental Threat & DPS info
+        public float DPS { get; set; }
+        public int RSLimit { get; set; }
+        public int TotalThreat { get; set; }
+
+        #region Costs
+        public float RotationTime { get; set; }
+        public int Blood { get; set; }
+        public int Unholy { get; set; }
+        public int Frost { get; set; }
+        public int Death { get; set; }
+        public int RP { get; set; }
+        #endregion
+
+        #endregion
 
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
@@ -130,6 +148,31 @@ namespace Rawr.TankDK {
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
             dict["Armor Penetration"] = (BasicStats.ArmorPenetration * 100f).ToString("F2") + "%";
             dict["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString("F0");
+
+            dict["DPS"] = DPS.ToString("F0");
+            dict["Rotation Time"] = String.Format("{0:0.00} sec", (RotationTime/1000));
+            dict["Total Threat"] = TotalThreat.ToString("F0");
+
+            #region Rune Strike Limit
+            dict["RS Limited"] = ""; 
+            if (RSLimit == (int)RSState.Good)
+                dict["RS Limited"] = "none"; 
+            else
+            {
+                if (1 == (RSLimit & (int)RSState.TimeStarved))
+                    dict["RS Limited"] += "Swing Starved ";
+                if (1 == (RSLimit & (int)RSState.RPStarved))
+                    dict["RS Limited"] += "RP Starved ";
+            }
+            #endregion
+            #region Ability Costs
+            dict["Blood"] = Blood.ToString("F0");
+            dict["Frost"] = Frost.ToString("F0");
+            dict["Unholy"] = Unholy.ToString("F0");
+            dict["Death"] = Death.ToString("F0");
+            dict["Runic Power"] = RP.ToString("F0");
+            #endregion
+
 
             dict["Overall Points"] = OverallPoints.ToString("F1"); 
             dict["Mitigation Points"] = String.Format("{0:0.0}", Mitigation); // Unmodified Mitigation.
