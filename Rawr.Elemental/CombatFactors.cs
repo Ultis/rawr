@@ -10,11 +10,11 @@ namespace Rawr.Elemental
     public class CombatFactors : ISpellArgs, IRotationOptions
     {
 
-        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd) : this(talents, stats, additionalTargets, latencyCast, latencyGcd, true, true)
+        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd) : this(talents, stats, additionalTargets, latencyCast, latencyGcd, true, true, false)
         {
         }
 
-        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd, bool useFireNova, bool useChainLightning)
+        public CombatFactors(ShamanTalents talents, Stats stats, int additionalTargets, float latencyCast, float latencyGcd, bool useFireNova, bool useChainLightning, bool useDpsFireTotem)
         {
             Talents = talents;
             Stats = stats;
@@ -23,7 +23,7 @@ namespace Rawr.Elemental
             LatencyGCD = latencyGcd;
             UseFireNova = useFireNova;
             UseChainLightning = useChainLightning;
-
+            UseDpsFireTotem = useDpsFireTotem;
         }
 
         #region ISpellArgs Member
@@ -69,6 +69,12 @@ namespace Rawr.Elemental
         }
 
         public bool UseChainLightning
+        {
+            get;
+            set;
+        }
+
+        public bool UseDpsFireTotem
         {
             get;
             set;

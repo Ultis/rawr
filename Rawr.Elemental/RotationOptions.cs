@@ -6,10 +6,11 @@ namespace Rawr.Elemental
 {
     public class RotationOptions : IRotationOptions
     {
-        public RotationOptions(bool useFN, bool useCL)
+        public RotationOptions(bool useFN, bool useCL, bool useDpsFireTotem)
         {
             UseFireNova = useFN;
             UseChainLightning = useCL;
+            UseDpsFireTotem = useDpsFireTotem;
         }
         #region IRotationOptions Member
 
@@ -20,6 +21,12 @@ namespace Rawr.Elemental
         }
 
         public bool UseChainLightning
+        {
+            get;
+            set;
+        }
+
+        public bool UseDpsFireTotem
         {
             get;
             set;

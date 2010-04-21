@@ -27,6 +27,7 @@ namespace Rawr.Elemental
 
         public bool UseFireNova = true;
         public bool UseChainLightning = true;
+        public bool UseDpsTotem = false;
 
 		public string GetXml()
 		{

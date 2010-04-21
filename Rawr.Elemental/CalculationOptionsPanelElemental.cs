@@ -16,14 +16,22 @@ namespace Rawr.Elemental
             tbModuleNotes.Text =
                 "Notes:\r\n" +
                 "For the estimator, it is assumed you use Flametongue weapon and Water Shield.\r\n" +
-                "The estimator is a simple estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
                 "Trinkets, Elemental Mastery and Clearcasting are modelled by calculating their average value during the fight.\r\n" +
                 "\r\n" +
-                "Assumed rotation:\r\n"+
-                "- Flame shock up.\n"+
+                "Assumed rotation:\r\n" +
+                "- Flame shock up.\n" +
                 "- Lava Burst whenever off cooldown.\r\n" +
                 "- Cast Thunderstorm whenever available if using Thunderstorm\r\n" +
-                "- Cast the highest DPS option between lightning bolt, fire nova, and chain lightning.";
+                "- Cast the highest DPS option between lightning bolt, fire nova, and chain lightning.\r\n" +
+                "\r\n" +
+                "Legend:\r\n" +
+                "FS - Flame Shock\r\n" +
+                "LvB - Lava Burst\r\n" +
+                "LB - Lightning Bolt\r\n" +
+                "CL - Chain Lightning [which is then followed by the number of targets hit, such as CL2 hits 2 targets]\r\n" +
+                "FN - Fire Nova [which is followed by the number of targets hit]\r\n" +
+                "ST - Searing Totem\r\n" +
+                "MT - Magma Totem [which is followed by the number of targets hit]\r\n";
         }
 
         protected override void LoadCalculationOptions()
@@ -59,6 +67,7 @@ namespace Rawr.Elemental
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
             cbFireNova.Checked = calcOpts.UseFireNova;
             cbChainLightning.Checked = calcOpts.UseChainLightning;
+            cbFireDpsTotem.Checked = calcOpts.UseDpsTotem;
 
             loading = false;
         }
@@ -155,6 +164,14 @@ namespace Rawr.Elemental
             if (loading) return;
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.UseChainLightning = cbChainLightning.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbFireTotem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseDpsTotem = cbFireDpsTotem.Checked;
             Character.OnCalculationsInvalidated();
         }
     }

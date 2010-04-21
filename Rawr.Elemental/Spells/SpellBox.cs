@@ -12,7 +12,9 @@ namespace Rawr.Elemental.Spells
         EarthShock,
         FrostShock,
         Thunderstorm,
-        FireNova
+        FireNova,
+        SearingTotem,
+        MagmaTotem
     }
 
     /// <summary>
@@ -26,7 +28,7 @@ namespace Rawr.Elemental.Spells
 
         public SpellBox(ISpellArgs args)
         {
-            spells = new Spell[9];
+            spells = new Spell[11];
             spells[(int)SpellIndex.LightningBolt] = new LightningBolt(args);
             spells[(int)SpellIndex.ChainLightning] = new ChainLightning(args);
             spells[(int)SpellIndex.LavaBurst] = new LavaBurst(args, 0);
@@ -36,6 +38,8 @@ namespace Rawr.Elemental.Spells
             spells[(int)SpellIndex.FrostShock] = new FrostShock(args);
             spells[(int)SpellIndex.Thunderstorm] = new Thunderstorm(args);
             spells[(int)SpellIndex.FireNova] = new FireNova(args);
+            spells[(int)SpellIndex.SearingTotem] = new SearingTotem(args);
+            spells[(int)SpellIndex.MagmaTotem] = new MagmaTotem(args);
         }
 
         public void Update(ISpellArgs args)
@@ -119,6 +123,16 @@ namespace Rawr.Elemental.Spells
         public FireNova FN
         {
             get { return (FireNova)spells[(int)SpellIndex.FireNova]; }
+        }
+
+        public SearingTotem ST
+        {
+            get { return (SearingTotem)spells[(int)SpellIndex.SearingTotem]; }
+        }
+
+        public MagmaTotem MT
+        {
+            get { return (MagmaTotem)spells[(int)SpellIndex.MagmaTotem]; }
         }
         #endregion
     }

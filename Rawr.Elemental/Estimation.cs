@@ -22,7 +22,7 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets-1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets-1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem);
             spellbox = new SpellBox(combatFactors);
         }
 
@@ -42,7 +42,7 @@ namespace Rawr.Elemental
 
             Stats addedStats = baseStats.Clone();
             addedStats.Accumulate(procStats);
-            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets - 1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning);
+            CombatFactors combatFactors = new CombatFactors(talents, addedStats, Math.Max(calcOpts.NumberOfTargets - 1, 0), calcOpts.LatencyCast, calcOpts.LatencyGcd, calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem);
             spellbox.Update(combatFactors);
         }
 
@@ -56,7 +56,7 @@ namespace Rawr.Elemental
              */
             #endregion
             
-            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning));
+            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem));
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts)
@@ -170,6 +170,8 @@ namespace Rawr.Elemental
             calculatedStats.EarthShock = rot.ES;
             calculatedStats.FrostShock = rot.FrS;
             calculatedStats.FireNova = rot.FN;
+            calculatedStats.SearingTotem = rot.ST;
+            calculatedStats.MagmaTotem = rot.MT;
             calculatedStats.TimeToOOM = TimeUntilOOM;
             calculatedStats.CastRegenFraction = CastFraction;
             calculatedStats.CastsPerSecond = rot.getCastsPerSecond();

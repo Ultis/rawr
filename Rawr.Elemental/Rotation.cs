@@ -112,6 +112,9 @@ namespace Rawr.Elemental
         public EarthShock ES;
         public FrostShock FrS;
         public FireNova FN;
+        public SearingTotem ST;
+        public MagmaTotem MT;
+        public Spell ActiveTotem;
 
         public ShamanTalents Talents;
 
@@ -132,8 +135,10 @@ namespace Rawr.Elemental
             ES = spellBox.ES;
             FrS = spellBox.FrS;
             FN = spellBox.FN;
+            ST = spellBox.ST;
+            MT = spellBox.MT;
 
-            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning);
+            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem);
         }
 
         /// <summary>
@@ -154,28 +159,41 @@ namespace Rawr.Elemental
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool useFN, bool useCL)
+        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem)
         {
-            if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null)
+            if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
-            CalculateRotation(true, true, useFN, useCL);
+            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL)
+        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem)
         {
-            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null)
+            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
             spells.Clear();
             Invalidate();
 
-            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0;
-            int passes = 0;
+            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0;
+
+            switch (useDpsFireTotem)
+            {
+                case true:
+                    if (ST.DpCT > MT.DpCT)
+                        ActiveTotem = ST;
+                    else
+                        ActiveTotem = MT;
+                    break;
+                case false:
+                    ActiveTotem = null;
+                    activeTotemDropsAt = 300f;
+                    break;
+            }
+
             while (true)
             {
-                passes++;
                 if (GetTime() >= LvBreadyAt) //LvB is ready
                 {
                     if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt) //the LvB cast will be finished before FS runs out
@@ -184,7 +202,7 @@ namespace Rawr.Elemental
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
                         if (LvBFS.ElementalT10 && GetTime() <= FSdropsAt)
                         {
-                            FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6); //Research showed that the closest amount of ticks to 6s will be added.
+                             FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6); //Research showed that the closest amount of ticks to 6s will be added.
                         }
                     }
                     else if (FSdropsAt == 0) //the first FS
@@ -199,9 +217,9 @@ namespace Rawr.Elemental
                 {
                     if (GetTime() + LvB.CastTime > FSdropsAt) //FS will run out
                     {
-                        if(LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0, 
-                                (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0))) // LB is the best option available
-                        {
+                        if(((LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0, (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)))) 
+                            && (LB.DpCT > (((activeTotemDropsAt < GetTime()) && useDpsFireTotem) ? ActiveTotem.PeriodicDamage() : 0)))
+                        {    // LB is the best option available
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > LB.CastTime) //there is enough time to fit in another LB and a FS before LvB is ready
                             {
                                 AddSpell(LB);
@@ -212,8 +230,10 @@ namespace Rawr.Elemental
                                 break; //FS recast nescessary -> done
                             }
                         }
-                        else if (((useCL &&clReadyAt < GetTime()) ? CL.DpCT : 0) >
-                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) // CL > FN
+                        else if ((((useCL &&clReadyAt < GetTime()) ? CL.DpCT : 0) >
+                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) 
+                            && (CL.DpCT > ((activeTotemDropsAt < GetTime()) && (useDpsFireTotem) ? ActiveTotem.PeriodicDamage() : 0)))
+                            // CL > FN and CL > Totem [Or totem doesn't need refreshed]
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > CL.CastTime) // Can fit another CL and FS
                             {
@@ -227,7 +247,8 @@ namespace Rawr.Elemental
                                 break;
                             }
                         }
-                        else //FN > CL
+                        else if ((useFN && fnReadyAt < GetTime()) && (activeTotemDropsAt > GetTime()))
+                        // FN > CL and FN > Totem [Or totem doesn't need refreshed]
                         {
                             if (LvBreadyAt - (GetTime() + FS.CastTime) > FN.CastTime) // Can fit another FN and FS
                             {
@@ -241,25 +262,37 @@ namespace Rawr.Elemental
                                 break;
                             }
                         }
+                        else // If the totem needs refreshed...
+                        {
+                            AddSpell(ActiveTotem);
+                            activeTotemDropsAt = ActiveTotem.Duration + GetTime();
+                        }
                     }
                     else if (LvBreadyAt - GetTime() <= LB.CastTime && !addlb1) //time before the next LvB is lower than LB cast time
                         AddSpell(new Wait(LvBreadyAt - GetTime()));
                     else //LvB is on cooldown, FS won't run out soon
-                        if (LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0,
-                                (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0))) //Is LB Dmg per cast time bigger than the Dpct of CL or FN and are these spells ready?
-                        {
+                        if(((LB.DpCT > (Math.Max((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0, (useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)))) 
+                            && (LB.DpCT > (((activeTotemDropsAt < GetTime()) && useDpsFireTotem) ? ActiveTotem.PeriodicDamage() : 0)))
+                        {    //Is LB Dmg per cast time bigger than the Dpct of CL or FN and are these spells ready?
                             AddSpell(LB);
                         }
-                        else if (((useCL && clReadyAt < GetTime()) ? CL.DpCT : 0) >
-                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) //CL > FN
+                        else if ((((useCL &&clReadyAt < GetTime()) ? CL.DpCT : 0) >
+                            ((useFN && fnReadyAt < GetTime()) ? FN.DpCT : 0)) 
+                            && (CL.DpCT > ((activeTotemDropsAt < GetTime()) && (useDpsFireTotem) ? ActiveTotem.PeriodicDamage() : 0)))
+                            // CL > FN and CL > Totem [Or totem doesn't need refreshed]
                         {
                             AddSpell(CL);
                             clReadyAt = GetTime() + CL.Cooldown;
                         }
-                        else //FN > CL
-                        {
+                        else if ((useFN && fnReadyAt < GetTime()) && (activeTotemDropsAt > GetTime()))
+                        {    //FN > CL
                             AddSpell(FN);
                             fnReadyAt = GetTime() + FN.Cooldown;
+                        }
+                        else // If the totem needs refreshed...
+                        {
+                            AddSpell(ActiveTotem);
+                            activeTotemDropsAt = ActiveTotem.Duration + GetTime();
                         }
                 }
             }
