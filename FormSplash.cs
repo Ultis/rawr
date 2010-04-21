@@ -38,10 +38,10 @@ namespace Rawr
 
 					version = Assembly.GetCallingAssembly().GetName().Version.ToString();
 					while (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
-					g.DrawString("UI v" + version, fontVersionBig, brushName, 484, 176, formatRightAlign);
+					g.DrawString("UI v" + version, fontVersionBig, brushName, 484, 144, formatRightAlign);
 					version = typeof(CalculationsBase).Assembly.GetName().Version.ToString();
 					while (version.EndsWith(".0")) version = version.Substring(0, version.Length - 2);
-					g.DrawString("Base v" + version, fontVersionBig, brushName, 484, 192, formatRightAlign);
+					g.DrawString("Base v" + version, fontVersionBig, brushName, 484, 160, formatRightAlign);
 
 					foreach (var modelKvp in Calculations.Models)
 					{
@@ -51,7 +51,7 @@ namespace Rawr
 						icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[modelKvp.Key], true);
 						if (icon != null)
 						{
-							g.DrawImage(icon, x, y);
+							g.DrawImage(icon, x, y, 32, 32);
 						}
 						g.DrawImage(Rawr.Properties.Resources.Rawr_Splash_ModelBackground, x + 30, y - 8);
 						g.DrawString(name, fontName, brushName, x + 34, y);
