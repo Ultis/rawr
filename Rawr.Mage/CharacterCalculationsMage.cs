@@ -118,7 +118,6 @@ namespace Rawr.Mage
         public float EvocationDurationIVHero;
         public float EvocationRegenIVHero;
 
-        public int MaxManaPotion;
         public int MaxManaGem;
         public float MaxEvocation;
         public float ManaGemTps;

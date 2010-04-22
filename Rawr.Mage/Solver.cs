@@ -948,7 +948,6 @@ namespace Rawr.Mage
         public float EvocationDurationIVHero;
         public float EvocationRegenIVHero;
 
-        public int MaxManaPotion;
         public int MaxManaGem;
         public float ManaGemTps;
         public float ManaPotionTps;
@@ -3151,7 +3150,6 @@ namespace Rawr.Mage
                 #region Mana Potion
                 if (manaPotionAvailable)
                 {
-                    MaxManaPotion = 1;
                     int manaPotionSegments = (segmentCooldowns && (potionOfWildMagicAvailable || restrictManaUse)) ? SegmentList.Count : 1;
                     mps = -(1 + baseStats.BonusManaPotion) * ManaPotionValue;
                     dps = 0;
@@ -3161,7 +3159,7 @@ namespace Rawr.Mage
                         if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment, Dps = dps, Mps = mps, Tps = tps });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
-                        lp.SetColumnUpperBound(column, (manaPotionSegments > 1) ? 1.0 : MaxManaPotion);
+                        lp.SetColumnUpperBound(column, 1.0);
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
                         lp.SetElementUnsafe(rowManaRegen, column, mps);
                         lp.SetElementUnsafe(rowPotion, column, 1.0);
@@ -3200,7 +3198,6 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    MaxManaPotion = 0;
                     ManaPotionTps = 0;
                 }
                 #endregion
@@ -4001,8 +3998,8 @@ namespace Rawr.Mage
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowEvocationIV, EvocationDurationIV * MaxEvocation);
             if (heroismAvailable) lp.SetRHSUnsafe(rowEvocationHero, EvocationDurationHero);
             if (icyVeinsAvailable && heroismAvailable) lp.SetRHSUnsafe(rowEvocationIVHero, EvocationDurationIVHero);
-            lp.SetRHSUnsafe(rowPotion, MaxManaPotion);
-            lp.SetRHSUnsafe(rowManaPotion, MaxManaPotion);
+            lp.SetRHSUnsafe(rowPotion, 1.0);
+            lp.SetRHSUnsafe(rowManaPotion, 1.0);
             lp.SetRHSUnsafe(rowManaGem, Math.Min(3, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / 120.0 : MaxManaGem));
             lp.SetRHSUnsafe(rowManaGemMax, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / 120.0 : MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, MaxConjureManaGem * ConjureManaGem.CastTime);
@@ -5359,7 +5356,6 @@ namespace Rawr.Mage
             displayCalculations.EvocationDurationIVHero = EvocationDurationIVHero;
             displayCalculations.EvocationRegenIVHero = EvocationRegenIVHero;
 
-            displayCalculations.MaxManaPotion = MaxManaPotion;
             displayCalculations.MaxManaGem = MaxManaGem;
             displayCalculations.MaxEvocation = MaxEvocation;
             displayCalculations.ManaGemTps = ManaGemTps;
