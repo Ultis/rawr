@@ -70,6 +70,10 @@ namespace Rawr
         DamageDone,
         /// <summary>The tick of a player's DoT on the target</summary>
         DoTTick,
+        /// <summary>Damage taken via magical means.</summary>
+        DamageTakenMagical,
+        /// <summary>Damage taken via physical/melee means.</summary>
+        DamageTakenPhysical,
         #endregion
 
         /// <summary>The player deals any form of damage, regardless of where it comes from or performs a heal (on self or other).</summary>
@@ -86,7 +90,8 @@ namespace Rawr
         PlagueStrikeHit,
         IcyTouchHit,
         RuneStrikeHit,
-        FrostFeverHit, // When FrostFever is Applied - not when it TICKs
+        /// <summary>When FrostFever is Applied - not when it TICKs</summary>
+        FrostFeverHit,
         #endregion
         #region Added by Druid
         InsectSwarmTick,

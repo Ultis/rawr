@@ -29,6 +29,7 @@ namespace Rawr.TankDK
             {
                 float trigger = 0f;
                 float chance = effect.Chance;
+                float duration = effect.Duration;
                 float unhastedAttackSpeed = 2f;
                 switch (effect.Trigger)
                 {
@@ -66,9 +67,13 @@ namespace Rawr.TankDK
                         trigger = (rRotation.BloodPlague + rRotation.FrostFever) / 3;
                         break;
                     case Trigger.DamageTaken:
+                    case Trigger.DamageTakenPhysical:
                         trigger = calcOpts.BossAttackSpeed;
                         chance *= 1f - (stats.Dodge + stats.Parry + stats.Miss);
                         unhastedAttackSpeed = calcOpts.BossAttackSpeed;
+                        break;
+                    case Trigger.DamageTakenMagical:
+                        trigger = calcOpts.IncomingFromMagicFrequency;
                         break;
                     //////////////////////////////////
                     // DK specific triggers:
@@ -103,15 +108,17 @@ namespace Rawr.TankDK
                 }
                 if (!float.IsInfinity(trigger))
                 {
-                    if (effect.MaxStack > 1)
+/*                    if ((trigger < duration) && (effect.MaxStack > 1))
                     {
-                            float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                            statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
+                        float FightLengthInSec = calcOpts.FightLength * 60;
+                        float MaxLengthByStack = trigger * effect.MaxStack / effect.GetChance(unhastedAttackSpeed);
+                        float timeToMax = (float)Math.Min(FightLengthInSec, MaxLengthByStack);
+                        statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
                     }
                     else
-                    {
+                    {*/
                         effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
-                    }
+  //                  }
                 }
             }
 

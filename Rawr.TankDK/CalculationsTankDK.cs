@@ -1008,6 +1008,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             #endregion
 
+            #region ** Resistance Damage Mitigation **
+            // For any physical only damage reductions. 
+            // Factor in armor Damage Reduction
+            fTotalMitigation += fMagicDamageDPS * fMagicDR;
+            if (opts.AdditiveMitigation)
+            {
+                fMagicDamageDPS -= fMagicDamageDPS * fMagicDR;
+            }
+            #endregion
+
             // Four T8 : AMS grants 10% damage reduction.
             stats.DamageTakenMultiplier -= (stats.BonusAntiMagicShellDamageReduction * amsUptimePct);
 
@@ -1468,8 +1478,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
                 // Need to factor in the damage taken aspect of the trigger.
                 // Using the assumption that the tank will be at < 35% health about that % of the time.
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 0, 0, 0.35f));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, 0, 0, 0.35f));
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, newStats, 0, 0, 0.35f));
             }
 
             // Heart Strike
@@ -1697,7 +1706,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 newStats.ArcaneResistance += 50f;
                 newStats.ShadowResistance += 50f;
                 newStats.NatureResistance += 50f;
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 18f, 0f, chance, 3));
+                // TODO: SpellHit is not sufficient.  Need to have this be DamageTakenSpell (vs. DamageTakenPhysical)
+                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenMagical, newStats, 18f, 0f, chance, 3));
             }
 
             // Frost Strike
@@ -2076,6 +2086,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     if (effect.Trigger == Trigger.DamageDone ||
                         effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageTaken ||
+                        effect.Trigger == Trigger.DamageTakenMagical ||
+                        effect.Trigger == Trigger.DamageTakenPhysical ||
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
                         effect.Trigger == Trigger.DamageSpellHit ||
