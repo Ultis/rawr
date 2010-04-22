@@ -46,10 +46,6 @@ namespace Rawr {
         InsectSwarmDmg,
         Intellect,
         InterruptProtection,
-        WarlockFelArmor,
-        WarlockDemonArmor,
-        WarlockSpellstoneHasteRating,
-        WarlockFirestoneSpellCritRating,
         Mana,
         ManaRestore,
         ManaRestoreOnCast_5_15,
@@ -461,8 +457,6 @@ namespace Rawr {
         ManaCostPerc,
         #endregion
         #region Added by Rawr.Warlock
-        WarlockSpellstoneDotDamageMultiplier,
-        WarlockFirestoneDirectDamageMultiplier,
         Warlock2T7,
         Warlock2T8,
         Warlock4T8,
@@ -2635,62 +2629,6 @@ namespace Rawr {
 
         #endregion
         #region Added by Rawr.Warlock
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("spellpower, plus an additional 30% of spirit is added to spellpower")]
-        [Category("Warlock")]
-        public float WarlockFelArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("armor")]
-        [Category("Warlock")]
-        public float WarlockDemonArmor
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% increase to periodic spell damage")]
-        [Category("Warlock")]
-        public float WarlockSpellstoneDotDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.WarlockSpellstoneDotDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.WarlockSpellstoneDotDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("haste rating")]
-        [Category("Warlock")]
-        public float WarlockSpellstoneHasteRating
-        { 
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockSpellstoneHasteRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockSpellstoneHasteRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% increase to direct spell damage")]
-        [Category("Warlock")]
-        public float WarlockFirestoneDirectDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.WarlockFirestoneDirectDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.WarlockFirestoneDirectDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("spell critical strike rating")]
-        [Category("Warlock")]
-        public float WarlockFirestoneSpellCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WarlockFirestoneSpellCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WarlockFirestoneSpellCritRating] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Spirit after Life Tap")]
         [Category("Warlock")]

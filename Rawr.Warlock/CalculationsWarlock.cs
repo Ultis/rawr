@@ -8,6 +8,7 @@ using System.Drawing;
 #endif
 using System.Xml.Serialization;
 using System.IO;
+using System.Diagnostics;
 
 namespace Rawr.Warlock {
 
@@ -240,11 +241,21 @@ namespace Rawr.Warlock {
             WarlockTalents talents = character.WarlockTalents;
             CalculationOptionsWarlock options
                 = character.CalculationOptions as CalculationOptionsWarlock;
-
             Stats stats = BaseStats.GetBaseStats(character);
-            AccumulateItemStats(stats, character, additionalItem);
-            AccumulateBuffsStats(stats, character.ActiveBuffs);
 
+            // Items
+            AccumulateItemStats(stats, character, additionalItem);
+
+            // Buffs
+            AccumulateBuffsStats(stats, character.ActiveBuffs);
+            if (options.Imbue.Equals("Grand Spellstone")) {
+                stats.HasteRating += 60f * (1f + talents.MasterConjuror * 1.5f);
+            } else {
+                Debug.Assert(options.Imbue.Equals("Grand Firestone"));
+                stats.CritRating += 49f * (1f + talents.MasterConjuror * 1.5f);
+            }
+
+            // Talents
             float[] talentValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
 
@@ -584,14 +595,6 @@ namespace Rawr.Warlock {
                 + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
                 + stats.BonusSpellCritMultiplier
                 + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
-
-                //warlock class buffs
-                + stats.WarlockFelArmor
-                + stats.WarlockDemonArmor
-                + stats.WarlockSpellstoneDotDamageMultiplier
-                + stats.WarlockSpellstoneHasteRating
-                + stats.WarlockFirestoneDirectDamageMultiplier
-                + stats.WarlockFirestoneSpellCritRating
 
                 //set bonuses
                 + stats.Warlock2T7

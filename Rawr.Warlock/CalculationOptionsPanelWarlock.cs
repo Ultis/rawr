@@ -136,7 +136,7 @@ namespace Rawr.Warlock {
             ++_ignoreCount;
 
             petCombo.SelectedItem = _options.Pet;
-
+            imbueCombo.SelectedItem = _options.Imbue;
             targetLevelCombo.Text = _options.TargetLevel.ToString();
             fightLengthSpinner.Value = (decimal) _options.Duration;
             latencySpinner.Value = (decimal) _options.Latency * 1000;
@@ -355,6 +355,16 @@ namespace Rawr.Warlock {
             }
 
             RefreshRotationPanel();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void imbueCombo_SelectedIndexChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.Imbue = imbueCombo.Text;
             Character.OnCalculationsInvalidated();
         }
 

@@ -613,11 +613,13 @@ namespace Rawr.Warlock {
         public virtual void FinalizeSpellModifiers() {
 
             SpellModifiers.Accumulate(Mommy.SpellModifiers);
-            SpellModifiers.AddAdditiveDirectMultiplier(
-                Mommy.CalcWarlockFirestoneDirectDamageMultiplier());
-            if (!GetType().Name.StartsWith("Curse")) {
-                SpellModifiers.AddAdditiveTickMultiplier(
-                    Mommy.CalcWarlockSpellstoneDotDamageMultiplier());
+            if (Mommy.Options.Imbue.Equals("Grand Spellstone")) {
+                if (!GetType().Name.StartsWith("Curse")) {
+                    SpellModifiers.AddAdditiveTickMultiplier(.01f);
+                }
+            } else {
+                Debug.Assert(Mommy.Options.Imbue.Equals("Grand Firestone"));
+                SpellModifiers.AddAdditiveDirectMultiplier(.01f);
             }
             switch (MagicSchool) {
                 case MagicSchool.Shadow:
@@ -1064,7 +1066,7 @@ namespace Rawr.Warlock {
 
         public override bool IsCastable() {
 
-            return Mommy.CalcBonusShadowDamageMultiplier() == 0;
+            return Mommy.Stats.BonusShadowDamageMultiplier == 0;
         }
     }
 

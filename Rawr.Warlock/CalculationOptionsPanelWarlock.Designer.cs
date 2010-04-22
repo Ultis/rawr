@@ -58,6 +58,8 @@
             this.notesPage = new System.Windows.Forms.TabPage();
             this.notesBox = new System.Windows.Forms.TextBox();
             this.optionsPage = new System.Windows.Forms.TabPage();
+            this.imbueLabel = new System.Windows.Forms.Label();
+            this.imbueCombo = new System.Windows.Forms.ComboBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.TimerButton = new System.Windows.Forms.Button();
             this.ProcCheckbox = new System.Windows.Forms.CheckBox();
@@ -90,7 +92,7 @@
             this.rotationCombo.Location = new System.Drawing.Point(6, 19);
             this.rotationCombo.Name = "rotationCombo";
             this.rotationCombo.Size = new System.Drawing.Size(271, 21);
-            this.rotationCombo.TabIndex = 6;
+            this.rotationCombo.TabIndex = 7;
             this.rotationCombo.SelectedIndexChanged += new System.EventHandler(this.rotationCombo_SelectedIndexChanged);
             // 
             // newRotationButton
@@ -100,7 +102,7 @@
             this.newRotationButton.Location = new System.Drawing.Point(121, 46);
             this.newRotationButton.Name = "newRotationButton";
             this.newRotationButton.Size = new System.Drawing.Size(39, 23);
-            this.newRotationButton.TabIndex = 7;
+            this.newRotationButton.TabIndex = 8;
             this.newRotationButton.Text = "New";
             this.newRotationButton.UseVisualStyleBackColor = true;
             this.newRotationButton.Click += new System.EventHandler(this.newRotationButton_Click);
@@ -112,7 +114,7 @@
             this.deleteRotationButton.Location = new System.Drawing.Point(229, 46);
             this.deleteRotationButton.Name = "deleteRotationButton";
             this.deleteRotationButton.Size = new System.Drawing.Size(48, 23);
-            this.deleteRotationButton.TabIndex = 9;
+            this.deleteRotationButton.TabIndex = 10;
             this.deleteRotationButton.Text = "Delete";
             this.deleteRotationButton.UseVisualStyleBackColor = true;
             this.deleteRotationButton.Click += new System.EventHandler(this.deleteRotationButton_Click);
@@ -134,7 +136,7 @@
             this.rotationBox.Controls.Add(this.rotationCombo);
             this.rotationBox.Controls.Add(this.deleteRotationButton);
             this.rotationBox.Controls.Add(this.rotationList);
-            this.rotationBox.Location = new System.Drawing.Point(3, 135);
+            this.rotationBox.Location = new System.Drawing.Point(3, 162);
             this.rotationBox.Name = "rotationBox";
             this.rotationBox.Size = new System.Drawing.Size(283, 280);
             this.rotationBox.TabIndex = 7;
@@ -151,7 +153,7 @@
             this.fillerCombo.Location = new System.Drawing.Point(43, 235);
             this.fillerCombo.Name = "fillerCombo";
             this.fillerCombo.Size = new System.Drawing.Size(234, 21);
-            this.fillerCombo.TabIndex = 17;
+            this.fillerCombo.TabIndex = 18;
             this.fillerCombo.SelectedIndexChanged += new System.EventHandler(this.fillerCombo_SelectedIndexChanged);
             // 
             // fillerLabel
@@ -169,7 +171,7 @@
             this.rotationMenu.Location = new System.Drawing.Point(6, 82);
             this.rotationMenu.Name = "rotationMenu";
             this.rotationMenu.Size = new System.Drawing.Size(107, 147);
-            this.rotationMenu.TabIndex = 10;
+            this.rotationMenu.TabIndex = 11;
             this.rotationMenu.SelectedIndexChanged += new System.EventHandler(this.rotationMenu_SelectedIndexChanged);
             // 
             // rotationErrorLabel
@@ -188,7 +190,7 @@
             this.rotationRenameButton.Location = new System.Drawing.Point(166, 46);
             this.rotationRenameButton.Name = "rotationRenameButton";
             this.rotationRenameButton.Size = new System.Drawing.Size(57, 23);
-            this.rotationRenameButton.TabIndex = 8;
+            this.rotationRenameButton.TabIndex = 9;
             this.rotationRenameButton.Text = "Rename";
             this.rotationRenameButton.UseVisualStyleBackColor = true;
             this.rotationRenameButton.Click += new System.EventHandler(this.rotationRenameButton_Click);
@@ -208,7 +210,7 @@
             this.rotationRemoveButton.Location = new System.Drawing.Point(119, 111);
             this.rotationRemoveButton.Name = "rotationRemoveButton";
             this.rotationRemoveButton.Size = new System.Drawing.Size(45, 23);
-            this.rotationRemoveButton.TabIndex = 13;
+            this.rotationRemoveButton.TabIndex = 14;
             this.rotationRemoveButton.Text = "<";
             this.rotationRemoveButton.UseVisualStyleBackColor = true;
             this.rotationRemoveButton.Click += new System.EventHandler(this.rotationRemoveButton_Click);
@@ -218,7 +220,7 @@
             this.rotationAddButton.Location = new System.Drawing.Point(119, 82);
             this.rotationAddButton.Name = "rotationAddButton";
             this.rotationAddButton.Size = new System.Drawing.Size(45, 23);
-            this.rotationAddButton.TabIndex = 11;
+            this.rotationAddButton.TabIndex = 12;
             this.rotationAddButton.Text = ">";
             this.rotationAddButton.UseVisualStyleBackColor = true;
             this.rotationAddButton.Click += new System.EventHandler(this.rotationAddButton_Click);
@@ -228,7 +230,7 @@
             this.rotationClearButton.Location = new System.Drawing.Point(119, 206);
             this.rotationClearButton.Name = "rotationClearButton";
             this.rotationClearButton.Size = new System.Drawing.Size(45, 23);
-            this.rotationClearButton.TabIndex = 16;
+            this.rotationClearButton.TabIndex = 17;
             this.rotationClearButton.Text = "Clear";
             this.rotationClearButton.UseVisualStyleBackColor = true;
             this.rotationClearButton.Click += new System.EventHandler(this.rotationClearButton_Click);
@@ -238,7 +240,7 @@
             this.rotationDownButton.Location = new System.Drawing.Point(119, 177);
             this.rotationDownButton.Name = "rotationDownButton";
             this.rotationDownButton.Size = new System.Drawing.Size(45, 23);
-            this.rotationDownButton.TabIndex = 15;
+            this.rotationDownButton.TabIndex = 16;
             this.rotationDownButton.Text = "Down";
             this.rotationDownButton.UseVisualStyleBackColor = true;
             this.rotationDownButton.Click += new System.EventHandler(this.rotationDownButton_Click);
@@ -248,7 +250,7 @@
             this.rotationUpButton.Location = new System.Drawing.Point(119, 148);
             this.rotationUpButton.Name = "rotationUpButton";
             this.rotationUpButton.Size = new System.Drawing.Size(45, 23);
-            this.rotationUpButton.TabIndex = 14;
+            this.rotationUpButton.TabIndex = 15;
             this.rotationUpButton.Text = "Up";
             this.rotationUpButton.UseVisualStyleBackColor = true;
             this.rotationUpButton.Click += new System.EventHandler(this.rotationUpButton_Click);
@@ -259,7 +261,7 @@
             this.rotationList.Location = new System.Drawing.Point(170, 82);
             this.rotationList.Name = "rotationList";
             this.rotationList.Size = new System.Drawing.Size(107, 147);
-            this.rotationList.TabIndex = 12;
+            this.rotationList.TabIndex = 13;
             this.rotationList.SelectedIndexChanged += new System.EventHandler(this.rotationList_SelectedIndexChanged);
             // 
             // petLabel
@@ -281,16 +283,16 @@
             "82",
             "81",
             "80"});
-            this.targetLevelCombo.Location = new System.Drawing.Point(180, 56);
+            this.targetLevelCombo.Location = new System.Drawing.Point(180, 83);
             this.targetLevelCombo.Name = "targetLevelCombo";
             this.targetLevelCombo.Size = new System.Drawing.Size(106, 21);
-            this.targetLevelCombo.TabIndex = 3;
+            this.targetLevelCombo.TabIndex = 4;
             this.targetLevelCombo.SelectedIndexChanged += new System.EventHandler(this.targetLevelCombo_SelectedIndexChanged);
             // 
             // targetLevelLabel
             // 
             this.targetLevelLabel.AutoSize = true;
-            this.targetLevelLabel.Location = new System.Drawing.Point(6, 59);
+            this.targetLevelLabel.Location = new System.Drawing.Point(6, 86);
             this.targetLevelLabel.Name = "targetLevelLabel";
             this.targetLevelLabel.Size = new System.Drawing.Size(70, 13);
             this.targetLevelLabel.TabIndex = 9;
@@ -299,7 +301,7 @@
             // fightLengthLabel
             // 
             this.fightLengthLabel.AutoSize = true;
-            this.fightLengthLabel.Location = new System.Drawing.Point(6, 85);
+            this.fightLengthLabel.Location = new System.Drawing.Point(6, 112);
             this.fightLengthLabel.Name = "fightLengthLabel";
             this.fightLengthLabel.Size = new System.Drawing.Size(95, 13);
             this.fightLengthLabel.TabIndex = 13;
@@ -313,7 +315,7 @@
             0,
             0,
             0});
-            this.fightLengthSpinner.Location = new System.Drawing.Point(180, 83);
+            this.fightLengthSpinner.Location = new System.Drawing.Point(180, 110);
             this.fightLengthSpinner.Maximum = new decimal(new int[] {
             720,
             0,
@@ -321,7 +323,7 @@
             0});
             this.fightLengthSpinner.Name = "fightLengthSpinner";
             this.fightLengthSpinner.Size = new System.Drawing.Size(106, 20);
-            this.fightLengthSpinner.TabIndex = 4;
+            this.fightLengthSpinner.TabIndex = 5;
             this.fightLengthSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.fightLengthSpinner.ValueChanged += new System.EventHandler(this.fightLengthSpinner_ValueChanged);
             // 
@@ -333,7 +335,7 @@
             0,
             0,
             0});
-            this.latencySpinner.Location = new System.Drawing.Point(180, 109);
+            this.latencySpinner.Location = new System.Drawing.Point(180, 136);
             this.latencySpinner.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -341,14 +343,14 @@
             0});
             this.latencySpinner.Name = "latencySpinner";
             this.latencySpinner.Size = new System.Drawing.Size(106, 20);
-            this.latencySpinner.TabIndex = 5;
+            this.latencySpinner.TabIndex = 6;
             this.latencySpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.latencySpinner.ValueChanged += new System.EventHandler(this.latencySpinner_ValueChanged);
             // 
             // latencyLabel
             // 
             this.latencyLabel.AutoSize = true;
-            this.latencyLabel.Location = new System.Drawing.Point(6, 111);
+            this.latencyLabel.Location = new System.Drawing.Point(6, 138);
             this.latencyLabel.Name = "latencyLabel";
             this.latencyLabel.Size = new System.Drawing.Size(131, 13);
             this.latencyLabel.TabIndex = 16;
@@ -406,6 +408,8 @@
             // 
             // optionsPage
             // 
+            this.optionsPage.Controls.Add(this.imbueLabel);
+            this.optionsPage.Controls.Add(this.imbueCombo);
             this.optionsPage.Controls.Add(this.petCombo);
             this.optionsPage.Controls.Add(this.targetLevelCombo);
             this.optionsPage.Controls.Add(this.rotationBox);
@@ -423,6 +427,29 @@
             this.optionsPage.TabIndex = 0;
             this.optionsPage.Text = "Options";
             this.optionsPage.UseVisualStyleBackColor = true;
+            // 
+            // imbueLabel
+            // 
+            this.imbueLabel.AutoSize = true;
+            this.imbueLabel.Location = new System.Drawing.Point(6, 59);
+            this.imbueLabel.Name = "imbueLabel";
+            this.imbueLabel.Size = new System.Drawing.Size(147, 13);
+            this.imbueLabel.TabIndex = 18;
+            this.imbueLabel.Text = "Temporary Weapon Enchant:";
+            // 
+            // imbueCombo
+            // 
+            this.imbueCombo.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.imbueCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imbueCombo.FormattingEnabled = true;
+            this.imbueCombo.Items.AddRange(new object[] {
+            "Grand Spellstone",
+            "Grand Firestone"});
+            this.imbueCombo.Location = new System.Drawing.Point(180, 56);
+            this.imbueCombo.Name = "imbueCombo";
+            this.imbueCombo.Size = new System.Drawing.Size(106, 21);
+            this.imbueCombo.TabIndex = 3;
+            this.imbueCombo.SelectedIndexChanged += new System.EventHandler(this.imbueCombo_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -513,5 +540,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.CheckBox ProcCheckbox;
         private System.Windows.Forms.Button TimerButton;
+        private System.Windows.Forms.ComboBox imbueCombo;
+        private System.Windows.Forms.Label imbueLabel;
     }
 }

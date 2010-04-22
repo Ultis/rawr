@@ -1064,42 +1064,6 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Fel Armor",
-                Group = "Class Buffs",
-                Stats = { WarlockFelArmor = 180f },
-                ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Demon Armor",
-                Group = "Class Buffs",
-                Stats = { WarlockDemonArmor = 2100f },
-                ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Grand Spellstone",
-                Group = "Class Buffs",
-                Stats = 
-                { 
-                    WarlockSpellstoneDotDamageMultiplier = 0.01f, 
-                    WarlockSpellstoneHasteRating = 60f
-                },
-                ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Grand Firestone",
-                Group = "Class Buffs",
-                Stats = 
-                { 
-                    WarlockFirestoneDirectDamageMultiplier = 0.01f,
-                    WarlockFirestoneSpellCritRating = 49f
-                },
-                ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Inner Fire",
                 Group = "Class Buffs",
                 Stats = { PriestInnerFire = 1f },

@@ -146,20 +146,9 @@ namespace Rawr.Warlock {
 
             return stats.SpellCrit
                 + StatConversion.GetSpellCritFromIntellect(GetIntellect(stats))
-                + StatConversion.GetSpellCritFromRating(
-                    stats.WarlockFirestoneSpellCritRating
-                            * (1f + Talents.MasterConjuror * 1.5f)
-                        + stats.CritRating)
+                + StatConversion.GetSpellCritFromRating(stats.CritRating)
                 + stats.BonusCritChance
                 + stats.SpellCritOnTarget;
-        }
-
-        public float CalcHasteRating() { return GetHasteRating(Stats); }
-        public float GetHasteRating(Stats stats) {
-
-            return stats.HasteRating
-                + stats.WarlockSpellstoneHasteRating
-                    * (1f + Talents.MasterConjuror * 1.5f);
         }
 
         public float CalcSpellHit() { return GetSpellHit(Stats); }
@@ -172,61 +161,10 @@ namespace Rawr.Warlock {
         public float CalcSpellPower() { return GetSpellPower(Stats); }
         public float GetSpellPower(Stats stats) {
 
-            float aegis = 1 + Talents.DemonicAegis * 0.10f;
             return (stats.SpellPower
-                    + (stats.WarlockFelArmor > 0
-                        ? aegis
-                            * (.3f * GetSpirit(stats) + stats.WarlockFelArmor)
-                        : 0f))
+                    + (1 + Talents.DemonicAegis * 0.10f)
+                        * (.3f * GetSpirit(stats) + 180f))
                 * (1f + stats.BonusSpellPowerMultiplier);
-        }
-
-        public float CalcBonusDamageMultiplier() {
-            return GetBonusDamageMultiplier(Stats);
-        }
-        public float GetBonusDamageMultiplier(Stats stats) {
-
-            return stats.BonusDamageMultiplier;
-        }
-
-        public float CalcBonusCritMultiplier() {
-            return GetBonusCritMultiplier(Stats);
-        }
-        public float GetBonusCritMultiplier(Stats stats) {
-
-            return stats.BonusCritMultiplier;
-        }
-
-        public float CalcWarlockFirestoneDirectDamageMultiplier() {
-            return GetWarlockFirestoneDirectDamageMultiplier(Stats);
-        }
-        public float GetWarlockFirestoneDirectDamageMultiplier(Stats stats) {
-
-            return stats.WarlockFirestoneDirectDamageMultiplier;
-        }
-
-        public float CalcWarlockSpellstoneDotDamageMultiplier() {
-            return GetWarlockSpellstoneDotDamageMultiplier(Stats);
-        }
-        public float GetWarlockSpellstoneDotDamageMultiplier(Stats stats) {
-
-            return stats.WarlockSpellstoneDotDamageMultiplier;
-        }
-
-        public float CalcBonusShadowDamageMultiplier() {
-            return GetBonusShadowDamageMultiplier(Stats);
-        }
-        public float GetBonusShadowDamageMultiplier(Stats stats) {
-
-            return stats.BonusShadowDamageMultiplier;
-        }
-
-        public float CalcBonusFireDamageMultiplier() {
-            return GetBonusFireDamageMultiplier(Stats);
-        }
-        public float GetBonusFireDamageMultiplier(Stats stats) {
-
-            return stats.BonusFireDamageMultiplier;
         }
 
         public float CalcSpellHaste() { return GetSpellHaste(Stats); }
@@ -234,7 +172,7 @@ namespace Rawr.Warlock {
 
             return 1
                 + stats.SpellHaste
-                + StatConversion.GetSpellHasteFromRating(GetHasteRating(stats));
+                + StatConversion.GetSpellHasteFromRating(stats.HasteRating);
         }
 
         #endregion
@@ -633,7 +571,6 @@ namespace Rawr.Warlock {
                     CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                     Options.Duration,
                     hasteValues.ToArray());
-            float staticRating = CalcHasteRating();
             Haste = new List<WeightedStat>();
             for (int p = percentages.Length, f = 0; --p >= 0; ) {
                 if (percentages[p].Chance == 0) {
@@ -648,7 +585,7 @@ namespace Rawr.Warlock {
                     s.Value
                         = (1 + percentages[p].Value)
                             * (1 + StatConversion.GetSpellHasteFromRating(
-                                    ratings[r].Value + staticRating))
+                                    ratings[r].Value + Stats.HasteRating))
                             * (1 + Stats.SpellHaste);
                     Haste.Add(s);
                     AvgHaste += s.Chance * s.Value;
@@ -726,46 +663,28 @@ namespace Rawr.Warlock {
                             periods[(int) Trigger.DamageDone],
                             chance,
                             mods);
-                } else if (effectStats.ShadowDamage > 0) {
-                    SpellModifiers mods = new SpellModifiers();
-                    mods.Accumulate(SpellModifiers);
-                    mods.AddAdditiveDirectMultiplier(
-                        CalcWarlockFirestoneDirectDamageMultiplier());
-                    AddShadowModifiers(mods);
-                    procdDamage
-                        += CalcDamageProc(
-                            effect,
-                            effect.Stats.ShadowDamage,
-                            interval,
-                            chance,
-                            mods);
-                } else if (effectStats.FireDamage > 0) {
-                    SpellModifiers mods = new SpellModifiers();
-                    mods.Accumulate(SpellModifiers);
-                    mods.AddAdditiveDirectMultiplier(
-                        CalcWarlockFirestoneDirectDamageMultiplier());
-                    AddShadowModifiers(mods);
-                    AddFireModifiers(mods);
-                    procdDamage
-                        += CalcDamageProc(
-                            effect,
-                            effect.Stats.FireDamage,
-                            interval,
-                            chance,
-                            mods);
                 } else if (
-                    effectStats.NatureDamage > 0
+                    effectStats.ShadowDamage > 0
+                        || effectStats.FireDamage > 0
+                        || effectStats.NatureDamage > 0
                         || effectStats.HolyDamage > 0
                         || effectStats.FrostDamage > 0) {
                     SpellModifiers mods = new SpellModifiers();
                     mods.Accumulate(SpellModifiers);
-                    mods.AddAdditiveDirectMultiplier(
-                        CalcWarlockFirestoneDirectDamageMultiplier());
-                    AddShadowModifiers(mods);
+                    if (Options.Imbue.Equals("Grand Firestone")) {
+                        mods.AddAdditiveDirectMultiplier(.01f);
+                    }
+                    if (effectStats.ShadowDamage > 0) {
+                        AddShadowModifiers(mods);
+                    } else if (effectStats.FireDamage > 0) {
+                        AddFireModifiers(mods);
+                    }
                     procdDamage
                         += CalcDamageProc(
                             effect,
-                            effectStats.NatureDamage
+                            effectStats.ShadowDamage
+                                + effectStats.FireDamage
+                                + effectStats.NatureDamage
                                 + effectStats.HolyDamage
                                 + effectStats.FrostDamage,
                             interval,
@@ -962,7 +881,7 @@ namespace Rawr.Warlock {
         public void AddShadowModifiers(SpellModifiers modifiers) {
 
             modifiers.AddMultiplicativeMultiplier(
-                CalcBonusShadowDamageMultiplier());
+                Stats.BonusShadowDamageMultiplier);
             modifiers.AddAdditiveMultiplier(
                 Talents.ShadowMastery * .03f);
             if (Options.GetActiveRotation().Contains("Shadow Bolt")
@@ -986,7 +905,7 @@ namespace Rawr.Warlock {
         public void AddFireModifiers(SpellModifiers modifiers) {
 
             modifiers.AddMultiplicativeMultiplier(
-                CalcBonusFireDamageMultiplier());
+                Stats.BonusFireDamageMultiplier);
             modifiers.AddAdditiveMultiplier(Talents.Emberstorm * .03f);
             if (Pet is Imp) {
                 float bonus = Talents.MasterDemonologist * .01f;

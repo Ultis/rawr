@@ -138,15 +138,16 @@ namespace Rawr.Warlock {
 
         #region properties
 
-        public String Pet;
+        public string Pet;
+        public string Imbue = "Grand Spellstone"; // default it here for backward compatibility w/ files from before it was added
         public bool UseInfernal;
         public int TargetLevel;
         public float Duration;
         public float Latency;
-        public float ManaPotSize;
-        public float Replenishment;
+
         public List<Rotation> Rotations;
         public int ActiveRotationIndex;
+
         public bool NoProcs;
 
         #endregion
