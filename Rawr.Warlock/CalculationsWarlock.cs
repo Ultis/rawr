@@ -319,7 +319,7 @@ namespace Rawr.Warlock {
 
             float active = 0f;
             foreach (Buff buff in character.ActiveBuffs) {
-                if (buff.Group != null && buff.Group.Equals(group)) {
+                if (buff.ConflictingBuffs.Contains(group)) {
                     active += extractor(buff.Stats);
                     foreach (Buff improvement in buff.Improvements) {
                         if (character.ActiveBuffs.Contains(improvement)) {
