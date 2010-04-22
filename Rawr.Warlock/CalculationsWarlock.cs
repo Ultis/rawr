@@ -83,7 +83,6 @@ namespace Rawr.Warlock {
 
             character.ActiveBuffsAdd("Fel Armor");
             character.ActiveBuffsAdd("Grand Spellstone");
-            character.WarlockTalents.GlyphLifeTap = true;
         }
 
         private string[] _characterDisplayCalculationLabels = null;
@@ -254,6 +253,24 @@ namespace Rawr.Warlock {
                 Debug.Assert(options.Imbue.Equals("Grand Firestone"));
                 stats.CritRating += 49f * (1f + talents.MasterConjuror * 1.5f);
             }
+            if (options.Pet.Equals("Imp")) {
+                stats.Health += GetBuffEffect(
+                    character,
+                    1330f * (1 + talents.ImprovedImp * .1f),
+                    "Health",
+                    s => s.Health);
+            } else if (options.Pet.Equals("Felhunter")) {
+                stats.Intellect += GetBuffEffect(
+                    character,
+                    48f * (1 + talents.ImprovedFelhunter * .05f),
+                    "Intellect",
+                    s => s.Intellect);
+                stats.Spirit += GetBuffEffect(
+                    character,
+                    64f * (1 + talents.ImprovedFelhunter * .05f),
+                    "Spirit",
+                    s => s.Spirit);
+            }
 
             // Talents
             float[] talentValues = { 0f, .04f, .07f, .1f };
@@ -291,6 +308,27 @@ namespace Rawr.Warlock {
             stats.Accumulate(statsTalents);
 
             return stats;
+        }
+
+        private delegate float StatExtractor(Stats stats);
+        private float GetBuffEffect(
+            Character character,
+            float candidateBuff,
+            string group,
+            StatExtractor extractor) {
+
+            float active = 0f;
+            foreach (Buff buff in character.ActiveBuffs) {
+                if (buff.Group != null && buff.Group.Equals(group)) {
+                    active += extractor(buff.Stats);
+                    foreach (Buff improvement in buff.Improvements) {
+                        if (character.ActiveBuffs.Contains(improvement)) {
+                            active += extractor(improvement.Stats);
+                        }
+                    }
+                }
+            }
+            return Math.Max(0f, candidateBuff - active);
         }
 
         /// <summary>
@@ -483,6 +521,7 @@ namespace Rawr.Warlock {
 
         public override Stats GetRelevantStats(Stats stats) {
             Stats s = new Stats {
+
                 //primary stats
                 SpellPower = stats.SpellPower,
                 Intellect = stats.Intellect,
@@ -545,7 +584,9 @@ namespace Rawr.Warlock {
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
 
-            if (!buff.AllowedClasses.Contains(CharacterClass.Warlock)) {
+            if (!buff.AllowedClasses.Contains(CharacterClass.Warlock)
+                || buff.Group.Equals("Spell Sensitivity")) {
+
                 return false;
             }
             return base.IsBuffRelevant(buff, character);
@@ -570,8 +611,8 @@ namespace Rawr.Warlock {
         }
 
         public override bool HasRelevantStats(Stats stats) {
-            bool isRelevant = _HasRelevantStats(stats);
 
+            bool isRelevant = _HasRelevantStats(stats);
             foreach (SpecialEffect se in stats.SpecialEffects()) {
                 isRelevant |= RelevantTrinket(se);
             }
@@ -580,6 +621,7 @@ namespace Rawr.Warlock {
 
         protected bool _HasRelevantStats(Stats stats) {
             bool yes = (
+
                 //our primary stats
                 stats.SpellPower
                 + stats.Intellect
@@ -608,7 +650,7 @@ namespace Rawr.Warlock {
             ) > 0;
 
             bool maybe = (
-                stats.Stamina
+                stats.Stamina + stats.Health
                 + stats.Mana + stats.Mp5
 
                 //miscellaneous stats belonging to items (or trinket procs) that can be used/applied to warlocks
@@ -625,7 +667,6 @@ namespace Rawr.Warlock {
 
             bool no = (
                 //ignore items with any of these stats
-                stats.Health
                 + stats.Resilience
                 + stats.Armor + stats.BonusArmor + stats.Agility
                 + stats.ArmorPenetration + stats.ArmorPenetrationRating
