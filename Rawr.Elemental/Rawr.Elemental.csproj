@@ -106,8 +106,11 @@
     <Compile Include="Spells\FlameShock.cs" />
     <Compile Include="Spells\FrostShock.cs" />
     <Compile Include="Spells\ILightningOverload.cs" />
+    <Compile Include="Spells\Totem.cs" />
     <Compile Include="Spells\LavaBurst.cs" />
     <Compile Include="Spells\LightningBolt.cs" />
+    <Compile Include="Spells\MagmaTotem.cs" />
+    <Compile Include="Spells\SearingTotem.cs" />
     <Compile Include="Spells\Shock.cs" />
     <Compile Include="Spells\Spell.cs" />
     <Compile Include="Spells\ISpellArgs.cs" />

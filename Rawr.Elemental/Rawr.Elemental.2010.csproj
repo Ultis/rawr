@@ -141,6 +141,7 @@
     <Compile Include="Spells\ISpellArgs.cs" />
     <Compile Include="Spells\SpellBox.cs" />
     <Compile Include="Spells\Thunderstorm.cs" />
+    <Compile Include="Spells\Totem.cs" />
     <Compile Include="Spells\Wait.cs" />
   </ItemGroup>
   <ItemGroup>

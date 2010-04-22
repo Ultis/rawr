@@ -35,8 +35,8 @@ namespace Rawr.Elemental.Spells
             additionalTargets = args.AdditionalTargets;
             if (additionalTargets < 0)
                 additionalTargets = 0;
-            if (additionalTargets > 10)
-                additionalTargets = 10;
+            if (additionalTargets > 9)
+                additionalTargets = 9;
 
             totalCoef *= 1f + additionalTargets;
 

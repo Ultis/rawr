@@ -8,6 +8,7 @@ namespace Rawr.Elemental
     {
         private List<Spell> spells;
         private List<Spell> casts;
+        private bool useDpsFireTotem = false;
 
         public List<Spell> Casts
         {
@@ -114,7 +115,7 @@ namespace Rawr.Elemental
         public FireNova FN;
         public SearingTotem ST;
         public MagmaTotem MT;
-        public Spell ActiveTotem;
+        public Totem ActiveTotem;
 
         public ShamanTalents Talents;
 
@@ -138,6 +139,8 @@ namespace Rawr.Elemental
             ST = spellBox.ST;
             MT = spellBox.MT;
 
+            useDpsFireTotem = rotOpt.UseDpsFireTotem;
+
             CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem);
         }
 
@@ -148,6 +151,7 @@ namespace Rawr.Elemental
         {
             casts = null;
             lastGetTime = float.PositiveInfinity;
+            lastDuration = float.PositiveInfinity;
             lastBaseCastTime = float.PositiveInfinity;
             lastWeightedCritchance = float.PositiveInfinity;
             lastWeightedHitchance = float.PositiveInfinity;
@@ -173,6 +177,7 @@ namespace Rawr.Elemental
         {
             if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
+            this.useDpsFireTotem = useDpsFireTotem;
             spells.Clear();
             Invalidate();
 
@@ -188,7 +193,7 @@ namespace Rawr.Elemental
                     break;
                 case false:
                     ActiveTotem = null;
-                    activeTotemDropsAt = 300f;
+                    activeTotemDropsAt = float.PositiveInfinity;
                     break;
             }
 
@@ -323,7 +328,7 @@ namespace Rawr.Elemental
         }
 
         /// <summary>
-        /// Gets the time after spell number i has been cast (with GCD) counting 0 as the first one.
+        /// Gets the time before spell number i has been cast (with GCD) counting 0 as the first one.
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
@@ -333,6 +338,30 @@ namespace Rawr.Elemental
             for (int j = 0; j < i; j++ )
                 time += spells[Mod(j,spells.Count)].CastTime;
             return time;
+        }
+
+        private float lastDuration = float.PositiveInfinity;
+        /// <summary>
+        /// The duration of one rotation pass. The total casting time is modified by totem uptime weighted totem casting times.
+        /// </summary>
+        public float Duration
+        {
+            get
+            {
+                if (lastDuration != float.PositiveInfinity)
+                    return lastDuration;
+                if(useDpsFireTotem)
+                    for (int i = spells.Count-1; i >= 0; i--)
+                    {
+                        if(spells[i] is Totem) //last dps totem cast
+                        {
+                            Totem t = (Totem)spells[i];
+                            float overTime = GetTime(i) + t.Duration - GetTime();
+                            return lastDuration = GetTime() - t.CastTime * overTime / GetTime(); //substract overtime weigthed cast time
+                        }
+                    }
+                return lastDuration = GetTime(); 
+            }
         }
 
         private float lastBaseCastTime = float.PositiveInfinity;
@@ -348,12 +377,12 @@ namespace Rawr.Elemental
 
         public float getCastsPerSecond()
         {
-            return Casts.Count / GetTime();
+            return Casts.Count / Duration;
         }
 
         public float getCastsPerSecond(Type spellType)
         {
-            return getSpells(spellType).Count / GetTime();
+            return getSpells(spellType).Count / Duration;
         }
 
         public float getTicksPerSecond(Type spellType)
@@ -373,7 +402,7 @@ namespace Rawr.Elemental
                         ticks += (float)Math.Floor(durationActive / s.PeriodicTickTime);
                 }
             }
-            return ticks / GetTime();
+            return ticks / Duration;
         }
 
         public List<Spell> getSpells(Type spellType)
@@ -452,7 +481,7 @@ namespace Rawr.Elemental
                     float ccc = 0f;
                     if (Talents.ElementalFocus > 0)
                         ccc = 1f - (1f - prev1.CCCritChance) * (1f - prev2.CCCritChance);
-                    mps += s.ManaCost * (1 - .4f * ccc);
+                    mps += s.ManaCost * ((s is Totem)?1f:(1 - .4f * ccc)); //totems are unaffected by cc
                     if (s.Duration > 0) //dot
                     {
                         int j = getSpellNumber(i);
@@ -467,17 +496,20 @@ namespace Rawr.Elemental
                     lag += s.Latency;
                     count[s.GetType()]++;
                 }
-                prev2 = prev1;
-                prev1 = s;
+                if (!(s is Totem)) //totems are unaffected by cc
+                {
+                    prev2 = prev1;
+                    prev1 = s;
+                }
             }
             foreach (Type t in count.Keys)
             {
                 spelldps[t] /= GetTime();
                 cc[t] /= count[t];
             }
-            mps /= GetTime(); //divide by rotation time
-            dps /= GetTime();
-            lag /= GetTime();
+            mps /= Duration; //divide by rotation time
+            dps /= Duration;
+            lag /= Duration;
         }
 
         /// <summary>

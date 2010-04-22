@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Elemental.Spells
 {
-    public class MagmaTotem : Spell
+    public class MagmaTotem : Totem
     {
         private int additionalTargets = 0;
 
@@ -34,8 +34,8 @@ namespace Rawr.Elemental.Spells
             additionalTargets = args.AdditionalTargets;
             if (additionalTargets < 0)
                 additionalTargets = 0;
-            else if (additionalTargets > 10)
-                additionalTargets = 10;
+            else if (additionalTargets > 9)
+                additionalTargets = 9;
 
             periodicTick *= 1 + (.05f * args.Talents.CallOfFlame);
 
@@ -43,13 +43,18 @@ namespace Rawr.Elemental.Spells
             dotSpCoef *= 1 + (.05f * args.Talents.CallOfFlame);
             dotBaseCoef *= 1 + (.05f * args.Talents.CallOfFlame);
 
+            dotBaseCoef *= (1 + additionalTargets);
+            dotSpCoef *= (1 + additionalTargets);
+
             shortName = "MT" + (1 + additionalTargets);
 
             base.Initialize(args);
         }
 
-        new public float PeriodicTick
-        { get { return base.PeriodicTick * (additionalTargets + 1); } }
+        public int AdditionalTargets
+        {
+            get { return additionalTargets; }
+        }
 
         public static MagmaTotem operator +(MagmaTotem A, MagmaTotem B)
         {

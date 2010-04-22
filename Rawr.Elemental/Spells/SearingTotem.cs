@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Elemental.Spells
 {
-    public class SearingTotem : Spell
+    public class SearingTotem : Totem
     {
         public SearingTotem(ISpellArgs args)
             : base()

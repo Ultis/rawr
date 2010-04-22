@@ -125,6 +125,15 @@
     <Compile Include="..\..\Rawr.Elemental\Spells\FireNova.cs">
       <Link>Spells\FireNova.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\Totem.cs">
+      <Link>Spells\Totem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\SearingTotem.cs">
+      <Link>Spells\SearingTotem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\MagmaTotem.cs">
+      <Link>Spells\MagmaTotem.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsPanelElemental.xaml.cs">
       <DependentUpon>CalculationOptionsPanelElemental.WPF.xaml</DependentUpon>
     </Compile>
