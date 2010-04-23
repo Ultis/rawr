@@ -27,26 +27,21 @@ public class FlameShock : Shock
         public override void Initialize(ISpellArgs args)
         {
             //for reference
-            //dotTick = (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
+            //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
 
             totalCoef += .01f * args.Talents.Concussion;
-            totalCoef += .1f * args.Talents.BoomingEchoes;
+            directCoefBonus += .1f * args.Talents.BoomingEchoes;
             manaCost *= 1 - .02f * args.Talents.Convection;
             dotBaseCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
-            dotBaseCoef *= 1 + .01f * args.Talents.Concussion;
-            dotSpCoef *= 1 + .01f * args.Talents.Concussion;
             dotBaseCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
             dotSpCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
-            dotBaseCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
-            dotSpCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
             manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
             cooldown -= .2f * args.Talents.Reverberation;
             cooldown -= 1f * args.Talents.BoomingEchoes;
             spellPower += args.Stats.SpellFireDamageRating;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
             periodicTicks += args.Stats.BonusFlameShockDuration / periodicTickTime; // t9 2 piece
-
 
             if (args.Talents.GlyphofFlameShock)
                 dotCritModifier += .6f;

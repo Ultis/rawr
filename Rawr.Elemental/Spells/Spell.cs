@@ -19,6 +19,7 @@ namespace Rawr.Elemental.Spells
         protected float missChance = .17f;
 
         protected float totalCoef = 1f;
+        protected float directCoefBonus = 0f;
         protected float baseCoef = 1f;
         protected float spCoef = 0f;
         protected float dotBaseCoef = 1f;
@@ -60,6 +61,8 @@ namespace Rawr.Elemental.Spells
             spCoef = 0f;
             dotBaseCoef = 1f;
             dotSpCoef = 0f;
+            dotCritModifier = 1f;
+            directCoefBonus = 0f;
             dotCanCrit = 0f;
             spellPower = 0f;
         }
@@ -87,10 +90,12 @@ namespace Rawr.Elemental.Spells
             nS.cooldown = (sp1.cooldown + sp2.cooldown);
             nS.missChance = (sp1.missChance + sp2.missChance);
             nS.totalCoef = (sp1.totalCoef + sp2.totalCoef);
+            nS.directCoefBonus = (sp1.directCoefBonus + sp2.directCoefBonus);
             nS.baseCoef = (sp1.baseCoef + sp2.baseCoef);
             nS.spCoef = (sp1.spCoef + sp2.spCoef);
             nS.dotBaseCoef = (sp1.dotBaseCoef + sp2.dotBaseCoef);
             nS.dotSpCoef = (sp1.dotSpCoef + sp2.dotSpCoef);
+            nS.dotCritModifier = (sp1.dotCritModifier + sp2.dotCritModifier);
             nS.spellPower = (sp1.spellPower + sp2.spellPower);
         }
 
@@ -113,17 +118,19 @@ namespace Rawr.Elemental.Spells
             nS.spCoef = sp1.spCoef * c;
             nS.dotBaseCoef = sp1.dotBaseCoef * c;
             nS.dotSpCoef = sp1.dotSpCoef * c;
+            nS.directCoefBonus = sp1.directCoefBonus * c;
+            nS.dotCritModifier = sp1.dotCritModifier * c;
             nS.spellPower = sp1.spellPower * c;
         }
 
         public virtual float MinHit
-        { get { return totalCoef * (baseMinDamage * baseCoef + spellPower * spCoef); } }
+        { get { return (totalCoef + directCoefBonus) * (baseMinDamage * baseCoef + spellPower * spCoef); } }
 
         public float MinCrit
         { get { return MinHit * (1 + critModifier); } }
 
         public virtual float MaxHit
-        { get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef); } }
+        { get { return (totalCoef + directCoefBonus) * (baseMaxDamage * baseCoef + spellPower * spCoef); } }
 
         public float MaxCrit
         { get { return MaxHit * (1 + critModifier); } }
@@ -204,7 +211,7 @@ namespace Rawr.Elemental.Spells
         { get { return spellPower * spCoef * totalCoef; } }
 
         public float PeriodicTick
-        { get { return (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * dotCritModifier * CritChance); } }
+        { get { return totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * dotCritModifier * CritChance); } }
 
         public float PeriodicTicks
         { 
@@ -303,9 +310,7 @@ namespace Rawr.Elemental.Spells
 
         public void ApplyEM(float modifier)
         {
-            crit += modifier * .15f;
-            if (crit > 1f)
-                crit = 1f;
+            throw new NotImplementedException();
         }
 
         public virtual Spell Clone()

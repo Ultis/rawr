@@ -37,15 +37,9 @@ namespace Rawr.Elemental.Spells
             else if (additionalTargets > 9)
                 additionalTargets = 9;
 
-            periodicTick *= 1 + (.05f * args.Talents.CallOfFlame);
-
+            totalCoef *= 1 + (.05f * args.Talents.CallOfFlame);
             manaCost *= 1 - (.05f * args.Talents.TotemicFocus);
-            dotSpCoef *= 1 + (.05f * args.Talents.CallOfFlame);
-            dotBaseCoef *= 1 + (.05f * args.Talents.CallOfFlame);
-
-            dotBaseCoef *= (1 + additionalTargets);
-            dotSpCoef *= (1 + additionalTargets);
-
+            totalCoef *= (1 + additionalTargets);
             shortName = "MT" + (1 + additionalTargets);
 
             base.Initialize(args);
