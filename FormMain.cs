@@ -1665,7 +1665,7 @@ Please remember that it's still a beta, though, so lots of things are likely to 
             StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, false), "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
-            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading, true, false, 1, checkUpgradeCancel );
+            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading, true, false, 1, UpgradeCancelPending );
             int skippedItems = 0;
 
             // get list of the items to be updated
@@ -1759,8 +1759,8 @@ Please remember that it's still a beta, though, so lots of things are likely to 
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			StringBuilder sbChanges = new StringBuilder();
 
-            ItemUpdater updater = new ItemUpdater(Rawr.Properties.GeneralSettings.Default.UseMultithreading,
-				false, usePTRDataToolStripMenuItem.Checked, 20, checkUpgradeCancel);
+            bool multithreaded = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            ItemUpdater updater = new ItemUpdater(multithreaded, false, usePTRDataToolStripMenuItem.Checked, 20, UpgradeCancelPending);
             int skippedItems = 0;
 
             // get list of the items to be updated
@@ -1776,6 +1776,14 @@ Please remember that it's still a beta, though, so lots of things are likely to 
 					if (!bOnlyNonLocalized || string.IsNullOrEmpty(item.LocalizedName))
 					{
 						updater.AddItem(addedItems++, item);
+                        if (!multithreaded)
+                        {
+                            StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Updating " + (skippedItems + addedItems) + " of " + allItems.Length + " items");
+                            if (UpgradeCancelPending())
+                            {
+                                break;
+                            }
+                        }
 					}
                 }
                 else
@@ -1838,12 +1846,12 @@ Please remember that it's still a beta, though, so lots of things are likely to 
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
             StatusMessaging.UpdateStatus(LoadUpgradesStatusKey(slot, false), "Getting Armory Updates");
-            Armory.LoadUpgradesFromArmory( Character, slot, checkUpgradeCancel );
+            Armory.LoadUpgradesFromArmory( Character, slot, UpgradeCancelPending );
 			ItemCache.OnItemsChanged();
             StatusMessaging.UpdateStatusFinished(LoadUpgradesStatusKey(slot, false));
 		}
 
-        private bool checkUpgradeCancel()
+        private bool UpgradeCancelPending()
         {
             return Status != null && Status.CancelPending;
         }
@@ -1860,7 +1868,7 @@ Please remember that it's still a beta, though, so lots of things are likely to 
         {
             WebRequestWrapper.ResetFatalErrorIndicator();
             StatusMessaging.UpdateStatus(LoadUpgradesStatusKey(slot,true), "Getting Wowhead Updates");
-            Wowhead.LoadUpgradesFromWowhead(Character, slot, usePTR, checkUpgradeCancel);
+            Wowhead.LoadUpgradesFromWowhead(Character, slot, usePTR, UpgradeCancelPending);
             ItemCache.OnItemsChanged();
             StatusMessaging.UpdateStatusFinished(LoadUpgradesStatusKey(slot, true));
         }

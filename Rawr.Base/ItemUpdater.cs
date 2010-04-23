@@ -198,6 +198,10 @@ namespace Rawr
 
         public void FinishAdding()
         {
+            if (!multiThreaded)
+            {
+                done = true;
+            }
             lock (lockObject)
             {
                 finishedInput = true;
