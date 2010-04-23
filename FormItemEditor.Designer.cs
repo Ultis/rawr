@@ -28,32 +28,32 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup13 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup14 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup15 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup16 = new System.Windows.Forms.ListViewGroup("Two Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup17 = new System.Windows.Forms.ListViewGroup("Main Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup18 = new System.Windows.Forms.ListViewGroup("Off Hand", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup19 = new System.Windows.Forms.ListViewGroup("Ranged", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup20 = new System.Windows.Forms.ListViewGroup("Projectile", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup21 = new System.Windows.Forms.ListViewGroup("Projectile Bag", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup22 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("fdhgerg");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("hfhsh");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("sdfgsd");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("werwer");
+            System.Windows.Forms.ListViewGroup listViewGroup67 = new System.Windows.Forms.ListViewGroup("Head", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup68 = new System.Windows.Forms.ListViewGroup("Neck", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup69 = new System.Windows.Forms.ListViewGroup("Shoulders", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup70 = new System.Windows.Forms.ListViewGroup("Back", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup71 = new System.Windows.Forms.ListViewGroup("Chest", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup72 = new System.Windows.Forms.ListViewGroup("Shirt", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup73 = new System.Windows.Forms.ListViewGroup("Tabard", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup74 = new System.Windows.Forms.ListViewGroup("Wrist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup75 = new System.Windows.Forms.ListViewGroup("Hands", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup76 = new System.Windows.Forms.ListViewGroup("Waist", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup77 = new System.Windows.Forms.ListViewGroup("Legs", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup78 = new System.Windows.Forms.ListViewGroup("Feet", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup79 = new System.Windows.Forms.ListViewGroup("Finger", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup80 = new System.Windows.Forms.ListViewGroup("Trinket", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup81 = new System.Windows.Forms.ListViewGroup("One Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup82 = new System.Windows.Forms.ListViewGroup("Two Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup83 = new System.Windows.Forms.ListViewGroup("Main Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup84 = new System.Windows.Forms.ListViewGroup("Off Hand", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup85 = new System.Windows.Forms.ListViewGroup("Ranged", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup86 = new System.Windows.Forms.ListViewGroup("Projectile", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup87 = new System.Windows.Forms.ListViewGroup("Projectile Bag", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup88 = new System.Windows.Forms.ListViewGroup("Gems", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("fdhgerg");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("hfhsh");
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("sdfgsd");
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("werwer");
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownId = new System.Windows.Forms.NumericUpDown();
             this.textBoxName = new System.Windows.Forms.TextBox();
@@ -114,14 +114,15 @@ namespace Rawr
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.textBoxCost = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
+            this.buttonGo = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownId)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownBonus1)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpeed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownMin)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.grpSpecialEffects.SuspendLayout();
             this.SuspendLayout();
@@ -308,7 +309,7 @@ namespace Rawr
             // 
             // comboBoxSocket3
             // 
-            this.comboBoxSocket3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxSocket3.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxSocket3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSocket3.FormattingEnabled = true;
@@ -326,7 +327,7 @@ namespace Rawr
             // 
             // comboBoxSocket2
             // 
-            this.comboBoxSocket2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxSocket2.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxSocket2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSocket2.FormattingEnabled = true;
@@ -344,7 +345,7 @@ namespace Rawr
             // 
             // comboBoxSocket1
             // 
-            this.comboBoxSocket1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.comboBoxSocket1.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxSocket1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSocket1.FormattingEnabled = true;
@@ -362,7 +363,7 @@ namespace Rawr
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(583, 552);
             this.buttonOK.Name = "buttonOK";
@@ -374,7 +375,7 @@ namespace Rawr
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonAdd.Location = new System.Drawing.Point(11, 552);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
@@ -385,7 +386,7 @@ namespace Rawr
             // 
             // buttonDelete
             // 
-            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonDelete.Location = new System.Drawing.Point(92, 552);
             this.buttonDelete.Name = "buttonDelete";
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
@@ -396,84 +397,84 @@ namespace Rawr
             // 
             // listViewItems
             // 
-            this.listViewItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.listViewItems.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.listViewItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName});
-            listViewGroup1.Header = "Head";
-            listViewGroup1.Name = "listViewGroupHead";
-            listViewGroup2.Header = "Neck";
-            listViewGroup2.Name = "listViewGroupNeck";
-            listViewGroup3.Header = "Shoulders";
-            listViewGroup3.Name = "listViewGroupShoulders";
-            listViewGroup4.Header = "Back";
-            listViewGroup4.Name = "listViewGroupBack";
-            listViewGroup5.Header = "Chest";
-            listViewGroup5.Name = "listViewGroupChest";
-            listViewGroup6.Header = "Shirt";
-            listViewGroup6.Name = "listViewGroupShirt";
-            listViewGroup7.Header = "Tabard";
-            listViewGroup7.Name = "listViewGroupTabard";
-            listViewGroup8.Header = "Wrist";
-            listViewGroup8.Name = "listViewGroupWrist";
-            listViewGroup9.Header = "Hands";
-            listViewGroup9.Name = "listViewGroupHands";
-            listViewGroup10.Header = "Waist";
-            listViewGroup10.Name = "listViewGroupWaist";
-            listViewGroup11.Header = "Legs";
-            listViewGroup11.Name = "listViewGroupLegs";
-            listViewGroup12.Header = "Feet";
-            listViewGroup12.Name = "listViewGroupFeet";
-            listViewGroup13.Header = "Finger";
-            listViewGroup13.Name = "listViewGroupFinger";
-            listViewGroup14.Header = "Trinket";
-            listViewGroup14.Name = "listViewGroupTrinket";
-            listViewGroup15.Header = "One Hand";
-            listViewGroup15.Name = "listViewGroupOneHand";
-            listViewGroup16.Header = "Two Hand";
-            listViewGroup16.Name = "listViewGroupTwoHand";
-            listViewGroup17.Header = "Main Hand";
-            listViewGroup17.Name = "listViewGroupMainHand";
-            listViewGroup18.Header = "Off Hand";
-            listViewGroup18.Name = "listViewGroupOffHand";
-            listViewGroup19.Header = "Ranged";
-            listViewGroup19.Name = "listViewGroupRanged";
-            listViewGroup20.Header = "Projectile";
-            listViewGroup20.Name = "listViewGroupProjectile";
-            listViewGroup21.Header = "Projectile Bag";
-            listViewGroup21.Name = "listViewGroupProjectileBag";
-            listViewGroup22.Header = "Gems";
-            listViewGroup22.Name = "listViewGroupGems";
+            listViewGroup67.Header = "Head";
+            listViewGroup67.Name = "listViewGroupHead";
+            listViewGroup68.Header = "Neck";
+            listViewGroup68.Name = "listViewGroupNeck";
+            listViewGroup69.Header = "Shoulders";
+            listViewGroup69.Name = "listViewGroupShoulders";
+            listViewGroup70.Header = "Back";
+            listViewGroup70.Name = "listViewGroupBack";
+            listViewGroup71.Header = "Chest";
+            listViewGroup71.Name = "listViewGroupChest";
+            listViewGroup72.Header = "Shirt";
+            listViewGroup72.Name = "listViewGroupShirt";
+            listViewGroup73.Header = "Tabard";
+            listViewGroup73.Name = "listViewGroupTabard";
+            listViewGroup74.Header = "Wrist";
+            listViewGroup74.Name = "listViewGroupWrist";
+            listViewGroup75.Header = "Hands";
+            listViewGroup75.Name = "listViewGroupHands";
+            listViewGroup76.Header = "Waist";
+            listViewGroup76.Name = "listViewGroupWaist";
+            listViewGroup77.Header = "Legs";
+            listViewGroup77.Name = "listViewGroupLegs";
+            listViewGroup78.Header = "Feet";
+            listViewGroup78.Name = "listViewGroupFeet";
+            listViewGroup79.Header = "Finger";
+            listViewGroup79.Name = "listViewGroupFinger";
+            listViewGroup80.Header = "Trinket";
+            listViewGroup80.Name = "listViewGroupTrinket";
+            listViewGroup81.Header = "One Hand";
+            listViewGroup81.Name = "listViewGroupOneHand";
+            listViewGroup82.Header = "Two Hand";
+            listViewGroup82.Name = "listViewGroupTwoHand";
+            listViewGroup83.Header = "Main Hand";
+            listViewGroup83.Name = "listViewGroupMainHand";
+            listViewGroup84.Header = "Off Hand";
+            listViewGroup84.Name = "listViewGroupOffHand";
+            listViewGroup85.Header = "Ranged";
+            listViewGroup85.Name = "listViewGroupRanged";
+            listViewGroup86.Header = "Projectile";
+            listViewGroup86.Name = "listViewGroupProjectile";
+            listViewGroup87.Header = "Projectile Bag";
+            listViewGroup87.Name = "listViewGroupProjectileBag";
+            listViewGroup88.Header = "Gems";
+            listViewGroup88.Name = "listViewGroupGems";
             this.listViewItems.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6,
-            listViewGroup7,
-            listViewGroup8,
-            listViewGroup9,
-            listViewGroup10,
-            listViewGroup11,
-            listViewGroup12,
-            listViewGroup13,
-            listViewGroup14,
-            listViewGroup15,
-            listViewGroup16,
-            listViewGroup17,
-            listViewGroup18,
-            listViewGroup19,
-            listViewGroup20,
-            listViewGroup21,
-            listViewGroup22});
+            listViewGroup67,
+            listViewGroup68,
+            listViewGroup69,
+            listViewGroup70,
+            listViewGroup71,
+            listViewGroup72,
+            listViewGroup73,
+            listViewGroup74,
+            listViewGroup75,
+            listViewGroup76,
+            listViewGroup77,
+            listViewGroup78,
+            listViewGroup79,
+            listViewGroup80,
+            listViewGroup81,
+            listViewGroup82,
+            listViewGroup83,
+            listViewGroup84,
+            listViewGroup85,
+            listViewGroup86,
+            listViewGroup87,
+            listViewGroup88});
             this.listViewItems.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewItems.HideSelection = false;
             this.listViewItems.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16});
             this.listViewItems.Location = new System.Drawing.Point(12, 38);
             this.listViewItems.MultiSelect = false;
             this.listViewItems.Name = "listViewItems";
@@ -492,9 +493,8 @@ namespace Rawr
             // 
             this.textBoxFilter.Location = new System.Drawing.Point(50, 12);
             this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(195, 20);
+            this.textBoxFilter.Size = new System.Drawing.Size(158, 20);
             this.textBoxFilter.TabIndex = 15;
-            this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
             // 
             // label22
             // 
@@ -507,7 +507,7 @@ namespace Rawr
             // 
             // propertyGridStats
             // 
-            this.propertyGridStats.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.propertyGridStats.Anchor = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.propertyGridStats.HelpVisible = false;
             this.propertyGridStats.Location = new System.Drawing.Point(431, 91);
@@ -764,7 +764,7 @@ namespace Rawr
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox2.Controls.Add(this.textBoxSource);
             this.groupBox2.Controls.Add(this.textBoxNote);
             this.groupBox2.Controls.Add(this.labelNote);
@@ -779,7 +779,7 @@ namespace Rawr
             // textBoxSource
             // 
             this.textBoxSource.BackColor = System.Drawing.SystemColors.Control;
-            this.textBoxSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.textBoxSource.Location = new System.Drawing.Point(57, 19);
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
@@ -831,7 +831,7 @@ namespace Rawr
             // 
             // grpSpecialEffects
             // 
-            this.grpSpecialEffects.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grpSpecialEffects.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.grpSpecialEffects.Controls.Add(this.butAddSpecialEffect);
             this.grpSpecialEffects.Controls.Add(this.butEditSpecialEffect);
             this.grpSpecialEffects.Controls.Add(this.butDeleteSpecialEffect);
@@ -921,6 +921,16 @@ namespace Rawr
             this.label9.TabIndex = 28;
             this.label9.Text = "Cost:";
             // 
+            // buttonGo
+            // 
+            this.buttonGo.Location = new System.Drawing.Point(214, 10);
+            this.buttonGo.Name = "buttonGo";
+            this.buttonGo.Size = new System.Drawing.Size(31, 23);
+            this.buttonGo.TabIndex = 30;
+            this.buttonGo.Text = "Go";
+            this.buttonGo.UseVisualStyleBackColor = true;
+            this.buttonGo.Click += new System.EventHandler(this.buttonGo_Click);
+            // 
             // FormItemEditor
             // 
             this.AcceptButton = this.buttonOK;
@@ -928,6 +938,7 @@ namespace Rawr
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(670, 590);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonGo);
             this.Controls.Add(this.textBoxCost);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.grpSpecialEffects);
@@ -968,16 +979,16 @@ namespace Rawr
             this.Text = "Rawr Item Editor";
             this.Load += new System.EventHandler(this.FormItemEditor_Load);
             this.Activated += new System.EventHandler(this.FormItemEditor_Activated);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownId)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBonus1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownBonus1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpeed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.numericUpDownMin)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.grpSpecialEffects.ResumeLayout(false);
@@ -1048,5 +1059,6 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxFaction;
         private System.Windows.Forms.TextBox textBoxCost;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button buttonGo;
     }
 }

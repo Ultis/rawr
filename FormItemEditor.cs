@@ -635,17 +635,6 @@ namespace Rawr
             return null;
 		}
 
-		private void textBoxFilter_TextChanged(object sender, EventArgs e)
-		{
-			if (!_loadingItem)
-			{
-				Item selectedItem = null;
-				if (SelectedItem != null) selectedItem = SelectedItem.Tag as Item;
-				LoadItems();
-				if (selectedItem != null) SelectItem(selectedItem, false);
-			}
-		}
-
         private void comboBoxBonus_SelectedIndexChanged(object sender, EventArgs e)
         {
             Item selectedItem = SelectedItem.Tag as Item;
@@ -860,5 +849,24 @@ namespace Rawr
             }
         }
 
+        private void textBoxFilter_KeyDown(object sender, KeyEventArgs e) {
+
+        }
+
+        private void buttonGo_Click(object sender, EventArgs e)
+        {
+            doFilter();
+        }
+
+        private void doFilter()
+        {
+			if (!_loadingItem)
+			{
+				Item selectedItem = null;
+				if (SelectedItem != null) selectedItem = SelectedItem.Tag as Item;
+				LoadItems();
+				if (selectedItem != null) SelectItem(selectedItem, false);
+			}
+        }
     }
 }
