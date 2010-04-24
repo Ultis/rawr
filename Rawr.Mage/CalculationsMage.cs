@@ -361,6 +361,7 @@ namespace Rawr.Mage
             character.ActiveBuffsAdd(("Misery"));
             character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
             character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd("Molten Armor");
         }
 
         public override string GetCharacterStatsString(Character character)

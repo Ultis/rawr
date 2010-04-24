@@ -97,8 +97,8 @@ namespace Rawr
                         Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), 
                         "Data"),
                     "EnchantCache.xml");
-            LoadEnchants();
-            SaveEnchants();
+            LoadEnchants(); // moved to formmain constructor
+            //SaveEnchants();
         }
 #endif
 
@@ -292,7 +292,7 @@ namespace Rawr
                 _allEnchants = _allEnchants ?? new EnchantList();
             }
 #else
-        private static void SaveEnchants()
+        public static void SaveEnchants()
         {
             try
             {
@@ -306,7 +306,7 @@ namespace Rawr
             catch { }
         }
 
-        private static void LoadEnchants()
+        public static void LoadEnchants()
         {
 
             try

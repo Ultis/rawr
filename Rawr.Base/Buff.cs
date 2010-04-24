@@ -113,12 +113,12 @@ namespace Rawr
                         "Data"),
                     "BuffCache.xml");
             LoadBuffs();
-            SaveBuffs();
+            //SaveBuffs(); moved to background save after load is complete
         }
         //washing virgin halo
         public Buff() { }
 
-        private static void SaveBuffs()
+        public static void SaveBuffs()
         {
             try
             {
@@ -134,7 +134,7 @@ namespace Rawr
             }
         }
 
-        private static void LoadBuffs() 
+        public static void LoadBuffs() 
         {
             try {
                 List<Buff> loadedBuffs = new List<Buff>();

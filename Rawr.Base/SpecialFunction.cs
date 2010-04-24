@@ -1100,19 +1100,19 @@ namespace Rawr
             if (ibetaCache == null)
             {
                 ibetaCache = CalculateIbetaCache();
-            }
 #if !SILVERLIGHT
-            try
-            {
-                using (FileStream stream = new FileStream(cacheName, FileMode.Create, FileAccess.Write))
+                try
                 {
-                    serializer.Serialize(stream, ibetaCache);
+                    using (FileStream stream = new FileStream(cacheName, FileMode.Create, FileAccess.Write))
+                    {
+                        serializer.Serialize(stream, ibetaCache);
+                    }
                 }
-            }
-            catch
-            {
-            }
+                catch
+                {
+                }
 #endif
+            }
         }
 
         private static InterpolationData[][] CalculateIbetaCache()

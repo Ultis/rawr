@@ -83,9 +83,12 @@ namespace Rawr
             {
                 regexCompiled = value;
 #if !SILVERLIGHT
-                foreach (var regex in ItemFilter.data.RegexList)
+                if (ItemFilter.data != null)
                 {
-                    regex.QueueRegexRecreate();
+                    foreach (var regex in ItemFilter.data.RegexList)
+                    {
+                        regex.QueueRegexRecreate();
+                    }
                 }
 #endif
             }

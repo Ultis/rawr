@@ -87,6 +87,10 @@ namespace Rawr
 			_statusForm = new Status();
 			Application.DoEvents();
 
+            // splash screen is up, start loading files
+            //Buff.LoadBuffs();
+            //Enchant.LoadEnchants();
+
 			Version version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version;
 			_formatWindowTitle = string.Format(_formatWindowTitle, version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString());
 
@@ -156,6 +160,12 @@ namespace Rawr
 
             // trigger background compilation of filter regex
             ItemFilterRegex.RegexCompiled = true;
+
+            // save files in background
+            ThreadPool.QueueUserWorkItem((object state) => {
+                Buff.SaveBuffs();
+                Enchant.SaveEnchants();
+            });
 		}
 
 		private bool _checkForUpdatesEnabled = true;

@@ -161,9 +161,6 @@ namespace Rawr
                 item.LastChange = DateTime.Now;
                 Items[item.Id] = item;
                 AutoSetUniqueId(item);
-#if RAWR3
-            Items.OrderBy(kvp => kvp.Key); //Astryl: What's the point of this? It doesn't order the items in Items, it returns an ordered list, but the return value isn't used...?
-#endif
             }
 
 			if (raiseEvent) OnItemsChanged();
@@ -346,22 +343,34 @@ namespace Rawr
             if (ItemsChanged != null) ItemsChanged(null, null);
         }
 
+        private Dictionary<string, List<Item>> uniqueItemByName = new Dictionary<string, List<Item>>();
+
         /// <summary>
         /// Matches the item against known rules for unique item groups and sets the UniqueId list.
         /// </summary>
         /// <param name="item">Item for which to auto set the UniqueId list.</param>
         public void AutoSetUniqueId(Item item)
         {
-            if (item.Unique) // all items that have UniqueId rules are marked as Unique
+            if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
             {
                 // find all items in item cache with same name
                 Item item251 = null, item264 = null, item277 = null;
                 lock (Items)
                 {
-                    // we want the loop on Items because we don't want to trigger AllItems cache rebuilds
-                    foreach (Item i in Items.Values)
+                    List<Item> list;
+                    if (!uniqueItemByName.TryGetValue(item.Name, out list))
                     {
-                        if (i.Name == item.Name)
+                        list = new List<Item>();
+                        uniqueItemByName[item.Name] = list;
+                    }
+                    list.Add(item);
+
+                    // we want the loop on Items because we don't want to trigger AllItems cache rebuilds
+                    foreach (Item i in list)
+                    {
+                        Item validItem;
+                        Items.TryGetValue(i.Id, out validItem);
+                        if (i == validItem)
                         {
                             if (i.ItemLevel == 251)
                             {

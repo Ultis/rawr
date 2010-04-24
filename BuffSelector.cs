@@ -17,8 +17,9 @@ namespace Rawr
 		{
 			InitializeComponent();
             if (!this.DesignMode)
-			{ 
-				BuildControls();
+			{
+                // don't need to BuildControls here, they'll be created when we set the first character from RebuildControls
+				//BuildControls();
 				Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
                 Rawr.UserControls.Options.GeneralSettings.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
                 Rawr.UserControls.Options.GeneralSettings.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);

@@ -1180,9 +1180,9 @@ namespace Rawr.Mage
             DpsTime = 1;
             InterruptFrequency = 0;
             AoeDuration = 0;
-            SmartOptimization = false;
+            SmartOptimization = true;
             DrumsOfBattle = false;
-            AutomaticArmor = true;
+            AutomaticArmor = false;
             TpsLimit = 0;
             IncrementalOptimizations = true;
             ReconstructSequence = false;
