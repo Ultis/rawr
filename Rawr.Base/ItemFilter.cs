@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 #endif
 using System.Xml.Serialization;
+using System.Threading;
 
 namespace Rawr
 {
@@ -71,6 +72,40 @@ namespace Rawr
         [XmlIgnore]
         private Regex _regex;
 
+        private static bool regexCompiled;
+        public static bool RegexCompiled 
+        { 
+            get
+            {
+                return regexCompiled;
+            }
+            set
+            {
+                regexCompiled = value;
+#if !SILVERLIGHT
+                foreach (var regex in ItemFilter.data.RegexList)
+                {
+                    regex.QueueRegexRecreate();
+                }
+#endif
+            }
+        }
+
+        private void QueueRegexRecreate()
+        {
+            ThreadPool.QueueUserWorkItem((object state) =>
+                {
+                    ItemFilterRegex itemFilter = state as ItemFilterRegex;
+                    // recreate regex
+                    itemFilter._regex = null;
+                    Regex regex = itemFilter.Regex;
+                }, this);
+            foreach (var regex in RegexList)
+            {
+                regex.QueueRegexRecreate();
+            }
+        }
+
         [XmlIgnore]
         public Regex Regex
         {
@@ -79,14 +114,14 @@ namespace Rawr
                 if (_regex == null)
                 {
                     if (_pattern == null) _pattern = "";
-                    _regex = new Regex(_pattern, 
-#if SILVERLIGHT
-#else
-                        RegexOptions.Compiled | 
+                    RegexOptions options = RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Singleline;
+#if !SILVERLIGHT
+                    if (RegexCompiled)
+                    {
+                        options |= RegexOptions.Compiled;
+                    }
 #endif
-                        RegexOptions.CultureInvariant |
-                        RegexOptions.IgnoreCase |
-                        RegexOptions.Singleline);
+                    _regex = new Regex(_pattern, options);
                 }
                 return _regex;
             }
@@ -179,7 +214,7 @@ namespace Rawr
 
     public static class ItemFilter
     {
-        static ItemFilterData data = new ItemFilterData();
+        internal static ItemFilterData data = new ItemFilterData();
 
         /// <summary>
         /// Returns a list that can be used to set relevant item types list. Call ItemCache.OnItemsChanged()

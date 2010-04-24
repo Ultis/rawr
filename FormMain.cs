@@ -153,6 +153,9 @@ namespace Rawr
             ToolStripDropDown dropDown = new ToolStripDropDown();
             dropDown.Items.Add(new ToolStripControlHost(itemFilterTreeView));
             toolStripDropDownButtonFilter.DropDown = dropDown;
+
+            // trigger background compilation of filter regex
+            ItemFilterRegex.RegexCompiled = true;
 		}
 
 		private bool _checkForUpdatesEnabled = true;
