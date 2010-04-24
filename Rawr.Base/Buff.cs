@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
+    [GenerateSerializer]
     public class BuffList : List<Buff>
     {
         public BuffList() : base() { }

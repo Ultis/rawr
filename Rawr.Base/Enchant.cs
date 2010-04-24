@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
+    [GenerateSerializer]
     public class EnchantList : List<Enchant>
     {
     }
@@ -144,7 +145,7 @@ namespace Rawr
 
         public override int GetHashCode()
         {
-            return (Id.ToString() + Slot.ToString()).GetHashCode();
+            return (Id << 5) | (int)Slot;
         }
 
         public bool FitsInSlot(ItemSlot slot)

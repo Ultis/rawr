@@ -46,6 +46,7 @@ namespace Rawr
 
     delegate ItemLocation Construct();
     
+    [GenerateArraySerializer]
     [XmlInclude(typeof(StaticDrop))]
     [XmlInclude(typeof(NoSource))]
     [XmlInclude(typeof(UnknownItem))]
@@ -807,6 +808,7 @@ namespace Rawr
     }
 
     [XmlRoot("dictionary")]
+    [GenerateSerializer]
     public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation[]>
     {
     }
@@ -836,16 +838,18 @@ namespace Rawr
             return Lookup(id.ToString());
         }
 
+        private static ItemLocation[] unknownLocation = { new ItemLocation("Unknown Location, please refresh"), null };
+
         public static ItemLocation[] Lookup(string id)
         {
-            ItemLocation[] item = { null, null };
+            ItemLocation[] item;
             if(_allLocations.TryGetValue(id, out item))
             {
                 return item;
             }
-            item = new ItemLocation[] { new ItemLocation("Unknown Location, please refresh"), null };
-
-            return item;
+            return unknownLocation;
+            //item = new ItemLocation[] { new ItemLocation("Unknown Location, please refresh"), null };
+            //return item;
         }
 
         public static void Save(string fileName)

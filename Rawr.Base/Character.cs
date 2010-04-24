@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 
 namespace Rawr //O O . .
 {
+    [GenerateSerializer]
     public class Character
     {
         [XmlElement("Name")]

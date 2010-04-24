@@ -203,6 +203,7 @@ namespace Rawr
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
+    [GenerateSerializer]
 #if SILVERLIGHT
     public class BatchCharacterList : ObservableCollection<BatchCharacter>
 #else

@@ -92,22 +92,33 @@ namespace Rawr
             }
         }
 
-        public bool IsMatch(Item item) {
-            if (string.IsNullOrEmpty(_pattern)
-                || (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description))
-                || (!string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note))
-                //|| (item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description))
-                || ((item.LocationInfo[0] != null && item.LocationInfo[1] != null)
-                    && (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && !string.IsNullOrEmpty(item.LocationInfo[1].Description))
-                    && Regex.IsMatch(item.LocationInfo[0].Description + " and" + item.LocationInfo[1].Description.Replace("Purchasable with","")))
-            )
+        private bool RegexIsMatch(string text)
+        {
+            return (!string.IsNullOrEmpty(text) && Regex.IsMatch(text));
+        }
+
+        public bool IsMatch(Item item)
+        {
+            // all checks must pass for match to pass, so do the fast checks first
+            if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
             {
-                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel) {
-                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality) {
+                if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
+                {
+                    ItemLocation[] locationInfo = item.LocationInfo;
+                    if (string.IsNullOrEmpty(_pattern)
+                        || (RegexIsMatch(locationInfo[0].Description))
+                        || (RegexIsMatch(locationInfo[0].Note))
+                        //|| (locationInfo[1] != null && !string.IsNullOrEmpty(locationInfo[1].Description) && Regex.IsMatch(locationInfo[1].Description))
+                        || ((locationInfo[0] != null && locationInfo[1] != null)
+                            && (!string.IsNullOrEmpty(locationInfo[0].Description) && !string.IsNullOrEmpty(locationInfo[1].Description))
+                            && Regex.IsMatch(locationInfo[0].Description + " and" + locationInfo[1].Description.Replace("Purchasable with", "")))
+                    )
+                    {
                         // no bind specified on the filter - we fine
                         /*if (!(BoA || BoE || BoP || BoU || BoN)) return true;
                         // item doesn't have real bind data, force it to show
-                        else*/ if (!BoN && !AdditiveFilter && item.Bind == BindsOn.None) return true;
+                        else*/
+                        if (!BoN && !AdditiveFilter && item.Bind == BindsOn.None) return true;
                         // There's Bind data set on the filter and Item has valid bind data
                         else if (BoA && item.Bind == BindsOn.BoA) return true;
                         else if (BoE && item.Bind == BindsOn.BoE) return true;
@@ -151,12 +162,14 @@ namespace Rawr
         }
     }
 
+    [GenerateSerializer]
     public class ItemTypeList : List<ItemType>
     {
         public ItemTypeList() : base() { }
         public ItemTypeList(IEnumerable<ItemType> collection) : base(collection) { }
     }
     
+    [GenerateSerializer]
     public class ItemFilterData
     {
         public SerializableDictionary<string, ItemTypeList> RelevantItemTypes = new SerializableDictionary<string, ItemTypeList>();

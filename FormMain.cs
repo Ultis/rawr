@@ -93,7 +93,7 @@ namespace Rawr
             asyncCalculationStart = new AsynchronousDisplayCalculationDelegate(AsyncCalculationStart);
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
             Rawr.UserControls.Options.GeneralSettings.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
-                    
+            
 			LoadModel(ConfigModel);
 			InitializeComponent();
             _defaultColor = itemButtonHead.BackColor;

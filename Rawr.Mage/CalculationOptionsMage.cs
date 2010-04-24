@@ -29,6 +29,7 @@ namespace Rawr.Mage
         public double MaximumStackingDuration;
     }
 
+    [GenerateSerializer]
     public sealed class CalculationOptionsMage : ICalculationOptionBase, INotifyPropertyChanged
     {
         private int playerLevel;

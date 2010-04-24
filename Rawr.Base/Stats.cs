@@ -535,6 +535,16 @@ namespace Rawr {
     }
 #endif
 
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class GenerateSerializerAttribute : Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class GenerateArraySerializerAttribute : Attribute
+    {
+    }
+
     [System.AttributeUsage(System.AttributeTargets.Property)]
     public sealed class CommonStat : System.Attribute {
         public static float GetCommonStatMinimumRange(PropertyInfo property) {

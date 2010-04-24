@@ -1646,6 +1646,7 @@ namespace Rawr
 
 	#endregion
 
+    [GenerateSerializer]
 	public class ItemList : List<Item>
     {
         public ItemList() : base() { }
