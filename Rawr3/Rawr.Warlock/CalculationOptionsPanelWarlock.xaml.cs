@@ -41,7 +41,7 @@ namespace Rawr.Warlock
 		public void LoadCalculationOptions()
 		{
 			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsWarlock();
+            if (Character.CalculationOptions == null) Character.CalculationOptions = CalculationOptionsWarlock.MakeDefaultOptions();
 
 			_loadingCalculationOptions = false;
 		}
