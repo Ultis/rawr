@@ -924,7 +924,7 @@ namespace Rawr {
             // Shadowmourne
             // Your melee attacks have a chance to drain a Soul Fragment granting you 30 Strength.  When you have acquired 10 Soul Fragments you will unleash Chaos Bane, dealing 1900 to 2100 Shadow damage split between all enemies within 15 yards and granting you 270 Strength for 10 sec.
             else if ((match = Regex.Match(line, @"Your melee attacks have a chance to drain a Soul Fragment granting you 30 Strength.")).Success)
-//            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to drain a Soul Fragment granting you (?<StrBuff>\d+) Strength.  When you have acquired (?<stackSize>\d+) Soul Fragments you will unleash Chaos Bane, dealing (?<mindmg>\d+) to (?<maxdmg>\d+) Shadow damage split between all enemies within 15 yards and granting you (?<strBuff2>\d+) Strength for (?<icd>) sec.")).Success)
+            //            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to drain a Soul Fragment granting you (?<StrBuff>\d+) Strength.  When you have acquired (?<stackSize>\d+) Soul Fragments you will unleash Chaos Bane, dealing (?<mindmg>\d+) to (?<maxdmg>\d+) Shadow damage split between all enemies within 15 yards and granting you (?<strBuff2>\d+) Strength for (?<icd>) sec.")).Success)
             {
                 // Capacitor like procs
                 Stats BuffStats = new Stats();
@@ -943,10 +943,10 @@ namespace Rawr {
                 float icd = 10;
                 Trigger trigger = Trigger.MeleeHit;
                 // At 10 stacks, the stacks proc the 2nd effect, so you would never have 10 stacks.
-                stats.AddSpecialEffect(new SpecialEffect(trigger, BuffStats, 60f, 0f, .2f, (stackSize-1)));
+                stats.AddSpecialEffect(new SpecialEffect(trigger, BuffStats, 60f, 0f, .2f, (stackSize - 1)));
                 stats.AddSpecialEffect(new SpecialEffect(trigger, BuffStats2, icd, 0f, .02f));
             }
-            
+
             #endregion
             #endregion
 
@@ -970,7 +970,7 @@ namespace Rawr {
             {
                 // Soul Preserver
                 // This is how RestoSham does it:
-                stats.ManacostReduceWithin15OnHealingCast += 800; 
+                stats.ManacostReduceWithin15OnHealingCast += 800;
                 // And that is how Tree does it:
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { HealingOmenProc = 800 }, 0, 0, 0.02f));
             }
@@ -1216,7 +1216,7 @@ namespace Rawr {
                 // Althor's Abacus
                 float min = (float)int.Parse(match.Groups["min"].Value);
                 float max = (float)int.Parse(match.Groups["max"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = min+(max-min)/2f }, 0f, 45f, 0.3f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = min + (max - min) / 2f }, 0f, 45f, 0.3f));
             }
             else if ((match = new Regex(@"Your harmful spells have a chance to increase your spell power by (?<initialSP>\d+) and an additional (?<additionalSP>\d+) every (?<frequency>\d+) sec for (?<time>\d+) sec").Match(line)).Success)
             {
@@ -1240,7 +1240,7 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { SpellPower = spellpower }, time, 60f, 0.1f));
             }
             else if ((match = new Regex(@"When struck in combat has a chance of increasing your armor by (?<armor>\d+) for (?<time>\d+) sec").Match(line)).Success)
-            { 
+            {
                 // Ashen Band of Courage - seems to be 60 sec iCD (wowhead)
                 // Apparently confirmed as 3% chance to proc -> http://maintankadin.failsafedesign.com/forum/index.php?f=21&t=27115&rb_v=viewtopic
                 float armor = (float)int.Parse(match.Groups["armor"].Value);
@@ -1316,7 +1316,7 @@ namespace Rawr {
                     {
                         stack = int.Parse(match.Groups["stack"].Value);
                     }
-                    
+
                     stats.AddSpecialEffect(EvalRegex(statName, amount, duration, ability, 0f, 1f, stack));
                 }
                 // ok... at this point with the way the code is written, this is really just for Sigil of the Unfaltering Knight, which grants a 
@@ -2014,6 +2014,15 @@ namespace Rawr {
                 childEffect.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit, new Stats() { CritRating =-184f }, float.PositiveInfinity, 0f, 1f, 5));
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, childEffect, 20f, 180f, 1f));
             }
+            else if ((match = new Regex(@"Generates a bolt of lightning to strike an enemy for (?<min>\d\d*) to (?<max>\d\d*) Nature damage*").Match(line)).Success)
+            {   // Gnomish Lightning Generator
+                int min = int.Parse(match.Groups["min"].Value);
+                int max = int.Parse(match.Groups["max"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                    new Stats() { NatureDamage = (float)(min + max) / 2f, },
+                    0f, 60f, 1f));
+            }
+
         }
 
         #region Specialized Items that need Extra Handling

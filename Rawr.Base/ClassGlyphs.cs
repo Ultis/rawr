@@ -405,7 +405,7 @@ namespace Rawr
         public bool GlyphofFlashHeal { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
         [GlyphData(6, "Glyph of Guardian Spirit", true, @"If your Guardian Spirit lasts its entire duration without being triggered, the cooldown is reset to 1 min.")]
         public bool GlyphofGuardianSpirit { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Holy Nova", true, @"Your Holy Nova spell heals for an additional 40%, but deals 40% less damage.")]
+        [GlyphData(7, "Glyph of Holy Nova", true, @"Increases the damage and healing of your Holy Nova spell by an additional 20%.")]
         public bool GlyphofHolyNova { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         [GlyphData(8, "Glyph of Hymn of Hope", true, @"Your Hymn of Hope lasts an additional 2 sec.")]
         public bool GlyphofHymnofHope { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
@@ -417,7 +417,7 @@ namespace Rawr
         public bool GlyphofMassDispel { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
         [GlyphData(12, "Glyph of Mind Control", true, @"Reduces the chance targets will resist or break Mind Control spell by an additional 17%.")]
         public bool GlyphofMindControl { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Mind Flay", true, @"Increases the range of your Mind Flay spell by 10 yards, but it only reduces the target's movement speed by 10%.")]
+        [GlyphData(13, "Glyph of Mind Flay", true, @"Increases the damage done by your Mind Flay spell by 10% when your target is afflicted with Shadow Word: Pain.")]
         public bool GlyphofMindFlay { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
         [GlyphData(14, "Glyph of Mind Sear", true, @"Increases the radius of effect on Mind Sear by 5 yards.")]
         public bool GlyphofMindSear { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
@@ -435,11 +435,11 @@ namespace Rawr
         public bool GlyphofRenew { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
         [GlyphData(21, "Glyph of Scourge Imprisonment", true, @"Reduces the cast time of your Shackle Undead by 0.5 sec.")]
         public bool GlyphofScourgeImprisonment { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
-        [GlyphData(22, "Glyph of Shadow", true, @"While in Shadowform, your spell critical strikes increase your spell power by 10% of your Spirit for 10 sec.")]
+        [GlyphData(22, "Glyph of Shadow", true, @"While in Shadowform, your spell critical strikes increase your spell power by 30% of your Spirit for 10 sec.")]
         public bool GlyphofShadow { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         [GlyphData(23, "Glyph of Shadow Word: Death", true, @"Targets below 35% health take an additional 10% damage from your Shadow Word: Death spell.")]
         public bool GlyphofShadowWordDeath { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
-        [GlyphData(24, "Glyph of Shadow Word: Pain", true, @"Increases the damage done by your Mind Flay spell by 10% when your target is afflicted with Shadow Word: Pain.")]
+        [GlyphData(24, "Glyph of Shadow Word: Pain", true, @"The periodic damage ticks of your Shadow Word: Pain spell restore 1% of your base mana.")]
         public bool GlyphofShadowWordPain { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
         [GlyphData(25, "Glyph of Smite", true, @"Your Smite spell inflicts an additional 20% damage against targets afflicted by Holy Fire.")]
         public bool GlyphofSmite { get { return _glyphData[25]; } set { _glyphData[25] = value; } }

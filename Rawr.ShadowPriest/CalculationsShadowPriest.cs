@@ -490,13 +490,13 @@ namespace Rawr.ShadowPriest
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            float SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.04f;
 
             Stats statsTotal = new Stats()
             {
                 BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
-                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.04f,
                 SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
                 SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
@@ -509,7 +509,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
+            statsTotal.SpellPower += SpellDamageFromSpiritPercentage * statsTotal.Spirit
                 + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -653,7 +653,6 @@ namespace Rawr.ShadowPriest
                 SpellHaste = stats.SpellHaste,
                 HasteRating = stats.HasteRating,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
@@ -686,8 +685,7 @@ namespace Rawr.ShadowPriest
                 ShadowDamage = stats.ShadowDamage,
                 ValkyrDamage = stats.ValkyrDamage,
 
-                /*ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
+                /*ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -725,6 +723,7 @@ namespace Rawr.ShadowPriest
 
         protected bool RelevantTrinket(SpecialEffect se)
         {
+            bool bRelevant = false;
             if (se.Trigger == Trigger.DamageSpellCrit
                 || se.Trigger == Trigger.DamageSpellHit
                 || se.Trigger == Trigger.DamageSpellCast
@@ -735,7 +734,10 @@ namespace Rawr.ShadowPriest
                 || se.Trigger == Trigger.SpellMiss
                 || se.Trigger == Trigger.Use)
             {
-                return _HasRelevantStats(se.Stats);
+                bRelevant = _HasRelevantStats(se.Stats);
+                foreach (SpecialEffect s in se.Stats.SpecialEffects())
+                    bRelevant |= RelevantTrinket(s);
+                return bRelevant;
             }
             return false;
         }
@@ -748,7 +750,7 @@ namespace Rawr.ShadowPriest
                 + stats.SpellCrit + stats.HitRating + stats.SpellHit + stats.SpellCritOnTarget
                 + stats.SpellHaste + stats.HasteRating
 
-                + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
+                + stats.BonusSpiritMultiplier
                 + stats.BonusIntellectMultiplier + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
                 + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
