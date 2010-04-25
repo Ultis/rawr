@@ -70,7 +70,8 @@ namespace Rawr
             Source = ItemSource.Unknown;
             _description = desc;
         }
-        public virtual ItemLocation Fill(XmlNode node, string itemId) {
+        public virtual ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
+        {
             return this;
         }
         public static ItemLocation Construct() {
@@ -171,11 +172,8 @@ namespace Rawr
             }
         }
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
 			if (doc != null)
 			{
                 // Save the informations of the vendor.
@@ -197,6 +195,7 @@ namespace Rawr
 
 					if (!_idToNameMap.TryGetValue(tokenId, out tokenName))
 					{
+                        WebRequestWrapper wrw = new WebRequestWrapper();
 						doc = wrw.DownloadItemInformation(int.Parse(tokenId));
 
 						_idToNameMap[tokenId] = tokenName = doc.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
@@ -204,6 +203,18 @@ namespace Rawr
 
                     _tokenMap[tokenName] = count;
 				}
+
+                // The armory (falsly) list a buy price for some items which have a cost in badges.
+                // So only check for a gold price if there's not also a token cost.
+                Cost = 0;
+                if (_tokenMap.Count == 0)
+                {
+                    XmlNode costNode = doc.SelectSingleNode("/page/itemInfo/item/cost/@buyPrice");
+                    if (costNode != null)
+                    {
+                        Cost = int.Parse(costNode.InnerText);
+                    }
+                }
 
                 if (listVendor.Count > 0)
                 {
@@ -285,16 +296,13 @@ namespace Rawr
             }
         }
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/rewardFromQuests/quest[1]");
 
             if (subNode != null)
             {
-                return QuestItem.Construct().Fill(node, itemId);
+                return QuestItem.Construct().Fill(doc, node, itemId);
             }
             subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/@buyPrice");
 
@@ -314,7 +322,7 @@ namespace Rawr
                     if (!tokenIDMap.TryGetValue(id, out tokenName))
                     {
                         WebRequestWrapper wrw2 = new WebRequestWrapper();
-                        XmlDocument doc2 = wrw.DownloadItemInformation(int.Parse(id));
+                        XmlDocument doc2 = wrw2.DownloadItemInformation(int.Parse(id));
 
                         tokenIDMap[id] = tokenName = doc2.SelectSingleNode("/page/itemInfo/item/@name").InnerText;
                     }
@@ -375,11 +383,8 @@ namespace Rawr
             }
         }
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             string TokenId;
             XmlNode subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/@honor");
             XmlNode subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
@@ -401,7 +406,7 @@ namespace Rawr
                     if (_tokenMap.ContainsKey(TokenId)) {
                         TokenType = _tokenMap[TokenId];
                     } else {
-                        wrw = new WebRequestWrapper();
+                        WebRequestWrapper wrw = new WebRequestWrapper();
                         doc = wrw.DownloadItemInformation(int.Parse(TokenId));
 
                         TokenType = doc.SelectSingleNode("/page/itemInfo/item").Attributes["name"].Value;
@@ -420,14 +425,18 @@ namespace Rawr
                 Points = int.Parse(subNodeH.InnerText);
                 PointType = "Honor";
                 subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/token/@count");
-                if(subNodeH != null) {
+                if (subNodeH != null)
+                {
                     TokenCount = int.Parse(subNodeH.InnerText);
                     TokenId = doc.SelectSingleNode("/page/itemInfo/item/cost/token").Attributes["id"].Value;
 
-                    if (_tokenMap.ContainsKey(TokenId)) {
+                    if (_tokenMap.ContainsKey(TokenId))
+                    {
                         TokenType = _tokenMap[TokenId];
-                    } else {
-                        wrw = new WebRequestWrapper();
+                    }
+                    else
+                    {
+                        WebRequestWrapper wrw = new WebRequestWrapper();
                         doc = wrw.DownloadItemInformation(int.Parse(TokenId));
 
                         TokenType = doc.SelectSingleNode("/page/itemInfo/item").Attributes["name"].Value;
@@ -435,17 +444,38 @@ namespace Rawr
                         _tokenMap[TokenId] = TokenType;
                     }
                 }
-            } else if (vendorList.Count > 0) {
+            }
+            else if (subNodeA != null)
+            {
+                Points = int.Parse(subNodeA.InnerText);
+                PointType = "Arena";
+                subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/token/@count");
+                if (subNodeH != null)
+                {
+                    TokenCount = int.Parse(subNodeH.InnerText);
+                    TokenId = doc.SelectSingleNode("/page/itemInfo/item/cost/token").Attributes["id"].Value;
+
+                    if (_tokenMap.ContainsKey(TokenId))
+                    {
+                        TokenType = _tokenMap[TokenId];
+                    }
+                    else
+                    {
+                        WebRequestWrapper wrw2 = new WebRequestWrapper();
+                        doc = wrw2.DownloadItemInformation(int.Parse(TokenId));
+
+                        TokenType = doc.SelectSingleNode("/page/itemInfo/item").Attributes["name"].Value;
+
+                        _tokenMap[TokenId] = TokenType;
+                    }
+                }
+            } 
+            else if (vendorList.Count > 0) 
+            {
                 VendorName = vendorList[0].Attributes["name"].Value;
                 VendorArea = vendorList[0].Attributes["area"].Value;
-            } else {
-                subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
-                if(subNodeA != null) {
-                    Points = int.Parse(subNodeA.InnerText);
-                    PointType = "Arena";
-                }
             }
-            if (string.IsNullOrEmpty(PointType)) { PointType = "Honor"; }
+            if (string.IsNullOrEmpty(PointType)) { PointType = "Unknown"; }
             return this;
         }
         public static new ItemLocation Construct()
@@ -475,15 +505,8 @@ namespace Rawr
             Source = ItemSource.StaticDrop;
         }
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            //XmlNode subNode = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource");
-            //Area = subNode.Attributes["areaName"].Value;
-            //Heroic = ("h" == subNode.Attributes["difficulty"].Value);
-            //Boss = subNode.Attributes["creatureName"].Value;
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             XmlNode subNodeArea = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@area");
             if (subNodeArea != null)
             {
@@ -532,12 +555,8 @@ namespace Rawr
         }
 
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             XmlNode subNodeArea = doc.SelectSingleNode("/page/itemInfo/item/dropCreatures/creature[1]/@area");
             if(subNodeArea != null)
             {
@@ -631,13 +650,8 @@ namespace Rawr
 
         private SerializableDictionary<string, int> _bopMats = new SerializableDictionary<string, int>();
         static SortedList<string, BindsOn> _materialBindMap = new SortedList<string, BindsOn>();
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
-
-
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/createdBy/spell/item");
 
             if (subNode != null)
@@ -679,7 +693,7 @@ namespace Rawr
                 int count = int.Parse(reagent.Attributes["count"].Value);
                 if (!_materialBindMap.ContainsKey(name))
                 {
-                    wrw = new WebRequestWrapper();
+                    WebRequestWrapper wrw = new WebRequestWrapper();
                     doc = wrw.DownloadItemToolTipSheet(reagent.Attributes["id"].Value);
 
                     _materialBindMap[name] = (BindsOn) Enum.Parse(typeof(BindsOn), doc.SelectSingleNode("/page/itemTooltips/itemTooltip/bonding").InnerText);
@@ -723,11 +737,8 @@ namespace Rawr
         public int Party {get;set;}
         public String Type {get;set;}
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/rewardFromQuests/quest[1]");
 
             Area = subNode.Attributes["area"].Value;
@@ -777,11 +788,8 @@ namespace Rawr
         public int MinLevel { get; set; }
         public int Party { get; set; }
 
-        public override ItemLocation Fill(XmlNode node, string itemId)
+        public override ItemLocation Fill(XmlDocument doc, XmlNode node, string itemId)
         {
-            WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
             XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/containerObjects/object[1]");
 
             Heroic = (subNode.Attributes["heroic"] != null && subNode.Attributes["heroic"].Value == "1");
@@ -893,15 +901,14 @@ namespace Rawr
             {
                 if (node != null && node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource") != null)
                 {
+                    WebRequestWrapper wrw = new WebRequestWrapper();
+                    XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
                     string sourceType = node.SelectSingleNode("page/itemTooltips/itemTooltip/itemSource").Attributes["value"].Value;
 
                     // If the armory has an item source set to creatureDrop, check to see if it might also be a vendor sold item
                     // and if so, switch it's type to vendor
                     if (sourceType == "sourceType.creatureDrop")
                     {
-                        WebRequestWrapper wrw = new WebRequestWrapper();
-                        XmlDocument doc = wrw.DownloadItemInformation(int.Parse(itemId));
-
 			            if (doc != null)
 			            {
 				            XmlNode subNode = doc.SelectSingleNode("/page/itemInfo/item/cost/token");
@@ -911,11 +918,25 @@ namespace Rawr
                             }
                         }
                     }
+                    // If the armory has an item source set to vendor, check to see if it cost honor or arena point to purchase and if so,
+                    // switch it's type to pvpItem
+                    if (sourceType == "sourceType.vendor")
+                    {
+                        if (doc != null)
+                        {
+                            XmlNode subNodeH = doc.SelectSingleNode("/page/itemInfo/item/cost/@honor");
+                            XmlNode subNodeA = doc.SelectSingleNode("/page/itemInfo/item/cost/@arena");
 
+                            if (subNodeH != null || subNodeA != null)
+                            {
+                                sourceType = "sourceType.pvpReward";
+                            }
+                        }
+                    }
                     if (_LocationFactory.ContainsKey(sourceType))
                     {
                         item = _LocationFactory[sourceType]();
-                        item = item.Fill(node, itemId);
+                        item = item.Fill(doc, node, itemId);
                     }
                     else
                     {
