@@ -147,9 +147,9 @@ namespace Rawr.UI
                     //WebRequestWrapper.ResetFatalErrorIndicator();
                     int itemId = EnterId.Value;
                     if (itemId > 0)
-                        AddItemById(EnterId.Value, EnterId.UseArmory, EnterId.UseWowhead);
+                        AddItemById(EnterId.Value, true, true);
                     else
-                        AddItemByName(EnterId.ItemName, EnterId.UseArmory, EnterId.UseWowhead);
+                        AddItemByName(EnterId.ItemName, true, true);
                 }
                 finally
                 {
@@ -164,10 +164,10 @@ namespace Rawr.UI
             if (name.Length <= 0) return;
 
             // try the armory (if requested)
-            if (useArmory)
-            {
+            //if (useArmory)
+            //{
                 //TODO-ARMORY-ITEM: Armory.GetItemIdByName(name, armoryId => AddItemByName(name, armoryId, useWowhead));
-            }
+            //}
             else
             {
                 AddItemByName(name, 0, useWowhead);

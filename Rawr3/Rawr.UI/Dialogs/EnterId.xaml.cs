@@ -62,16 +62,6 @@ namespace Rawr.UI
             get { return textItemId.Text; }
         }
 
-        public bool UseArmory
-        {
-            get { return (bool)cbArmory.IsChecked; }
-        }
-
-        public bool UseWowhead
-        {
-            get { return (bool)cbWowhead.IsChecked; }
-        }
-
         public EnterId()
         {
             InitializeComponent();
