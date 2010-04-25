@@ -151,20 +151,27 @@ namespace Rawr.Elemental.Spells
         { get { return (1f - CritChance) * MaxHit + CritChance * MaxCrit; } }
 
         /// <summary>
+        /// This is to ensure that the constraints on the GCD are met on abilities that have Gcd
+        /// </summary>
+        public float Gcd
+        { get { return (gcd >= 1 ? gcd : 1); } }
+
+        /// <summary>
         /// The effective Cast Time. Taking GCD and latency into account.
         /// </summary>
         public float CastTime
         {
             get
             {
-                if(gcd == 0 && castTime == 0)
+                if (gcd == 0 && castTime == 0)
                     return 0;
-                if (castTime >= gcd)
-                    return Math.Max(castTime, gcd) + Latency;
+                if (castTime >= Gcd)
+                    return Math.Max(castTime, Gcd) + Latency;
                 else
-                    return Math.Max(1, gcd) + Latency;
+                    return Math.Max(1, Gcd) + Latency;
             }
         }
+
         /// <summary>
         /// The effective Latency of this spell effecting the start cast time of the next one.
         /// </summary>
