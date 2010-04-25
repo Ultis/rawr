@@ -1124,6 +1124,12 @@ namespace Rawr //O O . .
                 case Rawr.ItemSlot.ProjectileBag: return CharacterSlot.ProjectileBag;
                 case Rawr.ItemSlot.Tabard: return CharacterSlot.Tabard;
                 case Rawr.ItemSlot.Shirt: return CharacterSlot.Shirt;
+                case Rawr.ItemSlot.Red: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Orange: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Yellow: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Green: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Blue: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Purple: return CharacterSlot.Gems;
                 case Rawr.ItemSlot.Prismatic: return CharacterSlot.Gems;
                 case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
                 default: return CharacterSlot.None;
