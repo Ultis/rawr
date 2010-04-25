@@ -672,11 +672,11 @@ namespace Rawr.Optimizer
                 }
 			}
 
-            if (this.bestValue == 0)
-            {
-                bestIndividual = null;
-                this.bestValuation = default(TValuation);
-            }
+            //if (this.bestValue == 0)
+            //{
+            //    bestIndividual = null;
+            //    this.bestValuation = default(TValuation);
+            //}
 
             bestValuation = this.bestValuation;
             bestValue = this.bestValue;

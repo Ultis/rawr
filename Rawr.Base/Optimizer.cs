@@ -723,10 +723,6 @@ namespace Rawr.Optimizer
                 {
                     optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter, null, false, optimizeTalents, false), calculationToOptimize, requirements);
                 }
-                else
-                {
-                    if (error == null) error = new NullReferenceException();
-                }
                 currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character, null, false, optimizeTalents, false), calculationToOptimize, requirements);
             }
             catch (Exception ex)
@@ -1682,10 +1678,10 @@ namespace Rawr.Optimizer
             if (bestIndividual != null)
             {
                 itemGenerator.NormalizeCharacter(bestIndividual.Character, false); // this makes it nonnormal, but i don't think it should create any problems
-            }
-            if (lockedSlot != CharacterSlot.OffHand && !bestIndividual.Character.CurrentCalculations.IncludeOffHandInCalculations(bestIndividual.Character))
-            {
-                bestIndividual.Character[CharacterSlot.OffHand] = null;
+                if (lockedSlot != CharacterSlot.OffHand && !bestIndividual.Character.CurrentCalculations.IncludeOffHandInCalculations(bestIndividual.Character))
+                {
+                    bestIndividual.Character[CharacterSlot.OffHand] = null;
+                }
             }
             return bestIndividual;
         }
@@ -2858,10 +2854,6 @@ namespace Rawr.Optimizer
                 if (optimizedCharacter != null)
                 {
                     optimizedCharacterValue = GetOptimizationValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter));
-                }
-                else
-                {
-                    if (error == null) error = new NullReferenceException();
                 }
                 currentCharacterValue = GetOptimizationValue(character, model.GetCharacterCalculations(character));
             }

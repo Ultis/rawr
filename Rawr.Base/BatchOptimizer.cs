@@ -322,10 +322,6 @@ namespace Rawr.Optimizer
                 {
                     optimizedBatchValue = GetOptimizationValue(optimizedBatch);
                 }
-                else
-                {
-                    if (error == null) error = new NullReferenceException();
-                }
             }
             catch (Exception ex)
             {
