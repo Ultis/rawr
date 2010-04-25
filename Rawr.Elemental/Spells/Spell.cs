@@ -253,7 +253,7 @@ namespace Rawr.Elemental.Spells
         { get { return TotalDamage / manaCost; } }
 
         public float DpCT
-        { get { return TotalDamage / (CastTime < gcd ? gcd : CastTime); } }
+        { get { return TotalDamage / CastTime; } }
 
         public float DpPR
         { get { return TotalDamage / PeriodicRefreshTime; } }
