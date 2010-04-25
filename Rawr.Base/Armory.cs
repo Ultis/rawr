@@ -582,6 +582,17 @@ namespace Rawr
                     XmlNode nodeAttribute = node.Attributes.GetNamedItem("armorBonus");
                     bBonusArmor = (int.Parse(nodeAttribute.Value) > 0);
                 }
+                // for the following slots there is normally no armor, so we know it has to be bonus armor
+                if (slot == ItemSlot.Finger ||
+                    slot == ItemSlot.MainHand ||
+                    slot == ItemSlot.Neck ||
+                    (slot == ItemSlot.OffHand && type != ItemType.Shield) ||
+                    slot == ItemSlot.OneHand ||
+                    slot == ItemSlot.Trinket ||
+                    slot == ItemSlot.TwoHand)
+                {
+                    bBonusArmor = true;
+                }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusParryRating")) { stats.ParryRating = int.Parse(node.InnerText); }
