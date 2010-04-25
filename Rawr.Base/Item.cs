@@ -929,7 +929,7 @@ namespace Rawr
                     Item tempItem = new Item();
                     tempItem.Name = "[Downloading from Armory]";
                     tempItem.Id = id;
-                    ItemCache.AddItem(tempItem, true);
+                    ItemCache.AddItem(tempItem, raiseEvent);
                     return tempItem;
                 }
 #else

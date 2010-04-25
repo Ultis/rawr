@@ -223,7 +223,11 @@ namespace Rawr.UI
             _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
 			_calculationCount = 0;
 			_autoResetEvent = new AutoResetEvent(false);
-					
+
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting Comparison Calculations");
+            DateTime start = DateTime.Now;
+#endif
             if (relevantItemInstances.Count > 0)
             {
                 foreach (ItemInstance item in relevantItemInstances)
@@ -233,6 +237,9 @@ namespace Rawr.UI
 				}
 				_autoResetEvent.WaitOne();
             }
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
 
 			List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
 			if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));

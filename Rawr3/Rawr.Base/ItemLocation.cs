@@ -395,16 +395,19 @@ namespace Rawr
             }
 
 
-
-			XAttribute priceAttr = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost").Attribute("buyPrice");
-
-            if (priceAttr != null)
+            XElement cost = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost");
+            if (cost != null)
             {
-                Cost = int.Parse(subNode.Value);
-            }
-            else
-            {
-                Cost = 0;
+                XAttribute priceAttr = cost.Attribute("buyPrice");
+
+                if (priceAttr != null)
+                {
+                    Cost = int.Parse(subNode.Value);
+                }
+                else
+                {
+                    Cost = 0;
+                }
             }
 
 			foreach (XElement token in xdoc.SelectNodes("/itemData/page/itemInfo/item/cost/token"))
@@ -476,40 +479,44 @@ namespace Rawr
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
             string TokenId;
-            XAttribute subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost").Attribute("honor");
-
-            if (subNode != null)
+            XElement cost = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost");
+            if (cost != null)
             {
-                Points = int.Parse(subNode.Value);
-                PointType = "Honor";
-                subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost/token").Attribute("count");
-                if(subNode != null)
-                {
-                    
-                    TokenCount = int.Parse(subNode.Value);
-                    TokenId = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost/token").Attribute("id").Value;
+                XAttribute subNode = cost.Attribute("honor");
 
-                    if (_tokenMap.ContainsKey(TokenId))
-                    {
-                        TokenType = _tokenMap[TokenId];
-                    }
-                    else
-                    {
-                        //wrw = new NetworkUtils();
-                        //itemInfo = wrw.DownloadItemInformation(int.Parse(TokenId));
-                        //TokenType = xdoc.SelectSingleNode("/itemData/page/itemInfo/item").Attribute("name").Value;
-
-                        _tokenMap[TokenId] = "<nyi>";// TokenType;
-                    }
-                }
-            }
-            else
-            {
-                subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost").Attribute("arena");
-                if(subNode != null)
+                if (subNode != null)
                 {
                     Points = int.Parse(subNode.Value);
-                    PointType = "Arena";
+                    PointType = "Honor";
+                    subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost/token").Attribute("count");
+                    if (subNode != null)
+                    {
+
+                        TokenCount = int.Parse(subNode.Value);
+                        TokenId = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/cost/token").Attribute("id").Value;
+
+                        if (_tokenMap.ContainsKey(TokenId))
+                        {
+                            TokenType = _tokenMap[TokenId];
+                        }
+                        else
+                        {
+                            //wrw = new NetworkUtils();
+                            //itemInfo = wrw.DownloadItemInformation(int.Parse(TokenId));
+                            //TokenType = xdoc.SelectSingleNode("/itemData/page/itemInfo/item").Attribute("name").Value;
+
+                            _tokenMap[TokenId] = "<nyi>";// TokenType;
+                        }
+                    }
+                }
+                else
+                {
+                    subNode = cost.Attribute("arena");
+                    if (subNode != null)
+                    {
+                        Points = int.Parse(subNode.Value);
+                        PointType = "Arena";
+                    }
                 }
             }
 
@@ -584,12 +591,12 @@ namespace Rawr
 
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
-            XAttribute subNodeArea = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/dropCreatures/creature").Attribute("area");
+            XAttribute subNodeArea = xdoc.SelectSingleNode("/itemData/item/sourceInfo/source").Attribute("area");
             if(subNodeArea != null)
             {
                 Location = subNodeArea.Value;
             }
-            XAttribute subNodeHeroic = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/dropCreatures/creature").Attribute("heroic");
+            XAttribute subNodeHeroic = xdoc.SelectSingleNode("/itemData/item/sourceInfo/source").Attribute("is_heroic");
             if (subNodeHeroic != null)
             {
                 Heroic = (subNodeHeroic.Value == "1");
@@ -677,16 +684,19 @@ namespace Rawr
             else
             {
                 subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item");
-                if (subNode.Attribute("requiredSkill")!= null)
+                if (subNode != null)
                 {
-                    Bind = BindsOn.BoP;
-                }
-                else
-                {
-                    Bind = BindsOn.BoE;
+                    if (subNode.Attribute("requiredSkill") != null)
+                    {
+                        Bind = BindsOn.BoP;
+                    }
+                    else
+                    {
+                        Bind = BindsOn.BoE;
+                    }
                 }
             }
-            if (subNode.Attribute("requiredSkill") != null)
+            if (subNode != null && subNode.Attribute("requiredSkill") != null)
             {
                 Skill = subNode.Attribute("requiredSkill").Value;
                 Level = int.Parse(subNode.Attribute("requiredSkillRank").Value);
@@ -696,10 +706,14 @@ namespace Rawr
                 Skill = "Unknown";
             }
 
-            XAttribute attr = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/createdBy/spell").Attribute("name");
-            if (attr != null)
+            XElement spell = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/createdBy/spell");
+            if (spell != null)
             {
-                SpellName = attr.Value;
+                XAttribute attr = spell.Attribute("name");
+                if (attr != null)
+                {
+                    SpellName = attr.Value;
+                }
             }
 
 
@@ -795,19 +809,10 @@ namespace Rawr
 
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
-            XElement subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/containerObjects/object");
+            XElement subNode = xdoc.SelectSingleNode("/itemData/item/sourceInfo/source");
 
             Area = subNode.Attribute("area").Value;
-			if (Area.Contains("(25)") && !Area.StartsWith("Heroic "))
-			{
-				if (xdoc.SelectSingleNode("/itemData/page/itemInfo/item").Attribute("level").Value == "258")
-					Area = "Heroic " + Area;
-			}
-			else if (Area.Contains("(10)") && !Area.StartsWith("Heroic "))
-			{
-				if (xdoc.SelectSingleNode("/itemData/page/itemInfo/item").Attribute("level").Value == "245")
-					Area = "Heroic " + Area;
-			}
+            Heroic = subNode.Attribute("is_heroic").Value == "1";
 			Container = subNode.Attribute("name").Value;
             return this;
         }

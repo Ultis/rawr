@@ -5,6 +5,7 @@ using System.IO;
 using System.Xml.Serialization;
 #if RAWR3
 using System.Linq;
+using System.Threading;
 #endif
 
 namespace Rawr
@@ -145,6 +146,10 @@ namespace Rawr
             return false;
         }
 
+#if RAWR3
+        private bool dirtySinceLastAdd;
+#endif
+
 		public Item AddItem(Item item) { return AddItem(item, true); }
 		public Item AddItem(Item item, bool raiseEvent)
 		{
@@ -163,7 +168,33 @@ namespace Rawr
                 AutoSetUniqueId(item);
             }
 
-			if (raiseEvent) OnItemsChanged();
+            if (raiseEvent)
+            {
+#if RAWR3
+                // when loading a new character we might get a long stream of new items from armory service
+                // if we trigger event for every single one the application becomes more or less unresponsive
+                // throttle events to no more than one per second
+                // this is all happening on the main thread, armory service background worker is pushing things
+                // on the dispatcher so add items will actually be delayed by however long it takes to
+                // compute all calculations for charts
+                // so send this via thread pool, this way it'll be pushed after all the backlog of items
+                dirtySinceLastAdd = true;
+                ThreadPool.QueueUserWorkItem((object state) =>
+                {
+                    System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        System.Diagnostics.Debug.WriteLine("Trying to trigger recalc " + dirtySinceLastAdd);
+                        if (dirtySinceLastAdd)
+                        {
+                            OnItemsChanged();
+                            dirtySinceLastAdd = false;
+                        }
+                    });
+                });
+#else
+                OnItemsChanged();
+#endif
+            }
 			return item;
 		}
 
