@@ -985,30 +985,39 @@ namespace Rawr
                     if (!Rawr.Properties.GeneralSettings.Default.UseMultithreading
                         && (oldItemStats != newItemStats || oldItemSource != newItemSource))
                     {
-                        switch (MessageBox.Show(
-                            "Do you want to use the New Data and overwrite the Old?"
-                            + "\r\n\r\n"
-                            + (cachedItem != null ? "[" + cachedItem.Id + "] " + cachedItem.Name
-                            : (newItem    != null ? "[" + newItem.Id    + "] " + newItem.Name
-                            : ""))
-                            + "\r\n\r\n"
-                            + "Old Data:\r\n"
-                            + "Stats:\r\n" + oldItemStats
-                            + "\r\n"
-                            + "Source: " + oldItemSource
-                            + "\r\n\r\n"
-                            + "New Data:\r\n"
-                            + "Stats:\r\n" + newItemStats
-                            + "\r\n"
-                            + "Source: " + newItemSource
-                            , "Update Item Cache",
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1))
+                        int locationCreated = oldItemSource.IndexOf("Created via");
+                        int locationCrafted = newItemSource.IndexOf("Crafted");
+
+                        if (oldItemSource != "Unknown Location, please refresh" &&
+                            oldItemSource != "Armory reports no source, try Wowhead" &&
+                            ((locationCreated != 0) || (locationCrafted != 0)))
                         {
-                            case DialogResult.Yes: { break; } // Do Nothing, go to AddItem
-                            default: {
-                                // User wants to keep orig data
-                                LocationFactory.Add(cachedItem.Id.ToString(), oldItemLoc, true);
-                                return ItemCache.FindItemById(id);
+                            switch (MessageBox.Show(
+                                "Do you want to use the New Data and overwrite the Old?"
+                                + "\r\n\r\n"
+                                + (cachedItem != null ? "[" + cachedItem.Id + "] " + cachedItem.Name
+                                : (newItem != null ? "[" + newItem.Id + "] " + newItem.Name
+                                : ""))
+                                + "\r\n\r\n"
+                                + "Old Data:\r\n"
+                                + "Stats:\r\n" + oldItemStats
+                                + "\r\n"
+                                + "Source: " + oldItemSource
+                                + "\r\n\r\n"
+                                + "New Data:\r\n"
+                                + "Stats:\r\n" + newItemStats
+                                + "\r\n"
+                                + "Source: " + newItemSource
+                                , "Update Item Cache",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1))
+                            {
+                                case DialogResult.Yes: { break; } // Do Nothing, go to AddItem
+                                default:
+                                    {
+                                        // User wants to keep orig data
+                                        LocationFactory.Add(cachedItem.Id.ToString(), oldItemLoc, true);
+                                        return ItemCache.FindItemById(id);
+                                    }
                             }
                         }
                     }
