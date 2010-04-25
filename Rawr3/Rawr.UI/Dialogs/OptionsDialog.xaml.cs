@@ -85,12 +85,30 @@ namespace Rawr.UI
             }
             GeneralSettings.Default.ProcEffectMode = ProcEffectModeCombo.SelectedIndex;
             GeneralSettings.Default.CombinationEffectMode = EffectCombinationsCalculationMode.SelectedIndex;
+            OnDisplayBuffChanged();
+            OnHideProfessionsChanged();
+            SpecialEffect.UpdateCalculationMode();
+            MainPage.Instance.Character.OnCalculationsInvalidated();
             this.DialogResult = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        public static event EventHandler DisplayBuffChanged;
+        protected static void OnDisplayBuffChanged()
+        {
+            if (DisplayBuffChanged != null)
+                DisplayBuffChanged(null, EventArgs.Empty);
+        }
+
+        public static event EventHandler HideProfessionsChanged;
+        protected static void OnHideProfessionsChanged()
+        {
+            if (HideProfessionsChanged != null)
+                HideProfessionsChanged(null, EventArgs.Empty);
         }
     }
 }

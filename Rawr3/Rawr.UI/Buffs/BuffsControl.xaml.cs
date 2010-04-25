@@ -209,6 +209,19 @@ namespace Rawr.UI
         public BuffsControl()
         {
             InitializeComponent();
+
+            OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
+            OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
+        }
+
+        void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
+        {
+            BuildControls();
+        }
+
+        void GeneralSettings_HideProfessionsChanged(object sender, EventArgs e)
+        {
+            BuildControls();
         }
 
         public bool HasCustomSets { get; private set; }
