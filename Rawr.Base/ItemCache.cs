@@ -253,7 +253,7 @@ namespace Rawr
             return cachedRelevantItems;
         }
 
-        private Item[] GetRelevantItemsInternal(CalculationsBase model)
+        internal Item[] GetRelevantItemsInternal(CalculationsBase model)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
                 delegate(Item item) { return model.IsItemRelevant(item) && ItemFilter.IsItemRelevant(model, item); }));

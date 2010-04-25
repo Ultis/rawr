@@ -11,6 +11,12 @@ using System.Collections.ObjectModel;
 
 namespace Rawr
 {
+    public class ItemFilterEnabledOverride
+    {
+        public string Name { get; set; }
+        public bool? Enabled { get; set; }
+        public List<ItemFilterEnabledOverride> SubFilterOverride { get; set; }
+    }
 
     public class ItemFilterRegexList : ObservableCollection<ItemFilterRegex> 
     {
@@ -122,7 +128,7 @@ namespace Rawr
                 if (Parent == null)
                 {
                     ItemFilter.OtherEnabled = value.GetValueOrDefault(false);
-                    Parent.UpdateEnabled(null);
+                    //Parent.UpdateEnabled(null);
                 }
                 else Parent.OtherRegexEnabled = value.GetValueOrDefault(false);
                 OnEnabledChanged(true);
@@ -432,10 +438,11 @@ namespace Rawr
             writer.Close();
         }
 
-        private static bool isLoading;
+        public static bool IsLoading { get; set; }
+
         public static void Load(TextReader reader)
         {
-            isLoading = true;
+            IsLoading = true;
             try
             {
                 System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemFilterData));
@@ -446,7 +453,7 @@ namespace Rawr
             {
                 data = new ItemFilterData();
             }
-            isLoading = false;
+            IsLoading = false;
             ItemCache.OnItemsChanged();
         }
         #endregion
@@ -467,7 +474,7 @@ namespace Rawr
         public void OnEnabledChanged(bool orginator)
         {
             OnPropertyChanged("Enabled");
-            if (orginator && !isLoading) ItemCache.OnItemsChanged();
+            if (orginator && !IsLoading) ItemCache.OnItemsChanged();
         }
 
         #region INotifyPropertyChanged Members

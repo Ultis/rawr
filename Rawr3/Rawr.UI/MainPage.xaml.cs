@@ -102,6 +102,11 @@ namespace Rawr.UI
 
                     character_ClassChanged(this, EventArgs.Empty);
 
+                    if (character.LoadItemFilterEnabledOverride())
+                    {
+                        ItemCache.OnItemsChanged();
+                    }
+
 					Character.IsLoading = false;
                     character_CalculationsInvalidated(this, EventArgs.Empty);
 
@@ -296,7 +301,10 @@ namespace Rawr.UI
         {
             Character.InvalidateItemInstances();
 			Character.OnCalculationsInvalidated();
-            ComparisonGraph.UpdateGraph();
+            if (!Character.IsLoading)
+            {
+                ComparisonGraph.UpdateGraph();
+            }
         }
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)

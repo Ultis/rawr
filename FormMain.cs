@@ -87,10 +87,6 @@ namespace Rawr
 			_statusForm = new Status();
 			Application.DoEvents();
 
-            // splash screen is up, start loading files
-            //Buff.LoadBuffs();
-            //Enchant.LoadEnchants();
-
 			Version version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version;
 			_formatWindowTitle = string.Format(_formatWindowTitle, version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString());
 
@@ -157,15 +153,6 @@ namespace Rawr
             ToolStripDropDown dropDown = new ToolStripDropDown();
             dropDown.Items.Add(new ToolStripControlHost(itemFilterTreeView));
             toolStripDropDownButtonFilter.DropDown = dropDown;
-
-            // trigger background compilation of filter regex
-            ItemFilterRegex.RegexCompiled = true;
-
-            // save files in background
-            ThreadPool.QueueUserWorkItem((object state) => {
-                Buff.SaveBuffs();
-                Enchant.SaveEnchants();
-            });
 		}
 
 		private bool _checkForUpdatesEnabled = true;
@@ -266,6 +253,11 @@ namespace Rawr
 						comboBoxClass.Text = Character.Class.ToString();
 						_character_ClassChanged(null, null);
 					}
+                    if (_character.LoadItemFilterEnabledOverride())
+                    {
+                        itemFilterTreeView.GenerateNodes();
+                        ItemCache.OnItemsChanged();
+                    }
 
                     //if (_itemComparison != null && !_itemComparison.IsDisposed)
                     //{
@@ -667,6 +659,19 @@ namespace Rawr
 			_splash.Close();
 			_splash.Dispose();
             SetTitle();
+
+            // reset filter regex
+            ItemFilterRegex.RegexCompiled = true;
+
+            // compile regex and save files in background
+            ThreadPool.QueueUserWorkItem((object state) =>
+            {
+                Thread.Sleep(1000); // wait a bit while windows are still drawing so it doesn't look laggy
+
+                ItemFilter.Compile();
+                Buff.SaveBuffs();
+                Enchant.SaveEnchants();
+            });
 
             if (!Properties.GeneralSettings.Default.SeenRawr3Note)
             {
@@ -1929,21 +1934,35 @@ Please remember that it's still a beta, though, so lots of things are likely to 
         private void EnsureItemsLoaded(string[] ids)
         {
             List<Item> items = new List<Item>();
+            bool cacheChanged = false;
             for (int i = 0; i < ids.Length; i++)
             {
                 StatusMessaging.UpdateStatus("Update Item Cache", string.Format("Checking Item Cache for Definitions - {0} of {1}", i, ids.Length));
                 string id = ids[i];
                 if (id != null)
                 {
-                    if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
+                    if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;                    
                     string[] s = id.Split('.');
-                    Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, false);
+                    Item newItem = null;
+                    if (!ItemCache.ContainsItemId(int.Parse(s[0])))
+                    {
+                        newItem = Item.LoadFromId(int.Parse(s[0]), false, false, false);
+                        cacheChanged = true;
+                    }
                     if (s.Length >= 4)
                     {
                         Item gem;
-                        if (s[1] != "*" && s[1] != "0") gem = Item.LoadFromId(int.Parse(s[1]), false, false, false);
-                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, false);
-                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, false);
+                        for (int g = 1; g <= 3; g++)
+                        {
+                            if (s[g] != "*" && s[g] != "0")
+                            {
+                                if (!ItemCache.ContainsItemId(int.Parse(s[g])))
+                                {
+                                    gem = Item.LoadFromId(int.Parse(s[g]), false, false, false);
+                                    cacheChanged = true;
+                                }
+                            }
+                        }
                     }
                     if (newItem != null)
                     {
@@ -1953,7 +1972,10 @@ Please remember that it's still a beta, though, so lots of things are likely to 
             }
             StatusMessaging.UpdateStatusFinished("Update Item Cache");
             ItemIcons.CacheAllIcons(items.ToArray());
-            ItemCache.OnItemsChanged();
+            if (cacheChanged)
+            {
+                ItemCache.OnItemsChanged();
+            }
         }
 
         private void BatchToolsToolStripMenuItem6_Click(object sender, EventArgs e)

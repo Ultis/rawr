@@ -20,6 +20,13 @@ namespace Rawr
 #endif
     {
     }
+
+    public class ItemFilterEnabledOverride
+    {
+        public string Name { get; set; }
+        public bool Enabled { get; set; }
+        public List<ItemFilterEnabledOverride> SubFilterOverride { get; set; }
+    }
     
     public class ItemFilterRegex
     {
@@ -81,31 +88,28 @@ namespace Rawr
             }
             set
             {
-                regexCompiled = value;
-#if !SILVERLIGHT
-                if (ItemFilter.data != null)
+                if (regexCompiled != value)
                 {
-                    foreach (var regex in ItemFilter.data.RegexList)
+                    regexCompiled = value;
+#if !SILVERLIGHT
+                    if (ItemFilter.FilterList != null)
                     {
-                        regex.QueueRegexRecreate();
+                        foreach (var regex in ItemFilter.FilterList)
+                        {
+                            regex.ResetRegex();
+                        }
                     }
-                }
 #endif
+                }
             }
         }
 
-        private void QueueRegexRecreate()
+        private void ResetRegex()
         {
-            ThreadPool.QueueUserWorkItem((object state) =>
-                {
-                    ItemFilterRegex itemFilter = state as ItemFilterRegex;
-                    // recreate regex
-                    itemFilter._regex = null;
-                    Regex regex = itemFilter.Regex;
-                }, this);
+            _regex = null;
             foreach (var regex in RegexList)
             {
-                regex.QueueRegexRecreate();
+                regex.ResetRegex();
             }
         }
 
@@ -217,7 +221,7 @@ namespace Rawr
 
     public static class ItemFilter
     {
-        internal static ItemFilterData data = new ItemFilterData();
+        private static ItemFilterData data = new ItemFilterData();
 
         /// <summary>
         /// Returns a list that can be used to set relevant item types list. Call ItemCache.OnItemsChanged()
@@ -234,9 +238,9 @@ namespace Rawr
             return list;
         }
 
-        public static ItemFilterRegexList RegexList { get { return data.RegexList; } }
+        public static ItemFilterRegexList FilterList { get { return data.RegexList; } }
 
-        public static bool OtherRegexEnabled {
+        public static bool OtherEnabled {
             get { return data.OtherRegexEnabled; }
             set { data.OtherRegexEnabled = value; }
         }
@@ -266,7 +270,7 @@ namespace Rawr
                 }
                 else
                 {
-                    added = OtherRegexEnabled;
+                    added = OtherEnabled;
                 }
                 if (added)
                 {
@@ -282,6 +286,8 @@ namespace Rawr
             }
             return false;
         }
+
+        public static bool IsLoading { get; set; }
 
 #if SILVERLIGHT
         public static void Save(TextWriter writer)
@@ -305,6 +311,15 @@ namespace Rawr
             }
         } 
 #else
+        public static void Compile()
+        {
+            //Console.WriteLine("Compile started");
+            // the only way to get full jit is to exercise all code paths which will only
+            // happen on actual data, so simulate item cache reset
+            ItemCache.Instance.GetRelevantItemsInternal(Calculations.Instance);
+            //Console.WriteLine("Compile ended");
+        }
+
         public static void Save(string fileName)
         {
             using (StreamWriter writer = new StreamWriter(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName), false, Encoding.UTF8))

@@ -31,14 +31,14 @@ namespace Rawr
         {
             Nodes.Clear();
             CheckBoxes = !EditMode;
-            foreach (ItemFilterRegex regex in ItemFilter.RegexList)
+            foreach (ItemFilterRegex regex in ItemFilter.FilterList)
             {
                 Nodes.Add(GetNode(regex));
             }
             if (!EditMode)
             {
                 TreeNode otherNode = new TreeNode("Other");
-                otherNode.Checked = ItemFilter.OtherRegexEnabled;
+                otherNode.Checked = ItemFilter.OtherEnabled;
                 Nodes.Add(otherNode);
             }
         }
@@ -107,7 +107,7 @@ namespace Rawr
                     if (node.Parent == null)
                     {
                         // this is the global other
-                        ItemFilter.OtherRegexEnabled = node.Checked;
+                        ItemFilter.OtherEnabled = node.Checked;
                     }
                     else
                     {

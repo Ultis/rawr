@@ -32,7 +32,7 @@ namespace Rawr
         {
             ItemFilterRegex regex = new ItemFilterRegex();
             TreeNode node = itemFilterTreeView.GetNode(regex);
-            ItemFilter.RegexList.Add(regex);
+            ItemFilter.FilterList.Add(regex);
             itemFilterTreeView.Nodes.Add(node);
             itemFilterTreeView.SelectedNode = node;
         }
@@ -58,8 +58,8 @@ namespace Rawr
             {
                 itemFilterTreeView.Nodes.RemoveAt(index);
                 itemFilterTreeView.Nodes.Insert(index - 1, node);
-                ItemFilter.RegexList.RemoveAt(index);
-                ItemFilter.RegexList.Insert(index - 1, regex);
+                ItemFilter.FilterList.RemoveAt(index);
+                ItemFilter.FilterList.Insert(index - 1, regex);
             }
             else
             {
@@ -82,8 +82,8 @@ namespace Rawr
             {
                 itemFilterTreeView.Nodes.RemoveAt(index);
                 itemFilterTreeView.Nodes.Insert(index + 1, node);
-                ItemFilter.RegexList.RemoveAt(index);
-                ItemFilter.RegexList.Insert(index + 1, regex);
+                ItemFilter.FilterList.RemoveAt(index);
+                ItemFilter.FilterList.Insert(index + 1, regex);
             }
             else
             {
@@ -105,7 +105,7 @@ namespace Rawr
             if (parent == null)
             {
                 itemFilterTreeView.Nodes.RemoveAt(index);
-                ItemFilter.RegexList.RemoveAt(index);
+                ItemFilter.FilterList.RemoveAt(index);
             }
             else
             {

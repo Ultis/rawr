@@ -136,41 +136,6 @@ namespace Rawr //O O . .
         public string _projectileBag { get { return GetGemmedId(CharacterSlot.ProjectileBag); } set { SetGemmedId(CharacterSlot.ProjectileBag, value); } }
         #endregion
 
-        // fix this to translate into new format if we want to preserve backward compatibility for character files
-        //[XmlElement("ExtraWristSocket")]
-        //public string _extraWristSocket { get { return _item[(int)CharacterSlot.ExtraWristSocket]; } set { _item[(int)CharacterSlot.ExtraWristSocket] = value; } }
-        //[XmlElement("ExtraHandsSocket")]
-        //public string _extraHandsSocket { get { return _item[(int)CharacterSlot.ExtraHandsSocket]; } set { _item[(int)CharacterSlot.ExtraHandsSocket] = value; } }
-        //[XmlElement("ExtraWaistSocket")]
-        //public string _extraWaistSocket { get { return _item[(int)CharacterSlot.ExtraWaistSocket]; } set { _item[(int)CharacterSlot.ExtraWaistSocket] = value; } }
-        //[XmlElement("HeadEnchant")]
-        //public int _headEnchant { get { return _itemEnchant[(int)CharacterSlot.Head]; } set { _itemEnchant[(int)CharacterSlot.Head] = value; } }
-        //[XmlElement("ShouldersEnchant")]
-        //public int _shouldersEnchant { get { return _itemEnchant[(int)CharacterSlot.Shoulders]; } set { _itemEnchant[(int)CharacterSlot.Shoulders] = value; } }
-        //[XmlElement("BackEnchant")]
-        //public int _backEnchant { get { return _itemEnchant[(int)CharacterSlot.Back]; } set { _itemEnchant[(int)CharacterSlot.Back] = value; } }
-        //[XmlElement("ChestEnchant")]
-        //public int _chestEnchant { get { return _itemEnchant[(int)CharacterSlot.Chest]; } set { _itemEnchant[(int)CharacterSlot.Chest] = value; } }
-        //[XmlElement("WristEnchant")]
-        //public int _wristEnchant { get { return _itemEnchant[(int)CharacterSlot.Wrist]; } set { _itemEnchant[(int)CharacterSlot.Wrist] = value; } }
-        //[XmlElement("HandsEnchant")]
-        //public int _handsEnchant { get { return _itemEnchant[(int)CharacterSlot.Hands]; } set { _itemEnchant[(int)CharacterSlot.Hands] = value; } }
-        //[XmlElement("LegsEnchant")]
-        //public int _legsEnchant { get { return _itemEnchant[(int)CharacterSlot.Legs]; } set { _itemEnchant[(int)CharacterSlot.Legs] = value; } }
-        //[XmlElement("FeetEnchant")]
-        //public int _feetEnchant { get { return _itemEnchant[(int)CharacterSlot.Feet]; } set { _itemEnchant[(int)CharacterSlot.Feet] = value; } }
-        //[XmlElement("Finger1Enchant")]
-        //public int _finger1Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger1]; } set { _itemEnchant[(int)CharacterSlot.Finger1] = value; } }
-        //[XmlElement("Finger2Enchant")]
-        //public int _finger2Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger2]; } set { _itemEnchant[(int)CharacterSlot.Finger2] = value; } }
-        //[XmlElement("MainHandEnchant")]
-        //public int _mainHandEnchant { get { return _itemEnchant[(int)CharacterSlot.MainHand]; } set { _itemEnchant[(int)CharacterSlot.MainHand] = value; } }
-        //[XmlElement("OffHandEnchant")]
-        //public int _offHandEnchant { get { return _itemEnchant[(int)CharacterSlot.OffHand]; } set { _itemEnchant[(int)CharacterSlot.OffHand] = value; } }
-        //[XmlElement("RangedEnchant")]
-        //public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
-        //[XmlElement("Talents")]
-        //public TalentTree _talents = new TalentTree();
 		[XmlElement("AvailableItems")]
 		public List<string> _availableItems;
 		[XmlElement("CurrentModel")]
@@ -178,6 +143,8 @@ namespace Rawr //O O . .
 		[XmlElement("EnforceMetagemRequirements")]
 		public bool _enforceMetagemRequirements = false;
 		public int Level { get { return 80; } }
+
+        #region Gemming Templates
         public List<GemmingTemplate> CustomGemmingTemplates { get; set; }
         public List<GemmingTemplate> GemmingTemplateOverrides { get; set; }
 
@@ -249,6 +216,96 @@ namespace Rawr //O O . .
             }
             gemmingTemplateModel = CurrentModel;
         }
+        #endregion
+
+        #region Item Filter
+        public List<ItemFilterEnabledOverride> ItemFilterEnabledOverride { get; set; }
+
+        private void SaveItemFilterEnabledOverride()
+        {
+            ItemFilterEnabledOverride = new List<ItemFilterEnabledOverride>();
+            foreach (var itemFilter in ItemFilter.FilterList)
+            {
+                SaveItemFilterEnabledOverride(itemFilter, ItemFilterEnabledOverride);
+            }
+            ItemFilterEnabledOverride.Add(new ItemFilterEnabledOverride() { Name = "Other", Enabled = ItemFilter.OtherEnabled });
+        }
+
+        private void SaveItemFilterEnabledOverride(ItemFilterRegex itemFilter, List<ItemFilterEnabledOverride> list)
+        {
+            ItemFilterEnabledOverride filterOverride = new ItemFilterEnabledOverride();
+            filterOverride.Name = itemFilter.Name;
+            filterOverride.Enabled = itemFilter.Enabled;
+            if (itemFilter.RegexList.Count > 0)
+            {
+                filterOverride.SubFilterOverride = new List<ItemFilterEnabledOverride>();
+                foreach (var subFilter in itemFilter.RegexList)
+                {
+                    SaveItemFilterEnabledOverride(subFilter, filterOverride.SubFilterOverride);
+                }
+                filterOverride.SubFilterOverride.Add(new ItemFilterEnabledOverride() { Name = "Other", Enabled = itemFilter.OtherRegexEnabled });                
+            }
+            list.Add(filterOverride);
+        }
+
+        public bool LoadItemFilterEnabledOverride()
+        {
+            bool triggerEvent = false;
+            if (ItemFilterEnabledOverride == null || ItemFilterEnabledOverride.Count == 0) return false;
+            ItemFilter.IsLoading = true;
+            foreach (var filterOverride in ItemFilterEnabledOverride)
+            {
+                if (filterOverride.Name != "Other")
+                {
+                    LoadItemFilterEnabledOverride(filterOverride, ItemFilter.FilterList, ref triggerEvent);
+                }
+                else
+                {
+                    if (ItemFilter.OtherEnabled != filterOverride.Enabled)
+                    {
+                        ItemFilter.OtherEnabled = (bool)filterOverride.Enabled;
+                        triggerEvent = true;
+                    }
+                }
+            }
+            ItemFilter.IsLoading = false;
+            return triggerEvent;
+        }
+
+        private void LoadItemFilterEnabledOverride(ItemFilterEnabledOverride filterOverride, ItemFilterRegexList list, ref bool triggerEvent)
+        {
+            foreach (ItemFilterRegex itemFilter in list)
+            {
+                if (itemFilter.Name == filterOverride.Name)
+                {
+                    if (itemFilter.Enabled != filterOverride.Enabled)
+                    {
+                        itemFilter.Enabled = filterOverride.Enabled;
+                        triggerEvent = true;
+                    }
+                    if (filterOverride.SubFilterOverride != null && filterOverride.SubFilterOverride.Count > 0)
+                    {
+                        foreach (var subOverride in filterOverride.SubFilterOverride)
+                        {
+                            if (subOverride.Name != "Other")
+                            {
+                                LoadItemFilterEnabledOverride(subOverride, itemFilter.RegexList, ref triggerEvent);
+                            }
+                            else
+                            {
+                                if (itemFilter.OtherRegexEnabled != subOverride.Enabled)
+                                {
+                                    itemFilter.OtherRegexEnabled = (bool)subOverride.Enabled;
+                                    triggerEvent = true;
+                                }
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+        #endregion
 
         public string CalculationToOptimize { get; set; }
 
@@ -2108,6 +2165,7 @@ namespace Rawr //O O . .
         {
             SerializeCalculationOptions();
             SaveGemmingTemplateOverrides();
+            SaveItemFilterEnabledOverride();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
@@ -2119,6 +2177,7 @@ namespace Rawr //O O . .
         {
 			SerializeCalculationOptions();
             SaveGemmingTemplateOverrides();
+            SaveItemFilterEnabledOverride();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
             if(ArmoryPets!=null)
                 ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
