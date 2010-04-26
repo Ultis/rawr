@@ -25,6 +25,7 @@ namespace Rawr.UI
 			_maxWidth = maxWidth;
 		}
 
+        public bool Equipped { get { return _calc.Equipped; } }
 		public ItemInstance ItemInstance { get { return _calc.ItemInstance; } }
 		public Item Item { get { return _calc.Item; } }
 		public string Name { get { return _calc.Name; } }

@@ -79,7 +79,19 @@ namespace Rawr.UI
 			var filteredList = _list
 				.Where(listItem => listItem.Name.ToLower().Contains((Filter ?? string.Empty).ToLower()));
 			var sortedList = ApplySort(filteredList);
-			return sortedList.GetEnumerator();
+
+            Dictionary<int, int> countItem = new Dictionary<int, int>();
+            foreach (var itemCalculation in sortedList)
+            {
+                int itemId = (itemCalculation.ItemInstance == null ? itemCalculation.Item.Id : itemCalculation.ItemInstance.Id);
+                if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
+                if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
+                    itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
+                {
+                    yield return itemCalculation;
+                }
+            }
+			//return sortedList.GetEnumerator();
 		}
 
 		private IOrderedEnumerable<ItemListItem> ApplySort(IEnumerable<ItemListItem> filteredList)
