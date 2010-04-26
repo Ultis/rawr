@@ -422,9 +422,10 @@ namespace Rawr.DPSDK
                     RP += 10 + talents.Dirge * 2.5;
                     PS = false;
                 }
-                if (currentTime % MHFrequency == 0)
+                // Kavan: in Rawr3 MHFrequency can be 0 when still loading weapon data from armory, besides this doesn't do anything
+                /*if (currentTime % MHFrequency == 0)
                 {
-                }
+                }*/
                 if (FF % 3000 == 0 && FF >= 0)
                 {
                     occurence.FFTick++;
