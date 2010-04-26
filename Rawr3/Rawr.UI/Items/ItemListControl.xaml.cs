@@ -272,7 +272,7 @@ namespace Rawr.UI
 
         private void listBoxItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-			if (!_buildingListItems)
+            if (!_buildingListItems && ((ListBox)sender).SelectedItem != null)
 			{
 				try
 				{
