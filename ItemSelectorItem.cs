@@ -276,9 +276,19 @@ namespace Rawr
 
 						if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
 							g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
-						int gemCount = (_itemCalculation.Item.SocketColor1 == ItemSlot.None ? 0 : 1) +
-							(_itemCalculation.Item.SocketColor2 == ItemSlot.None ? 0 : 1) +
-								(_itemCalculation.Item.SocketColor3 == ItemSlot.None ? 0 : 1);
+						int gemCount;
+                        if (_itemCalculation.ItemInstance != null)
+                        {
+                            gemCount = (_itemCalculation.ItemInstance.Gem1Id == 0 ? 0 : 1) +
+                                (_itemCalculation.ItemInstance.Gem2Id == 0 ? 0 : 1) +
+                                    (_itemCalculation.ItemInstance.Gem3Id == 0 ? 0 : 1);
+                        }
+                        else
+                        {
+                            gemCount = (_itemCalculation.Item.SocketColor1 == ItemSlot.None ? 0 : 1) +
+                                (_itemCalculation.Item.SocketColor2 == ItemSlot.None ? 0 : 1) +
+                                    (_itemCalculation.Item.SocketColor3 == ItemSlot.None ? 0 : 1);
+                        }
 						if (IsEnchant)
 							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 								new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
@@ -286,7 +296,7 @@ namespace Rawr
 							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 								new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
 
-						if (_itemCalculation.Item.SocketColor1 != ItemSlot.None)
+						if ((_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem1Id != 0) || _itemCalculation.Item.SocketColor1 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor1)
 							{
@@ -309,7 +319,7 @@ namespace Rawr
 							gemCount--;
 						}
 
-						if (_itemCalculation.Item.SocketColor2 != ItemSlot.None)
+                        if ((_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem2Id != 0) || _itemCalculation.Item.SocketColor2 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor2)
 							{
@@ -332,7 +342,7 @@ namespace Rawr
 							gemCount--;
 						}
 
-						if (_itemCalculation.Item.SocketColor3 != ItemSlot.None)
+                        if ((_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem3Id != 0) || _itemCalculation.Item.SocketColor3 != ItemSlot.None)
 						{
 							switch (_itemCalculation.Item.SocketColor3)
 							{
