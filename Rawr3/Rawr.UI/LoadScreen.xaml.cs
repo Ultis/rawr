@@ -58,27 +58,35 @@ namespace Rawr.UI
                     StringWriter sw = new StringWriter();
                     info.Invoke(null, new object[] { sw });
 
-                    Stream writer = FileUtils.GetFileStream(kvp.Key, true);
-                    StringReader reader = new StringReader(sw.ToString());
-
-                    int READ_CHUNK = 1024 * 1024;
-                    int WRITE_CHUNK = 1024 * 1024;
-                    byte[] byteBuffer = new byte[READ_CHUNK];
-                    char[] charBuffer = new char[READ_CHUNK];
-                    while (true)
+                    try
                     {
-                        int read = reader.Read(charBuffer, 0, READ_CHUNK);
-                        if (read <= 0) break;
-                        int to_write = read;
-                        while (to_write > 0)
+                        Stream writer = FileUtils.GetFileStream(kvp.Key, true);
+                        StringReader reader = new StringReader(sw.ToString());
+
+                        int READ_CHUNK = 1024 * 1024;
+                        int WRITE_CHUNK = 1024 * 1024;
+                        byte[] byteBuffer = new byte[READ_CHUNK];
+                        char[] charBuffer = new char[READ_CHUNK];
+                        while (true)
                         {
-                            for (int i = 0; i < to_write; i++) byteBuffer[i] = (byte)charBuffer[i];
-                            writer.Write(byteBuffer, 0, Math.Min(to_write, WRITE_CHUNK));
-                            to_write -= Math.Min(to_write, WRITE_CHUNK);
+                            int read = reader.Read(charBuffer, 0, READ_CHUNK);
+                            if (read <= 0) break;
+                            int to_write = read;
+                            while (to_write > 0)
+                            {
+                                for (int i = 0; i < to_write; i++) byteBuffer[i] = (byte)charBuffer[i];
+                                writer.Write(byteBuffer, 0, Math.Min(to_write, WRITE_CHUNK));
+                                to_write -= Math.Min(to_write, WRITE_CHUNK);
+                            }
                         }
+                        writer.Close();
+                        reader.Close();
                     }
-                    writer.Close();
-                    reader.Close();
+                    catch (IsolatedStorageException)
+                    {
+                        // they removed permissions after it was started, just ignore it
+                        // next time they will start it they'll be asked for permissions again
+                    }
                 }
             }
         }
