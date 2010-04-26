@@ -761,9 +761,46 @@ namespace Rawr //O O . .
             }
         }
 
-        public bool WaistBlacksmithingSocketEnabled { get; set; }
-        public bool HandsBlacksmithingSocketEnabled { get; set; }
-        public bool WristBlacksmithingSocketEnabled { get; set; }
+        private bool waistBSSocket;
+        public bool WaistBlacksmithingSocketEnabled { 
+            get 
+            { 
+                return waistBSSocket; 
+            }            
+            set
+            {
+                waistBSSocket = value;
+                OnCalculationsInvalidated();
+            }
+        }
+
+        private bool handsBSSocket;
+        public bool HandsBlacksmithingSocketEnabled
+        {
+            get
+            {
+                return handsBSSocket;
+            }
+            set
+            {
+                handsBSSocket = value;
+                OnCalculationsInvalidated();
+            }
+        }
+
+        private bool wristBSSocket;
+        public bool WristBlacksmithingSocketEnabled 
+        {
+            get
+            {
+                return wristBSSocket;
+            }
+            set
+            {
+                wristBSSocket = value;
+                OnCalculationsInvalidated();
+            }
+        }
 
         private Profession _primaryProfession = Profession.None;
         public Profession PrimaryProfession { 

@@ -2283,7 +2283,6 @@ Please remember that it's still a beta, though, so lots of things are likely to 
             if (!_loadingCharacter && _character != null)
             {
                 Character.WristBlacksmithingSocketEnabled = checkBoxWristBlacksmithingSocket.Checked;
-                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -2292,7 +2291,6 @@ Please remember that it's still a beta, though, so lots of things are likely to 
             if (!_loadingCharacter && _character != null)
             {
                 Character.HandsBlacksmithingSocketEnabled = checkBoxHandsBlacksmithingSocket.Checked;
-                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -2301,7 +2299,6 @@ Please remember that it's still a beta, though, so lots of things are likely to 
             if (!_loadingCharacter && _character != null)
             {
                 Character.WaistBlacksmithingSocketEnabled = checkBoxWaistBlacksmithingSocket.Checked;
-                Character.OnCalculationsInvalidated();
             }
         }
 
