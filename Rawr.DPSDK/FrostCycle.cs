@@ -463,7 +463,8 @@ namespace Rawr.DPSDK
                     PS = false;
                     RP += 10 + talents.Dirge * 2.5;
                 }
-                if (currentTime % MHFrequency == 0)
+                // Kavan: in Rawr3 MHFrequency can be 0 when still loading weapon data from armory
+                if (MHFrequency > 0 && currentTime % MHFrequency == 0)
                 {
                     KMApplicationProbability += (1 - KMApplicationProbability) * KMChance;
                 }
