@@ -83,7 +83,7 @@ namespace Rawr.Elemental
 
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts);
-            rot = e.getPriorityRotation(calcOpts.rotationType);
+            rot = e.getPriorityRotation(calcOpts.RotationType);
             // WITH PROCS
             int nPasses = 2, k;
             for (k = 0; k < nPasses; k++)
@@ -91,7 +91,7 @@ namespace Rawr.Elemental
                 procStats = DoSpecialEffects(character, stats, rot, calcOpts.FightDuration);
                 //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
                 e.Update(stats, procStats, talents, calcOpts);
-                rot = e.getPriorityRotation(calcOpts.rotationType);
+                rot = e.getPriorityRotation(calcOpts.RotationType);
             }
 
             // Thunderstorm usage
