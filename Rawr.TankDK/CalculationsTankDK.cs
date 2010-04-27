@@ -791,12 +791,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             #region ***** Threat Rating *****
             float fRotDuration = ct.calcOpts.m_Rotation.getRotationDuration();
-            float DSperSec = ct.calcOpts.m_Rotation.DeathStrike / fRotDuration;
+            float DSperSec = 0;
             float fThreatTotal = 0f;
             float fThreatPS = 0f;
 
             fThreatTotal = ct.GetTotalThreat();
-            fThreatPS = fThreatTotal / fRotDuration;
             if (opts.bExperimental)
             {
                 // Setup for new combat table using the new ability objects.
@@ -805,6 +804,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 calcs.RotationTime = ct2.m_RotationDuration;
                 fThreatPS = ct2.m_TPS;
                 calcs.DPS = ct2.m_DPS;
+                DSperSec = ct2.m_Rotation.DeathStrike / fRotDuration;
+            }
+            else if (fRotDuration > 0)
+            {
+                calcs.RotationTime = fRotDuration * 1000;
+                DSperSec = ct.calcOpts.m_Rotation.DeathStrike / fRotDuration;
+                fThreatPS = fThreatTotal / fRotDuration;
             }
 
             calcs.Threat = fThreatPS;
@@ -838,6 +844,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 calcs.Death = ct2.m_DeathRunes;
                 calcs.RP = ct2.m_RunicPower;
                 calcs.TotalThreat = (int)ct2.TotalThreat;
+            }
+            else
+            {
+                calcs.Blood = ct.m_BloodRunes;
+                calcs.Frost = ct.m_FrostRunes;
+                calcs.Unholy = ct.m_UnholyRunes;
+                calcs.Death = ct.m_DeathRunes;
             }
 
             // Threat buffs.
@@ -1054,7 +1067,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fSegmentMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
             fSegmentMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
             // Health Returned by DS and other sources:
-            fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health) * DSperSec, stats.HealingReceivedMultiplier);
+            if (DSperSec > 0)
+                fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health) * DSperSec, stats.HealingReceivedMultiplier);
             fTotalMitigation += fSegmentMitigation;
 
             calcs.Mitigation = fTotalMitigation;

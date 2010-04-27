@@ -13,7 +13,7 @@ namespace Rawr.TankDK {
         public float m_fPhysicalHaste = 0f;
 //        public Stats m_FullStats = new Stats();
         
-        public Type curRotationType = Type.Frost;
+        public Type curRotationType;
         
         public float curRotationDuration = 0f;  // rotation duration in seconds
 
@@ -48,9 +48,12 @@ namespace Rawr.TankDK {
         public Boolean fourT7 = false;
         public Boolean GlyphofIT = false;
         public Boolean GlyphofFS = false;
-        public Boolean managedRP = false;
+        public Boolean managedRP = true;
         public float GCDTime;
         public float RP;
+        public float[] AbilityCost = new float[4];
+
+        public DeathKnightTalents tTalents;
 
         public Rotation( ) 
         {
@@ -59,8 +62,10 @@ namespace Rawr.TankDK {
 
         public Rotation(DeathKnightTalents t)
         {
-            if (t != null)
-                this.GetRotationByTalents(t);
+            tTalents = t;
+            int iHash = 0;
+            if (tTalents != null)
+                this.GetRotationByTalents(tTalents);
             else
                 this.setRotation(this.curRotationType); 
         }
@@ -167,13 +172,118 @@ namespace Rawr.TankDK {
             return RP;
         }
 
-        public float getRotationDuration() { return getGCDTime(); }
+        public float getRotationDuration() { return Math.Max(getGCDTime(), getRuneTime()); }
         public float getGCDTime() {
-            GCDTime = GetGCDHasted() * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
-                BloodStrike + HeartStrike);
-            GCDTime += GetGCDHasted() * (DeathCoil + IcyTouch + HowlingBlast + HornOfWinter + DeathNDecay + BloodBoil + Pestilence);
+            GCDTime = GetGCDHasted() * (
+                PlagueStrike // U
+                + ScourgeStrike // FU
+                + FrostStrike // RP
+                + Obliterate // FU 
+                + DeathStrike // FU
+                + BloodStrike // B
+                + HeartStrike // B
+                + DeathCoil // RP
+                + IcyTouch // F
+                + HowlingBlast // FU
+                + HornOfWinter // none
+                + DeathNDecay // BFU
+                + BloodBoil // B
+                + Pestilence // B 
+                );
             return GCDTime;
         }
+
+        public float getRuneTime()
+        {
+            float TimeSpentRuneCDs = 0;
+            AbilityCost[(int)DKCostTypes.Frost] = (
+                ScourgeStrike // FU
+                + Obliterate // FU 
+                + DeathStrike // FU
+                + IcyTouch // F
+                + HowlingBlast // FU
+                + DeathNDecay // BFU
+                );
+            AbilityCost[(int)DKCostTypes.UnHoly] = (
+                PlagueStrike // U
+                + ScourgeStrike // FU
+                + Obliterate // FU 
+                + DeathStrike // FU
+                + HowlingBlast // FU
+                + DeathNDecay // BFU
+                );
+            AbilityCost[(int)DKCostTypes.Blood] = (
+                + BloodStrike // B
+                + HeartStrike // B
+                + DeathNDecay // BFU
+                + BloodBoil // B
+                + Pestilence // B 
+                );
+            // Death Runes
+            if (null != tTalents)
+            {
+                if (tTalents.BloodOfTheNorth > 0)
+                {
+                    AbilityCost[(int)DKCostTypes.Death] = (BloodStrike
+                        + Pestilence) * (tTalents.BloodOfTheNorth / 3);
+                }
+                if (tTalents.Reaping > 0)
+                {
+                    AbilityCost[(int)DKCostTypes.Death] = (BloodStrike
+                        + Pestilence) * (tTalents.Reaping / 3);
+                }
+                if (tTalents.DeathRuneMastery > 0)
+                {
+                    AbilityCost[(int)DKCostTypes.Death] += (DeathStrike
+                        + Obliterate) * 2 * (tTalents.DeathRuneMastery / 3);
+                }
+
+                SpendDeathRunes(AbilityCost, 0);
+            }
+
+            float MaxRunes = Math.Max(AbilityCost[(int)DKCostTypes.Frost], AbilityCost[(int)DKCostTypes.Blood]);
+            MaxRunes = Math.Max(MaxRunes, AbilityCost[(int)DKCostTypes.UnHoly]);
+
+            // Each rune requires 10 secs. But there are 2 of them.
+            TimeSpentRuneCDs = (MaxRunes * 10 / 2);
+
+            return TimeSpentRuneCDs;
+        }
+
+        /// <summary>
+        /// Pass in the AblityCost[] to process the DeathRunes
+        /// Stolen from CombatTable2
+        /// </summary>
+        /// <param name="AbilityCost"></param>
+        public void SpendDeathRunes(float[] AbilityCost, int DRSpent)
+        {
+            // Need to figure out how to factor in Death Runes
+            // Since each death rune replaces any other rune on the rotation,
+            // for each death rune, cut the cost of the highest other rune by 1.
+            // Do not run this if there are no DeathRunes to spend.
+            if (Math.Abs(AbilityCost[(int)DKCostTypes.Death]) > DRSpent)
+            {
+                int iHighestCostAbilityIndex = 0;
+                float fPreviousCostValue = 0;
+                for (int t = 0; t < (int)DKCostTypes.Death; t++)
+                {
+                    // Is the cost higher than our previous checked value.
+                    if (AbilityCost[t] > fPreviousCostValue)
+                    {
+                        // If so, save off the index of that ability.
+                        iHighestCostAbilityIndex = t;
+                    }
+                    fPreviousCostValue = AbilityCost[t];
+                }
+                // After going through the full list, spend a death rune and 
+                // then iterate through that list again. 
+                AbilityCost[iHighestCostAbilityIndex] -= 1;
+                // increment the death runes.
+                DRSpent++;
+                SpendDeathRunes(AbilityCost, DRSpent);
+            }
+        }
+
         /// <summary>
         /// How fast is the GCD with the current character's stats?
         /// </summary>
@@ -188,6 +298,7 @@ namespace Rawr.TankDK {
         // Rotations set by Skeleton Jack's 3.2 build and rotation notes.
         public void setRotation(Type t) {
             curRotationType = t;
+            managedRP = false;
             switch (curRotationType) {
                 case Type.Blood:
                     numDisease = 2f;
@@ -261,21 +372,27 @@ namespace Rawr.TankDK {
             }
         }
 
+        /// <summary>
+        /// Get the type of rotation we should be using based on talents.
+        /// </summary>
+        /// <param name="t"></param>
         public void GetRotationByTalents(DeathKnightTalents t)
         {
-            // Frost
-            if (t.HowlingBlast > 0)
+            managedRP = true;
+            #region Frost Rotations
+            if (t.HowlingBlast > 0 || t.FrostStrike > 0)
             {
                 curRotationType = Type.Frost;
 
-                // Default Frost Rotation.
                 numDisease = 2f;
                 diseaseUptime = 100f;
                 DeathCoil = 0f;
                 IcyTouch = 2f;
                 PlagueStrike = 2f;
                 ScourgeStrike = 0f;
-                FrostStrike = 1f;
+                FrostStrike = 0f;
+                if (t.FrostStrike > 0)
+                    FrostStrike = 1f;
                 HowlingBlast = 0f;
                 Obliterate = 3f;
                 BloodStrike = 2f;
@@ -283,24 +400,26 @@ namespace Rawr.TankDK {
                 DeathStrike = 0f;
                 RuneStrike = 3f;
                 Pestilence = 0f;
-                curRotationDuration = 20f;
+                curRotationDuration = 15f;
 
-                if (t.GlyphofHowlingBlast)
+                if (t.GlyphofHowlingBlast && t.HowlingBlast > 0)
                 {
                     // Single Disease Glyphed HB rotation
+                    // Means that we start w/ HB for the FF hit, and factor in PS later, while HB is on CD.
                     numDisease = 1f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
                     HowlingBlast = 1f;
                 }
-                if (t.Rime > 0)
+                if (t.Rime > 0 && t.HowlingBlast > 0)
                 {
                     // Additional HB proc based on Rime.
                     HowlingBlast += .5f;
                 }
             }
+            #endregion
+            #region Blood Rotations
             else if (t.HeartStrike > 0)
-            // Blood
             {
                 curRotationType = Type.Blood;
 
@@ -318,9 +437,11 @@ namespace Rawr.TankDK {
                 HeartStrike = 6f;
                 Pestilence = 0f;
                 RuneStrike = 2f;
-                curRotationDuration = 20f;
+                curRotationDuration = 15f;
             }
-            else if (t.EbonPlaguebringer > 0)
+            #endregion
+            #region Unholy Rotations
+            else if (t.EbonPlaguebringer > 0 || t.ScourgeStrike > 0)
             // UnHoly
             {
                 curRotationType = Type.Unholy;
@@ -330,21 +451,48 @@ namespace Rawr.TankDK {
                 DeathCoil = 0f;
                 IcyTouch = 1f;
                 PlagueStrike = 1f;
-                ScourgeStrike = 4f;
+                ScourgeStrike = 0f;
+                if (t.ScourgeStrike > 0)
+                    ScourgeStrike = 4f;
+                else
+                {
+                    DeathStrike = 4f;
+                }
                 FrostStrike = 0f;
                 HowlingBlast = 0f;
                 Obliterate = 0f;
                 BloodStrike = 2f;
                 HeartStrike = 0f;
                 curRotationDuration = 20f;
-                DeathStrike = 0f;
                 RuneStrike = 2f;
                 Pestilence = 0f;
             }
+            #endregion
             else
             // Unknown/custom build.
             {
+                managedRP = false;
+                // if talents are all 0, then setup a basic rotation:
                 curRotationType = Type.Custom;
+                // we're going to just spam a very basic rotation.
+                // IT-PS-BS-BS-DS-DS-RP
+                // Need to find a way to actually implement this properly.
+                numDisease = 2f;
+                diseaseUptime = 100f;
+                IcyTouch = 2f;
+                PlagueStrike = 2f;
+                BloodStrike = 2f;
+                Obliterate = 0f;
+                DeathStrike = 2f;
+                RuneStrike = 3f;
+                Pestilence = 0f;
+
+                DeathCoil = 2f;
+                ScourgeStrike = 0f;
+                FrostStrike = 0f;
+                HowlingBlast = 0f;
+                HeartStrike = 0f;
+                curRotationDuration = 15f;
             }
         }
 

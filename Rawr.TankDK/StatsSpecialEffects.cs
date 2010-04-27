@@ -106,7 +106,7 @@ namespace Rawr.TankDK
                             trigger += rRotation.curRotationDuration / rRotation.HowlingBlast;
                         break;
                 }
-                if (!float.IsInfinity(trigger))
+                if (!float.IsInfinity(trigger) && !float.IsNaN(trigger))
                 {
 /*                    if ((trigger < duration) && (effect.MaxStack > 1))
                     {
@@ -121,7 +121,6 @@ namespace Rawr.TankDK
   //                  }
                 }
             }
-
             return statsAverage;
         }
     }

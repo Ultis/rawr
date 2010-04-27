@@ -19,11 +19,12 @@ namespace Rawr.TankDK
         private Stats m_Stats;
         private CharacterCalculationsTankDK m_Calcs;
         private CalculationOptionsTankDK m_Opts;
+        public Rotation m_Rotation;
         #endregion
 
         // TODO: Find a way to balance 2h vs. DW.
         Weapon MH, OH;
-        List<AbilityDK_Base> ml_Rot;
+        public List<AbilityDK_Base> ml_Rot;
 
         #region Output Values
         private float _TotalDamage;
@@ -47,14 +48,20 @@ namespace Rawr.TankDK
         {
             get
             {
-                return _TotalThreat / (m_RotationDuration / 1000);
+                float tps = 0;
+                if (m_RotationDuration > 0) 
+                    tps = _TotalThreat / (m_RotationDuration / 1000);
+                return tps;
             }
         }
         public float m_DPS // readonly
         {
             get
             {
-                return _TotalDamage / (m_RotationDuration / 1000);
+                float dps = 0;
+                if (m_RotationDuration > 0)
+                    dps = _TotalDamage / (m_RotationDuration / 1000);
+                return dps;
             }
         }
 
@@ -124,16 +131,17 @@ namespace Rawr.TankDK
             m_Stats = stats.Clone();
             m_Calcs = calcs;
             m_Opts = calcOpts;
+            m_Rotation = calcOpts.m_Rotation;
 
             //TODO: Handle Expertise
-            if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
+            if (m_Char.MainHand != null && m_Char.MainHand.Item.Type != ItemType.None)
             {
-                MH = new Weapon(c.MainHand.Item, stats, calcOpts, 0);
+                MH = new Weapon(m_Char.MainHand.Item, m_Stats, m_Opts, 0);
                 OH = null;
-                if (c.MainHand.Slot != ItemSlot.TwoHand)
+                if (m_Char.MainHand.Slot != ItemSlot.TwoHand)
                 {
-                    if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
-                        OH = new Weapon(c.OffHand.Item, stats, calcOpts, 0);
+                    if (m_Char.OffHand != null && m_Char.OffHand.Item.Type != ItemType.None)
+                        OH = new Weapon(m_Char.OffHand.Item, m_Stats, m_Opts, 0);
                 }
             }
             else
@@ -144,8 +152,18 @@ namespace Rawr.TankDK
 
             // BuildRotation();
 
+            // Checking the rotation:
+            if (m_Rotation.IcyTouch == 0
+                && m_Rotation.PlagueStrike == 0
+                && m_Rotation.BloodStrike == 0)
+            {
+                // Then this is probably a null rotation, and
+                // so let's build one?
+                m_Rotation = new Rotation(m_Char.DeathKnightTalents);
+            }
+
             // TODO: move this out of the constructor
-            CompileRotation(calcOpts.m_Rotation);
+            CompileRotation(m_Rotation);
         }
 
         /// <summary>
@@ -219,6 +237,10 @@ namespace Rawr.TankDK
                     {
                         _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.BloodOfTheNorth / 3);
                     }
+                    if (m_Char.DeathKnightTalents.Reaping > 0)
+                    {
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.Reaping / 3);
+                    }
                 }
             }
             if (Rot.HeartStrike > 0)
@@ -247,6 +269,10 @@ namespace Rawr.TankDK
                     if (m_Char.DeathKnightTalents.BloodOfTheNorth > 0)
                     {
                         _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.BloodOfTheNorth / 3);
+                    }
+                    if (m_Char.DeathKnightTalents.Reaping > 0)
+                    {
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.Reaping / 3);
                     }
                 }
             }
@@ -383,7 +409,6 @@ namespace Rawr.TankDK
 
             int maxCD = Math.Max(BloodCD, FrostCD);
             maxCD = Math.Max(maxCD, UnHolyCD);
-            maxCD = Math.Max(maxCD, DeathCD);
 
             // This sums up all Cooldowntime
             // Not really the best way of handling this since cooldowns can overlap.
@@ -401,13 +426,13 @@ namespace Rawr.TankDK
             // Also get a swing count to balance out the RuneStrikes.
             bool bAvailableWhiteSwings = false;
             float fWhiteDamage = 0;
-            if (fWhiteSwings < Rot.RuneStrike)
+            if (0 < fWhiteSwings && fWhiteSwings < Rot.RuneStrike)
             {
                 // There's not enough time to get in all the RS's we have slated for
                 bAvailableWhiteSwings = false;
                 m_iRSState |= (int)RSState.TimeStarved;
             }
-            else
+            else if (0 < fWhiteSwings)
             {
                 // Since there are spare white swings, let's figure out how much white damage is done
                 bAvailableWhiteSwings = true;

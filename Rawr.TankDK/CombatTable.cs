@@ -13,6 +13,35 @@ namespace Rawr.TankDK
         public Stats stats;
         public CalculationOptionsTankDK calcOpts;
 
+        public int m_BloodRunes
+        {
+            get
+            {
+                return (int)this.calcOpts.m_Rotation.AbilityCost[(int)DKCostTypes.Blood];
+            }
+        }
+        public int m_FrostRunes
+        {
+            get
+            {
+                return (int)this.calcOpts.m_Rotation.AbilityCost[(int)DKCostTypes.Frost];
+            }
+        }
+        public int m_UnholyRunes
+        {
+            get
+            {
+                return (int)this.calcOpts.m_Rotation.AbilityCost[(int)DKCostTypes.UnHoly];
+            }
+        }
+        public int m_DeathRunes
+        {
+            get
+            {
+                return (int)this.calcOpts.m_Rotation.AbilityCost[(int)DKCostTypes.Death];
+            }
+        }
+
         public Weapon MH, OH;
 
         public float combinedSwingTime;

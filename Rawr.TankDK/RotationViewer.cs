@@ -51,7 +51,7 @@ namespace Rawr.TankDK
                 // TODO get the character data into this.
                 stats = new Stats();
             }
-            float GCD = rotation.getGCDTime();
+            float GCD = rotation.getRotationDuration();
             totalGCDs.Text = GCD + " seconds";
             if (GCD > rotation.curRotationDuration)
             {

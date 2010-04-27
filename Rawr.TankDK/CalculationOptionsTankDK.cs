@@ -247,7 +247,7 @@ namespace Rawr.TankDK
         {
             get
             {
-                if (null == _m_rotation)
+                if (null == _m_rotation || null == _m_rotation.tTalents || talents != _m_rotation.tTalents)
                 {
                     _m_rotation = new Rotation(talents);
                 }
