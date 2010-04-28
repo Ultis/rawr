@@ -150,8 +150,6 @@ namespace Rawr.TankDK
                 OH = null;
             }
 
-            // BuildRotation();
-
             // Checking the rotation:
             if (m_Rotation.IcyTouch == 0
                 && m_Rotation.PlagueStrike == 0
@@ -161,6 +159,8 @@ namespace Rawr.TankDK
                 // so let's build one?
                 m_Rotation = new Rotation(m_Char.DeathKnightTalents);
             }
+
+            BuildRotation();
 
             // TODO: move this out of the constructor
             CompileRotation(m_Rotation);
@@ -188,11 +188,36 @@ namespace Rawr.TankDK
             AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
             AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_Stats, MH, OH);
             AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_Stats);
-
             // RP:
             AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_Stats);
             AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
+
+            // Build the sortable list of abilities
+            List<AbilityDK_Base> l_RotRunes = new List<AbilityDK_Base>();
+            List<AbilityDK_Base> l_RotRP = new List<AbilityDK_Base>();
+            l_RotRunes.Add(IT);
+            l_RotRunes.Add(PS);
+            l_RotRunes.Add(BS);
+            l_RotRunes.Add(HS);
+            l_RotRunes.Add(BB);
+
+            l_RotRunes.Add(DS);
+            l_RotRunes.Add(HB);
+            l_RotRunes.Add(OB);
+            l_RotRunes.Add(SS);
+            l_RotRunes.Add(DnD);
+
+            l_RotRP.Add(RS);
+            l_RotRP.Add(DC);
+            l_RotRP.Add(FS);
+
+            l_RotRunes.Sort(AbilityDK_Base.CompareThreatByRunes);
+            l_RotRP.Sort(AbilityDK_Base.CompareByRP);
+
+            // we now have lists that provide sorted by cost of # of runes 
+            // and ammount of RP needed.
+
 
         }
 
@@ -421,6 +446,17 @@ namespace Rawr.TankDK
             if (MH != null && MH.hastedSpeed != 0)
             {
                 fWhiteSwings = (float)m_RotationDuration / (int)(MH.hastedSpeed * 1000);
+                // How many of the shots are parried?
+                // TODO: fWhiteSwings here may need to be # of BossSwings from BossHandler.
+                float fShotsParried = m_Stats.Parry * fWhiteSwings;
+                // What's the average hasted speed of those shots?
+                float fParryHastedSpeed = (MH.hastedSpeed * 1000) * (1f - 0.24f);
+                // How much of the rotation duration has hasted shots?
+                float fTimeHasted = fShotsParried * fParryHastedSpeed;
+                // The rest of that time, are normal shots
+                float fTimeNormal = m_RotationDuration - fTimeHasted;
+                // Get the final total.
+                fWhiteSwings = (fTimeNormal / (int)(MH.hastedSpeed * 1000)) + fShotsParried;
             }
             // This will provide the opportunity to increase available RP by swings due to Talents.
             // Also get a swing count to balance out the RuneStrikes.

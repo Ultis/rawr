@@ -29,6 +29,10 @@ namespace Rawr.TankDK
     /// </summary>
     abstract class AbilityDK_Base
     {
+        // TODO: Setup a sub AbilityDK_Base object that contains any proc'd events.
+        // This needs to then be calculated whenever someone calls for the value of a given ability.
+        // Similar to the way special effects are handled w/ stats.
+
         #region Constants
         public const uint MIN_GCD_MS = 1000;
         public const uint INSTANT = 1;
@@ -349,5 +353,94 @@ namespace Rawr.TankDK
             }
         }
 
+        #region Comparisons
+        public static int CompareByThreatPerCost(AbilityDK_Base a, AbilityDK_Base b, DKCostTypes t)
+        {
+            int ic = 0;
+            float aRunes = 1;
+            float bRunes = 1;
+
+            // Sum of cost:
+            switch (t)
+            {
+                case DKCostTypes.Blood:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Blood];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Blood];
+                    break;
+                case DKCostTypes.Frost:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Frost];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Frost];
+                    break;
+                case DKCostTypes.UnHoly:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.UnHoly];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.UnHoly];
+                    break;
+                case DKCostTypes.Death:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Blood] + a.AbilityCost[(int)DKCostTypes.Frost] + a.AbilityCost[(int)DKCostTypes.UnHoly];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Blood] + b.AbilityCost[(int)DKCostTypes.Frost] + b.AbilityCost[(int)DKCostTypes.UnHoly];
+                    break;
+                case DKCostTypes.CastTime:
+                case DKCostTypes.CooldownTime:
+                case DKCostTypes.DurationTime:
+                    aRunes = a.AbilityCost[(int)t] / 1000;
+                    bRunes = b.AbilityCost[(int)t] / 1000;
+                    break;
+                case DKCostTypes.RunicPower:
+                    aRunes = a.AbilityCost[(int)t];
+                    bRunes = b.AbilityCost[(int)t];
+                    break;
+                default:
+                    aRunes = 1;
+                    bRunes = 1;
+                    break;
+
+            }
+            if (aRunes != 0 || bRunes != 0)
+            {
+                if (aRunes != 0 && bRunes != 0)
+                {
+                    float avalue = a.GetTotalThreat() / aRunes;
+                    float bvalue = b.GetTotalThreat() / bRunes;
+                    if (avalue != bvalue)
+                    {
+                        // This is setup where we want a descending order.
+                        if (avalue > bvalue)
+                            ic = -1;
+                        else
+                            ic = 1;
+                    }
+                }
+                else // one of them are 0
+                {
+                    if (aRunes > bRunes )
+                        ic = -1;
+                    else
+                        ic = 1;
+                }
+            }
+            return ic;
+        }
+
+        public static int CompareByTotalThreat(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareByThreatPerCost(a, b, DKCostTypes.NumCostTypes);            
+        }
+
+        public static int CompareThreatByCooldown(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareByThreatPerCost(a, b, DKCostTypes.CooldownTime);
+        }
+
+        public static int CompareThreatByRunes(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareByThreatPerCost(a, b, DKCostTypes.Death);
+        }
+
+        public static int CompareByRP(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareByThreatPerCost(a, b, DKCostTypes.RunicPower);
+        }
+
+        #endregion
     }
 }
