@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 #if RAWR3
 using System.Windows.Media;
+#else
+using System.Drawing;
 #endif
 using System.Text;
 
@@ -134,7 +136,10 @@ namespace Rawr.Rogue
             get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
+                        "Health",
                         "Avoided Yellow Attacks %",
+                        "Avoided Poison Attacks %",
+                        "Avoided White Attacks %",
                         "Custom Rotation DPS",
 					};
                 return _optimizableCalculationLabels;
@@ -153,37 +158,20 @@ namespace Rawr.Rogue
             }
         }
 
-#if RAWR3
         private Dictionary<string, Color> _subPointNameColors = null;
-		public override Dictionary<string, Color> SubPointNameColors
-		{
-			get
-			{
-				if (_subPointNameColors == null)
-				{
-					_subPointNameColors = new Dictionary<string, Color>();
-					_subPointNameColors.Add("DPS", Color.FromArgb(255, 160, 0, 224));
-					_subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
-				}
-				return _subPointNameColors;
-			}
-		}
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
                 if (_subPointNameColors == null)
                 {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-                    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
                 }
                 return _subPointNameColors;
             }
         }
-#endif
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {
