@@ -23,7 +23,8 @@ namespace Rawr.TankDK
             Rotation rRotation = calcOpts.m_Rotation;
             if (effect.Trigger == Trigger.Use)
             {
-                statsAverage.Accumulate(effect.GetAverageStats());
+                if (calcOpts.bUseOnUseAbilities == true)
+                    statsAverage.Accumulate(effect.GetAverageStats());
             }
             else
             {

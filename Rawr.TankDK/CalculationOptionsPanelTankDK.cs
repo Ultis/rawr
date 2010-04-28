@@ -191,6 +191,17 @@ namespace Rawr.TankDK {
 
         }
 
+        private void cbUseOnUse_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.bUseOnUseAbilities = cbUseOnUse.Checked;
+                Character.OnCalculationsInvalidated();
+                if (cbUseOnUse.Checked == false)
+                    MessageBox.Show("WARNING: Disabling this option will make all 'OnUse' abilities have 0 value in the system.");
+            }
+        }
+
         #region StatsGraph
         private Stats[] BuildStatsList()
         {
@@ -221,7 +232,6 @@ namespace Rawr.TankDK {
             graph.Show();
         }
         #endregion
-
 
     }
 }

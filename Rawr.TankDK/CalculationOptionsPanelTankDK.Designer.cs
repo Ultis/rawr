@@ -63,6 +63,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.numMitigationWeight = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
+            this.cbUseOnUse = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numIncomingDamage)).BeginInit();
@@ -412,7 +413,7 @@
             // 
             // btnStatsGraph
             // 
-            this.btnStatsGraph.Location = new System.Drawing.Point(64, 443);
+            this.btnStatsGraph.Location = new System.Drawing.Point(61, 474);
             this.btnStatsGraph.Name = "btnStatsGraph";
             this.btnStatsGraph.Size = new System.Drawing.Size(113, 30);
             this.btnStatsGraph.TabIndex = 62;
@@ -572,8 +573,22 @@
             this.label12.TabIndex = 73;
             this.label12.Text = "Mitigation Weight (secs)";
             // 
+            // cbUseOnUse
+            // 
+            this.cbUseOnUse.AutoSize = true;
+            this.cbUseOnUse.Checked = true;
+            this.cbUseOnUse.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbUseOnUse.Location = new System.Drawing.Point(3, 443);
+            this.cbUseOnUse.Name = "cbUseOnUse";
+            this.cbUseOnUse.Size = new System.Drawing.Size(136, 17);
+            this.cbUseOnUse.TabIndex = 74;
+            this.cbUseOnUse.Text = "Enable On Use Abilities";
+            this.cbUseOnUse.UseVisualStyleBackColor = true;
+            this.cbUseOnUse.CheckedChanged += new System.EventHandler(this.cbUseOnUse_CheckedChanged);
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.cbUseOnUse);
             this.Controls.Add(this.numMitigationWeight);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.numBleedPerTick);
@@ -662,5 +677,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown numMitigationWeight;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox cbUseOnUse;
     }
 }

@@ -238,6 +238,15 @@ namespace Rawr.TankDK
             set { _m_bEnableParryHaste = value; OnPropertyChanged("EnableParryHaste"); }
         }
 
+        private bool _m_bUseOnUseAbilities = true;
+        public bool bUseOnUseAbilities
+        {
+            get
+            {
+                return _m_bUseOnUseAbilities;
+            }
+            set { _m_bUseOnUseAbilities = value; OnPropertyChanged("UseOnUseAbilities"); }
+        }
         #endregion
 
         #region Rotation
