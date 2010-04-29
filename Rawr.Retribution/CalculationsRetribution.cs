@@ -50,7 +50,7 @@ namespace Rawr.Retribution
                 string[] groupName = { "Uncommon", "Rare", "Epic" };
                 for (int i = 0; i < 3; i++)
                 {
-                    retval.Add(new GemmingTemplate()
+                    retval.Add(new GemmingTemplate()    // Strength every slot - Don't match colors
                     {
                         Model = "Retribution",
                         Group = groupName[i],
@@ -61,18 +61,29 @@ namespace Rawr.Retribution
                         MetaId = relentless,
                         Enabled = i == 2
                     });
-                    retval.Add(new GemmingTemplate()
+                    retval.Add(new GemmingTemplate()    // Strength in every slot - Match colors (Blue socket is least desired and gets the (unique) nightmare tear).
                     {
                         Model = "Retribution",
                         Group = groupName[i],
-                        RedId = etched[i],
-                        YellowId = rigid[i],
-                        BlueId = vivid[i],
-                        PrismaticId = rigid[i],
+                        RedId = bold[i],
+                        YellowId = inscribed[i],
+                        BlueId = tear[i],
+                        PrismaticId = bold[i],
                         MetaId = relentless,
                         Enabled = i == 2
                     });
-                    retval.Add(new GemmingTemplate()
+                    retval.Add(new GemmingTemplate()    // Strength in every slot - Match colors (This is a catch in case we don't have blue sockets, in that case, yellow gets the tear to activate the meta).  Putting sovereign here in blue is just filler.
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = bold[i],
+                        YellowId = tear[i],
+                        BlueId = sovereign[i],
+                        PrismaticId = bold[i],
+                        MetaId = relentless,
+                        Enabled = i == 2
+                    });
+                    retval.Add(new GemmingTemplate()    // Strength in every slot - match colors - no nightmare tear (in case we need to activate a 2nd bonus dependant on a blue)
                     {
                         Model = "Retribution",
                         Group = groupName[i],
@@ -83,36 +94,36 @@ namespace Rawr.Retribution
                         MetaId = relentless,
                         Enabled = i == 2
                     });
-                    retval.Add(new GemmingTemplate()
+                    retval.Add(new GemmingTemplate()    // Hit in every slot - Match colors (catch for serious hit deficienty)
                     {
                         Model = "Retribution",
                         Group = groupName[i],
-                        RedId = bold[i],
-                        YellowId = tear[i],
-                        BlueId = tear[i],
-                        PrismaticId = bold[i],
+                        RedId = etched[i],
+                        YellowId = rigid[i],
+                        BlueId = vivid[i],
+                        PrismaticId = rigid[i],
                         MetaId = relentless,
                         Enabled = i == 2
                     });
                 }
 
-                retval.Add(new GemmingTemplate()
-                {
-                    Model = "Retribution",
-                    Group = "Jeweler",
-                    RedId = bold[3],
-                    YellowId = bold[2],
-                    BlueId = bold[2],
-                    PrismaticId = bold[3],
-                    MetaId = relentless
-                });
-                retval.Add(new GemmingTemplate()
+                retval.Add(new GemmingTemplate()        // Strength in every slot - Don't match colors, Bold JC gems everywhere.
                 {
                     Model = "Retribution",
                     Group = "Jeweler",
                     RedId = bold[3],
                     YellowId = bold[3],
                     BlueId = bold[3],
+                    PrismaticId = bold[3],
+                    MetaId = relentless
+                });
+                retval.Add(new GemmingTemplate()        // Strength in every slot - match colors (Only red/prismatic gets JC gems)
+                {
+                    Model = "Retribution",
+                    Group = "Jeweler",
+                    RedId = bold[3],
+                    YellowId = inscribed[2],
+                    BlueId = tear[2],
                     PrismaticId = bold[3],
                     MetaId = relentless
                 });
