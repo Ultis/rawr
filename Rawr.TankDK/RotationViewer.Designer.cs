@@ -499,7 +499,6 @@
             this.label23.TabIndex = 82;
             this.label23.Text = "Blood Boil:";
             this.label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label23.Click += new System.EventHandler(this.label23_Click);
             // 
             // txtDnD
             // 
@@ -535,7 +534,6 @@
             this.label16.TabIndex = 86;
             this.label16.Text = "Pestilence:";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.label16.Click += new System.EventHandler(this.label16_Click);
             // 
             // RotationViewer
             // 

@@ -257,6 +257,17 @@ namespace Rawr.TankDK {
         /// <param name="AbilityCost"></param>
         public void SpendDeathRunes(float[] AbilityCost, int DRSpent)
         {
+            // Let's put some boundary conditions 'round here.
+            if (AbilityCost == null)
+                return;
+            // 10 min fight w/ 2 runes available at Death runes every rune cooldown.
+            if (Math.Abs(DRSpent) > 120)
+                return;
+            for (int i = 0; i <= (int)DKCostTypes.Death; i++)
+            {
+                if (Math.Abs(AbilityCost[i]) > 120)
+                    return;
+            }
             // Need to figure out how to factor in Death Runes
             // Since each death rune replaces any other rune on the rotation,
             // for each death rune, cut the cost of the highest other rune by 1.

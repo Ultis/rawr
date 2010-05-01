@@ -12,17 +12,16 @@ namespace Rawr.TankDK
     {
         public Rotation rotation;
         public DeathKnightTalents talents;
-        CalculationOptionsTankDK calcOpts;
-        Character character;
-        Stats stats;
+        private CalculationOptionsTankDK calcOpts;
+        private Character character;
 
-        public RotationViewer(CalculationOptionsTankDK calcOpts, Character character)
+        public RotationViewer(CalculationOptionsTankDK opts, Character ch)
         {
             InitializeComponent();
-            this.calcOpts = calcOpts;
+            this.calcOpts = opts;
             this.rotation = calcOpts.m_Rotation;
+            this.character = ch.Clone();
             talents = character.DeathKnightTalents;
-            this.character = character;
 
             txtBS.KeyUp += new KeyEventHandler(txtBS_KeyUp);
             txtDC.KeyUp += new KeyEventHandler(txtDC_KeyUp);
@@ -42,15 +41,80 @@ namespace Rawr.TankDK
             txtRS.KeyUp += new KeyEventHandler(txtRS_KeyUp);
             txtBB.KeyUp += new KeyEventHandler(txtBB_KeyUp);
             txtDnD.KeyUp += new KeyEventHandler(txtDnD_KeyUp);
+
+            UpdateStrikes();
+        }
+
+        void UpdateStrikes()
+        {
+            // Update the UI by disabling those strikes that we don't have access to.
+            #region Blood
+            // Heart Strike
+            if (talents.HeartStrike == 0)
+            {
+                txtHS.Enabled = false;
+                txtHS.Text = "0";
+            }
+            else
+            {
+                txtHS.Enabled = true;
+            }
+            // DRW
+            if (talents.DancingRuneWeapon == 0)
+            {
+                //txtDRW.Enabled = false;
+                //txtDRW.Text = "0";
+            }
+            #endregion
+            #region Frost
+            // Frost Strike
+            if (talents.FrostStrike == 0)
+            {
+                txtFS.Enabled = false;
+                txtFS.Text = "0";
+            }
+            else
+            {
+                txtFS.Enabled = true;
+
+            }
+            // Howling Blast
+            if (talents.HowlingBlast == 0)
+            {
+                txtHB.Enabled = false;
+                txtHB.Text = "0";
+            }
+            else
+            {
+                txtHB.Enabled = true;
+            }
+            #endregion
+            #region Unholy
+            // Corpse Explosion
+            if (talents.CorpseExplosion == 0)
+            {
+                //txtCE.Enabled = false;
+            }
+            // Scourge Strike
+            if (talents.ScourgeStrike == 0)
+            {
+                txtSS.Enabled = false;
+                txtSS.Text = "0";
+            }
+            else
+            {
+                txtSS.Enabled = true;
+            }
+            // Gargoyle
+            if (talents.HeartStrike == 0)
+            {
+                // txtGar.Enabled = false;
+            }
+            #endregion
         }
 
         void updateLabels()
         {
-            if (null == stats)
-            {
-                // TODO get the character data into this.
-                stats = new Stats();
-            }
             float GCD = rotation.getRotationDuration();
             totalGCDs.Text = GCD + " seconds";
             if (GCD > rotation.curRotationDuration)
@@ -88,6 +152,7 @@ namespace Rawr.TankDK
             txtBB.Text = rotation.BloodBoil.ToString();
             txtDnD.Text = rotation.DeathNDecay.ToString();
             cbManagedRP.Checked = rotation.managedRP;
+            UpdateStrikes();
             updateLabels();
         }
 
@@ -199,7 +264,22 @@ namespace Rawr.TankDK
             updateLabels();
         }
 
+        private void cbManagedRP_CheckedChanged(object sender, EventArgs e)
+        {
+            // On the RP abilities need to become readonly.
+            txtFS.ReadOnly = cbManagedRP.Checked;
+            txtRS.ReadOnly = cbManagedRP.Checked;
+            txtDC.ReadOnly = cbManagedRP.Checked;
+            rotation.managedRP = cbManagedRP.Checked;
+            updateLabels();
+            txtFS.Text = rotation.FrostStrike.ToString();
+            txtDC.Text = rotation.DeathCoil.ToString();
+            txtRS.Text = rotation.RuneStrike.ToString();
+        }
+
+
         //text changes, commits VALID entries into memory
+        #region Text Changes
 
         void txtDC_KeyUp(object sender, KeyEventArgs e)
         {
@@ -506,32 +586,23 @@ namespace Rawr.TankDK
             updateLabels();
         }
 
-        private void cbManagedRP_CheckedChanged(object sender, EventArgs e)
-        {
-            // On the RP abilities need to become readonly.
-            txtFS.ReadOnly = cbManagedRP.Checked;
-            txtRS.ReadOnly = cbManagedRP.Checked;
-            txtDC.ReadOnly = cbManagedRP.Checked;
-            rotation.managedRP = cbManagedRP.Checked;
-            updateLabels();
-            txtFS.Text = rotation.FrostStrike.ToString();
-            txtDC.Text = rotation.DeathCoil.ToString();
-            txtRS.Text = rotation.RuneStrike.ToString();
-        }
-
         private void txtPest_TextChanged(object sender, EventArgs e)
         {
-
+            TextBox t = (TextBox)sender;
+            try
+            {
+                double d = double.Parse(t.Text);
+                float f = (float)d;
+                rotation.Pestilence = f;
+            }
+            catch
+            {
+                rotation.Pestilence = 0f;
+                t.Text = "0";
+            }
+            updateLabels();
         }
+        #endregion
 
-        private void label16_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label23_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
