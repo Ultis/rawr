@@ -167,8 +167,9 @@ namespace Rawr.Warlock {
                 = Math.Min(ActiveRotationIndex, Rotations.Count - 1);
         }
 
-        public int GetBaseHitRate() { 
-            
+        public int GetBaseHitRate() {
+            if (TargetLevel < 80) TargetLevel = 80;
+            else if (TargetLevel > 83) TargetLevel = 83;
             return hitRatesByLevelDifference[TargetLevel - 80];
         }
 
