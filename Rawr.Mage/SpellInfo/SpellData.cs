@@ -940,6 +940,7 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0f, 0f);
             InitializeDamage(solver, false, 35, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             DotDuration = 12;
+            DotTickInterval = 3;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier -= 0.02f * solver.MageTalents.FirePower; // Living Bomb dot does not benefit from Fire Power
             BaseDirectDamageModifier *= (1 + 0.02f * solver.MageTalents.FirePower);

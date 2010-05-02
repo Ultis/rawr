@@ -136,8 +136,14 @@ namespace Rawr.Mage
 
         public CastingState CastingState;
 
-        private List<Spell> Spell;
-        private List<float> SpellWeight;
+        private struct SpellData
+        {
+            public Spell Spell;
+            public float Weight;
+            public float DotUptime;
+        }
+
+        private List<SpellData> Spell;
 
         public Cycle()
         {
@@ -148,8 +154,7 @@ namespace Rawr.Mage
             CastingState = castingState;
             if (needsDisplayCalculations)
             {
-                Spell = new List<Spell>();
-                SpellWeight = new List<float>();
+                Spell = new List<SpellData>();
             }
         }
 
@@ -194,10 +199,9 @@ namespace Rawr.Mage
 
         private void AddSpellsFromCycle(Cycle cycle, float weight)
         {
-            for (int i = 0; i < cycle.Spell.Count; i++)
+            foreach (var spell in cycle.Spell)
             {
-                Spell.Add(cycle.Spell[i]);
-                SpellWeight.Add(weight * cycle.SpellWeight[i]);
+                Spell.Add(new SpellData() { Spell = spell.Spell, DotUptime = spell.DotUptime, Weight = weight * spell.Weight });
             }
         }
 
@@ -205,8 +209,7 @@ namespace Rawr.Mage
         {
             if (needsDisplayCalculations)
             {
-                Spell.Add(spell);
-                SpellWeight.Add(weight);
+                Spell.Add(new SpellData() { Spell = spell, Weight = weight });
             }
             CastTime += weight * spell.CastTime;
             CastProcs += weight * spell.CastProcs;
@@ -230,8 +233,7 @@ namespace Rawr.Mage
         {
             if (needsDisplayCalculations)
             {
-                Spell.Add(spell);
-                SpellWeight.Add(weight);
+                Spell.Add(new SpellData() { Spell = spell, Weight = weight, DotUptime = dotUptime });
             }
             CastTime += weight * spell.CastTime;
             CastProcs += weight * spell.CastProcs;
@@ -266,17 +268,17 @@ namespace Rawr.Mage
 
         public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
         {
-            for (int i = 0; i < Spell.Count; i++)
+            foreach (var spell in Spell)
             {
-                if (Spell[i] != null) Spell[i].AddSpellContribution(dict, SpellWeight[i] * Spell[i].CastTime / CastTime * duration, effectSpellPower);
+                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower);
             }
         }
 
         public virtual void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
         {
-            for (int i = 0; i < Spell.Count; i++)
+            foreach (var spell in Spell)
             {
-                if (Spell[i] != null) Spell[i].AddManaUsageContribution(dict, SpellWeight[i] * Spell[i].CastTime / CastTime * duration);
+                spell.Spell.AddManaUsageContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration);
             }
         }
 

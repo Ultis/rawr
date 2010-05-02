@@ -30,7 +30,13 @@ namespace Rawr.Mage
     {
         public string Name;
         public float Hits;
+        public float Crits;
+        public float Ticks;
         public float Damage;
+        public float HitDamage;
+        public float CritDamage;
+        public float TickDamage;
+        public float DotUptime;
         public float Range;
 
         public int CompareTo(SpellContribution other)
@@ -778,7 +784,7 @@ namespace Rawr.Mage
             AverageCost = cost;
         }
 
-        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
+        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float dotUptime, float effectSpellPower)
         {
             SpellContribution contrib;
             if (!dict.TryGetValue(Name, out contrib))
@@ -798,8 +804,34 @@ namespace Rawr.Mage
                 }
                 igniteContrib.Damage += igniteContribution;
             }
-            contrib.Hits += HitProcs * duration / CastTime;
-            contrib.Damage += (AverageDamage + effectSpellPower * DamagePerSpellPower) / CastTime * duration - igniteContribution;
+            contrib.Hits += (HitProcs - CritProcs) * duration / CastTime;
+            contrib.Crits += CritProcs * duration / CastTime;
+            float damage = (AverageDamage + effectSpellPower * DamagePerSpellPower) / CastTime * duration - igniteContribution;
+            contrib.Damage += damage;
+            if (dotUptime > 0)
+            {
+                float tickDamage = dotUptime * (DotAverageDamage + effectSpellPower * DotDamagePerSpellPower) / CastTime * duration;
+                contrib.Damage += tickDamage;
+                // dotUptime = DotProcs / (DotDuration / DotTickInterval)
+                contrib.Ticks += dotUptime * (DotDuration / DotTickInterval) * duration / CastTime;
+                contrib.TickDamage += tickDamage;
+
+            }
+            else
+            {
+                if (DotTickInterval > 0)
+                {
+                    contrib.Ticks += DotProcs * duration / CastTime;
+                    float dotFactor = DotProcs / (DotDuration / DotTickInterval) * SpellModifier * DotDamageModifier * PartialResistFactor;
+                    float tickDamage = dotFactor * (BasePeriodicDamage + (RawSpellDamage + effectSpellPower) * DotDamageCoefficient) / CastTime * duration;
+                    contrib.TickDamage += tickDamage;
+                    damage -= tickDamage;
+                }
+            }
+            // damage = baseDamage * (1 + (CritBonus - 1) * CritRate)
+            float baseDamage = damage / (1 + (CritBonus - 1) * CritRate);
+            contrib.HitDamage += baseDamage * (1 - CritRate);
+            contrib.CritDamage += baseDamage * CritRate * CritBonus;
             contrib.Range = Range;
         }
 
