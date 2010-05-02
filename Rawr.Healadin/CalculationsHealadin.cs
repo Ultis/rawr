@@ -384,6 +384,8 @@ namespace Rawr.Healadin
                             trigger = 1f / Rotation.GetHealingCritsPerSec(calc);
                         else if (effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit)
                             trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
+                        else if (effect.Trigger == Trigger.DamageOrHealingDone)
+                            trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
                         else if (effect.Trigger == Trigger.Use)
                         {
                             trigger = 0f;
@@ -632,10 +634,11 @@ namespace Rawr.Healadin
         private bool IsTriggerRelevant(Trigger trigger)
         {
             return (
-                trigger == Trigger.Use              || trigger == Trigger.HolyLightCast     ||
-                trigger == Trigger.SpellCast        || trigger == Trigger.SpellCrit         ||
-                trigger == Trigger.SpellHit         || trigger == Trigger.HealingSpellCast  ||
-                trigger == Trigger.HealingSpellCrit || trigger == Trigger.HealingSpellHit
+                trigger == Trigger.Use                 || trigger == Trigger.HolyLightCast     ||
+                trigger == Trigger.SpellCast           || trigger == Trigger.SpellCrit         ||
+                trigger == Trigger.SpellHit            || trigger == Trigger.HealingSpellCast  ||
+                trigger == Trigger.HealingSpellCrit    || trigger == Trigger.HealingSpellHit   ||
+                trigger == Trigger.DamageOrHealingDone
             );
         }
 
@@ -746,6 +749,7 @@ namespace Rawr.Healadin
                 stats.HolyLightCastTimeReductionFromHolyShock +
                 stats.MovementSpeed +
                 stats.ShieldFromHealed +
+                stats.HighestStat +
 
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.BonusManaMultiplier +
