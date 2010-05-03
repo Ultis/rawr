@@ -59,15 +59,15 @@ namespace Rawr.UI
                 if (Current == talentData.MaxPoints)
                 {
                     b = new SolidColorBrush(Colors.Yellow);
-                    OverlayImage.Source = new BitmapImage(new Uri("../Images/icon-over-yellow.png", UriKind.Relative));
+                    OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-yellow.png", UriKind.Relative));
                 }
                 else
                 {
                     if (CanPutPoints()) b = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
                     else b = new SolidColorBrush(Colors.White);
 
-                    if (Current > 0) OverlayImage.Source = new BitmapImage(new Uri("../Images/icon-over-green.png", UriKind.Relative));
-                    else OverlayImage.Source = new BitmapImage(new Uri("../Images/icon-over-grey.png", UriKind.Relative));
+                    if (Current > 0) OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-green.png", UriKind.Relative));
+                    else OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-grey.png", UriKind.Relative));
                 }
 
                 RankLabel.Text = string.Format("{0}/{1}", Current, talentData.MaxPoints);

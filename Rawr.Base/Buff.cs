@@ -81,7 +81,7 @@ namespace Rawr
 #if RAWR3
         public static void Save(TextWriter writer)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+            XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
             serializer.Serialize(writer, _allBuffs);
             writer.Close();
         }
@@ -93,7 +93,7 @@ namespace Rawr
                 List<Buff> loadedBuffs = null;
                 try
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+                    XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
                     loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
                 }
                 catch { }

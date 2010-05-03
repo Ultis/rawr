@@ -12,7 +12,7 @@ x:Class="Rawr.UI.ItemContextMenu">
 				<ListBoxItem x:Name="ContextItemName" IsEnabled="False" Content="Super Cool Item"/>
                 <ListBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,2,4,2"/>
 				<ListBoxItem x:Name="ContextEdit" Content="Edit..."/>
-				<ListBoxItem x:Name="ContextOpenWowhead" Content="Open in Wowhead"/>
+				<HyperlinkButton x:Name="ContextOpenWowhead" Content="Open in Wowhead" TargetName="_blank"/>
 				<ListBoxItem x:Name="ContextRefreshArmory" Content="Refresh Item from Armory"/>
 				<ListBoxItem x:Name="ContextRefreshWowhead" Content="Refresh Item from Wowhead"/>
 				<ListBoxItem x:Name="ContextEquip" Content="Equip"/>

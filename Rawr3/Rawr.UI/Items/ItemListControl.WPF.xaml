@@ -37,7 +37,7 @@
           </ListBox.ItemContainerStyle>
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <Grid d:CacheMode="BitmapCache">
+              <Grid CacheMode="BitmapCache">
                 <StackPanel Orientation="Vertical" IsHitTestVisible="False">
                   <controls:DockPanel HorizontalAlignment="Stretch" LastChildFill="True">
                     <Image controls:DockPanel.Dock="Left" Source="{Binding Icon}"

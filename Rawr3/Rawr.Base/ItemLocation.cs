@@ -46,7 +46,7 @@ namespace Rawr
 
     delegate ItemLocation Construct();
 
-    
+    [GenerateArraySerializer]
     [XmlInclude(typeof(StaticDrop))]
     [XmlInclude(typeof(NoSource))]
     [XmlInclude(typeof(UnknownItem))]
@@ -824,7 +824,7 @@ namespace Rawr
     }
 
     [XmlRoot("dictionary")]
-    
+    [GenerateSerializer]
     public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation[]>
     {
     }

@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 #if RAWR3
 using System.Linq;
 using System.Threading;
+using System.Windows.Threading;
 #endif
 
 namespace Rawr
@@ -173,15 +174,19 @@ namespace Rawr
 #if RAWR3
                 // when loading a new character we might get a long stream of new items from armory service
                 // if we trigger event for every single one the application becomes more or less unresponsive
-                // throttle events to no more than one per second
                 // this is all happening on the main thread, armory service background worker is pushing things
                 // on the dispatcher so add items will actually be delayed by however long it takes to
                 // compute all calculations for charts
                 // so send this via thread pool, this way it'll be pushed after all the backlog of items
                 dirtySinceLastAdd = true;
+#if SILVERLIGHT
+                Dispatcher dispatcher = System.Windows.Deployment.Current.Dispatcher;
+#else
+                Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+#endif
                 ThreadPool.QueueUserWorkItem((object state) =>
-                {
-                    System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {                    
+                    dispatcher.BeginInvoke((Action)(() =>
                     {
                         System.Diagnostics.Debug.WriteLine("Trying to trigger recalc " + dirtySinceLastAdd);
                         if (dirtySinceLastAdd)
@@ -189,7 +194,7 @@ namespace Rawr
                             OnItemsChanged();
                             dirtySinceLastAdd = false;
                         }
-                    });
+                    }));
                 });
 #else
                 OnItemsChanged();
@@ -465,8 +470,8 @@ namespace Rawr
 #if RAWR3
         public void Save(TextWriter writer)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
-            serializer.Serialize(writer, new List<Item>(AllItems));
+            XmlSerializer serializer = new XmlSerializer(typeof(ItemList));
+            serializer.Serialize(writer, new ItemList(AllItems));
             writer.Close();
         }
 
@@ -476,7 +481,7 @@ namespace Rawr
             List<Item> listItems = new List<Item>();
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
+                XmlSerializer serializer = new XmlSerializer(typeof(ItemList));
                 listItems = (List<Item>)serializer.Deserialize(reader);
                 reader.Close();
             }

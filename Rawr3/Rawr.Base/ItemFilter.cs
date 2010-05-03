@@ -334,14 +334,14 @@ namespace Rawr
 
     }
 
-
+    [GenerateSerializer]
     public class ItemTypeList : List<ItemType>
     {
         public ItemTypeList() : base() { }
         public ItemTypeList(IEnumerable<ItemType> collection) : base(collection) { }
     }
 
-
+    [GenerateSerializer]
     public class ItemFilterData
     {
         public SerializableDictionary<string, ItemTypeList> RelevantItemTypes = new SerializableDictionary<string, ItemTypeList>();

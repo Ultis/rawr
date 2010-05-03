@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
+    [GenerateSerializer]
     public class Settings
     {
         public CacheSettings Cache { get; set; }

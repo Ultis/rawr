@@ -15,7 +15,7 @@
       </Style>
   </UserControl.Resources>
   <Popup x:Name="ItemPopup">
-		<Grid d:CacheMode="BitmapCache" x:Name="ItemGrid" MaxWidth="350">
+		<Grid CacheMode="BitmapCache" x:Name="ItemGrid" MaxWidth="350">
 			<Rectangle RadiusX="3" RadiusY="3">
                 <!--Rectangle.Effect> //Turning this effect off for performance reasons, may add it back in later
 					<DropShadowEffect ShadowDepth="4" Opacity="0.35" BlurRadius="10"/>

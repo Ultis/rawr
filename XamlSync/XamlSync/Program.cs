@@ -35,7 +35,7 @@ namespace XamlSync
             wpfMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base.WPF\"";
             wpfMap["xmlns:basics"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 	        wpfMap["xmlns:common"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
-            wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/wpf/2008/toolkit\"";
+            wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
             wpfMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
@@ -126,7 +126,7 @@ namespace XamlSync
         private static string ConvertSL2WPF(string line)
         {
             //CacheMode="BitmapCache"
-            line = Regex.Replace(line, "CacheMode\\s*=\\s*\"BitmapCache\"", "d:CacheMode=\"BitmapCache\"");
+            //line = Regex.Replace(line, "CacheMode\\s*=\\s*\"BitmapCache\"", "d:CacheMode=\"BitmapCache\"");
             //TabNavigation
             line = line.Replace("TabNavigation", "KeyboardNavigation.TabNavigation");
             //TickPlacement=""
@@ -146,7 +146,7 @@ namespace XamlSync
         private static string ConvertWPF2SL(string line)
         {
             //CacheMode="BitmapCache"
-            line = Regex.Replace(line, "d:CacheMode\\s*=\\s*\"BitmapCache\"", "CacheMode=\"BitmapCache\"");
+            //line = Regex.Replace(line, "d:CacheMode\\s*=\\s*\"BitmapCache\"", "CacheMode=\"BitmapCache\"");
             //TabNavigation
             line = line.Replace("KeyboardNavigation.TabNavigation", "TabNavigation");
             //TickPlacement=""

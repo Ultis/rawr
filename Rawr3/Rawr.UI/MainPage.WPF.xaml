@@ -100,14 +100,14 @@
             </ComboBox>
             <ComboBox x:Name="HelpMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="HelpMenu_SelectionChanged">
                 <ComboBoxItem Content="Help" Visibility="Collapsed"/>
-                <ComboBoxItem Content="Rawr Help Page"/>
-                <ComboBoxItem Content="Tour of Rawr"/>
-                <ComboBoxItem Content="Gemmings"/>
-                <ComboBoxItem Content="Gear Optimization"/>
-                <ComboBoxItem Content="Item Filtering"/>
+                <HyperlinkButton Content="Rawr Help Page" NavigateUri="http://rawr.codeplex.com/documentation" TargetName="_blank"/>
+                <HyperlinkButton Content="Tour of Rawr" NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" TargetName="_blank"/>
+                <HyperlinkButton Content="Gemmings" NavigateUri="http://rawr.codeplex.com/wikipage?title=Gemmings" TargetName="_blank"/>
+                <HyperlinkButton Content="Gear Optimization" NavigateUri="http://rawr.codeplex.com/wikipage?title=GearOptimization" TargetName="_blank"/>
+                <HyperlinkButton Content="Item Filtering" NavigateUri="http://rawr.codeplex.com/wikipage?title=ItemFiltering" TargetName="_blank"/>
                 <ComboBoxItem IsEnabled="False" Height="1" Background="#FFA0A0A0" Margin="4,4,4,4"/>
-                <ComboBoxItem Content="Rawr Website"/>
-                <ComboBoxItem Content="Donate"/>
+                <HyperlinkButton Content="Rawr Website" NavigateUri="http://rawr.codeplex.com/" TargetName="_blank"/>
+                <HyperlinkButton Content="Donate" NavigateUri="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=2451163" TargetName="_blank"/>
             </ComboBox>
         </StackPanel>
         ENDIFSL-->
@@ -298,7 +298,7 @@
     		</controls:TabControl>
     	</toolkit:DockPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
-            <TextBlock VerticalAlignment="Center" Text="b5" Foreground="#99999999" Margin="0,4,8,4"/>
+            <TextBlock VerticalAlignment="Center" Text="b7" Foreground="#99999999" Margin="0,4,8,4"/>
             <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
            <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
          </StackPanel>
