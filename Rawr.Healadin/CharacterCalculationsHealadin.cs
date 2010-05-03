@@ -141,8 +141,10 @@ namespace Rawr.Healadin
 				case "Health": return BasicStats.Health;
 				case "Holy Light Cast Time": return HL.CastTime();
                 case "Holy Light HPS": return HL.HPS();
+                case "Holy Light Time": return RotationHL;
 				case "Flash of Light Cast Time": return FoL.CastTime();
                 case "Flash of Light HPS": return FoL.HPS();
+                case "Flash of Light Time": return RotationFoL;
 			}
 			return 0f;
 		}

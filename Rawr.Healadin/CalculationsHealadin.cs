@@ -185,8 +185,10 @@ namespace Rawr.Healadin
 					"Health",
                     "Holy Light Cast Time",
                     "Holy Light HPS",
+                    "Holy Light Time",
                     "Flash of Light Cast Time",
                     "Flash of Light HPS",
+                    "Flash of Light Time",
 					};
                 return _optimizableCalculationLabels;
             }
