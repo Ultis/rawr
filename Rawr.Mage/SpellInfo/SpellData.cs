@@ -884,6 +884,7 @@ namespace Rawr.Mage
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
+            DotDamageCoefficient += 4 * 0.05f * solver.MageTalents.EmpoweredFire;
             Dirty = false;
         }
     }
@@ -942,8 +943,6 @@ namespace Rawr.Mage
             DotDuration = 12;
             DotTickInterval = 3;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
-            BaseAdditiveSpellModifier -= 0.02f * solver.MageTalents.FirePower; // Living Bomb dot does not benefit from Fire Power
-            BaseDirectDamageModifier *= (1 + 0.02f * solver.MageTalents.FirePower);
             Dirty = false;
         }
     }

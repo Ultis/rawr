@@ -801,14 +801,25 @@ namespace Rawr.Mage
             contribList.Sort();
             foreach (SpellContribution contrib in contribList)
             {
-                sb.AppendFormat("{0}: {1:F}%, {2:F} Damage\r\n",
-                    contrib.Name,
-                    100.0 * contrib.Damage / totalDamage,
-                    contrib.Damage);
-                sb.AppendFormat("\tHits (#: {0:F}, Avg: {1:F}, Total: {2:F})\r\n", 
-                    contrib.Hits,
-                    contrib.HitDamage / contrib.Hits,
-                    contrib.HitDamage);
+                if (contrib.HitDamage > 0)
+                {
+                    sb.AppendFormat("{0}: {1:F}%, {2:F} Damage\r\n",
+                        contrib.Name,
+                        100.0 * contrib.Damage / totalDamage,
+                        contrib.Damage);
+                    sb.AppendFormat("\tHits (#: {0:F}, Avg: {1:F}, Total: {2:F})\r\n",
+                        contrib.Hits,
+                        contrib.HitDamage / contrib.Hits,
+                        contrib.HitDamage);
+                }
+                else
+                {
+                    sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\r\n",
+                        contrib.Name,
+                        100.0 * contrib.Damage / totalDamage,
+                        contrib.Damage,
+                        contrib.Hits);
+                }
                 if (contrib.CritDamage > 0)
                 {
                     sb.AppendFormat("\tCrits (#: {0:F}, Avg: {1:F}, Total: {2:F})\r\n",
