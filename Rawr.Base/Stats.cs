@@ -72,7 +72,6 @@ namespace Rawr {
         RangedCritRating,
         RangedHasteRating,
         Resilience,
-        RPp5,
         ScopeDamage,
         ShadowResistance,
         SpellArcaneDamageRating,
@@ -110,11 +109,6 @@ namespace Rawr {
 		BonusFerociousBiteCrit,
 		BonusRipCrit,
         BonusRakeCrit,
-        BonusObliterateDamage,
-        BonusScourgeStrikeDamage,
-        BonusHeartStrikeMultiplier,
-        BonusScourgeStrikeMultiplier,
-        BonusObliterateMultiplier,
         BonusInsectSwarmDamage,
         BonusNukeCritChance,
         TigersFuryCooldownReduction,
@@ -299,8 +293,10 @@ namespace Rawr {
         #region Added by Rawr.Warlock
         AttackPowerDemons,
         #endregion
-        #region Added by Rawr.TankDK
-        BonusMaxRunicPower,    // Improper use: used as a talent intermediate, please cleanup
+        #region Added by DK*
+        BonusObliterateDamage,
+        BonusScourgeStrikeDamage,
+        RPp5,
         #endregion
         #region Set Bonuses: Warlock
         Warlock4T7,
@@ -339,25 +335,15 @@ namespace Rawr {
         #region DK set bonuses
         DiseasesCanCrit,
         BonusAntiMagicShellDamageReduction,
-        BonusDeathCoilCrit,
-        BonusDeathStrikeCrit,
-        BonusFrostStrikeCrit,
         BonusIceboundFortitudeDuration,
-        BonusObliterateCrit,
-        BonusPerDiseaseBloodStrikeDamage,
-        BonusPerDiseaseHeartStrikeDamage,
-        BonusPerDiseaseObliterateDamage,
-        BonusPerDiseaseScourgeStrikeDamage,
-        BonusPlagueStrikeCrit,
+
         BonusRPFromDeathStrike,
         BonusRPFromObliterate,
         BonusRPFromScourgeStrike,
-        BonusScourgeStrikeCrit,
         TankDK_T10_2pc,
         TankDK_T10_4pc,
         #endregion
         #region Runeforges
-        BonusFrostWeaponDamage,
         CinderglacierProc,
         #endregion
         #region Damage Procs
@@ -419,9 +405,27 @@ namespace Rawr {
         SnareRootDurReduc,
         FearDurReduc,
         #region Added by Rawr.TankDK
+        BonusFrostWeaponDamage,
+
         BonusRuneStrikeMultiplier,
         BonusBloodStrikeDamageMultiplier, // T9_2p
         BonusHeartStrikeDamageMultiplier, // T9_2p
+        BonusHeartStrikeMultiplier,
+        BonusScourgeStrikeMultiplier,
+        BonusObliterateMultiplier,
+
+        BonusDeathCoilCrit,
+        BonusDeathStrikeCrit,
+        BonusFrostStrikeCrit,
+        BonusObliterateCrit,
+        BonusPlagueStrikeCrit,
+        BonusScourgeStrikeCrit,
+
+        BonusPerDiseaseBloodStrikeDamage,
+        BonusPerDiseaseHeartStrikeDamage,
+        BonusPerDiseaseObliterateDamage,
+        BonusPerDiseaseScourgeStrikeDamage,
+
         #endregion
         #region Added by Rawr.Feral
         BonusLacerateDamageMultiplier,
@@ -1470,6 +1474,16 @@ namespace Rawr {
         #region Death Knight Bonuses
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Runic Power per 5 Seconds")]
+        public float RPp5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RPp5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RPp5] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Death Knight")]
+        [DisplayName("Bonus Obliterate Damage")]
         public float BonusObliterateDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage]; }
@@ -1478,6 +1492,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Diseases Can Crit")]
         public float DiseasesCanCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DiseasesCanCrit]; }
@@ -1487,32 +1502,36 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Death Knight")]
+        [DisplayName("% Bonus Heart Strike Damage Multiplier")]
         public float BonusHeartStrikeMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusHeartStrikeMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHeartStrikeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHeartStrikeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Death Knight")]
+        [DisplayName("% Bonus Scourge Strike Damage Multiplier")]
         public float BonusScourgeStrikeMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusScourgeStrikeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusScourgeStrikeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Death Knight")]
+        [DisplayName("% Bonus Obliterate Damage Multiplier")]
         public float BonusObliterateMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusObliterateMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusObliterateMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Scourge Strike Damage")]
         public float BonusScourgeStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage]; }
@@ -1541,6 +1560,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Death Coil Damage")]
         public float BonusDeathCoilDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilDamage]; }
@@ -1549,6 +1569,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Frost Strike Damage")]
         public float BonusFrostStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeDamage]; }
@@ -1557,6 +1578,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Howling Blast Damage")]
         public float BonusHowlingBlastDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusHowlingBlastDamage]; }
@@ -1569,8 +1591,8 @@ namespace Rawr {
         [DisplayName("% White Damage as Frost Damage")]
         public float BonusFrostWeaponDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostWeaponDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusFrostWeaponDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostWeaponDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostWeaponDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1584,6 +1606,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Death Strike Damage")]
         public float BonusDeathStrikeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeDamage]; }
@@ -1592,6 +1615,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus Icy Touch Damage")]
         public float BonusIcyTouchDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusIcyTouchDamage]; }
@@ -1600,6 +1624,7 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus AMS Damage Reduction")]
         public float BonusAntiMagicShellDamageReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusAntiMagicShellDamageReduction]; }
@@ -1612,8 +1637,8 @@ namespace Rawr {
         [DisplayName("% Bonus Death Coil Crit")]
         public float BonusDeathCoilCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathCoilCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDeathCoilCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDeathCoilCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1622,8 +1647,8 @@ namespace Rawr {
         [DisplayName("% Bonus Death Strike Crit")]
         public float BonusDeathStrikeCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDeathStrikeCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDeathStrikeCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDeathStrikeCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1632,12 +1657,13 @@ namespace Rawr {
         [DisplayName("% Bonus Frost Strike Crit")]
         public float BonusFrostStrikeCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusFrostStrikeCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostStrikeCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostStrikeCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Death Knight")]
+        [DisplayName("Bonus IBF Duration")]
         public float BonusIceboundFortitudeDuration
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusIceboundFortitudeDuration]; }
@@ -1650,8 +1676,8 @@ namespace Rawr {
         [DisplayName("% Obliterate Crit")]
         public float BonusObliterateCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusObliterateCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusObliterateCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1660,8 +1686,8 @@ namespace Rawr {
         [DisplayName("% Bonus Damage Per Disease For Blood Strike")]
         public float BonusPerDiseaseBloodStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseBloodStrikeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseBloodStrikeDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseBloodStrikeDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseBloodStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1670,8 +1696,8 @@ namespace Rawr {
         [DisplayName("% Bonus Damage Per Disease For Heart Strike")]
         public float BonusPerDiseaseHeartStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseHeartStrikeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseHeartStrikeDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseHeartStrikeDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseHeartStrikeDamage] = value; }
         }
 
         
@@ -1681,8 +1707,8 @@ namespace Rawr {
         [DisplayName("% Bonus Damage Per Disease For Obliterate")]
         public float BonusPerDiseaseObliterateDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseObliterateDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseObliterateDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseObliterateDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseObliterateDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1691,8 +1717,8 @@ namespace Rawr {
         [DisplayName("% Bonus Damage Per Disease For Scourge Strike")]
         public float BonusPerDiseaseScourgeStrikeDamage
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseScourgeStrikeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPerDiseaseScourgeStrikeDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseScourgeStrikeDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPerDiseaseScourgeStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1701,8 +1727,8 @@ namespace Rawr {
         [DisplayName("% Bonus Plague Strike Crit")]
         public float BonusPlagueStrikeCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusPlagueStrikeCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusPlagueStrikeCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPlagueStrikeCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPlagueStrikeCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1738,8 +1764,8 @@ namespace Rawr {
         [DisplayName("% Rune Strike Damage Multiplier")]
         public float BonusRuneStrikeMultiplier
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRuneStrikeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1748,8 +1774,8 @@ namespace Rawr {
         [DisplayName("% Blood Strike Damage Multiplier")]
         public float BonusBloodStrikeDamageMultiplier
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusBloodStrikeDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1758,8 +1784,8 @@ namespace Rawr {
         [DisplayName("% Heart Strike Damage Multiplier")]
         public float BonusHeartStrikeDamageMultiplier
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHeartStrikeDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1768,8 +1794,8 @@ namespace Rawr {
         [DisplayName("% Bonus Scourge Strike Crit")]
         public float BonusScourgeStrikeCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeCrit] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusScourgeStrikeCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusScourgeStrikeCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2180,24 +2206,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HealingOmenProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.HealingOmenProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [CommonStat]
-        public float RPp5
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RPp5]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RPp5] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deathknight")]
-        [CommonStat]
-        public float BonusMaxRunicPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusMaxRunicPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -90,7 +90,11 @@ namespace Rawr.TankDK {
         }
         #endregion
 
+        #region Intermediate Values
+        public float BonusMaxRunicPower = 0f;
         public bool m_bT9_4PC = false;
+        #endregion 
+        
         public static int HitResultCount = EnumHelper.GetCount(typeof(HitResult));
 
         #region SubPointColors
@@ -1533,7 +1537,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Increases Max RP by 15 per point
             if (character.DeathKnightTalents.RunicPowerMastery > 0)
             {
-                FullCharacterStats.BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
+                BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
             }
 
             // Toughness
@@ -2056,7 +2060,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
 			    BonusHealingReceived = stats.BonusHealingReceived,
                 RPp5 = stats.RPp5,
-                BonusMaxRunicPower = stats.BonusMaxRunicPower,
                 TankDK_T10_2pc = stats.TankDK_T10_2pc,
                 TankDK_T10_4pc = stats.TankDK_T10_4pc,
 
@@ -2240,7 +2243,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.BonusAntiMagicShellDamageReduction != 0);
             bResults |= (stats.BonusHealingReceived != 0);
             bResults |= (stats.RPp5 != 0);
-            bResults |= (stats.BonusMaxRunicPower != 0);
             bResults |= (stats.TankDK_T10_2pc != 0);
             bResults |= (stats.TankDK_T10_4pc != 0);
 
