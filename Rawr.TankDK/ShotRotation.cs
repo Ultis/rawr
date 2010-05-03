@@ -62,12 +62,15 @@ namespace Rawr.TankDK {
 
         public Rotation(DeathKnightTalents t)
         {
-            tTalents = t;
-            int iHash = 0;
-            if (tTalents != null)
+            if (null != t)
+            {
+                tTalents = t.Clone();
+                //            int iHash = 0;
                 this.GetRotationByTalents(tTalents);
+            }
             else
-                this.setRotation(this.curRotationType); 
+                this.setRotation(this.curRotationType);
+
         }
 
         public enum Type { Custom, Blood, Frost, Unholy }
