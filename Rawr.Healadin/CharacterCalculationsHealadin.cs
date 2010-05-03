@@ -71,7 +71,6 @@ namespace Rawr.Healadin
 
         public float ManaBase { get; set; }
         public float ManaMp5 { get; set; }
-        public float ManaPotion { get; set; }
         public float ManaReplenishment { get; set; }
         public float ManaArcaneTorrent { get; set; }
         public float ManaDivinePlea { get; set; }

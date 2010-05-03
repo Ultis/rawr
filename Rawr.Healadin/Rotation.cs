@@ -70,7 +70,6 @@ namespace Rawr.Healadin
             calc.ManaArcaneTorrent = (Character.Race == CharacterRace.BloodElf ? Stats.Mana * .06f * (float)Math.Ceiling(FightLength / 120f - .25f) : 0);
             calc.ManaDivinePlea = Stats.Mana * .25f * DivinePleas;
             calc.ManaMp5 = FightLength * Stats.Mp5 / 5f;
-            calc.ManaPotion = (1 + Stats.BonusManaPotion) * CalcOpts.ManaAmt;
             calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
             if (Stats.HighestStat > 0)
@@ -79,7 +78,7 @@ namespace Rawr.Healadin
                 calc.ManaReplenishment += Stats.ManaRestoreFromMaxManaPerSecond * FightLength * greatnessMana * CalcOpts.Replenishment; // Replenishment
                 calc.ManaDivinePlea += DivinePleas * greatnessMana * .25f; // Divine Plea
             }
-            return calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion +
+            return calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther +
                 calc.ManaReplenishment + calc.ManaLayOnHands;
         }
 

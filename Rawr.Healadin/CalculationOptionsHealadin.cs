@@ -20,7 +20,6 @@ namespace Rawr.Healadin
         public CalculationOptionsHealadin()
         {
             length = 7;
-            manaAmt = 4300;
             activity = .85f;
             replenishment = .9f;
             divinePlea = 2f;
@@ -45,13 +44,6 @@ namespace Rawr.Healadin
         {
             get { return length; }
             set { length = value; OnPropertyChanged("Length"); }
-        }
-
-        private float manaAmt;
-        public float ManaAmt
-        {
-            get { return manaAmt; }
-            set { manaAmt = value; OnPropertyChanged("ManaAmt"); }
         }
 
         private float activity;

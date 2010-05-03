@@ -472,23 +472,21 @@ namespace Rawr.Healadin
 
                 ComparisonCalculationHealadin Base = new ComparisonCalculationHealadin("Base");
                 ComparisonCalculationHealadin Mp5 = new ComparisonCalculationHealadin("Mp5");
-                ComparisonCalculationHealadin Potion = new ComparisonCalculationHealadin("Potion");
                 ComparisonCalculationHealadin Replenishment = new ComparisonCalculationHealadin("Replenishment");
                 ComparisonCalculationHealadin ArcaneTorrent = new ComparisonCalculationHealadin("Arcane Torrent");
                 ComparisonCalculationHealadin DivinePlea = new ComparisonCalculationHealadin("Divine Plea");
                 ComparisonCalculationHealadin LoH = new ComparisonCalculationHealadin("Lay on Hands");
-                ComparisonCalculationHealadin Other = new ComparisonCalculationHealadin("Other");
+                ComparisonCalculationHealadin Other = new ComparisonCalculationHealadin("Potion & Other");
 
                 Base.OverallPoints = Base.ThroughputPoints = calc.ManaBase;
                 Mp5.OverallPoints = Mp5.ThroughputPoints = calc.ManaMp5;
                 LoH.OverallPoints = LoH.ThroughputPoints = calc.ManaLayOnHands;
-                Potion.OverallPoints = Potion.ThroughputPoints = calc.ManaPotion;
                 Replenishment.OverallPoints = Replenishment.ThroughputPoints = calc.ManaReplenishment;
                 ArcaneTorrent.OverallPoints = ArcaneTorrent.ThroughputPoints = calc.ManaArcaneTorrent;
                 DivinePlea.OverallPoints = DivinePlea.ThroughputPoints = calc.ManaDivinePlea;
                 Other.OverallPoints = Other.ThroughputPoints = calc.ManaOther;
 
-                return new ComparisonCalculationBase[] { Base, Mp5, Potion, Replenishment, LoH, ArcaneTorrent, DivinePlea, Other };
+                return new ComparisonCalculationBase[] { Base, Mp5, Replenishment, LoH, ArcaneTorrent, DivinePlea, Other };
             }
             else if (chartName == "Mana Usage Breakdown")
             {
