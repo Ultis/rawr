@@ -462,6 +462,7 @@ namespace Rawr.Mage
                 result.spellIndex = 0;
                 result.cycleIndex = 0;
                 result.stateIndex = 0;
+                result.effectIndex = 0;
                 pool.RemoveAt(bestIndex);
                 return result;
             }
