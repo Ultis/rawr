@@ -4,6 +4,77 @@ using System.Text;
 
 namespace Rawr.Warlock {
 
+    public class StatUtils {
+
+        public static float CalcStamina(Stats stats) {
+
+            return stats.Stamina * (1f + stats.BonusStaminaMultiplier);
+        }
+
+        public static float CalcIntellect(Stats stats) {
+
+            return stats.Intellect * (1f + stats.BonusIntellectMultiplier);
+        }
+
+        public static float CalcSpirit(Stats stats) {
+
+            return stats.Spirit * (1f + stats.BonusSpiritMultiplier);
+        }
+
+        public static float CalcHealth(Stats stats) {
+
+            return (stats.Health
+                    + StatConversion.GetHealthFromStamina(CalcStamina(stats)))
+                * (1 + stats.BonusHealthMultiplier);
+        }
+
+        public static float CalcMana(Stats stats) {
+
+            return (1 + stats.BonusManaMultiplier)
+                * (stats.Mana
+                    + StatConversion.GetManaFromIntellect(
+                        CalcIntellect(stats)));
+        }
+
+        public static float CalcUsableMana(Stats stats, float fightLen) {
+
+            float mps
+                = stats.Mp5 / 5f
+                    + stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
+            return CalcMana(stats) + stats.ManaRestore + mps * fightLen;
+        }
+
+        public static float CalcSpellCrit(Stats stats) {
+
+            return stats.SpellCrit
+                + StatConversion.GetSpellCritFromIntellect(CalcIntellect(stats))
+                + StatConversion.GetSpellCritFromRating(stats.CritRating)
+                + stats.BonusCritChance
+                + stats.SpellCritOnTarget;
+        }
+
+        public static float CalcSpellHit(Stats stats) {
+
+            return stats.SpellHit
+                + StatConversion.GetSpellHitFromRating(stats.HitRating);
+        }
+
+        public static float CalcSpellPower(Stats stats) {
+
+            return (stats.SpellPower
+                    + stats.SpellDamageFromSpiritPercentage * CalcSpirit(stats))
+                * (1f + stats.BonusSpellPowerMultiplier);
+        }
+
+        public static float CalcSpellHaste(Stats stats) {
+
+            return (1f + stats.SpellHaste)
+                * (1f
+                    + StatConversion.GetSpellHasteFromRating(
+                        stats.HasteRating));
+        }
+    }
+
     public class SpellModifiers {
 
         public float AdditiveMultiplier { get; private set; }

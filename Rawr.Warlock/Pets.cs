@@ -20,6 +20,7 @@ namespace Rawr.Warlock {
         }
 
         public CharacterCalculationsWarlock Mommy { get; protected set; }
+        public Stats Stats { get; protected set; }
 
         public float BaseStamina { get; protected set; }
         public float StaminaCoef { get; protected set; }
@@ -32,6 +33,9 @@ namespace Rawr.Warlock {
         public float BaseMana { get; protected set; }
         public float SpellCritPerIntellect { get; protected set; }
         public float BaseSpellCrit { get; protected set; }
+
+        public float BaseSpellPower { get; protected set; }
+        public float SpellPowerCoef { get; protected set; }
 
         public Pet(
             CharacterCalculationsWarlock mommy,
@@ -51,23 +55,47 @@ namespace Rawr.Warlock {
             BaseMana = 1343f;
             SpellCritPerIntellect = .006f;
             BaseSpellCrit = 3.333f;
+
+            BaseSpellPower = 0f;
+            SpellPowerCoef = .15f;
+        }
+
+        public void CalcStats() {
+
+            float vitality = Mommy.Talents.FelVitality * .05f;
+            Stats = new Stats() {
+                Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina(),
+                Intellect
+                    = BaseIntellect + IntellectCoef * Mommy.CalcIntellect(),
+                SpellPower
+                    = BaseSpellPower + SpellPowerCoef * Mommy.CalcSpellPower(),
+                BonusStaminaMultiplier = vitality,
+                BonusIntellectMultiplier = vitality,
+            };
+            Stats.Accumulate(Mommy.PetBuffs);
         }
 
         public float CalcStamina() {
 
-            return (BaseStamina + StaminaCoef * Mommy.CalcStamina())
-                * (1f + Mommy.Talents.FelVitality * .05f);
+            return StatUtils.CalcStamina(Stats);
         }
 
         public float CalcIntellect() {
 
-            return (BaseIntellect + IntellectCoef * Mommy.CalcIntellect())
-                * (1f + Mommy.Talents.FelVitality * .05f);
+            return StatUtils.CalcIntellect(Stats);
         }
 
         public float CalcHealth() {
 
-            return BaseHealth + HealthPerStamina * CalcStamina();
+            // sadly, pets do not have the same stamina->health conversion as
+            // players, so have to write our own CalcHealth method.
+            return (Stats.Health + HealthPerStamina * CalcStamina())
+                * (1 + Stats.BonusHealthMultiplier);
+        }
+
+        public float CalcSpellPower() {
+
+            return StatUtils.CalcSpellPower(Stats);
         }
     }
 

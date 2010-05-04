@@ -24,6 +24,7 @@ namespace Rawr.Warlock {
         public Character Character { get; private set; }
         public Pet Pet { get; private set; }
         public Stats PreProcStats { get; private set; }
+        public Stats PetBuffs { get; private set; }
         public Stats Stats { get; private set; }
         public CalculationOptionsWarlock Options { get; private set; }
         public WarlockTalents Talents { get; private set; }
@@ -47,7 +48,11 @@ namespace Rawr.Warlock {
 
         public CharacterCalculationsWarlock() { }
 
-        public CharacterCalculationsWarlock(Character character, Stats stats) {
+        /// <param name="stats">
+        /// This should already have buffStats factored in.
+        /// </param>
+        public CharacterCalculationsWarlock(
+            Character character, Stats stats, Stats petBuffs) {
 
             Character = character;
             Options = (CalculationOptionsWarlock) character.CalculationOptions;
@@ -57,6 +62,7 @@ namespace Rawr.Warlock {
             Talents = character.WarlockTalents;
             Stats = stats;
             PreProcStats = Stats.Clone();
+            PetBuffs = petBuffs;
             BaseMana = BaseStats.GetBaseStats(character).Mana;
             Spells = new Dictionary<string, Spell>();
             CastSpells = new Dictionary<string, Spell>();
@@ -66,16 +72,12 @@ namespace Rawr.Warlock {
                     Options.GetBaseHitRate() / 100f + CalcSpellHit());
 
             if (!Options.Pet.Equals("None")
-                && (!Options.Pet.Equals("Felguard")
-                    || Talents.SummonFelguard > 0)) {
+                && (Talents.SummonFelguard > 0
+                    || !Options.Pet.Equals("Felguard"))) {
 
                 Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
                 Pet = (Pet) Activator.CreateInstance(
                         type, new object[] { this });
-                Stats.SpellPower
-                    += Talents.DemonicKnowledge
-                        * .04f
-                        * (Pet.CalcStamina() + Pet.CalcIntellect());
             }
 
             float personalDps = CalcPersonalDps();
@@ -89,90 +91,33 @@ namespace Rawr.Warlock {
 
         #region Stat accessors
 
-        public float CalcStamina() { return GetStamina(Stats); }
-        public float GetStamina(Stats stats) {
+        public float CalcStamina() { return StatUtils.CalcStamina(Stats); }
 
-            return stats.Stamina * (1f + stats.BonusStaminaMultiplier);
-        }
+        public float CalcIntellect() { return StatUtils.CalcIntellect(Stats); }
 
-        public float CalcIntellect() { return GetIntellect(Stats); }
-        public float GetIntellect(Stats stats) {
+        public float CalcSpirit() { return StatUtils.CalcSpirit(Stats); }
 
-            return stats.Intellect * (1f + stats.BonusIntellectMultiplier);
-        }
+        public float CalcHealth() { return StatUtils.CalcHealth(Stats); }
 
-        public float CalcSpirit() { return GetSpirit(Stats); }
-        public float GetSpirit(Stats stats) {
-
-            return stats.Spirit * (1f + stats.BonusSpiritMultiplier);
-        }
-
-        public float CalcHealth() { return GetHealth(Stats); }
-        public float GetHealth(Stats stats) {
-
-            return (stats.Health
-                    + StatConversion.GetHealthFromStamina(GetStamina(stats)))
-                * (1 + stats.BonusHealthMultiplier);
-        }
-
-        public float CalcMana() { return GetMana(Stats); }
-        public float GetMana(Stats stats) {
-
-            return (1 + stats.BonusManaMultiplier)
-                * (stats.Mana
-                    + StatConversion.GetManaFromIntellect(GetIntellect(stats)));
-        }
+        public float CalcMana() { return StatUtils.CalcMana(Stats); }
 
         public float CalcUsableMana(float fightLen) {
-            return GetUsableMana(Stats, fightLen);
-        }
-        public float GetUsableMana(Stats stats, float fightLen) {
-
-            float mps
-                = stats.Mp5 / 5f
-                    + stats.Mana
-                        * Math.Max(
-                            stats.ManaRestoreFromMaxManaPerSecond,
-                            .002f
-                                * Spell.CalcUprate(
-                                    Talents.ImprovedSoulLeech * .5f,
-                                    15f,
-                                    AvgTimeUsed * 1.1f));
-            return GetMana(stats) + stats.ManaRestore + mps * fightLen;
+            
+            return StatUtils.CalcUsableMana(Stats, fightLen);
         }
 
-        public float CalcSpellCrit() { return GetSpellCrit(Stats); }
-        public float GetSpellCrit(Stats stats) {
+        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats); }
 
-            return stats.SpellCrit
-                + StatConversion.GetSpellCritFromIntellect(GetIntellect(stats))
-                + StatConversion.GetSpellCritFromRating(stats.CritRating)
-                + stats.BonusCritChance
-                + stats.SpellCritOnTarget;
+        public float CalcSpellHit() { return StatUtils.CalcSpellHit(Stats); }
+
+        public float CalcSpellPower() {
+            
+            return StatUtils.CalcSpellPower(Stats);
         }
 
-        public float CalcSpellHit() { return GetSpellHit(Stats); }
-        public float GetSpellHit(Stats stats) {
-
-            return stats.SpellHit
-                + StatConversion.GetSpellHitFromRating(stats.HitRating);
-        }
-
-        public float CalcSpellPower() { return GetSpellPower(Stats); }
-        public float GetSpellPower(Stats stats) {
-
-            return (stats.SpellPower
-                    + (1 + Talents.DemonicAegis * 0.10f)
-                        * (.3f * GetSpirit(stats) + 180f))
-                * (1f + stats.BonusSpellPowerMultiplier);
-        }
-
-        public float CalcSpellHaste() { return GetSpellHaste(Stats); }
-        public float GetSpellHaste(Stats stats) {
-
-            return 1
-                + stats.SpellHaste
-                + StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+        public float CalcSpellHaste() {
+            
+            return StatUtils.CalcSpellHaste(Stats);
         }
 
         #endregion
@@ -222,7 +167,7 @@ namespace Rawr.Warlock {
                 string.Format(
                     "{0:0.0}*{1:0.0}\tBefore Procs",
                     CalcSpellPower(),
-                    GetSpellPower(PreProcStats)));
+                    StatUtils.CalcSpellPower(PreProcStats)));
 
             #region Hit Rating
             float onePercentOfHitRating
@@ -269,7 +214,7 @@ namespace Rawr.Warlock {
                 string.Format(
                     "{0:0.00%}*{1:0.00%}\tBefore Procs",
                     CalcSpellCrit(),
-                    GetSpellCrit(PreProcStats)));
+                    StatUtils.CalcSpellCrit(PreProcStats)));
 
             dictValues.Add(
                 "Average Haste",
@@ -279,7 +224,7 @@ namespace Rawr.Warlock {
                         + "{2:0.00}%\tBefore Procs",
                     (AvgHaste - 1) * 100f,
                     Math.Max(1.0f, 1.5f / AvgHaste),
-                    (GetSpellHaste(PreProcStats) - 1) * 100f));
+                    (StatUtils.CalcSpellHaste(PreProcStats) - 1) * 100f));
 
             // Pet Stats
             if (Pet == null) {
@@ -371,7 +316,7 @@ namespace Rawr.Warlock {
                 // the debuff.
                 Stats.BonusFireDamageMultiplier
                     = Stats.BonusShadowDamageMultiplier
-                    = Stats.BonusHolyDamageMultiplier 
+                    = Stats.BonusHolyDamageMultiplier
                     = Stats.BonusFrostDamageMultiplier
                     = Stats.BonusNatureDamageMultiplier
                     = .13f;
@@ -435,6 +380,14 @@ namespace Rawr.Warlock {
                 }
             }
 
+            if (Pet != null) {
+                Pet.CalcStats();
+                Stats.SpellPower
+                    += Talents.DemonicKnowledge
+                        * .04f
+                        * (Pet.CalcStamina() + Pet.CalcIntellect());
+            }
+
             // finilize each spell's modifiers.
             // Start with Conflagrate, since pyroclasm depends on its results.
             if (CastSpells.ContainsKey("Conflagrate")) {
@@ -478,7 +431,7 @@ namespace Rawr.Warlock {
 
         private void CalcHasteAndManaProcs() {
 
-            float nonProcHaste = GetSpellHaste(PreProcStats);
+            float nonProcHaste = StatUtils.CalcSpellHaste(PreProcStats);
             if (Options.NoProcs) {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
@@ -723,7 +676,8 @@ namespace Rawr.Warlock {
                     procStats.Accumulate(proc);
                     if (effect.Trigger == Trigger.Use && !IsDoublePot(effect)) {
                         ExtraCritAtMax
-                            += GetSpellCrit(effect.Stats) - GetSpellCrit(proc);
+                            += StatUtils.CalcSpellCrit(effect.Stats)
+                                - StatUtils.CalcSpellCrit(proc);
                     }
                 }
             }
@@ -754,7 +708,7 @@ namespace Rawr.Warlock {
             SpellModifiers modifiers) {
 
             damagePerProc *=
-                (1  + (modifiers.GetFinalCritMultiplier() - 1)
+                (1 + (modifiers.GetFinalCritMultiplier() - 1)
                         * modifiers.CritChance)
                     * modifiers.GetFinalDirectMultiplier()
                     * (1

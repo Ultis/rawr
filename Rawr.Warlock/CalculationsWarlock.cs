@@ -219,10 +219,21 @@ namespace Rawr.Warlock {
                 bool significantChange,
                 bool needsDisplayCalculations) {
 
-            Stats stats = GetCharacterStats(character, additionalItem);
-            CharacterCalculationsWarlock calculatedStats
-                = new CharacterCalculationsWarlock(character, stats);
-            return calculatedStats;
+            return new CharacterCalculationsWarlock(
+                character,
+                GetCharacterStats(character, additionalItem),
+                GetPetBuffStats(character));
+        }
+
+        private Stats GetPetBuffStats(Character character) {
+
+            Stats stats = GetBuffsStats(character.ActiveBuffs);
+            ApplyPetsRaidBuff(
+                stats,
+                ((CalculationOptionsWarlock) character.CalculationOptions).Pet,
+                character.WarlockTalents,
+                character.ActiveBuffs);
+            return stats;
         }
 
         /// <summary>Gets the total Stats of the Character</summary>
@@ -253,24 +264,11 @@ namespace Rawr.Warlock {
                 Debug.Assert(options.Imbue.Equals("Grand Firestone"));
                 stats.CritRating += 49f * (1f + talents.MasterConjuror * 1.5f);
             }
-            if (options.Pet.Equals("Imp")) {
-                stats.Health += GetBuffEffect(
-                    character,
-                    1330f * (1 + talents.ImprovedImp * .1f),
-                    "Health",
-                    s => s.Health);
-            } else if (options.Pet.Equals("Felhunter")) {
-                stats.Intellect += GetBuffEffect(
-                    character,
-                    48f * (1 + talents.ImprovedFelhunter * .05f),
-                    "Intellect",
-                    s => s.Intellect);
-                stats.Spirit += GetBuffEffect(
-                    character,
-                    64f * (1 + talents.ImprovedFelhunter * .05f),
-                    "Spirit",
-                    s => s.Spirit);
-            }
+            ApplyPetsRaidBuff(
+                stats, options.Pet, talents, character.ActiveBuffs);
+            float aegis = 1f + talents.DemonicAegis * 0.10f;
+            stats.SpellPower += 180f * aegis; // fel armor
+            stats.SpellDamageFromSpiritPercentage += .3f * aegis; // fel armor
 
             // Talents
             float[] talentValues = { 0f, .04f, .07f, .1f };
@@ -306,23 +304,57 @@ namespace Rawr.Warlock {
                         .06f));
             }
             stats.Accumulate(statsTalents);
+            stats.ManaRestoreFromMaxManaPerSecond
+                = Math.Max(
+                    stats.ManaRestoreFromMaxManaPerSecond,
+                    .002f
+                        * Spell.CalcUprate(
+                            talents.ImprovedSoulLeech * .5f,
+                            15f,
+                            options.Duration * 1.1f));
 
             return stats;
         }
 
+        private void ApplyPetsRaidBuff(
+            Stats stats,
+            string pet,
+            WarlockTalents talents,
+            List<Buff> activeBuffs) {
+
+            if (pet.Equals("Imp")) {
+                stats.Health += GetBuffEffect(
+                    activeBuffs,
+                    1330f * (1 + talents.ImprovedImp * .1f),
+                    "Health",
+                    s => s.Health);
+            } else if (pet.Equals("Felhunter")) {
+                stats.Intellect += GetBuffEffect(
+                    activeBuffs,
+                    48f * (1 + talents.ImprovedFelhunter * .05f),
+                    "Intellect",
+                    s => s.Intellect);
+                stats.Spirit += GetBuffEffect(
+                    activeBuffs,
+                    64f * (1 + talents.ImprovedFelhunter * .05f),
+                    "Spirit",
+                    s => s.Spirit);
+            }
+        }
+
         private delegate float StatExtractor(Stats stats);
         private float GetBuffEffect(
-            Character character,
+            List<Buff> activeBuffs,
             float candidateBuff,
             string group,
             StatExtractor extractor) {
 
             float active = 0f;
-            foreach (Buff buff in character.ActiveBuffs) {
+            foreach (Buff buff in activeBuffs) {
                 if (buff.ConflictingBuffs.Contains(group)) {
                     active += extractor(buff.Stats);
                     foreach (Buff improvement in buff.Improvements) {
-                        if (character.ActiveBuffs.Contains(improvement)) {
+                        if (activeBuffs.Contains(improvement)) {
                             active += extractor(improvement.Stats);
                         }
                     }

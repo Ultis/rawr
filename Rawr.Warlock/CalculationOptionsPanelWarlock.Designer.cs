@@ -60,7 +60,7 @@
             this.optionsPage = new System.Windows.Forms.TabPage();
             this.imbueLabel = new System.Windows.Forms.Label();
             this.imbueCombo = new System.Windows.Forms.ComboBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.debugTab = new System.Windows.Forms.TabPage();
             this.TimerButton = new System.Windows.Forms.Button();
             this.ProcCheckbox = new System.Windows.Forms.CheckBox();
             this.rotationBox.SuspendLayout();
@@ -69,7 +69,7 @@
             this.tabbedPane.SuspendLayout();
             this.notesPage.SuspendLayout();
             this.optionsPage.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.debugTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // petCombo
@@ -373,7 +373,7 @@
             // 
             this.tabbedPane.Controls.Add(this.notesPage);
             this.tabbedPane.Controls.Add(this.optionsPage);
-            this.tabbedPane.Controls.Add(this.tabPage1);
+            this.tabbedPane.Controls.Add(this.debugTab);
             this.tabbedPane.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabbedPane.Location = new System.Drawing.Point(0, 0);
             this.tabbedPane.Name = "tabbedPane";
@@ -451,17 +451,17 @@
             this.imbueCombo.TabIndex = 3;
             this.imbueCombo.SelectedIndexChanged += new System.EventHandler(this.imbueCombo_SelectedIndexChanged);
             // 
-            // tabPage1
+            // debugTab
             // 
-            this.tabPage1.Controls.Add(this.TimerButton);
-            this.tabPage1.Controls.Add(this.ProcCheckbox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(292, 474);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Debug";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.debugTab.Controls.Add(this.TimerButton);
+            this.debugTab.Controls.Add(this.ProcCheckbox);
+            this.debugTab.Location = new System.Drawing.Point(4, 22);
+            this.debugTab.Name = "debugTab";
+            this.debugTab.Padding = new System.Windows.Forms.Padding(3);
+            this.debugTab.Size = new System.Drawing.Size(292, 474);
+            this.debugTab.TabIndex = 2;
+            this.debugTab.Text = "Debug";
+            this.debugTab.UseVisualStyleBackColor = true;
             // 
             // TimerButton
             // 
@@ -500,8 +500,8 @@
             this.notesPage.PerformLayout();
             this.optionsPage.ResumeLayout(false);
             this.optionsPage.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.debugTab.ResumeLayout(false);
+            this.debugTab.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -537,7 +537,7 @@
         private System.Windows.Forms.TabPage optionsPage;
         private System.Windows.Forms.TabPage notesPage;
         private System.Windows.Forms.TextBox notesBox;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage debugTab;
         private System.Windows.Forms.CheckBox ProcCheckbox;
         private System.Windows.Forms.Button TimerButton;
         private System.Windows.Forms.ComboBox imbueCombo;
