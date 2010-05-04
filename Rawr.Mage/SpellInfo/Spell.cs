@@ -793,6 +793,7 @@ namespace Rawr.Mage
                 dict[Name] = contrib;
             }
             float igniteContribution = 0;
+            float critBonus = CritBonus;
             if (IgniteDamage > 0)
             {
                 igniteContribution = (IgniteDamage + effectSpellPower * IgniteDamagePerSpellPower) / CastTime * duration;
@@ -803,6 +804,7 @@ namespace Rawr.Mage
                     dict["Ignite"] = igniteContrib;
                 }
                 igniteContrib.Damage += igniteContribution;
+                critBonus /= (1 + castingState.Solver.IgniteFactor);
             }
             contrib.Hits += (HitProcs - CritProcs) * duration / CastTime;
             contrib.Crits += CritProcs * duration / CastTime;
@@ -829,9 +831,9 @@ namespace Rawr.Mage
                 }
             }
             // damage = baseDamage * (1 + (CritBonus - 1) * CritRate)
-            float baseDamage = damage / (1 + (CritBonus - 1) * CritRate);
+            float baseDamage = damage / (1 + (critBonus - 1) * CritRate);
             contrib.HitDamage += baseDamage * (1 - CritRate);
-            contrib.CritDamage += baseDamage * CritRate * CritBonus;
+            contrib.CritDamage += baseDamage * CritRate * critBonus;
             contrib.Range = Range;
         }
 
