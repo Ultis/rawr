@@ -319,6 +319,11 @@ namespace Rawr.Warlock {
                     = Stats.BonusHolyDamageMultiplier
                     = Stats.BonusFrostDamageMultiplier
                     = Stats.BonusNatureDamageMultiplier
+                    = PetBuffs.BonusFireDamageMultiplier
+                    = PetBuffs.BonusShadowDamageMultiplier
+                    = PetBuffs.BonusHolyDamageMultiplier
+                    = PetBuffs.BonusFrostDamageMultiplier
+                    = PetBuffs.BonusNatureDamageMultiplier
                     = .13f;
             }
             if (Talents.ImprovedShadowBolt > 0
@@ -342,6 +347,7 @@ namespace Rawr.Warlock {
                     Options.Duration / casts); // trigger period
                 float benefit = .05f - Stats.SpellCritOnTarget;
                 Stats.SpellCritOnTarget += benefit * uprate;
+                PetBuffs.SpellCritOnTarget += benefit * uprate;
             }
             Stats.SpellPower += lifeTap.GetAvgBonusSpellPower();
 
@@ -381,11 +387,12 @@ namespace Rawr.Warlock {
             }
 
             if (Pet != null) {
-                Pet.CalcStats();
+                Pet.CalcStats1();
                 Stats.SpellPower
                     += Talents.DemonicKnowledge
                         * .04f
                         * (Pet.CalcStamina() + Pet.CalcIntellect());
+                Pet.CalcStats2();
             }
 
             // finilize each spell's modifiers.
@@ -426,7 +433,11 @@ namespace Rawr.Warlock {
 
         private float CalcPetDps() {
 
-            return 0f;
+            if (Pet == null) {
+                return 0f;
+            } else {
+                return Pet.CalcMeleeDps() + Pet.CalcSpecialDps();
+            }
         }
 
         private void CalcHasteAndManaProcs() {
