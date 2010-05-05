@@ -10,21 +10,20 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_RuneStrike : AbilityDK_Base
     {
-        public AbilityDK_RuneStrike(Stats s, Weapon MH, Weapon OH, int ThreatOfTharassian)
+        public AbilityDK_RuneStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Rune Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 20;
             this.uBaseDamage = 736; // May need to adjust this.
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.5f;
-            this.DamageAdditiveModifer = 150 * (int)sStats.AttackPower * 10 / 10000;
+            this.DamageAdditiveModifer = 150 * (int)CState.m_Stats.AttackPower * 10 / 10000;
             this.bTriggersGCD = false;
             this.Cooldown = 0;
-            m_iToT = ThreatOfTharassian;
-
+            m_iToT = CState.m_Talents.ThreatOfThassarian;
         }
 
         private int m_iToT = 0;

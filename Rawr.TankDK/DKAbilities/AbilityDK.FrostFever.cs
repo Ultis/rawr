@@ -15,16 +15,16 @@ namespace Rawr.TankDK
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
         /// <param name="Epidemic">How many points into Epidemic?</param>
-        public AbilityDK_FrostFever(Stats s, uint Epidemic)
+        public AbilityDK_FrostFever(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Frost Fever";
             this.tDamageType = ItemDamageType.Frost;
-            if (Epidemic >= 3)
+            if (CS.m_Talents.Epidemic >= 3)
                 // error
                 this.uDuration = 15000;
             else
-                this.uDuration = 15000 + (Epidemic * 3000);
+                this.uDuration = 15000 + ((uint)CS.m_Talents.Epidemic * 3000);
             this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
@@ -41,7 +41,7 @@ namespace Rawr.TankDK
             get
             {
                 //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.sStats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer;
+                return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer;
             }
             set
             {

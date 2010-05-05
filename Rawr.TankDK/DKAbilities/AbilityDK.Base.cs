@@ -74,9 +74,9 @@ namespace Rawr.TankDK
             this.uTickRate = INSTANT;
             this.uDuration = INSTANT;
         }
-        public AbilityDK_Base(Stats s)
+        public AbilityDK_Base(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "";
             this.AbilityCost[(int)DKCostTypes.Blood] = 0;
             this.AbilityCost[(int)DKCostTypes.Frost] = 0;
@@ -92,7 +92,16 @@ namespace Rawr.TankDK
         }
         #endregion 
 
-        protected Stats sStats;
+        /// <summary>
+        /// The state of combat at the time the ability is uesd.
+        /// </summary>
+        protected CombatState CState;
+
+        /// <summary>
+        /// Any DK ability triggered by this ability.  
+        /// Should not be recursive.
+        /// </summary>
+        public AbilityDK_Base m_TriggeredAbility;
 
         /// <summary>
         ///  Name of the ability.
@@ -134,7 +143,7 @@ namespace Rawr.TankDK
                 // Average out the min & max damage, then add in baseDamage from the weapon.
                 // Factor in miss rate based on HIT
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
-                chanceMiss -= sStats.PhysicalHit;
+                chanceMiss -= CState.m_Stats.PhysicalHit;
                 chanceMiss = Math.Max(0f, chanceMiss);
 
                 return (uint)((AvgDam + WDam) * (1 - chanceMiss));
@@ -156,6 +165,12 @@ namespace Rawr.TankDK
         /// The idea is that we want to quantify the area buffing talents.
         /// </summary>
         public uint uArea { get; set; }
+
+        /// <summary>
+        /// Is this an AOE ability?
+        /// </summary>
+        public bool bAOE { get; set; }
+
         /// <summary>
         /// What type of damage does this ability do?
         /// </summary>
@@ -266,7 +281,7 @@ namespace Rawr.TankDK
         /// Get the full effect over the lifetime of the ability.
         /// </summary>
         /// <returns>int that is TickDamage * duration</returns>
-        public int GetTotalDamage()
+        virtual public int GetTotalDamage()
         {
             // Start w/ getting the base damage values.
             int iDamage = this.GetTickDamage();
@@ -284,6 +299,10 @@ namespace Rawr.TankDK
                 fDamageCount = 1;
             }
             iDamage = (int)((float)iDamage * fDamageCount);
+            if (bAOE == true)
+            {
+                iDamage = (int)((float)iDamage * this.CState.m_NumberOfTargets);
+            }
             return iDamage;
         }
 

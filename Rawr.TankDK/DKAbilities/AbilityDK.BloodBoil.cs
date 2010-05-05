@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_BloodBoil : AbilityDK_Base
     {
-        public AbilityDK_BloodBoil(Stats s)
+        public AbilityDK_BloodBoil(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Blood Boil";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -23,7 +23,7 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             this.uRange = 0;
             this.uArea = 10;
-            // TODO: AOE - need to have target numbers.
+            this.bAOE = true;
         }
 
         private int _DamageAdditiveModifer = 95;
@@ -35,10 +35,10 @@ namespace Rawr.TankDK
             get
             {
                 // AP Scaling
-                int AdditionalDamage = (int)(this.sStats.AttackPower * 0.04);
+                int AdditionalDamage = (int)(this.CState.m_Stats.AttackPower * 0.04);
                 // TODO: Additional Disease Damage:
                 // if (uNumDiseases > 0): 95 + (0.035 × Attack Power).
-                return (int)(this.sStats.AttackPower * 0.035) + this._DamageAdditiveModifer + AdditionalDamage;
+                return (int)(this.CState.m_Stats.AttackPower * 0.035) + this._DamageAdditiveModifer + AdditionalDamage;
             }
             set
             {

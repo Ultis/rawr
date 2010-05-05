@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_Pestilence : AbilityDK_Base
     {
-        public AbilityDK_Pestilence(Stats s)
+        public AbilityDK_Pestilence(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Pestilence";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -22,9 +22,9 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             this.uRange = 0;
             this.uArea = 10;
-            // TODO: AOE - need to have target numbers.
-            // Glyph - Refreshes disease
-            // Glyph - extends range
+            this.bAOE = true;
+            // TODO: Glyph - Refreshes disease
+            // TODO: Glyph - extends range
 
         }
     }

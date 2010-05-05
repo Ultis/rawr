@@ -6,6 +6,15 @@ Currently targeting:
 2.3.16:
 * Defect 16231: [EXPERIMETNAL] Additional work on the new abilities work-flow.  Additional data available in the summary pane to support improved visability, only available when the new code is enabled.  Fleshing out a number of the abilities on the rotation.  Optimizer results make slightly more sense when optimizing for Talents, which is a bit disturbing since it's in-complete.
 * Removed a bunch of "TODOs" that are being handled by the re-work.
+* Defect 15913: Finally! Fix for Acclimation
+* SortaFix for 14553:  Put in some code to have some automatic adjustment of the rotation back into the schema.  This helps when comparing different complete Talent Specs, but is broken when looking at individual talents on the graph.  
+* No Defect:  Better rotation time allowing for a more accurate Threat value.  Most folks will see their threat decrease to more reasonable numbers.
+* No Defect: Additional work for the updated CombatTable - Initial comparison functions to allow sorting abilities by various values.
+* Defect 15192: Integrated Parry haste calculations in the new combatTable code so that in-theory, Parry provides a very slight amount of threat.  It's not much, but the math is there, and we're seeing additional white swings provided by the parry haste.  In some situations, for really slow weapons with high avoidance rates, this is preventing RS from being capped by # of white swings.
+* Fix for defect 15845: Created a switch in options for enabling/disabling onUse abilities.
+* Fix for Defect 16231:  The rotation viewer now knows what strikes are available via talents.  This improves some bit of the talent optimizer.  
+* No Defect: Noticed a threading issue in threat caused by the auto-rotation bits.
+* Stats cleanup - removed a stat, and properly categorized a bunch of DK stats that were all in Additive that should have been multiplicative.
 
 2.3.15:
 * No Defect: DS health restore was not contributing to mitigation, which it should be.

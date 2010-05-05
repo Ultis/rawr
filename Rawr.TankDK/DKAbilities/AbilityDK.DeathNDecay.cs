@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_DeathNDecay : AbilityDK_Base
     {
-        public AbilityDK_DeathNDecay(Stats s)
+        public AbilityDK_DeathNDecay(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Death N Decay";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
@@ -28,7 +28,7 @@ namespace Rawr.TankDK
             this.uTickRate = 1 * 1000;
             this.uDuration = 10 * 1000;
             this.Cooldown = 30 * 1000;
-            // TODO: AOE - need to have target numbers.
+            this.bAOE = true;
 
         }
     }

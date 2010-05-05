@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_DeathCoil : AbilityDK_Base
     {
-        public AbilityDK_DeathCoil(Stats s)
+        public AbilityDK_DeathCoil(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Death Coil";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
             this.uBaseDamage = 443;

@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_HeartStrike : AbilityDK_Base
     {
-        public AbilityDK_HeartStrike(Stats s, Weapon MH, Weapon OH)
+        public AbilityDK_HeartStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Heart Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -21,7 +21,9 @@ namespace Rawr.TankDK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .5f;
             this.bTriggersGCD = true;
+            this.bAOE = true;
             // TODO: Multi Target spell - need to add in the damage for the 2nd target.
+            // Override Damage method.
         }
     }
 }

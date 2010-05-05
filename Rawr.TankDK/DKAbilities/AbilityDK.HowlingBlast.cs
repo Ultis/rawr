@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_HowlingBlast : AbilityDK_Base
     {
-        public AbilityDK_HowlingBlast(Stats s)
+        public AbilityDK_HowlingBlast(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Howling Blast";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
@@ -24,7 +24,7 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             this.uRange = 20;
             this.uArea = 10;
-            // TODO: AOE - need to have target numbers.
+            this.bAOE = true;
             
         }
     }

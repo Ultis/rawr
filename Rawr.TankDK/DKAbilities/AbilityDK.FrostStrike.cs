@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_FrostStrike : AbilityDK_Base
     {
-        public AbilityDK_FrostStrike(Stats s, Weapon MH, Weapon OH, int ThreatOfTharassian)
+        public AbilityDK_FrostStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Frost Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
             this.uMinDamage = 137;
@@ -21,7 +21,7 @@ namespace Rawr.TankDK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .55f;
             this.bTriggersGCD = true;
-            this.m_iToT = ThreatOfTharassian;
+            m_iToT = CState.m_Talents.ThreatOfThassarian;
         }
 
         private int m_iToT = 0;

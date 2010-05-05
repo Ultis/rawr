@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_Obliterate : AbilityDK_Base
     {
-        public AbilityDK_Obliterate(Stats s, Weapon MH, Weapon OH, int ThreatOfTharassian)
+        public AbilityDK_Obliterate(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Obliterate";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
@@ -23,7 +23,7 @@ namespace Rawr.TankDK
             this.fWeaponDamageModifier = .8f;
             this.bTriggersGCD = true;
             // Physical Damage * .125 * # diseases on target may consume the diseases.
-            m_iToT = ThreatOfTharassian;
+            m_iToT = CState.m_Talents.ThreatOfThassarian;
 
         }
 

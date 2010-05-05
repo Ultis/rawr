@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_DeathStrike : AbilityDK_Base
     {
-        public AbilityDK_DeathStrike(Stats s, Weapon MH, Weapon OH, int ThreatOfTharassian)
+        public AbilityDK_DeathStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Death Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
@@ -23,8 +23,8 @@ namespace Rawr.TankDK
             this.fWeaponDamageModifier = .75f;
             this.bTriggersGCD = true;
             // TODO: # diseases on Target.
-            this.sStats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
-            m_iToT = ThreatOfTharassian;
+            this.CState.m_Stats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
+            m_iToT = CState.m_Talents.ThreatOfThassarian;
 
         }
 

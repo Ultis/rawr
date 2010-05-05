@@ -9,9 +9,9 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_CorpseExplosion : AbilityDK_Base
     {
-        public AbilityDK_CorpseExplosion(Stats s)
+        public AbilityDK_CorpseExplosion(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Corpse Explosion";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
             this.uBaseDamage = 443;
@@ -19,7 +19,7 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             this.uRange = 30;
             this.Cooldown = 5000;
-            // TODO: AOE - multiple Targets
+            this.bAOE = true;
         }
     }
 }

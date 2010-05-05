@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_ScourgeStrike : AbilityDK_Base
     {
-        public AbilityDK_ScourgeStrike(Stats s, Weapon MH, Weapon OH)
+        public AbilityDK_ScourgeStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Scourge Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
@@ -22,7 +22,7 @@ namespace Rawr.TankDK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .5f;
             this.bTriggersGCD = true;
-            // Physical Damage * .25 * # diseases on target as shadow.
+            // TODO: Physical Damage * .25 * # diseases on target as shadow.
         }
 
     }

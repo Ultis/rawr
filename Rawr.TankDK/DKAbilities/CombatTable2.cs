@@ -15,15 +15,13 @@ namespace Rawr.TankDK
     {
         #region Member Vars
         #region Basic setup variables
-        private Character m_Char;
-        private Stats m_Stats;
+        private CombatState m_CState;
         private CharacterCalculationsTankDK m_Calcs;
         private CalculationOptionsTankDK m_Opts;
         public Rotation m_Rotation;
         #endregion
 
         // TODO: Find a way to balance 2h vs. DW.
-        Weapon MH, OH;
         public List<AbilityDK_Base> ml_Rot;
 
         #region Output Values
@@ -127,27 +125,34 @@ namespace Rawr.TankDK
 
         public CombatTable2(Character c, Stats stats, CharacterCalculationsTankDK calcs, CalculationOptionsTankDK calcOpts)
         {
-            m_Char = c.Clone();
-            m_Stats = stats.Clone();
+            this.m_CState = new CombatState();
+            if (c != null)
+            {
+                if (c.DeathKnightTalents == null)
+                    c.DeathKnightTalents = new DeathKnightTalents();
+                this.m_CState.m_Talents = c.DeathKnightTalents.Clone();
+            }
+            this.m_CState.m_Stats = stats.Clone();
             m_Calcs = calcs;
             m_Opts = calcOpts;
+            this.m_CState.m_NumberOfTargets = (float)m_Opts.uNumberTargets;
             m_Rotation = calcOpts.m_Rotation;
 
             //TODO: Handle Expertise
-            if (m_Char.MainHand != null && m_Char.MainHand.Item.Type != ItemType.None)
+            if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
             {
-                MH = new Weapon(m_Char.MainHand.Item, m_Stats, m_Opts, 0);
-                OH = null;
-                if (m_Char.MainHand.Slot != ItemSlot.TwoHand)
+                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, 0);
+                m_CState.OH = null;
+                if (c.MainHand.Slot != ItemSlot.TwoHand)
                 {
-                    if (m_Char.OffHand != null && m_Char.OffHand.Item.Type != ItemType.None)
-                        OH = new Weapon(m_Char.OffHand.Item, m_Stats, m_Opts, 0);
+                    if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
+                        m_CState.OH = new Weapon(c.OffHand.Item, this.m_CState.m_Stats, m_Opts, 0);
                 }
             }
             else
             {
-                MH = null;
-                OH = null;
+                m_CState.MH = null;
+                m_CState.OH = null;
             }
 
             // Checking the rotation:
@@ -157,7 +162,7 @@ namespace Rawr.TankDK
             {
                 // Then this is probably a null rotation, and
                 // so let's build one?
-                m_Rotation = new Rotation(m_Char.DeathKnightTalents);
+                m_Rotation = new Rotation(this.m_CState.m_Talents);
             }
 
             BuildRotation();
@@ -174,24 +179,24 @@ namespace Rawr.TankDK
             // TODO: need to setup a CombatState object. 
             // Setup an instance of each ability.
             // Single Runes:
-            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_Stats);
-            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic);
-            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
-            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic);
-            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
-            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_Stats, MH, OH);
-            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_Stats);
-            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_Stats);
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CState);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CState);
+            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CState);
+            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CState);
+            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CState);
+            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CState);
             // Multi Runes:
-            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
-            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_Stats);
-            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
-            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_Stats, MH, OH);
-            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_Stats);
+            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CState);
+            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CState);
+            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CState);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CState);
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CState);
             // RP:
-            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
-            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_Stats);
-            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian);
+            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CState);
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CState);
+            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CState);
 
             // Build the sortable list of abilities
             List<AbilityDK_Base> l_RotRunes = new List<AbilityDK_Base>();
@@ -237,8 +242,8 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.IcyTouch; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_IcyTouch(m_Stats));
-                    ml_Rot.Add(new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
+                    ml_Rot.Add(new AbilityDK_IcyTouch(m_CState));
+                    ml_Rot.Add(new AbilityDK_FrostFever(m_CState));
                 }
             }
             #endregion
@@ -247,8 +252,8 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.PlagueStrike; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_PlagueStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
-                    ml_Rot.Add(new AbilityDK_BloodPlague(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
+                    ml_Rot.Add(new AbilityDK_PlagueStrike(m_CState));
+                    ml_Rot.Add(new AbilityDK_BloodPlague(m_CState));
                 }
             }
             #endregion
@@ -257,23 +262,23 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.BloodStrike; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_BloodStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
-                    if (m_Char.DeathKnightTalents.BloodOfTheNorth > 0)
+                    ml_Rot.Add(new AbilityDK_BloodStrike(m_CState));
+                    if (m_CState.m_Talents.BloodOfTheNorth > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.BloodOfTheNorth / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_CState.m_Talents.BloodOfTheNorth / 3);
                     }
-                    if (m_Char.DeathKnightTalents.Reaping > 0)
+                    if (m_CState.m_Talents.Reaping > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.Reaping / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_CState.m_Talents.Reaping / 3);
                     }
                 }
             }
             if (Rot.HeartStrike > 0)
             {
-                if (m_Char.DeathKnightTalents.HeartStrike > 0)
+                if (m_CState.m_Talents.HeartStrike > 0)
                 {
                     for (i = (int)Rot.HeartStrike; i > 0; i--)
-                        ml_Rot.Add(new AbilityDK_HeartStrike(m_Stats, MH, OH));
+                        ml_Rot.Add(new AbilityDK_HeartStrike(m_CState));
                 }
                 else
                 {
@@ -284,20 +289,20 @@ namespace Rawr.TankDK
             if (Rot.BloodBoil > 0)
             {
                 for (i = (int)Rot.BloodBoil; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_BloodBoil(m_Stats));
+                    ml_Rot.Add(new AbilityDK_BloodBoil(m_CState));
             }
             if (Rot.Pestilence > 0)
             {
                 for (i = (int)Rot.Pestilence; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_Pestilence(m_Stats));
-                    if (m_Char.DeathKnightTalents.BloodOfTheNorth > 0)
+                    ml_Rot.Add(new AbilityDK_Pestilence(m_CState));
+                    if (m_CState.m_Talents.BloodOfTheNorth > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.BloodOfTheNorth / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_CState.m_Talents.BloodOfTheNorth / 3);
                     }
-                    if (m_Char.DeathKnightTalents.Reaping > 0)
+                    if (m_CState.m_Talents.Reaping > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= (m_Char.DeathKnightTalents.Reaping / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= (m_CState.m_Talents.Reaping / 3);
                     }
                 }
             }
@@ -307,10 +312,10 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.DeathStrike; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_DeathStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
-                    if (m_Char.DeathKnightTalents.DeathRuneMastery > 0)
+                    ml_Rot.Add(new AbilityDK_DeathStrike(m_CState));
+                    if (m_CState.m_Talents.DeathRuneMastery > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= 2 * (m_Char.DeathKnightTalents.DeathRuneMastery / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= 2 * (m_CState.m_Talents.DeathRuneMastery / 3);
                     }
                 }
             }
@@ -318,10 +323,10 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.HowlingBlast; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_HowlingBlast(m_Stats));
-                    if (m_Char.DeathKnightTalents.GlyphofHowlingBlast)
+                    ml_Rot.Add(new AbilityDK_HowlingBlast(m_CState));
+                    if (m_CState.m_Talents.GlyphofHowlingBlast)
                     {
-                        ml_Rot.Add(new AbilityDK_FrostFever(m_Stats, (uint)m_Char.DeathKnightTalents.Epidemic));
+                        ml_Rot.Add(new AbilityDK_FrostFever(m_CState));
                     }
                 }
             }
@@ -329,15 +334,15 @@ namespace Rawr.TankDK
             {
                 for (i = (int)Rot.Obliterate; i > 0; i--)
                 {
-                    ml_Rot.Add(new AbilityDK_Obliterate(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
-                    if (m_Char.DeathKnightTalents.DeathRuneMastery > 0)
+                    ml_Rot.Add(new AbilityDK_Obliterate(m_CState));
+                    if (m_CState.m_Talents.DeathRuneMastery > 0)
                     {
-                        _AbilityCost[(int)DKCostTypes.Death] -= 2 * (m_Char.DeathKnightTalents.DeathRuneMastery / 3);
+                        _AbilityCost[(int)DKCostTypes.Death] -= 2 * (m_CState.m_Talents.DeathRuneMastery / 3);
                     }
                     // Oblit will consume the diseases... so we need to cut their duration short.
-                    if (m_Char.DeathKnightTalents.Annihilation < 3)
+                    if (m_CState.m_Talents.Annihilation < 3)
                     {
-                        float percDuration = m_Char.DeathKnightTalents.Annihilation / 3;
+                        float percDuration = m_CState.m_Talents.Annihilation / 3;
                         foreach (AbilityDK_Base a in ml_Rot)
                         {
                             if (a.szName == "Blood Plague"
@@ -353,11 +358,11 @@ namespace Rawr.TankDK
             }
             if (Rot.ScourgeStrike > 0)
             {
-                if (m_Char.DeathKnightTalents.ScourgeStrike > 0)
+                if (m_CState.m_Talents.ScourgeStrike > 0)
                 {
                     for (i = (int)Rot.ScourgeStrike; i > 0; i--)
                     {
-                        ml_Rot.Add(new AbilityDK_ScourgeStrike(m_Stats, MH, OH));
+                        ml_Rot.Add(new AbilityDK_ScourgeStrike(m_CState));
                     }
                 }
                 else
@@ -372,7 +377,7 @@ namespace Rawr.TankDK
             if (Rot.DeathNDecay > 0)
             {
                 for (i = (int)Rot.DeathNDecay; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_DeathNDecay(m_Stats));
+                    ml_Rot.Add(new AbilityDK_DeathNDecay(m_CState));
             }
             #endregion
             #endregion
@@ -381,20 +386,20 @@ namespace Rawr.TankDK
             if (Rot.RuneStrike > 0)
             {
                 for (i = (int)Rot.RuneStrike; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_RuneStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
+                    ml_Rot.Add(new AbilityDK_RuneStrike(m_CState));
                 // TODO: need to have these replace melee strikes.
             }
             if (Rot.DeathCoil > 0)
             {
                 for (i = (int)Rot.DeathCoil; i > 0; i--)
-                    ml_Rot.Add(new AbilityDK_DeathCoil(m_Stats));
+                    ml_Rot.Add(new AbilityDK_DeathCoil(m_CState));
             }
             if (Rot.FrostStrike > 0)
             {
-                if (m_Char.DeathKnightTalents.FrostStrike > 0)
+                if (m_CState.m_Talents.FrostStrike > 0)
                 {
                     for (i = (int)Rot.FrostStrike; i > 0; i--)
-                        ml_Rot.Add(new AbilityDK_FrostStrike(m_Stats, MH, OH, m_Char.DeathKnightTalents.ThreatOfThassarian));
+                        ml_Rot.Add(new AbilityDK_FrostStrike(m_CState));
                 }
                 else
                 {
@@ -443,20 +448,20 @@ namespace Rawr.TankDK
 
             #region White Swings
             float fWhiteSwings = 0;
-            if (MH != null && MH.hastedSpeed != 0)
+            if (m_CState.MH != null && m_CState.MH.hastedSpeed != 0)
             {
-                fWhiteSwings = (float)m_RotationDuration / (int)(MH.hastedSpeed * 1000);
+                fWhiteSwings = (float)m_RotationDuration / (int)(m_CState.MH.hastedSpeed * 1000);
                 // How many of the shots are parried?
                 // TODO: fWhiteSwings here may need to be # of BossSwings from BossHandler.
-                float fShotsParried = m_Stats.Parry * fWhiteSwings;
+                float fShotsParried = m_CState.m_Stats.Parry * fWhiteSwings;
                 // What's the average hasted speed of those shots?
-                float fParryHastedSpeed = (MH.hastedSpeed * 1000) * (1f - 0.24f);
+                float fParryHastedSpeed = (m_CState.MH.hastedSpeed * 1000) * (1f - 0.24f);
                 // How much of the rotation duration has hasted shots?
                 float fTimeHasted = fShotsParried * fParryHastedSpeed;
                 // The rest of that time, are normal shots
                 float fTimeNormal = m_RotationDuration - fTimeHasted;
                 // Get the final total.
-                fWhiteSwings = (fTimeNormal / (int)(MH.hastedSpeed * 1000)) + fShotsParried;
+                fWhiteSwings = (fTimeNormal / (int)(m_CState.MH.hastedSpeed * 1000)) + fShotsParried;
             }
             // This will provide the opportunity to increase available RP by swings due to Talents.
             // Also get a swing count to balance out the RuneStrikes.
@@ -473,9 +478,9 @@ namespace Rawr.TankDK
                 // Since there are spare white swings, let's figure out how much white damage is done
                 bAvailableWhiteSwings = true;
                 fWhiteSwings = (fWhiteSwings - Rot.RuneStrike);
-                fWhiteDamage = (MH.damage * fWhiteSwings);
-                if (null != OH)
-                    fWhiteDamage += (OH.damage * fWhiteSwings);
+                fWhiteDamage = (m_CState.MH.damage * fWhiteSwings);
+                if (null != m_CState.OH)
+                    fWhiteDamage += (m_CState.OH.damage * fWhiteSwings);
             }
 
             #endregion

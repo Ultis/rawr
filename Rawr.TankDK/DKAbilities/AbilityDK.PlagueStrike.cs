@@ -9,11 +9,11 @@ namespace Rawr.TankDK
     /// </summary>
     class AbilityDK_PlagueStrike : AbilityDK_Base
     {
-        public AbilityDK_PlagueStrike(Stats s, Weapon MH, Weapon OH, int ThreatOfTharassian)
+        public AbilityDK_PlagueStrike(CombatState CS)
         {
-            this.sStats = s;
-            this.wMH = MH;
-            this.wOH = OH;
+            this.CState = CS;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
             this.szName = "Plague Strike";
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -21,7 +21,7 @@ namespace Rawr.TankDK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .5f;
             this.bTriggersGCD = true;
-            m_iToT = ThreatOfTharassian;
+            m_iToT = CState.m_Talents.ThreatOfThassarian;
 
         }
 

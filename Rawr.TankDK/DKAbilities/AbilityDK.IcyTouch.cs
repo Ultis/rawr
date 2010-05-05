@@ -14,9 +14,9 @@ namespace Rawr.TankDK
         /// them with Frost Fever, a disease that deals periodic damage 
         /// and reduces melee and ranged attack speed by 14% for 15 sec.
         /// </summary>
-        public AbilityDK_IcyTouch(Stats s)
+        public AbilityDK_IcyTouch(CombatState CS)
         {
-            this.sStats = s;
+            this.CState = CS;
             this.szName = "Icy Touch";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -27,6 +27,7 @@ namespace Rawr.TankDK
             this.bTriggersGCD = true;
             // 3.3.3 IT now hits alot harder for threat.
             this.ThreatMultiplier = 7;
+            this.m_TriggeredAbility = new AbilityDK_FrostFever(CS);
         }
     }
 }
