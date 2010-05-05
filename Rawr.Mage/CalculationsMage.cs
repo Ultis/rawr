@@ -1179,7 +1179,7 @@ namespace Rawr.Mage
                     for (int i = 0; i < effectList.Count; i++)
                     {
                         g.DrawLine(new Pen(colors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
-                        g.DrawString(effectList[i].ToString(), fontLegend, Brushes.Black, new Point(60, legendY));
+                        //g.DrawString(effectList[i].ToString(), fontLegend, Brushes.Black, new Point(60, legendY));
 
                         legendY += 16;
                     }
@@ -1310,6 +1310,8 @@ namespace Rawr.Mage
                         }
 
                         g.DrawLines(new Pen(colors[i]), plot);
+
+                        g.DrawString(string.Format("{0} (average uptime {1:F}%)", effectList[i], effectList[i].GetAverageUptime(triggerInterval, triggerChance, 3.0f, calculations.CalculationOptions.FightDuration) * 100), fontLegend, Brushes.Black, new Point(60, 2 + i * 16));
                     }
                     break;
                 case "Sequence Reconstruction":
