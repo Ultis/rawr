@@ -1230,6 +1230,17 @@ namespace Rawr {
                 float averageSP = (min + max) / 2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = averageSP }, time, 45f, 0.1f));
             }
+            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec").Match(line)).Success)
+            {
+                // Corpse Tongue Coin
+                // Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec.  Cannot occur more than once every 30 sec.
+                float fArmor = 5712;
+                float fDuration = 10;
+                float fICD = 30;
+                // Assuming the target will be under 35% health for that amount of time.
+                float fChance = .35f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { Armor = fArmor }, fDuration, fICD, fChance));
+            }
             #endregion
             #region 3.3 rings
             else if ((match = new Regex(@"Your helpful spells have a chance to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
@@ -2022,7 +2033,18 @@ namespace Rawr {
                     new Stats() { NatureDamage = (float)(min + max) / 2f, },
                     0f, 60f, 1f));
             }
-
+            // TODO: Update this so it can have a wider use.
+            else if ((match = new Regex(@"Absorbs 6400 damage").Match(line)).Success)
+            {   
+                // Corroded Skeleton Key
+                // Absorbs 6400 damage.  Lasts 10 sec. (2 Min Cooldown)
+                float DamageAbsorb = 6400;
+                float fDuration = 10;
+                float fCD = 120; // 2 min * 60 sec
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                    new Stats() { HealthRestore = DamageAbsorb },
+                    fDuration, fCD));
+            }
         }
 
         #region Specialized Items that need Extra Handling
