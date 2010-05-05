@@ -898,7 +898,10 @@ namespace Rawr
                                         //boss = "Unknown Boss (Wowhead lacks data)";
                                         area = null; // if boss is null prefer treating this as pve token
                                     }*/
-                                    _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
+                                    if (tokenNames[i] != null)
+                                    {
+                                        _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
+                                    }
                                 }
                                 #endregion
                             }
@@ -942,11 +945,18 @@ namespace Rawr
                                 }
                                 #endregion
                             }
-                            else
+                            else if (tokenNames[i] != null)
                             {
                                 #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
                                 vendorItem.TokenMap[tokenNames[i]] = tokenCounts[i];
                                 #endregion
+                            }
+                            else /*if (tokenNames[i] == null)*/
+                            {
+                                // there was an error pulling token data from web
+                                // ignore source information 
+                                vendorItem = null;
+                                break;
                             }
                             #endregion
                         }
