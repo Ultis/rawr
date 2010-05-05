@@ -1146,10 +1146,13 @@ namespace Rawr.Mage
             }
 
             solution = lp.Solve();
+
+            var ret = GetCalculationsResult();
+
             ArrayPool.ReleaseArraySet(ArraySet);
             ArraySet = null;
 
-            return GetCalculationsResult();
+            return ret;
         }
 
         #region Effect Maximization
