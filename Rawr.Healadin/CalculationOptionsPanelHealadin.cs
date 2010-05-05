@@ -24,7 +24,6 @@ namespace Rawr.Healadin
 
 			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
             cmbLength.Value = (decimal)calcOpts.Length;
-            cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
 
             nudDivinePlea.Value = (decimal)calcOpts.DivinePlea;
             nudGHL.Value = (decimal)calcOpts.GHL_Targets;
@@ -83,34 +82,6 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 calcOpts.Length = (float)cmbLength.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
                 Character.OnCalculationsInvalidated();
             }
         }
