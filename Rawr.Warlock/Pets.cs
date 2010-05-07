@@ -42,6 +42,7 @@ namespace Rawr.Warlock {
         public float SpecialCooldown { get; protected set; }
         public float SpecialCastTime { get; protected set; }
         public float SpecialBaseDamage { get; protected set; }
+        public SpellModifiers TotalModifiers { get; protected set; }
         public SpellModifiers SpecialModifiers { get; protected set; }
 
         #endregion
@@ -54,6 +55,7 @@ namespace Rawr.Warlock {
             float healthPerStamina) {
 
             Mommy = mommy;
+            TotalModifiers = new SpellModifiers();
             SpecialModifiers = new SpellModifiers();
 
             BaseStamina = 328f;
@@ -87,16 +89,22 @@ namespace Rawr.Warlock {
                         + .1f
                             * talents.ImprovedDemonicTactics
                             * (Mommy.CalcSpellCrit()
-                                - Mommy.Stats.SpellCritOnTarget),
+                                - Mommy.Stats.SpellCritOnTarget)
+                        + Mommy.Stats.Warlock2T9,
             };
             Stats.Accumulate(Mommy.PetBuffs);
+
+            Mommy.Add4pT10(TotalModifiers);
+            FinalizeModifiers();
+            SpecialModifiers.Accumulate(TotalModifiers);
         }
 
-        public void CalcStats2() {
+        public void CalcStats2(float pactProcBenefit) {
 
             Stats.SpellPower
-                = BaseSpellPower + SpellPowerCoef * Mommy.CalcSpellPower();
-            FinalizeModifiers();
+                = BaseSpellPower
+                    + SpellPowerCoef * Mommy.CalcSpellPower()
+                    + pactProcBenefit;
         }
 
         protected virtual void FinalizeModifiers() {
@@ -168,10 +176,53 @@ namespace Rawr.Warlock {
 
         public float CalcSpecialDps() {
 
-            return GetSpecialDamage() / GetSpecialSpeed();
+            float speed = GetSpecialSpeed();
+            if (speed == 0) {
+                return 0f;
+            } else {
+                return GetSpecialDamage() / GetSpecialSpeed();
+            }
         }
 
         #endregion
+
+        public float GetCritsPerSec() {
+
+            return Mommy.HitChance * CalcSpellCrit() / GetSpecialSpeed();
+        }
+
+        public float GetPactProcBenefit() {
+
+            float pact = .02f * Mommy.Talents.DemonicPact;
+            if (pact == 0) {
+                return 0f;
+            }
+
+            float buff
+                = CalculationsWarlock.GetBuffEffect(
+                    Mommy.Character.ActiveBuffs,
+                    Mommy.CalcSpellPower() * pact,
+                    "Spell Power",
+                    s => s.SpellPower);
+            if (buff == 0) {
+                return 0f;
+            }
+
+            SpecialEffect pactEffect
+                = new SpecialEffect(0, null, 45f, 20f);
+            float uprate = pactEffect.GetAverageUptime(
+                GetSpecialSpeed(),
+                Mommy.HitChance * CalcSpellCrit(),
+                GetSpecialSpeed(),
+                Mommy.Options.Duration);
+
+            return uprate * buff;
+        }
+
+        protected float GetEmpowermentCooldown() {
+
+            return 60f * (1f - .1f * Mommy.Talents.Nemesis);
+        }
     }
 
     public class Felguard : Pet {
@@ -222,8 +273,13 @@ namespace Rawr.Warlock {
             WarlockTalents talents = Mommy.Talents;
             float demonologist = talents.MasterDemonologist * .01f;
 
-            BaseSpellCrit += demonologist;
+            // crit goes into the stats object
+            Stats.SpellCrit += demonologist;
+            if (talents.DemonicEmpowerment > 0) {
+                Stats.SpellCrit += .2f * 30f / GetEmpowermentCooldown();
+            }
 
+            // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusFireDamageMultiplier);
             SpecialModifiers.AddMultiplicativeMultiplier(

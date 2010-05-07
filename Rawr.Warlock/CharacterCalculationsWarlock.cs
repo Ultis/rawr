@@ -370,21 +370,7 @@ namespace Rawr.Warlock {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     Talents.MasterDemonologist * .01f);
             }
-            if (Stats.Warlock4T10 > 0) {
-                Spell trigger = null;
-                if (CastSpells.ContainsKey("Immolate")) {
-                    trigger = CastSpells["Immolate"];
-                } else if (CastSpells.ContainsKey("Unstable Affliction")) {
-                    trigger = CastSpells["Unstable Affliction"];
-                }
-                if (trigger != null) {
-                    float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
-                    float uprate
-                        = Spell.CalcUprate(
-                            .15f, 10f, Options.Duration / numTicks);
-                    SpellModifiers.AddMultiplicativeMultiplier(.1f * uprate);
-                }
-            }
+            Add4pT10(SpellModifiers);
 
             if (Pet != null) {
                 Pet.CalcStats1();
@@ -392,7 +378,14 @@ namespace Rawr.Warlock {
                     += Talents.DemonicKnowledge
                         * .04f
                         * (Pet.CalcStamina() + Pet.CalcIntellect());
-                Pet.CalcStats2();
+                float empower = Talents.EmpoweredImp / 3f;
+                if (Pet is Imp && empower > 0) {
+                    SpellModifiers.AddCritChance(
+                        empower * AvgTimeUsed * Pet.GetCritsPerSec());
+                }
+                float pact = Pet.GetPactProcBenefit();
+                Stats.SpellPower += pact;
+                Pet.CalcStats2(pact);
             }
 
             // finilize each spell's modifiers.
@@ -876,6 +869,25 @@ namespace Rawr.Warlock {
                 float bonus = Talents.MasterDemonologist * .01f;
                 modifiers.AddMultiplicativeMultiplier(bonus);
                 modifiers.AddCritChance(bonus);
+            }
+        }
+
+        public void Add4pT10(SpellModifiers modifiers) {
+
+            if (Stats.Warlock4T10 > 0) {
+                Spell trigger = null;
+                if (CastSpells.ContainsKey("Immolate")) {
+                    trigger = CastSpells["Immolate"];
+                } else if (CastSpells.ContainsKey("Unstable Affliction")) {
+                    trigger = CastSpells["Unstable Affliction"];
+                }
+                if (trigger != null) {
+                    float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
+                    float uprate
+                        = Spell.CalcUprate(
+                            .15f, 10f, Options.Duration / numTicks);
+                    modifiers.AddMultiplicativeMultiplier(.1f * uprate);
+                }
             }
         }
 

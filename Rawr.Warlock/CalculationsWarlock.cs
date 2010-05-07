@@ -227,7 +227,19 @@ namespace Rawr.Warlock {
 
         private Stats GetPetBuffStats(Character character) {
 
-            Stats stats = GetBuffsStats(character.ActiveBuffs);
+            List<Buff> buffs = new List<Buff>();
+            foreach (Buff buff in character.ActiveBuffs) {
+                string group = buff.Group;
+                if (group != "Profession Buffs"
+                    && group != "Set Bonuses"
+                    && group != "Food"
+                    && group != "Potion"
+                    && group != "Elixirs and Flasks") {
+
+                    buffs.Add(buff);
+                }
+            }
+            Stats stats = GetBuffsStats(buffs);
             ApplyPetsRaidBuff(
                 stats,
                 ((CalculationOptionsWarlock) character.CalculationOptions).Pet,
@@ -342,8 +354,8 @@ namespace Rawr.Warlock {
             }
         }
 
-        private delegate float StatExtractor(Stats stats);
-        private float GetBuffEffect(
+        public delegate float StatExtractor(Stats stats);
+        public static float GetBuffEffect(
             List<Buff> activeBuffs,
             float candidateBuff,
             string group,
