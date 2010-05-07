@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-    public class RotationParameters : IEquatable<RotationParameters>
+    public class SimulatorParameters : IEquatable<SimulatorParameters>
     {
 
         public bool T7_4pc { get; private set; }
@@ -14,11 +14,11 @@ namespace Rawr.Retribution
         public decimal Wait { get; private set; }
         public decimal Delay { get; private set; }
         public decimal DivineStormCooldown { get; private set; }
-		public decimal SpellGCD { get; private set; }//TODO: Redo this whole model to not be a simulator
+		public decimal SpellGCD { get; private set; }
         public decimal SimulationTime { get; private set; }
 
 
-        public RotationParameters(
+        public SimulatorParameters(
             Ability[] priorities, 
             float wait, 
             float delay, 
@@ -28,7 +28,7 @@ namespace Rawr.Retribution
             float divineStormCooldown,
             float spellHaste,
             decimal simulationTime)
-		{//TODO: Redo this whole model to not be a simulator
+		{
             Priorities = (Ability[])priorities.Clone();
             T7_4pc = t7_4pc;
             GlyphConsecrate = glyphConsecrate;
@@ -42,15 +42,15 @@ namespace Rawr.Retribution
 
         public override bool Equals(Object obj)
         {
-			return Equals(obj as RotationParameters);//TODO: Redo this whole model to not be a simulator
+            return Equals(obj as SimulatorParameters);
         }
 
-        public bool Equals(RotationParameters other)
+        public bool Equals(SimulatorParameters other)
         {
             if (other == null) 
                 return false;
 
-			// Default comparer is slow for enums//TODO: Redo this whole model to not be a simulator
+			// Default comparer is slow for enums
             if (!Utilities.AreArraysEqual(Priorities, other.Priorities, (x, y) => x == y))
                 return false;
 
@@ -94,7 +94,7 @@ namespace Rawr.Retribution
             string s = "";
             for (int i = 0; i < rotation.Length; i++)
             {
-                s += RotationParameters.ShortAbilityString(rotation[i]);
+                s += SimulatorParameters.ShortAbilityString(rotation[i]);
                 if (i + 1 < rotation.Length) s += " > ";
             }
             return s;
@@ -104,21 +104,21 @@ namespace Rawr.Retribution
         {
             string s = "";
             for (int i = 0; i < rotation.Length; i++)
-			{//TODO: Redo this whole model to not be a simulator
-                s += RotationParameters.ShortAbilityString(rotation[i]);
+			{
+                s += SimulatorParameters.ShortAbilityString(rotation[i]);
                 if (i + 1 < rotation.Length) s += "-";
             }
             return s;
         }
 
-		public static string AbilityString(Ability ability)//TODO: Redo this whole model to not be a simulator
+		public static string AbilityString(Ability ability)
         {
             if (ability == Ability.Consecration) return "Consecration";
-			if (ability == Ability.CrusaderStrike) return "Crusader Strike";//TODO: Redo this whole model to not be a simulator
+			if (ability == Ability.CrusaderStrike) return "Crusader Strike";
             if (ability == Ability.Judgement) return "Judgement";
             if (ability == Ability.DivineStorm) return "Divine Storm";
-			if (ability == Ability.Exorcism) return "Exorcism";//TODO: Redo this whole model to not be a simulator
-            if (ability == Ability.HammerOfWrath) return "Hammer of Wrath";//TODO: Redo this whole model to not be a simulator
+			if (ability == Ability.Exorcism) return "Exorcism";
+            if (ability == Ability.HammerOfWrath) return "Hammer of Wrath";
             return "?";
         }
 
@@ -128,13 +128,13 @@ namespace Rawr.Retribution
                 Ability.Consecration, Ability.DivineStorm, Ability.Exorcism };
         }
 
-		public override string ToString()//TODO: Redo this whole model to not be a simulator
+		public override string ToString()
         {
-			string ret = "";//TODO: Redo this whole model to not be a simulator
+			string ret = "";
             foreach (Ability a in Priorities)
             {
                 ret += ShortAbilityString(a) + ", ";
-			}//TODO: Redo this whole model to not be a simulator
+			}
             return ret;
         }
 

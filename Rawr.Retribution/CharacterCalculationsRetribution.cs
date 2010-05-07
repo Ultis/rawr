@@ -12,7 +12,7 @@ namespace Rawr.Retribution
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
         public float DPSPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
 
-        public RotationSolution Solution { get; set; }
+        public RotationSolution Solution { get; set; } // TODO: Remove dependancy, This should be obtained out of the base Rotation class, not the Sim specific solution.
         public Ability[] Rotation { get; set; }
 
         public float WhiteDPS { get; set; }
@@ -86,8 +86,8 @@ namespace Rawr.Retribution
 
             // Rotation Info:
             dictValues["Chosen Rotation"] = Rotation == null ? 
-                "n/a" : 
-                RotationParameters.ShortRotationString(Rotation);
+                "n/a" :
+                SimulatorParameters.ShortRotationString(Rotation);  // TODO: Remove dependancy on SimulatorParameters.
             dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
             dictValues["SoV Overtake"] = string.Format("{0} sec", SoVOvertake.ToString("N2"));
             dictValues["Crusader Strike CD"] = 

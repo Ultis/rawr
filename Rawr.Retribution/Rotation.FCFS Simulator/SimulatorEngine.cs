@@ -5,20 +5,20 @@ using Rawr.Base.Algorithms;
 
 namespace Rawr.Retribution
 {
-    static class RotationSimulator
+    static class SimulatorEngine
     {
 
-        private static CalculationCache<RotationParameters, RotationSolution> solutionCache =
-            new CalculationCache<RotationParameters, RotationSolution>(SimulateRotationCore);
+        private static CalculationCache<SimulatorParameters, RotationSolution> solutionCache =
+            new CalculationCache<SimulatorParameters, RotationSolution>(SimulateRotationCore);
 
 
-		public static RotationSolution SimulateRotation(RotationParameters rot)//TODO: Redo this whole model to not be a simulator
+        public static RotationSolution SimulateRotation(SimulatorParameters rot)
         {
             return solutionCache.GetResult(rot);
         }
 
 
-        private static RotationSolution SimulateRotationCore(RotationParameters rot)
+        private static RotationSolution SimulateRotationCore(SimulatorParameters rot)
         {
             const int timeUnitsPerSecond = 100000;
             const int meleeAbilityGcd = (int)(1.5m * timeUnitsPerSecond);
@@ -26,7 +26,7 @@ namespace Rawr.Retribution
             int fightLength = (int)(rot.SimulationTime * timeUnitsPerSecond);
             int spellGcd = (int)(rot.SpellGCD * timeUnitsPerSecond);
             SimulatorAbility.Delay = (int)(rot.Delay * timeUnitsPerSecond);
-			SimulatorAbility.Wait = (int)(rot.Wait * timeUnitsPerSecond);//TODO: Redo this whole model to not be a simulator
+			SimulatorAbility.Wait = (int)(rot.Wait * timeUnitsPerSecond);
 
             SimulatorAbility[] abilities = new SimulatorAbility[(int)Ability.Last + 1];
 
@@ -36,7 +36,7 @@ namespace Rawr.Retribution
             abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(
                 4 * timeUnitsPerSecond,
                 meleeAbilityGcd);
-			abilities[(int)Ability.DivineStorm] = new SimulatorAbility(//TODO: Redo this whole model to not be a simulator
+			abilities[(int)Ability.DivineStorm] = new SimulatorAbility(
                 (int)(rot.DivineStormCooldown * timeUnitsPerSecond),
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
@@ -46,7 +46,7 @@ namespace Rawr.Retribution
                 15 * timeUnitsPerSecond,
                 spellGcd);
             abilities[(int)Ability.HammerOfWrath] = new SimulatorAbility(
-				6 * timeUnitsPerSecond,//TODO: Redo this whole model to not be a simulator
+				6 * timeUnitsPerSecond,
                 meleeAbilityGcd);
 
             int gcdFinishTime = 0;
@@ -55,12 +55,12 @@ namespace Rawr.Retribution
             {
                 if (currentTime >= gcdFinishTime)
                 {
-					foreach (Ability ability in rot.Priorities)//TODO: Redo this whole model to not be a simulator
+					foreach (Ability ability in rot.Priorities)
                     {
                         if (abilities[(int)ability].ShouldAbilityBeUsedNext(currentTime))
                         {
                             if (abilities[(int)ability].CanAbilityBeUsedNow(currentTime))
-								gcdFinishTime = abilities[(int)ability].UseAbility(currentTime);//TODO: Redo this whole model to not be a simulator
+								gcdFinishTime = abilities[(int)ability].UseAbility(currentTime);
 
                             break;
                         }
@@ -74,7 +74,7 @@ namespace Rawr.Retribution
                     {
                         int nextUseTime = abilities[(int)ability].GetNextUseTime(currentTime);
                         if (nextUseTime > currentTime)
-							nextTime = Math.Min(nextTime, nextUseTime);//TODO: Redo this whole model to not be a simulator
+							nextTime = Math.Min(nextTime, nextUseTime);
                     }
                 }
                 else
@@ -82,7 +82,7 @@ namespace Rawr.Retribution
                     nextTime = Math.Min(nextTime, gcdFinishTime);
                 }
 
-				currentTime = nextTime;//TODO: Redo this whole model to not be a simulator
+				currentTime = nextTime;
             }
 
             float fightLengthInSeconds = ((float)fightLength) / timeUnitsPerSecond;
@@ -95,7 +95,7 @@ namespace Rawr.Retribution
                 solution.SetAbilityEffectiveCooldown(
                     ability,
                     abilities[(int)ability].EffectiveCooldown() / timeUnitsPerSecond);
-			}//TODO: Redo this whole model to not be a simulator
+			}
 
             return solution;
         }

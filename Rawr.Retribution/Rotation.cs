@@ -4,17 +4,17 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-	public abstract class Rotation//TODO: Redo this whole model to not be a simulator
+	public abstract class Rotation
     {
 
         public static IEnumerable<Ability[]> GetAllRotations()
         {
-			Ability[] abilities = new Ability[(int)Ability.Last + 1];//TODO: Redo this whole model to not be a simulator
+			Ability[] abilities = new Ability[(int)Ability.Last + 1];
 
             for (int ability = 0; ability <= (int)Ability.Last; ability++)
                 abilities[ability] = (Ability)ability;
 
-			return Utilities.GetDifferentElementPermutations(abilities);//TODO: Redo this whole model to not be a simulator
+			return Utilities.GetDifferentElementPermutations(abilities);
         }
 
 
@@ -22,18 +22,14 @@ namespace Rawr.Retribution
         {
             if (combats == null)
                 throw new ArgumentNullException("combats");
-			//TODO: Redo this whole model to not be a simulator
+			
             Combats = combats;
-			CS = combats.Talents.CrusaderStrike == 0 ? //TODO: Redo this whole model to not be a simulator
-                (Skill)new NullCrusaderStrike(combats) : 
-                (Skill)new CrusaderStrike(combats);
-            DS = combats.Talents.DivineStorm == 0 ?
-                (Skill)new NullCrusaderStrike(combats) :
-                (Skill)new DivineStorm(combats);
+			CS = combats.Talents.CrusaderStrike == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
+            DS = combats.Talents.DivineStorm == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new DivineStorm(combats);
             Exo = new Exorcism(combats);
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
-			White = new White(combats);//TODO: Redo this whole model to not be a simulator
+			White = new White(combats);
             HoR = new HandOfReckoning(combats);
 
             switch (combats.CalcOpts.Seal)
@@ -48,7 +44,7 @@ namespace Rawr.Retribution
                     if (combats.Talents.SealOfCommand == 0)
                         goto default;
 
-					Seal = new SealOfCommand(combats);//TODO: Redo this whole model to not be a simulator
+					Seal = new SealOfCommand(combats);
                     SealDot = new NullSealDoT(combats);
                     Judge = new JudgementOfCommand(combats);
                     break;
@@ -63,7 +59,7 @@ namespace Rawr.Retribution
                 default:
                     Seal = new NullSeal(combats);
                     SealDot = new NullSealDoT(combats);
-					Judge = new NullJudgement(combats);//TODO: Redo this whole model to not be a simulator
+					Judge = new NullJudgement(combats);
                     break;
             }
         }
@@ -75,7 +71,7 @@ namespace Rawr.Retribution
         public Skill Exo { get; private set; }
         public Skill HoW { get; private set; }
         public Skill Cons { get; private set; }
-		public Skill Seal { get; private set; }//TODO: Redo this whole model to not be a simulator
+		public Skill Seal { get; private set; }
         public Skill SealDot { get; private set; }
         public Skill HoR { get; private set; }
         public White White { get; private set; }
@@ -108,18 +104,18 @@ namespace Rawr.Retribution
             calc.CrusaderStrikeSkill = CS;
             calc.ConsecrationSkill = Cons;
             calc.ExorcismSkill = Exo;
-			calc.HammerOfWrathSkill = HoW;//TODO: Redo this whole model to not be a simulator
+			calc.HammerOfWrathSkill = HoW;
             calc.HandOfReckoningSkill = HoR;
 
             calc.DPSPoints =
                 calc.WhiteDPS +
                 calc.SealDPS +
                 calc.JudgementDPS +
-				calc.CrusaderStrikeDPS +//TODO: Redo this whole model to not be a simulator
+				calc.CrusaderStrikeDPS +
                 calc.DivineStormDPS +
                 calc.ExorcismDPS +
                 calc.HandOfReckoningDPS +
-				calc.ConsecrationDPS +//TODO: Redo this whole model to not be a simulator
+				calc.ConsecrationDPS +
                 calc.HammerOfWrathDPS +
                 calc.OtherDPS;
         }
@@ -131,7 +127,7 @@ namespace Rawr.Retribution
                 SealDPS(Seal, SealDot)+ 
                 GetAbilityDps(Judge) + 
                 GetAbilityDps(DS) +
-				GetAbilityDps(CS) + //TODO: Redo this whole model to not be a simulator
+				GetAbilityDps(CS) + 
                 GetAbilityDps(Cons) + 
                 GetAbilityDps(Exo) + 
                 GetAbilityDps(HoW) + 
@@ -148,7 +144,7 @@ namespace Rawr.Retribution
 
         public float SoVOvertakeTime()
         {
-			float sov0dps = GetAbilityDps(new JudgementOfVengeance(Combats, 0));//TODO: Redo this whole model to not be a simulator
+			float sov0dps = GetAbilityDps(new JudgementOfVengeance(Combats, 0));
             float sov5dps = GetAbilityDps(new JudgementOfVengeance(Combats, 5))
                 + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
             float sordps = GetAbilityDps(new JudgementOfRighteousness(Combats))
@@ -157,19 +153,19 @@ namespace Rawr.Retribution
             if (sordps > sov0dps)
             {
                 float averageStack = (sordps - sov0dps) / (sov5dps - sov0dps) * 5f;
-				float timeToMaxStack = Combats.AttackSpeed * 4f;//TODO: Redo this whole model to not be a simulator
+				float timeToMaxStack = Combats.AttackSpeed * 4f;
                 return 2.5f * timeToMaxStack / (5f - averageStack);
             }
             else { return 0; }
         }
 
         public float AverageSoVStackSize()
-		{//TODO: Redo this whole model to not be a simulator
+		{
             float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
             float timeToMaxStack = Combats.AttackSpeed * 4f;
             if (averageTimeOnMob > timeToMaxStack)
             {
-				return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;//TODO: Redo this whole model to not be a simulator
+				return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
             }
             else
             {
@@ -177,7 +173,7 @@ namespace Rawr.Retribution
             }
         }
 
-		public virtual float SealDPS(Skill seal, Skill sealdot)//TODO: Redo this whole model to not be a simulator
+		public virtual float SealDPS(Skill seal, Skill sealdot)
         {
             return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
         }
@@ -227,7 +223,7 @@ namespace Rawr.Retribution
             // Melee hit procs can be triggered by:
             // - Crusader Strike hits
             // - Divine Storm hits
-			// - Weapon swing hits//TODO: Redo this whole model to not be a simulator
+			// - Weapon swing hits
             // - Tiny Abomination in a Jar releasing attack hits
             // (2 multiplier needs to be moved to another place)
             // - Judgement hits
@@ -238,7 +234,7 @@ namespace Rawr.Retribution
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge);
-		}//TODO: Redo this whole model to not be a simulator
+		}
 
         public float GetPhysicalAttacksPerSec()
         {
@@ -247,7 +243,7 @@ namespace Rawr.Retribution
             // - Divine Storm hits
             // - Weapon swing hits
             // - Tiny Abomination in a Jar releasing attack hits
-			// (2 multiplier needs to be moved to another place)//TODO: Redo this whole model to not be a simulator
+			// (2 multiplier needs to be moved to another place)
             // - Judgement hits
             // - Hammer of Wrath hits
 
@@ -256,7 +252,7 @@ namespace Rawr.Retribution
                 GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
-				GetAbilityHitsPerSecond(Judge) +//TODO: Redo this whole model to not be a simulator
+				GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW);
         }
 
@@ -280,7 +276,7 @@ namespace Rawr.Retribution
             // - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
-			//TODO: Redo this whole model to not be a simulator
+			
             return
                 GetAbilityCritsPerSecond(CS) +
                 GetAbilityCritsPerSecond(DS) +
@@ -295,7 +291,7 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-			// - Tiny Abomination in a Jar releasing attack crits//TODO: Redo this whole model to not be a simulator
+			// - Tiny Abomination in a Jar releasing attack crits
             // (2 multiplier needs to be moved to another place)
             // - Judgement crits
             // - Hammer of Wrath crits
@@ -333,7 +329,7 @@ namespace Rawr.Retribution
             // - Consecration damage ticks
             // - Exorcism hits
 
-			return//TODO: Redo this whole model to not be a simulator
+			return
                 GetAbilityHitsPerSecond(CS) +
                 GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
@@ -343,340 +339,6 @@ namespace Rawr.Retribution
                 GetAbilityHitsPerSecond(Cons) +
                 GetAbilityHitsPerSecond(Exo);
         }
-		//TODO: Redo this whole model to not be a simulator
-    }
-
-    public class Simulator : Rotation
-    {
-
-        private static Ability[] RemoveHammerOfWrathFromRotation(Ability[] rotation)
-        {
-            List<Ability> abilities = new List<Ability>(rotation);
-            abilities.Remove(Ability.HammerOfWrath);
-            return abilities.ToArray();
-        }
-
-        private static Ability[] RemoveUnavailableAbilitiesFromRotation(
-            Ability[] rotation, 
-            CombatStats combats)
-        {
-            Ability[] result = rotation;
-
-            if (combats.Talents.CrusaderStrike == 0)
-            {
-                List<Ability> abilities = new List<Ability>(result);
-                abilities.Remove(Ability.CrusaderStrike);
-                result = abilities.ToArray();
-            }
-
-			if (combats.Talents.DivineStorm == 0)//TODO: Redo this whole model to not be a simulator
-            {
-                List<Ability> abilities = new List<Ability>(result);
-                abilities.Remove(Ability.DivineStorm);
-                result = abilities.ToArray();
-            }
-
-            return result;
-        }
-
-        /// <summary>
-		/// Calculates the solution with concrete parameters//TODO: Redo this whole model to not be a simulator
-        /// </summary>
-        private static RotationSolution GetSolution(
-            CombatStats combats,
-            Ability[] rotation,
-            decimal simulationTime,
-            float divineStormCooldown,
-            float spellHaste)
-        {
-            return RotationSimulator.SimulateRotation(new RotationParameters(
-                rotation,
-                combats.CalcOpts.Wait,
-                combats.CalcOpts.Delay,
-                combats.Stats.JudgementCDReduction > 0,
-                combats.Talents.ImprovedJudgements,
-                combats.Talents.GlyphOfConsecration,
-                divineStormCooldown,
-                spellHaste,
-                simulationTime));
-        }
-
-        /// <summary>
-        /// Calculates the solution by combining subsolutions with the boss above and under 20% health
-        /// </summary>
-		private static RotationSolution GetCombinedSolutionWithUnder20PercentHealth(//TODO: Redo this whole model to not be a simulator
-            CombatStats combats,
-            Ability[] rotation,
-            decimal simulationTime,
-            float divineStormCooldown,
-            float spellHaste)
-        {
-            return RotationSolution.Combine(
-                () => GetSolution(
-                    combats,
-                    RemoveHammerOfWrathFromRotation(rotation),
-                    simulationTime,
-                    divineStormCooldown,
-                    spellHaste),
-                1 - combats.CalcOpts.TimeUnder20,
-                () => GetSolution(
-                    combats,
-                    rotation,
-                    simulationTime,
-                    divineStormCooldown,
-                    spellHaste),
-                combats.CalcOpts.TimeUnder20);
-        }
-
-        /// <summary>
-        /// Calculates the solution by combining subsolutions with different Divine Storm cooldowns,
-        /// if 2 piece T10 bonus is active.
-        /// </summary>
-        private static RotationSolution GetCombinedSolutionWithDivineStormCooldown(
-            CombatStats combats,
-            Ability[] rotation,
-			decimal simulationTime,//TODO: Redo this whole model to not be a simulator
-            float spellHaste,
-            float swingTime)
-        {
-            const float normalDivineStormCooldown = 10;
-            const float cooldownRangeStep = 0.6f;
-
-            if (combats.Stats.DivineStormRefresh == 0)
-                return GetCombinedSolutionWithUnder20PercentHealth(
-                    combats,
-                    rotation,
-                    simulationTime,
-                    normalDivineStormCooldown,
-                    spellHaste);
-
-            // Calculate solutions for different Divine Storm cooldowns
-            // and combine them weighted by their neighbourhood cooldown range probabilities
-            RotationSolution result = null;
-            float resultProbability = 0;
-            for (
-                    float cooldownRangeStart = 0;
-                    cooldownRangeStart < normalDivineStormCooldown;
-                    cooldownRangeStart += cooldownRangeStep)
-            {
-                float currentSolutionProbability =
-                    GetT10DivineStormCooldownProbability(
-                        swingTime,
-                        cooldownRangeStart,
-                        Math.Min(normalDivineStormCooldown, cooldownRangeStart + cooldownRangeStep),
-                        combats.Stats.DivineStormRefresh);
-                result = RotationSolution.Combine(
-                    () => result,
-                    resultProbability,
-                    () => GetCombinedSolutionWithUnder20PercentHealth(
-                        combats,
-                        rotation,
-                        simulationTime,
-                        Math.Min(
-                            normalDivineStormCooldown,
-                            cooldownRangeStart + cooldownRangeStart / 2 + combats.CalcOpts.Delay),
-                        spellHaste),
-                    currentSolutionProbability);
-                resultProbability += currentSolutionProbability;
-            }
-
-            // Combine with normal Divine Storm cooldown in cases when T10 doesn't proc
-            return RotationSolution.Combine(
-                () => result,
-                resultProbability,
-                () => GetCombinedSolutionWithUnder20PercentHealth(
-                    combats,
-                    rotation,
-                    simulationTime,
-                    normalDivineStormCooldown,
-                    spellHaste),
-                1 - resultProbability);
-		}//TODO: Redo this whole model to not be a simulator
-
-        /// <summary>
-        /// Calculates the solution by combining subsolutions with and withou Bloodlust
-        /// </summary>
-        private static RotationSolution GetCombinedSolutionWithBloodlust(
-            CombatStats combats,
-            Ability[] rotation,
-            decimal simulationTime)
-        {
-            const float bloodlustDuration = 40f;
-            const float secondsPerMinute = 60f;
-            const float bloodlustHaste = 0.3f;
-
-            // in seconds
-            float fightLengthWithBloodlust = combats.CalcOpts.Bloodlust ?
-                Math.Min(combats.CalcOpts.FightLength * secondsPerMinute, bloodlustDuration) :
-                0;
-            // in seconds
-            float fightLengthWithoutBloodlust =
-                Math.Max(0, combats.CalcOpts.FightLength * secondsPerMinute - fightLengthWithBloodlust);
-
-            float bloodlustSpellHaste = (1 + combats.Stats.SpellHaste) * (1 + bloodlustHaste) - 1;
-
-            float normalSwingTime = combats.BaseWeaponSpeed / (1 + combats.Stats.PhysicalHaste);
-            float bloodlustSwingTime = normalSwingTime / (1 + bloodlustHaste);
-
-            return RotationSolution.Combine(
-                    () => GetCombinedSolutionWithDivineStormCooldown(
-                        combats,
-                        rotation,
-                        simulationTime,
-                        combats.Stats.SpellHaste,
-                        normalSwingTime),
-                    fightLengthWithoutBloodlust,
-                    () => GetCombinedSolutionWithDivineStormCooldown(
-                        combats,
-                        rotation,
-                        simulationTime,
-                        bloodlustSpellHaste,
-                        bloodlustSwingTime),
-                    fightLengthWithBloodlust);
-        }
-
-        /// <summary>
-        /// Calculates probability of divine storm cooldown being in the given time range.
-        /// For cooldown to end early after N swings, (N - 1) swings must not proc and then 1 swing must proc.
-        /// </summary>
-        /// <param name="swingSpeed">Time between weapon swings</param>
-        /// <param name="minCooldown">Minimal cooldown wanted</param>
-        /// <param name="maxCooldown">Maximal cooldown wanted</param>
-        /// <param name="procChance">Proc chance</param>
-        /// <returns></returns>
-        private static float GetT10DivineStormCooldownProbability(
-            float swingSpeed,
-            float minCooldown,
-            float maxCooldown,
-            float procChance)
-        {
-			//TODO: Redo this whole model to not be a simulator
-
-            if (swingSpeed == 0) { swingSpeed = 2.0f; } // This is to prevent accidental infinite loops
-
-            const float divineStormCooldown = 10;
-
-            for (
-                    float integerSwingCountTime = 0;
-                    integerSwingCountTime < divineStormCooldown;
-                    integerSwingCountTime += swingSpeed)
-                if ((minCooldown < (float)integerSwingCountTime) && ((float)integerSwingCountTime < maxCooldown))
-                    return 
-                        GetT10DivineStormCooldownProbability(
-                            swingSpeed, 
-                            minCooldown, 
-                            integerSwingCountTime,
-                            procChance) +
-                        GetT10DivineStormCooldownProbability(
-                            swingSpeed, 
-                            integerSwingCountTime, 
-                            maxCooldown,
-                            procChance);
-
-            int nonProcSwingCount = (int)(minCooldown / swingSpeed);
-            return 
-                GetIntegerPower(1 - procChance, nonProcSwingCount) // nonProcSwingCount swings must not proc
-                * procChance                                       // 1 swing must proc
-                * (maxCooldown - minCooldown) / swingSpeed;        // adjust to range size
-        }
-
-        private static float GetIntegerPower(float x, int power)
-        {
-            float result = 1;
-            for (int currentPower = 0; currentPower < power; currentPower++)
-                result *= x;
-
-            return result;
-        }
-
-
-        public RotationSolution Solution { get; set; }
-        public Ability[] Rotation { get; set; }
-		//TODO: Redo this whole model to not be a simulator
-
-        public Simulator(CombatStats combats, Ability[] rotation, decimal simulationTime)
-            : base(combats)
-        {
-            if (rotation == null)
-                throw new ArgumentNullException("rotation");
-
-            Ability[] effectiveRotation = RemoveUnavailableAbilitiesFromRotation(rotation, combats);
-
-            Rotation = effectiveRotation;
-            Solution = GetCombinedSolutionWithBloodlust(combats, effectiveRotation, simulationTime);
-        }
-
-
-        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
-        {
-            calc.Solution = Solution;
-            calc.Rotation = Rotation;
-        }
-
-        public override float GetAbilityUsagePerSecond(Skill skill)
-        {
-            return Solution.GetAbilityUsagePerSecond(skill.RotationAbility.Value);
-        }
-
-    }
-
-    public class EffectiveCooldown : Rotation
-    {
-
-        public EffectiveCooldown(CombatStats combats) 
-            : base(combats) 
-        { 
-        }
-
-
-        public override void SetCharacterCalculations(CharacterCalculationsRetribution calc)
-        {
-            calc.Solution = new RotationSolution();
-
-            foreach (Skill skill in new[] { Judge, CS, DS, Cons, Exo, HoW })
-            {
-                float effectiveCooldown;
-                if (skill.UsableAfter20PercentHealth)
-                {
-                    if (skill.UsableBefore20PercentHealth)
-                        effectiveCooldown =
-                            Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) *
-                                (1f - Combats.CalcOpts.TimeUnder20) +
-                            Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
-                                    skill.RotationAbility.Value) *
-                                Combats.CalcOpts.TimeUnder20;
-                    else
-                        effectiveCooldown = Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
-                            skill.RotationAbility.Value);
-                }
-                else
-                {
-                    if (skill.UsableBefore20PercentHealth)
-                        effectiveCooldown = Combats.CalcOpts.GetEffectiveAbilityCooldown(
-                            skill.RotationAbility.Value);
-                    else
-                        effectiveCooldown = 0;
-                }
-
-                calc.Solution.SetAbilityEffectiveCooldown(skill.RotationAbility.Value, effectiveCooldown);
-            }
-
-            calc.Rotation = null;
-        }
-
-        public override float GetAbilityUsagePerSecond(Skill skill)
-        {
-            return 
-                (skill.UsableBefore20PercentHealth ?
-                    (1 - Combats.CalcOpts.TimeUnder20)
-                        / Combats.CalcOpts.GetEffectiveAbilityCooldown(skill.RotationAbility.Value) :
-                    0) +
-                (skill.UsableAfter20PercentHealth ?
-                    Combats.CalcOpts.TimeUnder20
-                        / Combats.CalcOpts.GetEffectiveAbilityCooldownAfter20PercentHealth(
-                            skill.RotationAbility.Value) :
-                    0);
-        }
-
+		
     }
 }

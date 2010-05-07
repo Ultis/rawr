@@ -453,8 +453,8 @@ namespace Rawr.Retribution
             if (options.Rotations.Count == 0)
                 return GetCharacterRotation(
                     character, 
-                    additionalItem, 
-                    RotationParameters.DefaultRotation(),
+                    additionalItem,
+                    SimulatorParameters.DefaultRotation(),
                     simulationTime);
 
             return FindBestRotation(
@@ -631,6 +631,21 @@ namespace Rawr.Retribution
                     trigger = 1f / rot.GetMeleeAttacksPerSec();
                     break;
 
+                    /* Experimental.
+                case Trigger.MeleeAttack:   // [Tiny Abomination in a Jar] and [Shadowmourne]
+                    float MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
+                                                rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
+                                                rot.GetAbilityCritsPerSecond(rot.CS) +          // -+
+                                                rot.GetAbilityCritsPerSecond(rot.DS) +          //  +- Righteous Vengeance application/refresh (100% on CS/DS/Judge crit)
+                                                rot.GetAbilityCritsPerSecond(rot.Judge) +       // -+
+                                                rot.GetAbilityHitsPerSecond(rot.Judge);         // Judgement debuf application (100% on J Hit)
+                    if (seal == SealOf.Vengeance)
+                        MeleeAttackPerSec += rot.White.ChanceToLand() / rot.Combats.AttackSpeed; // Holy Vengeance (100% on melee hit when using SoV)
+
+                    trigger = 1f / MeleeAttackPerSec;                            
+                    break;
+                     */
+
                 case Trigger.PhysicalCrit:
                     trigger = 1f / rot.GetPhysicalCritsPerSec();
                     break;
@@ -715,8 +730,10 @@ namespace Rawr.Retribution
                         tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration, 0);
                     }
 
-                    if (tempStats != null) return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
-                    else return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                    if (tempStats != null) 
+                        return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                    else 
+                        return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
                 }
             }
             else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
@@ -737,18 +754,13 @@ namespace Rawr.Retribution
             // Secondary stats
             // GetManaFromIntellect/GetHealthFromStamina account for the fact 
             // that the first 20 Int/Sta only give 1 Mana/Health each.
-            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * 
-                (1f + stats.BonusManaMultiplier);
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
             stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
-            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * 
-                (1 + stats.BonusAttackPowerMultiplier);
+            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
-            stats.Expertise += talents.CombatExpertise * 2 + 
-                StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
-            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(
-                stats.HitRating, 
-                CharacterClass.Paladin);
+            stats.Expertise += talents.CombatExpertise * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating( stats.HitRating, CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
 
             float talentCrit = 
@@ -879,6 +891,7 @@ namespace Rawr.Retribution
                             Trigger.PhysicalHit,
                             Trigger.MeleeCrit,
                             Trigger.MeleeHit,
+                          //  Trigger.MeleeAttack,   Experimental
                             Trigger.DamageDone,
                             Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
                             Trigger.DoTTick,
@@ -1273,7 +1286,7 @@ namespace Rawr.Retribution
                                 null,
                                 rotation, 
                                 isAllRotationsChart ? allRotationsSimulationTime : simulationTime)),
-                        RotationParameters.RotationString(rotation), 
+                        SimulatorParameters.RotationString(rotation), 
                         Utilities.AreArraysEqual(rotation, selectedRotation));
                     compare.Item = null;
                     comparisons.Add(compare);

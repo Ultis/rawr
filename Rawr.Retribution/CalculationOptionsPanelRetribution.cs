@@ -65,7 +65,7 @@ namespace Rawr.Retribution
             nudHoW20.Value = (decimal)calcOpts.HoWCD20;
 
             if (calcOpts.Rotations.Count == 0) 
-                calcOpts.Rotations.Add(RotationParameters.DefaultRotation());
+                calcOpts.Rotations.Add(SimulatorParameters.DefaultRotation());
             butDelRotation.Enabled = calcOpts.Rotations.Count > 1;
             buildRotationCombo();
             cmbRotations.SelectedIndex = 0;
@@ -444,7 +444,7 @@ namespace Rawr.Retribution
             List<string> rotationList = new List<string>(calcOpts.Rotations.Count);
             foreach (Ability[] rotation in calcOpts.Rotations)
             {
-                rotationList.Add(RotationParameters.RotationString(rotation));
+                rotationList.Add(SimulatorParameters.RotationString(rotation));
             }
             cmbRotations.DataSource = rotationList;
             cmbRotations.SelectedIndex = oldIndex;
@@ -457,7 +457,7 @@ namespace Rawr.Retribution
             List<string> abilityList = new List<string>(calcOpts.Rotations[number].Length);
             foreach (Ability ability in calcOpts.Rotations[number])
             {
-                abilityList.Add(RotationParameters.AbilityString(ability));
+                abilityList.Add(SimulatorParameters.AbilityString(ability));
             }
             listRotation.Items.Clear();
             listRotation.Items.AddRange(abilityList.ToArray());
