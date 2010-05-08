@@ -65,6 +65,9 @@ namespace Rawr.Mage
         public double[] _w;
         public double[] _ww;
         public double[] _wd;
+        public double[] _qx;
+        public double[] _qv;
+        public double[] _vd;
         public double[] _u;
         public double[] _c;
 #if SILVERLIGHT
@@ -74,6 +77,7 @@ namespace Rawr.Mage
 #endif
         //internal static double[] _b;
         public double[] _cost;
+        public double[] _spellDps;
         public double[] _costWorking;
         //private static double[] _beta;
         //private static double[] _betaBackup;
@@ -81,6 +85,7 @@ namespace Rawr.Mage
         public int[] _flags;
         public double[] _lb;
         public double[] _ub;
+        public double[] _mb;
 
         public int maxRows = 0;
         public int maxCols = 0;
@@ -311,8 +316,12 @@ namespace Rawr.Mage
             _w = new double[maxRows];
             _ww = new double[maxRows];
             _wd = new double[maxCols];
+            _qx = new double[maxCols];
+            _qv = new double[maxCols];
+            _vd = new double[maxCols];
             _u = new double[maxRows];
             _c = new double[maxCols];
+            _spellDps = new double[maxCols];
             _cost = new double[maxCols + maxRows];
             _costWorking = new double[maxCols + maxRows];
             //_b = new double[maxRows];
@@ -326,6 +335,9 @@ namespace Rawr.Mage
             _x = new double[maxRows];
             _w = new double[maxRows];
             _ww = new double[maxRows];
+            _qx = new double[maxCols];
+            _qv = new double[maxCols];
+            _vd = new double[maxCols];
             _u = new double[maxRows];
             _c = new double[maxCols];
             double[] tmp = new double[maxCols + maxRows];

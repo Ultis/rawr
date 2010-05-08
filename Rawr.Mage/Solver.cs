@@ -279,6 +279,10 @@ namespace Rawr.Mage
 
         public float IncomingDamageDps { get; set; }
 
+        public int MaxTalents { get; set; }
+        public float Mastery { get; set; }
+        public float ManaAdeptBonus { get; set; }
+
         #endregion
 
         // initialized in InitializeSpellTemplates
@@ -931,6 +935,7 @@ namespace Rawr.Mage
         private int[] segmentColumn;
         public List<SolutionVariable> SolutionVariable { get; set; }
 
+        private const double ManaRegenLPScaling = 0.01;
         public float StartingMana { get; set; }
 
         public Cycle ConjureManaGem { get; set; }
@@ -1110,6 +1115,10 @@ namespace Rawr.Mage
             this.requiresMIP = segmentCooldowns || integralMana;
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
+            if (calculationOptions.Beta)
+            {
+                this.needsSolutionVariables = true;
+            }
             cancellationPending = false;
         }
 
@@ -1140,12 +1149,17 @@ namespace Rawr.Mage
 
             ConstructProblem();
 
+            if (CalculationOptions.Beta)
+            {
+                SolveQuadratic();
+            }
+
             if (requiresMIP)
             {
                 RestrictSolution();
             }
 
-            solution = lp.Solve();
+            solution = lp.Solve();            
 
             var ret = GetCalculationsResult();
 
@@ -2256,6 +2270,24 @@ namespace Rawr.Mage
 
         private void CalculateBaseStateStats()
         {
+            int[] talentData = MageTalents.Data;
+            int arcane = 0;
+            for (int i = 0; i <= 29; i++)
+            {
+                arcane += talentData[i];
+            }
+            int fire = 0;
+            for (int i = 30; i <= 57; i++)
+            {
+                fire += talentData[i];
+            }
+            int frost = 0;
+            for (int i = 58; i <= 85; i++)
+            {
+                frost += talentData[i];
+            }
+            MaxTalents = Math.Max(arcane, Math.Max(fire, frost));
+
             Stats baseStats = BaseStats;
             BaseSpellHit = baseStats.HitRating * CalculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit + 0.01f * MageTalents.Precision;
 
@@ -2287,6 +2319,10 @@ namespace Rawr.Mage
             HolyThreatMultiplier = threatFactor;
 
             float baseSpellModifier = (1 + 0.01f * MageTalents.ArcaneInstability) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier) * CalculationOptions.EffectDamageMultiplier;
+            if (CalculationOptions.Beta)
+            {
+                baseSpellModifier *= (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
+            }
             float baseAdditiveSpellModifier = 1.0f;
             BaseSpellModifier = baseSpellModifier;
             BaseAdditiveSpellModifier = baseAdditiveSpellModifier;
@@ -2439,6 +2475,10 @@ namespace Rawr.Mage
             CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
 
             BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+            if (CalculationOptions.Beta)
+            {
+                BaseCastingSpeed *= (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
+            }
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
 
             IncomingDamageAmpMelee = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - 0.01f * MageTalents.ArcticWinds) * (1 - MeleeMitigation) * (1 - Dodge) * (1 - DamageTakenReduction);
@@ -2476,6 +2516,14 @@ namespace Rawr.Mage
             BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower;
             BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
             BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
+
+            if (CalculationOptions.Beta)
+            {
+                if (arcane > fire && arcane > frost)
+                {
+                    ManaAdeptBonus = (0.23600000143051f * Math.Min(51, arcane) + 1.5f * Mastery) * 0.01f; // 0.12036
+                }
+            }
         }
 
         private void InitializeSpellTemplates()
@@ -2621,7 +2669,7 @@ namespace Rawr.Mage
 #endif
 
                 #region Set LP Scaling
-                lp.SetRowScaleUnsafe(rowManaRegen, 0.01);
+                lp.SetRowScaleUnsafe(rowManaRegen, ManaRegenLPScaling);
                 lp.SetRowScaleUnsafe(rowManaGem, 40.0);
                 lp.SetRowScaleUnsafe(rowPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
@@ -4821,8 +4869,18 @@ namespace Rawr.Mage
             //if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-            lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond * multiplier);
-            lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond * multiplier);
+            if (CalculationOptions.Beta)
+            {
+                float dps = cycle.GetDamagePerSecond(ManaAdeptBonus);
+                lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
+                lp.SetCostUnsafe(column, minimizeTime ? -1 : dps * multiplier);
+                lp.SetSpellDpsUnsafe(column, cycle.GetSpellDamagePerSecond() * multiplier);
+            }
+            else
+            {
+                lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond * multiplier);
+                lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond * multiplier);
+            }
 
             for (int i = 0; i < rowStackingConstraintCount; i++)
             {
@@ -5315,6 +5373,58 @@ namespace Rawr.Mage
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Quadratic Solver
+        private void SolveQuadratic()
+        {
+            // for now requires solution variables to work
+            int[] sort = new int[lp.Columns];
+            for (int j = 0; j < lp.Columns; j++)
+            {
+                sort[j] = j;
+            }
+            Array.Sort(sort, (x, y) =>
+            {
+                SolutionVariable vx = SolutionVariable[x];
+                SolutionVariable vy = SolutionVariable[y];
+                int comp = vx.Segment.CompareTo(vy.Segment);
+                if (comp != 0) return comp;
+                if (vx.Dps == 0.0)
+                {
+                    if (vy.Dps == 0.0)
+                    {
+                        return vx.Mps.CompareTo(vy.Mps);
+                    }
+                    else
+                    {
+                        if (vx.Mps <= 0)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+                }
+                else if (vy.Dps == 0.0)
+                {
+                    if (vy.Mps <= 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                return vx.Mps.CompareTo(vy.Mps);
+            });
+
+
+            lp.SolvePrimalQuadratic(rowManaRegen, sort, ManaAdeptBonus / (BaseStats.Mana * ManaRegenLPScaling));
         }
         #endregion
 

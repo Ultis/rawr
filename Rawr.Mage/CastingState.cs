@@ -399,6 +399,10 @@ namespace Rawr.Mage
             }
 
             CastingSpeed = (1 + SpellHasteRating / 1000f * levelScalingFactor) * (1f + BaseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+            if (CalculationOptions.Beta)
+            {
+                CastingSpeed *= (1 + (Math.Min(51, solver.MaxTalents) * 0.15700000524521f) * 0.01f);
+            }
 
             StateCritRate = stateCritRating / 1400f * levelScalingFactor;
             if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);

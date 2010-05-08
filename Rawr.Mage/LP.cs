@@ -29,10 +29,12 @@ namespace Rawr.Mage
         private int[] _flags;
         internal double[] _lb;
         internal double[] _ub;
+        internal double[] _mb;
 
         private const int flagNLB = 0x1; // variable nonbasic at lower bound
         private const int flagNUB = 0x2; // variable nonbasic at upper bound
-        private const int flagN = 0x3; // variable nonbasic
+        private const int flagNMid = 0x400; // variable nonbasic in middle (quadratic program only)
+        private const int flagN = 0x403; // variable nonbasic
         private const int flagB = 0x4; // variable basic
         private const int flagDis = 0x8; // variable blacklisted
         private const int flagFix = 0x10; // variable fixed
@@ -43,6 +45,12 @@ namespace Rawr.Mage
         private const int flagPivot2 = 0x200; // variable is in reduced pivot candidate set
 
         private bool disabledDirty;
+
+        // quadratic parameters
+        private int mpsRow; 
+        private int[] sort;
+        private int[] sortinv;
+        private double Qk;
 
 #if SILVERLIGHT
         private double[] a;
@@ -73,9 +81,13 @@ namespace Rawr.Mage
         private double* w;
         private double* ww;
         private double* wd;
+        private double* qx;
+        private double* qv;
+        private double* vd;
         private double* c;
         private double* u;
         private double* cost;
+        private double* spellDps;
         private double* sparseValue;
         private double* D;
         private double** pD;
@@ -86,6 +98,7 @@ namespace Rawr.Mage
         private int* flags;
         private double* lb;
         private double* ub;
+        private double* mb;
 #endif
 
         private const double epsPrimal = 1.0e-7;
@@ -164,6 +177,10 @@ namespace Rawr.Mage
             clone._flags = (int[])_flags.Clone();
             clone._lb = (double[])_lb.Clone();
             clone._ub = (double[])_ub.Clone();
+            if (_mb != null)
+            {
+                clone._mb = (double[])_mb.Clone();
+            }
             if (numExtraConstraints > 0)
             {
                 clone.extraConstraintsUsed = (int[])extraConstraintsUsed.Clone();
@@ -194,6 +211,11 @@ namespace Rawr.Mage
         public void SetCost(int col, double value)
         {
             arraySet._cost[col] = value;
+        }
+
+        public void SetSpellDps(int col, double value)
+        {
+            arraySet._spellDps[col] = value;
         }
 
         private bool hardInfeasibility = false;
@@ -338,6 +360,7 @@ namespace Rawr.Mage
             arraySet._cost[cols] = 0.0;
             _lb[cols] = 0.0; // we can reuse dirty arrays, initialize only when needed
             _ub[cols] = double.PositiveInfinity;
+            arraySet._spellDps[cols] = 0.0;
             _flags[cols] = flagNLB | flagLB;
             cols++;
             return A.AddColumn();
@@ -441,6 +464,7 @@ namespace Rawr.Mage
                 {
                     _lb = arraySet._lb;
                     _ub = arraySet._ub;
+                    _mb = arraySet._mb;
                     _flags = arraySet._flags;
                     // do not clear, initialize on each new column instead
                     //Array.Clear(_lb, 0, _lb.Length);
@@ -452,9 +476,11 @@ namespace Rawr.Mage
                 {
                     _lb = new double[maxSize];
                     _ub = new double[maxSize];
+                    _mb = new double[maxSize];
                     _flags = new int[maxSize];
                     arraySet._lb = _lb;
                     arraySet._ub = _ub;
+                    arraySet._mb = _mb;
                     arraySet._flags = _flags;
                 }
             }
@@ -464,16 +490,20 @@ namespace Rawr.Mage
                 Array.Copy(_lb, newlb, _lb.Length);
                 double[] newub = new double[maxSize];
                 Array.Copy(_ub, newub, _ub.Length);
+                double[] newmb = new double[maxSize];
+                Array.Copy(_mb, newmb, _mb.Length);
                 int[] newflags = new int[maxSize];
                 Array.Copy(_flags, newflags, _flags.Length);
                 if (_lb == arraySet._lb)
                 {
                     arraySet._lb = newlb;
                     arraySet._ub = newub;
+                    arraySet._mb = newmb;
                     arraySet._flags = newflags;
                 }
                 _lb = newlb;
                 _ub = newub;
+                _mb = newmb;
                 _flags = newflags;
             }
         }
@@ -673,6 +703,176 @@ namespace Rawr.Mage
         }
 #endif
 
+        public unsafe void QuadraticQ(double* x, double* Qx)
+        {
+            int sortj = 0;
+            double xm = 0.0;
+            for (int j = 0; j < cols; j++)
+            {
+                sortj = sort[j];
+                xm += x[sortj] * a[sortj * baseRows + mpsRow];
+                Qx[sortj] = spellDps[sortj] * xm;
+            }
+            double xe = x[sortj] * spellDps[sortj];
+            for (int j = cols - 2; cols >= 0; j--)
+            {                
+                sortj = sort[j];
+                Qx[sortj] += a[sortj * baseRows + mpsRow] * xe;
+                xe += x[sortj] * spellDps[sortj];
+            }
+        }
+
+        public unsafe void ComputeQx()
+        {
+            // TODO this should be updated instead of reset each time
+            for (int i = 0; i < rows; i++)
+            {
+                int col = B[i];
+                mb[col] = d[i];
+            }
+            for (int col = 0; col < cols + rows; col++)
+            {
+                if ((flags[col] & flagNLB) != 0)
+                {
+                    mb[col] = lb[col];
+                }
+                else if ((flags[col] & flagNUB) != 0)
+                {
+                    mb[col] = ub[col];
+                }
+            }
+            int sortj = 0;
+            double xm = 0.0;
+            for (int j = 0; j < cols; j++)
+            {
+                sortj = sort[j];
+                xm += mb[sortj] * a[sortj * baseRows + mpsRow];
+                qx[sortj] = spellDps[sortj] * xm;
+            }
+            double xe = mb[sortj] * spellDps[sortj];
+            for (int j = cols - 2; j >= 0; j--)
+            {
+                sortj = sort[j];
+                qx[sortj] += a[sortj * baseRows + mpsRow] * xe;
+                xe += mb[sortj] * spellDps[sortj];
+            }
+        }
+
+        public unsafe double ComputevQv(int incoming, double direction)
+        {
+            // v = 1 at incoming, 0 at all other nonbasic, -w at basic
+            // expand v
+            Zero(vd, cols);
+            for (int i = 0; i < rows; i++)
+            {
+                int col = B[i];
+                vd[col] = - direction * w[i];
+            }
+            vd[V[incoming]] = direction;
+            int sortj = 0;
+            double xm = 0.0;
+            for (int j = 0; j < cols; j++)
+            {
+                sortj = sort[j];
+                xm += vd[sortj] * a[sortj * baseRows + mpsRow];
+                qv[sortj] = spellDps[sortj] * xm;
+            }
+            double xe = vd[sortj] * spellDps[sortj];
+            for (int j = cols - 2; j >= 0; j--)
+            {
+                sortj = sort[j];
+                qv[sortj] += a[sortj * baseRows + mpsRow] * xe;
+                xe += vd[sortj] * spellDps[sortj];
+            }
+            double v = 0.0;
+            for (int j = 0; j < cols; j++)
+            {
+                v += qv[j] * vd[j];
+            }
+            return -v * Qk;
+        }
+
+        public unsafe double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k)
+        {
+            if (hardInfeasibility) return new double[cols + 1];
+            double[] ret = null;
+
+            this.mpsRow = mpsRow;
+            this.sort = sort;
+            sortinv = new int[cols];
+            for (int i = 0; i < cols; i++)
+            {
+                sortinv[sort[i]] = i;
+            }
+            this.Qk = k;
+
+            fixed (double** pD = arraySet._pD)
+            fixed (double* a = arraySet.SparseMatrixData, U = arraySet.LU_U, sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2, d = arraySet._d, x = arraySet._x, w = arraySet._w, ww = arraySet._ww, wd = arraySet._wd, qx = arraySet._qx, qv = arraySet._qv, vd = arraySet._vd, c = arraySet._c, u = arraySet._u, cost = arraySet._cost, spellDps = arraySet._spellDps, costw = arraySet._costWorking, sparseValue = arraySet.SparseMatrixValue, D = arraySet.extraConstraints, lb = _lb, ub = _ub, mb = _mb)
+            fixed (int* B = _B, V = _V, sparseRow = arraySet.SparseMatrixRow, sparseCol = arraySet.SparseMatrixCol, P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart, flags = _flags)
+            {
+                this.a = a;
+                this.U = U;
+                this.d = d;
+                this.x = x;
+                this.w = w;
+                this.ww = ww;
+                this.wd = wd;
+                this.c = c;
+                this.u = u;
+                this.cost = cost;
+                this.sparseValue = sparseValue;
+                this.D = D;
+                this.B = B;
+                this.V = V;
+                this.sparseRow = sparseRow;
+                this.sparseCol = sparseCol;
+                this.flags = flags;
+                this.lb = lb;
+                this.ub = ub;
+                this.mb = mb;
+                this.pD = pD;
+                this.qx = qx;
+                this.qv = qv;
+                this.vd = vd;
+                this.spellDps = spellDps;
+
+                SetupExtraConstraints();
+
+                lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+                ret = SolvePrimalUnsafe(false, false, false, true);
+                ret = SolvePrimalQuadraticUnsafe();
+                lu.EndUnsafe();
+
+                this.a = null;
+                this.U = null;
+                this.d = null;
+                this.x = null;
+                this.w = null;
+                this.ww = null;
+                this.wd = null;
+                this.c = null;
+                this.u = null;
+                this.cost = null;
+                this.sparseValue = null;
+                this.D = null;
+                this.pD = null;
+                this.B = null;
+                this.V = null;
+                this.sparseRow = null;
+                this.sparseCol = null;
+                this.flags = null;
+                this.lb = null;
+                this.ub = null;
+                this.mb = null;
+                this.qx = null;
+                this.qv = null;
+                this.vd = null;
+                this.spellDps = null;
+            }
+
+            return ret;
+        }
+
         private void Decompose()
         {
 #if SILVERLIGHT
@@ -804,6 +1004,10 @@ namespace Rawr.Mage
                     {
                         v = ub[col];
                     }
+                    else if ((flags[col] & flagNMid) != 0)
+                    {
+                        v = mb[col];
+                    }
                 }
                 if (Math.Abs(v) >= epsZero)
                 {
@@ -868,6 +1072,60 @@ namespace Rawr.Mage
                 if (col < cols)
                 {
                     double costcol = cost[col];
+                    int sCol1 = sparseCol[col];
+                    int sCol2 = sparseCol[col + 1];
+#if SILVERLIGHT
+                    for (int i = sCol1; i < sCol2; i++)
+                    {
+                        costcol -= sparseValue[i] * u[sparseRow[i]];
+                    }
+
+#else
+                    int* sRow = sparseRow + sCol1;
+                    double* sValue = sparseValue + sCol1;
+                    for (int i = sCol1; i < sCol2; i++, sRow++, sValue++)
+                    {
+                        costcol -= *sValue * u[*sRow];
+                    }
+#endif
+                    for (int k = 0; k < numExtraConstraints; k++)
+                    {
+                        costcol -= pD[k][col] * u[baseRows + k];
+                    }
+                    c[j] = costcol;
+                }
+                else
+                {
+                    c[j] = cost[col] - u[col - cols];
+                }
+            }
+        }
+
+        private void ComputeReducedCostGradient()
+        {
+            ComputeQx();
+            for (int i = 0; i < rows; i++)
+            {
+                //if (B[i] < cols) u[i] = cost[B[i]];
+                //else u[i] = 0.0;
+                int col = B[i];
+                if (col < cols)
+                {
+                    u[i] = cost[col] - Qk * qx[col];
+                }
+                else
+                {
+                    u[i] = cost[col];
+                }
+            }
+            lu.BSolve(u);
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+
+                if (col < cols)
+                {
+                    double costcol = cost[col] - Qk * qx[col];
                     int sCol1 = sparseCol[col];
                     int sCol2 = sparseCol[col + 1];
 #if SILVERLIGHT
@@ -979,6 +1237,52 @@ namespace Rawr.Mage
                     ret[i] = ub[i];
                     value += cost[i] * ub[i];
                 }
+                else if ((flags[i] & flagNMid) != 0)
+                {
+                    ret[i] = mb[i];
+                    value += cost[i] * mb[i];
+                }
+            }
+            ret[cols] = value;
+            return ret;
+        }
+
+        private double[] ComputeReturnSolutionQuadratic()
+        {
+            double[] ret = new double[cols + 1];
+            double value = 0.0;
+            for (int i = 0; i < rows; i++)
+            {
+                if (B[i] < cols)
+                {
+                    double di = d[i];
+                    if (Math.Abs(di - lb[B[i]]) < Math.Abs(lb[B[i]]) * epsPrimalRel + epsPrimalLow || di < lb[B[i]]) di = lb[B[i]];
+                    else if (Math.Abs(di - ub[B[i]]) < Math.Abs(ub[B[i]]) * epsPrimalRel + epsPrimalLow || di > ub[B[i]]) di = ub[B[i]];
+                    ret[B[i]] = di;
+                    value += cost[B[i]] * di;
+                }
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                if ((flags[i] & flagNLB) != 0)
+                {
+                    ret[i] = lb[i];
+                    value += cost[i] * lb[i];
+                }
+                else if ((flags[i] & flagNUB) != 0)
+                {
+                    ret[i] = ub[i];
+                    value += cost[i] * ub[i];
+                }
+                else if ((flags[i] & flagNMid) != 0)
+                {
+                    ret[i] = mb[i];
+                    value += cost[i] * mb[i];
+                }
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                value -= 0.5 * Qk * qx[i] * mb[i];
             }
             ret[cols] = value;
             return ret;
@@ -1004,7 +1308,61 @@ namespace Rawr.Mage
                 {
                     value += cost[i] * ub[i];
                 }
+                else if ((flags[i] & flagNMid) != 0)
+                {
+                    value += cost[i] * mb[i];
+                }
             }
+            return value;
+        }
+
+        private double ComputeValueQuadratic()
+        {
+            double value = 0.0;
+            for (int i = 0; i < rows; i++)
+            {
+                if (B[i] < cols)
+                {
+                    value += cost[B[i]] * d[i];
+                }
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                if ((flags[i] & flagNLB) != 0)
+                {
+                    value += cost[i] * lb[i];
+                }
+                else if ((flags[i] & flagNUB) != 0)
+                {
+                    value += cost[i] * ub[i];
+                }
+                else if ((flags[i] & flagNMid) != 0)
+                {
+                    value += cost[i] * mb[i];
+                }
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                value -= 0.5 * Qk * qx[i] * mb[i];
+            }
+            /*for (int i = 0; i < cols; i++)
+            {
+                value -= 0.5 * Qk * mb[i] * mb[i] * a[i * baseRows + mpsRow] * spellDps[i];
+            }
+            for (int i = 0; i < cols; i++)
+            {
+                for (int j = i + 1; j < cols; j++)
+                {
+                    if (sortinv[i] < sortinv[j])
+                    {
+                        value -= Qk * mb[i] * mb[j] * a[i * baseRows + mpsRow] * spellDps[j];
+                    }
+                    else
+                    {
+                        value -= Qk * mb[i] * mb[j] * a[j * baseRows + mpsRow] * spellDps[i];
+                    }
+                }
+            }*/
             return value;
         }
 
@@ -1052,6 +1410,19 @@ namespace Rawr.Mage
                     costj = -c[j];
                     dir = -1.0;
                 }
+                else if ((flags[col] & flagNMid) != 0)
+                {
+                    if (c[j] > maxc)
+                    {
+                        costj = c[j];
+                        dir = 1.0;
+                    }
+                    else
+                    {
+                        costj = -c[j];
+                        dir = -1.0;
+                    }
+                }
                 if (costj > maxc && (flags[col] & flagDis) == 0 && (flags[col] & flagFix) == 0)
                 {
                     maxc = costj;
@@ -1062,13 +1433,13 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private bool SelectPrimalOutgoing(double direction, bool feasible, double eps, out int outmini, out double outminr, out int outbound)
+        private bool SelectPrimalOutgoing(double direction, bool feasible, double eps, ref int refmini, ref double refminr, ref int refbound)
         {
             // min over i of d[i]/w[i] where w[i]>0
-            double minrr = double.PositiveInfinity;
-            double minr = double.PositiveInfinity;
-            int mini = -1;
-            int bound = 0;
+            double minrr = refminr;
+            double minr = refminr;
+            int mini = refmini;
+            int bound = refbound;
             double minv = 0.0;
             //double reducedcost = c[incoming];
             for (int i = 0; i < rows; i++)
@@ -1086,9 +1457,9 @@ namespace Rawr.Mage
                 {
                     // we lost primal feasibility
                     // fall back to phase I
-                    outmini = mini;
-                    outminr = minr;
-                    outbound = bound;
+                    refmini = mini;
+                    refminr = minr;
+                    refbound = bound;
                     return false;
                 }
                 if (feasible || ifeasible)
@@ -1137,10 +1508,26 @@ namespace Rawr.Mage
                 }
                 continue;
             }
-            outmini = mini;
-            outminr = minr;
-            outbound = bound;
+            refmini = mini;
+            refminr = minr;
+            refbound = bound;
             return true;
+        }
+
+        private double ComputeQuadraticLimit(int incoming, double direction)
+        {
+            // feasible direction v, 1 in component incoming
+            // [B N]*[vB vN] = 0
+            // vB = -Binv * N*vN = -w
+            // increase in value = t * vT * grad + t^2/2 * vT * Q * v
+            // vT * grad = c[incoming]
+            double vQv = ComputevQv(incoming, direction);
+            // c[incoming] + t * vQv = 0
+            if (vQv > -epsZero)
+            {
+                return double.PositiveInfinity;
+            }
+            return -c[incoming] * direction / vQv;
         }
 
         private void ComputePrimalRowLimits(int incoming)
@@ -2587,13 +2974,13 @@ namespace Rawr.Mage
                     return ComputeReturnSolution();
                 }
 
-                int mini;
-                double minr;
-                int bound;
+                int mini = -1;
+                double minr = double.PositiveInfinity;
+                int bound = 0;
 
                 ComputePrimalRowLimits(maxj);
 
-                if (!SelectPrimalOutgoing(direction, feasible, eps, out mini, out minr, out bound))
+                if (!SelectPrimalOutgoing(direction, feasible, eps, ref mini, ref minr, ref bound))
                 {
                     feasible = false;
                     lowestInfeasibility = double.PositiveInfinity;
@@ -2700,6 +3087,305 @@ namespace Rawr.Mage
             // if feasible return the best we got
             if (feasible) return ComputeReturnSolution();
             if (lastFeasible > 0 && !shortLimit)
+            {
+                limit = lastFeasible;
+                for (i = 0; i < rows; i++)
+                {
+                    B[i] = cols + i;
+                    flags[cols + i] = (flags[cols + i] | flagB) & ~flagN & ~flagDis;
+                }
+                for (j = 0; j < cols; j++)
+                {
+                    V[j] = j;
+                    flags[j] = (flags[j] | flagNLB) & ~flagB & ~flagDis;
+                }
+                goto RESTART;
+            }
+            return new double[cols + 1];
+        }
+
+        private double[] SolvePrimalQuadraticUnsafe()
+        {
+            // LU = A_B
+            // d = x_B <- A_B^-1*b ... primal solution
+            // u = u <- c_B*A_B^-1 ... dual solution
+            // w_N <- c_N - u*A_N  ... dual solution
+
+            int limit = 5000;
+
+        RESTART:
+            int i, j, k;
+            bool feasible = false;
+            int round = 0;
+            int redecompose = 0;
+            const int maxRedecompose = 50;
+            double eps = epsPrimal;
+            double lowestInfeasibility = double.PositiveInfinity;
+            int lastFeasible = 0;
+
+            if (disabledDirty)
+            {
+                for (i = 0; i < cols + rows; i++)
+                {
+                    flags[i] &= ~flagDis;
+                }
+                disabledDirty = false;
+            }
+
+            do
+            {
+            DECOMPOSE:
+                if (redecompose <= 0)
+                {
+                    Decompose();
+                    redecompose = maxRedecompose; // decompose every 50 iterations to maintain stability
+                    feasible = false; // when refactoring basis recompute the solution
+                }
+                if (lu.Singular)
+                {
+                    redecompose = 0;
+                    PatchSingularBasis();
+                    continue;
+                }
+
+                if (!feasible)
+                {
+                    ComputePrimalSolution(false);
+                    feasible = IsPrimalFeasible(eps);
+
+                    if (feasible)
+                    {
+                        lastFeasible = round;
+                    }
+                }
+
+                if (!feasible)
+                {
+                    double infeasibility;
+                    ComputePhaseIReducedCosts(out infeasibility, eps);
+                    if (infeasibility < lowestInfeasibility) lowestInfeasibility = infeasibility;
+                    else if (infeasibility > lowestInfeasibility + eps)
+                    {
+                        // we're not using a shifting strategy for primal so the only way to combat
+                        // numerical cycling is to lower the tolerances
+                        if (eps < 1.0)
+                        {
+                            eps *= 10.0;
+                            lowestInfeasibility = double.PositiveInfinity;
+                        }
+                        if (redecompose < maxRedecompose)
+                        {
+                            redecompose = 0;
+                            goto DECOMPOSE;
+                        }
+                    }
+                    if (infeasibility > 100.0 && !ColdStart)
+                    {
+                        // we're so far out of feasible region we're better off starting from scratch
+                        for (i = 0; i < rows; i++)
+                        {
+                            B[i] = cols + i;
+                            flags[cols + i] = (flags[cols + i] | flagB) & ~flagN & ~flagDis;
+                        }
+                        for (j = 0; j < cols; j++)
+                        {
+                            V[j] = j;
+                            flags[j] = (flags[j] | flagNLB) & ~flagB & ~flagDis;
+                        }
+                        disabledDirty = false;
+                        redecompose = 0;
+                        ColdStart = true;
+                        continue;
+                    }
+                }
+
+            MINISTEP:
+                if (feasible)
+                {
+                    ComputeReducedCostGradient();
+                }
+
+                double direction;
+                int maxj = SelectPrimalIncoming(out direction, false);
+
+                if (maxj == -1)
+                {
+                    // TODO verify optimality
+                    // so far we only know it's a KKT point
+                    /*if (feasible && verifyRefactoredOptimality && redecompose < maxRedecompose && verificationAttempts < 5)
+                    {
+                        redecompose = 0;
+                        feasible = false;
+                        verificationAttempts++;
+                        continue;
+                    }*/
+                    /*if (blacklistAllowed)
+                    {
+                        bool retry = false;
+                        if (disabledDirty)
+                        {
+                            for (i = 0; i < cols + rows; i++)
+                            {
+                                if ((flags[i] & flagDis) != 0)
+                                {
+                                    flags[i] &= ~flagDis;
+                                    retry = true;
+                                }
+                            }
+                            disabledDirty = false;
+                        }
+                        if (retry)
+                        {
+                            blacklistAllowed = false;
+                            redecompose = 0;
+                            needsRecalc = true;
+                            continue;
+                        }
+                    }*/
+
+                    // rebuild solution so it's stable
+                    //ComputePrimalSolution();
+
+                    // optimum, return solution (or could be no feasible solution)
+                    if (!feasible) return new double[cols + 1]; // if it's not feasible then return null solution
+                    ColdStart = false;
+                    //System.Diagnostics.Trace.WriteLine("Primal optimality in round " + round);
+                    return ComputeReturnSolutionQuadratic();
+                }
+
+                ComputePrimalRowLimits(maxj);
+
+                int mini = -1;
+                double minr = ComputeQuadraticLimit(maxj, direction);
+                int bound = flagNMid;
+
+                if (!SelectPrimalOutgoing(direction, feasible, eps, ref mini, ref minr, ref bound))
+                {
+                    feasible = false;
+                    lowestInfeasibility = double.PositiveInfinity;
+                    redecompose = 0;
+                    goto DECOMPOSE;
+                }
+
+                /*if (mini == -1)
+                {
+                    // unbounded
+                    if (!ColdStart)
+                    {
+                        // something went really horribly wrong, try from scratch
+                        for (i = 0; i < rows; i++)
+                        {
+                            B[i] = cols + i;
+                            flags[cols + i] = (flags[cols + i] | flagB) & ~flagN & ~flagDis;
+                        }
+                        for (j = 0; j < cols; j++)
+                        {
+                            V[j] = j;
+                            flags[j] = (flags[j] | flagNLB) & ~flagB & ~flagDis;
+                        }
+                        redecompose = 0;
+                        ColdStart = true;
+                        continue;
+                    }
+                    // completely unstable, investigate
+                    double[] ret = new double[cols + 1];
+                    return ret;
+                }*/
+
+                // determine if we do a basis change or just a bound swap
+                int col = V[maxj];
+                double dist;
+                if (direction > 0.0)
+                {
+                    dist = ub[col] - mb[col];
+                }
+                else
+                {
+                    dist = mb[col] - lb[col];
+                }
+                if (Math.Abs(minr) >= dist - epsZero)
+                {
+                    if (direction > 0.0)
+                    {
+                        flags[col] = (flags[col] & ~flagN) | flagNUB;
+                    }
+                    else
+                    {
+                        flags[col] = (flags[col] & ~flagN) | flagNLB;
+                    }
+                }
+                else if (mini == -1)
+                {
+                    flags[col] = (flags[col] & ~flagN) | flagNMid;
+                    mb[col] = mb[col] + direction * minr;
+                    dist = minr;
+                }
+                else
+                {
+                    goto UPDATE;
+                }
+
+                if (!feasible)
+                {
+                    round++; // still increment to avoid infinite cycles
+                    continue;
+                }
+
+                minr = direction * dist;
+                for (i = 0; i < rows; i++)
+                {
+                    d[i] -= minr * w[i];
+                }
+
+                goto MINISTEP;
+
+            UPDATE:
+
+                if (feasible)
+                {
+                    UpdatePrimal(minr, mini, maxj);
+                }
+
+                // swap base
+
+                redecompose--;
+                if (redecompose > 0)
+                {
+                    double pivot;
+                    lu.Update(ww, mini, out pivot);
+                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]))
+                    {
+                        if (redecompose == maxRedecompose - 1)
+                        {
+                            redecompose = 0;
+                            feasible = false; // forces recalc
+                            flags[V[maxj]] |= flagDis;
+                            disabledDirty = true;
+                            continue;
+                        }
+                        else
+                        {
+                            redecompose = 0;
+                            feasible = false;
+                            continue;
+                        }
+                    }
+                }
+
+                k = B[mini];
+                B[mini] = V[maxj];
+                V[maxj] = k;
+                flags[B[mini]] = (flags[B[mini]] | flagB) & ~flagN;
+                flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
+
+                round++;
+            } while (round < limit || round < 100); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
+            // when tuning dual feasibility limit to 100 rounds, we don't want to spend too much time on it
+
+            // just in case
+            // if feasible return the best we got
+            if (feasible) return ComputeReturnSolution();
+            if (lastFeasible > 0)
             {
                 limit = lastFeasible;
                 for (i = 0; i < rows; i++)

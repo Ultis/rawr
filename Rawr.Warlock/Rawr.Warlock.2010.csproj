@@ -130,7 +130,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimulatedStat.cs" />
     <Compile Include="Spells.cs" />
-    <Compile Include="SpellModifiers.cs" />
+    <Compile Include="StatUtils.cs" />
     <Compile Include="TextInputDialog.cs">
       <SubType>Form</SubType>
     </Compile>

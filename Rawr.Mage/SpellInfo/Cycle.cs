@@ -330,6 +330,18 @@ namespace Rawr.Mage
             }
         }
 
+        public float GetDamagePerSecond(float manaAdeptBonus)
+        {
+            CalculateEffects();
+            return damagePerSecond * (1 + manaAdeptBonus) + effectDamagePerSecond;
+        }
+
+        public float GetSpellDamagePerSecond()
+        {
+            CalculateEffects();
+            return damagePerSecond;
+        }
+
         internal float threatPerSecond;
         internal float effectThreatPerSecond;
         public float ThreatPerSecond

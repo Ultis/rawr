@@ -99,6 +99,13 @@ namespace Rawr.Mage
             }
         }
 
+        private bool _Beta;
+        public bool Beta
+        {
+            get { return _Beta; }
+            set { _Beta = value; OnPropertyChanged("Beta"); }
+        }
+
         private int _TargetLevel;
         public int TargetLevel
         {

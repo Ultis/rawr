@@ -323,7 +323,10 @@ namespace Rawr.Mage
         private void DepthFirstSearch()
         {
             int sizeLimit = CalculationOptions.MaxHeapLimit;
-            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            if (!CalculationOptions.Beta)
+            {
+                lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            }
 
             upperBound = lp.Value;
             lowerBound = CalculationOptions.LowerBoundHint;

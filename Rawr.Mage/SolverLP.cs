@@ -16,8 +16,12 @@ namespace Rawr.Mage
         private LP lp;
         private double[] compactSolution;
         private bool needsDual;
+        private bool needsQuadratic;
         private int segments;
         public StringBuilder Log;
+        private int mpsRow;
+        private int[] sort;
+        private double Qk;
         //public int[] disabledHex;
 
 #if SILVERLIGHT
@@ -151,6 +155,14 @@ namespace Rawr.Mage
             pColumnScale[col] = value;
         }
 
+        public int Columns
+        {
+            get
+            {
+                return cCols;
+            }
+        }
+
         public int AddColumn()
         {
             arraySet.columnScale[cCols] = 1.0;
@@ -230,6 +242,11 @@ namespace Rawr.Mage
         public void SetCostUnsafe(int col, double value)
         {
             pCost[col] = value * pRowScale[cRows] * pColumnScale[col];
+        }
+
+        public void SetSpellDpsUnsafe(int col, double value)
+        {
+            arraySet._spellDps[col] = value * pRowScale[cRows] * pColumnScale[col];
         }
 
         public void SetColumnLowerBound(int col, double value)
@@ -346,7 +363,11 @@ namespace Rawr.Mage
         {
             if (compactSolution == null)
             {
-                if (needsDual)
+                if (needsQuadratic)
+                {
+                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk);
+                }
+                else if (needsDual)
                 {
                     //System.Diagnostics.Trace.WriteLine("Solving " + Log.ToString());
                     //System.Diagnostics.Debug.WriteLine("Solving H=" + HeroismHash.ToString("X") + ", AP=" + APHash.ToString("X") + ", IV=" + IVHash.ToString("X"));
@@ -382,6 +403,16 @@ namespace Rawr.Mage
             //lp.SolveDual(true);
             compactSolution = lp.SolveDual(true);
             UnscaleSolution();
+        }
+
+        public void SolvePrimalQuadratic(int mpsRow, int[] sort, double k)
+        {
+            this.mpsRow = mpsRow;
+            this.sort = sort;
+            this.Qk = k;
+            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k);
+            UnscaleSolution();
+            needsQuadratic = true;
         }
 
         public double Value

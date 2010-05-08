@@ -116,11 +116,15 @@
     <Compile Include="GraphForm.designer.cs">
       <DependentUpon>GraphForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Rotation.ECD Table\EffectiveCooldown.cs" />
+    <Compile Include="Rotation.FCFS Simulator\Simulator.cs" />
+    <Compile Include="Rotation.FCFS Simulator\SimulatorAbility.cs" />
+    <Compile Include="Rotation.FCFS Simulator\SimulatorEngine.cs" />
+    <Compile Include="Rotation.FCFS Simulator\SimulatorParameters.cs" />
     <Compile Include="Skill.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Rotation.cs" />
-    <Compile Include="SimulatorAbility.cs" />
     <Compile Include="CalculationOptionsPanelRetribution.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -136,8 +140,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RotationParameters.cs" />
-    <Compile Include="RotationSimulator.cs" />
     <Compile Include="RotationSolution.cs" />
   </ItemGroup>
   <ItemGroup>
