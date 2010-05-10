@@ -826,7 +826,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     sequence[index].SetTimeConstraint(sequence[index].MinTime, sequence[index].MaxTime + sequence[index + 1].Duration);
                     sequence[index + 1].SetTimeConstraint(sequence[index + 1].MinTime, sequence[index + 1].MaxTime + sequence[index].Duration);
                 }
-                else
+                else if (sequence[index].SuperGroup != null)
                 {
                     sequence[index].SuperGroup.Item.Insert(sequence[index].SuperGroup.Item.IndexOf(sequence[index + 1]), sequence[index]);
                 }

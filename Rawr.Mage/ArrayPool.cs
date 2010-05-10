@@ -87,6 +87,14 @@ namespace Rawr.Mage
         public double[] _ub;
         public double[] _mb;
 
+        public double[] cg_p;
+        public double[] cg_x;
+        public double[] cg_r;
+        public double[] cg_w;
+        public double[] cg_rr;
+        public double[] cg_ww;
+        public double[] cg_qp;
+
         public int maxRows = 0;
         public int maxCols = 0;
         public int maxExtra = 0;
@@ -327,6 +335,17 @@ namespace Rawr.Mage
             //_b = new double[maxRows];
             //_beta = new double[maxRows];
             //_betaBackup = new double[maxRows];
+        }
+
+        public void RecreateCGArrays()
+        {
+            cg_p = new double[maxRows + maxCols];
+            cg_r = new double[maxRows + maxCols];
+            cg_x = new double[maxRows + maxCols];
+            cg_w = new double[maxRows + maxCols];
+            cg_rr = new double[maxRows + maxCols];
+            cg_ww = new double[maxRows + maxCols];
+            cg_qp = new double[maxRows + maxCols];
         }
 
         public void ExtendLPArrays()
