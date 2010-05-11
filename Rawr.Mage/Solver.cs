@@ -2517,6 +2517,7 @@ namespace Rawr.Mage
             BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
             BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
 
+            ManaAdeptBonus = 0.0f;
             if (CalculationOptions.Beta)
             {
                 if (arcane > fire && arcane > frost)

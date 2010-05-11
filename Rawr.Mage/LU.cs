@@ -139,14 +139,25 @@ namespace Rawr.Mage
         public unsafe void BSolve(double* b)
 #endif
         {
-            BSolveU(b, c);
-            BSolveL(c, b);
+            BSolveU(b, c, 0.00000001);
+            BSolveL(c, b, 0.00000001);
+        }
+
+
+#if SILVERLIGHT
+        public void BSolve(double[] b, double epsZero)
+#else
+        public unsafe void BSolve(double* b, double epsZero)
+#endif
+        {
+            BSolveU(b, c, epsZero);
+            BSolveL(c, b, epsZero);
         }
 
 #if SILVERLIGHT
-        public void BSolveU(double[] b, double[] c)
+        public void BSolveU(double[] b, double[] c, double epsZero)
 #else
-        public unsafe void BSolveU(double* b, double* c)
+        public unsafe void BSolveU(double* b, double* c, double epsZero)
 #endif
         {
             int i, k;
@@ -156,7 +167,7 @@ namespace Rawr.Mage
             }
             for (k = 0; k < size; k++)
             {
-                if (U[k * size + k] != 0 && Math.Abs(c[k]) > 0.000001)
+                if (U[k * size + k] != 0 && Math.Abs(c[k]) > epsZero)
                 {
                     c[k] /= U[k * size + k];
                     for (i = k + 1; i < size; i++)
@@ -175,7 +186,7 @@ namespace Rawr.Mage
 #endif
         {
             BSolveUUnit(col, c);
-            BSolveL(c, b);
+            BSolveL(c, b, 0.00000001);
         }
 
 #if SILVERLIGHT
@@ -226,9 +237,9 @@ namespace Rawr.Mage
         }
 
 #if SILVERLIGHT
-        public void BSolveL(double[] b, double[] c)
+        public void BSolveL(double[] b, double[] c, double epsZero)
 #else
-        public unsafe void BSolveL(double* b, double* c)
+        public unsafe void BSolveL(double* b, double* c, double epsZero)
 #endif
         {
             int i, j;
@@ -261,7 +272,7 @@ namespace Rawr.Mage
                     int row = LJ[j]; // we're updating using row, if element is zero we can skip
                     // c~ = c + eta (erow' c)
                     double f = c[row];
-                    if (Math.Abs(f) >= 0.00000001)
+                    if (Math.Abs(f) >= epsZero)
                     {
                         int maxi = sLstart[j + 1];
                         for (i = sLstart[j]; i < maxi; i++)
@@ -279,12 +290,22 @@ namespace Rawr.Mage
         public unsafe void FSolve(double* b)
 #endif
         {
-            FSolveL(b, c);
-            FSolveU(c, b);
+            FSolveL(b, c, 0.00000001);
+            FSolveU(c, b, 0.00000001);
         }
 
 #if SILVERLIGHT
-        public void FSolveU(double[] b, double[] c)
+        public void FSolve(double[] b, double epsZero)
+#else
+        public unsafe void FSolve(double* b, double epsZero)
+#endif
+        {
+            FSolveL(b, c, epsZero);
+            FSolveU(c, b, epsZero);
+        }
+
+#if SILVERLIGHT
+        public void FSolveU(double[] b, double[] c, double epsZero)
         {
             int i, k;
             for (i = 0; i < size; i++)
@@ -293,7 +314,7 @@ namespace Rawr.Mage
             }
             for (k = size - 1; k >= 0; k--)
             {
-                if (U[k * size + k] != 0 && Math.Abs(c2[k]) > 0.000001)
+                if (U[k * size + k] != 0 && Math.Abs(c2[k]) > epsZero)
                 {
                     c2[k] /= U[k * size + k];
                     for (i = 0; i < k; i++)
@@ -330,7 +351,7 @@ namespace Rawr.Mage
         }
 
         // hand optimized version of the above silverlight code
-        public unsafe void FSolveU(double* b, double* c)
+        public unsafe void FSolveU(double* b, double* c, double epsZero)
         {
             int size = this.size;
             double* U = this.U;
@@ -347,7 +368,7 @@ namespace Rawr.Mage
                 {
                     double div = *Ukk;
                     double c2kv = *c2k;
-                    if (div != 0 && Math.Abs(c2kv) > 0.000001)
+                    if (div != 0 && Math.Abs(c2kv) > epsZero)
                     {
                         c2kv /= div;
                         *c2k = c2kv;
@@ -396,7 +417,7 @@ namespace Rawr.Mage
 #endif
 
 #if SILVERLIGHT
-        public void FSolveL(double[] b, double[] c)
+        public void FSolveL(double[] b, double[] c, double epsZero)
         {
             // perform all eta operations and finally apply row permutation P
             int i, j;
@@ -408,7 +429,7 @@ namespace Rawr.Mage
                     int row = LJ[j]; // we're updating using row, if element is zero we can skip
                     // b~ = b + eta (erow' b)
                     double f = b[row];
-                    if (Math.Abs(f) >= 0.00000001)
+                    if (Math.Abs(f) >= epsZero)
                     {
                         /*for (i = 0; i < size; i++)
                         {
@@ -441,7 +462,7 @@ namespace Rawr.Mage
             }
         }
 #else
-        public unsafe void FSolveL(double* b, double* c)
+        public unsafe void FSolveL(double* b, double* c, double epsZero)
         {
             int size = this.size;
             int* sLstartj = this.sLstart;
@@ -460,7 +481,7 @@ namespace Rawr.Mage
                 // b~ = b + eta (erow' b)
                 double f = b[row];
                 int* sLstartjinc = sLstartj + 1;
-                if (Math.Abs(f) >= 0.00000001)
+                if (Math.Abs(f) >= epsZero)
                 {
                     /*for (i = 0; i < size; i++)
                     {

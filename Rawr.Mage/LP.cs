@@ -833,7 +833,7 @@ namespace Rawr.Mage
         }
 
 #if SILVERLIGHT
-        public double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k)
+        public double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear)
         {
             if (hardInfeasibility) return new double[cols + 1];
             double[] ret = null;
@@ -893,7 +893,10 @@ namespace Rawr.Mage
             SetupExtraConstraints();
 
             lu.BeginSafe();
-            ret = SolvePrimalUnsafe(false, false, false, true);
+            if (!skipLinear)
+            {
+                ret = SolvePrimalUnsafe(false, false, false, true);
+            }
             ret = SolvePrimalQuadraticCGUnsafe();
             lu.EndUnsafe();
 
@@ -934,7 +937,7 @@ namespace Rawr.Mage
             return ret;
         }
 #else
-        public unsafe double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k)
+        public unsafe double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear)
         {
             if (hardInfeasibility) return new double[cols + 1];
             double[] ret = null;
@@ -998,7 +1001,10 @@ namespace Rawr.Mage
                 SetupExtraConstraints();
 
                 lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
-                ret = SolvePrimalUnsafe(false, false, false, true);
+                if (!skipLinear)
+                {
+                    ret = SolvePrimalUnsafe(false, false, false, true);
+                }
                 ret = SolvePrimalQuadraticCGUnsafe();
                 lu.EndUnsafe();
 
@@ -1118,7 +1124,14 @@ namespace Rawr.Mage
                 {
                     flags[V[vindex]] = (flags[V[vindex]] | flagNUB) & ~flagB & ~flagDis;
                 }
+                if ((flags[B[singularColumn]] & flagNMid) != 0)
+                {
+                    int s = Array.IndexOf(_S, B[singularColumn]);
+                    _S[s] = S[super - 1];
+                    super--;
+                }
                 flags[B[singularColumn]] = (flags[B[singularColumn]] | flagB) & ~flagN & ~flagDis;
+                //ValidateSuperBasis();
             }
         }
 
@@ -1399,12 +1412,12 @@ namespace Rawr.Mage
                 if (mb[col] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps)
                 {
                     x[i] = 1.0;
-                    infeasibility += lb[col] - mb[i];
+                    infeasibility += lb[col] - mb[col];
                 }
                 else if (mb[col] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps)
                 {
                     x[i] = -1.0;
-                    infeasibility += mb[i] - ub[col];
+                    infeasibility += mb[col] - ub[col];
                 }
                 else x[i] = 0.0;
             }
@@ -1494,35 +1507,28 @@ namespace Rawr.Mage
         {
             double[] ret = new double[cols + 1];
             double value = 0.0;
-            for (int i = 0; i < rows; i++)
+            for (int col = 0; col < cols; col++)
             {
-                if (B[i] < cols)
+                if ((flags[col] & flagNLB) != 0)
                 {
-                    double di = d[i];
-                    if (Math.Abs(di - lb[B[i]]) < Math.Abs(lb[B[i]]) * epsPrimalRel + epsPrimalLow || di < lb[B[i]]) di = lb[B[i]];
-                    else if (Math.Abs(di - ub[B[i]]) < Math.Abs(ub[B[i]]) * epsPrimalRel + epsPrimalLow || di > ub[B[i]]) di = ub[B[i]];
-                    ret[B[i]] = di;
-                    value += cost[B[i]] * di;
+                    ret[col] = lb[col];
+                    value += cost[col] * lb[col];
+                }
+                else if ((flags[col] & flagNUB) != 0)
+                {
+                    ret[col] = ub[col];
+                    value += cost[col] * ub[col];
+                }
+                else
+                {
+                    double di = mb[col];
+                    if (Math.Abs(di - lb[col]) < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow || di < lb[col]) di = lb[col];
+                    else if (Math.Abs(di - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow || di > ub[col]) di = ub[col];
+                    ret[col] = di;
+                    value += cost[col] * di;
                 }
             }
-            for (int i = 0; i < cols; i++)
-            {
-                if ((flags[i] & flagNLB) != 0)
-                {
-                    ret[i] = lb[i];
-                    value += cost[i] * lb[i];
-                }
-                else if ((flags[i] & flagNUB) != 0)
-                {
-                    ret[i] = ub[i];
-                    value += cost[i] * ub[i];
-                }
-                else if ((flags[i] & flagNMid) != 0)
-                {
-                    ret[i] = mb[i];
-                    value += cost[i] * mb[i];
-                }
-            }
+            ComputeQx();
             for (int i = 0; i < cols; i++)
             {
                 value -= 0.5 * Qk * qx[i] * mb[i];
@@ -1989,8 +1995,8 @@ namespace Rawr.Mage
                 }*/
             }
             //lu.FSolve(w);
-            lu.FSolveL(w, ww);
-            lu.FSolveU(ww, w);
+            lu.FSolveL(w, ww, 0.00000001);
+            lu.FSolveU(ww, w, 0.00000001);
         }
 
         private int SelectDualOutgoing(bool phaseI, out double delta, out int bound)
@@ -2829,8 +2835,8 @@ namespace Rawr.Mage
                 }
             }
             //lu.FSolve(w);
-            lu.FSolveL(w, ww);
-            lu.FSolveU(ww, w);
+            lu.FSolveL(w, ww, 0.00000001);
+            lu.FSolveU(ww, w, 0.00000001);
 
             // -minr = dual step
             // rp = primal step
@@ -3829,7 +3835,7 @@ namespace Rawr.Mage
                 int col = B[i];
                 x[i] = source[col];
             }
-            lu.BSolve(x);
+            lu.BSolve(x, epsZero);
 
             for (int s = 0; s < super; s++)
             {
@@ -3886,7 +3892,7 @@ namespace Rawr.Mage
                 }
             }
 
-            lu.FSolve(x);
+            lu.FSolve(x, epsZero);
 
             for (int i = 0; i < rows; i++)
             {
@@ -3895,7 +3901,7 @@ namespace Rawr.Mage
             }
         }
 
-        private bool ComputeCGStep(out double maxAlpha)
+        private bool ComputeCGStep(double eps, out double maxAlpha)
         {
             // compute CG step for superbasic variables
             // see ftp://ftp.numerical.rl.ac.uk/pub/reports/ghnRAL98069.ps.gz
@@ -3943,7 +3949,9 @@ namespace Rawr.Mage
                 rtw += cg_w[col] * cg_w[col];
             }
 
-            if (rtw <= epsCG)
+            double limit = eps * eps;
+
+            if (rtw <= limit)
             {
                 return false;
             }
@@ -3960,36 +3968,86 @@ namespace Rawr.Mage
                     pqp += cg_qp[i] * cg_p[i];
                 }
                 pqp *= Qk;
-                if (pqp < epsCG)
+                if (pqp < limit)
                 {
                     // we found a direction of negative curvature (positive in the maximization context)
+                    // or possibly linear descent direction
                     // CG won't work in this case, i.e. it'll try to go opposite of gradient
                     // if we've done some steps before encountering negative curvature just use
                     // that as a good approximation
                     // otherwise return this feasible direction along which we'll have unbounded increase
-                    if (step == 0)
+                    if (pqp < -limit)
                     {
-                        // if gradient is very small we might be getting small pqp just due to that
-                        // and this isn't a negative curvature really
-                        if (rtw > 0.001)
+                        // definitely negative curvature
+                        // use this as direction for line search until we hit boundary
+                        // determine direction based on sign of gradient along this direction
+                        double grad = 0.0;
+                        for (int i = 0; i < cols; i++)
                         {
-                            maxAlpha = double.PositiveInfinity;
-                            Copy(cg_x, cg_p, cols + rows);
-                            return true;
+                            grad += (cost[i] - Qk * qx[i]) * cg_p[i];
+                        }
+                        if (grad < -limit)
+                        {
+                            // negative gradient, we should use the opposite direction
+                            for (int i = 0; i < rows + cols; i++)
+                            {
+                                cg_x[i] = -cg_p[i];
+                            }
                         }
                         else
                         {
-                            // assume we're close to optimal that it won't matter
-                            // if there are other optimal directions we'll get better gradient next time
-                            return false;
+                            Copy(cg_x, cg_p, cols + rows);
                         }
+                        maxAlpha = double.PositiveInfinity;
+                        return true;
                     }
                     else
+                    {
+                        // we have zero curvature
+                        // we're either at optimum or we have unbounded linear descent
+                        if (step == 0)
+                        {
+                            // things depend on the gradient
+                            if (rtw > 0.001)
+                            {
+                                // gradient is significantly steep that we can treat this
+                                // as unbounded linear descent
+                                maxAlpha = double.PositiveInfinity;
+                                Copy(cg_x, cg_p, cols + rows);
+                                return true;
+                            }
+                            else
+                            {
+                                // assume we're close to optimal that it won't matter
+                                // if there are other optimal directions we'll get better gradient next time
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            // we already computed some progress to be made, so use that
+                            // if after making that we encounter linear descent we'll
+                            // find this in subsequent step
+                            return true;
+                        }
+                    }
+                }
+                double alpha = rtw / pqp;
+
+                if (alpha > 100.0)
+                {
+                    // relative steepness is very small
+                    // this'll most likely result in a very long step which in turn can mean
+                    // that bound will have a very small factor and epsZero comparison will give false positive
+                    // this is especially pronounced if we do several CG steps and alpha starts rising out of bounds
+                    // i.e. we're close to zero gradient and then turn into a huge descent
+                    // so if we've already done some steps just use that and we'll go further in next iteration
+                    // but more than likely a huge step like this will hit a boundary
+                    if (step > 0)
                     {
                         return true;
                     }
                 }
-                double alpha = rtw / pqp;
 
                 //ValidateCGFeasibility();
                 //ValidateCGFeasibility2();
@@ -4033,7 +4091,7 @@ namespace Rawr.Mage
                     int col = S[i];
                     rtwnew += cg_ww[col] * cg_ww[col];
                 }
-                if (rtwnew <= epsCG)
+                if (rtwnew <= limit)
                 {
                     return true;
                 }
@@ -4078,7 +4136,7 @@ namespace Rawr.Mage
             int maxj, mini;
             const int maxRedecompose = 50;
 
-            int verificationAttempts = 0;
+            //int verificationAttempts = 0;
 
             bool feasible = false;
             double lowestInfeasibility = double.PositiveInfinity;
@@ -4097,6 +4155,7 @@ namespace Rawr.Mage
             do
             {
             DECOMPOSE:
+
                 if (redecompose <= 0)
                 {
                     Decompose();
@@ -4107,6 +4166,7 @@ namespace Rawr.Mage
                 {
                     redecompose = 0;
                     PatchSingularBasis();
+                    //ValidateSuperBasis();
                     continue;
                 }
 
@@ -4161,12 +4221,13 @@ namespace Rawr.Mage
                 }
 
             MINISTEP:
+
                 int col = -1;
                 double alpha = 1.0;
 
                 if (super > 0)
                 {
-                    if (ComputeCGStep(out alpha))
+                    if (ComputeCGStep(eps, out alpha))
                     {
 
                         if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
@@ -4185,7 +4246,12 @@ namespace Rawr.Mage
                                 mb[i] += cg_x[i];
                             }
                             //ValidateFeasibility();
+                            //ValidateFlags();
                         }
+                        /*else if ((flags[col] & flagNMid) == 0)
+                        {
+                            System.Diagnostics.Trace.Assert(Array.IndexOf(_B, col) != -1, "Bad outgoing selection!");
+                        }*/
                     }
                 }
 
@@ -4198,14 +4264,6 @@ namespace Rawr.Mage
 
                     double direction;
                     maxj = SelectPrimalIncoming(out direction, false);
-
-                    if (maxj != -1 && (flags[V[maxj]] & flagNMid) != 0)
-                    {
-                        // we're supposed to be at optimality for superbasics
-                        // this must be a result of numerical instability
-                        // if no other directions are increasing then we're at optimum
-                        maxj = -1;
-                    }
 
                     if (maxj == -1)
                     {
@@ -4226,21 +4284,17 @@ namespace Rawr.Mage
                         if (retry)
                         {
                             maxj = SelectPrimalIncoming(out direction, false);
-                            if (maxj != -1 && (flags[V[maxj]] & flagNMid) != 0)
-                            {
-                                maxj = -1;
-                            }
                         }
 
                         if (maxj == -1)
                         {
-                            if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
+                            /*if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
                             {
                                 redecompose = 0;
                                 feasible = false;
                                 verificationAttempts++;
                                 continue;
-                            }
+                            }*/
 
                             return ComputeReturnSolutionQuadratic();
                         }
@@ -4250,11 +4304,17 @@ namespace Rawr.Mage
                     // with the CG method this'll never be one of the superbasic variables
                     // since we optimize them on each step
 
-                    if (super == 0)
+                    if (super == 0 || (flags[V[maxj]] & flagNMid) != 0)
                     {
                         // special case the one free variable case
                         // in this situation the CG step is overkill
                         // we can use straight reduced gradient approach
+
+                        // we also use this for superbasics when we're so close to optimal that
+                        // CG decides it's not safe numerically to continue
+                        // in that case the quadratic limit will most likely be very small
+                        // but since we're working with unit step in reduced space the solving with
+                        // basis shouldn't give too many problems due to zero snapping
 
                         bool changeBasis;
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
@@ -4266,9 +4326,19 @@ namespace Rawr.Mage
                             goto DECOMPOSE;
                         }
 
-                        if (changeBasis) goto UPDATE;
+                        if (changeBasis)
+                        {
+                            if ((flags[V[maxj]] & flagNMid) != 0)
+                            {
+                                int s = Array.IndexOf(_S, V[maxj]);
+                                _S[s] = _S[super - 1];
+                                super--;
+                            }
 
-                        if (super > 0)
+                            goto UPDATE;
+                        }
+
+                        if (super == 1)
                         {
                             // we already updated superbasics to optimal
                             // so we know CG will return zero step
@@ -4280,13 +4350,13 @@ namespace Rawr.Mage
 
                             if (maxj == -1)
                             {
-                                if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
+                                /*if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
                                 {
                                     redecompose = 0;
                                     feasible = false;
                                     verificationAttempts++;
                                     continue;
-                                }
+                                }*/
 
                                 return ComputeReturnSolutionQuadratic();
                             }
@@ -4296,8 +4366,8 @@ namespace Rawr.Mage
                             {
                                 S[super] = col;
                                 super++;
-                                ValidateSuperBasis();
                                 flags[col] = (flags[col] & ~flagN) | flagNMid;
+                                //ValidateSuperBasis();
                             }
                         }
 
@@ -4307,8 +4377,8 @@ namespace Rawr.Mage
                     col = V[maxj];
                     S[super] = col;
                     super++;
-                    ValidateSuperBasis();
                     flags[col] = (flags[col] & ~flagN) | flagNMid;
+                    //ValidateSuperBasis();
 
                     goto MINISTEP;
                 }
@@ -4326,6 +4396,16 @@ namespace Rawr.Mage
                     }
                 }
                 //ValidateFeasibility();
+                //ValidateFlags();
+                /*if ((bound & flagNUB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+                if ((bound & flagNLB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - lb[col]) < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }*/
+
 
                 if ((flags[col] & flagNMid) != 0)
                 {
@@ -4334,10 +4414,12 @@ namespace Rawr.Mage
                     i = Array.IndexOf(_S, col);
                     S[i] = S[super - 1];
                     super--;
-                    ValidateSuperBasis();
+                    //ValidateSuperBasis();
 
                     goto MINISTEP;
                 }
+
+                //System.Diagnostics.Trace.Assert(Array.IndexOf(_B, col) != -1, "Bad outgoing selection!");
 
                 // select superbasic to enter basis
                 // avoid selecting those flagged as disabled because they'll likely cause
@@ -4427,10 +4509,11 @@ namespace Rawr.Mage
                             goto UPDATE;
                         }
 
+                        //ValidateSuperBasis();
                         goto MINISTEP;
                     }
                 }
-                ValidateSuperBasis();
+                //ValidateSuperBasis();
 
                 // swap base
                 maxj = Array.IndexOf(_V, inc);
@@ -4454,7 +4537,7 @@ namespace Rawr.Mage
                         {
                             S[super] = col;
                             super++;
-                            ValidateSuperBasis();
+                            //ValidateSuperBasis();
                         }
                         if (redecompose == maxRedecompose - 1)
                         {
@@ -4478,7 +4561,8 @@ namespace Rawr.Mage
                 V[maxj] = k;
                 flags[B[mini]] = (flags[B[mini]] | flagB) & ~flagN;
                 flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
-                ValidateSuperBasis();
+                //ValidateSuperBasis();
+                //ValidateFlags();
 
                 round++;
             } while (round < limit); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
@@ -4516,6 +4600,12 @@ namespace Rawr.Mage
             if (Math.Abs(minr) >= dist - epsZero)
             {
                 // just a bound swap
+                if ((flags[col] & flagNMid) != 0)
+                {
+                    int s = Array.IndexOf(_S, col);
+                    _S[s] = _S[super - 1];
+                    super--;
+                }
                 if (direction > 0.0)
                 {
                     flags[col] = (flags[col] & ~flagN) | flagNUB;
@@ -4524,6 +4614,7 @@ namespace Rawr.Mage
                 {
                     flags[col] = (flags[col] & ~flagN) | flagNLB;
                 }
+                //ValidateSuperBasis();                
             }
             else
             {
@@ -4538,6 +4629,22 @@ namespace Rawr.Mage
             {
                 mb[B[i]] -= minr * w[i];
             }
+            /*if (!changeBasis)
+            {
+                //ValidateFlags();
+            }
+            else
+            {
+                col = B[mini];
+                if ((bound & flagNUB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+                if ((bound & flagNLB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - lb[col]) < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+            }*/
         }
 
         private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis)
@@ -4567,6 +4674,12 @@ namespace Rawr.Mage
             if (Math.Abs(minr) >= dist - epsZero)
             {
                 // just a bound swap
+                if ((flags[col] & flagNMid) != 0)
+                {
+                    int s = Array.IndexOf(_S, col);
+                    _S[s] = _S[super - 1];
+                    super--;
+                }
                 if (direction > 0.0)
                 {
                     flags[col] = (flags[col] & ~flagN) | flagNUB;
@@ -4575,6 +4688,7 @@ namespace Rawr.Mage
                 {
                     flags[col] = (flags[col] & ~flagN) | flagNLB;
                 }
+                //ValidateSuperBasis();
             }
             else if (mini == -1)
             {
@@ -4585,7 +4699,7 @@ namespace Rawr.Mage
                     S[super] = col;
                     super++;
                 }
-                ValidateSuperBasis();
+                //ValidateSuperBasis();
                 dist = minr;
             }
             else
@@ -4602,6 +4716,22 @@ namespace Rawr.Mage
                 mb[B[i]] -= minr * w[i];
             }
             //ValidateFeasibility();
+            /*if (!changeBasis)
+            {
+                //ValidateFlags();
+            }
+            else
+            {
+                col = B[mini];
+                if ((bound & flagNUB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+                if ((bound & flagNLB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - lb[col]) < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+            }*/
             return true;
         }
 
@@ -4650,18 +4780,47 @@ namespace Rawr.Mage
 
         public void ValidateSuperBasis()
         {
-#if !SILVERLIGHT
+#if SILVERLIGHT
             for (int s = 0; s < super - 1; s++)
             {
                 int col = S[s];
                 int i = Array.IndexOf(_S, col, s + 1);
                 System.Diagnostics.Trace.Assert(i == -1 || i >= super, "Superbasis corruption");
             }
-            for (int s = 0; s < super - 1; s++)
+            for (int s = 0; s < super; s++)
             {
                 int col = S[s];
                 int i = Array.IndexOf(_V, col);
                 System.Diagnostics.Trace.Assert(i != -1, "Superbasis corruption");
+                System.Diagnostics.Trace.Assert((flags[col] & flagNMid) != 0, "Superbasis corruption");
+            }
+#endif
+        }
+
+        public void ValidateFlags()
+        {
+#if !SILVERLIGHT
+            for (int col = 0; col < cols + rows; col++)
+            {
+                if ((flags[col] & flagNUB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_V, col) != -1, "Flags corruption");
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+                if ((flags[col] & flagNLB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_V, col) != -1, "Flags corruption");
+                    System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - lb[col]) < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
+                }
+                if ((flags[col] & flagNMid) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_S, col) != -1, "Flags corruption");
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_V, col) != -1, "Flags corruption");
+                }
+                if ((flags[col] & flagB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_B, col) != -1, "Flags corruption");
+                }
             }
 #endif
         }
