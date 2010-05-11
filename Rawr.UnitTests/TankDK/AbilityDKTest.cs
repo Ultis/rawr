@@ -95,9 +95,13 @@ namespace Rawr.UnitTests.TankDK
             Stats characterStats = new Stats();
             characterStats = BaseStats.GetBaseStats(80, CharacterClass.DeathKnight, CharacterRace.Undead);
 
+            CombatState state = new CombatState();
+            state.m_Stats = characterStats;
+            state.m_Talents = new DeathKnightTalents();
+            
             // We're going to create IcyTouch and ensure that we can access everything for that 
             // ability that is used by a DK.  
-            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(characterStats);
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(state);
             
             // Frost Fever application. is skipped for the purposes of this test.
             Assert.IsTrue(IT.szName == "Icy Touch", "Name");
@@ -122,8 +126,13 @@ namespace Rawr.UnitTests.TankDK
         {
             Stats FFTestStats = new Stats();
             FFTestStats.AttackPower = 100;
+
+            CombatState state = new CombatState();
+            state.m_Stats = FFTestStats;
+            state.m_Talents = new DeathKnightTalents();
+
             // Frost Fever application.
-            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(FFTestStats, 0);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(state);
             // FF can be reapplied w/o any cooldown.
             // A disease dealing [0 + AP * 0.055 * 1.15] Frost damage every 3 sec and reducing the target's melee and ranged attack speed by 14% for 15 sec.  Caused by Icy Touch and other spells. 
             // Base damage 0
@@ -156,14 +165,21 @@ namespace Rawr.UnitTests.TankDK
             // Needs AP passed in 
             Stats FFTestStats = new Stats();
             FFTestStats.AttackPower = 100;
+            
             Item i = new Item("Test", ItemQuality.Common, ItemType.Dagger, 1, "", ItemSlot.MainHand, "", false, new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 10, 20, ItemDamageType.Physical, 2, "");
             CalculationOptionsTankDK c = new CalculationOptionsTankDK();
             c.talents = new DeathKnightTalents();
             Weapon w = new Weapon(i, FFTestStats, c, 0f);
-            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(FFTestStats, w, null, 0);
+
+            CombatState combatState = new CombatState();
+            combatState.m_Stats = FFTestStats;
+            combatState.MH = w;
+            combatState.m_Talents = c.talents;
+            
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(combatState);
 
             // Blood Plauge application.
-            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(FFTestStats, 0);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(combatState);
 
             // A disease dealing [0 + AP * 0.055 * 1.15] Shadow damage every 3 sec . 
             // Base damage 0

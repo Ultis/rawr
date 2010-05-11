@@ -893,8 +893,13 @@ namespace Rawr {
             #endregion
             #region Misc
             else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140"))
-            {   // Essence of Gossamer - probably not quite right?!
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -0.01f }, 10, 1, 0.05f));
+            {   // Essence of Gossamer 
+                // 140 damage reduced from EACH attack.
+                // Lasts 10 secs.
+                // So this isn't a normal X amount absorbed period over 10 sec. like a Corroded Skeleton Key or priest's bubble.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken,
+                                    new Stats() { DamageAbsorbed = 140f },
+                                    10, 1, 0.05f));
             }
             else if (line.StartsWith("Protected from the cold.  Your Frost resistance is increased by 20"))
             {   // Mechanized Snow Goggles of the...
@@ -1735,7 +1740,7 @@ namespace Rawr {
 				// unfortunately for us the cooldown isn't listed, so guess 3min.
 				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
 			}
-			// Increases dodge rating by 183 for 20 sec.
+            // Increases dodge rating by 183 for 20 sec.
 			else if (Regex.IsMatch(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec"))
 			{
 				string[] inputs = Regex.Split(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec");
@@ -2042,7 +2047,23 @@ namespace Rawr {
                 float fDuration = 10;
                 float fCD = 120; // 2 min * 60 sec
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-                    new Stats() { HealthRestore = DamageAbsorb },
+                    new Stats() { DamageAbsorbed = DamageAbsorb },
+                    fDuration, fCD));
+            }
+            else if ((match = new Regex(@"Increases resistance to Arcane, Fire, Frost, Nature, and Shadow spells by (?<amount>\d\d*) for (?<duration>\d\d*) sec.").Match(line)).Success)
+            {
+                // Sindragosa's Flawless Fang
+                // Increases resistance to Arcane, Fire, Frost, Nature, and Shadow spells by 239 for 10 sec. (1 Min Cooldown)
+                int amount = int.Parse(match.Groups["amount"].Value);
+                float fDuration = float.Parse(match.Groups["duration"].Value);
+                float fCD = 60; // 1 min * 60 sec
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                    new Stats() { ArcaneResistance = amount,
+                    FireResistance = amount,
+                    FrostResistance = amount, 
+                    NatureResistance = amount,
+                    ShadowResistance = amount,
+                    },
                     fDuration, fCD));
             }
         }

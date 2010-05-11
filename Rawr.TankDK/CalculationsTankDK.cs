@@ -1046,6 +1046,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fTotalMitigation += fSegmentMitigation;
             #endregion
 
+            #region ** Damage Absorbed Mitigation **
+            fTotalMitigation += stats.DamageAbsorbed;
+            #endregion
+
             // Let's make sure we don't go into negative damage here
             fMagicDamageDPS = Math.Max(0f, fMagicDamageDPS);
             fPhyDamageDPS = Math.Max(0f, fPhyDamageDPS);
@@ -1987,6 +1991,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
                 Resilience = stats.Resilience,
 
+                DamageAbsorbed = stats.DamageAbsorbed,
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
@@ -2168,6 +2173,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.Parry != 0);
             bResults |= (stats.Miss != 0);
             bResults |= (stats.Defense != 0);
+            bResults |= (stats.DamageAbsorbed != 0);
 
             bResults |= (stats.Resilience != 0);
 

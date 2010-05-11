@@ -27,6 +27,7 @@ namespace Rawr {
         PhysicalCrit,
         CritRating,
         CritBonusDamage,
+        DamageAbsorbed,
         Defense,
         DefenseRating,
         Dodge,
@@ -2110,7 +2111,17 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.Healed]; }
             set { _rawAdditiveData[(int)AdditiveStat.Healed] = value; }
         }
-        
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Effects")]
+        [DisplayName("Damage Absorbed")]
+        [CommonStat]
+        public float DamageAbsorbed
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DamageAbsorbed]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DamageAbsorbed] = value; }
+        }
+
         #region Proc'd Damage Types
         // Physical
         [System.ComponentModel.DefaultValueAttribute(0f)]

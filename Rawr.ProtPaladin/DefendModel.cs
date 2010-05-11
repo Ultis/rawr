@@ -33,9 +33,10 @@ namespace Rawr.ProtPaladin
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
+            float absorbed = Stats.DamageAbsorbed;
 
-            DamagePerHit    = Options.BossAttackValue * guaranteedReduction;
-            DamagePerCrit   = 2.0f * DamagePerHit;
+            DamagePerHit    = (Options.BossAttackValue * guaranteedReduction) - absorbed;
+            DamagePerCrit   = (2.0f * DamagePerHit);
             DamagePerBlock  = Math.Max(0.0f, DamagePerHit - Lookup.ActiveBlockReduction(Character, Stats));
 
             AverageDamagePerHit =

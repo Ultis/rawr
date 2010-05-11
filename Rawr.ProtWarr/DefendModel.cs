@@ -33,11 +33,12 @@ namespace Rawr.ProtWarr
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
             float baseAttack            = Options.BossAttackValue * guaranteedReduction;
+            float absorbed              = Stats.DamageAbsorbed;
 
-            DamagePerHit        = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier);
-            DamagePerCrit       = baseAttack * 2.0f * (1.0f + Stats.PhysicalDamageTakenMultiplier);
-            DamagePerBlock      = Math.Max(0.0f, baseAttack - Stats.BlockValue) * (1.0f + Stats.PhysicalDamageTakenMultiplier);
-            DamagePerCritBlock  = Math.Max(0.0f, baseAttack - (Stats.BlockValue * 2.0f)) * (1.0f + Stats.PhysicalDamageTakenMultiplier);
+            DamagePerHit = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
+            DamagePerCrit = baseAttack * 2.0f * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
+            DamagePerBlock = Math.Max(0.0f, baseAttack - Stats.BlockValue) * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
+            DamagePerCritBlock = Math.Max(0.0f, baseAttack - (Stats.BlockValue * 2.0f)) * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
 
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +
