@@ -47,6 +47,8 @@ namespace Rawr
         MeleeHit,
         /// <summary>Any melee crits on the target</summary>
         MeleeCrit,
+        /// <summary>Any melee attack lands (special trigger for 'Tiny Abobination in a Jar' (Icecrown Citadel) and Shadowmourne (Icecrown Citadel). Identical to Meleehit for some, may have additional procs happening for other classes (Retribution is one)</summary>
+        MeleeAttack,
         #endregion
         #region Ranged Physical Attacks
         /// <summary>Any ranged lands on the target (hit or crit)</summary>
@@ -1587,6 +1589,8 @@ namespace Rawr
                         return "on Melee Crit";
                     case Trigger.MeleeHit:
                         return "on Melee Hit";
+                    case Trigger.MeleeAttack:
+                        return "on Melee Attack";
                     case Trigger.SpellCast:
                         return "on Spell Cast";
                     case Trigger.SpellCrit:
