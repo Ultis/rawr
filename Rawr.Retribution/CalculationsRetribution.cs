@@ -474,8 +474,7 @@ namespace Rawr.Retribution
             Rotation bestRotation = null;
             foreach (Ability[] rotation in rotations)
             {
-                Rotation currentRotation = 
-                    GetCharacterRotation(character, additionalItem, rotation, simulationTime);
+                Rotation currentRotation = GetCharacterRotation(character, additionalItem, rotation, simulationTime);
                 float currentDPS = currentRotation.DPS();
                 if (currentDPS > maxDPS)
                 {
@@ -551,8 +550,11 @@ namespace Rawr.Retribution
             // If wanted, Average out any Proc and OnUse effects into the stats
             if (computeAverageStats)
             {
+                Stats statsTmp = stats.Clone();
+                ConvertRatings(statsTmp, talents, calcOpts.TargetLevel);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
+
                 float fightLength = calcOpts.FightLength * 60f;
-                CombatStats combats = new CombatStats(character, stats);
+                CombatStats combats = new CombatStats(character, statsTmp);
                 Rotation rot = CreateRotation(combats, rotation, simulationTime);
 
                 // Average out proc effects, and add to global stats.
@@ -566,7 +568,7 @@ namespace Rawr.Retribution
                             combats.BaseWeaponSpeed, 
                             fightLength, 
                             calcOpts.StackTrinketReset));
-                stats += statsAverage;
+                stats.Accumulate(statsAverage);
 
                 // Death's Verdict/Vengeance (TOTC)
                 // Known issue: We haven't yet accounted for bonus multipliers on str and agi
@@ -631,7 +633,7 @@ namespace Rawr.Retribution
                     trigger = 1f / rot.GetMeleeAttacksPerSec();
                     break;
 
-                    /* Experimental.
+                // Experimental.
                 case Trigger.MeleeAttack:   // [Tiny Abomination in a Jar] and [Shadowmourne]
                     float MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
                                                 rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
@@ -644,7 +646,6 @@ namespace Rawr.Retribution
 
                     trigger = 1f / MeleeAttackPerSec;                            
                     break;
-                     */
 
                 case Trigger.PhysicalCrit:
                     trigger = 1f / rot.GetPhysicalCritsPerSec();
@@ -891,7 +892,7 @@ namespace Rawr.Retribution
                             Trigger.PhysicalHit,
                             Trigger.MeleeCrit,
                             Trigger.MeleeHit,
-                          //  Trigger.MeleeAttack,   Experimental
+                            Trigger.MeleeAttack,
                             Trigger.DamageDone,
                             Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
                             Trigger.DoTTick,
@@ -1351,6 +1352,5 @@ namespace Rawr.Retribution
         }
 
         #endregion
-
     }
 }
