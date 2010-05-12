@@ -653,7 +653,7 @@ namespace Rawr.Mage
 
         // replace column col in basis B with aj
 #if SILVERLIGHT
-        public void Update(double[] a, int col, out double pivot)
+        public bool Update(double[] a, int col, out double pivot)
         {
             int i, j, k;
             for (j = 0; j < size; j++)
@@ -672,6 +672,14 @@ namespace Rawr.Mage
             {
                 if (Math.Abs(a[i]) > 0.000001) lastnz = i;
             }
+
+            if (lastnz < col)
+            {
+                Singular = true;
+                pivot = 0.0;
+                return false;
+            }
+
             // XXaXXXX    XXXXXaX
             //  XaXXXX     XXXXaX
             //   aXXXX      XXXaX   <--- col
@@ -762,9 +770,10 @@ namespace Rawr.Mage
             {
                 Singular = true;
             }
+            return true;
         }
 #else
-        public unsafe void Update(double* a, int col, out double pivot)
+        public unsafe bool Update(double* a, int col, out double pivot)
         {
             int i, j, k;
             int* Q = this.Q;
@@ -784,6 +793,12 @@ namespace Rawr.Mage
             for (; lastnz >= 0; lastnz--)
             {
                 if (Math.Abs(a[lastnz]) > 0.000001) break;
+            }
+
+            if (lastnz < col)
+            {
+                pivot = 0.0;
+                return false;
             }
             
             // XXaXXXX    XXXXXaX
@@ -902,6 +917,11 @@ namespace Rawr.Mage
             {
                 Singular = true;
             }
+            else
+            {
+                Singular = false;
+            }
+            return true;
         }
 #endif
     }

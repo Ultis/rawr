@@ -1999,6 +1999,65 @@ namespace Rawr.Mage
             lu.FSolveU(ww, w, 0.00000001);
         }
 
+        private void ComputeBasisReplace(int incoming)
+        {
+            // w = U \ (L \ A(:,j));
+            int maxcol = incoming;
+            if (maxcol < cols)
+            {
+#if SILVERLIGHT
+                int i = 0;
+                for (; i < baseRows; i++)
+                {
+                    w[i] = a[i + maxcol * baseRows];
+                }
+                for (int k = 0; k < numExtraConstraints; k++, i++)
+                {
+                    w[i] = pD[k][maxcol];
+                }
+#else
+                Copy(w, a + (maxcol * baseRows), baseRows);
+                /*const int c = ~3;
+                int trunc = baseRows & c;
+                double* source = a + (maxcol * baseRows);
+                double* wk = w;
+                double* arr1 = wk + trunc;
+                double* arr2 = wk + baseRows;
+                for (; wk < arr1; wk += 4, source += 4)
+                {
+                    wk[0] = source[0];
+                    wk[1] = source[1];
+                    wk[2] = source[2];
+                    wk[3] = source[3];
+                }
+                for (; wk < arr2; wk++, source++)
+                {
+                    *wk = *source;
+                }*/
+                if (numExtraConstraints > 0)
+                {
+                    double* wk = w + baseRows;
+                    double* wkend = wk + numExtraConstraints;
+                    double** pdk = pD;
+                    for (; wk < wkend; wk++, pdk++)
+                    {
+                        *wk = (*pdk)[maxcol];
+                    }
+                }
+#endif
+            }
+            else
+            {
+                Zero(w, rows);
+                w[maxcol - cols] = 1.0;
+                /*for (int i = 0; i < rows; i++)
+                {
+                    w[i] = (i == maxcol - cols) ? 1.0 : 0.0;
+                }*/
+            }
+            lu.FSolveL(w, ww, 0.00000001);
+        }
+
         private int SelectDualOutgoing(bool phaseI, out double delta, out int bound)
         {
             double mind = 0.0;
@@ -3462,7 +3521,7 @@ namespace Rawr.Mage
                 {
                     double pivot;
                     lu.Update(ww, mini, out pivot);
-                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]))
+                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]) + epsZero)
                     {
                         if (redecompose == maxRedecompose - 1)
                         {
@@ -4135,6 +4194,8 @@ namespace Rawr.Mage
             int redecompose = 0;
             int maxj, mini;
             const int maxRedecompose = 50;
+            bool changeBasis;
+            double direction;
 
             //int verificationAttempts = 0;
 
@@ -4200,8 +4261,13 @@ namespace Rawr.Mage
                         }
                     }
                     // for establishing feasibility we don't need quadratic part, just do a simplex step
-                    bool changeBasis;
                     PhaseIQStep(out maxj, eps, out mini, out bound, out changeBasis);
+
+                    if (maxj == -1)
+                    {
+                        // if it's not feasible then return null solution
+                        if (!feasible) return new double[cols + 1];
+                    }
 
                     if (changeBasis)
                     {
@@ -4262,7 +4328,6 @@ namespace Rawr.Mage
 
                     ComputeReducedCostGradient();
 
-                    double direction;
                     maxj = SelectPrimalIncoming(out direction, false);
 
                     if (maxj == -1)
@@ -4316,7 +4381,6 @@ namespace Rawr.Mage
                         // but since we're working with unit step in reduced space the solving with
                         // basis shouldn't give too many problems due to zero snapping
 
-                        bool changeBasis;
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
                         {
                             // we lost feasibility, go to phase I
@@ -4424,7 +4488,80 @@ namespace Rawr.Mage
                 // select superbasic to enter basis
                 // avoid selecting those flagged as disabled because they'll likely cause
                 // basis singularity again
-                int inc = S[super - 1];
+
+                // try to replace col with a combination of superbasics
+                // perform this by repeated updates
+                mini = Array.IndexOf(_B, col);
+                int inc = -1;
+                bool numericCheck = true;
+            SUPERBASICUPDATE:
+                for (i = super - 1; i >= 0; i--)
+                {
+                    inc = S[i];
+                    ComputeBasisReplace(inc);
+                    // numerical stability verification only makes sense while we're still nonsinguler
+                    // once we get singular further solver with U are undefined
+                    if (numericCheck)
+                    {
+                        lu.FSolveU(ww, w, 0.00000001);
+                    }
+
+                    double pivot;
+                    if (lu.Update(ww, mini, out pivot))
+                    {
+                        redecompose--;
+                        if (numericCheck && Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]) + epsZero)
+                        {
+                            // numerical errors accumulated are high
+                            if (redecompose == maxRedecompose - 1)
+                            {
+                                redecompose = 0;
+                                feasible = false; // forces recalc
+                                flags[col] |= flagDis;
+                                disabledDirty = true;
+                                goto DECOMPOSE;
+                            }
+                            else
+                            {
+                                redecompose = 0;
+                                feasible = false;
+                                goto DECOMPOSE;
+                            }
+                        }
+                        if (lu.Singular)
+                        {
+                            // we need more than one superbasic to complete the replace
+                            numericCheck = false;
+                            goto SUPERBASICUPDATE;
+                        }
+                        else
+                        {
+                            // replace successful, final column is inc
+                            S[i] = S[super - 1];
+                            super--;
+
+                            maxj = Array.IndexOf(_V, inc);
+
+                            k = B[mini];
+                            B[mini] = V[maxj];
+                            V[maxj] = k;
+                            flags[B[mini]] = (flags[B[mini]] | flagB) & ~flagN;
+                            flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
+                            //ValidateSuperBasis();
+                            //ValidateFlags();
+
+                            round++;
+                            goto DECOMPOSE;
+                        }
+                    }
+                }
+                if (lu.Singular)
+                {
+                    Decompose();
+                    redecompose = maxRedecompose; 
+                }
+
+                /*int inc = S[super - 1];
                 if ((flags[inc] & flagDis) == 0)
                 {
                     super--;
@@ -4445,7 +4582,7 @@ namespace Rawr.Mage
                         }
                     }
                     if (!found)
-                    {
+                    {*/
                         // all superbasics were flagged, so we can't actually do the swap
                         // try to do a reduced gradient and see if it makes sense to free
                         // another variable so that we can use it to enter basis
@@ -4457,7 +4594,6 @@ namespace Rawr.Mage
                         // so pretend superbasics are fixed and do a single direction change
                         ComputeReducedCostGradient();
 
-                        double direction;
                         maxj = SelectPrimalIncoming(out direction, false);
 
                         if (maxj == -1)
@@ -4486,8 +4622,7 @@ namespace Rawr.Mage
                                 return ComputeReturnSolutionQuadratic();
                             }
                         }
-
-                        bool changeBasis;
+                        
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
                         {
                             // we lost feasibility, go to phase I
@@ -4511,15 +4646,14 @@ namespace Rawr.Mage
 
                         //ValidateSuperBasis();
                         goto MINISTEP;
-                    }
+                    /*}
                 }
                 //ValidateSuperBasis();
 
                 // swap base
                 maxj = Array.IndexOf(_V, inc);
-                mini = Array.IndexOf(_B, col);
 
-                ComputeBasisStep(maxj);
+                ComputeBasisStep(maxj);*/
 
             UPDATE:
 
@@ -4528,7 +4662,7 @@ namespace Rawr.Mage
                 {
                     double pivot;
                     lu.Update(ww, mini, out pivot);
-                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]))
+                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]) + epsZero)
                     {
                         // we aren't making the swap
                         // make sure to properly add superbasic back to S if we cancelled swap
@@ -4578,13 +4712,19 @@ namespace Rawr.Mage
             double direction;
             maxj = SelectPrimalIncoming(out direction, false);
 
-            ComputeBasisStep(maxj);
 
             mini = -1;
             double minr = double.PositiveInfinity;
             bound = flagNMid;
             changeBasis = false;
 
+            if (maxj == -1)
+            {
+                // not feasible (can happen as part of MIP)
+                return;
+            }
+
+            ComputeBasisStep(maxj);
             SelectPhaseIQOutgoing(direction, eps, ref mini, ref minr, ref bound);
 
             int col = V[maxj];
@@ -5275,7 +5415,7 @@ namespace Rawr.Mage
                 {
                     double pivot;
                     lu.Update(ww, mini, out pivot);
-                    if (lu.Singular || Math.Abs(wd[minj] - pivot) > 1.0e-6 * Math.Abs(wd[minj]))
+                    if (lu.Singular || Math.Abs(wd[minj] - pivot) > 1.0e-6 * Math.Abs(wd[minj]) + epsZero)
                     {
                         if (redecompose == maxRedecompose - 1)
                         {
