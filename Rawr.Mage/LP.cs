@@ -4242,6 +4242,12 @@ namespace Rawr.Mage
 
                 if (!feasible)
                 {
+                    round++;
+                    if (round > limit)
+                    {
+                        break;
+                    }
+
                     double infeasibility;
                     ComputePhaseIQReducedCosts(out infeasibility, eps);
                     if (infeasibility < lowestInfeasibility) lowestInfeasibility = infeasibility;
@@ -4287,6 +4293,11 @@ namespace Rawr.Mage
                 }
 
             MINISTEP:
+                round++;
+                if (round > limit)
+                {
+                    break;
+                }
 
                 int col = -1;
                 double alpha = 1.0;
@@ -4498,6 +4509,11 @@ namespace Rawr.Mage
                 for (i = super - 1; i >= 0; i--)
                 {
                     inc = S[i];
+                    // skip if we disabled for numerical stability
+                    if ((flags[col] & flagDis) != 0)
+                    {
+                        continue;
+                    }
                     ComputeBasisReplace(inc);
                     // numerical stability verification only makes sense while we're still nonsinguler
                     // once we get singular further solver with U are undefined
@@ -4550,7 +4566,6 @@ namespace Rawr.Mage
                             //ValidateSuperBasis();
                             //ValidateFlags();
 
-                            round++;
                             goto DECOMPOSE;
                         }
                     }
@@ -4697,14 +4712,13 @@ namespace Rawr.Mage
                 flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
                 //ValidateSuperBasis();
                 //ValidateFlags();
-
-                round++;
             } while (round < limit); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
             // when tuning dual feasibility limit to 100 rounds, we don't want to spend too much time on it
 
             // just in case
             // if feasible return the best we got
-            return ComputeReturnSolutionQuadratic();
+            if (feasible) return ComputeReturnSolutionQuadratic();
+            return new double[cols + 1];
         }
 
         private void PhaseIQStep(out int maxj, double eps, out int mini, out int bound, out bool changeBasis)
