@@ -479,6 +479,7 @@ namespace Rawr.Elemental
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 ManaRestore = stats.ManaRestore,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
+                MovementSpeed = stats.MovementSpeed,
                 #endregion
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -562,7 +563,8 @@ namespace Rawr.Elemental
                 stats.Mp5 +
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.ManaRestore +
-                stats.ManaRestoreFromBaseManaPPM;
+                stats.ManaRestoreFromBaseManaPPM +
+                stats.MovementSpeed;
             #endregion
             #region Multipliers
             elementalStats +=

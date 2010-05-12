@@ -1165,7 +1165,8 @@ namespace Rawr.Moonkin
                 InsectSwarmDmg = stats.InsectSwarmDmg,
                 MoonfireDotCrit = stats.MoonfireDotCrit,
                 BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
-                MoonkinT10CritDot = stats.MoonkinT10CritDot
+                MoonkinT10CritDot = stats.MoonkinT10CritDot,
+                MovementSpeed = stats.MovementSpeed
             };
             // Add special effects that meet the following criteria:
             // 1) On-use OR
@@ -1270,8 +1271,8 @@ namespace Rawr.Moonkin
                 + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
                 + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
                 + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot; 
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
+                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot;
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.MovementSpeed;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
             return moonkinStats > 0 || (commonStats > 0 && ignoreStats == 0.0f);
         }

@@ -49,7 +49,8 @@ namespace Rawr.RestoSham
             "RestoShamRelicT9",
             "RestoShamRelicT10",
             "Healed",
-            "Hp5"
+            "Hp5",
+            "MovementSpeed"
         };
 
         public static List<string> RelevantGlyphs = new List<string>(10) {
