@@ -39,10 +39,19 @@ namespace Rawr.Warlock {
         public float BaseSpellPower { get; protected set; }
         public float SpellPowerCoef { get; protected set; }
 
+        public float BaseAttackPower { get; protected set; }
+        public float AttackPowerCoef { get; protected set; }
+
+        public float BaseMeleeDamage { get; protected set; }
+        public float DamagePerAttackPower { get; protected set; }
+
         public float SpecialCooldown { get; protected set; }
         public float SpecialCastTime { get; protected set; }
         public float SpecialBaseDamage { get; protected set; }
+        public float SpecialDamagePerSpellPower { get; protected set; }
+        public float SpecialDamagePerAttackPower { get; protected set; }
         public SpellModifiers TotalModifiers { get; protected set; }
+        public SpellModifiers MeleeModifiers { get; protected set; }
         public SpellModifiers SpecialModifiers { get; protected set; }
 
         #endregion
@@ -56,6 +65,7 @@ namespace Rawr.Warlock {
 
             Mommy = mommy;
             TotalModifiers = new SpellModifiers();
+            MeleeModifiers = new SpellModifiers();
             SpecialModifiers = new SpellModifiers();
 
             BaseStamina = 328f;
@@ -71,6 +81,9 @@ namespace Rawr.Warlock {
 
             BaseSpellPower = 0f;
             SpellPowerCoef = .15f;
+
+            BaseAttackPower = 608f;
+            AttackPowerCoef = .57f;
         }
 
         public void CalcStats1() {
@@ -97,6 +110,7 @@ namespace Rawr.Warlock {
             Mommy.Add4pT10(TotalModifiers);
             FinalizeModifiers();
             SpecialModifiers.Accumulate(TotalModifiers);
+            MeleeModifiers.Accumulate(TotalModifiers);
         }
 
         public void CalcStats2(float pactProcBenefit) {
@@ -109,6 +123,13 @@ namespace Rawr.Warlock {
 
         protected virtual void FinalizeModifiers() {
 
+            TotalModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusDamageMultiplier);
+            MeleeModifiers.AddAdditiveMultiplier(
+                .04f * Mommy.Talents.UnholyPower);
+            if (Mommy.Character.Race == CharacterRace.Orc) {
+                TotalModifiers.AddAdditiveMultiplier(.05f);
+            }
         }
 
         #endregion
@@ -143,13 +164,55 @@ namespace Rawr.Warlock {
             return StatUtils.CalcSpellCrit(Stats);
         }
 
+        public float CalcAttackPower() {
+
+            return BaseAttackPower + AttackPowerCoef * Mommy.CalcSpellPower();
+        }
+
+        public float CalcMeleeHitDamage() {
+
+            return BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower();
+        }
+
+        public float CalcMeleeCrit() {
+
+            return .05f
+                + StatConversion.NPC_LEVEL_CRIT_MOD[
+                    Mommy.Options.TargetLevel - 80];
+        }
+
+        public float CalcMeleeHaste() {
+
+            return 1f;
+        }
+
         #endregion
 
         #region dps
 
+        public float CalcMeleeSpeed() {
+
+            return 2f / CalcMeleeHaste();
+        }
+
+        public float CalcMeleeDamage() {
+
+            int levelDelta = Mommy.Options.TargetLevel - 80;
+            float glanceChance
+                = StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDelta];
+            float critChance = CalcMeleeCrit();
+            float hitChance = Mommy.HitChance - glanceChance - critChance;
+
+            float glanceMod
+                = 1f - .1f * (Mommy.Options.TargetLevel - 80);
+            return CalcMeleeHitDamage()
+                * (hitChance + 2f * critChance + glanceMod * hitChance)
+                * MeleeModifiers.GetFinalDirectMultiplier();
+        }
+
         public float CalcMeleeDps() {
 
-            return 0f;
+            return CalcMeleeDamage() / CalcMeleeSpeed();
         }
 
         public float GetSpecialSpeed() {
@@ -164,7 +227,8 @@ namespace Rawr.Warlock {
                 = StatConversion.GetAverageResistance(
                     80, Mommy.Options.TargetLevel, 0f, 0f);
             float nonCrit
-                = (SpecialBaseDamage + CalcSpellPower())
+                = (SpecialBaseDamage
+                        + SpecialDamagePerSpellPower * CalcSpellPower())
                     * SpecialModifiers.GetFinalDirectMultiplier()
                     * (1 - resist);
             float crit = nonCrit * SpecialModifiers.GetFinalCritMultiplier();
@@ -188,7 +252,8 @@ namespace Rawr.Warlock {
 
         public float GetCritsPerSec() {
 
-            return Mommy.HitChance * CalcSpellCrit() / GetSpecialSpeed();
+            return Mommy.HitChance * CalcSpellCrit() / GetSpecialSpeed()
+                + CalcMeleeCrit() / CalcMeleeSpeed();
         }
 
         public float GetPactProcBenefit() {
@@ -210,10 +275,28 @@ namespace Rawr.Warlock {
 
             SpecialEffect pactEffect
                 = new SpecialEffect(0, null, 45f, 20f);
+            float meleeRate;
+            if (BaseMeleeDamage == 0) {
+                meleeRate = 0f;
+            } else {
+                meleeRate = 1 / CalcMeleeSpeed();
+            }
+            float spellRate;
+            if (SpecialDamagePerAttackPower == 0) {
+                spellRate = 1 / GetSpecialSpeed();
+            } else {
+                spellRate = 0f;
+                meleeRate += 1 / GetSpecialSpeed();
+            }
+            float triggerRate = 1 / (meleeRate + spellRate);
             float uprate = pactEffect.GetAverageUptime(
-                GetSpecialSpeed(),
-                Mommy.HitChance * CalcSpellCrit(),
-                GetSpecialSpeed(),
+                triggerRate,
+                Utilities.GetWeightedSum(
+                    Mommy.HitChance * CalcSpellCrit(),
+                    spellRate,
+                    CalcMeleeCrit(),
+                    meleeRate),
+                triggerRate,
                 Mommy.Options.Duration);
 
             return uprate * buff;
@@ -233,6 +316,13 @@ namespace Rawr.Warlock {
                 1820f, // baseHealth,
                 11f) { // healthPerStamina
 
+            BaseAttackPower = 729f;
+            AttackPowerCoef = .68f;
+
+            BaseMeleeDamage = (433f + 650f) / 2f;
+            DamagePerAttackPower = .187f;
+
+            SpecialCooldown = 6f;
         }
     }
 
@@ -244,7 +334,35 @@ namespace Rawr.Warlock {
                 1671f, // baseHealth,
                 9.5f) { // healthPerStamina,
 
+            BaseMeleeDamage = (277f + 416f) / 2f;
+            DamagePerAttackPower = .12f;
 
+            SpecialBaseDamage = (112f + 159f) / 2f;
+            SpecialDamagePerSpellPower = .5f;
+            SpecialCooldown = 6f - Mommy.Talents.ImprovedFelhunter * 2f;
+        }
+
+        protected override void FinalizeModifiers() {
+
+            base.FinalizeModifiers();
+
+            WarlockTalents talents = Mommy.Talents;
+
+            // multipliers go into SpecialModifiers
+            SpecialModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusShadowDamageMultiplier);
+            if (Mommy.CastSpells.ContainsKey("Corruption")) {
+                SpecialModifiers.AddAdditiveMultiplier(.15f);
+            }
+            if (Mommy.CastSpells.ContainsKey("Curse Of Agony")) {
+                SpecialModifiers.AddAdditiveMultiplier(.15f);
+            }
+            if (Mommy.CastSpells.ContainsKey("Immolate")) {
+                SpecialModifiers.AddAdditiveMultiplier(.15f);
+            }
+            if (Mommy.CastSpells.ContainsKey("Unstable Affliction")) {
+                SpecialModifiers.AddAdditiveMultiplier(.15f);
+            }
         }
     }
 
@@ -262,13 +380,14 @@ namespace Rawr.Warlock {
             BaseMana = 1052f;
             BaseSpellCrit = .01f;
 
-            SpecialBaseDamage = (199f + 223f) / 2f;
+            SpecialBaseDamage = (213f + 239f) / 2f;
+            SpecialDamagePerSpellPower = .79f;
             SpecialCastTime = 2.5f - Mommy.Talents.DemonicPower * .25f;
-            // real firebolt avg hit, naked untalented = 236, NOT whatever the
-            // tooltip indicates
         }
 
         protected override void FinalizeModifiers() {
+
+            base.FinalizeModifiers();
 
             WarlockTalents talents = Mommy.Talents;
             float demonologist = talents.MasterDemonologist * .01f;
@@ -282,8 +401,6 @@ namespace Rawr.Warlock {
             // multipliers go into SpecialModifiers
             SpecialModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusFireDamageMultiplier);
-            SpecialModifiers.AddMultiplicativeMultiplier(
-                Stats.BonusDamageMultiplier);
             SpecialModifiers.AddAdditiveMultiplier(.1f * talents.ImprovedImp);
             SpecialModifiers.AddAdditiveMultiplier(.04f * talents.UnholyPower);
             SpecialModifiers.AddAdditiveMultiplier(demonologist);
@@ -302,7 +419,28 @@ namespace Rawr.Warlock {
                 1671f, // baseHealth,
                 9f) { // healthPerStamina,
 
+            BaseMeleeDamage = (363f + 546f) / 2f;
+            DamagePerAttackPower = .157f;
 
+            SpecialBaseDamage = 248f;
+            SpecialDamagePerSpellPower = .5f;
+            SpecialCooldown = 12f - Mommy.Talents.DemonicPower * 3f;
+        }
+
+        protected override void FinalizeModifiers() {
+
+            base.FinalizeModifiers();
+
+            WarlockTalents talents = Mommy.Talents;
+            float demonologist = talents.MasterDemonologist * .01f;
+
+            // crit goes into the stats object
+            Stats.SpellCrit += demonologist;
+
+            // multipliers go into SpecialModifiers
+            SpecialModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusShadowDamageMultiplier);
+            SpecialModifiers.AddAdditiveMultiplier(demonologist);
         }
     }
 
@@ -313,7 +451,8 @@ namespace Rawr.Warlock {
                 1671f, // baseHealth,
                 11f) { // healthPerStamina,
 
-
+            BaseMeleeDamage = (297f + 448f) / 2f;
+            DamagePerAttackPower = .13f;
         }
     }
 
