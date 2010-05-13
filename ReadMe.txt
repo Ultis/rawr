@@ -1,4 +1,4 @@
-Rawr v2.3.15.0
+Rawr v2.3.16.0
 ------------
 
 We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're reading the readme for), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
@@ -13,20 +13,17 @@ We're pleased to announce that, after long last, Rawr3 has entered public beta. 
  Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!
    
    
-And now back to Rawr v2.3.15.0.
+And now back to Rawr v2.3.16.0.
    
 Recent Changes:
- - Improvements to Wowhead/Armory parsing.
- - Rawr.Mage: Fix for calculations being broken on 32bit OSes.
- - Rawr.Warlock: Lots more work on fleshing out missing parts of the model. (Pets are somewhat workings; yes, we know it's very important, and are actively working on it)
- - Rawr.TankDK: Further improvements to ability usage mechanics.
- - Rawr.Elemental: Added Chain Lightning and Fire Nova usage.
- - Rawr.Moonkin: Updated relevancy logic. Couple fixes for spell damage displays.
- - Rawr.Healadin: Updated relevancy logic.
- - Rawr.Retribution: Fix for a couple crashes. Added support for a few more special effect types.
- - Rawr.Cat: Fix for base stats for Night Elves.
- - Rawr.DPSDK: Fix for ArPen calculations with Blood Gorged. Fix for expertise calculations.
- - Rawr.Rogue: Added Turn the Tables support.
+ - Lots of improvements to the default data files. There is a known issue with the source on PvP items, but otherwise should be pretty good.
+ - Fix for a bug with gemming templates being considered available for the optimizer when disabled in some cases.
+ - Some significant improvements to Optimizer performance.
+ - Significant improvements to launch time.
+ - Rawr.Warlock: Tons of bugfixes and improvements! Pet modeling! Joy!
+ - Rawr.TankDK: Improvements to rotation handling.
+ - Rawr.Elemental: Added option to use a DPS totem. Fix for Glyph of Flame Shock calculations.
+ - Rawr.Mage: Fix for a bug with potion usage. Added some extra information in the Solution results. Fix for damage calculations on Living BomB and Pyroblast DoTs.
 
 Instructions
 ------------
@@ -131,6 +128,19 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.15.0
+ - Improvements to Wowhead/Armory parsing.
+ - Rawr.Mage: Fix for calculations being broken on 32bit OSes.
+ - Rawr.Warlock: Lots more work on fleshing out missing parts of the model. (Pets are somewhat workings; yes, we know it's very important, and are actively working on it)
+ - Rawr.TankDK: Further improvements to ability usage mechanics.
+ - Rawr.Elemental: Added Chain Lightning and Fire Nova usage.
+ - Rawr.Moonkin: Updated relevancy logic. Couple fixes for spell damage displays.
+ - Rawr.Healadin: Updated relevancy logic.
+ - Rawr.Retribution: Fix for a couple crashes. Added support for a few more special effect types.
+ - Rawr.Cat: Fix for base stats for Night Elves.
+ - Rawr.DPSDK: Fix for ArPen calculations with Blood Gorged. Fix for expertise calculations.
+ - Rawr.Rogue: Added Turn the Tables support.
+
 v2.3.14.0
  - Rawr3: Tons of fixes for Rawr3 compatability and UI.
  - Significant performance improvements all around.
