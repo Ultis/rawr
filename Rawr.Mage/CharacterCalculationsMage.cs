@@ -34,6 +34,7 @@ namespace Rawr.Mage
     public class SolutionVariable
     {
         public int Segment;
+        public int ManaSegment;
         public CastingState State;
         public Cycle Cycle;
         public VariableType Type;
@@ -205,10 +206,10 @@ namespace Rawr.Mage
                 bestTiming = timing.ToString();
             }
 
-            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraintsLevel >= 5))
+            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplaySegmentMana && CalculationOptions.DisplayAdvancedConstraintsLevel >= 5))
             {
                 CalculationOptions.AdviseAdvancedSolver = true;
-                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable more options in\r\nadvanced solver (segment cooldowns, integral mana consumables, advanced constraints options)!\r\n\r\n" + bestTiming.TrimStart('*');
+                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable more options in\r\nadvanced solver (segment cooldowns, segment mana, integral mana consumables, advanced constraints options)!\r\n\r\n" + bestTiming.TrimStart('*');
             }
 
             return bestTiming;
@@ -525,7 +526,7 @@ namespace Rawr.Mage
                                 ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                                 ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                             }
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", "Idle Regen", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F} sec", "Idle Regen", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.Evocation:
                             evocation += Solution[i];
@@ -540,7 +541,7 @@ namespace Rawr.Mage
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                             ManaSources["Evocation"] += (float)Solution[i] * 0.15f * BaseStats.Mana / 2f * evoBaseState.CastingSpeed;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.EvocationIV:
                             evocationIV += Solution[i];
@@ -554,11 +555,11 @@ namespace Rawr.Mage
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins))
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}", "Icy Veins+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                                 else
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Icy Veins)", Solution[i] / EvocationDurationIV, SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Evocation (Icy Veins)", Solution[i] / EvocationDurationIV, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                             }
                             break;
@@ -574,11 +575,11 @@ namespace Rawr.Mage
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.Heroism))
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}", "Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                                 else
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Heroism)", Solution[i] / EvocationDurationHero, SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Evocation (Heroism)", Solution[i] / EvocationDurationHero, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                             }
                             break;
@@ -594,11 +595,11 @@ namespace Rawr.Mage
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.EffectsActive((int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism))
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}", "Icy Veins+Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                                 else
                                 {
-                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Icy Veins+Heroism)", Solution[i] / EvocationDurationIVHero, SegmentList[SolutionVariable[i].Segment]));
+                                    sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Evocation (Icy Veins+Heroism)", Solution[i] / EvocationDurationIVHero, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 }
                             }
                             break;
@@ -606,12 +607,12 @@ namespace Rawr.Mage
                             manaPotion += Solution[i];
                             // (1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue
                             ManaSources["Mana Potion"] += (float)(Solution[i] * (1 + BaseStats.BonusManaPotion) * ManaPotionValue);
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Potion", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Mana Potion", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.ManaGem:
                             manaGem += Solution[i];
                             ManaSources["Mana Gem"] += (float)(Solution[i] * (1 + BaseStats.BonusManaGem) * ManaGemValue);
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Mana Gem", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.Drinking:
                             ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);
@@ -637,7 +638,7 @@ namespace Rawr.Mage
                             break;
                         case VariableType.ManaOverflow:
                             ManaUsage["Overflow"] += (float)Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Overflow", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Mana Overflow", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.AfterFightRegen:
                             ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);
@@ -668,7 +669,7 @@ namespace Rawr.Mage
                                 ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                                 ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                                 ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
-                                if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                                if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 Spell waterbolt = SolutionVariable[i].State.GetSpell(SpellId.Waterbolt);
                                 SpellContribution contrib;
                                 if (!DamageSources.TryGetValue(waterbolt.Name, out contrib))
@@ -689,7 +690,7 @@ namespace Rawr.Mage
                                 ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                                 ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                                 ManaUsage["Summon Mirror Image"] += (float)Solution[i] * (int)(0.10 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseGlobalCooldown;
-                                if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Mirror Image", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
+                                if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Summon Mirror Image", Solution[i] / BaseGlobalCooldown, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                                 Spell mirrorImage = SolutionVariable[i].State.GetSpell(SpellId.MirrorImage);
                                 SpellContribution contrib;
                                 if (!DamageSources.TryGetValue("Mirror Image", out contrib))
@@ -706,7 +707,7 @@ namespace Rawr.Mage
                             Cycle smg = SolutionVariable[i].Cycle;
                             smg.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             smg.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         /*case VariableType.Ward:
                             ward += Solution[i];
@@ -726,7 +727,7 @@ namespace Rawr.Mage
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
                             combinedSolutionData[label] = i;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", label, Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F} sec", label, Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                     }
                 }
@@ -906,7 +907,7 @@ namespace Rawr.Mage
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
                 ret["Status"] = "Score: ..., Dps: ..., Survivability: ...";
-                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true);
+                DisplayCalculations.DisplaySolver = new Solver(DisplayCalculations.Character, DisplayCalculations.CalculationOptions, DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns, DisplayCalculations.CalculationOptions.DisplaySegmentMana, DisplayCalculations.CalculationOptions.DisplayIntegralMana, DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel, DisplayCalculations.MageArmor, false, DisplayCalculations.CalculationOptions.SmartOptimization, true, true);
                 CalculationsMage.EnableSolver(DisplayCalculations.DisplaySolver);
                 DisplayCalculations.CalculationOptions.SequenceReconstruction = null;
                 return ret;
@@ -926,7 +927,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || (DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns == true && DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel);
+                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplaySegmentMana != DisplayCalculations.CalculationOptions.ComparisonSegmentMana || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || (DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns == true && DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel);
             }
         }
 

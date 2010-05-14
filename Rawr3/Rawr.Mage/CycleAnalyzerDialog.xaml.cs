@@ -144,7 +144,7 @@ namespace Rawr.Mage
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(character, calculationOptions, false, false, 0, armor, false, false, false, false);
+            Solver solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
             solver.Initialize(null);
 
             switch ((string)((ComboBoxItem)CycleGeneratorComboBox.SelectedItem).Content)

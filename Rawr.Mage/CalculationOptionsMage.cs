@@ -450,6 +450,20 @@ namespace Rawr.Mage
             set { _DisplayIntegralMana = value; OnPropertyChanged("DisplayIntegralMana"); }
         }
 
+        private bool _ComparisonSegmentMana;
+        public bool ComparisonSegmentMana
+        {
+            get { return _ComparisonSegmentMana; }
+            set { _ComparisonSegmentMana = value; OnPropertyChanged("ComparisonSegmentMana"); }
+        }
+
+        private bool _DisplaySegmentMana;
+        public bool DisplaySegmentMana
+        {
+            get { return _DisplaySegmentMana; }
+            set { _DisplaySegmentMana = value; OnPropertyChanged("DisplaySegmentMana"); }
+        }
+
         private int _ComparisonAdvancedConstraintsLevel;
         public int ComparisonAdvancedConstraintsLevel
         {

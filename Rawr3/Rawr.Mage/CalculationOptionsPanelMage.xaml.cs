@@ -118,7 +118,7 @@ namespace Rawr.Mage
             string armor = "Molten Armor";
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(Character, calculationOptions, false, false, 0, armor, false, false, true, false);
+            Solver solver = new Solver(Character, calculationOptions, false, false, false, 0, armor, false, false, true, false);
             solver.Initialize(null);
             CastingState baseState = new CastingState(solver, 0, false, 0);
 

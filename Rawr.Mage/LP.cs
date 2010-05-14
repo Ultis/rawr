@@ -1684,22 +1684,28 @@ namespace Rawr.Mage
                     double limit;
                     if (cg_x[col] > 0)
                     {
-                        limit = (ub[col] - mb[col]) / cg_x[col];
-                        if (limit < refalpha)
+                        if (mb[col] + refalpha * cg_x[col] > +Math.Abs(ub[col]) * epsPrimalRel + eps)
                         {
-                            refalpha = limit;
-                            refcol = col;
-                            refbound = flagNUB;
+                            limit = (ub[col] - mb[col]) / cg_x[col];
+                            if (limit < refalpha)
+                            {
+                                refalpha = limit;
+                                refcol = col;
+                                refbound = flagNUB;
+                            }
                         }
                     }
                     else
                     {
-                        limit = (lb[col] - mb[col]) / cg_x[col];
-                        if (limit < refalpha)
+                        if (mb[col] + refalpha * cg_x[col] < -Math.Abs(lb[col]) * epsPrimalRel - eps)
                         {
-                            refalpha = limit;
-                            refcol = col;
-                            refbound = flagNLB;
+                            limit = (lb[col] - mb[col]) / cg_x[col];
+                            if (limit < refalpha)
+                            {
+                                refalpha = limit;
+                                refcol = col;
+                                refbound = flagNLB;
+                            }
                         }
                     }
                 }
@@ -3872,16 +3878,16 @@ namespace Rawr.Mage
         }
 
 #if SILVERLIGHT
-        private void NullSpaceProject(double[] dest, double[] source)
+        private void NullSpaceReduce(double[] dest, double[] source)
 #else
-        private void NullSpaceProject(double* dest, double* source)
+        private void NullSpaceReduce(double* dest, double* source)
 #endif
         {
             //dest = Z*ZT*source
 
             // Z = [-Binv*S, I, 0]
 
-            Zero(dest, cols + rows);
+            //Zero(dest, cols + rows);
 
             // ZT*source
 
@@ -3921,7 +3927,14 @@ namespace Rawr.Mage
 
                 dest[col] = v;
             }
+        }
 
+#if SILVERLIGHT
+        private void NullSpaceExpand(double[] dest)
+#else
+        private void NullSpaceExpand(double* dest)
+#endif
+        {
             //dest = Z*ZT*source
             //destB = -Binv*S*destS
 
@@ -3970,6 +3983,8 @@ namespace Rawr.Mage
             //x = 0
             Zero(cg_x, cols + rows);
 
+            Zero(cg_p, cols + rows);
+
             //r = g
             ComputeQx();
             for (int i = 0; i < cols; i++)
@@ -3983,10 +3998,15 @@ namespace Rawr.Mage
             // aside from projection we only use r up to cols
 
             //w = Z*ZT*r
-            NullSpaceProject(cg_w, cg_r);
+            NullSpaceReduce(cg_w, cg_r);
 
             //p = w
-            Copy(cg_p, cg_w, cols + rows);
+            //Copy(cg_p, cg_w, cols + rows);
+            for (int i = 0; i < super; i++)
+            {
+                int col = S[i];
+                cg_p[col] = cg_w[col];
+            }
             //ValidateCGFeasibility2();
 
             maxAlpha = 1.0;
@@ -4015,11 +4035,15 @@ namespace Rawr.Mage
                 return false;
             }
 
+            double minrtw = rtw;
+            double startrtw = rtw;
+
             int step = 0;
 
             do
             {
                 //alpha = -(rT * w) / (pT * Q * p)
+                NullSpaceExpand(cg_p);
                 QuadraticQ(cg_p, cg_qp);
                 double pqp = 0.0;
                 for (int i = 0; i < cols; i++)
@@ -4119,17 +4143,6 @@ namespace Rawr.Mage
 
                 //ValidateCGFeasibility();
 
-                step++;
-                if (step == super)
-                {
-                    // if we get here and residual is not zero
-                    // the accumulated roundoff errors are probably large enough
-                    // to make it better to restart CG
-                    // since we don't need accurate solution untill we're close to optimum
-                    // it's better to just exit early in this case
-                    return true;
-                }
-
                 //r~ = r + alpha * Q * p
                 for (int i = 0; i < cols; i++)
                 {
@@ -4137,7 +4150,7 @@ namespace Rawr.Mage
                 }
 
                 //w~ = Z*ZT*r~
-                NullSpaceProject(cg_ww, cg_rr);
+                NullSpaceReduce(cg_ww, cg_rr);
 
                 //beta = (r~T * w~) / (rT * w)
                 double rtwnew = 0.0;
@@ -4150,16 +4163,37 @@ namespace Rawr.Mage
                     int col = S[i];
                     rtwnew += cg_ww[col] * cg_ww[col];
                 }
-                if (rtwnew <= limit)
+                step++;
+                if (step > 5 * super)
+                {
+                    if (rtwnew > startrtw)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                if (rtwnew <= limit || (step >= super && rtwnew < 2 * minrtw))
                 {
                     return true;
+                }
+                if (rtwnew < minrtw)
+                {
+                    minrtw = rtwnew;
                 }
                 double beta = rtwnew / rtw;
 
                 //p = w~ + beta*p
-                for (int i = 0; i < cols + rows; i++)
+                /*for (int i = 0; i < cols + rows; i++)
                 {
                     cg_p[i] = cg_ww[i] + beta * cg_p[i];
+                }*/
+                for (int i = 0; i < super; i++)
+                {
+                    int col = S[i];
+                    cg_p[col] = cg_ww[col] + beta * cg_p[col];
                 }
                 //ValidateCGFeasibility2();
 
@@ -4934,7 +4968,7 @@ namespace Rawr.Mage
 
         public void ValidateSuperBasis()
         {
-#if SILVERLIGHT
+#if !SILVERLIGHT
             for (int s = 0; s < super - 1; s++)
             {
                 int col = S[s];

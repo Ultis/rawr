@@ -88,6 +88,7 @@ namespace Rawr.Mage
         public MageTalents MageTalents { get; set; }
         public CalculationOptionsMage CalculationOptions { get; set; }
         private bool segmentCooldowns;
+        private bool segmentMana;
         private int advancedConstraintsLevel;
         private bool integralMana;
         private string armor;
@@ -930,6 +931,7 @@ namespace Rawr.Mage
         private bool needsTimeExtension;
         private bool conjureManaGem;
         private float dpsTime;
+        public int manaSegments;
 
         private SolverLP lp;
         private int[] segmentColumn;
@@ -955,7 +957,7 @@ namespace Rawr.Mage
 
         public int MaxManaGem;
         public float ManaGemTps;
-        public float ManaPotionTps;
+        public float ManaPotionTps;        
 
         // initialized in ConstructSegments
         public List<Segment> SegmentList { get; set; }
@@ -1095,17 +1097,18 @@ namespace Rawr.Mage
         }
         #endregion
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
-            Construct(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+            Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
         }
 
-        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        private void Construct(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
             this.Character = character;
             this.MageTalents = character.MageTalents;
             this.CalculationOptions = calculationOptions;
             this.segmentCooldowns = segmentCooldowns;
+            this.segmentMana = segmentMana;
             this.advancedConstraintsLevel = advancedConstraintsLevel;
             this.integralMana = integralMana;
             this.armor = armor;
@@ -1125,15 +1128,15 @@ namespace Rawr.Mage
         [ThreadStatic]
         private static Solver threadSolver;
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
             if (threadSolver == null)
             {
-                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
             }
             else
             {
-                threadSolver.Construct(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                threadSolver.Construct(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
             }
             return threadSolver.GetCharacterCalculations(additionalItem);
         }
@@ -2622,15 +2625,19 @@ namespace Rawr.Mage
             if (minimizeTime) needsTimeExtension = true;
 
             restrictManaUse = false;
-            if (segmentCooldowns) restrictManaUse = true;
+            if (segmentCooldowns || segmentMana) restrictManaUse = true;
             if (CalculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
                 integralMana = false;
+                segmentMana = false;
             }
             segmentNonCooldowns = false;
-            if (restrictManaUse) segmentNonCooldowns = true;
-            if (restrictThreat) segmentNonCooldowns = true;
+            if (segmentCooldowns)
+            {
+                if (restrictManaUse) segmentNonCooldowns = true;
+                if (restrictThreat) segmentNonCooldowns = true;
+            }
 
             dpsTime = CalculationOptions.DpsTime;
             float silenceTime = CalculationOptions.EffectShadowSilenceFrequency * CalculationOptions.EffectShadowSilenceDuration * Math.Max(1 - baseStats.ShadowResistance / CalculationOptions.TargetLevel * 0.15f, 0.25f);
@@ -2641,13 +2648,29 @@ namespace Rawr.Mage
                 dpsTime -= movementShare;
             }
 
+            if (segmentMana)
+            {
+                if (segmentCooldowns)
+                {
+                    manaSegments = 2;
+                }
+                else
+                {
+                    manaSegments = (int)Math.Ceiling(CalculationOptions.FightDuration / EvocationCooldown) + 1;
+                }
+            }
+            else
+            {
+                manaSegments = 1;
+            }
+
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
             if (lp == null)
             {
                 lp = new SolverLP();
             }
-            lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseFireWard ? 1 : 0) + (CalculationOptions.UseFrostWard ? 1 : 0))) * SegmentList.Count, this, SegmentList.Count);
+            lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseFireWard ? 1 : 0) + (CalculationOptions.UseFrostWard ? 1 : 0))) * manaSegments * SegmentList.Count, this, SegmentList.Count);
 
             SetCalculationReuseReferences();
             AddWardStates();
@@ -2682,10 +2705,10 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowCount, 0.05);
                 if (restrictManaUse)
                 {
-                    for (int ss = 0; ss < SegmentList.Count - 1; ss++)
+                    for (int ss = 0; ss < manaSegments * SegmentList.Count - 1; ss++)
                     {
-                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, 0.1);
-                        lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, 0.1);
+                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, ManaRegenLPScaling);
+                        lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, ManaRegenLPScaling);
                     }
                 }
                 if (restrictThreat)
@@ -2708,26 +2731,29 @@ namespace Rawr.Mage
                 mps = -(BaseState.ManaRegen * (1 - CalculationOptions.Fragmentation) + BaseState.ManaRegen5SR * CalculationOptions.Fragmentation);
                 for (int segment = 0; segment < idleRegenSegments; segment++)
                 {
-                    column = lp.AddColumnUnsafe();
-                    lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? SegmentList[segment].Duration : CalculationOptions.FightDuration);
-                    if (idleRegenSegments == 1 && !needsTimeExtension)
+                    for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                     {
-                        lp.SetColumnLowerBound(column, (1 - dpsTime) * CalculationOptions.FightDuration);
-                    }
-                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, State = BaseState, Dps = dps, Mps = mps, Tps = tps });
-                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                    lp.SetElementUnsafe(rowManaRegen, column, mps);
-                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowDpsTime, column, -1.0);
-                    lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
-                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                    if (restrictManaUse)
-                    {
-                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                        column = lp.AddColumnUnsafe();
+                        lp.SetColumnUpperBound(column, (idleRegenSegments > 1) ? SegmentList[segment].Duration : CalculationOptions.FightDuration);
+                        if (idleRegenSegments == 1 && manaSegments == 1  && !needsTimeExtension)
                         {
-                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                            lp.SetColumnLowerBound(column, (1 - dpsTime) * CalculationOptions.FightDuration);
+                        }
+                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.IdleRegen, Segment = segment, ManaSegment = manaSegment, State = BaseState, Dps = dps, Mps = mps, Tps = tps });
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                        lp.SetElementUnsafe(rowManaRegen, column, mps);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowDpsTime, column, -1.0);
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment * manaSegments + manaSegment; ss < idleRegenSegments * manaSegments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                            }
                         }
                     }
                 }
@@ -2743,35 +2769,38 @@ namespace Rawr.Mage
                     mps = wand.ManaPerSecond;
                     for (int segment = 0; segment < wandSegments; segment++)
                     {
-                        float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
-                        dps = wand.DamagePerSecond * mult;
-                        tps = wand.ThreatPerSecond;
-                        if (mult > 0)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            column = lp.AddColumnUnsafe();
-                            lp.SetColumnUpperBound(column, (wandSegments > 1) ? SegmentList[segment].Duration : CalculationOptions.FightDuration);
-                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = BaseState, Dps = dps, Mps = mps, Tps = tps });
-                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                            lp.SetElementUnsafe(rowManaRegen, column, mps);
-                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                            lp.SetElementUnsafe(rowThreat, column, tps);
-                            lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
-                            lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                            if (restrictManaUse)
+                            float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
+                            dps = wand.DamagePerSecond * mult;
+                            tps = wand.ThreatPerSecond;
+                            if (mult > 0)
                             {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                column = lp.AddColumnUnsafe();
+                                lp.SetColumnUpperBound(column, (wandSegments > 1) ? SegmentList[segment].Duration : CalculationOptions.FightDuration);
+                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, ManaSegment = manaSegment, State = BaseState, Dps = dps, Mps = mps, Tps = tps });
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                                lp.SetElementUnsafe(rowManaRegen, column, mps);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                lp.SetElementUnsafe(rowThreat, column, tps);
+                                lp.SetElementUnsafe(rowTargetDamage, column, -wand.DamagePerSecond);
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (restrictManaUse)
                                 {
-                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    }
                                 }
-                            }
-                            if (restrictThreat)
-                            {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                if (restrictThreat)
                                 {
-                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                    for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                    }
                                 }
                             }
                         }
@@ -2850,335 +2879,458 @@ namespace Rawr.Mage
                             evoStateIVHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
                         }
                     }
+                    int minManaSegment = segmentMana ? 1 : 0;
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
-                        // base evocation
-                        if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                        for (int manaSegment = minManaSegment; manaSegment < manaSegments; manaSegment++)
                         {
-                            dps = 0.0f;
-                            if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                            // base evocation
+                            if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                             {
-                                dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                            }
-                            tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 0.5f * threatFactor;
-                            mps = -EvocationRegen;
-                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
-                            column = lp.AddColumnUnsafe();
-                            lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * MaxEvocation);
-                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegen);
-                            lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegen);
-                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                            lp.SetElementUnsafe(rowEvocation, column, 1.0);
-                            lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                            lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                            if (restrictManaUse)
-                            {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                dps = 0.0f;
+                                if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                 {
-                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegen);
-                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegen);
+                                    dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
                                 }
-                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 0.5f * threatFactor;
+                                mps = -EvocationRegen;
+                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, ManaSegment = manaSegment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
+                                column = lp.AddColumnUnsafe();
+                                lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? evocationDuration : evocationDuration * MaxEvocation);
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegen);
+                                lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegen);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                lp.SetElementUnsafe(rowEvocation, column, 1.0);
+                                lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (restrictManaUse)
                                 {
-                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                                }
-                            }
-                            if (restrictThreat)
-                            {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                {
-                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                }
-                            }
-                        }
-                        if (CalculationOptions.EnableHastedEvocation)
-                        {
-                            if (icyVeinsAvailable)
-                            {
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
-                                {
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                                    if (segmentMana)
                                     {
-                                        dps = evoStateIV.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                        for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegen);
+                                        }
+                                        for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegen);
+                                        }
                                     }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenIV;
-                                    // last tick of icy veins
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV, Dps = dps, Tps = tps, Mps = mps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationIV : EvocationDurationIV * MaxEvocation);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIV);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIV);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.2);
-                                    lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                    else
+                                    {
+                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        {
+                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegen);
+                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegen);
+                                        }
+                                    }
                                     if (segmentCooldowns)
                                     {
-                                        foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
                                         {
                                             if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                                         }
                                     }
-                                    if (restrictManaUse)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
-                                        }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                        {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
-                                        }
-                                    }
-                                    if (restrictThreat)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                        }
-                                    }
                                 }
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                if (restrictThreat)
                                 {
-                                    // remainder
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                                    for (int ss = segment; ss < SegmentList.Count - 1; ss++)
                                     {
-                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                                    }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenIV;
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationIV : EvocationDurationIV * MaxEvocation);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIV);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIV);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.2);
-                                    lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                    if (restrictManaUse)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
-                                        }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                        {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
-                                        }
-                                    }
-                                    if (restrictThreat)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                        }
+                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
                                     }
                                 }
                             }
-                            if (heroismAvailable)
+                            if (CalculationOptions.EnableHastedEvocation)
                             {
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
+                                if (icyVeinsAvailable)
                                 {
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
                                     {
-                                        dps = evoStateHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                                    }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenHero;
-                                    // last tick of heroism
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoStateHero, Dps = dps, Mps = mps, Tps = tps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationHero : EvocationDurationHero);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenHero);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenHero);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowHeroism, column, 1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.3);
-                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                    if (restrictManaUse)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                            dps = evoStateIV.GetSpell(SpellId.Waterbolt).DamagePerSecond;
                                         }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenIV;
+                                        // last tick of icy veins
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, ManaSegment = manaSegment, State = evoStateIV, Dps = dps, Tps = tps, Mps = mps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationIV : EvocationDurationIV * MaxEvocation);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIV);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIV);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                        lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (segmentCooldowns)
                                         {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                            foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                            {
+                                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                            }
+                                        }
+                                        if (restrictManaUse)
+                                        {
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
+                                                }
+                                            }
+                                        }
+                                        if (restrictThreat)
+                                        {
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
-                                    if (restrictThreat)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        // remainder
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                        }
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenIV;
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, ManaSegment = manaSegment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationIV : EvocationDurationIV * MaxEvocation);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIV);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIV);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                        lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (restrictManaUse)
+                                        {
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIV);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIV);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2);
+                                                }
+                                            }
+                                        }
+                                        if (restrictThreat)
+                                        {
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
                                 }
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                if (heroismAvailable)
                                 {
-                                    // remainder
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
                                     {
-                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                                    }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenHero;
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationHero : EvocationDurationHero);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenHero);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenHero);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.3);
-                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                    if (restrictManaUse)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                            dps = evoStateHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
                                         }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenHero;
+                                        // last tick of heroism
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, ManaSegment = manaSegment, State = evoStateHero, Dps = dps, Mps = mps, Tps = tps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationHero : EvocationDurationHero);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenHero);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenHero);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowHeroism, column, 1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.3);
+                                        lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0 - calculationResult.EvocationDurationHero / 0.1);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (restrictManaUse)
                                         {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                                }
+                                            }
+                                        }
+                                        if (restrictThreat)
+                                        {
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
-                                    if (restrictThreat)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        // remainder
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                        }
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.3 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenHero;
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationHero, Segment = segment, ManaSegment = manaSegment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationHero : EvocationDurationHero);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenHero);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenHero);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.3);
+                                        lp.SetElementUnsafe(rowEvocationHero, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationHeroActivation, column, 1.0);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (restrictManaUse)
+                                        {
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenHero);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenHero);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.3);
+                                                }
+                                            }
+                                        }
+                                        if (restrictThreat)
+                                        {
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            if (icyVeinsAvailable && heroismAvailable)
-                            {
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
+                                if (icyVeinsAvailable && heroismAvailable)
                                 {
-                                    // last tick of icy veins+heroism
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
                                     {
-                                        dps = evoStateIVHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                                    }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenIVHero;
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoStateIVHero, Dps = dps, Mps = mps, Tps = tps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationIVHero : EvocationDurationIVHero);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIVHero);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIVHero);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowHeroism, column, 1.0);
-                                    lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
-                                    lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
-                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
-                                    lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                    if (segmentCooldowns)
-                                    {
-                                        foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                        // last tick of icy veins+heroism
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                            dps = evoStateIVHero.GetSpell(SpellId.Waterbolt).DamagePerSecond;
+                                        }
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenIVHero;
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, ManaSegment = manaSegment, State = evoStateIVHero, Dps = dps, Mps = mps, Tps = tps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationIVHero : EvocationDurationIVHero);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIVHero);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIVHero);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowHeroism, column, 1.0);
+                                        lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                                        lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
+                                        lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
+                                        lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0 - calculationResult.EvocationDurationIVHero / 0.1);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (segmentCooldowns)
+                                        {
+                                            foreach (SegmentConstraint constraint in rowSegmentIcyVeins)
+                                            {
+                                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                            }
+                                        }
+                                        if (restrictManaUse)
+                                        {
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
+                                                }
+                                            }
+                                        }
+                                        if (restrictThreat)
+                                        {
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
-                                    if (restrictManaUse)
+                                    if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                     {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        // remainder
+                                        dps = 0.0f;
+                                        if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
+                                            dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
                                         }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                        tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor;
+                                        mps = -EvocationRegenIVHero;
+                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, ManaSegment = manaSegment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
+                                        column = lp.AddColumnUnsafe();
+                                        lp.SetColumnUpperBound(column, (evocationSegments > 1 || manaSegments > 1) ? EvocationDurationIVHero : EvocationDurationIVHero);
+                                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIVHero);
+                                        lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIVHero);
+                                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                        lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
+                                        lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
+                                        lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
+                                        //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
+                                        lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
+                                        lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
+                                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                        if (restrictManaUse)
                                         {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
+                                            if (segmentMana)
+                                            {
+                                                for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegment - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
+                                                }
+                                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegment - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                                {
+                                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
+                                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
+                                                }
+                                            }
+                                            if (segmentCooldowns)
+                                            {
+                                                foreach (SegmentConstraint constraint in rowSegmentEvocation)
+                                                {
+                                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
+                                                }
+                                            }
                                         }
-                                    }
-                                    if (restrictThreat)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                        if (restrictThreat)
                                         {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
-                                        }
-                                    }
-                                }
-                                if (CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
-                                {
-                                    // remainder
-                                    dps = 0.0f;
-                                    if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
-                                    {
-                                        dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
-                                    }
-                                    tps = 0.15f * evocationMana / 2f * BaseState.CastingSpeed * 1.2 * 1.3 * 0.5f * threatFactor;
-                                    mps = -EvocationRegenIVHero;
-                                    if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIVHero, Segment = segment, State = evoState, Dps = dps, Mps = mps, Tps = tps });
-                                    column = lp.AddColumnUnsafe();
-                                    lp.SetColumnUpperBound(column, (evocationSegments > 1) ? EvocationDurationIVHero : EvocationDurationIVHero);
-                                    lp.SetElementUnsafe(rowAfterFightRegenMana, column, -EvocationRegenIVHero);
-                                    lp.SetElementUnsafe(rowManaRegen, column, -EvocationRegenIVHero);
-                                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                                    lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                                    lp.SetElementUnsafe(rowEvocation, column, 1.2 * 1.3);
-                                    lp.SetElementUnsafe(rowEvocationHero, column, 1.2);
-                                    lp.SetElementUnsafe(rowEvocationIVHero, column, 1.0);
-                                    //lp.SetElementUnsafe(rowEvocationIVHeroActivation, column, 1.0);
-                                    lp.SetElementUnsafe(rowThreat, column, tps); // should split among all targets if more than one, assume one only
-                                    lp.SetCostUnsafe(column, minimizeTime ? -1 : dps);
-                                    if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                                    if (restrictManaUse)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -EvocationRegenIVHero);
-                                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, EvocationRegenIVHero);
-                                        }
-                                        foreach (SegmentConstraint constraint in rowSegmentEvocation)
-                                        {
-                                            if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.2 * 1.3);
-                                        }
-                                    }
-                                    if (restrictThreat)
-                                    {
-                                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                                        {
-                                            lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                            {
+                                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                            }
                                         }
                                     }
                                 }
@@ -3208,42 +3360,45 @@ namespace Rawr.Mage
                     tps = (1 + baseStats.BonusManaPotion) * ManaPotionValue * 0.5f * threatFactor;
                     for (int segment = 0; segment < manaPotionSegments; segment++)
                     {
-                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment, Dps = dps, Mps = mps, Tps = tps });
-                        column = lp.AddColumnUnsafe();
-                        lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
-                        lp.SetColumnUpperBound(column, 1.0);
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                        lp.SetElementUnsafe(rowManaRegen, column, mps);
-                        lp.SetElementUnsafe(rowPotion, column, 1.0);
-                        lp.SetElementUnsafe(rowManaPotion, column, 1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps);
-                        ManaPotionTps = (float)tps;
-                        //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
-                        lp.SetCostUnsafe(column, 0.0);
-                        /*if (segmentCooldowns && effectPotionAvailable)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            for (int ss = 0; ss < segments; ss++)
+                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment, ManaSegment = manaSegment, Dps = dps, Mps = mps, Tps = tps });
+                            column = lp.AddColumnUnsafe();
+                            lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
+                            lp.SetColumnUpperBound(column, 1.0);
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                            lp.SetElementUnsafe(rowManaRegen, column, mps);
+                            lp.SetElementUnsafe(rowPotion, column, 1.0);
+                            lp.SetElementUnsafe(rowManaPotion, column, 1.0);
+                            lp.SetElementUnsafe(rowThreat, column, tps);
+                            ManaPotionTps = (float)tps;
+                            //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
+                            lp.SetCostUnsafe(column, 0.0);
+                            /*if (segmentCooldowns && effectPotionAvailable)
                             {
-                                double cool = 120;
-                                int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
-                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
-                                if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 15.0);
-                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                                for (int ss = 0; ss < segments; ss++)
+                                {
+                                    double cool = 120;
+                                    int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                                    if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                    if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 15.0);
+                                    if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                                }
+                            }*/
+                            if (restrictManaUse)
+                            {
+                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                }
                             }
-                        }*/
-                        if (restrictManaUse)
-                        {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                            if (restrictThreat)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                            }
-                        }
-                        if (restrictThreat)
-                        {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                            {
-                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                }
                             }
                         }
                     }
@@ -3287,40 +3442,43 @@ namespace Rawr.Mage
                     }
                     for (int segment = 0; segment < manaGemSegments; segment++)
                     {
-                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment, Dps = dps, Mps = mps, Tps = tps });
-                        column = lp.AddColumnUnsafe();
-                        lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
-                        lp.SetColumnUpperBound(column, upperBound);
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
-                        lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
-                        lp.SetElementUnsafe(rowManaGem, column, 1.0);
-                        lp.SetElementUnsafe(rowManaGemMax, column, 1.0);
-                        //lp.SetElementUnsafe(rowFlameCap, column, 1.0);
-                        lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps);
-                        ManaGemTps = (float)tps;
-                        //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
-                        lp.SetCostUnsafe(column, 0.0);
-                        if (segmentCooldowns)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            foreach (SegmentConstraint constraint in rowSegmentManaGem)
+                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment, ManaSegment = manaSegment, Dps = dps, Mps = mps, Tps = tps });
+                            column = lp.AddColumnUnsafe();
+                            lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
+                            lp.SetColumnUpperBound(column, upperBound);
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
+                            lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
+                            lp.SetElementUnsafe(rowManaGem, column, 1.0);
+                            lp.SetElementUnsafe(rowManaGemMax, column, 1.0);
+                            //lp.SetElementUnsafe(rowFlameCap, column, 1.0);
+                            lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
+                            lp.SetElementUnsafe(rowThreat, column, tps);
+                            ManaGemTps = (float)tps;
+                            //lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
+                            lp.SetCostUnsafe(column, 0.0);
+                            if (segmentCooldowns)
                             {
-                                if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                foreach (SegmentConstraint constraint in rowSegmentManaGem)
+                                {
+                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                }
                             }
-                        }
-                        if (restrictManaUse)
-                        {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                            if (restrictManaUse)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaGemRegen);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaGemRegen);
+                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaGemRegen);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaGemRegen);
+                                }
                             }
-                        }
-                        if (restrictThreat)
-                        {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                            if (restrictThreat)
                             {
-                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                }
                             }
                         }
                     }
@@ -3354,43 +3512,46 @@ namespace Rawr.Mage
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
-                        foreach (CastingState state in scratchStateList)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            Spell waterbolt = state.GetSpell(SpellId.Waterbolt);
-                            dps = waterbolt.DamagePerSecond;
-                            tps = 0.0;
-                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state, Dps = dps, Mps = mps, Tps = tps });
-                            column = lp.AddColumnUnsafe();
-                            if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, BaseGlobalCooldown);
-                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                            lp.SetElementUnsafe(rowManaRegen, column, mps);
-                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                            if (!MageTalents.GlyphOfEternalWater)
+                            foreach (CastingState state in scratchStateList)
                             {
-                                lp.SetElementUnsafe(rowSummonWaterElemental, column, -1 / BaseGlobalCooldown);
-                                lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
-                                lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
-                            }
-                            lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
-                            lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                            if (restrictManaUse)
-                            {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                Spell waterbolt = state.GetSpell(SpellId.Waterbolt);
+                                dps = waterbolt.DamagePerSecond;
+                                tps = 0.0;
+                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, ManaSegment = manaSegment, State = state, Dps = dps, Mps = mps, Tps = tps });
+                                column = lp.AddColumnUnsafe();
+                                if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, BaseGlobalCooldown);
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                                lp.SetElementUnsafe(rowManaRegen, column, mps);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                if (!MageTalents.GlyphOfEternalWater)
                                 {
-                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    lp.SetElementUnsafe(rowSummonWaterElemental, column, -1 / BaseGlobalCooldown);
+                                    lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
+                                    lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                                 }
-                            }
-                            if (segmentCooldowns)
-                            {
-                                foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
+                                lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (restrictManaUse)
                                 {
-                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    }
                                 }
-                                foreach (SegmentConstraint constraint in rowSegmentSummonWaterElemental)
+                                if (segmentCooldowns)
                                 {
-                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
+                                    {
+                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    }
+                                    foreach (SegmentConstraint constraint in rowSegmentSummonWaterElemental)
+                                    {
+                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    }
                                 }
                             }
                         }
@@ -3419,41 +3580,44 @@ namespace Rawr.Mage
                     }
                     for (int segment = 0; segment < mirrorImageSegments; segment++)
                     {
-                        foreach (CastingState state in scratchStateList)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            Spell mirrorImage = state.GetSpell(SpellId.MirrorImage);
-                            dps = mirrorImage.DamagePerSecond;
-                            tps = 0.0;
-                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonMirrorImage, Segment = segment, State = state, Dps = dps, Mps = mps, Tps = tps });
-                            column = lp.AddColumnUnsafe();
-                            if (mirrorImageSegments > 1) lp.SetColumnUpperBound(column, BaseGlobalCooldown);
-                            //if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
-                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                            lp.SetElementUnsafe(rowManaRegen, column, mps);
-                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                            lp.SetElementUnsafe(rowSummonMirrorImage, column, -1 / BaseGlobalCooldown);
-                            lp.SetElementUnsafe(rowSummonMirrorImageCount, column, 1.0);
-                            lp.SetElementUnsafe(rowMirrorImage, column, 1.0);
-                            lp.SetCostUnsafe(column, minimizeTime ? -1 : mirrorImage.DamagePerSecond);
-                            lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                            if (restrictManaUse)
+                            foreach (CastingState state in scratchStateList)
                             {
-                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                Spell mirrorImage = state.GetSpell(SpellId.MirrorImage);
+                                dps = mirrorImage.DamagePerSecond;
+                                tps = 0.0;
+                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonMirrorImage, Segment = segment, ManaSegment = manaSegment, State = state, Dps = dps, Mps = mps, Tps = tps });
+                                column = lp.AddColumnUnsafe();
+                                if (mirrorImageSegments > 1) lp.SetColumnUpperBound(column, BaseGlobalCooldown);
+                                //if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                                lp.SetElementUnsafe(rowManaRegen, column, mps);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                lp.SetElementUnsafe(rowSummonMirrorImage, column, -1 / BaseGlobalCooldown);
+                                lp.SetElementUnsafe(rowSummonMirrorImageCount, column, 1.0);
+                                lp.SetElementUnsafe(rowMirrorImage, column, 1.0);
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : mirrorImage.DamagePerSecond);
+                                lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (restrictManaUse)
                                 {
-                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                    }
                                 }
-                            }
-                            if (segmentCooldowns)
-                            {
-                                foreach (SegmentConstraint constraint in rowSegmentMirrorImage)
+                                if (segmentCooldowns)
                                 {
-                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
-                                }
-                                foreach (SegmentConstraint constraint in rowSegmentSummonMirrorImage)
-                                {
-                                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    foreach (SegmentConstraint constraint in rowSegmentMirrorImage)
+                                    {
+                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    }
+                                    foreach (SegmentConstraint constraint in rowSegmentSummonMirrorImage)
+                                    {
+                                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                                    }
                                 }
                             }
                         }
@@ -3477,7 +3641,7 @@ namespace Rawr.Mage
                     if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + 0, column, 1.0);
                     if (restrictManaUse)
                     {
-                        for (int ss = 0; ss < SegmentList.Count - 1; ss++)
+                        for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
                         {
                             lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
                             lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
@@ -3530,14 +3694,17 @@ namespace Rawr.Mage
                 {
                     for (int segment = 0; segment < SegmentList.Count; segment++)
                     {
-                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment });
-                        column = lp.AddColumnUnsafe();
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
-                        lp.SetElementUnsafe(rowManaRegen, column, 1.0);
-                        for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
-                            lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
+                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment, ManaSegment = manaSegment });
+                            column = lp.AddColumnUnsafe();
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
+                            lp.SetElementUnsafe(rowManaRegen, column, 1.0);
+                            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
+                            }
                         }
                     }
                 }
@@ -3554,32 +3721,35 @@ namespace Rawr.Mage
                     tps = spell.ThreatPerSecond;
                     for (int segment = 0; segment < conjureSegments; segment++)
                     {
-                        column = lp.AddColumnUnsafe();
-                        lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : MaxConjureManaGem));
-                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Cycle = spell, Segment = segment, State = BaseState, Dps = dps, Tps = tps, Mps = mps });
-                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
-                        lp.SetElementUnsafe(rowManaRegen, column, mps);
-                        lp.SetElementUnsafe(rowConjureManaGem, column, 1.0);
-                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
-                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                        lp.SetElementUnsafe(rowThreat, column, tps = spell.ThreatPerSecond);
-                        lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
-                        lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
-                        lp.SetElementUnsafe(rowManaGem, column, -3.0 / spell.CastTime); // one cast time gives 3 new gem uses
-                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-                        if (restrictManaUse)
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                         {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                            column = lp.AddColumnUnsafe();
+                            lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : MaxConjureManaGem));
+                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Cycle = spell, Segment = segment, ManaSegment = manaSegment, State = BaseState, Dps = dps, Tps = tps, Mps = mps });
+                            lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
+                            lp.SetElementUnsafe(rowManaRegen, column, mps);
+                            lp.SetElementUnsafe(rowConjureManaGem, column, 1.0);
+                            lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                            lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                            lp.SetElementUnsafe(rowThreat, column, tps = spell.ThreatPerSecond);
+                            lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
+                            lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
+                            lp.SetElementUnsafe(rowManaGem, column, -3.0 / spell.CastTime); // one cast time gives 3 new gem uses
+                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                            if (restrictManaUse)
                             {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+                                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
+                                }
                             }
-                        }
-                        if (restrictThreat)
-                        {
-                            for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                            if (restrictThreat)
                             {
-                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
+                                {
+                                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                }
                             }
                         }
                     }
@@ -3647,25 +3817,28 @@ namespace Rawr.Mage
                             if ((state.Effects & (int)StandardEffect.NonItemBasedMask) == CalculationOptions.IncrementalSetStateIndexes[index])
                             {
                                 if (CalculationOptions.CooldownRestrictionsValid(SegmentList[CalculationOptions.IncrementalSetSegments[index]], state))
-                                {
+                                {                                    
                                     float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[CalculationOptions.IncrementalSetSegments[index]]) : 1.0f;
                                     if (mult > 0)
                                     {
-                                        column = lp.AddColumnUnsafe();
                                         Cycle c = state.GetCycle(CalculationOptions.IncrementalSetSpells[index]);
                                         int seg = CalculationOptions.IncrementalSetSegments[index];
-                                        if (requiresMIP)
+                                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                                         {
-                                            if (seg != lastSegment)
+                                            column = lp.AddColumnUnsafe();
+                                            if (requiresMIP)
                                             {
-                                                for (; lastSegment < seg; )
+                                                if (seg != lastSegment)
                                                 {
-                                                    segmentColumn[++lastSegment] = column;
+                                                    for (; lastSegment < seg; )
+                                                    {
+                                                        segmentColumn[++lastSegment] = column;
+                                                    }
                                                 }
                                             }
+                                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, ManaSegment = manaSegment, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
+                                            SetSpellColumn(minimizeTime, seg, manaSegment, state, column, c, mult);
                                         }
-                                        if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
-                                        SetSpellColumn(minimizeTime, seg, state, column, c, mult);
                                     }
                                 }
                             }
@@ -3723,9 +3896,12 @@ namespace Rawr.Mage
                                         if (!skip)
                                         {
                                             placed.Add(c);
-                                            column = lp.AddColumnUnsafe();
-                                            if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
-                                            SetSpellColumn(minimizeTime, seg, state, column, c, mult);
+                                            for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                            {
+                                                column = lp.AddColumnUnsafe();
+                                                if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, ManaSegment = manaSegment, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
+                                                SetSpellColumn(minimizeTime, seg, manaSegment, state, column, c, mult);
+                                            }
                                         }
                                     }
                                 }
@@ -4259,7 +4435,7 @@ namespace Rawr.Mage
             }
             if (restrictManaUse)
             {
-                for (int ss = 0; ss < SegmentList.Count - 1; ss++)
+                for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
                 {
                     lp.SetRHSUnsafe(rowSegmentManaUnderflow + ss, StartingMana);
                     lp.SetRHSUnsafe(rowSegmentManaOverflow + ss, BaseStats.Mana - StartingMana);
@@ -4364,7 +4540,7 @@ namespace Rawr.Mage
             if (manaPotionAvailable && integralMana) rowManaPotion = rowCount++;
             if (CalculationOptions.ManaGemEnabled)
             {
-                if (segmentCooldowns || conjureManaGem || needsTimeExtension)
+                if (segmentCooldowns || conjureManaGem || needsTimeExtension || segmentMana)
                 {
                     rowManaGem = rowCount++;
                 }
@@ -4438,7 +4614,7 @@ namespace Rawr.Mage
                     rowSummonMirrorImageCount = rowCount++;
                 }
             }
-            if (dpsTime < 1 && (needsTimeExtension || segmentCooldowns))
+            if (dpsTime < 1 && (needsTimeExtension || segmentCooldowns || segmentMana))
             {
                 rowDpsTime = rowCount++;
             }
@@ -4519,6 +4695,17 @@ namespace Rawr.Mage
             if (segmentCooldowns)
             {
                 rowCount = ConstructSegmentationRows(rowCount);
+            }
+            if (segmentCooldowns || segmentMana)
+            {
+                if (restrictManaUse)
+                {
+                    int segments = segmentCooldowns ? SegmentList.Count : 1;
+                    rowSegmentManaOverflow = rowCount;
+                    rowCount += segments * manaSegments - 1;
+                    rowSegmentManaUnderflow = rowCount;
+                    rowCount += segments * manaSegments - 1;
+                }
             }
             return rowCount;
         }
@@ -4745,13 +4932,6 @@ namespace Rawr.Mage
             rowSegment = rowCount;
             rowCount += SegmentList.Count;
             // mana overflow & underflow (don't need over all segments, that is already verified)
-            if (restrictManaUse)
-            {
-                rowSegmentManaOverflow = rowCount;
-                rowCount += SegmentList.Count - 1;
-                rowSegmentManaUnderflow = rowCount;
-                rowCount += SegmentList.Count - 1;
-            }
             if (restrictThreat)
             {
                 rowSegmentThreat = rowCount;
@@ -4760,7 +4940,7 @@ namespace Rawr.Mage
             return rowCount;
         }
 
-        private void SetSpellColumn(bool minimizeTime, int segment, CastingState state, int column, Cycle cycle, float multiplier)
+        private void SetSpellColumn(bool minimizeTime, int segment, int manaSegment, CastingState state, int column, Cycle cycle, float multiplier)
         {
             double bound = CalculationOptions.FightDuration;
             double manaRegen = cycle.ManaPerSecond;
@@ -4895,12 +5075,20 @@ namespace Rawr.Mage
 
             if (segmentCooldowns)
             {
-                bound = SetSpellColumnSegment(segment, state, column, cycle, bound, manaRegen);
+                bound = SetSpellColumnSegment(segment, manaSegment, state, column, cycle, bound, manaRegen);
+            }
+            if (restrictManaUse)
+            {
+                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+                {
+                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                }
             }
             lp.SetColumnUpperBound(column, bound);
         }
 
-        private double SetSpellColumnSegment(int segment, CastingState state, int column, Cycle cycle, double bound, double manaRegen)
+        private double SetSpellColumnSegment(int segment, int manaSegment, CastingState state, int column, Cycle cycle, double bound, double manaRegen)
         {
             // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
             //lp[rowOffset + 1 * segments + seg, index] = 1;
@@ -4999,14 +5187,6 @@ namespace Rawr.Mage
             {
                 bound = Math.Min(bound, SegmentList[segment].Duration);
                 lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
-            }
-            if (restrictManaUse)
-            {
-                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
-                }
             }
             if (restrictThreat)
             {
@@ -5390,7 +5570,17 @@ namespace Rawr.Mage
             {
                 SolutionVariable vx = SolutionVariable[x];
                 SolutionVariable vy = SolutionVariable[y];
+                if (vx.State != null && vx.State.Evocation && vy.Type == VariableType.ManaOverflow && vx.Segment == vy.Segment && vx.ManaSegment == vy.ManaSegment + 1)
+                {
+                    return -1;
+                }
+                if (vy.State != null && vy.State.Evocation && vx.Type == VariableType.ManaOverflow && vx.Segment == vy.Segment && vy.ManaSegment == vx.ManaSegment + 1)
+                {
+                    return 1;
+                }
                 int comp = vx.Segment.CompareTo(vy.Segment);
+                if (comp != 0) return comp;
+                comp = vx.ManaSegment.CompareTo(vy.ManaSegment);
                 if (comp != 0) return comp;
                 if (vx.Dps == 0.0)
                 {
