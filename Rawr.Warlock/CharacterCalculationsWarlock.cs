@@ -304,6 +304,10 @@ namespace Rawr.Warlock {
                         timeRemaining, manaRemaining, filler);
             filler.Spam(timeRemaining);
             CastSpells.Add(Options.GetActiveRotation().Filler, filler);
+
+            foreach (Spell spell in CastSpells.Values) {
+                spell.AdjustAfterCastingIsSet();
+            }
             #endregion
 
             #region Calculate spell modifiers
@@ -882,7 +886,8 @@ namespace Rawr.Warlock {
                     trigger = CastSpells["Unstable Affliction"];
                 }
                 if (trigger != null) {
-                    float numTicks = trigger.GetNumCasts() * trigger.NumTicks;
+                    float numTicks
+                        = HitChance * trigger.GetNumCasts() * trigger.NumTicks;
                     float uprate
                         = Spell.CalcUprate(
                             .15f, 10f, Options.Duration / numTicks);

@@ -751,7 +751,8 @@ namespace Rawr.Warlock {
                         "Glyph of Chaos Bolt",
                         "Glyph of Immolate",
                         "Glyph of Incinerate",
-                        "Glyph of Conflagrate" };
+                        "Glyph of Conflagrate",
+                        "Glyph of Imp" };
             }
             return _relevantGlyphs;
         }

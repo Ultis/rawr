@@ -605,6 +605,11 @@ namespace Rawr.Warlock {
             return 1 - chanceQueued;
         }
 
+        public virtual void AdjustAfterCastingIsSet() {
+
+            // here for subclasses to override if desired.
+        }
+
         #endregion
 
 
@@ -1228,18 +1233,21 @@ namespace Rawr.Warlock {
             }
         }
 
+        public override void AdjustAfterCastingIsSet() {
+
+            if (IsClippedByConflagrate(Mommy)) {
+                float downtime = SimulatedStats["downtime"].GetValue();
+                float uptime = GetAvgTimeBetweenCasts() - downtime;
+                NumTicks = uptime / 3f;
+            }
+        }
+
         public override void FinalizeSpellModifiers() {
             
             base.FinalizeSpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
             if (Mommy.Stats.Warlock2T8 > 0) {
                 SpellModifiers.AddAdditiveMultiplier(.1f);
-            }
-
-            if (IsClippedByConflagrate(Mommy)) {
-                float downtime = SimulatedStats["downtime"].GetValue();
-                float uptime = GetAvgTimeBetweenCasts() - downtime;
-                NumTicks = uptime / 3f;
             }
         }
 
