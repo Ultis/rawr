@@ -20,13 +20,15 @@ namespace Rawr.Mage
 
         private int[] _B;
         private int[] _V;
-        private int[] _S;
+        private int[] _S;        
         private LU lu;
 
         internal ArraySet arraySet;
 
         private bool costWorkingDirty;
         private bool shifted;
+        private bool osbDirty; // true if superbasis changed since last ordered superbasis update
+        private int osbStructural; // number of structural variables in superbasis
 
         private int[] _flags;
         internal double[] _lb;
@@ -36,7 +38,7 @@ namespace Rawr.Mage
         private const int flagNLB = 0x1; // variable nonbasic at lower bound
         private const int flagNUB = 0x2; // variable nonbasic at upper bound
         private const int flagNMid = 0x400; // variable nonbasic in middle (quadratic program only)
-        private const int flagN = 0x403; // variable nonbasic
+        private const int flagN = flagNLB | flagNUB | flagNMid; // variable nonbasic
         private const int flagB = 0x4; // variable basic
         private const int flagDis = 0x8; // variable blacklisted
         private const int flagFix = 0x10; // variable fixed
@@ -45,13 +47,14 @@ namespace Rawr.Mage
         private const int flagPivot = 0x80; // variable is eligible for pivot
         private const int flagFlip = 0x100; // variable bounds must be flipped
         private const int flagPivot2 = 0x200; // variable is in reduced pivot candidate set
+        private const int flagSB = flagB | flagNMid;
 
         private bool disabledDirty;
 
         // quadratic parameters
         private int mpsRow; 
         private int[] sort;
-        private int[] sortinv;
+        //private int[] sortinv;
         private double Qk;
 
 #if SILVERLIGHT
@@ -75,6 +78,7 @@ namespace Rawr.Mage
         private int[] B;
         private int[] V;
         private int[] S;
+        private int[] OSB;
         private int[] sparseRow;
         private int[] sparseCol;
         private int[] flags;
@@ -111,6 +115,7 @@ namespace Rawr.Mage
         private int* B;
         private int* V;
         private int* S;
+        private int* OSB;
         private int* sparseRow;
         private int* sparseCol;
         private int* flags;
@@ -758,6 +763,29 @@ namespace Rawr.Mage
             }
         }
 
+#if SILVERLIGHT
+        public void QuadraticQOSB(double[] x, double[] Qx)
+#else
+        public unsafe void QuadraticQOSB(double* x, double* Qx)
+#endif
+        {
+            int sortj = 0;
+            double xm = 0.0;
+            for (int j = 0; j < osbStructural; j++)
+            {
+                sortj = OSB[j];
+                xm += x[sortj] * a[sortj * baseRows + mpsRow];
+                Qx[sortj] = spellDps[sortj] * xm;
+            }
+            double xe = x[sortj] * spellDps[sortj];
+            for (int j = osbStructural - 2; j >= 0; j--)
+            {
+                sortj = OSB[j];
+                Qx[sortj] += a[sortj * baseRows + mpsRow] * xe;
+                xe += x[sortj] * spellDps[sortj];
+            }
+        }
+
         private void UpdateMB()
         {
             // TODO this should be updated instead of reset each time
@@ -871,6 +899,7 @@ namespace Rawr.Mage
             this.B = _B;
             this.V = _V;
             this.S = _S;
+            this.OSB = arraySet._orderedSuperbasis;
             this.sparseRow = arraySet.SparseMatrixRow;
             this.sparseCol = arraySet.SparseMatrixCol;
             this.flags = _flags;
@@ -916,6 +945,7 @@ namespace Rawr.Mage
             this.B = null;
             this.V = null;
             this.S = null;
+            this.OSB = null;
             this.sparseRow = null;
             this.sparseCol = null;
             this.flags = null;
@@ -949,11 +979,11 @@ namespace Rawr.Mage
 
             this.mpsRow = mpsRow;
             this.sort = sort;
-            sortinv = new int[cols];
+            /*sortinv = new int[cols];
             for (int i = 0; i < cols; i++)
             {
                 sortinv[sort[i]] = i;
-            }
+            }*/
             this.Qk = k;
             if (_S == null || _S.Length < cols)
             {
@@ -962,7 +992,7 @@ namespace Rawr.Mage
 
             fixed (double** pD = arraySet._pD)
             fixed (double* a = arraySet.SparseMatrixData, U = arraySet.LU_U, sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2, d = arraySet._d, x = arraySet._x, w = arraySet._w, ww = arraySet._ww, wd = arraySet._wd, qx = arraySet._qx, qv = arraySet._qv, vd = arraySet._vd, c = arraySet._c, u = arraySet._u, cost = arraySet._cost, spellDps = arraySet._spellDps, costw = arraySet._costWorking, sparseValue = arraySet.SparseMatrixValue, D = arraySet.extraConstraints, lb = _lb, ub = _ub, mb = _mb, cg_p = arraySet.cg_p, cg_x = arraySet.cg_x, cg_w = arraySet.cg_w, cg_r = arraySet.cg_r, cg_qp = arraySet.cg_qp, cg_rr = arraySet.cg_rr, cg_ww = arraySet.cg_ww)
-            fixed (int* B = _B, V = _V, S = _S, sparseRow = arraySet.SparseMatrixRow, sparseCol = arraySet.SparseMatrixCol, P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart, flags = _flags)
+            fixed (int* B = _B, V = _V, S = _S, OSB = arraySet._orderedSuperbasis, sparseRow = arraySet.SparseMatrixRow, sparseCol = arraySet.SparseMatrixCol, P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart, flags = _flags)
             {
                 this.a = a;
                 this.U = U;
@@ -979,6 +1009,7 @@ namespace Rawr.Mage
                 this.B = B;
                 this.V = V;
                 this.S = S;
+                this.OSB = OSB;
                 this.sparseRow = sparseRow;
                 this.sparseCol = sparseCol;
                 this.flags = flags;
@@ -1024,6 +1055,7 @@ namespace Rawr.Mage
                 this.B = null;
                 this.V = null;
                 this.S = null;
+                this.OSB = null;
                 this.sparseRow = null;
                 this.sparseCol = null;
                 this.flags = null;
@@ -1133,6 +1165,7 @@ namespace Rawr.Mage
                 flags[B[singularColumn]] = (flags[B[singularColumn]] | flagB) & ~flagN & ~flagDis;
                 //ValidateSuperBasis();
             }
+            osbDirty = true;
         }
 
         private double DualPhaseILowerBound(int col)
@@ -1572,6 +1605,7 @@ namespace Rawr.Mage
             {
                 value += cost[i] * mb[i];
             }
+            ComputeQx();
             for (int i = 0; i < cols; i++)
             {
                 value -= 0.5 * Qk * qx[i] * mb[i];
@@ -3973,6 +4007,30 @@ namespace Rawr.Mage
             }
         }
 
+        private void UpdateOSB()
+        {
+            int i = 0;
+            for (int j = 0; j < cols; j++)
+            {
+                int sortj = sort[j];
+                if ((flags[sortj] & flagSB) != 0)
+                {
+                    OSB[i] = sortj;
+                    i++;
+                }
+            }
+            osbStructural = i;
+            for (int j = cols; j < cols + rows; j++)
+            {
+                if ((flags[j] & flagSB) != 0)
+                {
+                    OSB[i] = j;
+                    i++;
+                }
+            }
+            osbDirty = false;
+        }
+
         private bool ComputeCGStep(double eps, out double maxAlpha)
         {
             // compute CG step for superbasic variables
@@ -3985,17 +4043,24 @@ namespace Rawr.Mage
 
             Zero(cg_p, cols + rows);
 
+            if (osbDirty)
+            {
+                UpdateOSB();
+            }
+
             //r = g
             ComputeQx();
-            for (int i = 0; i < cols; i++)
-            {                
-                cg_r[i] = cost[i] - Qk * qx[i];
-            }
-            for (int i = cols; i < cols + rows; i++)
+            for (int i = 0; i < osbStructural; i++)
             {
-                cg_r[i] = cost[i];
+                int col = OSB[i];
+                cg_r[col] = cost[col] - Qk * qx[col];
             }
-            // aside from projection we only use r up to cols
+            for (int i = osbStructural; i < super + rows; i++)
+            {
+                int col = OSB[i];
+                cg_r[col] = cost[col];
+            }
+            // we only use r up to cols, and we only need the basic/superbasic components
 
             //w = Z*ZT*r
             NullSpaceReduce(cg_w, cg_r);
@@ -4044,11 +4109,12 @@ namespace Rawr.Mage
             {
                 //alpha = -(rT * w) / (pT * Q * p)
                 NullSpaceExpand(cg_p);
-                QuadraticQ(cg_p, cg_qp);
+                QuadraticQOSB(cg_p, cg_qp);
                 double pqp = 0.0;
-                for (int i = 0; i < cols; i++)
+                for (int i = 0; i < osbStructural; i++)
                 {
-                    pqp += cg_qp[i] * cg_p[i];
+                    int col = OSB[i];
+                    pqp += cg_qp[col] * cg_p[col];
                 }
                 pqp *= Qk;
                 if (pqp < limit)
@@ -4065,21 +4131,27 @@ namespace Rawr.Mage
                         // use this as direction for line search until we hit boundary
                         // determine direction based on sign of gradient along this direction
                         double grad = 0.0;
-                        for (int i = 0; i < cols; i++)
+                        for (int i = 0; i < osbStructural; i++)
                         {
-                            grad += (cost[i] - Qk * qx[i]) * cg_p[i];
+                            int col = OSB[i];
+                            grad += (cost[col] - Qk * qx[col]) * cg_p[col];
                         }
                         if (grad < -limit)
                         {
                             // negative gradient, we should use the opposite direction
-                            for (int i = 0; i < rows + cols; i++)
+                            for (int i = 0; i < rows + super; i++)
                             {
-                                cg_x[i] = -cg_p[i];
+                                int col = OSB[i];
+                                cg_x[col] = -cg_p[col];
                             }
                         }
                         else
                         {
-                            Copy(cg_x, cg_p, cols + rows);
+                            for (int i = 0; i < rows + super; i++)
+                            {
+                                int col = OSB[i];
+                                cg_x[col] = cg_p[col];
+                            }
                         }
                         maxAlpha = double.PositiveInfinity;
                         return true;
@@ -4096,7 +4168,11 @@ namespace Rawr.Mage
                                 // gradient is significantly steep that we can treat this
                                 // as unbounded linear descent
                                 maxAlpha = double.PositiveInfinity;
-                                Copy(cg_x, cg_p, cols + rows);
+                                for (int i = 0; i < rows + super; i++)
+                                {
+                                    int col = OSB[i];
+                                    cg_x[col] = cg_p[col];
+                                }
                                 return true;
                             }
                             else
@@ -4120,15 +4196,61 @@ namespace Rawr.Mage
                 if (alpha > 100.0)
                 {
                     // relative steepness is very small
-                    // this'll most likely result in a very long step which in turn can mean
-                    // that bound will have a very small factor and epsZero comparison will give false positive
-                    // this is especially pronounced if we do several CG steps and alpha starts rising out of bounds
-                    // i.e. we're close to zero gradient and then turn into a huge descent
-                    // so if we've already done some steps just use that and we'll go further in next iteration
-                    // but more than likely a huge step like this will hit a boundary
-                    if (step > 0)
+                    // this could result in a very long step
+                    // we try not to go too much out of feasible range, which is usually in the order of several hundred per variable
+                    double infnorm = 0.0;
+                    for (int i = 0; i < rows + super; i++)
                     {
-                        return true;
+                        int col = OSB[i];
+                        double v = Math.Abs(cg_p[col]);
+                        if (v > infnorm)
+                        {
+                            infnorm = v;
+                        }
+                    }
+
+                    // if we're too large cancel based on our prediction if we made any progress
+                    if (infnorm > 1.0)
+                    {
+                        // check if it's safe to treat this as linear descent
+                        double grad = 0.0;
+                        for (int i = 0; i < osbStructural; i++)
+                        {
+                            int col = OSB[i];
+                            grad += (cost[col] - Qk * qx[col]) * cg_p[col];
+                        }
+                        double t = 100 / infnorm;
+                        if (Math.Abs(grad) * t - 0.5 * t * t * pqp > 0)
+                        {
+                            if (grad < 0)
+                            {
+                                // negative gradient, we should use the opposite direction
+                                for (int i = 0; i < rows + super; i++)
+                                {
+                                    int col = OSB[i];
+                                    cg_x[col] = -cg_p[col];
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < rows + super; i++)
+                                {
+                                    int col = OSB[i];
+                                    cg_x[col] = cg_p[col];
+                                }
+                            }
+                            maxAlpha = double.PositiveInfinity;
+                            return true;
+                        }
+
+                        if (rtw > startrtw)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
                     }
                 }
 
@@ -4136,17 +4258,19 @@ namespace Rawr.Mage
                 //ValidateCGFeasibility2();
 
                 //x = x + alpha * p
-                for (int i = 0; i < rows + cols; i++)
+                for (int i = 0; i < rows + super; i++)
                 {
-                    cg_x[i] += alpha * cg_p[i];
+                    int col = OSB[i];
+                    cg_x[col] += alpha * cg_p[col];
                 }
 
                 //ValidateCGFeasibility();
 
                 //r~ = r + alpha * Q * p
-                for (int i = 0; i < cols; i++)
+                for (int i = 0; i < osbStructural; i++)
                 {
-                    cg_rr[i] = cg_r[i] - alpha * Qk * cg_qp[i];
+                    int col = OSB[i];
+                    cg_rr[col] = cg_r[col] - alpha * Qk * cg_qp[col];
                 }
 
                 //w~ = Z*ZT*r~
@@ -4230,6 +4354,7 @@ namespace Rawr.Mage
             const int maxRedecompose = 50;
             bool changeBasis;
             double direction;
+            osbDirty = true;
 
             //int verificationAttempts = 0;
 
@@ -4411,8 +4536,6 @@ namespace Rawr.Mage
                     }
 
                     // freeing V[maxj] will result in improved solution
-                    // with the CG method this'll never be one of the superbasic variables
-                    // since we optimize them on each step
 
                     if (super == 0 || (flags[V[maxj]] & flagNMid) != 0)
                     {
@@ -4476,6 +4599,7 @@ namespace Rawr.Mage
                                 S[super] = col;
                                 super++;
                                 flags[col] = (flags[col] & ~flagN) | flagNMid;
+                                osbDirty = true;
                                 //ValidateSuperBasis();
                             }
                         }
@@ -4487,6 +4611,7 @@ namespace Rawr.Mage
                     S[super] = col;
                     super++;
                     flags[col] = (flags[col] & ~flagN) | flagNMid;
+                    osbDirty = true;
                     //ValidateSuperBasis();
 
                     goto MINISTEP;
@@ -4523,6 +4648,7 @@ namespace Rawr.Mage
                     i = Array.IndexOf(_S, col);
                     S[i] = S[super - 1];
                     super--;
+                    osbDirty = true;
                     //ValidateSuperBasis();
 
                     goto MINISTEP;
@@ -4597,6 +4723,7 @@ namespace Rawr.Mage
                             V[maxj] = k;
                             flags[B[mini]] = (flags[B[mini]] | flagB) & ~flagN;
                             flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
+                            osbDirty = true;
                             //ValidateSuperBasis();
                             //ValidateFlags();
 
@@ -4810,6 +4937,7 @@ namespace Rawr.Mage
                 changeBasis = true;
                 dist = minr;
             }
+            osbDirty = true;
 
             minr = direction * dist;
             mb[col] += minr;
@@ -4867,6 +4995,7 @@ namespace Rawr.Mage
                     int s = Array.IndexOf(_S, col);
                     _S[s] = _S[super - 1];
                     super--;
+                    osbDirty = true;
                 }
                 if (direction > 0.0)
                 {
@@ -4886,6 +5015,7 @@ namespace Rawr.Mage
                     flags[col] = (flags[col] & ~flagN) | flagNMid;
                     S[super] = col;
                     super++;
+                    osbDirty = true;
                 }
                 //ValidateSuperBasis();
                 dist = minr;
@@ -4895,6 +5025,7 @@ namespace Rawr.Mage
                 // we hit basic bound, update basis
                 changeBasis = true;
                 dist = minr;
+                osbDirty = true;
             }
 
             minr = direction * dist;

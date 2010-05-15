@@ -210,7 +210,10 @@ namespace Rawr.Mage
         private void HybridSearch(bool guided)
         {
             int sizeLimit = CalculationOptions.MaxHeapLimit;
-            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            if (!CalculationOptions.Beta)
+            {
+                lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            }
 
             int round = 0;
 
@@ -621,7 +624,10 @@ namespace Rawr.Mage
         private void BestBoundSearch()
         {
             int maxHeap = CalculationOptions.MaxHeapLimit;
-            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            if (!CalculationOptions.Beta)
+            {
+                lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+            }
             heap = new Heap<SolverLP>(HeapType.MaximumHeap);
             HeapPush(lp);
 
@@ -637,7 +643,10 @@ namespace Rawr.Mage
                     double current = heap.Head.Value;
                     lp = heap.Pop();
                     lp.ForceRecalculation();
-                    lp.SolvePrimalDual();
+                    if (!CalculationOptions.Beta)
+                    {
+                        lp.SolvePrimalDual();
+                    }
                     // some testing indicates that the recalculated solution gives the correct result, so the previous solution is most likely to be the problematic one, since we just discarded it not a big deal
                     //if (lp.Value <= max + 1.0)
                     //{

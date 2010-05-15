@@ -82,6 +82,7 @@ namespace Rawr.Mage
         //private static double[] _beta;
         //private static double[] _betaBackup;
 
+        public int[] _orderedSuperbasis;
         public int[] _flags;
         public double[] _lb;
         public double[] _ub;
@@ -332,6 +333,7 @@ namespace Rawr.Mage
             _spellDps = new double[maxCols];
             _cost = new double[maxCols + maxRows];
             _costWorking = new double[maxCols + maxRows];
+            _orderedSuperbasis = new int[maxCols + maxRows];
             //_b = new double[maxRows];
             //_beta = new double[maxRows];
             //_betaBackup = new double[maxRows];
@@ -359,6 +361,7 @@ namespace Rawr.Mage
             _vd = new double[maxCols];
             _u = new double[maxRows];
             _c = new double[maxCols];
+            _orderedSuperbasis = new int[maxCols + maxRows];
             double[] tmp = new double[maxCols + maxRows];
             _cost.CopyTo(tmp, 0);
             _cost = tmp;
