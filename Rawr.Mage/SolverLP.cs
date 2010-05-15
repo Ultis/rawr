@@ -130,7 +130,9 @@ namespace Rawr.Mage
             }
 
             compactSolution = null;
+            sort = null;
             needsDual = false;
+            needsQuadratic = false;
         }
 
         public void SetRowScale(int row, double value)

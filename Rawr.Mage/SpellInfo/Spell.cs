@@ -141,6 +141,8 @@ namespace Rawr.Mage
         //public float CostPerSecond;
         public bool SpammedDot;
         public bool Pom;
+        public float Ticks;
+        public float CastProcs;
         public float HitProcs;
         public float CritProcs;
         public float IgniteProcs;
@@ -195,8 +197,6 @@ namespace Rawr.Mage
         public string Name { get { return template.Name; } }
         public bool AreaEffect { get { return template.AreaEffect; } }
         public bool Channeled { get { return template.Channeled; } }
-        public float Ticks { get { return template.Ticks; } }
-        public float CastProcs { get { return template.CastProcs; } }
         public float CastProcs2 { get { return template.CastProcs2; } }
         public float NukeProcs { get { return template.NukeProcs; } }
         public bool Instant { get { return template.Instant; } }
@@ -256,7 +256,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (BaseMinDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier * DirectDamageModifier;
+                return (BaseMinDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier * DirectDamageModifier / template.Ticks;
             }
         }
 
@@ -264,7 +264,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return (BaseMaxDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier * DirectDamageModifier;
+                return (BaseMaxDamage + RawSpellDamage * SpellDamageCoefficient) * SpellModifier * DirectDamageModifier / template.Ticks;
             }
         }
 
@@ -395,6 +395,8 @@ namespace Rawr.Mage
 
             s.SpammedDot = reference.SpammedDot;
             s.Pom = reference.Pom;
+            s.Ticks = reference.Ticks;
+            s.CastProcs = reference.CastProcs;
             s.HitProcs = reference.HitProcs;
             s.CritProcs = reference.CritProcs;
             s.IgniteProcs = reference.IgniteProcs;
@@ -521,6 +523,8 @@ namespace Rawr.Mage
             if (CritRate < 0.0f) CritRate = 0.0f;
             if (CritRate > 1.0f) CritRate = 1.0f;
 
+            Ticks = template.Ticks;
+            CastProcs = template.CastProcs;
             HitProcs = Ticks * HitRate;
             CritProcs = HitProcs * CritRate;
             if ((MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && mageTalents.Ignite > 0)
@@ -610,12 +614,16 @@ namespace Rawr.Mage
                     DotDamagePerSpellPower = 0;
                 }
             }
-            if (ChannelReduction > 0)
+            if (ChannelReduction != 0)
             {
+                Ticks *= (1 - ChannelReduction);
+                HitProcs *= (1 - ChannelReduction);
+                CritProcs *= (1 - ChannelReduction);
+                TargetProcs *= (1 - ChannelReduction);
+                CastProcs = CastProcs2 + (CastProcs - CastProcs2) * (1 - ChannelReduction);
                 AverageDamage *= (1 - ChannelReduction);
                 AverageThreat *= (1 - ChannelReduction);
                 DamagePerSpellPower *= (1 - ChannelReduction);
-                CastTime *= (1 - ChannelReduction);
             }
             AverageCost = CalculateCost(castingState.Solver, round);
 
@@ -634,19 +642,28 @@ namespace Rawr.Mage
 
         public virtual void RecalculateCastTime(CastingState castingState)
         {
-            if (ChannelReduction > 0)
+            if (ChannelReduction != 0)
             {
+                Ticks /= (1 - ChannelReduction);
+                HitProcs /= (1 - ChannelReduction);
+                CritProcs /= (1 - ChannelReduction);
+                TargetProcs /= (1 - ChannelReduction);
+                CastProcs = template.CastProcs;
                 AverageDamage /= (1 - ChannelReduction);
                 AverageThreat /= (1 - ChannelReduction);
                 DamagePerSpellPower /= (1 - ChannelReduction);
             }
             CastTime = template.CalculateCastTime(castingState, InterruptProtection, CritRate, Pom, BaseCastTime, out ChannelReduction);
-            if (ChannelReduction > 0)
+            if (ChannelReduction != 0)
             {
+                Ticks *= (1 - ChannelReduction);
+                HitProcs *= (1 - ChannelReduction);
+                CritProcs *= (1 - ChannelReduction);
+                TargetProcs *= (1 - ChannelReduction);
+                CastProcs = template.CastProcs2 + (template.CastProcs - template.CastProcs2) * (1 - ChannelReduction);
                 AverageDamage *= (1 - ChannelReduction);
                 AverageThreat *= (1 - ChannelReduction);
                 DamagePerSpellPower *= (1 - ChannelReduction);
-                CastTime *= (1 - ChannelReduction);
             }
         }
 

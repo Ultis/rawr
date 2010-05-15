@@ -444,11 +444,19 @@ namespace Rawr.Mage
             {
                 latency = calculationOptions.LatencyCast;
             }
-            float castTime = baseCastTime / castingSpeed + latency;
+            float averageTicks = Ticks;
+            float castTime = baseCastTime / castingSpeed;
+            if (calculationOptions.Beta && Channeled)
+            {
+                float tickCastTime = castTime / Ticks;
+                averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                castTime = averageTicks * tickCastTime;
+            }
             if (InterruptFactor > 0)
             {
-                castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
             }
+            castTime += latency;
             float gcdcap = globalCooldown + calculationOptions.LatencyGCD;
             if (castTime < gcdcap) castTime = gcdcap;
             channelReduction = 0.0f;
@@ -469,13 +477,13 @@ namespace Rawr.Mage
                             break;
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
-                            procs = critRate * Ticks;
-                            triggers = (int)Ticks;
+                            procs = critRate * averageTicks;
+                            triggers = (int)averageTicks;
                             break;
                         case Trigger.DamageSpellHit:
                         case Trigger.SpellHit:
-                            procs = HitRate * Ticks;
-                            triggers = (int)Ticks;
+                            procs = HitRate * averageTicks;
+                            triggers = (int)averageTicks;
                             break;
                     }
                     if (procs == 0.0f) continue;
@@ -485,11 +493,17 @@ namespace Rawr.Mage
                         // hasted casttime
                         float speed = rootCastingSpeed * (1 + (spellHasteRating + procHaste) * hasteFactor);
                         float gcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / speed);
-                        float cast = baseCastTime / speed + latency;
+                        float cast = baseCastTime / speed;
+                        if (calculationOptions.Beta && Channeled)
+                        {
+                            float tickCastTime = cast / Ticks;
+                            cast = (float)Math.Floor(BaseCastTime / tickCastTime) * tickCastTime;
+                        }
                         if (InterruptFactor > 0)
                         {
-                            cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                            cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
                         }
+                        cast += latency;
                         gcdcap = gcd + calculationOptions.LatencyGCD;
                         if (cast < gcdcap) cast = gcdcap;
 
@@ -514,11 +528,18 @@ namespace Rawr.Mage
                         castingSpeed = rootCastingSpeed * (1 + spellHasteRating * hasteFactor);
 
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
-                        castTime = baseCastTime / castingSpeed + latency;
+                        castTime = baseCastTime / castingSpeed;
+                        if (calculationOptions.Beta && Channeled)
+                        {
+                            float tickCastTime = castTime / Ticks;
+                            averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            castTime = averageTicks * tickCastTime;
+                        }
                         if (InterruptFactor > 0)
                         {
-                            castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                            castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
                         }
+                        castTime += latency;
                         gcdcap = globalCooldown + calculationOptions.LatencyGCD;
                         if (castTime < gcdcap) castTime = gcdcap;
                     }
@@ -529,24 +550,39 @@ namespace Rawr.Mage
                         castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         float proccedSpeed = castingSpeed * (1 + (rawHaste + procHaste) / 1000f * levelScalingFactor);
                         float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
-                        float proccedCastTime = baseCastTime / proccedSpeed + latency;
+                        float proccedCastTime = baseCastTime / proccedSpeed;
+                        float proccedTicks = averageTicks;
+                        if (calculationOptions.Beta && Channeled)
+                        {
+                            float tickCastTime = proccedCastTime / Ticks;
+                            proccedTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            castTime = proccedTicks * tickCastTime;
+                        }
                         if (InterruptFactor > 0)
                         {
-                            proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                            proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
                         }
+                        proccedCastTime += latency;
                         if (proccedCastTime < proccedGcd + calculationOptions.LatencyGCD) proccedCastTime = proccedGcd + calculationOptions.LatencyGCD;
-                        int chancesToProc = (int)(((int)Math.Floor(effect.Duration / proccedCastTime) + 1) * Ticks);
+                        int chancesToProc = (int)(((int)Math.Floor(effect.Duration / proccedCastTime) + 1) * proccedTicks);
                         if (!(Instant || pom)) chancesToProc -= 1;
                         if (AreaEffect) chancesToProc *= calculationOptions.AoeTargets;
                         spellHasteRating = rawHaste + procHaste * (1 - (float)Math.Pow(1 - effect.Chance * critRate, chancesToProc));
                         //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                         castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
-                        castTime = baseCastTime / castingSpeed + latency;
+                        castTime = baseCastTime / castingSpeed;
+                        if (calculationOptions.Beta && Channeled)
+                        {
+                            float tickCastTime = castTime / Ticks;
+                            averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            castTime = averageTicks * tickCastTime;
+                        }
                         if (InterruptFactor > 0)
                         {
                             castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
                         }
+                        castTime += latency;
                         if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
                     }
                 }
@@ -572,24 +608,24 @@ namespace Rawr.Mage
                                         break;
                                     case Trigger.DamageSpellCrit:
                                     case Trigger.SpellCrit:
-                                        procs = critRate * Ticks;
+                                        procs = critRate * averageTicks;
                                         break;
                                     case Trigger.DamageSpellHit:
                                     case Trigger.SpellHit:
-                                        procs = HitRate * Ticks;
+                                        procs = HitRate * averageTicks;
                                         break;
                                 }
                                 if (procs == 0.0f) continue;
                                 // until they put in some good trinkets with such effects just do a quick dirty calculation
                                 float effectHasteRating;
-                                if (procs > Ticks)
+                                if (procs > averageTicks)
                                 {
                                     // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
                                     effectHasteRating = effect.GetAverageStackSize(castTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * procHaste;
                                 }
                                 else
                                 {
-                                    effectHasteRating = effect.GetAverageStackSize(castTime / Ticks, procs / Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * procHaste;
+                                    effectHasteRating = effect.GetAverageStackSize(castTime / averageTicks, procs / averageTicks, 3.0f, effectCooldown.SpecialEffect.Duration) * procHaste;
                                 }
 
                                 castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
@@ -597,11 +633,18 @@ namespace Rawr.Mage
                                 castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
 
                                 globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
-                                castTime = baseCastTime / castingSpeed + latency;
+                                castTime = baseCastTime / castingSpeed;
+                                if (calculationOptions.Beta && Channeled)
+                                {
+                                    float tickCastTime = castTime / Ticks;
+                                    averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                                    castTime = averageTicks * tickCastTime;
+                                }
                                 if (InterruptFactor > 0)
                                 {
-                                    castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
+                                    castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
                                 }
+                                castTime += latency;
                                 if (castTime < globalCooldown + calculationOptions.LatencyGCD) castTime = globalCooldown + calculationOptions.LatencyGCD;
                             }
                         }
@@ -609,20 +652,34 @@ namespace Rawr.Mage
                 }
             }
 
+            if (Channeled && calculationOptions.Beta)
+            {
+                channelReduction = 1 - averageTicks / Ticks;
+            }
+
             // channeled pushback
             if (Channeled && InterruptFactor > 0)
             {
-                int maxLostTicks = (int)Math.Ceiling(Ticks * 0.25f * Math.Max(0, 1 - interruptProtection));
+                int maxLostTicks = (int)Math.Ceiling(averageTicks * 0.25f * Math.Max(0, 1 - interruptProtection));
                 // pushbacks that happen up to pushbackCastTime cut the cast time to pushbackCastTime
                 // pushbacks that happen after just terminate the channel
                 // [---|---X---|---|---]
+                castTime -= latency;
                 float tickFactor = 0;
                 for (int i = 0; i < maxLostTicks; i++)
                 {
-                    tickFactor += InterruptFactor * castTime / Ticks * (i + 1) / Ticks;
+                    tickFactor += InterruptFactor * castTime / averageTicks * (i + 1) / averageTicks;
                 }
-                tickFactor += InterruptFactor * (Ticks - maxLostTicks) * castTime / Ticks * maxLostTicks / Ticks;
-                channelReduction = tickFactor;
+                tickFactor += InterruptFactor * (averageTicks - maxLostTicks) * castTime / averageTicks * maxLostTicks / averageTicks;
+                if (calculationOptions.Beta)
+                {
+                    channelReduction = 1 - averageTicks * (1 - tickFactor) / Ticks;
+                }
+                else
+                {
+                    channelReduction = tickFactor;
+                }
+                castTime = castTime * (1 - tickFactor) + latency;
             }
 
             return castTime;

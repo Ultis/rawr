@@ -258,6 +258,7 @@ namespace Rawr.Mage
         public float Dodge { get; set; }
 
         public float BaseCastingSpeed { get; set; }
+        public float CastingSpeedMultiplier { get; set; }
         public float BaseGlobalCooldown { get; set; }
 
         public float IncomingDamageAmpMelee { get; set; }
@@ -2407,6 +2408,13 @@ namespace Rawr.Mage
             }
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
             float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
+            if (CalculationOptions.Beta)
+            {
+                if (fire > arcane && fire > frost)
+                {
+                    spellCrit += (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
+                }
+            }
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;
@@ -2464,6 +2472,13 @@ namespace Rawr.Mage
 
             float mult = (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage);
+            if (CalculationOptions.Beta)
+            {
+                if (frost > arcane && frost > fire)
+                {
+                    spellCrit += (1 + (Math.Min(51, MaxTalents) * 0.35299998521805f) * 0.01f);
+                }
+            }
             BaseArcaneCritBonus = (1 + mult * baseAddMult);
             BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
             BaseFrostCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f));
@@ -2477,11 +2492,15 @@ namespace Rawr.Mage
             CombustionFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
             CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
 
-            BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
             if (CalculationOptions.Beta)
             {
-                BaseCastingSpeed *= (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
+                if (arcane > fire && arcane > frost)
+                {
+                    CastingSpeedMultiplier *= (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
+                }
             }
+            BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * CastingSpeedMultiplier;
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
 
             IncomingDamageAmpMelee = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - 0.01f * MageTalents.ArcticWinds) * (1 - MeleeMitigation) * (1 - Dodge) * (1 - DamageTakenReduction);
