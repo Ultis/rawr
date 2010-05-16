@@ -4210,7 +4210,7 @@ namespace Rawr.Mage
                     }
 
                     // if we're too large cancel based on our prediction if we made any progress
-                    if (infnorm > 1.0)
+                    if (alpha * infnorm > 1000.0)
                     {
                         // check if it's safe to treat this as linear descent
                         double grad = 0.0;
@@ -4342,13 +4342,550 @@ namespace Rawr.Mage
             } while (true);
         }
 
+
+        private bool CopositivityDetection(double eps)
+        {
+            // verify second order optimality conditions
+            // based on http://iwi.eldoc.ub.rug.nl/FILES/root/2008/LinAlgApplBundfuss/2008LinAlgApplBundfuss.pdf
+
+            Zero(cg_x, cols + rows);
+            Zero(cg_p, cols + rows);
+
+            // add all zero reduced gradient nonbasics into superbasis
+            // they'll form the basis of simplex
+
+            ComputeQx();
+
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                if (Math.Abs(c[j]) < eps && (flags[col] & flagNMid) == 0)
+                {
+                    S[super] = col;
+                    super++;
+                    flags[col] = (flags[col] & ~flagN) | flagNMid;
+                }
+            }
+
+            int maxv = super * 2;
+            int maxs = 10;
+            double[] vector = new double[maxv * super]; // contains superbasic components of simplex vectors vi
+            double[] cross = new double[maxv * maxv]; // contains products viT * Q * vj
+            int[] simplex = new int[maxs * super]; // contains simplexes with oriented vector indexes
+
+            UpdateOSB();
+
+            // initialize root vertexes
+            int vCount = 1;
+            for (int i = 0; i < super; i++)
+            {
+                vector[vCount * super + i] = 1.0;
+                vCount++;
+            }
+
+            // flag products as not computed
+            for (int i = 1; i <= super; i++)
+            {
+                for (int j = i; j <= super; j++)
+                {
+                    cross[(j - 1) * j / 2 + i] = double.NaN;
+                }
+            }
+
+            // initialize root simplexes
+            int simCount = 0;
+            int combinations = (1 << super);
+            for (int i = 0; i < combinations; i++)
+            {
+                bool valid = true;
+                for (int j = 0; j < super; j++)
+                {
+                    int col = S[j];
+                    if ((i & (1 << j)) != 0)
+                    {
+                        if (mb[col] - lb[col] < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow)
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (ub[col] - mb[col] < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow)
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+                if (valid)
+                {
+                    if (simCount + 1 > maxs)
+                    {
+                        maxs += 10;
+                        Array.Resize(ref simplex, maxs * super);
+                    }
+                    for (int j = 0; j < super; j++)
+                    {
+                        if ((i & (1 << j)) != 0)
+                        {
+                            simplex[simCount * super + j] = -(j + 1);
+                        }
+                        else
+                        {
+                            simplex[simCount * super + j] = (j + 1);
+                        }
+                    }
+                    simCount++;
+                }
+            }
+
+            while (simCount > 0)
+            {
+                int off = (simCount - 1) * super;
+
+                const double limit = -1.0;
+                double min = limit; // a rough detection, but we're not multiplying with Qk
+                int mini = 0;
+                int minj = 0;
+
+                int vi;
+                int vj;
+
+
+                // find minimum product
+                for (int i = 0; i < super; i++)
+                {
+                    for (int j = i; j < super; j++)
+                    {
+                        vi = simplex[off + i];
+                        vj = simplex[off + j];
+
+                        double sign = (vi * vj < 0) ? -1.0 : 1.0;
+
+                        if (vi < 0) vi = -vi;
+                        if (vj < 0) vj = -vj;
+                        int index;
+                        if (vi < vj)
+                        {
+                            index = (vj - 1) * vj / 2 + vi;
+                        }
+                        else
+                        {
+                            index = (vi - 1) * vi / 2 + vj;
+                        }
+
+                        if (double.IsNaN(cross[index]))
+                        {
+                            for (int s = 0; s < super; s++)
+                            {
+                                int col = S[s];
+                                cg_p[col] = vector[vi * super + s];
+                            }
+                            NullSpaceExpand(cg_p);
+                            QuadraticQOSB(cg_p, cg_qp);
+                            for (int s = 0; s < super; s++)
+                            {
+                                int col = S[s];
+                                cg_p[col] = vector[vj * super + s];
+                            }
+                            NullSpaceExpand(cg_p);
+                            double pqp = 0.0;
+                            for (int k = 0; k < osbStructural; k++)
+                            {
+                                int col = OSB[k];
+                                pqp += cg_qp[col] * cg_p[col];
+                            }
+                            cross[index] = pqp;
+                        }
+
+                        double v = sign * cross[index];
+
+                        if (i == j && v < -eps)
+                        {
+                            for (int s = 0; s < super; s++)
+                            {
+                                int col = S[s];
+                                cg_x[col] = vector[vi * super + s];
+                            }
+                            NullSpaceExpand(cg_x);
+                            return true;
+                        }
+
+                        if (v < min)
+                        {
+                            min = v;
+                            mini = i;
+                            minj = j;
+                        }
+                    }
+                }
+
+                if (min == limit)
+                {
+                    // remove simplex
+                    simCount--;
+                    continue;
+                }
+
+                // select splitting point
+                vi = simplex[off + mini];
+                vj = simplex[off + minj];
+                double signi = (vi < 0) ? -1.0 : 1.0;
+                double signj = (vj < 0) ? -1.0 : 1.0;
+                if (vi < 0) vi = -vi;
+                if (vj < 0) vj = -vj;
+                double alpha = cross[(vi - 1) * vi / 2 + vi];
+                double beta = cross[(vj - 1) * vj / 2 + vj];
+                double gamma = min;
+
+                double k1 = gamma / (gamma - alpha);
+                double k2 = beta / (beta - gamma);
+
+                if (k1 > k2 + epsZero)
+                {
+                    if (alpha < eps && beta < eps)
+                    {
+                        for (int s = 0; s < super; s++)
+                        {
+                            int col = S[s];
+                            cg_x[col] = (signi * vector[vi * super + s] + signj * vector[vj * super + s]) / 2;
+                        }
+                        NullSpaceExpand(cg_x);
+                        return true;
+                    }
+                    else if (alpha >= eps)
+                    {
+                        for (int s = 0; s < super; s++)
+                        {
+                            int col = S[s];
+                            cg_x[col] = signj * vector[vj * super + s] - gamma / alpha * signi * vector[vi * super + s];
+                        }
+                        NullSpaceExpand(cg_x);
+                        return true;
+                    }
+                    else
+                    {
+                        for (int s = 0; s < super; s++)
+                        {
+                            int col = S[s];
+                            cg_x[col] = signi * vector[vi * super + s] - gamma / beta * signj * vector[vj * super + s];
+                        }
+                        NullSpaceExpand(cg_x);
+                        return true;
+                    }
+                }
+
+                double lambda;
+
+                /*if (k2 - k1 < 0.01)
+                {
+                    // we're in dange of splitting a very small edge infinitely
+                    // instead split the longest edge in half
+                    int maxi = 0;
+                    int maxj = 0;
+                    double max = 0;
+                    for (int i = 0; i < super; i++)
+                    {
+                        for (int j = i + 1; j < super; j++)
+                        {
+                            vi = simplex[off + i];
+                            vj = simplex[off + j];
+                            signi = (vi < 0) ? -1.0 : 1.0;
+                            signj = (vj < 0) ? -1.0 : 1.0;
+                            if (vi < 0) vi = -vi;
+                            if (vj < 0) vj = -vj;
+                            for (int s = 0; s < super; s++)
+                            {
+                                double diff = Math.Abs(signi * vector[vi * super + s] - signj * vector[vj * super + s]);
+                                if (diff > max)
+                                {
+                                    max = diff;
+                                    maxi = i;
+                                    maxj = j;
+                                }
+                            }
+                        }
+                    }
+
+                    mini = maxi;
+                    minj = maxj;
+                    vi = simplex[off + maxi];
+                    vj = simplex[off + maxj];
+                    signi = (vi < 0) ? -1.0 : 1.0;
+                    signj = (vj < 0) ? -1.0 : 1.0;
+                    if (vi < 0) vi = -vi;
+                    if (vj < 0) vj = -vj;
+
+                    lambda = 0.5;
+                }
+                else*/
+                {
+                    double k3 = (beta - gamma) / (alpha - 2 * gamma + beta);
+
+                    lambda = Math.Max(k1, Math.Min(k3, k2));
+                }
+
+                if (vCount == maxv)
+                {
+                    maxv *= 2;
+                    Array.Resize(ref vector, maxv * super);
+                    Array.Resize(ref cross, maxv * maxv);
+                }
+                // add the splitting point
+                for (int s = 0; s < super; s++)
+                {
+                    vector[vCount * super + s] = lambda * signi * vector[vi * super + s] + (1.0 - lambda) * signj * vector[vj * super + s];
+                }
+                // flag products as not computed
+                for (int i = 1; i <= vCount; i++)
+                {
+                    cross[(vCount - 1) * vCount / 2 + i] = double.NaN;
+                }
+                vCount++;
+
+                // remove old simplex
+                simCount--;
+
+                if (simCount + 2 > maxs)
+                {
+                    maxs += 10;
+                    Array.Resize(ref simplex, maxs * super);
+                }
+                // add new simplex
+                for (int s = 0; s < super; s++)
+                {
+                    simplex[(simCount + 1) * super + s] = simplex[simCount * super + s];
+                }
+                simplex[simCount * super + mini] = vCount - 1;
+                simplex[(simCount + 1) * super + minj] = vCount - 1;
+                simCount += 2;
+            }
+
+            return false;
+        }
+
+        private bool CopositivityDetectionLight(double eps)
+        {
+            // verify second order optimality conditions
+            // based on http://iwi.eldoc.ub.rug.nl/FILES/root/2008/LinAlgApplBundfuss/2008LinAlgApplBundfuss.pdf
+
+            Zero(cg_x, cols + rows);
+            Zero(cg_p, cols + rows);
+
+            // add all zero reduced gradient nonbasics into superbasis
+            // they'll form the basis of simplex
+
+            ComputeQx();
+
+            int col;
+
+            for (int j = 0; j < cols; j++)
+            {
+                col = V[j];
+                if (Math.Abs(c[j]) < eps && (flags[col] & flagNMid) == 0)
+                {
+                    S[super] = col;
+                    super++;
+                    flags[col] = (flags[col] & ~flagN) | flagNMid;
+                }
+            }
+
+            UpdateOSB();
+
+            double[] vqv = new double[super];
+            bool[] up = new bool[super];
+            bool[] down = new bool[super];
+
+            for (int i = 0; i < super; i++)
+            {
+                for (int s = 0; s < super; s++)
+                {
+                    col = S[s];
+                    cg_x[col] = (i == s) ? 1.0 : 0.0;
+                }
+                NullSpaceExpand(cg_x);
+                up[i] = true;
+                down[i] = true;
+                for (int j = 0; j < super + rows; j++)
+                {                    
+                    col = OSB[j];
+                    if (Math.Abs(cg_x[col]) > epsZero)
+                    {
+                        if (ub[col] - mb[col] < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow)
+                        {
+                            if (cg_x[col] > 0)
+                            {
+                                up[i] = false;
+                            }
+                            else
+                            {
+                                down[i] = false;
+                            }
+                        }
+                        if (mb[col] - lb[col] < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow)
+                        {
+                            if (cg_x[col] < 0)
+                            {
+                                up[i] = false;
+                            }
+                            else
+                            {
+                                down[i] = false;
+                            }
+                        }
+                    }
+                }
+                QuadraticQOSB(cg_x, cg_qp);
+                double pqp = 0.0;
+                for (int k = 0; k < osbStructural; k++)
+                {
+                    col = OSB[k];
+                    pqp += cg_qp[col] * cg_x[col];
+                }
+                vqv[i] = pqp;
+
+                if (pqp < -eps)
+                {
+                    if (up[i])
+                    {
+                        return true;
+                    }
+                    else if (down[i])
+                    {
+                        for (int k = 0; i < rows + super; i++)
+                        {
+                            col = OSB[k];
+                            cg_x[col] = -cg_x[col];
+                        }
+                    }
+                }
+            }
+
+            // find minimum product
+            for (int i = 0; i < super; i++)
+            {
+                for (int s = 0; s < super; s++)
+                {
+                    col = S[s];
+                    cg_p[col] = (i == s) ? 1.0 : 0.0;
+                }
+                NullSpaceExpand(cg_p);
+                QuadraticQOSB(cg_p, cg_qp);
+                for (int j = i + 1; j < super; j++)
+                {
+                    for (int s = 0; s < super; s++)
+                    {
+                        col = S[s];
+                        cg_p[col] = (j == s) ? 1.0 : 0.0;
+                    }
+                    NullSpaceExpand(cg_p);
+                    double pqp = 0.0;
+                    for (int k = 0; k < osbStructural; k++)
+                    {
+                        col = OSB[k];
+                        pqp += cg_qp[col] * cg_p[col];
+                    }
+
+                    double signi = 1.0;
+                    double signj = 1.0;
+
+                    if (!up[i])
+                    {
+                        signi = -1.0;
+                        if (!down[i])
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (!up[j])
+                    {
+                        signj = -1.0;
+                        if (!down[j])
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (Math.Abs(pqp) > eps)
+                    {
+                        if (pqp > 0)
+                        {
+                            if (signi == 1.0 && down[i])
+                            {
+                                signi = -1.0;
+                                pqp = -pqp;
+                            }
+
+                            if (pqp > 0)
+                            {
+                                if (signj == 1.0 && down[j])
+                                {
+                                    signj = -1.0;
+                                    pqp = -pqp;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        double alpha = vqv[i];
+                        double beta = vqv[j];
+                        double gamma = pqp;
+
+                        double k1 = gamma / (gamma - alpha);
+                        double k2 = beta / (beta - gamma);
+
+                        if (k1 > k2 + epsZero)
+                        {
+                            if (alpha < eps && beta < eps)
+                            {
+                                for (int s = 0; s < super; s++)
+                                {
+                                    col = S[s];
+                                    cg_x[col] = (((i == s) ? signi : 0.0) + ((j == s) ? signj : 0.0)) / 2;
+                                }
+                                NullSpaceExpand(cg_x);
+                                return true;
+                            }
+                            else if (alpha >= eps)
+                            {
+                                for (int s = 0; s < super; s++)
+                                {
+                                    col = S[s];
+                                    cg_x[col] = ((j == s) ? signj : 0.0) - gamma / alpha * ((i == s) ? signi : 0.0);
+                                }
+                                NullSpaceExpand(cg_x);
+                                return true;
+                            }
+                            else
+                            {
+                                for (int s = 0; s < super; s++)
+                                {
+                                    col = S[s];
+                                    cg_x[col] = ((i == s) ? signi : 0.0) - gamma / beta * ((j == s) ? signj : 0.0);
+                                }
+                                NullSpaceExpand(cg_x);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private double[] SolvePrimalQuadraticCGUnsafe()
         {
             int limit = 5000;
 
-        //RESTART:
+            //RESTART:
             int i, k;
             int round = 0;
+            int updateCount = 0;
             int redecompose = 0;
             int maxj, mini;
             const int maxRedecompose = 50;
@@ -4395,6 +4932,7 @@ namespace Rawr.Mage
                     ComputePrimalSolution(false);
                     UpdateMB();
                     feasible = IsPrimalQFeasible(eps);
+                    updateCount = 0;
                 }
 
                 int bound = flagNMid;
@@ -4427,6 +4965,7 @@ namespace Rawr.Mage
                     }
                     // for establishing feasibility we don't need quadratic part, just do a simplex step
                     PhaseIQStep(out maxj, eps, out mini, out bound, out changeBasis);
+                    updateCount++;
 
                     if (maxj == -1)
                     {
@@ -4481,6 +5020,7 @@ namespace Rawr.Mage
                             {
                                 mb[i] += cg_x[i];
                             }
+                            updateCount++;
                             //ValidateFeasibility();
                             //ValidateFlags();
                         }
@@ -4523,15 +5063,7 @@ namespace Rawr.Mage
 
                         if (maxj == -1)
                         {
-                            /*if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
-                            {
-                                redecompose = 0;
-                                feasible = false;
-                                verificationAttempts++;
-                                continue;
-                            }*/
-
-                            return ComputeReturnSolutionQuadratic();
+                            goto TERMINATION;
                         }
                     }
 
@@ -4549,6 +5081,7 @@ namespace Rawr.Mage
                         // but since we're working with unit step in reduced space the solving with
                         // basis shouldn't give too many problems due to zero snapping
 
+                        updateCount++;
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
                         {
                             // we lost feasibility, go to phase I
@@ -4582,15 +5115,7 @@ namespace Rawr.Mage
 
                             if (maxj == -1)
                             {
-                                /*if (feasible && redecompose < maxRedecompose && verificationAttempts < 5)
-                                {
-                                    redecompose = 0;
-                                    feasible = false;
-                                    verificationAttempts++;
-                                    continue;
-                                }*/
-
-                                return ComputeReturnSolutionQuadratic();
+                                goto TERMINATION;
                             }
 
                             col = V[maxj];
@@ -4617,6 +5142,7 @@ namespace Rawr.Mage
                     goto MINISTEP;
                 }
 
+            CGSTEP:
                 // we hit a bound
                 // if it's superbasic just fix it
                 // otherwise we have to do a basis update
@@ -4628,10 +5154,11 @@ namespace Rawr.Mage
                     {
                         mb[i] += alpha * cg_x[i];
                     }
+                    updateCount++;
                 }
                 //ValidateFeasibility();
-                //ValidateFlags();
-                /*if ((bound & flagNUB) != 0)
+                /*ValidateFlags();
+                if ((bound & flagNUB) != 0)
                 {
                     System.Diagnostics.Trace.Assert(Math.Abs(mb[col] - ub[col]) < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow, "Flags corruption");
                 }
@@ -4734,7 +5261,7 @@ namespace Rawr.Mage
                 if (lu.Singular)
                 {
                     Decompose();
-                    redecompose = maxRedecompose; 
+                    redecompose = maxRedecompose;
                 }
 
                 /*int inc = S[super - 1];
@@ -4759,77 +5286,78 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {*/
-                        // all superbasics were flagged, so we can't actually do the swap
-                        // try to do a reduced gradient and see if it makes sense to free
-                        // another variable so that we can use it to enter basis
+                // all superbasics were flagged, so we can't actually do the swap
+                // try to do a reduced gradient and see if it makes sense to free
+                // another variable so that we can use it to enter basis
 
-                        // we're not actually at optimality point for superbasics
-                        // so whatever we get here will be good for reduced gradient only
-                        // CG step might want us to go in the opposite direction actually
-                        // but we can't allow that because we can't fix basis in that direction
-                        // so pretend superbasics are fixed and do a single direction change
-                        ComputeReducedCostGradient();
+                // we're not actually at optimality point for superbasics
+                // so whatever we get here will be good for reduced gradient only
+                // CG step might want us to go in the opposite direction actually
+                // but we can't allow that because we can't fix basis in that direction
+                // so pretend superbasics are fixed and do a single direction change
+                ComputeReducedCostGradient();
 
+                maxj = SelectPrimalIncoming(out direction, false);
+
+                if (maxj == -1)
+                {
+                    // we might have disabled some variables, unflag them and recheck
+                    bool retry = false;
+                    if (disabledDirty)
+                    {
+                        for (i = 0; i < cols + rows; i++)
+                        {
+                            if ((flags[i] & flagDis) != 0)
+                            {
+                                flags[i] &= ~flagDis;
+                                retry = true;
+                            }
+                        }
+                        disabledDirty = false;
+                    }
+                    if (retry)
+                    {
                         maxj = SelectPrimalIncoming(out direction, false);
+                    }
 
-                        if (maxj == -1)
-                        {
-                            // we might have disabled some variables, unflag them and recheck
-                            bool retry = false;
-                            if (disabledDirty)
-                            {
-                                for (i = 0; i < cols + rows; i++)
-                                {
-                                    if ((flags[i] & flagDis) != 0)
-                                    {
-                                        flags[i] &= ~flagDis;
-                                        retry = true;
-                                    }
-                                }
-                                disabledDirty = false;
-                            }
-                            if (retry)
-                            {
-                                maxj = SelectPrimalIncoming(out direction, false);
-                            }
-
-                            if (maxj == -1)
-                            {
-                                return ComputeReturnSolutionQuadratic();
-                            }
-                        }
-                        
-                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
-                        {
-                            // we lost feasibility, go to phase I
-                            feasible = false;
-                            lowestInfeasibility = double.PositiveInfinity;
-                            redecompose = 0;
-                            goto DECOMPOSE;
-                        }
-
-                        if (changeBasis)
-                        {
-                            if ((flags[V[maxj]] & flagNMid) != 0)
-                            {
-                                int s = Array.IndexOf(_S, V[maxj]);
-                                _S[s] = _S[super - 1];
-                                super--;
-                            }
-
-                            goto UPDATE;
-                        }
-
-                        //ValidateSuperBasis();
-                        goto MINISTEP;
-                    /*}
+                    if (maxj == -1)
+                    {
+                        goto TERMINATION;
+                    }
                 }
+
+                updateCount++;
+                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
+                {
+                    // we lost feasibility, go to phase I
+                    feasible = false;
+                    lowestInfeasibility = double.PositiveInfinity;
+                    redecompose = 0;
+                    goto DECOMPOSE;
+                }
+
+                if (changeBasis)
+                {
+                    if ((flags[V[maxj]] & flagNMid) != 0)
+                    {
+                        int s = Array.IndexOf(_S, V[maxj]);
+                        _S[s] = _S[super - 1];
+                        super--;
+                    }
+
+                    goto UPDATE;
+                }
+
                 //ValidateSuperBasis();
+                goto MINISTEP;
+            /*}
+        }
+        //ValidateSuperBasis();
 
-                // swap base
-                maxj = Array.IndexOf(_V, inc);
+        // swap base
+        maxj = Array.IndexOf(_V, inc);
 
-                ComputeBasisStep(maxj);*/
+        ComputeBasisStep(maxj);*/
 
             UPDATE:
 
@@ -4873,6 +5401,39 @@ namespace Rawr.Mage
                 flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
                 //ValidateSuperBasis();
                 //ValidateFlags();
+                goto DECOMPOSE;
+
+            TERMINATION:
+
+                /*if (feasible && (redecompose < maxRedecompose || updateCount > 0) && verificationAttempts < 5)
+                {
+                    redecompose = 0;
+                    feasible = false;
+                    verificationAttempts++;
+                    continue;
+                }*/
+
+                /*if (CopositivityDetectionLight(eps))
+                {
+                    alpha = double.PositiveInfinity;
+                    if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
+                    {
+                        // we lost feasibility, go to phase I
+                        feasible = false;
+                        lowestInfeasibility = double.PositiveInfinity;
+                        redecompose = 0;
+                        goto DECOMPOSE;
+                    }
+
+                    if (col != -1)
+                    {
+                        // otherwise we're unbounded which should not happen
+                        goto CGSTEP;
+                    }
+                }*/
+
+                return ComputeReturnSolutionQuadratic();
+
             } while (round < limit); // limit computation so we don't dead loop, if everything works it shouldn't take more than this
             // when tuning dual feasibility limit to 100 rounds, we don't want to spend too much time on it
 
@@ -4947,7 +5508,7 @@ namespace Rawr.Mage
             }
             /*if (!changeBasis)
             {
-                //ValidateFlags();
+                ValidateFlags();
             }
             else
             {
@@ -4990,6 +5551,7 @@ namespace Rawr.Mage
             if (Math.Abs(minr) >= dist - epsZero)
             {
                 // just a bound swap
+                minr = direction * dist;
                 if ((flags[col] & flagNMid) != 0)
                 {
                     int s = Array.IndexOf(_S, col);
@@ -5018,17 +5580,14 @@ namespace Rawr.Mage
                     osbDirty = true;
                 }
                 //ValidateSuperBasis();
-                dist = minr;
             }
             else
             {
                 // we hit basic bound, update basis
                 changeBasis = true;
-                dist = minr;
                 osbDirty = true;
             }
 
-            minr = direction * dist;
             mb[col] += minr;
             for (int i = 0; i < rows; i++)
             {
@@ -5037,7 +5596,7 @@ namespace Rawr.Mage
             //ValidateFeasibility();
             /*if (!changeBasis)
             {
-                //ValidateFlags();
+                ValidateFlags();
             }
             else
             {

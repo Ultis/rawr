@@ -367,7 +367,7 @@ namespace Rawr.Mage
             {
                 if (needsQuadratic)
                 {
-                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, true);
+                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, needsDual);
                 }
                 else if (needsDual)
                 {
@@ -412,7 +412,7 @@ namespace Rawr.Mage
             this.mpsRow = mpsRow;
             this.sort = sort;
             this.Qk = k;
-            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, true);
+            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, false);
             UnscaleSolution();
             needsQuadratic = true;
         }

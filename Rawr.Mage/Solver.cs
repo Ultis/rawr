@@ -3842,7 +3842,8 @@ namespace Rawr.Mage
                                     {
                                         Cycle c = state.GetCycle(CalculationOptions.IncrementalSetSpells[index]);
                                         int seg = CalculationOptions.IncrementalSetSegments[index];
-                                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                        //for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                        for (int manaSegment = manaSegments - 1; manaSegment >= 0; manaSegment--)
                                         {
                                             column = lp.AddColumnUnsafe();
                                             if (requiresMIP)
@@ -3915,7 +3916,8 @@ namespace Rawr.Mage
                                         if (!skip)
                                         {
                                             placed.Add(c);
-                                            for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                            //for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                                            for (int manaSegment = manaSegments - 1; manaSegment >= 0; manaSegment--)
                                             {
                                                 column = lp.AddColumnUnsafe();
                                                 if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { State = state, Cycle = c, Segment = seg, ManaSegment = manaSegment, Type = VariableType.Spell, Dps = c.DamagePerSecond, Mps = c.ManaPerSecond, Tps = c.ThreatPerSecond });
