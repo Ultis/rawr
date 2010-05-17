@@ -512,17 +512,37 @@ namespace Rawr.Mage
             List<int> cooldownList = new List<int>();
             List<CycleId> spellList = new List<CycleId>();
             List<int> segmentList = new List<int>();
+            List<int> manaSegmentList = new List<int>();
+            List<VariableType> variableTypeList = new List<VariableType>();
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
-                if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Type == VariableType.Spell)
+                if (calculations.Solution[i] > 0)
                 {
-                    int cooldown = calculations.SolutionVariable[i].State.Effects & (int)StandardEffect.NonItemBasedMask;
-                    CycleId spellId = calculations.SolutionVariable[i].Cycle.CycleId;
+                    VariableType type = calculations.SolutionVariable[i].Type;
+                    int cooldown;
+                    if (calculations.SolutionVariable[i].State != null)
+                    {
+                        cooldown = calculations.SolutionVariable[i].State.Effects & (int)StandardEffect.NonItemBasedMask;
+                    }
+                    else
+                    {
+                        cooldown = 0;
+                    }
+                    CycleId spellId;
+                    if (calculations.SolutionVariable[i].Type == VariableType.Spell)
+                    {
+                        spellId = calculations.SolutionVariable[i].Cycle.CycleId;
+                    }
+                    else
+                    {
+                        spellId = CycleId.None;
+                    }
                     int segment = calculations.SolutionVariable[i].Segment;
+                    int manaSegment = calculations.SolutionVariable[i].ManaSegment;
                     bool found = false;
                     for (int j = 0; j < cooldownList.Count; j++)
                     {
-                        if (cooldownList[j] == cooldown && spellList[j] == spellId && segmentList[j] == segment)
+                        if (cooldownList[j] == cooldown && spellList[j] == spellId && segmentList[j] == segment && manaSegmentList[j] == manaSegment && variableTypeList[j] == type)
                         {
                             found = true;
                             break;
@@ -533,12 +553,16 @@ namespace Rawr.Mage
                         cooldownList.Add(cooldown);
                         spellList.Add(spellId);
                         segmentList.Add(segment);
+                        manaSegmentList.Add(manaSegment);
+                        variableTypeList.Add(type);
                     }
                 }
             }
             calculationOptions.IncrementalSetStateIndexes = cooldownList.ToArray();
             calculationOptions.IncrementalSetSpells = spellList.ToArray();
             calculationOptions.IncrementalSetSegments = segmentList.ToArray();
+            calculationOptions.IncrementalSetVariableType = variableTypeList.ToArray();
+            calculationOptions.IncrementalSetManaSegment = manaSegmentList.ToArray();
             if (calculationOptions.AutomaticArmor)
             {
                 calculationOptions.IncrementalSetArmor = calculations.MageArmor;
@@ -1076,7 +1100,7 @@ namespace Rawr.Mage
         public static string TimeFormat(double time)
         {
             TimeSpan span = new TimeSpan((long)(Math.Round(time, 2) / 0.0000001));
-            return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds, span.Milliseconds);
+            return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds);
         }
 
 #if !RAWR3

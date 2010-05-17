@@ -407,12 +407,12 @@ namespace Rawr.Mage
             UnscaleSolution();
         }
 
-        public void SolvePrimalQuadratic(int mpsRow, int[] sort, double k)
+        public void SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear)
         {
             this.mpsRow = mpsRow;
             this.sort = sort;
             this.Qk = k;
-            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, false);
+            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, skipLinear);
             UnscaleSolution();
             needsQuadratic = true;
         }

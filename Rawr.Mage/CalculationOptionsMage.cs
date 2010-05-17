@@ -384,6 +384,8 @@ namespace Rawr.Mage
         [XmlIgnore]
         public VariableType[] IncrementalSetVariableType;
         [XmlIgnore]
+        public int[] IncrementalSetManaSegment;
+        [XmlIgnore]
         public Rawr.Mage.SequenceReconstruction.Sequence SequenceReconstruction;
         [XmlIgnore]
         public bool AdviseAdvancedSolver;
@@ -412,6 +414,8 @@ namespace Rawr.Mage
             IncrementalSetSegments = null;
             IncrementalSetSortedStates = null;
             IncrementalSetSpells = null;
+            IncrementalSetManaSegment = null;
+            IncrementalSetVariableType = null;
             CooldownRestrictionList = null;
         }
 
@@ -1181,6 +1185,8 @@ namespace Rawr.Mage
             clone.IncrementalSetStateIndexes = null;
             clone.IncrementalSetSegments = null;
             clone.IncrementalSetSpells = null;
+            clone.IncrementalSetVariableType = null;
+            clone.IncrementalSetManaSegment = null;
             return clone;
         }
 
