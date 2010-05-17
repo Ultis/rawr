@@ -1,4 +1,4 @@
-Rawr v2.3.16.0
+Rawr v2.3.17.0
 ------------
 
 We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're reading the readme for), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
@@ -13,7 +13,7 @@ We're pleased to announce that, after long last, Rawr3 has entered public beta. 
  Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!
    
    
-And now back to Rawr v2.3.16.0.
+And now back to Rawr v2.3.17.0.
    
 Recent Changes:
  - Lots of improvements to the default data files. There is a known issue with the source on PvP items, but otherwise should be pretty good.
@@ -128,6 +128,9 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.16.0
+ - Oops.
+
 v2.3.15.0
  - Improvements to Wowhead/Armory parsing.
  - Rawr.Mage: Fix for calculations being broken on 32bit OSes.

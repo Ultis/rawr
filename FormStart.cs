@@ -18,7 +18,7 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-            labelVersionHistory.Text = @"v2.3.16.0
+            labelVersionHistory.Text = @"v2.3.17.0
  - Lots of improvements to the default data files. There is a known issue with the source on PvP items, but otherwise should be pretty good.
  - Fix for a bug with gemming templates being considered available for the optimizer when disabled in some cases.
  - Some significant improvements to Optimizer performance.
