@@ -3,8 +3,12 @@
 Currently targeting: 
 * Wow version 3.3.3a
 
+2.3.18:
+* Defect 17712: Fix for a crash on some Vista systems.
+
+2.3.17:
 2.3.16:
-* Defect 16231: [EXPERIMETNAL] Additional work on the new abilities work-flow.  Additional data available in the summary pane to support improved visability, only available when the new code is enabled.  Fleshing out a number of the abilities on the rotation.  Optimizer results make slightly more sense when optimizing for Talents, which is a bit disturbing since it's in-complete.
+* Defect 16231: [EXPERIMENTAL] Additional work on the new abilities work-flow.  Additional data available in the summary pane to support improved visability, only available when the new code is enabled.  Fleshing out a number of the abilities on the rotation.  Optimizer results make slightly more sense when optimizing for Talents, which is a bit disturbing since it's in-complete.
 * Removed a bunch of "TODOs" that are being handled by the re-work.
 * Defect 15913: Finally! Fix for Acclimation
 * SortaFix for 14553:  Put in some code to have some automatic adjustment of the rotation back into the schema.  This helps when comparing different complete Talent Specs, but is broken when looking at individual talents on the graph.  

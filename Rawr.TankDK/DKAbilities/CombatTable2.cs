@@ -217,8 +217,10 @@ namespace Rawr.TankDK
             l_RotRP.Add(DC);
             l_RotRP.Add(FS);
 
-            l_RotRunes.Sort(AbilityDK_Base.CompareThreatByRunes);
-            l_RotRP.Sort(AbilityDK_Base.CompareByRP);
+            // The sorting functions may be causing the occasional crash on Vista 32.  
+            // Test this before re-implementing.
+//            l_RotRunes.Sort(AbilityDK_Base.CompareThreatByRunes);
+//            l_RotRP.Sort(AbilityDK_Base.CompareByRP);
 
             // we now have lists that provide sorted by cost of # of runes 
             // and ammount of RP needed.
