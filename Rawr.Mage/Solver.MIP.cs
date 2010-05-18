@@ -700,7 +700,7 @@ namespace Rawr.Mage
             {
                 if (manaPotionAvailable && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
                 if (CalculationOptions.ManaGemEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0)) return false;
-                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / BaseState.CastingSpeed)) return false;
+                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, EvocationDuration / 4.0)) return false;
                 if (CalculationOptions.EnableHastedEvocation)
                 {
                     if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / BaseState.CastingSpeed / 1.2)) return false;

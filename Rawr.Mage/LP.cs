@@ -1270,16 +1270,32 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool IsPrimalQFeasible(double eps)
+        private bool IsPrimalQFeasible(double eps, out bool recalculate)
         {
+            bool feasible = true;
+            recalculate = false;
             for (int i = 0; i < rows + cols; i++)
             {
-                if (mb[i] < lb[i] - Math.Abs(lb[i]) * epsPrimalRel - eps || mb[i] > ub[i] + Math.Abs(ub[i]) * epsPrimalRel + eps)
+                if (mb[i] < lb[i] - Math.Abs(lb[i]) * epsPrimalRel - eps)
                 {
-                    return false;
+                    if ((flags[i] & flagN) != 0)
+                    {
+                        mb[i] = lb[i];
+                        recalculate = true;
+                    }
+                    feasible = false;
+                }
+                else if (mb[i] > ub[i] + Math.Abs(ub[i]) * epsPrimalRel + eps)
+                {
+                    if ((flags[i] & flagN) != 0)
+                    {
+                        mb[i] = ub[i];
+                        recalculate = true;
+                    }
+                    feasible = false;
                 }
             }
-            return true;
+            return feasible;
         }
 
         private void ComputeReducedCosts()
@@ -1458,14 +1474,6 @@ namespace Rawr.Mage
             for (int j = 0; j < cols; j++)
             {
                 int col = V[j];
-                if (mb[col] < lb[col] - Math.Abs(lb[col]) * epsPrimalRel - eps)
-                {
-                    mb[col] = lb[col];
-                }
-                else if (mb[col] > ub[col] + Math.Abs(ub[col]) * epsPrimalRel + eps)
-                {
-                    mb[col] = ub[col];
-                }
 
                 if (col < cols)
                 {
@@ -1718,7 +1726,7 @@ namespace Rawr.Mage
                     double limit;
                     if (cg_x[col] > 0)
                     {
-                        if (mb[col] + refalpha * cg_x[col] > +Math.Abs(ub[col]) * epsPrimalRel + eps)
+                        if (mb[col] + refalpha * cg_x[col] - ub[col] > +Math.Abs(ub[col]) * epsPrimalRel + eps)
                         {
                             limit = (ub[col] - mb[col]) / cg_x[col];
                             if (limit < refalpha)
@@ -1731,7 +1739,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        if (mb[col] + refalpha * cg_x[col] < -Math.Abs(lb[col]) * epsPrimalRel - eps)
+                        if (mb[col] + refalpha * cg_x[col] - lb[col] < -Math.Abs(lb[col]) * epsPrimalRel - eps)
                         {
                             limit = (lb[col] - mb[col]) / cg_x[col];
                             if (limit < refalpha)
@@ -4929,9 +4937,13 @@ namespace Rawr.Mage
 
                 if (!feasible)
                 {
-                    ComputePrimalSolution(false);
-                    UpdateMB();
-                    feasible = IsPrimalQFeasible(eps);
+                    bool recalculate;
+                    do
+                    {
+                        ComputePrimalSolution(false);
+                        UpdateMB();
+                        feasible = IsPrimalQFeasible(eps, out recalculate);
+                    } while (recalculate);
                     updateCount = 0;
                 }
 
