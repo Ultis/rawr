@@ -778,7 +778,11 @@ namespace Rawr
                     {
                         returnDocument = new XmlDocument();
                         returnDocument.XmlResolver = null;
-                        returnDocument.LoadXml(xml.Replace("&",""));
+                        // I have no idea why this was here, but it breaks escaped char parsing in strings
+                        // if there is a specific issue that this is supposed to handle make it so
+                        // it doesn't break escaped characters
+                        //returnDocument.LoadXml(xml.Replace("&",""));
+                        returnDocument.LoadXml(xml);
                         if (returnDocument == null || returnDocument.DocumentElement == null
                                     || !returnDocument.DocumentElement.HasChildNodes
                                     /*|| !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes*/) // this check is no longer valid
