@@ -1013,6 +1013,7 @@ namespace Rawr.Retribution
                 ShadowDamage = stats.ShadowDamage,
                 NatureDamage = stats.NatureDamage,
                 HolyDamage = stats.HolyDamage,
+                MovementSpeed = stats.MovementSpeed,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1128,7 +1129,9 @@ namespace Rawr.Retribution
                                   stats.ArcaneDamage > 0 ||
                                   stats.ShadowDamage > 0 ||
                                   stats.NatureDamage > 0 ||
-                                  stats.HolyDamage > 0;
+                                  stats.HolyDamage > 0 ||
+                                  // Special (unmodelled)
+                                  stats.MovementSpeed > 0;
 
 
             if (!SecondaryStats)
