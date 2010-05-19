@@ -53,8 +53,10 @@ namespace Rawr
                         // we changed the id of the item, sanitize the item cache
                         lock (ItemCache.Items)
                         {
+                            _changingItemCache = true;
                             ItemCache.Items.Remove(selectedId); // clean the entry at old id
                             ItemCache.AddItem(oldItem); // insert it at the new id and clear whatever was at that id before
+                            _changingItemCache = false;
                         }
                     }
 				}
@@ -697,8 +699,10 @@ namespace Rawr
                 if (selectedItem.Id != selectedId)
                 {
                     // we changed the id of the item, sanitize the item cache
+                    _changingItemCache = true;
                     ItemCache.Items.Remove(selectedId); // clean the entry at old id
                     ItemCache.AddItem(selectedItem); // insert it at the new id and clear whatever was at that id before
+                    _changingItemCache = false;
                 }
                 Character.OnCalculationsInvalidated();
             }

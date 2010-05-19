@@ -401,7 +401,7 @@ namespace Rawr
 			XmlDocument doc = null;
             if (!string.IsNullOrEmpty(site) && !string.IsNullOrEmpty(id))
 			{
-				doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadURI, site, id), true);
+				doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadURI, site, id), true, false);
 			}
 			return doc;
 		}
@@ -422,7 +422,7 @@ namespace Rawr
             XmlDocument doc = null;
             if (!string.IsNullOrEmpty(id))
             {
-                doc = DownloadXml(string.Format(NetworkSettingsProvider.QuestWowheadURI, id), true);
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.QuestWowheadURI, id), true, false);
             }
             return doc;
         }
@@ -432,7 +432,7 @@ namespace Rawr
             XmlDocument doc = null;
             if (!string.IsNullOrEmpty(id))
             {
-                doc = DownloadXml(string.Format("http://www.wowhead.com/?item={0}", id), true);
+                doc = DownloadXml(string.Format("http://www.wowhead.com/?item={0}", id), true, true);
             }
             return doc;
         }
@@ -442,7 +442,7 @@ namespace Rawr
             XmlDocument doc = null;
             if (!string.IsNullOrEmpty(id))
             {
-                doc = DownloadXml(string.Format("http://www.wowhead.com/?quest={0}", id), true);
+                doc = DownloadXml(string.Format("http://www.wowhead.com/?quest={0}", id), true, true);
             }
             return doc;
         }
@@ -761,8 +761,8 @@ namespace Rawr
 			return value;
 		}
 
-		private XmlDocument DownloadXml(string URI) { return DownloadXml(URI, false); }
-		private XmlDocument DownloadXml(string URI, bool allowTable)
+		private XmlDocument DownloadXml(string URI) { return DownloadXml(URI, false, false); }
+		private XmlDocument DownloadXml(string URI, bool allowTable, bool isHtml)
 		{
 			XmlDocument returnDocument = null;
             int retry = 0;
@@ -778,11 +778,18 @@ namespace Rawr
                     {
                         returnDocument = new XmlDocument();
                         returnDocument.XmlResolver = null;
-                        // I have no idea why this was here, but it breaks escaped char parsing in strings
-                        // if there is a specific issue that this is supposed to handle make it so
-                        // it doesn't break escaped characters
-                        //returnDocument.LoadXml(xml.Replace("&",""));
-                        returnDocument.LoadXml(xml);
+                        if (isHtml)
+                        {
+                            // when trying to load HTML as XML there might be other things in HTML
+                            // that are not valid XML, removing & signs makes it able to parse HTML
+                            // but it will also break all escaped characters, so don't do this for
+                            // valid xml files
+                            returnDocument.LoadXml(xml.Replace("&",""));
+                        }
+                        else
+                        {
+                            returnDocument.LoadXml(xml);
+                        }
                         if (returnDocument == null || returnDocument.DocumentElement == null
                                     || !returnDocument.DocumentElement.HasChildNodes
                                     /*|| !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes*/) // this check is no longer valid

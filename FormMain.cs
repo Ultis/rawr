@@ -720,6 +720,15 @@ Please remember that it's still a beta, though, so lots of things are likely to 
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
+            // when item is deleted from item cache we have to make sure to update
+            // all items needed by current character (essentially we have to prevent the item from
+            // being deleted)
+            if (!_loadingCharacter)
+            {
+                _loadingCharacter = true; // suppress item changed event
+                EnsureItemsLoaded(_character.GetAllEquippedAndAvailableGearIds());
+                _loadingCharacter = false;
+            }
             if (this.InvokeRequired)
             {
                 if (_loadingCharacter)
