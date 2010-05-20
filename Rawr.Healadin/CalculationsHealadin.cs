@@ -376,7 +376,10 @@ namespace Rawr.Healadin
                     if (calc == null)
                     {
                         trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
-                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit) trigger *= stats.SpellCrit;
+                        if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
+                            trigger *= stats.SpellCrit;
+                        else if (effect.Trigger == Trigger.HolyShockCast)
+                            trigger = 6f / calcOpts.HolyShock;
                     }
                     else
                     {
@@ -388,6 +391,8 @@ namespace Rawr.Healadin
                             trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
                         else if (effect.Trigger == Trigger.DamageOrHealingDone)
                             trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
+                        else if (effect.Trigger == Trigger.HolyShockCast)
+                            trigger = 6f / calcOpts.HolyShock;
                         else if (effect.Trigger == Trigger.Use)
                         {
                             trigger = 0f;
@@ -638,7 +643,7 @@ namespace Rawr.Healadin
                 trigger == Trigger.SpellCast           || trigger == Trigger.SpellCrit         ||
                 trigger == Trigger.SpellHit            || trigger == Trigger.HealingSpellCast  ||
                 trigger == Trigger.HealingSpellCrit    || trigger == Trigger.HealingSpellHit   ||
-                trigger == Trigger.DamageOrHealingDone
+                trigger == Trigger.DamageOrHealingDone || trigger == Trigger.HolyShockCast
             );
         }
 
