@@ -82,7 +82,7 @@ namespace Rawr.Warlock {
             BaseSpellPower = 0f;
             SpellPowerCoef = .15f;
 
-            BaseAttackPower = 608f;
+            BaseAttackPower = 294f;
             AttackPowerCoef = .57f;
         }
 
@@ -94,6 +94,8 @@ namespace Rawr.Warlock {
                 Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina(),
                 Intellect
                     = BaseIntellect + IntellectCoef * Mommy.CalcIntellect(),
+                Strength = 297f,
+                Agility = 297f,
                 BonusStaminaMultiplier = vitality,
                 BonusIntellectMultiplier = vitality,
                 SpellCrit
@@ -104,6 +106,9 @@ namespace Rawr.Warlock {
                             * (Mommy.CalcSpellCrit()
                                 - Mommy.Stats.SpellCritOnTarget)
                         + Mommy.Stats.Warlock2T9,
+                AttackPower
+                    = BaseAttackPower
+                        + AttackPowerCoef * Mommy.CalcSpellPower(),
             };
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -166,12 +171,7 @@ namespace Rawr.Warlock {
 
         public float CalcAttackPower() {
 
-            return BaseAttackPower + AttackPowerCoef * Mommy.CalcSpellPower();
-        }
-
-        public float CalcMeleeHitDamage() {
-
-            return BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower();
+            return StatUtils.CalcAttackPower(Stats, 1f, 0f);
         }
 
         public float CalcMeleeCrit() {
@@ -183,7 +183,7 @@ namespace Rawr.Warlock {
 
         public float CalcMeleeHaste() {
 
-            return 1f;
+            return 1f + Stats.PhysicalHaste;
         }
 
         #endregion
@@ -193,6 +193,19 @@ namespace Rawr.Warlock {
         public float CalcMeleeSpeed() {
 
             return 2f / CalcMeleeHaste();
+        }
+
+        public float CalcMeleeHitDamage() {
+
+            int level = Mommy.Options.TargetLevel;
+            return (BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower())
+                * (1
+                    - StatConversion.GetArmorDamageReduction(
+                        level,
+                        StatConversion.NPC_ARMOR[level - 80],
+                        Stats.ArmorPenetration, // arpen debuffs
+                        0f, // arpen buffs
+                        0f)); // arpen rating
         }
 
         public float CalcMeleeDamage() {
@@ -206,7 +219,7 @@ namespace Rawr.Warlock {
             float glanceMod
                 = 1f - .1f * (Mommy.Options.TargetLevel - 80);
             return CalcMeleeHitDamage()
-                * (hitChance + 2f * critChance + glanceMod * hitChance)
+                * (hitChance + 2f * critChance + glanceMod * glanceChance)
                 * MeleeModifiers.GetFinalDirectMultiplier();
         }
 
@@ -316,10 +329,7 @@ namespace Rawr.Warlock {
                 1820f, // baseHealth,
                 11f) { // healthPerStamina
 
-            BaseAttackPower = 729f;
-            AttackPowerCoef = .68f;
-
-            BaseMeleeDamage = (433f + 650f) / 2f;
+            BaseMeleeDamage = (410f + 627f) / 2f;
             DamagePerAttackPower = .187f;
 
             SpecialCooldown = 6f;

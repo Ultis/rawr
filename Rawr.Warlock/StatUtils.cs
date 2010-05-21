@@ -73,6 +73,31 @@ namespace Rawr.Warlock {
                     + StatConversion.GetSpellHasteFromRating(
                         stats.HasteRating));
         }
+
+        public static float CalcStrength(Stats stats) {
+
+            return stats.Strength * (1 + stats.BonusStrengthMultiplier);
+        }
+
+        public static float CalcAgility(Stats stats) {
+
+            return stats.Agility * (1 + stats.BonusAgilityMultiplier);
+        }
+
+        public static float CalcAttackPower(
+            Stats stats, float apPerStrength, float apPerAgility) {
+
+            return (1 + stats.BonusAttackPowerMultiplier)
+                * (stats.AttackPower
+                    + CalcStrength(stats) * apPerStrength
+                    + CalcAgility(stats) * apPerAgility);
+        }
+
+        public static float CalcPhysicalCrit(
+            Stats stats, float critPerAgility) {
+
+            return stats.PhysicalCrit + CalcAgility(stats) * critPerAgility;
+        }
     }
 
     public class SpellModifiers {
