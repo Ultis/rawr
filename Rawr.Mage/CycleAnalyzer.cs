@@ -126,19 +126,23 @@ namespace Rawr.Mage
             {
                 case "Arcane (MB/2T10 duration collapsed)":
                     castingState = new CastingState(solver, 0, false, 0);
-                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
+                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true, true);
                     break;
                 case "Arcane (Arcane Power, MB/2T10 duration collapsed)":
                     castingState = new CastingState(solver, (int)StandardEffect.ArcanePower, false, 0);
-                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true);
+                    generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true, true);
                     break;
                 case "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)":
                     castingState = new CastingState(solver, 0, false, 0);
-                    generator = new ArcaneCycleGenerator(castingState, true, true, true, true, true);
+                    generator = new ArcaneCycleGenerator(castingState, true, true, true, true, true, true);
+                    break;
+                case "Arcane Beta":
+                    castingState = new CastingState(solver, 0, false, 0);
+                    generator = new ArcaneCycleGeneratorBeta(castingState, true, true, true, true, true, true);
                     break;
                 case "Arcane (no ABar, MB duration collapsed)":
                     castingState = new CastingState(solver, 0, false, 0);
-                    generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false);
+                    generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false, true);
                     break;
                 case "Arcane Movement (average 1 per 10 sec for 1 sec)":
                     castingState = new CastingState(solver, 0, false, 0);

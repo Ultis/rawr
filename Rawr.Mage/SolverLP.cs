@@ -22,6 +22,8 @@ namespace Rawr.Mage
         private int mpsRow;
         private int[] sort;
         private double Qk;
+        private int maximizeColumn;
+        private double targetValue;
         //public int[] disabledHex;
 
 #if SILVERLIGHT
@@ -133,6 +135,7 @@ namespace Rawr.Mage
             sort = null;
             needsDual = false;
             needsQuadratic = false;
+            maximizeColumn = -1;
         }
 
         public void SetRowScale(int row, double value)
@@ -367,7 +370,7 @@ namespace Rawr.Mage
             {
                 if (needsQuadratic)
                 {
-                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, needsDual);
+                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, needsDual, maximizeColumn, targetValue);
                 }
                 else if (needsDual)
                 {
@@ -386,7 +389,10 @@ namespace Rawr.Mage
 
         private void UnscaleSolution()
         {
-            compactSolution[compactSolution.Length - 1] /= arraySet.rowScale[cRows];
+            if (maximizeColumn == -1)
+            {
+                compactSolution[compactSolution.Length - 1] /= arraySet.rowScale[cRows];
+            }
             for (int i = 0; i < compactSolution.Length - 1; i++)
             {
                 compactSolution[i] *= arraySet.columnScale[i];
@@ -407,12 +413,14 @@ namespace Rawr.Mage
             UnscaleSolution();
         }
 
-        public void SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear)
+        public void SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear, int maximizeColumn, double targetValue)
         {
             this.mpsRow = mpsRow;
             this.sort = sort;
             this.Qk = k;
-            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, skipLinear);
+            this.maximizeColumn = maximizeColumn;
+            this.targetValue = targetValue * arraySet.rowScale[cRows];
+            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, skipLinear, maximizeColumn, this.targetValue);
             UnscaleSolution();
             needsQuadratic = true;
         }

@@ -210,7 +210,7 @@ namespace Rawr.Mage
         private void HybridSearch(bool guided)
         {
             int sizeLimit = CalculationOptions.MaxHeapLimit;
-            if (!CalculationOptions.Beta)
+            if (!needsQuadratic)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
             }
@@ -326,7 +326,7 @@ namespace Rawr.Mage
         private void DepthFirstSearch()
         {
             int sizeLimit = CalculationOptions.MaxHeapLimit;
-            if (!CalculationOptions.Beta)
+            if (!needsQuadratic)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
             }
@@ -624,7 +624,7 @@ namespace Rawr.Mage
         private void BestBoundSearch()
         {
             int maxHeap = CalculationOptions.MaxHeapLimit;
-            if (!CalculationOptions.Beta)
+            if (!needsQuadratic)
             {
                 lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
             }
@@ -643,7 +643,7 @@ namespace Rawr.Mage
                     double current = heap.Head.Value;
                     lp = heap.Pop();
                     lp.ForceRecalculation();
-                    if (!CalculationOptions.Beta)
+                    if (!needsQuadratic)
                     {
                         lp.SolvePrimalDual();
                     }
@@ -913,16 +913,14 @@ namespace Rawr.Mage
                     currentNode.Children.Add(new BranchNode() { Lp = childLP, Parent = currentNode, Depth = currentNode.Depth + 1 });
                     break;
             }
-#if DEBUG
-            if (childLP.Log != null)
+            /*if (childLP.Log != null)
             {
                 string[] lines = childLP.Log.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length >= 2 && lines[lines.Length - 1] == lines[lines.Length - 2])
                 {
                     childLP = childLP; // something looks to be buggy
                 }
-            }
-#endif
+            }*/
         }
 
         private double[] GetSegmentCooldownCount(int effectsMask, VariableType cooldownType)

@@ -449,7 +449,7 @@ namespace Rawr.Mage
             if (calculationOptions.Beta && Channeled)
             {
                 float tickCastTime = castTime / Ticks;
-                averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                 castTime = averageTicks * tickCastTime;
             }
             if (InterruptFactor > 0)
@@ -497,7 +497,7 @@ namespace Rawr.Mage
                         if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = cast / Ticks;
-                            cast = (float)Math.Floor(BaseCastTime / tickCastTime) * tickCastTime;
+                            cast = (float)Math.Floor(baseCastTime / tickCastTime) * tickCastTime;
                         }
                         if (InterruptFactor > 0)
                         {
@@ -532,7 +532,7 @@ namespace Rawr.Mage
                         if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = castTime / Ticks;
-                            averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = averageTicks * tickCastTime;
                         }
                         if (InterruptFactor > 0)
@@ -555,7 +555,7 @@ namespace Rawr.Mage
                         if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = proccedCastTime / Ticks;
-                            proccedTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            proccedTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = proccedTicks * tickCastTime;
                         }
                         if (InterruptFactor > 0)
@@ -575,7 +575,7 @@ namespace Rawr.Mage
                         if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = castTime / Ticks;
-                            averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                            averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = averageTicks * tickCastTime;
                         }
                         if (InterruptFactor > 0)
@@ -637,7 +637,7 @@ namespace Rawr.Mage
                                 if (calculationOptions.Beta && Channeled)
                                 {
                                     float tickCastTime = castTime / Ticks;
-                                    averageTicks = (float)Math.Floor(BaseCastTime / tickCastTime);
+                                    averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                                     castTime = averageTicks * tickCastTime;
                                 }
                                 if (InterruptFactor > 0)

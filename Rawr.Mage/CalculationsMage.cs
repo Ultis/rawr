@@ -883,9 +883,17 @@ namespace Rawr.Mage
             MageTalents talents = character.MageTalents;
 
             float statsRaceBonusIntellectMultiplier = 0.0f;
+            float statsRaceBonusManaMultiplier = 0.0f;
             if (character.Race == CharacterRace.Gnome)
             {
-                statsRaceBonusIntellectMultiplier = 0.05f;
+                if (calculationOptions.Beta)
+                {
+                    statsRaceBonusManaMultiplier = 0.05f;
+                }
+                else
+                {
+                    statsRaceBonusIntellectMultiplier = 0.05f;
+                }
             }
             float statsTalentBonusIntellectMultiplier = 0.03f * talents.ArcaneMind;
             float statsRaceBonusSpiritMultiplier = 0.0f;
@@ -912,8 +920,15 @@ namespace Rawr.Mage
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
             statsTotal.Health = (float)Math.Round((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) * (1 + statsTotal.BonusHealthMultiplier));
-            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect);
-            statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
+            statsTotal.Mana = (float)Math.Round((statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect) * (1 + statsRaceBonusManaMultiplier));
+            if (calculationOptions.Beta)
+            {
+                statsTotal.Armor = (float)Math.Round(statsTotal.Armor + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
+            }
+            else
+            {
+                statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
+            }
 
             if (character.Race == CharacterRace.BloodElf)
             {
@@ -935,7 +950,14 @@ namespace Rawr.Mage
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
-                statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
+                if (calculationOptions.Beta)
+                {
+                    statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                }
+                else
+                {
+                    statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
+                }
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
@@ -979,6 +1001,10 @@ namespace Rawr.Mage
 
             statsTotal.SpellPower += statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower;
             statsTotal.SpellPower += spellDamageFromIntellectPercentage * statsTotal.Intellect;
+            if (calculationOptions.Beta)
+            {
+                statsTotal.SpellPower += statsTotal.Intellect - 10;
+            }
             //statsTotal.SpellPower += spellDamageFromSpiritPercentage * statsTotal.Spirit;
 
             statsTotal.CritBonusDamage += calculationOptions.EffectCritDamageBonus;
@@ -1742,6 +1768,7 @@ namespace Rawr.Mage
                 Mage2T10 = stats.Mage2T10,
                 Mage4T10 = stats.Mage4T10,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                MasteryRating = stats.MasteryRating
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1851,7 +1878,7 @@ namespace Rawr.Mage
         public override bool HasRelevantStats(Stats stats)
         {
             bool mageStats = HasMageStats(stats);
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier + stats.MasteryRating;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.ArmorPenetrationRating;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {

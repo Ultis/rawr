@@ -54,6 +54,7 @@ namespace Rawr {
         ManaRestoreFromMaxManaPerSecond,
         ManaorEquivRestore,
         MangleCostReduction,
+        MasteryRating,
         Paragon,
         RakeCostReduction,
         RipCostReduction,
@@ -854,6 +855,16 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.HitRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Base Stats")]
+        [DisplayName("Mastery Rating")]
+        [CommonStat]
+        public float MasteryRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MasteryRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MasteryRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

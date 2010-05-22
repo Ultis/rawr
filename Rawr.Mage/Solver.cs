@@ -98,6 +98,7 @@ namespace Rawr.Mage
         private bool requiresMIP;
         private bool needsSolutionVariables;
         private bool cancellationPending;
+        private bool needsQuadratic;
 
         public ArraySet ArraySet { get; set; }
 
@@ -1119,10 +1120,7 @@ namespace Rawr.Mage
             this.requiresMIP = segmentCooldowns || integralMana;
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
-            if (calculationOptions.Beta)
-            {
-                this.needsSolutionVariables = true;
-            }
+            this.needsQuadratic = false;
             cancellationPending = false;
         }
 
@@ -1153,7 +1151,7 @@ namespace Rawr.Mage
 
             ConstructProblem();
 
-            if (CalculationOptions.Beta)
+            if (needsQuadratic)
             {
                 SolveQuadratic();
             }
@@ -2539,12 +2537,15 @@ namespace Rawr.Mage
             BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
             BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
 
+            Mastery = baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;
             if (CalculationOptions.Beta)
             {
                 if (arcane > fire && arcane > frost)
                 {
                     ManaAdeptBonus = (0.23600000143051f * Math.Min(51, arcane) + 1.5f * Mastery) * 0.01f; // 0.12036
+                    needsQuadratic = true;
+                    needsSolutionVariables = true;
                 }
             }
         }
@@ -2639,9 +2640,12 @@ namespace Rawr.Mage
             minimizeTime = false;
             if (CalculationOptions.TargetDamage > 0)
             {
-                minimizeTime = true;
+                if (!needsQuadratic)
+                {
+                    minimizeTime = true;
+                }
+                needsTimeExtension = true;
             }
-            if (minimizeTime) needsTimeExtension = true;
 
             restrictManaUse = false;
             if (segmentCooldowns || segmentMana) restrictManaUse = true;
@@ -2823,7 +2827,7 @@ namespace Rawr.Mage
                 {
                     if (requiresMIP)
                     {
-                        segmentColumn[seg] = column + 1;
+                        segmentColumn[seg] = lp.Columns;
                     }
                     for (int buffset = 0; buffset < stateList.Count; buffset++)
                     {
@@ -2991,7 +2995,10 @@ namespace Rawr.Mage
                 if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.TimeExtension });
                 int column = lp.AddColumnUnsafe();
                 lp.SetColumnUpperBound(column, CalculationOptions.FightDuration);
-                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                if (!needsQuadratic)
+                {
+                    lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                }
                 lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
                 lp.SetElementUnsafe(rowEvocation, column, EvocationDuration / EvocationCooldown);
                 //lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
@@ -5008,7 +5015,7 @@ namespace Rawr.Mage
             //if (state.Berserking && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerBerserking, column, 1.0);
             lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-            if (CalculationOptions.Beta)
+            if (needsQuadratic)
             {
                 float dps = cycle.GetDamagePerSecond(ManaAdeptBonus);
                 lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
@@ -5572,8 +5579,7 @@ namespace Rawr.Mage
                 return vx.Mps.CompareTo(vy.Mps);
             });
 
-
-            lp.SolvePrimalQuadratic(rowManaRegen, sort, ManaAdeptBonus / (BaseStats.Mana * ManaRegenLPScaling), useIncrementalOptimizations);
+            lp.SolvePrimalQuadratic(rowManaRegen, sort, ManaAdeptBonus / (BaseStats.Mana * ManaRegenLPScaling), useIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
         }
         #endregion
 
@@ -5608,6 +5614,7 @@ namespace Rawr.Mage
             Array.Copy(HasteRatingEffects, 0, displayCalculations.HasteRatingEffects, 0, HasteRatingEffectsCount);
 
             displayCalculations.BaseGlobalCooldown = BaseGlobalCooldown;
+            displayCalculations.ManaAdeptBonus = ManaAdeptBonus;
 
             displayCalculations.EvocationDuration = EvocationDuration;
             displayCalculations.EvocationRegen = EvocationRegen;
@@ -5696,7 +5703,7 @@ namespace Rawr.Mage
         {
             CharacterCalculationsMage calculationResult = new CharacterCalculationsMage();
 
-            if (minimizeTime)
+            if (CalculationOptions.TargetDamage > 0)
             {
                 calculationResult.SubPoints[0] = -(float)(CalculationOptions.TargetDamage / solution[solution.Length - 1]);
             }

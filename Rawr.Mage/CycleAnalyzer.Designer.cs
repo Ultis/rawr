@@ -68,8 +68,8 @@
             this.backgroundWorker.WorkerReportsProgress = true;
             this.backgroundWorker.WorkerSupportsCancellation = true;
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // textBoxDescription
             // 
@@ -152,6 +152,7 @@
             "Arcane (Arcane Power, MB/2T10 duration collapsed)",
             "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)",
             "Arcane (no ABar, MB duration collapsed)",
+            "Arcane Beta",
             "Arcane Movement (average 1 per 10 sec for 1 sec)",
             "Frost",
             "Frost (no latency combos)",
