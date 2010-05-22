@@ -49,7 +49,7 @@ namespace Rawr.Warlock {
         public float SpecialCastTime { get; protected set; }
         public float SpecialBaseDamage { get; protected set; }
         public float SpecialDamagePerSpellPower { get; protected set; }
-        public float SpecialDamagePerAttackPower { get; protected set; }
+
         public SpellModifiers TotalModifiers { get; protected set; }
         public SpellModifiers MeleeModifiers { get; protected set; }
         public SpellModifiers SpecialModifiers { get; protected set; }
@@ -195,31 +195,58 @@ namespace Rawr.Warlock {
             return 2f / CalcMeleeHaste();
         }
 
-        public float CalcMeleeHitDamage() {
+        public float CalcCharSheetMeleeHit() {
 
-            int level = Mommy.Options.TargetLevel;
-            return (BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower())
-                * (1
-                    - StatConversion.GetArmorDamageReduction(
-                        level,
-                        StatConversion.NPC_ARMOR[level - 80],
-                        Stats.ArmorPenetration, // arpen debuffs
-                        0f, // arpen buffs
-                        0f)); // arpen rating
+            return (BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower());
+        }
+
+        public float CalcMeleeHitChance() {
+
+            // the warlock's miss rate, not including buff/debuff
+            float miss
+                = .17f
+                    - Mommy.CalcSpellHit()
+                    - Stats.SpellHit
+                    + Mommy.Talents.Suppression * .01f;
+           
+            // adjust to melee miss rate
+            miss *= 8f / 13f;
+
+            // add in physical hit buff/debuffs
+            miss -= Stats.PhysicalHit;
+
+            return Math.Min(1f, 1f - miss);
         }
 
         public float CalcMeleeDamage() {
 
-            int levelDelta = Mommy.Options.TargetLevel - 80;
-            float glanceChance
-                = StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDelta];
-            float critChance = CalcMeleeCrit();
-            float hitChance = Mommy.HitChance - glanceChance - critChance;
+            return CalcMeleeDamage(true, 0f);
+        }
 
-            float glanceMod
-                = 1f - .1f * (Mommy.Options.TargetLevel - 80);
-            return CalcMeleeHitDamage()
-                * (hitChance + 2f * critChance + glanceMod * glanceChance)
+        protected float CalcMeleeDamage(bool canGlance, float bonusDamage) {
+
+            int level = Mommy.Options.TargetLevel;
+            int levelDelta = level - 80;
+
+            float combatTableModifier
+                = CalcMeleeHitChance()
+                    + CalcMeleeCrit()
+                    - StatConversion.WHITE_DODGE_CHANCE_CAP[levelDelta];
+            if (canGlance) {
+                combatTableModifier
+                    -= .3f * StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDelta];
+            }
+            float armorModifier
+                = 1
+                    - StatConversion.GetArmorDamageReduction(
+                        level,
+                        StatConversion.NPC_ARMOR[levelDelta],
+                        Stats.ArmorPenetration, // arpen debuffs
+                        0f, // arpen buffs
+                        0f); // arpen rating
+            return (CalcCharSheetMeleeHit() + bonusDamage)
+                * combatTableModifier
+                * armorModifier
                 * MeleeModifiers.GetFinalDirectMultiplier();
         }
 
@@ -234,7 +261,7 @@ namespace Rawr.Warlock {
                 + SpecialCastTime / StatUtils.CalcSpellHaste(Stats);
         }
 
-        public float GetSpecialDamage() {
+        public virtual float GetSpecialDamage() {
 
             float resist
                 = StatConversion.GetAverageResistance(
@@ -295,11 +322,11 @@ namespace Rawr.Warlock {
                 meleeRate = 1 / CalcMeleeSpeed();
             }
             float spellRate;
-            if (SpecialDamagePerAttackPower == 0) {
-                spellRate = 1 / GetSpecialSpeed();
-            } else {
+            if (SpecialDamagePerSpellPower == 0) {
                 spellRate = 0f;
                 meleeRate += 1 / GetSpecialSpeed();
+            } else {
+                spellRate = 1 / GetSpecialSpeed();
             }
             float triggerRate = 1 / (meleeRate + spellRate);
             float uprate = pactEffect.GetAverageUptime(
@@ -333,6 +360,11 @@ namespace Rawr.Warlock {
             DamagePerAttackPower = .187f;
 
             SpecialCooldown = 6f;
+        }
+
+        public override float GetSpecialDamage() {
+
+            return CalcMeleeDamage(false, 72f);
         }
     }
 
