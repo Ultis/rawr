@@ -220,11 +220,18 @@ namespace Rawr.Warlock {
                 "Average Haste",
                 string.Format(
                     "{0:0.00}%*"
-                        + "{1:0.00}s\tGlobal Cooldown\n"
-                        + "{2:0.00}%\tBefore Procs",
-                    (AvgHaste - 1) * 100f,
-                    Math.Max(1.0f, 1.5f / AvgHaste),
-                    (StatUtils.CalcSpellHaste(PreProcStats) - 1) * 100f));
+                        + "{1:0.00}%\tfrom {2:0.0} Haste rating\r\n"
+                        + "{3:0.00}%\tfrom Buffs\r\n"
+                        + "{4:0.0}ish%\tfrom Procs\r\n"
+                        + "\r\n"
+                        + "{5:0.00}s\tGlobal Cooldown\r\n",
+                    (AvgHaste - 1f) * 100f,
+                    StatConversion.GetSpellHasteFromRating(Stats.HasteRating)
+                        * 100f,
+                    Stats.HasteRating,
+                    Stats.SpellHaste * 100f,
+                    (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats)) * 100f,
+                    Math.Max(1.0f, 1.5f / AvgHaste)));
 
             // Pet Stats
             if (Pet == null) {

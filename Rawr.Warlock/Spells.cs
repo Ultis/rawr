@@ -295,7 +295,7 @@ namespace Rawr.Warlock {
                     = string.Format(
                         "{0:0.0} dps ({1:0.0%})*",
                         dps,
-                        dps / Mommy.OverallPoints);
+                        dps / Mommy.PersonalDps);
             } else {
                 toolTip = string.Format("{0:0.0} casts*", numCasts);
             }
@@ -317,11 +317,45 @@ namespace Rawr.Warlock {
                         AvgTickCrit,
                         NumTicks);
             }
+            if (AvgDamagePerCast > 0) {
+                toolTip += "\r\n";
+            }
+            if (AvgDirectHit > 0) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tDirect Coefficient\r\n",
+                        100 * DirectCoefficient);
+            }
+            if (AvgTickHit > 0) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tPer Tick Coefficient\r\n",
+                        100 * TickCoefficient);
+            }
+            if (AvgDirectHit > 0) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tDirect Multiplier\r\n",
+                        100 * SpellModifiers.GetFinalDirectMultiplier());
+            }
+            if (AvgTickHit > 0) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tPer Tick Multiplier\r\n",
+                        100 * SpellModifiers.GetFinalTickMultiplier());
+            }
             if (AvgDirectCrit > AvgDirectHit || AvgTickCrit > AvgTickHit) {
                 toolTip
                     += string.Format(
-                        "{0:0.0}%\tCrit Chance\r\n",
-                        100 * SpellModifiers.CritChance);
+                        "{0:0.0}%\tCrit Chance\r\n"
+                            + "{1:0}%\tCrit Multiplier\r\n",
+                        100 * SpellModifiers.CritChance,
+                        100 * SpellModifiers.GetFinalCritMultiplier());
+            }
+            if (AvgDamagePerCast > 0) {
+                toolTip
+                    += string.Format(
+                        "{0:0.0}%\tResisted\r\n\r\n", 100 * GetResist());
             }
             toolTip
                 += string.Format(
@@ -339,7 +373,8 @@ namespace Rawr.Warlock {
             if (AvgDamagePerCast > 0) {
                 toolTip
                     += string.Format(
-                        "{0:0.0}\tDPC\r\n"
+                        "\r\n"
+                            + "{0:0.0}\tDPC\r\n"
                             + "{1:0.0}\tDPCT\r\n"
                             + "{2:0.0}\tDPM\r\n"
                             + "{3:0.0}\tCasts",

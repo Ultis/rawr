@@ -120,7 +120,6 @@ namespace Rawr.Warlock {
                     "Immolate",
                     "Conflagrate",
                     "Incinerate (Under Backdraft)",
-                    "Corruption",
                     "Chaos Bolt",
                     "Curse Of Doom"));
 

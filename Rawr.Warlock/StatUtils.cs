@@ -94,9 +94,11 @@ namespace Rawr.Warlock {
         }
 
         public static float CalcPhysicalCrit(
-            Stats stats, float critPerAgility) {
+            Stats stats, float critPerAgility, int levelDelta) {
 
-            return stats.PhysicalCrit + CalcAgility(stats) * critPerAgility;
+            return stats.PhysicalCrit
+                + CalcAgility(stats) * critPerAgility
+                + StatConversion.NPC_LEVEL_CRIT_MOD[levelDelta];
         }
     }
 
@@ -184,7 +186,7 @@ namespace Rawr.Warlock {
 
         public void AddCritChance(float val) {
 
-            CritChance += val;
+            CritChance = Math.Min(1, CritChance + val);
         }
 
         public void AddCritOverallMultiplier(float val) {

@@ -95,7 +95,7 @@ namespace Rawr.Warlock {
                 Intellect
                     = BaseIntellect + IntellectCoef * Mommy.CalcIntellect(),
                 Strength = 297f,
-                Agility = 297f,
+                Agility = 90f,
                 BonusStaminaMultiplier = vitality,
                 BonusIntellectMultiplier = vitality,
                 SpellCrit
@@ -109,6 +109,7 @@ namespace Rawr.Warlock {
                 AttackPower
                     = BaseAttackPower
                         + AttackPowerCoef * Mommy.CalcSpellPower(),
+                PhysicalCrit = .0329f,
             };
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -176,9 +177,8 @@ namespace Rawr.Warlock {
 
         public float CalcMeleeCrit() {
 
-            return .05f
-                + StatConversion.NPC_LEVEL_CRIT_MOD[
-                    Mommy.Options.TargetLevel - 80];
+            return StatUtils.CalcPhysicalCrit(
+                Stats, .00019f, Mommy.Options.TargetLevel - 80);
         }
 
         public float CalcMeleeHaste() {
@@ -206,8 +206,8 @@ namespace Rawr.Warlock {
             float miss
                 = .17f
                     - Mommy.CalcSpellHit()
-                    - Stats.SpellHit
-                    + Mommy.Talents.Suppression * .01f;
+                    + Stats.SpellHit
+                    - Mommy.Talents.Suppression * .01f;
            
             // adjust to melee miss rate
             miss *= 8f / 13f;
