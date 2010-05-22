@@ -346,7 +346,7 @@ namespace Rawr.RestoSham
             //  ELW healing scale = purification scale
             float ELWHealingScale = PurificationScale;
             float ELWHPS = ((652 + ELWBonusHealing) * ELWHealingScale / 12) * (1 + stats.BonusHealingDoneMultiplier);
-            float ELWChance = stats.Earthliving * (0.2f + (character.ShamanTalents.GlyphofEarthlivingWeapon ? .01f : 0)) * ELWOverwriteScale;
+            float ELWChance = stats.Earthliving * (0.2f + (character.ShamanTalents.GlyphofEarthlivingWeapon ? .05f : 0)) * ELWOverwriteScale;
             #endregion
             #region Earth Shield Calculations
             bool UseES = (options.EarthShield && character.ShamanTalents.EarthShield > 0); // Wether or not to use ES at all - Make sure the option and the talent are on.
