@@ -838,6 +838,14 @@ namespace Rawr.RestoSham
             return statsTotal;
         }
         #region Basic Stats Methods
+        
+        /// <summary>
+        /// Filters a Stats object to just the stats relevant to the model.
+        /// </summary>
+        /// <param name="stats">A complete Stats object containing all stats.</param>
+        /// <returns>
+        /// A filtered Stats object containing only the stats relevant to the model.
+        /// </returns>
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats relevantStats = new Stats();
@@ -869,15 +877,31 @@ namespace Rawr.RestoSham
 
             return relevantStats;
         }
+        
+        /// <summary>
+        /// Tests whether there are positive relevant stats in the Stats object.
+        /// </summary>
+        /// <param name="stats">The complete Stats object containing all stats.</param>
+        /// <returns>
+        /// True if any of the positive stats in the Stats are relevant.
+        /// </returns>
         public override bool HasRelevantStats(Stats stats)
         {
+            // Accumulate the "base" stats with the special effect stats.
+            Stats comparison = new Stats();
+            comparison.Accumulate(stats);
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                comparison.Accumulate(effect.Stats);
+            }
+
             float statTotal = 0f;
 
             // Loop over each relevant stat and get its value
             Type statsType = typeof(Stats);
             foreach (string relevantStat in Relevants.RelevantStats)
             {
-                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
+                float v = (float)statsType.GetProperty(relevantStat).GetValue(comparison, null);
                 if (v > 0)
                     statTotal += v;
             }
