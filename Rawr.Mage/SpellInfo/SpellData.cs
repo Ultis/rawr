@@ -297,7 +297,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.21 * BaseMana[78]), MinDamage = 776, MaxDamage = 916, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.21 * BaseMana[79]), MinDamage = 780, MaxDamage = 920, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.21 * BaseMana[80]), MinDamage = 925, MaxDamage = 1095, SpellDamageCoefficient = 1.5f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.21 * BaseMana[80]), MinDamage = 855, MaxDamage = 1013, SpellDamageCoefficient = 1.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.21 * BaseMana[80]), MinDamage = 855, MaxDamage = 1013, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.21 * BaseMana[81]), MinDamage = 874, MaxDamage = 1036, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.21 * BaseMana[82]), MinDamage = 894, MaxDamage = 1060, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.21 * BaseMana[83]), MinDamage = 912, MaxDamage = 1082, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.21 * BaseMana[84]), MinDamage = 931, MaxDamage = 1105, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.21 * BaseMana[85]), MinDamage = 950, MaxDamage = 1128, SpellDamageCoefficient = 0.429f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -340,7 +345,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.08 * BaseMana[78]), MinDamage = 376, MaxDamage = 444, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.08 * BaseMana[79]), MinDamage = 379, MaxDamage = 448, SpellDamageCoefficient = 1.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.08 * BaseMana[80]), MinDamage = 382, MaxDamage = 451, SpellDamageCoefficient = 1.5f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.08 * BaseMana[80]), MinDamage = 312, MaxDamage = 368, SpellDamageCoefficient = 1.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.08 * BaseMana[80]), MinDamage = 312, MaxDamage = 368, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.08 * BaseMana[81]), MinDamage = 319, MaxDamage = 377, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.08 * BaseMana[82]), MinDamage = 325, MaxDamage = 385, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.08 * BaseMana[83]), MinDamage = 333, MaxDamage = 395, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.08 * BaseMana[84]), MinDamage = 340, MaxDamage = 404, SpellDamageCoefficient = 0.429f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.08 * BaseMana[85]), MinDamage = 347, MaxDamage = 413, SpellDamageCoefficient = 0.429f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -398,6 +408,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.53 * BaseMana[79]), MinDamage = 873, MaxDamage = 1067, PeriodicDamage = 780, SpellDamageCoefficient = 0.2427f, DotDamageCoefficient = 4 * 0.122f };
             SpellData[10] = new SpellData() { Cost = (int)(0.53 * BaseMana[80]), MinDamage = 876, MaxDamage = 1071, PeriodicDamage = 780, SpellDamageCoefficient = 0.2427f, DotDamageCoefficient = 4 * 0.122f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.53 * BaseMana[80]), MinDamage = 417, MaxDamage = 509, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.53 * BaseMana[81]), MinDamage = 426, MaxDamage = 520, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.53 * BaseMana[82]), MinDamage = 436, MaxDamage = 532, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.53 * BaseMana[83]), MinDamage = 444, MaxDamage = 542, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.53 * BaseMana[84]), MinDamage = 453, MaxDamage = 553, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.53 * BaseMana[85]), MinDamage = 462, MaxDamage = 564, PeriodicDamage = 343, SpellDamageCoefficient = 0.1222f, DotDamageCoefficient = 0.254f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -464,6 +479,7 @@ namespace Rawr.Mage
     public class FireWardTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static FireWardTemplate()
         {
             SpellData[0] = new SpellData() { Cost = (int)(0.16 * BaseMana[70]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
@@ -477,10 +493,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.16 * BaseMana[78]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
             SpellData[9] = new SpellData() { Cost = (int)(0.16 * BaseMana[79]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
             SpellData[10] = new SpellData() { Cost = (int)(0.16 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.16 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.16 * BaseMana[81]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.16 * BaseMana[82]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.16 * BaseMana[83]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.16 * BaseMana[84]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.16 * BaseMana[85]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
@@ -516,6 +545,7 @@ namespace Rawr.Mage
     public class FrostWardTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static FrostWardTemplate()
         {
             SpellData[0] = new SpellData() { Cost = (int)(0.14 * BaseMana[70]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
@@ -529,10 +559,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.14 * BaseMana[78]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
             SpellData[9] = new SpellData() { Cost = (int)(0.14 * BaseMana[79]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
             SpellData[10] = new SpellData() { Cost = (int)(0.14 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.14 * BaseMana[80]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.14 * BaseMana[81]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.14 * BaseMana[82]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.14 * BaseMana[83]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.14 * BaseMana[84]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.14 * BaseMana[85]), MinDamage = 0, MaxDamage = 0, PeriodicDamage = 0, SpellDamageCoefficient = 0, DotDamageCoefficient = 0 };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
@@ -578,6 +621,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 368, MaxDamage = 419, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
             SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 368, MaxDamage = 419, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 359, MaxDamage = 411, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f * 0.13f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -617,7 +665,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.11 * BaseMana[78]), MinDamage = 714, MaxDamage = 771, SpellDamageCoefficient = 3.0f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.11 * BaseMana[79]), MinDamage = 799, MaxDamage = 861, SpellDamageCoefficient = 3.0f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.11 * BaseMana[80]), MinDamage = 803, MaxDamage = 866, SpellDamageCoefficient = 3.0f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.11 * BaseMana[80]), MinDamage = 1029, MaxDamage = 1111, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.11 * BaseMana[80]), MinDamage = 1029, MaxDamage = 1111, SpellDamageCoefficient = 0.715f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.11 * BaseMana[81]), MinDamage = 1052, MaxDamage = 1136, SpellDamageCoefficient = 0.715f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.11 * BaseMana[82]), MinDamage = 1076, MaxDamage = 1162, SpellDamageCoefficient = 0.715f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.11 * BaseMana[83]), MinDamage = 1098, MaxDamage = 1186, SpellDamageCoefficient = 0.715f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.11 * BaseMana[84]), MinDamage = 1121, MaxDamage = 1211, SpellDamageCoefficient = 0.715f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.11 * BaseMana[85]), MinDamage = 1144, MaxDamage = 1236, SpellDamageCoefficient = 0.715f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -693,6 +746,7 @@ namespace Rawr.Mage
     public class DeepFreezeTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static DeepFreezeTemplate()
         {
             SpellData[0] = new SpellData() { Cost = (int)(0.09 * BaseMana[70]), MinDamage = 1919, MaxDamage = 2191, SpellDamageCoefficient = 7.5f / 3.5f };
@@ -706,10 +760,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.09 * BaseMana[78]), MinDamage = 2279, MaxDamage = 2551, SpellDamageCoefficient = 7.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.09 * BaseMana[79]), MinDamage = 2324, MaxDamage = 2596, SpellDamageCoefficient = 7.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.09 * BaseMana[80]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.09 * BaseMana[80]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.09 * BaseMana[81]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.09 * BaseMana[82]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.09 * BaseMana[83]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.09 * BaseMana[84]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.09 * BaseMana[85]), MinDamage = 2369, MaxDamage = 2641, SpellDamageCoefficient = 7.5f / 3.5f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         //float fingersOfFrostCritRate;
@@ -768,7 +835,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.19 * BaseMana[78]), MinDamage = 888, MaxDamage = 1132, PeriodicDamage = 116, SpellDamageCoefficient = 3.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.19 * BaseMana[79]), MinDamage = 893, MaxDamage = 1138, PeriodicDamage = 116, SpellDamageCoefficient = 3.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.19 * BaseMana[80]), MinDamage = 898, MaxDamage = 1143, PeriodicDamage = 116, SpellDamageCoefficient = 3.5f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.19 * BaseMana[80]), MinDamage = 741, MaxDamage = 943, PeriodicDamage = 116, SpellDamageCoefficient = 3.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.19 * BaseMana[80]), MinDamage = 741, MaxDamage = 943, PeriodicDamage = 116, SpellDamageCoefficient = 1.000f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.19 * BaseMana[81]), MinDamage = 758, MaxDamage = 966, PeriodicDamage = 120, SpellDamageCoefficient = 1.000f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.19 * BaseMana[82]), MinDamage = 775, MaxDamage = 987, PeriodicDamage = 124, SpellDamageCoefficient = 1.000f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.19 * BaseMana[83]), MinDamage = 792, MaxDamage = 1012, PeriodicDamage = 128, SpellDamageCoefficient = 1.000f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.19 * BaseMana[84]), MinDamage = 809, MaxDamage = 1035, PeriodicDamage = 132, SpellDamageCoefficient = 1.000f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.19 * BaseMana[85]), MinDamage = 826, MaxDamage = 1058, PeriodicDamage = 136, SpellDamageCoefficient = 1.000f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -837,7 +909,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.14 * BaseMana[78]), MinDamage = 640, MaxDamage = 743, PeriodicDamage = 60, SpellDamageCoefficient = 3.0f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.14 * BaseMana[79]), MinDamage = 644, MaxDamage = 747, PeriodicDamage = 60, SpellDamageCoefficient = 3.0f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.14 * BaseMana[80]), MinDamage = 722, MaxDamage = 838, PeriodicDamage = 90, SpellDamageCoefficient = 3.0f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.14 * BaseMana[80]), MinDamage = 581, MaxDamage = 675, PeriodicDamage = 81, SpellDamageCoefficient = 3.0f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.14 * BaseMana[80]), MinDamage = 581, MaxDamage = 675, PeriodicDamage = 81, SpellDamageCoefficient = 0.857f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.14 * BaseMana[81]), MinDamage = 594, MaxDamage = 690, PeriodicDamage = 82, SpellDamageCoefficient = 0.857f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.14 * BaseMana[82]), MinDamage = 608, MaxDamage = 706, PeriodicDamage = 84, SpellDamageCoefficient = 0.857f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.14 * BaseMana[83]), MinDamage = 620, MaxDamage = 720, PeriodicDamage = 85, SpellDamageCoefficient = 0.857f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.14 * BaseMana[84]), MinDamage = 633, MaxDamage = 735, PeriodicDamage = 87, SpellDamageCoefficient = 0.857f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.14 * BaseMana[85]), MinDamage = 646, MaxDamage = 750, PeriodicDamage = 88, SpellDamageCoefficient = 0.857f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -897,6 +974,7 @@ namespace Rawr.Mage
     public class PyroblastTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static PyroblastTemplate()
         {
             // spell data for Pyroblast is not level adjusted except for level 70 and 80, adjust if the needed data is found
@@ -911,10 +989,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.22 * BaseMana[78]), MinDamage = 1190, MaxDamage = 1510, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
             SpellData[9] = new SpellData() { Cost = (int)(0.22 * BaseMana[79]), MinDamage = 1190, MaxDamage = 1510, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
             SpellData[10] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.22 * BaseMana[81]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.22 * BaseMana[82]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.22 * BaseMana[83]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.22 * BaseMana[84]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.22 * BaseMana[85]), MinDamage = 1210, MaxDamage = 1531, PeriodicDamage = 452, SpellDamageCoefficient = 1.15f, DotDamageCoefficient = 0.2f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
@@ -955,6 +1046,7 @@ namespace Rawr.Mage
     public class LivingBombTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static LivingBombTemplate()
         {
             // spell data for Living Bomb is not level adjusted except for level 70 and 80, adjust if the needed data is found
@@ -969,10 +1061,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.22 * BaseMana[78]), MinDamage = 306, MaxDamage = 306, PeriodicDamage = 1024, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
             SpellData[9] = new SpellData() { Cost = (int)(0.22 * BaseMana[79]), MinDamage = 306, MaxDamage = 306, PeriodicDamage = 1024, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
             SpellData[10] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.22 * BaseMana[81]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.22 * BaseMana[82]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.22 * BaseMana[83]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.22 * BaseMana[84]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.22 * BaseMana[85]), MinDamage = 690, MaxDamage = 690, PeriodicDamage = 1380, SpellDamageCoefficient = 0.4f, DotDamageCoefficient = 0.8f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -1013,6 +1118,7 @@ namespace Rawr.Mage
     public class SlowTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static SlowTemplate()
         {
             // spell data for Living Bomb is not level adjusted except for level 70 and 80, adjust if the needed data is found
@@ -1027,6 +1133,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.12 * BaseMana[78]) };
             SpellData[9] = new SpellData() { Cost = (int)(0.12 * BaseMana[79]) };
             SpellData[10] = new SpellData() { Cost = (int)(0.12 * BaseMana[80]) };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.12 * BaseMana[80]) };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.12 * BaseMana[81]) };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.12 * BaseMana[82]) };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.12 * BaseMana[83]) };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.12 * BaseMana[84]) };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.12 * BaseMana[85]) };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1066,6 +1178,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.25 * BaseMana[79]), MinDamage = 707, MaxDamage = 773, SpellDamageCoefficient = 0.2142f };
             SpellData[10] = new SpellData() { Cost = (int)(0.25 * BaseMana[80]), MinDamage = 709, MaxDamage = 776, SpellDamageCoefficient = 0.2142f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.25 * BaseMana[80]), MinDamage = 674, MaxDamage = 736, SpellDamageCoefficient = 0.2142f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.25 * BaseMana[81]), MinDamage = 688, MaxDamage = 752, SpellDamageCoefficient = 0.2142f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.25 * BaseMana[82]), MinDamage = 703, MaxDamage = 769, SpellDamageCoefficient = 0.2142f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.25 * BaseMana[83]), MinDamage = 716, MaxDamage = 784, SpellDamageCoefficient = 0.2142f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.25 * BaseMana[84]), MinDamage = 730, MaxDamage = 800, SpellDamageCoefficient = 0.2142f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.25 * BaseMana[85]), MinDamage = 744, MaxDamage = 816, SpellDamageCoefficient = 0.2142f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1111,6 +1228,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.06 * BaseMana[79]), MinDamage = 221, MaxDamage = 255, SpellDamageCoefficient = 0.1429f };
             SpellData[10] = new SpellData() { Cost = (int)(0.06 * BaseMana[80]), MinDamage = 223, MaxDamage = 258, SpellDamageCoefficient = 0.1429f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.06 * BaseMana[80]), MinDamage = 215, MaxDamage = 215, SpellDamageCoefficient = 0.1429f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.06 * BaseMana[81]), MinDamage = 220, MaxDamage = 220, SpellDamageCoefficient = 0.1429f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.06 * BaseMana[82]), MinDamage = 225, MaxDamage = 225, SpellDamageCoefficient = 0.1429f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.06 * BaseMana[83]), MinDamage = 230, MaxDamage = 230, SpellDamageCoefficient = 0.1429f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.06 * BaseMana[84]), MinDamage = 235, MaxDamage = 235, SpellDamageCoefficient = 0.1429f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.06 * BaseMana[85]), MinDamage = 240, MaxDamage = 240, SpellDamageCoefficient = 0.1429f };
         }
 
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
@@ -1171,10 +1293,26 @@ namespace Rawr.Mage
             new SpellData() { Cost = (int)(0.18 * BaseMana[79]), MinDamage = 802, MaxDamage = 958, SpellDamageCoefficient = 0.95f * 3.0f / 3.5f }, // downranking penalty
             new SpellData() { Cost = (int)(0.18 * BaseMana[80]), MinDamage = 936, MaxDamage = 1144, SpellDamageCoefficient = 2.5f / 3.5f },
         };
+        public static readonly SpellData[] SpellDataBeta = new SpellData[]
+        {
+            new SpellData() { Cost = (int)(0.18 * BaseMana[80]), MinDamage = 821, MaxDamage = 1003, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[81]), MinDamage = 840, MaxDamage = 1026, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[82]), MinDamage = 821, MaxDamage = 1049, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[83]), MinDamage = 859, MaxDamage = 1072, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[84]), MinDamage = 878, MaxDamage = 1095, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[85]), MinDamage = 897, MaxDamage = 1118, SpellDamageCoefficient = 2.5f / 3.5f },
+        };
 
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         public Spell GetSpell(CastingState castingState, float arcaneBlastDebuff)
@@ -1222,7 +1360,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 817, MaxDamage = 948, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 823, MaxDamage = 954, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1185, MaxDamage = 1377, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1068, MaxDamage = 1240, SpellDamageCoefficient = 2.5f / 3.5f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1068, MaxDamage = 1240, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 1092, MaxDamage = 1268, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 1117, MaxDamage = 1297, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 1140, MaxDamage = 1324, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 1164, MaxDamage = 1352, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 1188, MaxDamage = 1380, SpellDamageCoefficient = 0.714f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1462,6 +1605,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.31 * BaseMana[79]), MinDamage = 360.0f * 5, MaxDamage = 360.0f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.31 * BaseMana[80]), MinDamage = 361.9f * 5, MaxDamage = 361.9f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[0] = new SpellData() { Cost = (int)(0.00 * BaseMana[80]), MinDamage = 310.0f * 5, MaxDamage = 310.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.00 * BaseMana[81]), MinDamage = 318.0f * 5, MaxDamage = 318.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.00 * BaseMana[82]), MinDamage = 325.0f * 5, MaxDamage = 325.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.00 * BaseMana[83]), MinDamage = 334.0f * 5, MaxDamage = 334.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.00 * BaseMana[84]), MinDamage = 342.0f * 5, MaxDamage = 342.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.00 * BaseMana[85]), MinDamage = 350.0f * 5, MaxDamage = 350.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1586,6 +1734,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.22 * BaseMana[79]), MinDamage = 487, MaxDamage = 525, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 538, MaxDamage = 582, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 171, MaxDamage = 185, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.22 * BaseMana[81]), MinDamage = 175, MaxDamage = 189, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.22 * BaseMana[82]), MinDamage = 179, MaxDamage = 193, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.22 * BaseMana[83]), MinDamage = 183, MaxDamage = 197, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.22 * BaseMana[84]), MinDamage = 187, MaxDamage = 201, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.22 * BaseMana[85]), MinDamage = 191, MaxDamage = 205, SpellDamageCoefficient = 0.097f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1614,6 +1767,7 @@ namespace Rawr.Mage
     public class BlastWaveTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static BlastWaveTemplate()
         {
             // spell data for Blast Wave is not level adjusted except for level 70 and 80, adjust if the needed data is found
@@ -1628,10 +1782,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
             SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 882, MaxDamage = 1038, SpellDamageCoefficient = 0.1929f };
             SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 1047, MaxDamage = 1233, SpellDamageCoefficient = 0.1929f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         public void Initialize(Solver solver)
@@ -1648,6 +1815,7 @@ namespace Rawr.Mage
     public class DragonsBreathTemplate : SpellTemplate
     {
         public static SpellData[] SpellData = new SpellData[11];
+        public static SpellData[] SpellDataBeta = new SpellData[6];
         static DragonsBreathTemplate()
         {
             // spell data for Dragon's Breath is not level adjusted except for level 70 and 80, adjust if the needed data is found
@@ -1662,10 +1830,23 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
             SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 935, MaxDamage = 1085, SpellDamageCoefficient = 0.1929f };
             SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 1101, MaxDamage = 1279, SpellDamageCoefficient = 0.1929f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            return SpellData[options.PlayerLevel - 70];
+            if (options.Beta)
+            {
+                return SpellDataBeta[options.PlayerLevel - 80];
+            }
+            else
+            {
+                return SpellData[options.PlayerLevel - 70];
+            }
         }
 
         public void Initialize(Solver solver)
@@ -1696,6 +1877,11 @@ namespace Rawr.Mage
             SpellData[9] = new SpellData() { Cost = (int)(0.74 * BaseMana[79]), MinDamage = 2816, MaxDamage = 2816, SpellDamageCoefficient = 1.1429f };
             SpellData[10] = new SpellData() { Cost = (int)(0.74 * BaseMana[80]), MinDamage = 3408, MaxDamage = 3408, SpellDamageCoefficient = 1.1429f };
             SpellDataBeta[0] = new SpellData() { Cost = (int)(0.74 * BaseMana[80]), MinDamage = 4 * 402, MaxDamage = 4 * 402, SpellDamageCoefficient = 4 * 0.14426f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.74 * BaseMana[81]), MinDamage = 4 * 411, MaxDamage = 4 * 411, SpellDamageCoefficient = 4 * 0.14426f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.74 * BaseMana[82]), MinDamage = 4 * 420, MaxDamage = 4 * 420, SpellDamageCoefficient = 4 * 0.14426f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.74 * BaseMana[83]), MinDamage = 4 * 429, MaxDamage = 4 * 429, SpellDamageCoefficient = 4 * 0.14426f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.74 * BaseMana[84]), MinDamage = 4 * 438, MaxDamage = 4 * 438, SpellDamageCoefficient = 4 * 0.14426f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.74 * BaseMana[85]), MinDamage = 4 * 447, MaxDamage = 4 * 447, SpellDamageCoefficient = 4 * 0.14426f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {

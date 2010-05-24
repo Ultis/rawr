@@ -879,6 +879,51 @@ namespace Rawr.Mage
                             break;
                     }
                     break;
+                case 81:
+                    statsRaceHealth = 9551f;
+                    statsRaceMana = 4287f;
+                    statsRaceStrength = 31f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 60f;
+                    statsRaceIntellect = 188f;
+                    statsRaceSpirit = 177f;
+                    break;
+                case 82:
+                    statsRaceHealth = 13418f;
+                    statsRaceMana = 6102f;
+                    statsRaceStrength = 31f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 60f;
+                    statsRaceIntellect = 191f;
+                    statsRaceSpirit = 180f;
+                    break;
+                case 83:
+                    statsRaceHealth = 13418f;
+                    statsRaceMana = 6102f;
+                    statsRaceStrength = 31f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 60f;
+                    statsRaceIntellect = 191f;
+                    statsRaceSpirit = 180f;
+                    break;
+                case 84:
+                    statsRaceHealth = 13418f;
+                    statsRaceMana = 6102f;
+                    statsRaceStrength = 31f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 60f;
+                    statsRaceIntellect = 191f;
+                    statsRaceSpirit = 180f;
+                    break;
+                case 85:
+                    statsRaceHealth = 13418f;
+                    statsRaceMana = 6102f;
+                    statsRaceStrength = 31f;
+                    statsRaceAgility = 46f;
+                    statsRaceStamina = 60f;
+                    statsRaceIntellect = 191f;
+                    statsRaceSpirit = 180f;
+                    break;
             }
             MageTalents talents = character.MageTalents;
 
@@ -999,8 +1044,8 @@ namespace Rawr.Mage
 
             float spellDamageFromIntellectPercentage = 0.03f * talents.MindMastery;
 
-            statsTotal.SpellPower += statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower;
-            statsTotal.SpellPower += spellDamageFromIntellectPercentage * statsTotal.Intellect;
+            statsTotal.SpellPower += (float)Math.Floor(statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower);
+            statsTotal.SpellPower += (float)Math.Floor(spellDamageFromIntellectPercentage * statsTotal.Intellect);
             if (calculationOptions.Beta)
             {
                 statsTotal.SpellPower += statsTotal.Intellect - 10;

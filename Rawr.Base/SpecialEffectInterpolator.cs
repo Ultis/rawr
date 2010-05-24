@@ -55,7 +55,7 @@ namespace Rawr
                         intervalMin = 0.5f * interval;
                         updateGrid = true;
                     }
-                    if (interval > intervalMax)
+                    if (interval >= intervalMax)
                     {
                         intervalMax = 1.5f * interval;
                         updateGrid = true;

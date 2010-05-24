@@ -65,6 +65,11 @@ namespace Rawr.Mage
             BaseMana[78] = 3063;
             BaseMana[79] = 3166;
             BaseMana[80] = 3268;
+            BaseMana[81] = 4567;
+            BaseMana[82] = 6382;
+            BaseMana[83] = 6382;
+            BaseMana[84] = 6382;
+            BaseMana[85] = 6382;
         }
 
         public virtual Spell GetSpell(CastingState castingState)

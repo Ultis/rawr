@@ -33,7 +33,6 @@
             this.tabControlFight2 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBoxChannelLatency = new System.Windows.Forms.TextBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label89 = new System.Windows.Forms.Label();
             this.textBoxGCDLatency = new System.Windows.Forms.TextBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -306,6 +305,9 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
+            this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.label127 = new System.Windows.Forms.Label();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.label107 = new System.Windows.Forms.Label();
@@ -358,12 +360,9 @@
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label21 = new System.Windows.Forms.Label();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControlFight2.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage8.SuspendLayout();
@@ -384,6 +383,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
             this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControlFight2
@@ -434,11 +434,6 @@
             this.textBoxChannelLatency.Name = "textBoxChannelLatency";
             this.textBoxChannelLatency.Size = new System.Drawing.Size(75, 20);
             this.textBoxChannelLatency.TabIndex = 159;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label89
             // 
@@ -505,7 +500,12 @@
             "77",
             "78",
             "79",
-            "80"});
+            "80",
+            "81",
+            "82",
+            "83",
+            "84",
+            "85"});
             this.comboBoxPlayerLevel.Location = new System.Drawing.Point(111, 33);
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
@@ -1448,7 +1448,14 @@
             "80",
             "81",
             "82",
-            "83"});
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90"});
             this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(128, 238);
             this.comboBoxAoeTargetLevel.Name = "comboBoxAoeTargetLevel";
             this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(75, 21);
@@ -1597,7 +1604,14 @@
             "80",
             "81",
             "82",
-            "83"});
+            "83",
+            "84",
+            "85",
+            "86",
+            "87",
+            "88",
+            "89",
+            "90"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(128, 3);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
             this.comboBoxTargetLevel.Size = new System.Drawing.Size(75, 21);
@@ -3291,6 +3305,36 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(-3, 277);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(89, 13);
+            this.label21.TabIndex = 217;
+            this.label21.Text = "Segment Mana: *";
+            this.toolTipMage.SetToolTip(this.label21, "Segment each time segment based on Evocation usage.");
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplaySegmentMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox8.Location = new System.Drawing.Point(209, 277);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(15, 14);
+            this.checkBox8.TabIndex = 216;
+            this.checkBox8.UseVisualStyleBackColor = true;
+            // 
+            // checkBox9
+            // 
+            this.checkBox9.AutoSize = true;
+            this.checkBox9.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonSegmentMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.checkBox9.Location = new System.Drawing.Point(164, 277);
+            this.checkBox9.Name = "checkBox9";
+            this.checkBox9.Size = new System.Drawing.Size(15, 14);
+            this.checkBox9.TabIndex = 215;
+            this.checkBox9.UseVisualStyleBackColor = true;
+            // 
             // label127
             // 
             this.label127.AutoSize = true;
@@ -3848,35 +3892,10 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label21
+            // calculationOptionsMageBindingSource
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(-3, 277);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(89, 13);
-            this.label21.TabIndex = 217;
-            this.label21.Text = "Segment Mana: *";
-            this.toolTipMage.SetToolTip(this.label21, "Segment each time segment based on Evocation usage.");
-            // 
-            // checkBox8
-            // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "DisplaySegmentMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox8.Location = new System.Drawing.Point(209, 277);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(15, 14);
-            this.checkBox8.TabIndex = 216;
-            this.checkBox8.UseVisualStyleBackColor = true;
-            // 
-            // checkBox9
-            // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.calculationOptionsMageBindingSource, "ComparisonSegmentMana", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBox9.Location = new System.Drawing.Point(164, 277);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(15, 14);
-            this.checkBox9.TabIndex = 215;
-            this.checkBox9.UseVisualStyleBackColor = true;
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -3889,7 +3908,6 @@
             this.tabControlFight2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -3920,6 +3938,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}

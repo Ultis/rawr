@@ -2344,63 +2344,72 @@ namespace Rawr.Mage
             BaseFrostFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * MageTalents.FirePower;
 
             float spellCritPerInt = 0f;
-            float spellCritBase = 0f;
+            float spellCritBase = 0.9075f;
             float baseRegen = 0f;
             switch (playerLevel)
             {
                 case 70:
                     spellCritPerInt = 0.0125f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.005596f;
                     break;
                 case 71:
                     spellCritPerInt = 0.0116f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.005316f;
                     break;
                 case 72:
                     spellCritPerInt = 0.0108f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.005049f;
                     break;
                 case 73:
                     spellCritPerInt = 0.0101f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.004796f;
                     break;
                 case 74:
                     spellCritPerInt = 0.0093f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.004555f;
                     break;
                 case 75:
                     spellCritPerInt = 0.0087f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.004327f;
                     break;
                 case 76:
                     spellCritPerInt = 0.0081f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.004110f;
                     break;
                 case 77:
                     spellCritPerInt = 0.0075f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.003903f;
                     break;
                 case 78:
                     spellCritPerInt = 0.007f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.003708f;
                     break;
                 case 79:
                     spellCritPerInt = 0.0065f;
-                    spellCritBase = 0.9075f;
                     baseRegen = 0.003522f;
                     break;
                 case 80:
                     spellCritPerInt = 0.006f;
-                    spellCritBase = 0.9075f;
+                    baseRegen = 0.003345f;
+                    break;
+                case 81:
+                    spellCritPerInt = 0.0042f;
+                    baseRegen = 0.003345f;
+                    break;
+                case 82:
+                    spellCritPerInt = 0.003f;
+                    baseRegen = 0.003345f;
+                    break;
+                case 83:
+                    spellCritPerInt = 0.003f;
+                    baseRegen = 0.003345f;
+                    break;
+                case 84:
+                    spellCritPerInt = 0.003f;
+                    baseRegen = 0.003345f;
+                    break;
+                case 85:
+                    spellCritPerInt = 0.003f;
                     baseRegen = 0.003345f;
                     break;
             }
@@ -2408,7 +2417,7 @@ namespace Rawr.Mage
             float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * 0.02f * MageTalents.ArcaneConcentration * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
             if (CalculationOptions.Beta)
             {
-                if (fire > arcane && fire > frost)
+                if (fire > arcane && fire >= frost)
                 {
                     spellCrit += (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
                 }
@@ -2493,7 +2502,7 @@ namespace Rawr.Mage
             CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
             if (CalculationOptions.Beta)
             {
-                if (arcane > fire && arcane > frost)
+                if (arcane >= fire && arcane >= frost)
                 {
                     CastingSpeedMultiplier *= (1 + (Math.Min(51, MaxTalents) * 0.15700000524521f) * 0.01f);
                 }
@@ -2541,7 +2550,7 @@ namespace Rawr.Mage
             ManaAdeptBonus = 0.0f;
             if (CalculationOptions.Beta)
             {
-                if (arcane > fire && arcane > frost)
+                if (arcane >= fire && arcane >= frost)
                 {
                     ManaAdeptBonus = (0.23600000143051f * Math.Min(51, arcane) + 1.5f * Mastery) * 0.01f; // 0.12036
                     needsQuadratic = true;
@@ -3429,6 +3438,13 @@ namespace Rawr.Mage
                 EvocationDurationIV = evocationDuration / 1.2f;
                 EvocationDurationHero = evocationDuration / 1.3f;
                 EvocationDurationIVHero = evocationDuration / 1.2f / 1.3f;
+                if (CalculationOptions.Beta)
+                {
+                    EvocationDuration = (float)Math.Floor(8 / (EvocationDuration / 4)) * EvocationDuration / 4;
+                    EvocationDurationIV = (float)Math.Floor(8 / (EvocationDurationIV / 4)) * EvocationDurationIV / 4;
+                    EvocationDurationHero = (float)Math.Floor(8 / (EvocationDurationHero / 4)) * EvocationDurationHero / 4;
+                    EvocationDurationIVHero = (float)Math.Floor(8 / (EvocationDurationIVHero / 4)) * EvocationDurationIVHero / 4;
+                }
                 float evocationMana = baseStats.Mana;
                 EvocationRegen = BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed;
                 EvocationRegenIV = BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * evoBaseState.CastingSpeed * 1.2f;

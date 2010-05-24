@@ -700,12 +700,19 @@ namespace Rawr.Mage
             {
                 if (manaPotionAvailable && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
                 if (CalculationOptions.ManaGemEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaGem, 1.0)) return false;
-                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, EvocationDuration / 4.0)) return false;
+
+                CastingState evoBaseState = BaseState;
+                if (CalculationOptions.Enable2T10Evocation && BaseStats.Mage2T10 > 0)
+                {
+                    evoBaseState = BaseState.Tier10TwoPieceState;
+                }
+
+                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / evoBaseState.CastingSpeed)) return false;
                 if (CalculationOptions.EnableHastedEvocation)
                 {
-                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / BaseState.CastingSpeed / 1.2)) return false;
-                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, 2.0 / BaseState.CastingSpeed / 1.3)) return false;
-                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, 2.0 / BaseState.CastingSpeed / 1.2 / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / evoBaseState.CastingSpeed / 1.2)) return false;
+                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, 2.0 / evoBaseState.CastingSpeed / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, 2.0 / evoBaseState.CastingSpeed / 1.2 / 1.3)) return false;
                 }
                 if (conjureManaGem && !ValidateIntegralConsumableOverall(VariableType.ConjureManaGem, ConjureManaGem.CastTime)) return false;
             }

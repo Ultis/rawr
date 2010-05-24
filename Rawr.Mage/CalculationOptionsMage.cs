@@ -44,7 +44,14 @@ namespace Rawr.Mage
             set
             {
                 playerLevel = value;
-                levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (playerLevel - 70) / 10f));
+                if (playerLevel <= 80)
+                {
+                    levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (playerLevel - 70) / 10f));
+                }
+                else
+                {
+                    levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(7f / 41f, (playerLevel - 80) / 5f));
+                }
                 OnPropertyChanged("PlayerLevel");
             }
         }
