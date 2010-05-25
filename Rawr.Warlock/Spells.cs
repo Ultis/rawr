@@ -681,6 +681,13 @@ namespace Rawr.Warlock {
                         * SimulatedStats["Pyroclasm Uprate"].GetValue()
                         * Mommy.Talents.Pyroclasm * .02f);
             }
+            if (Mommy.Talents.EmpoweredImp > 0 && Mommy.Pet is Imp) {
+                SpellModifiers.AddCritChance(
+                    GetAvgTimeUsed()
+                        * Mommy.Pet.GetCritsPerSec()
+                        * Mommy.Talents.EmpoweredImp
+                        / 3f);
+            }
         }
 
         public virtual void SetDamageStats(float baseSpellPower) {

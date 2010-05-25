@@ -320,7 +320,7 @@ namespace Rawr.Warlock {
             }
             #endregion
 
-            #region Calculate spell modifiers
+            #region Calculate spell modifiers, Part 1
 
             // add procs to RawStats
             if (CastSpells.ContainsKey("Curse Of The Elements")) {
@@ -386,22 +386,31 @@ namespace Rawr.Warlock {
             }
             Add4pT10(SpellModifiers);
 
+            Stats critProcs = CalcCritProcs();
+            Stats.CritRating += critProcs.CritRating;
+            Stats.SpellCrit += critProcs.SpellCrit;
+            Stats.SpellCritOnTarget += critProcs.SpellCritOnTarget;
+
             if (Pet != null) {
                 Pet.CalcStats1();
                 Stats.SpellPower
                     += Talents.DemonicKnowledge
                         * .04f
                         * (Pet.CalcStamina() + Pet.CalcIntellect());
-                float empower = Talents.EmpoweredImp / 3f;
-                if (Pet is Imp && empower > 0) {
-                    SpellModifiers.AddCritChance(
-                        empower * AvgTimeUsed * Pet.GetCritsPerSec());
-                }
+            }
+
+            #endregion
+
+            float damageDone = CalcRemainingProcs();
+
+            #region Calculate Spell Modifiers, Part 2
+
+            if (Pet != null) {
                 float pact = Pet.GetPactProcBenefit();
                 Stats.SpellPower += pact;
                 Pet.CalcStats2(pact);
             }
-
+            
             // finilize each spell's modifiers.
             // Start with Conflagrate, since pyroclasm depends on its results.
             if (CastSpells.ContainsKey("Conflagrate")) {
@@ -412,9 +421,8 @@ namespace Rawr.Warlock {
                     spell.FinalizeSpellModifiers();
                 }
             }
-            #endregion
 
-            float damageDone = CalcRemainingProcs();
+            #endregion
 
             #region Calculate damage done for each spell
             Spell conflagrate = null;
@@ -564,16 +572,190 @@ namespace Rawr.Warlock {
             }
         }
 
+        private Stats CalcCritProcs() {
+
+            if (Options.NoProcs) {
+                return new Stats();
+            }
+
+            Dictionary<int, float> periods = new Dictionary<int, float>();
+            Dictionary<int, float> chances = new Dictionary<int, float>();
+            PopulateTriggers(periods, chances);
+
+            Stats procStats = new Stats();
+            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
+                    continue;
+                }
+
+                Stats proc = CalcNormalProc(effect, periods, chances);
+                procStats.Accumulate(proc);
+                if (effect.Trigger == Trigger.Use && !IsDoublePot(effect)) {
+                    ExtraCritAtMax
+                        += StatUtils.CalcSpellCrit(effect.Stats)
+                            - StatUtils.CalcSpellCrit(proc);
+                }
+            }
+            return procStats;
+        }
+
         private float CalcRemainingProcs() {
 
             if (Options.NoProcs) {
                 return 0f;
             }
 
-            Dictionary<int, float> periods
-                = new Dictionary<int, float>();
-            Dictionary<int, float> chances
-                = new Dictionary<int, float>();
+            Dictionary<int, float> periods = new Dictionary<int, float>();
+            Dictionary<int, float> chances = new Dictionary<int, float>();
+            PopulateTriggers(periods, chances);
+
+            float procdDamage = 0f;
+            Stats procStats = new Stats();
+            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
+                    continue;
+                }
+
+                Stats effectStats = effect.Stats;
+                if (effectStats.ValkyrDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.AddCritChance(.05f + Stats.SpellCritOnTarget);
+                    mods.AddMultiplicativeMultiplier(
+                        Stats.BonusHolyDamageMultiplier);
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effect.Stats.ValkyrDamage,
+                            periods[(int) Trigger.DamageDone],
+                            chances[(int) effect.Trigger],
+                            mods);
+                } else if (
+                    effectStats.ShadowDamage > 0
+                        || effectStats.FireDamage > 0
+                        || effectStats.NatureDamage > 0
+                        || effectStats.HolyDamage > 0
+                        || effectStats.FrostDamage > 0) {
+                    SpellModifiers mods = new SpellModifiers();
+                    mods.Accumulate(SpellModifiers);
+                    if (Options.Imbue.Equals("Grand Firestone")) {
+                        mods.AddAdditiveDirectMultiplier(.01f);
+                    }
+                    if (effectStats.ShadowDamage > 0) {
+                        AddShadowModifiers(mods);
+                    } else if (effectStats.FireDamage > 0) {
+                        AddFireModifiers(mods);
+                    }
+                    procdDamage
+                        += CalcDamageProc(
+                            effect,
+                            effectStats.ShadowDamage
+                                + effectStats.FireDamage
+                                + effectStats.NatureDamage
+                                + effectStats.HolyDamage
+                                + effectStats.FrostDamage,
+                            periods[(int) effect.Trigger],
+                            chances[(int) effect.Trigger],
+                            mods);
+                } else {
+                    procStats.Accumulate(
+                        CalcNormalProc(effect, periods, chances));
+                }
+            }
+
+            procStats.HasteRating
+                = procStats.SpellHaste
+                = procStats.Mana
+                = procStats.ManaCostPerc
+                = procStats.ManacostReduceWithin15OnHealingCast
+                = procStats.ManaGainOnGreaterHealOverheal
+                = procStats.ManaorEquivRestore
+                = procStats.ManaRestore
+                = procStats.ManaRestoreFromBaseManaPPM
+                = procStats.ManaRestoreFromMaxManaPerSecond
+                = procStats.ManaRestoreOnCast_5_15
+                = procStats.ManaSpringMp5Increase
+                = procStats.CritRating
+                = procStats.SpellCrit
+                = procStats.SpellCritOnTarget
+                = procStats.PhysicalCrit
+                = 0;
+            Stats.Accumulate(procStats);
+
+            return procdDamage;
+        }
+
+        private Stats CalcNormalProc(
+            SpecialEffect effect,
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances) {
+
+            Stats effectStats = effect.Stats;
+            Stats proc = effect.GetAverageStats(
+                periods[(int) effect.Trigger],
+                chances[(int) effect.Trigger],
+                CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                Options.Duration);
+
+            // Handle "recursive effects" - i.e. those that *enable* a
+            // proc during a short window.
+            if (effect.Stats._rawSpecialEffectDataSize == 1
+                && periods.ContainsKey(
+                    (int) effect.Stats._rawSpecialEffectData[0].Trigger)) {
+
+                SpecialEffect inner
+                    = effect.Stats._rawSpecialEffectData[0];
+                Stats innerStats
+                    = inner.GetAverageStats(
+                        periods[(int) inner.Trigger],
+                        chances[(int) inner.Trigger],
+                        1f,
+                        effect.Duration);
+                float upTime
+                    = effect.GetAverageUptime(
+                        periods[(int) effect.Trigger],
+                        chances[(int) effect.Trigger],
+                        1f,
+                        Options.Duration);
+                proc.Accumulate(innerStats, upTime);
+            }
+
+            return proc;
+        }
+
+        private float CalcDamageProc(
+            SpecialEffect effect,
+            float damagePerProc,
+            float interval,
+            float chance,
+            SpellModifiers modifiers) {
+
+            damagePerProc *=
+                (1 + (modifiers.GetFinalCritMultiplier() - 1)
+                        * modifiers.CritChance)
+                    * modifiers.GetFinalDirectMultiplier()
+                    * (1
+                        - StatConversion.GetAverageResistance(
+                            80, Options.TargetLevel, 0f, 0f));
+            float numProcs
+                = Options.Duration
+                    * effect.GetAverageProcsPerSecond(
+                        interval,
+                        chance,
+                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                        Options.Duration);
+            return numProcs * damagePerProc;
+        }
+
+        private bool IsDoublePot(SpecialEffect effect) {
+
+            return effect.Cooldown == 1200f && effect.Duration == 14f;
+        }
+
+        /// <summary>To be used only after spell casting stats are set</summary>
+        private void PopulateTriggers(
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances) {
+
             float totalCasts = 0f;
             float totalTicks = 0f;
             float corruptionTicks = 0f;
@@ -610,141 +792,6 @@ namespace Rawr.Warlock {
                 totalTicks / Options.Duration,
                 corruptionTicks == 0 ? -1 : Options.Duration / corruptionTicks,
                 castsPerCrittable.GetValue());
-
-            float procdDamage = 0f;
-            Stats procStats = new Stats();
-            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
-                if (!periods.ContainsKey((int) effect.Trigger)) {
-                    continue;
-                }
-
-                float interval = periods[(int) effect.Trigger];
-                float chance = chances[(int) effect.Trigger];
-
-                Stats effectStats = effect.Stats;
-                if (effectStats.ValkyrDamage > 0) {
-                    SpellModifiers mods = new SpellModifiers();
-                    mods.AddCritChance(.05f + Stats.SpellCritOnTarget);
-                    mods.AddMultiplicativeMultiplier(
-                        Stats.BonusHolyDamageMultiplier);
-                    procdDamage
-                        += CalcDamageProc(
-                            effect,
-                            effect.Stats.ValkyrDamage,
-                            periods[(int) Trigger.DamageDone],
-                            chance,
-                            mods);
-                } else if (
-                    effectStats.ShadowDamage > 0
-                        || effectStats.FireDamage > 0
-                        || effectStats.NatureDamage > 0
-                        || effectStats.HolyDamage > 0
-                        || effectStats.FrostDamage > 0) {
-                    SpellModifiers mods = new SpellModifiers();
-                    mods.Accumulate(SpellModifiers);
-                    if (Options.Imbue.Equals("Grand Firestone")) {
-                        mods.AddAdditiveDirectMultiplier(.01f);
-                    }
-                    if (effectStats.ShadowDamage > 0) {
-                        AddShadowModifiers(mods);
-                    } else if (effectStats.FireDamage > 0) {
-                        AddFireModifiers(mods);
-                    }
-                    procdDamage
-                        += CalcDamageProc(
-                            effect,
-                            effectStats.ShadowDamage
-                                + effectStats.FireDamage
-                                + effectStats.NatureDamage
-                                + effectStats.HolyDamage
-                                + effectStats.FrostDamage,
-                            interval,
-                            chance,
-                            mods);
-                } else {
-                    Stats proc = effect.GetAverageStats(
-                        interval,
-                        chance,
-                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                        Options.Duration);
-
-                    // Handle "recursive effects" - i.e. those that *enable* a
-                    // proc during a short window.
-                    if (effect.Stats._rawSpecialEffectDataSize == 1
-                        && periods.ContainsKey(
-                            (int) effect.Stats._rawSpecialEffectData[0].Trigger)) {
-
-                        SpecialEffect inner
-                            = effect.Stats._rawSpecialEffectData[0];
-                        Stats innerStats
-                            = inner.GetAverageStats(
-                                periods[(int) inner.Trigger],
-                                chances[(int) inner.Trigger],
-                                1f,
-                                effect.Duration);
-                        float upTime
-                            = effect.GetAverageUptime(
-                                periods[(int) effect.Trigger],
-                                chances[(int) effect.Trigger],
-                                1f,
-                                Options.Duration);
-                        proc.Accumulate(innerStats, upTime);
-                    }
-
-                    procStats.Accumulate(proc);
-                    if (effect.Trigger == Trigger.Use && !IsDoublePot(effect)) {
-                        ExtraCritAtMax
-                            += StatUtils.CalcSpellCrit(effect.Stats)
-                                - StatUtils.CalcSpellCrit(proc);
-                    }
-                }
-            }
-
-            procStats.HasteRating
-                = procStats.SpellHaste
-                = procStats.Mana
-                = procStats.ManaCostPerc
-                = procStats.ManacostReduceWithin15OnHealingCast
-                = procStats.ManaGainOnGreaterHealOverheal
-                = procStats.ManaorEquivRestore
-                = procStats.ManaRestore
-                = procStats.ManaRestoreFromBaseManaPPM
-                = procStats.ManaRestoreFromMaxManaPerSecond
-                = procStats.ManaRestoreOnCast_5_15
-                = procStats.ManaSpringMp5Increase
-                = 0;
-            Stats.Accumulate(procStats);
-
-            return procdDamage;
-        }
-
-        private float CalcDamageProc(
-            SpecialEffect effect,
-            float damagePerProc,
-            float interval,
-            float chance,
-            SpellModifiers modifiers) {
-
-            damagePerProc *=
-                (1 + (modifiers.GetFinalCritMultiplier() - 1)
-                        * modifiers.CritChance)
-                    * modifiers.GetFinalDirectMultiplier()
-                    * (1
-                        - StatConversion.GetAverageResistance(
-                            80, Options.TargetLevel, 0f, 0f));
-            float numProcs
-                = Options.Duration
-                    * effect.GetAverageProcsPerSecond(
-                        interval,
-                        chance,
-                        CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                        Options.Duration);
-            return numProcs * damagePerProc;
-        }
-
-        private bool IsDoublePot(SpecialEffect effect) {
-
-            return effect.Cooldown == 1200f && effect.Duration == 14f;
         }
 
         /// <param name="castPeriod">

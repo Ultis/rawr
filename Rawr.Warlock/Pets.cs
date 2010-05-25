@@ -88,6 +88,13 @@ namespace Rawr.Warlock {
 
         public void CalcStats1() {
 
+            // Stam & Int have to happen in this stage, so that Demonic
+            // Knowledge is in effect when calculating the benefit of a
+            // Demonic Pact proc.
+
+            // Crit has to happen in this stage, so that Empowered Imp gives
+            // the warlocks the right amount of crit.
+
             WarlockTalents talents = Mommy.Talents;
             float vitality = talents.FelVitality * .05f;
             float tacticsCrit
@@ -106,9 +113,8 @@ namespace Rawr.Warlock {
                 BonusIntellectMultiplier = vitality,
                 SpellCrit
                     = BaseSpellCrit + tacticsCrit + Mommy.Stats.Warlock2T9,
-                AttackPower
-                    = BaseAttackPower
-                        + AttackPowerCoef * Mommy.CalcSpellPower(),
+                SpellPower = BaseSpellPower,
+                AttackPower = BaseAttackPower,
                 PhysicalCrit = .0329f + tacticsCrit,
             };
             Stats.Accumulate(Mommy.PetBuffs);
@@ -121,10 +127,12 @@ namespace Rawr.Warlock {
 
         public void CalcStats2(float pactProcBenefit) {
 
+            // only by now to we have an accurate read on the warlock's average
+            // spell power.
+
             Stats.SpellPower
-                = BaseSpellPower
-                    + SpellPowerCoef * Mommy.CalcSpellPower()
-                    + pactProcBenefit;
+                += SpellPowerCoef * Mommy.CalcSpellPower() + pactProcBenefit;
+            Stats.AttackPower += AttackPowerCoef * Mommy.CalcSpellPower();
         }
 
         protected virtual void FinalizeModifiers() {
@@ -323,7 +331,10 @@ namespace Rawr.Warlock {
             float spellRate;
             if (SpecialDamagePerSpellPower == 0) {
                 spellRate = 0f;
-                meleeRate += 1 / GetSpecialSpeed();
+                float specialSpeed = GetSpecialSpeed();
+                if (specialSpeed > 0) {
+                    meleeRate += 1 / GetSpecialSpeed();
+                }
             } else {
                 spellRate = 1 / GetSpecialSpeed();
             }
@@ -359,6 +370,15 @@ namespace Rawr.Warlock {
             DamagePerAttackPower = .187f;
 
             SpecialCooldown = 6f;
+        }
+
+        protected override void FinalizeModifiers() {
+            
+            base.FinalizeModifiers();
+            Stats.BonusAttackPowerMultiplier
+                = (1f + Stats.BonusAttackPowerMultiplier) * 1.5f - 1f;
+            TotalModifiers.AddMultiplicativeMultiplier(
+                Mommy.Talents.MasterDemonologist * .01f);
         }
 
         public override float GetSpecialDamage() {
@@ -444,7 +464,7 @@ namespace Rawr.Warlock {
                 Stats.BonusFireDamageMultiplier);
             SpecialModifiers.AddAdditiveMultiplier(.1f * talents.ImprovedImp);
             SpecialModifiers.AddAdditiveMultiplier(.04f * talents.UnholyPower);
-            SpecialModifiers.AddAdditiveMultiplier(demonologist);
+            SpecialModifiers.AddMultiplicativeMultiplier(demonologist);
             SpecialModifiers.AddAdditiveMultiplier(.1f * talents.EmpoweredImp);
             SpecialModifiers.AddCritBonusMultiplier(.2f * talents.Ruin);
             if (talents.GlyphImp) {
