@@ -94,6 +94,7 @@ namespace Rawr.Warlock {
             options.Pet = "None";
             options.TargetLevel = 83;
             options.Duration = 300;
+            options.Latency = 100;
             options.Rotations = new List<Rotation>();
 
             options.Rotations.Add(

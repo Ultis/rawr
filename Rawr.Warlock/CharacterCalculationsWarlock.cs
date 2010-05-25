@@ -269,6 +269,9 @@ namespace Rawr.Warlock {
         #region dps calculations
 
         private float CalcPersonalDps() {
+            
+            // SP & Crit: lock before pet (both affected by procs)
+            // Procs after crit
 
             if (Options.GetActiveRotation().GetError() != null) {
                 return 0f;
@@ -885,21 +888,23 @@ namespace Rawr.Warlock {
 
         public void Add4pT10(SpellModifiers modifiers) {
 
-            if (Stats.Warlock4T10 > 0) {
-                Spell trigger = null;
-                if (CastSpells.ContainsKey("Immolate")) {
-                    trigger = CastSpells["Immolate"];
-                } else if (CastSpells.ContainsKey("Unstable Affliction")) {
-                    trigger = CastSpells["Unstable Affliction"];
-                }
-                if (trigger != null) {
-                    float numTicks
-                        = HitChance * trigger.GetNumCasts() * trigger.NumTicks;
-                    float uprate
-                        = Spell.CalcUprate(
-                            .15f, 10f, Options.Duration / numTicks);
-                    modifiers.AddMultiplicativeMultiplier(.1f * uprate);
-                }
+            if (Stats.Warlock4T10 == 0) {
+                return;
+            }
+
+            Spell trigger = null;
+            if (CastSpells.ContainsKey("Immolate")) {
+                trigger = CastSpells["Immolate"];
+            } else if (CastSpells.ContainsKey("Unstable Affliction")) {
+                trigger = CastSpells["Unstable Affliction"];
+            }
+            if (trigger != null) {
+                float numTicks
+                    = HitChance * trigger.GetNumCasts() * trigger.NumTicks;
+                float uprate
+                    = Spell.CalcUprate(
+                        .15f, 10f, Options.Duration / numTicks);
+                modifiers.AddMultiplicativeMultiplier(.1f * uprate);
             }
         }
 

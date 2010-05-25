@@ -90,6 +90,12 @@ namespace Rawr.Warlock {
 
             WarlockTalents talents = Mommy.Talents;
             float vitality = talents.FelVitality * .05f;
+            float tacticsCrit
+                = .02f * talents.DemonicTactics
+                    + .1f
+                        * talents.ImprovedDemonicTactics
+                        * (Mommy.CalcSpellCrit()
+                            - Mommy.Stats.SpellCritOnTarget);
             Stats = new Stats() {
                 Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina(),
                 Intellect
@@ -99,17 +105,11 @@ namespace Rawr.Warlock {
                 BonusStaminaMultiplier = vitality,
                 BonusIntellectMultiplier = vitality,
                 SpellCrit
-                    = BaseSpellCrit
-                        + .02f * talents.DemonicTactics
-                        + .1f
-                            * talents.ImprovedDemonicTactics
-                            * (Mommy.CalcSpellCrit()
-                                - Mommy.Stats.SpellCritOnTarget)
-                        + Mommy.Stats.Warlock2T9,
+                    = BaseSpellCrit + tacticsCrit + Mommy.Stats.Warlock2T9,
                 AttackPower
                     = BaseAttackPower
                         + AttackPowerCoef * Mommy.CalcSpellPower(),
-                PhysicalCrit = .0329f,
+                PhysicalCrit = .0329f + tacticsCrit,
             };
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -195,11 +195,6 @@ namespace Rawr.Warlock {
             return 2f / CalcMeleeHaste();
         }
 
-        public float CalcCharSheetMeleeHit() {
-
-            return (BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower());
-        }
-
         public float CalcMeleeHitChance() {
 
             // the warlock's miss rate, not including buff/debuff
@@ -228,6 +223,10 @@ namespace Rawr.Warlock {
             int level = Mommy.Options.TargetLevel;
             int levelDelta = level - 80;
 
+            float characterSheetDamage
+                = BaseMeleeDamage
+                    + DamagePerAttackPower * CalcAttackPower()
+                    + bonusDamage;
             float combatTableModifier
                 = CalcMeleeHitChance()
                     + CalcMeleeCrit()
@@ -244,7 +243,7 @@ namespace Rawr.Warlock {
                         Stats.ArmorPenetration, // arpen debuffs
                         0f, // arpen buffs
                         0f); // arpen rating
-            return (CalcCharSheetMeleeHit() + bonusDamage)
+            return characterSheetDamage
                 * combatTableModifier
                 * armorModifier
                 * MeleeModifiers.GetFinalDirectMultiplier();
