@@ -18,15 +18,15 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-            labelVersionHistory.Text = @"v2.3.17.0
- - Lots of improvements to the default data files. There is a known issue with the source on PvP items, but otherwise should be pretty good.
- - Fix for a bug with gemming templates being considered available for the optimizer when disabled in some cases.
- - Some significant improvements to Optimizer performance.
- - Significant improvements to launch time.
- - Rawr.Warlock: Tons of bugfixes and improvements! Pet modeling! Joy!
- - Rawr.TankDK: Improvements to rotation handling.
- - Rawr.Elemental: Added option to use a DPS totem. Fix for Glyph of Flame Shock calculations.
- - Rawr.Mage: Fix for a bug with potion usage. Added some extra information in the Solution results. Fix for damage calculations on Living BomB and Pyroblast DoTs.";
+			labelVersionHistory.Text = @"v2.3.18.0
+ - Fix for bug in parsing characters with certain abnormal characters in their data.
+ - Fix for a lockup in the item editor.
+ - More improvements to the default filters and item cache.
+ - Rawr.Mage: Improvements to rotation solver.
+ - Rawr.TankDK: Fix for crashing bug.
+ - Rawr.Retribution: Fix for RunSpeed being relevant.
+ - Rawr.Warlock: Further improvements to pet modeling.
+ - Rawr.RestoSham: Fix for certain profession buffs being relevant.";
  			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
