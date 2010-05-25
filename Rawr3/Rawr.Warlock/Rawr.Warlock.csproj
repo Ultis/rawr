@@ -72,11 +72,11 @@
     <Compile Include="..\..\Rawr.Warlock\SimulatedStat.cs">
       <Link>SimulatedStat.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Warlock\SpellModifiers.cs">
-      <Link>SpellModifiers.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Warlock\Spells.cs">
       <Link>Spells.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Warlock\StatUtils.cs">
+      <Link>StatUtils.cs</Link>
     </Compile>
     <Compile Include="CalculationOptionsPanelWarlock.xaml.cs">
       <DependentUpon>CalculationOptionsPanelWarlock.xaml</DependentUpon>

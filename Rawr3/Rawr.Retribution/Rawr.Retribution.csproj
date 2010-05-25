@@ -84,17 +84,23 @@
     <Compile Include="..\..\Rawr.Retribution\Rotation.cs">
       <Link>Rotation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Retribution\RotationParameters.cs">
-      <Link>RotationParameters.cs</Link>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.ECD Table\EffectiveCooldown.cs">
+      <Link>Rotation.ECD Table\EffectiveCooldown.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Retribution\RotationSimulator.cs">
-      <Link>RotationSimulator.cs</Link>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.FCFS Simulator\Simulator.cs">
+      <Link>Rotation.FCFS Simulator\Simulator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.FCFS Simulator\SimulatorAbility.cs">
+      <Link>Rotation.FCFS Simulator\SimulatorAbility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.FCFS Simulator\SimulatorEngine.cs">
+      <Link>Rotation.FCFS Simulator\SimulatorEngine.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Retribution\Rotation.FCFS Simulator\SimulatorParameters.cs">
+      <Link>Rotation.FCFS Simulator\SimulatorParameters.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Retribution\RotationSolution.cs">
       <Link>RotationSolution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\SimulatorAbility.cs">
-      <Link>SimulatorAbility.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Retribution\Skill.cs">
       <Link>Skill.cs</Link>

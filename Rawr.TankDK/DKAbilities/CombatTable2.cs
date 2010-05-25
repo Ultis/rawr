@@ -130,7 +130,7 @@ namespace Rawr.TankDK
             {
                 if (c.DeathKnightTalents == null)
                     c.DeathKnightTalents = new DeathKnightTalents();
-                this.m_CState.m_Talents = c.DeathKnightTalents.Clone();
+                this.m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
             }
             this.m_CState.m_Stats = stats.Clone();
             m_Calcs = calcs;

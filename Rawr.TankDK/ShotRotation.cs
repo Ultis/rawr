@@ -64,7 +64,7 @@ namespace Rawr.TankDK {
         {
             if (null != t)
             {
-                tTalents = t.Clone();
+                tTalents = (DeathKnightTalents)t.Clone();
                 //            int iHash = 0;
                 this.GetRotationByTalents(tTalents);
             }
