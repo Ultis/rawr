@@ -234,7 +234,8 @@ namespace Rawr.Warlock {
                     && group != "Set Bonuses"
                     && group != "Food"
                     && group != "Potion"
-                    && group != "Elixirs and Flasks") {
+                    && group != "Elixirs and Flasks"
+                    && group != "Focus Magic, Spell Critical Strike Chance") {
 
                     buffs.Add(buff);
                 }
@@ -633,7 +634,22 @@ namespace Rawr.Warlock {
 
                 return false;
             }
-            return base.IsBuffRelevant(buff, character);
+            if (character != null
+                && Rawr.Properties.GeneralSettings.Default.HideProfEnchants
+                && !character.HasProfession(buff.Professions)) {
+
+                return false;
+            }
+            Stats stats = buff.GetTotalStats();
+            return HasRelevantStats(stats)
+                || stats.Strength > 0
+                || stats.Agility > 0
+                || stats.AttackPower > 0
+                || stats.BonusAttackPowerMultiplier > 0
+                || stats.PhysicalCrit > 0
+                || stats.PhysicalHaste > 0
+                || stats.ArmorPenetration > 0
+                || stats.BonusPhysicalDamageMultiplier > 0;
         }
 
         protected bool RelevantTrinket(SpecialEffect effect) {
@@ -752,7 +768,8 @@ namespace Rawr.Warlock {
                         "Glyph of Immolate",
                         "Glyph of Incinerate",
                         "Glyph of Conflagrate",
-                        "Glyph of Imp" };
+                        "Glyph of Imp",
+                        "Glyph of Felguard" };
             }
             return _relevantGlyphs;
         }

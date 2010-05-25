@@ -115,7 +115,7 @@ namespace Rawr.Warlock {
                     = BaseSpellCrit + tacticsCrit + Mommy.Stats.Warlock2T9,
                 SpellPower = BaseSpellPower,
                 AttackPower = BaseAttackPower,
-                PhysicalCrit = .0329f + tacticsCrit,
+                PhysicalCrit = .0329f + tacticsCrit + Mommy.Stats.Warlock2T9,
             };
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -125,13 +125,9 @@ namespace Rawr.Warlock {
             MeleeModifiers.Accumulate(TotalModifiers);
         }
 
-        public void CalcStats2(float pactProcBenefit) {
+        public void CalcStats2() {
 
-            // only by now to we have an accurate read on the warlock's average
-            // spell power.
-
-            Stats.SpellPower
-                += SpellPowerCoef * Mommy.CalcSpellPower() + pactProcBenefit;
+            Stats.SpellPower += SpellPowerCoef * Mommy.CalcSpellPower();
             Stats.AttackPower += AttackPowerCoef * Mommy.CalcSpellPower();
         }
 
@@ -141,6 +137,8 @@ namespace Rawr.Warlock {
                 Stats.BonusDamageMultiplier);
             MeleeModifiers.AddAdditiveMultiplier(
                 .04f * Mommy.Talents.UnholyPower);
+            MeleeModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusPhysicalDamageMultiplier);
             if (Mommy.Character.Race == CharacterRace.Orc) {
                 TotalModifiers.AddAdditiveMultiplier(.05f);
             }
@@ -303,7 +301,7 @@ namespace Rawr.Warlock {
                 + CalcMeleeCrit() / CalcMeleeSpeed();
         }
 
-        public float GetPactProcBenefit() {
+        public float ApplyPactProcBenefit() {
 
             float pact = .02f * Mommy.Talents.DemonicPact;
             if (pact == 0) {
@@ -349,7 +347,9 @@ namespace Rawr.Warlock {
                 triggerRate,
                 Mommy.Options.Duration);
 
-            return uprate * buff;
+            float benefit = uprate * buff;
+            Stats.SpellPower += benefit;
+            return benefit;
         }
 
         protected float GetEmpowermentCooldown() {
@@ -375,10 +375,16 @@ namespace Rawr.Warlock {
         protected override void FinalizeModifiers() {
             
             base.FinalizeModifiers();
+
+            WarlockTalents talents = Mommy.Talents;
+            float apBonus = 1.5f + talents.DemonicBrutality * .1f;
+            if (Mommy.Talents.GlyphFelguard) {
+                apBonus *= 1.2f;
+            }
             Stats.BonusAttackPowerMultiplier
-                = (1f + Stats.BonusAttackPowerMultiplier) * 1.5f - 1f;
+                = (1f + Stats.BonusAttackPowerMultiplier) * apBonus - 1f;
             TotalModifiers.AddMultiplicativeMultiplier(
-                Mommy.Talents.MasterDemonologist * .01f);
+                talents.MasterDemonologist * .01f);
         }
 
         public override float GetSpecialDamage() {

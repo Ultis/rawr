@@ -406,9 +406,8 @@ namespace Rawr.Warlock {
             #region Calculate Spell Modifiers, Part 2
 
             if (Pet != null) {
-                float pact = Pet.GetPactProcBenefit();
-                Stats.SpellPower += pact;
-                Pet.CalcStats2(pact);
+                Pet.CalcStats2();
+                Stats.SpellPower += Pet.ApplyPactProcBenefit();
             }
             
             // finilize each spell's modifiers.
