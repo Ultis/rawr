@@ -873,11 +873,6 @@ namespace Rawr.Mage
 
             this.mpsRow = mpsRow;
             this.sort = sort;
-            sortinv = new int[cols];
-            for (int i = 0; i < cols; i++)
-            {
-                sortinv[sort[i]] = i;
-            }
             this.Qk = k;
             if (_S == null || _S.Length < cols)
             {

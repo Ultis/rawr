@@ -2774,7 +2774,7 @@ namespace Rawr.Mage
             }
         }
 
-        unsafe private void ConstructSpells()
+        private void ConstructSpells()
         {
             int column = 0;
             if (useIncrementalOptimizations)
@@ -2888,7 +2888,7 @@ namespace Rawr.Mage
             }
         }
 
-        unsafe private void ConstructConjureManaGem()
+        private void ConstructConjureManaGem()
         {
             if (conjureManaGem)
             {
