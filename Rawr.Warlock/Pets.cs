@@ -295,12 +295,6 @@ namespace Rawr.Warlock {
 
         #endregion
 
-        public float GetCritsPerSec() {
-
-            return Mommy.HitChance * CalcSpellCrit() / GetSpecialSpeed()
-                + CalcMeleeCrit() / CalcMeleeSpeed();
-        }
-
         public float ApplyPactProcBenefit() {
 
             float pact = .02f * Mommy.Talents.DemonicPact;
@@ -450,6 +444,11 @@ namespace Rawr.Warlock {
             SpecialBaseDamage = (213f + 239f) / 2f;
             SpecialDamagePerSpellPower = .79f;
             SpecialCastTime = 2.5f - Mommy.Talents.DemonicPower * .25f;
+        }
+
+        public float GetCritsPerSec() {
+
+            return Mommy.HitChance * CalcSpellCrit() / GetSpecialSpeed();
         }
 
         protected override void FinalizeModifiers() {

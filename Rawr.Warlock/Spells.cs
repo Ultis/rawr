@@ -684,7 +684,7 @@ namespace Rawr.Warlock {
             if (Mommy.Talents.EmpoweredImp > 0 && Mommy.Pet is Imp) {
                 SpellModifiers.AddCritChance(
                     GetAvgTimeUsed()
-                        * Mommy.Pet.GetCritsPerSec()
+                        * ((Imp) Mommy.Pet).GetCritsPerSec()
                         * Mommy.Talents.EmpoweredImp
                         / 3f);
             }
