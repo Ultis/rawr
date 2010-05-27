@@ -104,8 +104,8 @@ namespace Rawr.Enhance
         public float CritMultiplierSpell { get { return critMultiplierSpell; } }
 
         public float ChanceSpellHit { get { return 1 - chanceSpellMiss; } }
-        public float ChanceWhiteHitMH { get { return 1 - chanceWhiteMissMH; } }
-        public float ChanceWhiteHitOH { get { return 1 - chanceWhiteMissOH; } }
+        public float ChanceWhiteHitMH { get { return 1 - chanceWhiteMissMH - chanceDodgeMH; } }
+        public float ChanceWhiteHitOH { get { return 1 - chanceWhiteMissOH - chanceDodgeOH; } }
         public float ChanceYellowHitMH { get { return 1 - chanceYellowMissMH; } }
         public float ChanceYellowHitOH { get { return 1 - chanceYellowMissOH; } }
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
@@ -119,10 +119,10 @@ namespace Rawr.Enhance
         public float AverageDodge { get { return (ChanceDodgeMH + ChanceDodgeOH) / 2; } }
         public float AverageParry { get { return (ChanceParryMH + ChanceParryOH) / 2; } }
         public float AverageExpertise { get { return (ExpertiseBonusMH + ExpertiseBonusOH) / 2; } }
-        public float AverageWhiteHit { get { return (ChanceWhiteHitMH + ChanceWhiteHitOH) / 2; } }
-        public float AverageWhiteCrit { get { return (ChanceWhiteCritMH + ChanceWhiteCritOH) / 2; } }
-        public float AverageYellowHit { get { return (ChanceYellowHitMH + ChanceYellowHitOH) / 2; } }
-        public float AverageYellowCrit { get { return (ChanceYellowCritMH + ChanceYellowCritOH) / 2; } }
+        public float AverageWhiteHitChance { get { return (ChanceWhiteHitMH + ChanceWhiteHitOH) / 2; } }
+        public float AverageWhiteCritChance { get { return (ChanceWhiteCritMH + ChanceWhiteCritOH) / 2; } }
+        public float AverageYellowHitChance { get { return (ChanceYellowHitMH + ChanceYellowHitOH) / 2; } }
+        public float AverageYellowCritChance { get { return (ChanceYellowCritMH + ChanceYellowCritOH) / 2; } }
 
         public float UnhastedMHSpeed { get { return unhastedMHSpeed; } }
         public float HastedMHSpeed { get { return hastedMHSpeed; } }
@@ -159,8 +159,8 @@ namespace Rawr.Enhance
 
         public float ExportMeleeCritMH { get { return exportMeleeCritMH; } } // doesn't include ED
         public float ExportMeleeCritOH { get { return exportMeleeCritOH; } } // doesn't include ED
-        public float DisplayMeleeCrit { get { return AverageWhiteCrit + whiteCritDepression; } }
-        public float DisplayYellowCrit { get { return AverageYellowCrit + yellowCritDepression; } }
+        public float DisplayMeleeCrit { get { return AverageWhiteCritChance + whiteCritDepression; } }
+        public float DisplayYellowCrit { get { return AverageYellowCritChance + yellowCritDepression; } }
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
         public float MaxMana { get { return maxMana; } }
@@ -318,6 +318,7 @@ namespace Rawr.Enhance
             float averageMeleeMissChance = (chanceWhiteMissMH + chanceWhiteMissOH) / 2f;
             float whiteHitsPerSMH = 0f;
             float whiteHitsPerSOH = 0f;
+            float moteHitsPerS = 0f;
             float yellowHitsPerSMH = 0f;
             float yellowHitsPerSOH = 0f;
             float flameTongueHitsPerSecond = 0f;
@@ -328,10 +329,10 @@ namespace Rawr.Enhance
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
-                swingsPerSOHMelee = hastedOHSpeed == 0f ? 0f : 1f / hastedOHSpeed;
-                whiteHitsPerSMH = (1f - chanceWhiteMissMH - chanceDodgeMH) * swingsPerSMHMelee;
-                whiteHitsPerSOH = (1f - chanceWhiteMissOH - chanceDodgeOH) * swingsPerSOHMelee;
-
+                swingsPerSOHMelee = (hastedOHSpeed == 0f) ? 0f : 1f / hastedOHSpeed;
+                whiteHitsPerSMH = ChanceWhiteHitMH * swingsPerSMHMelee;
+                whiteHitsPerSOH = ChanceWhiteHitOH * swingsPerSOHMelee;
+                moteHitsPerS = _stats.MoteOfAnger * 2 * AverageWhiteHitChance;
                 // Windfury model
                 if (_calcOpts.MainhandImbue == "Windfury")
                 {
@@ -353,17 +354,22 @@ namespace Rawr.Enhance
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
 
                 // Maelstrom Weapon time to 5 stacks calc
-                hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH;
-                mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
                 if (_character.ShamanTalents.DualWield == 1 && unhastedOHSpeed != 0f)
                 {
-                    hitsPerSOH = whiteHitsPerSOH + yellowHitsPerSOH;
-                    mwProcsPerSecond += (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
+                    hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH + moteHitsPerS / 2;
+                    hitsPerSOH = whiteHitsPerSOH + yellowHitsPerSOH + moteHitsPerS / 2;
+                    mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH + (mwPPM / (60f / unhastedOHSpeed)) * hitsPerSOH;
+                }
+                else
+                {
+                    hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH + moteHitsPerS;
+                    hitsPerSOH = 0f;
+                    mwProcsPerSecond = (mwPPM / (60f / unhastedMHSpeed)) * hitsPerSMH;
                 }
                 secondsToFiveStack = 5f / mwProcsPerSecond;
 
                 // Elemental Devastation Uptime calc
-                staticShocksPerSecond = (HitsPerSMH + HitsPerSOH) * staticShockChance;
+                staticShocksPerSecond = (hitsPerSMH + hitsPerSOH) * staticShockChance;
                 flameTongueHitsPerSecond = (_calcOpts.MainhandImbue == "Flametongue" ? HitsPerSMH : 0f) +
                     ((_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1) ? HitsPerSOH : 0f);
                 spellAttacksPerSec = (1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond) // + flameTongueHitsPerSecond)
@@ -381,7 +387,9 @@ namespace Rawr.Enhance
             //SetCritValues((1 + _stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + edBonusCrit + .00005f); //fudge factor for rounding
             SetCritValues(baseMeleeCrit + meleeCritModifier + edBonusCrit + .00005f); //fudge factor for rounding
             meleeAttacksPerSec = hitsPerSMH + hitsPerSOH;
-            meleeCritsPerSec = (whiteHitsPerSMH * chanceWhiteCritMH) + (whiteHitsPerSOH * chanceWhiteCritOH) + (yellowHitsPerSMH * chanceYellowCritMH) + (yellowHitsPerSOH * chanceYellowCritOH);
+            meleeCritsPerSec = (whiteHitsPerSMH * chanceWhiteCritMH) + (whiteHitsPerSOH * chanceWhiteCritOH) + 
+                               (yellowHitsPerSMH * chanceYellowCritMH) + (yellowHitsPerSOH * chanceYellowCritOH) +
+                               (_stats.MoteOfAnger * 2 * AverageWhiteCritChance);
             spellCritsPerSec = spellAttacksPerSec * ChanceSpellCrit;
             spellCastsPerSec = spellAttacksPerSec;
             spellMissesPerSec = spellAttacksPerSec * chanceSpellMiss;

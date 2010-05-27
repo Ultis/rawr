@@ -322,6 +322,7 @@ namespace Rawr.Enhance
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = 0f;
             float dpsOHMeleeTotal = 0f;
+            float dpsMoteOfAnger = 0f;
 
             float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifierMH;
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifierMH;
@@ -338,14 +339,20 @@ namespace Rawr.Enhance
                 float dpsOHMeleeGlances = adjustedOHDPS * cs.GlancingHitModifier;
                 dpsOHMeleeTotal = ((dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * cs.UnhastedOHSpeed / cs.HastedOHSpeed) * meleeMultipliers;
             }
-            float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal;
-            #endregion
 
             // Generic MH & OH damage values used for SS, LL & WF
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
             float damageOHSwing = 0f;
             if (character.ShamanTalents.DualWield == 1)
                 damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
+
+            if (character.ShamanTalents.DualWield == 1)
+                dpsMoteOfAnger = (damageMHSwing + damageOHSwing) / 2 * stats.MoteOfAnger;
+            else
+                dpsMoteOfAnger = damageMHSwing * stats.MoteOfAnger;
+
+            float dpsMelee = dpsMHMeleeTotal + dpsOHMeleeTotal + dpsMoteOfAnger;
+            #endregion
 
             #region Stormstrike DPS
             float dpsSS = 0f;
@@ -584,13 +591,13 @@ namespace Rawr.Enhance
             calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
             calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
             calculatedStats.ParriedAttacks = cs.AverageParry * 100f;
-            calculatedStats.MissedAttacks = (1 - cs.AverageWhiteHit) * 100f;
+            calculatedStats.MissedAttacks = (1 - cs.AverageWhiteHitChance) * 100f;
             calculatedStats.AvoidedAttacks = calculatedStats.MissedAttacks + calculatedStats.DodgedAttacks + calculatedStats.ParriedAttacks;
-            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHit * 10000f)) / 100f;
+            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHitChance * 10000f)) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
             calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
             calculatedStats.OverMeleeCritCap = (float)Math.Floor((float)(cs.OverMeleeCritCap * 10000f)) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHit * 10000f)) / 100f;
+            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHitChance * 10000f)) / 100f;
             calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
@@ -613,8 +620,8 @@ namespace Rawr.Enhance
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
             
-            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHit, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCrit, cs.MeleePPM);
-            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHit, cs.AverageDodge, -1, cs.AverageYellowCrit, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
+            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHitChance, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCritChance, cs.MeleePPM);
+            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHitChance, cs.AverageDodge, -1, cs.AverageYellowCritChance, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
             calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
             calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
             calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
@@ -912,7 +919,8 @@ namespace Rawr.Enhance
                     Mp5 = stats.Mp5,
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                     ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
-                    DeathbringerProc = stats.DeathbringerProc
+                    DeathbringerProc = stats.DeathbringerProc,
+                    MoteOfAnger = stats.MoteOfAnger 
 				};
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -942,6 +950,7 @@ namespace Rawr.Enhance
                     trigger == Trigger.DamageSpellCast ||
                     trigger == Trigger.MeleeHit ||
                     trigger == Trigger.MeleeCrit ||
+                    trigger == Trigger.MeleeAttack ||
                     trigger == Trigger.PhysicalHit ||
                     trigger == Trigger.PhysicalCrit ||
                     trigger == Trigger.DamageDone ||
@@ -1001,7 +1010,7 @@ namespace Rawr.Enhance
                 stats.LightningSpellPower + stats.Enhance4T8 + stats.Enhance4T7 + stats.BonusWFAttackPower + 
                 stats.Enhance2T9 + stats.Enhance4T9 + +stats.Enhance2T10 + stats.Enhance4T10 + 
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.Enhance2T7 + stats.Enhance2T8 + stats.BonusSSDamage) > 0;
+                stats.Enhance2T7 + stats.Enhance2T8 + stats.BonusSSDamage + stats.MoteOfAnger) > 0;
         }
 
         private bool irrelevantStats(Stats stats)

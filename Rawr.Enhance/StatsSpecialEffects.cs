@@ -78,17 +78,26 @@ namespace Rawr.Enhance
                 }
                 if (effect.MaxStack > 1)
                 {
-                    float timeToMax = (float)Math.Min(_cs.FightLength, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                    float buffDuration = _cs.FightLength;
-                    if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
+                    if (effect.Stats.MoteOfAnger > 0)
                     {
-                        buffDuration = 20f;
+                        // When in effect stats, MoteOfAnger is % of melee hits
+                        // When in character stats, MoteOfAnger is average procs per second
+                        statsAverage.Accumulate(new Stats() { MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(trigger, chance, unhastedAttackSpeed, 0f) / effect.MaxStack });
                     }
-                    if (timeToMax * .5f > buffDuration)
+                    else
                     {
-                        timeToMax = 2 * buffDuration;
+                        float timeToMax = (float)Math.Min(_cs.FightLength, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
+                        float buffDuration = _cs.FightLength;
+                        if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
+                        {
+                            buffDuration = 20f;
+                        }
+                        if (timeToMax * .5f > buffDuration)
+                        {
+                            timeToMax = 2 * buffDuration;
+                        }
+                        statsAverage.Accumulate(effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration))));
                     }
-                    statsAverage.Accumulate(effect.Stats * (effect.MaxStack * (((buffDuration) - .5f * timeToMax) / (buffDuration))));
                 }
                 else
                 {
@@ -107,27 +116,39 @@ namespace Rawr.Enhance
             {
                 case Trigger.DamageDone:
                     trigger = (_cs.HastedMHSpeed + 1f / _cs.GetSpellAttacksPerSec()) / 2f;
-                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHit + _cs.ChanceSpellHit); // limit to 100% chance
+                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHitChance + _cs.ChanceSpellHit); // limit to 100% chance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.DamageOrHealingDone:
                     // Need to add Self Heals
                     trigger = (_cs.HastedMHSpeed + 1f / _cs.GetSpellAttacksPerSec()) / 2f;
-                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHit + _cs.ChanceSpellHit); // limit to 100% chance
+                    chance = (float)Math.Min(1.0f, _cs.AverageWhiteHitChance + _cs.ChanceSpellHit); // limit to 100% chance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeCrit:
                 case Trigger.PhysicalCrit:
                     trigger = _cs.HastedMHSpeed;
-                    chance = _cs.AverageWhiteCrit;
+                    chance = _cs.AverageWhiteCritChance;
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeHit:
                 case Trigger.PhysicalHit:
                     trigger = _cs.HastedMHSpeed;
-                    chance = _cs.AverageWhiteHit;
+                    chance = _cs.AverageWhiteHitChance;
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
+                case Trigger.MeleeAttack:
+                    if (_character.ShamanTalents.DualWield == 1)
+                    {
+                        trigger = (_cs.HastedMHSpeed + _cs.HastedOHSpeed) / 2;
+                        chance = 1f;
+                        unhastedAttackSpeed = (_cs.UnhastedMHSpeed + _cs.UnhastedOHSpeed) / 2;
+                    } else {
+                        trigger = _cs.HastedMHSpeed;
+                        chance = 1f;
+                        unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                    }
+                    break;                
                 case Trigger.DamageSpellCast:
                 case Trigger.SpellCast:
                     trigger = 1f / _cs.GetSpellCastsPerSec();
