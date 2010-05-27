@@ -1058,28 +1058,32 @@ namespace Rawr
                 Name = "Mage Armor",
                 Group = "Class Buffs",
                 Stats = { MageMageArmor = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" })
+                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" }),
+                AllowedClasses = new List<CharacterClass> { CharacterClass.Mage }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Molten Armor",
                 Group = "Class Buffs",
                 Stats = { MageMoltenArmor = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" })
+                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" }),
+                AllowedClasses = new List<CharacterClass> { CharacterClass.Mage }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Ice Armor",
                 Group = "Class Buffs",
                 Stats = { MageIceArmor = 1f },
-                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" })
+                ConflictingBuffs = new List<string>(new string[] { "Mage Class Armor" }),
+                AllowedClasses = new List<CharacterClass> { CharacterClass.Mage }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Inner Fire",
                 Group = "Class Buffs",
                 Stats = { PriestInnerFire = 1f },
-                ConflictingBuffs = new List<string>(new string[] { })
+                ConflictingBuffs = new List<string>(new string[] { }),
+                AllowedClasses = new List<CharacterClass> { CharacterClass.Priest }
             });
 
             #endregion

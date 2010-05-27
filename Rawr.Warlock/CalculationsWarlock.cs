@@ -616,7 +616,7 @@ namespace Rawr.Warlock {
                 BonusManaPotion = stats.BonusManaPotion,                            //triggered when a mana pot is consumed
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,        //Bracing Eathsiege Diamond (metagem) effect
                 ManaRestore = stats.ManaRestore,                                    //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
-                SpellsManaReduction = stats.SpellsManaReduction,                    //spark of hope -> http://www.wowhead.com/?item=45703
+                // SpellsManaReduction = stats.SpellsManaReduction,                    //spark of hope -> http://www.wowhead.com/?item=45703
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {

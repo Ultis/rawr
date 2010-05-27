@@ -507,6 +507,18 @@ namespace Rawr.Warlock {
                     continue;
                 }
 
+                // mana
+                Stats proc = effect.GetAverageStats(
+                    periods[(int) effect.Trigger],
+                    chances[(int) effect.Trigger],
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    Options.Duration);
+                if (proc.ManaRestore > 0) {
+                    proc.ManaRestore *= Options.Duration;
+                }
+                procStats.Accumulate(proc);
+
+                // haste
                 if (effect.Stats.HasteRating > 0) {
                     hasteRatingEffects.Add(effect);
                     hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
@@ -569,6 +581,14 @@ namespace Rawr.Warlock {
                     AvgHaste += s.Chance * s.Value;
                 }
             }
+
+            Stats.Mana += procStats.Mana;
+            Stats.ManaRestore += procStats.ManaRestore;
+            Stats.ManaRestoreFromBaseManaPPM
+                += procStats.ManaRestoreFromBaseManaPPM;
+            Stats.ManaRestoreFromMaxManaPerSecond
+                += procStats.ManaRestoreFromMaxManaPerSecond;
+            Stats.Mp5 += procStats.Mp5;
         }
 
         private Stats CalcCritProcs() {
@@ -664,15 +684,10 @@ namespace Rawr.Warlock {
             procStats.HasteRating
                 = procStats.SpellHaste
                 = procStats.Mana
-                = procStats.ManaCostPerc
-                = procStats.ManacostReduceWithin15OnHealingCast
-                = procStats.ManaGainOnGreaterHealOverheal
-                = procStats.ManaorEquivRestore
                 = procStats.ManaRestore
                 = procStats.ManaRestoreFromBaseManaPPM
                 = procStats.ManaRestoreFromMaxManaPerSecond
-                = procStats.ManaRestoreOnCast_5_15
-                = procStats.ManaSpringMp5Increase
+                = procStats.Mp5
                 = procStats.CritRating
                 = procStats.SpellCrit
                 = procStats.SpellCritOnTarget
@@ -729,9 +744,10 @@ namespace Rawr.Warlock {
             SpellModifiers modifiers) {
 
             damagePerProc *=
-                (1 + (modifiers.GetFinalCritMultiplier() - 1)
-                        * modifiers.CritChance)
-                    * modifiers.GetFinalDirectMultiplier()
+                modifiers.GetFinalDirectMultiplier()
+                    * (1
+                        + (modifiers.GetFinalCritMultiplier() - 1)
+                            * modifiers.CritChance)
                     * (1
                         - StatConversion.GetAverageResistance(
                             80, Options.TargetLevel, 0f, 0f));
