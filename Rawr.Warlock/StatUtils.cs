@@ -4,7 +4,38 @@ using System.Text;
 
 namespace Rawr.Warlock {
 
+    public delegate float StatExtractor(Stats stats);
+
+    public delegate WeightedStat[] UptimeCombiner(
+        SpecialEffect[] effects,
+        float[] triggerInterval,
+        float[] triggerChance,
+        float[] offset, float[] scale,
+        float attackSpeed,
+        float fightDuration,
+        float[] value);
+
     public class StatUtils {
+
+        public static float GetBuffEffect(
+            List<Buff> activeBuffs,
+            float candidateBuff,
+            string group,
+            StatExtractor extractor) {
+
+            float active = 0f;
+            foreach (Buff buff in activeBuffs) {
+                if (buff.ConflictingBuffs.Contains(group)) {
+                    active += extractor(buff.Stats);
+                    foreach (Buff improvement in buff.Improvements) {
+                        if (activeBuffs.Contains(improvement)) {
+                            active += extractor(improvement.Stats);
+                        }
+                    }
+                }
+            }
+            return Math.Max(0f, candidateBuff - active);
+        }
 
         public static float CalcStamina(Stats stats) {
 

@@ -123,6 +123,32 @@ namespace Rawr.Warlock {
             FinalizeModifiers();
             SpecialModifiers.Accumulate(TotalModifiers);
             MeleeModifiers.Accumulate(TotalModifiers);
+
+            Stats.SpellHaste = GetHasteWithProcs(s => s.SpellHaste);
+            Stats.PhysicalHaste = GetHasteWithProcs(s => s.PhysicalHaste);
+        }
+
+        private float GetHasteWithProcs(StatExtractor statExtractor) {
+
+            Dictionary<int, float> periods = new Dictionary<int, float>();
+            Dictionary<int, float> chances = new Dictionary<int, float>();
+            periods.Add((int) Trigger.Use, 0f);
+            chances.Add((int) Trigger.Use, 1f);
+            WeightedStat[] hasteProcs
+                = Mommy.GetUptimes(
+                    Stats,
+                    periods,
+                    chances,
+                    statExtractor,
+                    (a, b, c, d, e, f, g, h)
+                        => SpecialEffect
+                                .GetAverageCombinedUptimeCombinationsMultiplicative(
+                            a, b, c, d, e, f, g, h));
+            float avgProcHaste = 0f;
+            foreach (WeightedStat proc in hasteProcs) {
+                avgProcHaste += proc.Chance * proc.Value;
+            }
+            return (1f + statExtractor(Stats)) * (1f + avgProcHaste) - 1f;
         }
 
         public void CalcStats2() {
@@ -303,7 +329,7 @@ namespace Rawr.Warlock {
             }
 
             float buff
-                = CalculationsWarlock.GetBuffEffect(
+                = StatUtils.GetBuffEffect(
                     Mommy.Character.ActiveBuffs,
                     Mommy.CalcSpellPower() * pact,
                     "Spell Power",
@@ -379,6 +405,15 @@ namespace Rawr.Warlock {
                 = (1f + Stats.BonusAttackPowerMultiplier) * apBonus - 1f;
             TotalModifiers.AddMultiplicativeMultiplier(
                 talents.MasterDemonologist * .01f);
+
+            if (talents.DemonicEmpowerment > 0) {
+                Stats.AddSpecialEffect(
+                    new SpecialEffect(
+                        Trigger.Use,
+                        new Stats() { PhysicalHaste = .2f },
+                        15f,
+                        GetEmpowermentCooldown()));
+            }
         }
 
         public override float GetSpecialDamage() {

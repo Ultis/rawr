@@ -336,44 +336,23 @@ namespace Rawr.Warlock {
             List<Buff> activeBuffs) {
 
             if (pet.Equals("Imp")) {
-                stats.Health += GetBuffEffect(
+                stats.Health += StatUtils.GetBuffEffect(
                     activeBuffs,
                     1330f * (1 + talents.ImprovedImp * .1f),
                     "Health",
                     s => s.Health);
             } else if (pet.Equals("Felhunter")) {
-                stats.Intellect += GetBuffEffect(
+                stats.Intellect += StatUtils.GetBuffEffect(
                     activeBuffs,
                     48f * (1 + talents.ImprovedFelhunter * .05f),
                     "Intellect",
                     s => s.Intellect);
-                stats.Spirit += GetBuffEffect(
+                stats.Spirit += StatUtils.GetBuffEffect(
                     activeBuffs,
                     64f * (1 + talents.ImprovedFelhunter * .05f),
                     "Spirit",
                     s => s.Spirit);
             }
-        }
-
-        public delegate float StatExtractor(Stats stats);
-        public static float GetBuffEffect(
-            List<Buff> activeBuffs,
-            float candidateBuff,
-            string group,
-            StatExtractor extractor) {
-
-            float active = 0f;
-            foreach (Buff buff in activeBuffs) {
-                if (buff.ConflictingBuffs.Contains(group)) {
-                    active += extractor(buff.Stats);
-                    foreach (Buff improvement in buff.Improvements) {
-                        if (activeBuffs.Contains(improvement)) {
-                            active += extractor(improvement.Stats);
-                        }
-                    }
-                }
-            }
-            return Math.Max(0f, candidateBuff - active);
         }
 
         /// <summary>

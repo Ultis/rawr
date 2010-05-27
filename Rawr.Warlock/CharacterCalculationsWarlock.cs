@@ -489,83 +489,32 @@ namespace Rawr.Warlock {
                 corruptionPeriod,
                 1f);
 
-            List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
-            List<float> hasteIntervals = new List<float>();
-            List<float> hasteChances = new List<float>();
-            List<float> hasteOffsets = new List<float>();
-            List<float> hasteScales = new List<float>();
-            List<float> hasteValues = new List<float>();
-            List<SpecialEffect> hasteRatingEffects = new List<SpecialEffect>();
-            List<float> hasteRatingIntervals = new List<float>();
-            List<float> hasteRatingChances = new List<float>();
-            List<float> hasteRatingOffsets = new List<float>();
-            List<float> hasteRatingScales = new List<float>();
-            List<float> hasteRatingValues = new List<float>();
-            Stats procStats = new Stats();
-            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
-                if (!periods.ContainsKey((int) effect.Trigger)) {
-                    continue;
-                }
-
-                // mana
-                Stats proc = effect.GetAverageStats(
-                    periods[(int) effect.Trigger],
-                    chances[(int) effect.Trigger],
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    Options.Duration);
-                if (proc.ManaRestore > 0) {
-                    proc.ManaRestore *= Options.Duration;
-                }
-                procStats.Accumulate(proc);
-
-                // haste
-                if (effect.Stats.HasteRating > 0) {
-                    hasteRatingEffects.Add(effect);
-                    hasteRatingIntervals.Add(periods[(int) effect.Trigger]);
-                    hasteRatingChances.Add(chances[(int) effect.Trigger]);
-                    if (IsDoublePot(effect)) {
-                        hasteRatingOffsets.Add(.75f * Options.Duration);
-                    } else {
-                        hasteRatingOffsets.Add(0f);
-                    }
-                    hasteRatingScales.Add(1f);
-                    hasteRatingValues.Add(effect.Stats.HasteRating);
-                }
-                if (effect.Stats.SpellHaste > 0) {
-                    hasteEffects.Add(effect);
-                    hasteIntervals.Add(periods[(int) effect.Trigger]);
-                    hasteChances.Add(chances[(int) effect.Trigger]);
-                    hasteOffsets.Add(0f);
-                    hasteScales.Add(1f);
-                    hasteValues.Add(effect.Stats.SpellHaste);
-                }
-            }
-            WeightedStat[] ratings
-                = SpecialEffect.GetAverageCombinedUptimeCombinations(
-                    hasteRatingEffects.ToArray(),
-                    hasteRatingIntervals.ToArray(),
-                    hasteRatingChances.ToArray(),
-                    hasteRatingOffsets.ToArray(),
-                    hasteRatingScales.ToArray(),
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    Options.Duration,
-                    hasteRatingValues.ToArray());
-            WeightedStat[] percentages
-                = SpecialEffect
-                        .GetAverageCombinedUptimeCombinationsMultiplicative(
-                    hasteEffects.ToArray(),
-                    hasteIntervals.ToArray(),
-                    hasteChances.ToArray(),
-                    hasteOffsets.ToArray(),
-                    hasteScales.ToArray(),
-                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
-                    Options.Duration,
-                    hasteValues.ToArray());
+            // calculate the haste procs
             Haste = new List<WeightedStat>();
+            WeightedStat[] percentages
+                = GetUptimes(
+                    Stats,
+                    periods,
+                    chances,
+                    s => s.SpellHaste,
+                    (a, b, c, d, e, f, g, h)
+                        => SpecialEffect.GetAverageCombinedUptimeCombinations(
+                            a, b, c, d, e, f, g, h));
+            WeightedStat[] ratings
+                = GetUptimes(
+                    Stats,
+                    periods,
+                    chances,
+                    s => s.HasteRating,
+                    (a, b, c, d, e, f, g, h)
+                        => SpecialEffect
+                                .GetAverageCombinedUptimeCombinationsMultiplicative(
+                            a, b, c, d, e, f, g, h));
             for (int p = percentages.Length, f = 0; --p >= 0; ) {
                 if (percentages[p].Chance == 0) {
                     continue;
                 }
+
                 for (int r = ratings.Length; --r >= 0; ++f) {
                     if (ratings[r].Chance == 0) {
                         continue;
@@ -582,6 +531,23 @@ namespace Rawr.Warlock {
                 }
             }
 
+            // calculate mana procs
+            Stats procStats = new Stats();
+            foreach (SpecialEffect effect in Stats.SpecialEffects()) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
+                    continue;
+                }
+
+                Stats proc = effect.GetAverageStats(
+                    periods[(int) effect.Trigger],
+                    chances[(int) effect.Trigger],
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    Options.Duration);
+                if (proc.ManaRestore > 0) {
+                    proc.ManaRestore *= Options.Duration;
+                }
+                procStats.Accumulate(proc);
+            }
             Stats.Mana += procStats.Mana;
             Stats.ManaRestore += procStats.ManaRestore;
             Stats.ManaRestoreFromBaseManaPPM
@@ -589,6 +555,45 @@ namespace Rawr.Warlock {
             Stats.ManaRestoreFromMaxManaPerSecond
                 += procStats.ManaRestoreFromMaxManaPerSecond;
             Stats.Mp5 += procStats.Mp5;
+        }
+
+        public WeightedStat[] GetUptimes(
+            Stats stats,
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances,
+            StatExtractor statExtractor,
+            UptimeCombiner uptimeCombiner) {
+
+            List<SpecialEffect> hasteEffects = new List<SpecialEffect>();
+            List<float> hasteIntervals = new List<float>();
+            List<float> hasteChances = new List<float>();
+            List<float> hasteOffsets = new List<float>();
+            List<float> hasteScales = new List<float>();
+            List<float> hasteValues = new List<float>();
+            foreach (SpecialEffect effect in stats.SpecialEffects()) {
+                if (!periods.ContainsKey((int) effect.Trigger)) {
+                    continue;
+                }
+
+                float value = statExtractor(effect.Stats);
+                if (value > 0) {
+                    hasteEffects.Add(effect);
+                    hasteIntervals.Add(periods[(int) effect.Trigger]);
+                    hasteChances.Add(chances[(int) effect.Trigger]);
+                    hasteOffsets.Add(0f);
+                    hasteScales.Add(1f);
+                    hasteValues.Add(value);
+                }
+            }
+            return uptimeCombiner(
+                    hasteEffects.ToArray(),
+                    hasteIntervals.ToArray(),
+                    hasteChances.ToArray(),
+                    hasteOffsets.ToArray(),
+                    hasteScales.ToArray(),
+                    CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
+                    Options.Duration,
+                    hasteValues.ToArray());
         }
 
         private Stats CalcCritProcs() {
