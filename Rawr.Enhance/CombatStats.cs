@@ -336,7 +336,11 @@ namespace Rawr.Enhance
                 // Windfury model
                 if (_calcOpts.MainhandImbue == "Windfury")
                 {
-                    float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS + moteHitsPerS;
+                    float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
+                    if (_character.ShamanTalents.DualWield == 1)
+                        hitsThatProcWFPerS += moteHitsPerS / 2; // half the hits will be OH and thus won't proc WF
+                    else
+                        hitsThatProcWFPerS += moteHitsPerS; // if no offhand then all motes will be MH weapon by definition
                     float maxExpectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * fightLength;
                     float ineligibleSeconds = maxExpectedWFPerFight * (3.25f - hastedMHSpeed);
                     float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
