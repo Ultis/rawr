@@ -1129,7 +1129,7 @@ namespace Rawr.Warlock {
                 .12f, // percent base mana
                 1.5f, // cast time
                 8f, // cooldown
-                10f, // recast period
+                0f, // recast period
                 645f, // low direct damage
                 753f, // high direct damage
                 .4266f, // direct coefficient

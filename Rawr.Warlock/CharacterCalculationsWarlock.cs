@@ -373,7 +373,6 @@ namespace Rawr.Warlock {
                 Talents.Malediction * .01f);
             SpellModifiers.AddMultiplicativeMultiplier(
                 Talents.DemonicPact * .02f);
-            SpellModifiers.AddCritChance(CalcSpellCrit());
             SpellModifiers.AddCritOverallMultiplier(
                 Stats.BonusCritMultiplier);
             if (Talents.Metamorphosis > 0) {
@@ -390,6 +389,7 @@ namespace Rawr.Warlock {
             Stats.CritRating += critProcs.CritRating;
             Stats.SpellCrit += critProcs.SpellCrit;
             Stats.SpellCritOnTarget += critProcs.SpellCritOnTarget;
+            SpellModifiers.AddCritChance(CalcSpellCrit());
 
             if (Pet != null) {
                 Pet.CalcStats1();
@@ -498,7 +498,8 @@ namespace Rawr.Warlock {
                     chances,
                     s => s.SpellHaste,
                     (a, b, c, d, e, f, g, h)
-                        => SpecialEffect.GetAverageCombinedUptimeCombinations(
+                        => SpecialEffect
+                                .GetAverageCombinedUptimeCombinationsMultiplicative(
                             a, b, c, d, e, f, g, h));
             WeightedStat[] ratings
                 = GetUptimes(
@@ -507,8 +508,7 @@ namespace Rawr.Warlock {
                     chances,
                     s => s.HasteRating,
                     (a, b, c, d, e, f, g, h)
-                        => SpecialEffect
-                                .GetAverageCombinedUptimeCombinationsMultiplicative(
+                        => SpecialEffect.GetAverageCombinedUptimeCombinations(
                             a, b, c, d, e, f, g, h));
             for (int p = percentages.Length, f = 0; --p >= 0; ) {
                 if (percentages[p].Chance == 0) {
