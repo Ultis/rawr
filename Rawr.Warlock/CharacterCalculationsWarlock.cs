@@ -289,6 +289,7 @@ namespace Rawr.Warlock {
             float manaRemaining = CalcUsableMana(timeRemaining);
 
             #region Calculate NumCasts for each spell
+
             Priorities = new List<Spell>();
             foreach (
                 string spellName
@@ -300,6 +301,9 @@ namespace Rawr.Warlock {
                     CastSpells.Add(spellName, spell);
                 }
             }
+
+            
+
             Spell filler = GetSpell(Options.GetActiveRotation().Filler);
             RecordCollisionDelays(new CastingState(this, filler));
             foreach (Spell spell in Priorities) {
@@ -318,6 +322,7 @@ namespace Rawr.Warlock {
             foreach (Spell spell in CastSpells.Values) {
                 spell.AdjustAfterCastingIsSet();
             }
+
             #endregion
 
             #region Calculate spell modifiers, Part 1
@@ -650,8 +655,8 @@ namespace Rawr.Warlock {
                         += CalcDamageProc(
                             effect,
                             effect.Stats.ValkyrDamage,
-                            periods[(int) Trigger.DamageDone],
-                            chances[(int) effect.Trigger],
+                            periods,
+                            chances,
                             mods);
                 } else if (
                     effectStats.ShadowDamage > 0
@@ -677,8 +682,8 @@ namespace Rawr.Warlock {
                                 + effectStats.NatureDamage
                                 + effectStats.HolyDamage
                                 + effectStats.FrostDamage,
-                            periods[(int) effect.Trigger],
-                            chances[(int) effect.Trigger],
+                            periods,
+                            chances,
                             mods);
                 } else {
                     procStats.Accumulate(
@@ -744,8 +749,8 @@ namespace Rawr.Warlock {
         private float CalcDamageProc(
             SpecialEffect effect,
             float damagePerProc,
-            float interval,
-            float chance,
+            Dictionary<int, float> periods,
+            Dictionary<int, float> chances,
             SpellModifiers modifiers) {
 
             damagePerProc *=
@@ -759,8 +764,8 @@ namespace Rawr.Warlock {
             float numProcs
                 = Options.Duration
                     * effect.GetAverageProcsPerSecond(
-                        interval,
-                        chance,
+                        periods[(int) effect.Trigger],
+                        chances[(int) effect.Trigger],
                         CalculationsWarlock.AVG_UNHASTED_CAST_TIME,
                         Options.Duration);
             return numProcs * damagePerProc;

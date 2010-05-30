@@ -1632,6 +1632,25 @@ namespace Rawr.Warlock {
         }
     }
 
+    public class SoulFire : Spell {
+
+        public SoulFire(CharacterCalculationsWarlock mommy) 
+            : base(
+                mommy,
+                MagicSchool.Fire, // magicSchool,
+                SpellTree.Destruction, // spellTree,
+                .09f, // percentBaseMana,
+                6f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                1323f, // lowDirectDamage,
+                1657f, // highDirectDamage,
+                1.15f, // directCoefficient,
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                0f) { } // bonusCritMultiplier) { }
+    }
+
     public class UnstableAffliction : Spell {
 
         public UnstableAffliction(CharacterCalculationsWarlock mommy)

@@ -34,6 +34,8 @@
             this.newRotationButton = new System.Windows.Forms.Button();
             this.deleteRotationButton = new System.Windows.Forms.Button();
             this.rotationBox = new System.Windows.Forms.GroupBox();
+            this.executeLabel = new System.Windows.Forms.Label();
+            this.executeCombo = new System.Windows.Forms.ComboBox();
             this.fillerCombo = new System.Windows.Forms.ComboBox();
             this.fillerLabel = new System.Windows.Forms.Label();
             this.rotationMenu = new System.Windows.Forms.ListBox();
@@ -77,9 +79,9 @@
             this.petCombo.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.petCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.petCombo.FormattingEnabled = true;
-            this.petCombo.Location = new System.Drawing.Point(180, 6);
+            this.petCombo.Location = new System.Drawing.Point(159, 6);
             this.petCombo.Name = "petCombo";
-            this.petCombo.Size = new System.Drawing.Size(106, 21);
+            this.petCombo.Size = new System.Drawing.Size(127, 21);
             this.petCombo.TabIndex = 1;
             this.petCombo.SelectedIndexChanged += new System.EventHandler(this.petCombo_SelectedIndexChanged);
             // 
@@ -121,6 +123,8 @@
             // 
             // rotationBox
             // 
+            this.rotationBox.Controls.Add(this.executeLabel);
+            this.rotationBox.Controls.Add(this.executeCombo);
             this.rotationBox.Controls.Add(this.fillerCombo);
             this.rotationBox.Controls.Add(this.fillerLabel);
             this.rotationBox.Controls.Add(this.rotationMenu);
@@ -138,10 +142,34 @@
             this.rotationBox.Controls.Add(this.rotationList);
             this.rotationBox.Location = new System.Drawing.Point(3, 162);
             this.rotationBox.Name = "rotationBox";
-            this.rotationBox.Size = new System.Drawing.Size(283, 280);
+            this.rotationBox.Size = new System.Drawing.Size(283, 306);
             this.rotationBox.TabIndex = 7;
             this.rotationBox.TabStop = false;
             this.rotationBox.Text = "Spell Priorities";
+            // 
+            // executeLabel
+            // 
+            this.executeLabel.AutoSize = true;
+            this.executeLabel.Location = new System.Drawing.Point(6, 265);
+            this.executeLabel.Name = "executeLabel";
+            this.executeLabel.Size = new System.Drawing.Size(49, 13);
+            this.executeLabel.TabIndex = 23;
+            this.executeLabel.Text = "Execute:";
+            // 
+            // executeCombo
+            // 
+            this.executeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.executeCombo.Enabled = false;
+            this.executeCombo.FormattingEnabled = true;
+            this.executeCombo.Items.AddRange(new object[] {
+            "None",
+            "Drain Soul",
+            "Soul Fire"});
+            this.executeCombo.Location = new System.Drawing.Point(61, 262);
+            this.executeCombo.Name = "executeCombo";
+            this.executeCombo.Size = new System.Drawing.Size(216, 21);
+            this.executeCombo.TabIndex = 22;
+            this.executeCombo.SelectedIndexChanged += new System.EventHandler(this.executeCombo_SelectedIndexChanged);
             // 
             // fillerCombo
             // 
@@ -150,9 +178,9 @@
             this.fillerCombo.Items.AddRange(new object[] {
             "Shadow Bolt",
             "Incinerate"});
-            this.fillerCombo.Location = new System.Drawing.Point(43, 235);
+            this.fillerCombo.Location = new System.Drawing.Point(61, 235);
             this.fillerCombo.Name = "fillerCombo";
-            this.fillerCombo.Size = new System.Drawing.Size(234, 21);
+            this.fillerCombo.Size = new System.Drawing.Size(216, 21);
             this.fillerCombo.TabIndex = 18;
             this.fillerCombo.SelectedIndexChanged += new System.EventHandler(this.fillerCombo_SelectedIndexChanged);
             // 
@@ -177,7 +205,7 @@
             // rotationErrorLabel
             // 
             this.rotationErrorLabel.ForeColor = System.Drawing.Color.Red;
-            this.rotationErrorLabel.Location = new System.Drawing.Point(6, 259);
+            this.rotationErrorLabel.Location = new System.Drawing.Point(6, 286);
             this.rotationErrorLabel.Name = "rotationErrorLabel";
             this.rotationErrorLabel.Size = new System.Drawing.Size(271, 13);
             this.rotationErrorLabel.TabIndex = 19;
@@ -283,9 +311,9 @@
             "82",
             "81",
             "80"});
-            this.targetLevelCombo.Location = new System.Drawing.Point(180, 83);
+            this.targetLevelCombo.Location = new System.Drawing.Point(159, 83);
             this.targetLevelCombo.Name = "targetLevelCombo";
-            this.targetLevelCombo.Size = new System.Drawing.Size(106, 21);
+            this.targetLevelCombo.Size = new System.Drawing.Size(127, 21);
             this.targetLevelCombo.TabIndex = 4;
             this.targetLevelCombo.SelectedIndexChanged += new System.EventHandler(this.targetLevelCombo_SelectedIndexChanged);
             // 
@@ -315,14 +343,14 @@
             0,
             0,
             0});
-            this.fightLengthSpinner.Location = new System.Drawing.Point(180, 110);
+            this.fightLengthSpinner.Location = new System.Drawing.Point(159, 110);
             this.fightLengthSpinner.Maximum = new decimal(new int[] {
             720,
             0,
             0,
             0});
             this.fightLengthSpinner.Name = "fightLengthSpinner";
-            this.fightLengthSpinner.Size = new System.Drawing.Size(106, 20);
+            this.fightLengthSpinner.Size = new System.Drawing.Size(127, 20);
             this.fightLengthSpinner.TabIndex = 5;
             this.fightLengthSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.fightLengthSpinner.ValueChanged += new System.EventHandler(this.fightLengthSpinner_ValueChanged);
@@ -335,14 +363,14 @@
             0,
             0,
             0});
-            this.latencySpinner.Location = new System.Drawing.Point(180, 136);
+            this.latencySpinner.Location = new System.Drawing.Point(159, 136);
             this.latencySpinner.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.latencySpinner.Name = "latencySpinner";
-            this.latencySpinner.Size = new System.Drawing.Size(106, 20);
+            this.latencySpinner.Size = new System.Drawing.Size(127, 20);
             this.latencySpinner.TabIndex = 6;
             this.latencySpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.latencySpinner.ValueChanged += new System.EventHandler(this.latencySpinner_ValueChanged);
@@ -361,7 +389,7 @@
             this.infernalCheck.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.infernalCheck.AutoSize = true;
             this.infernalCheck.Enabled = false;
-            this.infernalCheck.Location = new System.Drawing.Point(180, 33);
+            this.infernalCheck.Location = new System.Drawing.Point(159, 33);
             this.infernalCheck.Name = "infernalCheck";
             this.infernalCheck.Size = new System.Drawing.Size(106, 17);
             this.infernalCheck.TabIndex = 2;
@@ -445,9 +473,9 @@
             this.imbueCombo.Items.AddRange(new object[] {
             "Grand Spellstone",
             "Grand Firestone"});
-            this.imbueCombo.Location = new System.Drawing.Point(180, 56);
+            this.imbueCombo.Location = new System.Drawing.Point(159, 56);
             this.imbueCombo.Name = "imbueCombo";
-            this.imbueCombo.Size = new System.Drawing.Size(106, 21);
+            this.imbueCombo.Size = new System.Drawing.Size(127, 21);
             this.imbueCombo.TabIndex = 3;
             this.imbueCombo.SelectedIndexChanged += new System.EventHandler(this.imbueCombo_SelectedIndexChanged);
             // 
@@ -542,5 +570,7 @@
         private System.Windows.Forms.Button TimerButton;
         private System.Windows.Forms.ComboBox imbueCombo;
         private System.Windows.Forms.Label imbueLabel;
+        private System.Windows.Forms.Label executeLabel;
+        private System.Windows.Forms.ComboBox executeCombo;
     }
 }

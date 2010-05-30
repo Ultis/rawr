@@ -25,16 +25,19 @@ namespace Rawr.Warlock {
 
             ++_ignoreCount;
 
+            Rotation rotation = _options.GetActiveRotation();
+
             rotationCombo.Items.Clear();
-            foreach (Rotation rotation in _options.Rotations) {
-                rotationCombo.Items.Add(rotation.Name);
+            foreach (Rotation r in _options.Rotations) {
+                rotationCombo.Items.Add(r.Name);
             }
-            rotationCombo.SelectedItem = _options.GetActiveRotation().Name;
+            rotationCombo.SelectedItem = rotation.Name;
 
             rotationMenu.Items.Clear();
             foreach (string spell in Spell.ALL_SPELLS) {
                 if (!GetActivePriorities().Contains(spell)
-                    && !fillerCombo.Items.Contains(spell)) {
+                    && !fillerCombo.Items.Contains(spell)
+                    && !executeCombo.Items.Contains(spell)) {
 
                     rotationMenu.Items.Add(spell);
                 }
@@ -45,7 +48,12 @@ namespace Rawr.Warlock {
                 rotationList.Items.Add(spell);
             }
 
-            fillerCombo.SelectedItem = _options.GetActiveRotation().Filler;
+            fillerCombo.SelectedItem = rotation.Filler;
+            if (rotation.Execute == null) {
+                executeCombo.SelectedItem = "None";
+            } else {
+                executeCombo.SelectedItem = rotation.Execute;
+            }
 
             RefreshRotationButtons();
 
@@ -317,7 +325,7 @@ namespace Rawr.Warlock {
                 return;
             }
             _options.ActiveRotationIndex = _options.Rotations.Count;
-            _options.Rotations.Add(new Rotation(name, "Shadow Bolt"));
+            _options.Rotations.Add(new Rotation(name, "Shadow Bolt", null));
 
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
@@ -350,7 +358,7 @@ namespace Rawr.Warlock {
             _options.RemoveActiveRotation();
             if (_options.Rotations.Count == 0) {
                 _options.Rotations.Add(
-                    new Rotation("New Rotation", "Shadow Bolt"));
+                    new Rotation("New Rotation", "Shadow Bolt", null));
                 _options.ActiveRotationIndex = 0;
             }
 
@@ -368,7 +376,23 @@ namespace Rawr.Warlock {
             Character.OnCalculationsInvalidated();
         }
 
+        private void executeCombo_SelectedIndexChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            if (executeCombo.Text == "None") {
+                _options.GetActiveRotation().Execute = null;
+            } else {
+                _options.GetActiveRotation().Execute = executeCombo.Text;
+            }
+            Character.OnCalculationsInvalidated();
+        }
+
         #endregion
+
 
         #region debug operations
 

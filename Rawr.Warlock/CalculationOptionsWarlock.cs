@@ -9,6 +9,7 @@ namespace Rawr.Warlock {
 
         public string Name;
         public string Filler;
+        public string Execute;
         public List<string> SpellPriority;
 
         public Rotation() {
@@ -17,10 +18,14 @@ namespace Rawr.Warlock {
         }
 
         public Rotation(
-            string name, string filler, params string[] priorities) {
+            string name,
+            string filler,
+            string execute,
+            params string[] priorities) {
 
             Name = name;
             Filler = filler;
+            Execute = execute;
             SpellPriority = new List<string>(priorities);
         }
 
@@ -101,6 +106,7 @@ namespace Rawr.Warlock {
                 new Rotation(
                     "Affliction",
                     "Shadow Bolt",
+                    "Drain Soul",
                     "Haunt",
                     "Corruption",
                     "Unstable Affliction",
@@ -109,6 +115,7 @@ namespace Rawr.Warlock {
                 new Rotation(
                     "Demonology",
                     "Shadow Bolt",
+                    "Soul Fire",
                     "Immolation Aura",
                     "Corruption",
                     "Immolate",
@@ -118,6 +125,7 @@ namespace Rawr.Warlock {
                 new Rotation(
                     "Destruction",
                     "Incinerate",
+                    null,
                     "Immolate",
                     "Conflagrate",
                     "Incinerate (Under Backdraft)",
