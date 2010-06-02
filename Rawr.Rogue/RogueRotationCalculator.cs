@@ -14,6 +14,8 @@ namespace Rawr.Rogue
 		public bool MaintainBleed { get; set; }
         public float MainHandSpeed { get; set; }
         public float OffHandSpeed { get; set; }
+        public float MainHandSpeedNorm { get; set; }
+        public float OffHandSpeedNorm { get; set; }
         public float ChanceExtraCPPerHit { get; set; }
         public float AvoidedWhiteAttacks { get; set; }
         public float AvoidedAttacks { get; set; }
@@ -59,7 +61,7 @@ namespace Rawr.Rogue
         private float[] _chanceExtraCP = new float[5];
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float cpPerCPG, bool maintainBleed,
-			float mainHandSpeed, float offHandSpeed, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
+            float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, 
@@ -74,6 +76,8 @@ namespace Rawr.Rogue
 			MaintainBleed = maintainBleed;
             MainHandSpeed = mainHandSpeed;
             OffHandSpeed = offHandSpeed;
+            MainHandSpeedNorm = mainHandSpeedNorm;
+            OffHandSpeedNorm = offHandSpeedNorm;
             AvoidedWhiteAttacks = avoidedWhiteAttacks;
             AvoidedAttacks = avoidedAttacks;
             AvoidedFinisherAttacks = avoidedFinisherAttacks;
@@ -249,30 +253,50 @@ namespace Rawr.Rogue
             }
             #endregion
 
+            #region Heartpierce proc
+            float HP264PPS = 0;
+            float HP277PPS = 0;
+            float HP264TPS = 0;
+            float HP277TPS = 0;
+            if (MainHandStats.Weapon.Name == "Heartpierce")
+                if (MainHandStats.Weapon.ItemLevel == 264)
+                    HP264PPS += MainHandSpeedNorm / 60 * (mainHandCount + cpgCount + evisCount + envenomCount) / Duration;
+                else if (MainHandStats.Weapon.ItemLevel == 277)
+                    HP277PPS += MainHandSpeedNorm / 60 * (mainHandCount + cpgCount + evisCount + envenomCount) / Duration;
+            if (OffHandStats.Weapon.Name == "Heartpierce")
+                if (OffHandStats.Weapon.ItemLevel == 264)
+                    HP264PPS += OffHandSpeedNorm / 60 * (offHandCount + (cpgCount == 0 ? cpgCount : 0)) / Duration;
+                else if (OffHandStats.Weapon.ItemLevel == 277)
+                    HP277PPS += OffHandSpeedNorm / 60 * (offHandCount + (cpgCount == 0 ? cpgCount : 0)) / Duration;
+            if (HP264PPS > 0)
+            {
+                float ChanceVar264 = (float)Math.Exp(-2 * HP264PPS);
+                HP264TPS = HP264PPS * ChanceVar264 * (1 - (float)Math.Pow(ChanceVar264, 5)) / (1 - ChanceVar264);
+            }
+            if (HP277PPS > 0)
+            {
+                float ChanceVar277 = (float)Math.Exp(-2 * HP277PPS);
+                HP277TPS = HP277PPS * ChanceVar277 * (1 - (float)Math.Pow(ChanceVar277, 6)) / (1 - ChanceVar277);
+            }
+            totalEnergyAvailable += (HP264TPS + HP277TPS) * Duration * 4;
+            #endregion
+
             #region Extra Energy turned into Combo Point Generators
-            float backstabCount = 0f;
-            float hemoCount = 0f;
-            float sStrikeCount = 0f;
-            float mutiCount = 0f;
             if (totalEnergyAvailable > 0)
             {
                 cpgCount += totalEnergyAvailable / cpgEnergy;
                 totalEnergyAvailable = 0f;
             }
-            if (CPG == 2) backstabCount += cpgCount;
-            else if (CPG == 3) hemoCount += cpgCount;
-            else if (CPG == 1) sStrikeCount += cpgCount;
-            else if (CPG == 0) mutiCount += cpgCount;
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
-            if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount);
-            if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + mutiCount);
+            if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + cpgCount + evisCount + envenomCount);
+            if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + (cpgCount == 0 ? cpgCount : 0));
             #endregion
 
             #region Poisons
-            float mHHitCount = mainHandCount + backstabCount + hemoCount + sStrikeCount + mutiCount + evisCount + envenomCount + snDCount;
-            float oHHitCount = offHandCount + mutiCount;
+            float mHHitCount = mainHandCount + cpgCount + evisCount + envenomCount + snDCount;
+            float oHHitCount = offHandCount + (cpgCount == 0 ? cpgCount : 0);
             float iPCount = 0f;
             float dPCount = 0f;
             float wPCount = 0f;
@@ -356,10 +380,10 @@ namespace Rawr.Rogue
                                        kSDmgBonus * kSDuration / Duration * offHandCount +
                                        kSDmgBonus * kSAttacks) *
                                        OffHandStats.DamagePerSwing * HFBMultiplier;
-            float backstabDamageTotal = backstabCount * BackstabStats.DamagePerSwing * HFBMultiplier;
-            float hemoDamageTotal = hemoCount * HemoStats.DamagePerSwing * HFBMultiplier;
-            float sStrikeDamageTotal = sStrikeCount * SStrikeStats.DamagePerSwing * HFBMultiplier;
-            float mutiDamageTotal = mutiCount * MutiStats.DamagePerSwing * HFBMultiplier;
+            float backstabDamageTotal = (cpgCount == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
+            float hemoDamageTotal = (cpgCount == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing * HFBMultiplier;
+            float sStrikeDamageTotal = (cpgCount == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
+            float mutiDamageTotal = (cpgCount == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing * HFBMultiplier;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * HFBMultiplier;
             float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
@@ -380,10 +404,10 @@ namespace Rawr.Rogue
 
                 MainHandCount = mainHandCount,
                 OffHandCount = offHandCount,
-                BackstabCount = backstabCount,
-                HemoCount = hemoCount,
-                SStrikeCount = sStrikeCount,
-                MutiCount = mutiCount,
+                BackstabCount = (cpgCount == 2 ? cpgCount : 0),
+                HemoCount = (cpgCount == 3 ? cpgCount : 0),
+                SStrikeCount = (cpgCount == 1 ? cpgCount : 0),
+                MutiCount = (cpgCount == 0 ? cpgCount : 0),
                 RuptCount = ruptCount,
                 EvisCount = evisCount,
                 EnvenomCount = envenomCount,

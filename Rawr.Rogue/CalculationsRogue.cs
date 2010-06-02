@@ -589,7 +589,7 @@ namespace Rawr.Rogue
 
             #region Rotations
             RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, stats, calcOpts, cpPerCPG,
-                maintainBleed, /*berserkDuration,*/ mainHandSpeed, offHandSpeed,
+                maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
                 chanceWhiteAvoided, chanceAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * 0.2f * character.RogueTalents.SealFate, chanceCritMuti * 0.2f * character.RogueTalents.SealFate,
                 mainHandStats, offHandStats, backstabStats, hemoStats, sStrikeStats, mutiStats,
                 ruptStats, evisStats, envenomStats, snDStats, iPStats, dPStats, wPStats, aPStats);
