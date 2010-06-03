@@ -388,7 +388,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -407,7 +407,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -426,7 +426,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -445,7 +445,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -464,7 +464,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -483,7 +483,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -502,7 +502,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -521,7 +521,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -540,7 +540,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -559,7 +559,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -578,7 +578,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -597,7 +597,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -616,7 +616,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -635,7 +635,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -654,7 +654,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -673,13 +673,13 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>Dungeons</Name>
-      <Pattern>(?&lt;! Heroic.*)(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold|Pit of Saron|Halls of Reflection|Forge of Souls)</Pattern>
+      <Pattern>(?&lt;!Heroic.*)(Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold|Pit of Saron|Halls of Reflection|Forge of Souls)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -691,7 +691,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -712,7 +712,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -731,7 +731,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -750,7 +750,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -769,7 +769,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -788,7 +788,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -807,7 +807,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -826,7 +826,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -845,7 +845,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -864,7 +864,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -883,7 +883,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -902,7 +902,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -921,14 +921,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Trial of the Champion</Name>
-          <Pattern>Trial of the Champion|Found in Confessor's Cache in Heroic Trial of the Champion</Pattern>
+          <Pattern>Trial of the Champion</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -940,7 +940,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -959,7 +959,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -978,7 +978,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -997,7 +997,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -1015,7 +1015,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -1042,7 +1042,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1061,7 +1061,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1080,7 +1080,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1099,7 +1099,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1117,7 +1117,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1138,7 +1138,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1157,7 +1157,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1176,7 +1176,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1194,7 +1194,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1215,7 +1215,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1234,7 +1234,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1253,7 +1253,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1271,7 +1271,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1292,7 +1292,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1311,7 +1311,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1330,7 +1330,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1348,7 +1348,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1369,7 +1369,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1388,7 +1388,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1406,7 +1406,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1425,7 +1425,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -1443,7 +1443,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -1462,7 +1462,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -1481,7 +1481,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -1499,7 +1499,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -1524,7 +1524,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1543,7 +1543,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1562,7 +1562,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1581,7 +1581,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1599,7 +1599,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1620,7 +1620,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1639,7 +1639,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1658,7 +1658,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1676,7 +1676,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1697,7 +1697,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1716,7 +1716,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1735,7 +1735,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1753,7 +1753,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1774,7 +1774,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1793,7 +1793,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1812,7 +1812,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1830,7 +1830,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1851,7 +1851,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -1870,7 +1870,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -1888,7 +1888,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -1907,7 +1907,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -1925,7 +1925,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -1944,7 +1944,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -1963,7 +1963,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -1981,7 +1981,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -1999,7 +1999,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -2022,7 +2022,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2041,7 +2041,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2060,7 +2060,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2079,14 +2079,14 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Assembly of Iron</Name>
-              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker|Assembly of Iron</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2098,7 +2098,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2117,7 +2117,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2136,7 +2136,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2155,7 +2155,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2174,7 +2174,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2193,7 +2193,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2212,7 +2212,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2231,7 +2231,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2250,7 +2250,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2269,7 +2269,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2288,7 +2288,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2307,7 +2307,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -2325,7 +2325,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2346,7 +2346,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2365,7 +2365,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2384,7 +2384,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2403,14 +2403,14 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
               <Name>Assembly of Iron</Name>
-              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker</Pattern>
+              <Pattern>Stormcaller Brundir|Runemaster Molgeim|Steelbreaker|Assembly of Iron</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -2422,7 +2422,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2441,7 +2441,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2460,7 +2460,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2479,7 +2479,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2498,7 +2498,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2517,7 +2517,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2536,7 +2536,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2555,7 +2555,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2574,7 +2574,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2593,7 +2593,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2612,7 +2612,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2631,7 +2631,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -2649,7 +2649,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -2667,7 +2667,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -2692,7 +2692,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2711,7 +2711,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2730,7 +2730,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2749,7 +2749,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2768,7 +2768,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -2786,7 +2786,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -2807,7 +2807,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2826,7 +2826,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2845,7 +2845,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2864,7 +2864,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2883,7 +2883,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2902,7 +2902,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -2920,7 +2920,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -2938,7 +2938,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -2961,7 +2961,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2980,7 +2980,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -2999,7 +2999,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3018,7 +3018,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3037,7 +3037,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -3055,7 +3055,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -3076,7 +3076,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3095,7 +3095,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3114,7 +3114,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3133,7 +3133,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3152,7 +3152,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3171,7 +3171,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -3189,7 +3189,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -3207,26 +3207,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>? (Refresh from Armory)</Name>
-          <Pattern>Champions' Cache in $</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -3244,7 +3225,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -3271,7 +3252,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3290,7 +3271,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3309,7 +3290,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3328,7 +3309,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3346,7 +3327,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3367,7 +3348,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3386,7 +3367,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3405,7 +3386,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3423,7 +3404,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3444,7 +3425,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3463,7 +3444,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3481,7 +3462,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3502,7 +3483,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3521,7 +3502,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3539,7 +3520,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3560,7 +3541,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3578,7 +3559,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -3596,7 +3577,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -3619,7 +3600,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3638,7 +3619,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3657,7 +3638,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3676,7 +3657,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3694,7 +3675,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3715,7 +3696,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3734,7 +3715,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3753,7 +3734,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3771,7 +3752,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3792,7 +3773,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3811,7 +3792,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3829,7 +3810,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3850,7 +3831,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -3869,7 +3850,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3887,7 +3868,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -3908,7 +3889,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -3926,7 +3907,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -3944,7 +3925,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -3962,7 +3943,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -3987,7 +3968,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4006,7 +3987,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4025,7 +4006,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4044,7 +4025,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4062,7 +4043,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4083,7 +4064,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4102,7 +4083,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4121,7 +4102,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4139,7 +4120,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4160,7 +4141,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4179,7 +4160,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4197,7 +4178,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4218,7 +4199,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4237,7 +4218,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4255,7 +4236,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4276,7 +4257,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4294,7 +4275,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -4312,7 +4293,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4335,7 +4316,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4354,7 +4335,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4373,7 +4354,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4392,7 +4373,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4410,7 +4391,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4431,7 +4412,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4450,7 +4431,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4469,7 +4450,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4487,7 +4468,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4508,7 +4489,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4527,7 +4508,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4545,7 +4526,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4566,7 +4547,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
@@ -4585,7 +4566,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4603,7 +4584,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
@@ -4624,7 +4605,7 @@
                       <MaxItemQuality>Heirloom</MaxItemQuality>
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
-                      <AppliesToGems>true</AppliesToGems>
+                      <AppliesToGems>false</AppliesToGems>
                       <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
@@ -4642,7 +4623,7 @@
                   <MaxItemQuality>Heirloom</MaxItemQuality>
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
-                  <AppliesToGems>true</AppliesToGems>
+                  <AppliesToGems>false</AppliesToGems>
                   <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
@@ -4660,7 +4641,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -4678,7 +4659,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -4697,7 +4678,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -4716,7 +4697,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -4734,7 +4715,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -4757,7 +4738,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4776,7 +4757,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4795,7 +4776,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4814,7 +4795,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -4832,7 +4813,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -4853,7 +4834,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4872,7 +4853,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4891,7 +4872,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -4910,7 +4891,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -4928,7 +4909,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -4946,7 +4927,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -4967,7 +4948,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -4986,7 +4967,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -5004,7 +4985,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -5027,7 +5008,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -5046,7 +5027,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -5064,7 +5045,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5085,7 +5066,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -5104,7 +5085,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -5122,7 +5103,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -5140,7 +5121,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -5161,14 +5142,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Venture Coin</Name>
-          <Pattern>Purkom|'Grizzly' D\. Adams</Pattern>
+          <Pattern>Venture Coin</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5180,7 +5161,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5199,7 +5180,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5218,7 +5199,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5237,7 +5218,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5256,7 +5237,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5275,7 +5256,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5283,8 +5264,8 @@
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Trophy of the Crusade</Name>
-              <Pattern>Trophy of the Crusade</Pattern>
+              <Name>Emblem of Triumph</Name>
+              <Pattern>Emblem of Triumph] $</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -5296,13 +5277,32 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Trophy of the Crusade</Name>
+              <Pattern>Trophy of the Crusade|Valiant Laradia|Valiant Bressia</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Triumph</Name>
-          <Pattern>Emblem of Triumph</Pattern>
+          <Pattern>Emblem of Triumph|Valiant Laradia|Valiant Bressia</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5314,7 +5314,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5322,8 +5322,8 @@
             <ItemFilterRegex>
               <RegexList />
               <OtherRegexEnabled>true</OtherRegexEnabled>
-              <Name>Class Token</Name>
-              <Pattern>Mark of Sanctification|Sanctified|Witch's|Lasherweave|and</Pattern>
+              <Name>Emblem of Frost</Name>
+              <Pattern>Emblem of Frost] $</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -5335,13 +5335,32 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
+              <Enabled>true</Enabled>
+            </ItemFilterRegex>
+            <ItemFilterRegex>
+              <RegexList />
+              <OtherRegexEnabled>true</OtherRegexEnabled>
+              <Name>Class Token</Name>
+              <Pattern>Mark of Sanctification|Sanctified|Witch's|Lasherweave|Dark Coven|Ymirjar Lord's</Pattern>
+              <BoA>true</BoA>
+              <BoE>true</BoE>
+              <BoP>true</BoP>
+              <BoU>true</BoU>
+              <BoN>true</BoN>
+              <MinItemLevel>0</MinItemLevel>
+              <MaxItemLevel>1000</MaxItemLevel>
+              <MinItemQuality>Temp</MinItemQuality>
+              <MaxItemQuality>Heirloom</MaxItemQuality>
+              <AdditiveFilter>true</AdditiveFilter>
+              <AppliesToItems>true</AppliesToItems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>Emblem of Frost</Name>
-          <Pattern>Emblem of Frost|Mark of Sanctification|Sanctified|Witch's|Lasherweave</Pattern>
+          <Pattern>Emblem of Frost|Mark of Sanctification|Sanctified|Witch's|Lasherweave|Dark Coven|Ymirjar Lord's</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5353,7 +5372,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5372,7 +5391,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5391,7 +5410,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5412,7 +5431,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -5431,7 +5450,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -5450,7 +5469,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
             <ItemFilterRegex>
@@ -5469,7 +5488,7 @@
               <MaxItemQuality>Heirloom</MaxItemQuality>
               <AdditiveFilter>true</AdditiveFilter>
               <AppliesToItems>true</AppliesToItems>
-              <AppliesToGems>true</AppliesToGems>
+              <AppliesToGems>false</AppliesToGems>
               <Enabled>true</Enabled>
             </ItemFilterRegex>
           </RegexList>
@@ -5487,13 +5506,13 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Special Currency (Badges, Rings, etc.)</Name>
-      <Pattern>Purchasable with|Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot|Champion Isimode|Arcanist Firael|Arcanist Adurin|Enchanter Erodin</Pattern>
+      <Name>Special Currency (Emblems, Tokens, etc.)</Name>
+      <Pattern>Purchasable with(?!.*(\ds.*\dc|Mark of Honor))|(?&lt;!PvP.*)(Harold Winston|Valerie Langrom|Magister Brasael|Dubin Clay|Lady Palanseer|Arcanist Ivrenne|Paldesse|Purkom|'Grizzly' D\. Adams|Brightlink|Hexil Garrot|Champion Isimode|Arcanist Firael|Arcanist Adurin|Enchanter Erodin|Valiant Laradia|Valiant Bressia|Venture Coin)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5505,7 +5524,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -5698,7 +5717,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5717,7 +5736,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5736,7 +5755,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5755,7 +5774,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5774,7 +5793,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5793,7 +5812,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5812,7 +5831,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5831,7 +5850,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5850,7 +5869,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -5869,13 +5888,32 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Misc. Vendor</Name>
+          <Pattern>\ds.*\dc$</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Factions &amp; Vendors</Name>
-      <Pattern>Friendly|Honored|Revered|Exalted|Duchess Mynx|Archmage Alvareaux|Cielstrasza|Tanak|Geen|Veteran Crusader Aliocha Segard|Lillehoff|Horde Expedition|Kalu'ak|Logistics Officer Brighton|Alliance Vanguard|\dg.*\ds.*\dc</Pattern>
+      <Name>Faction Reputation</Name>
+      <Pattern>Friendly|Honored|Revered|Exalted|Duchess Mynx|Archmage Alvareaux|Cielstrasza|Tanak|Geen|Veteran Crusader Aliocha Segard|Lillehoff|Horde Expedition|Kalu'ak|Logistics Officer Brighton|Alliance Vanguard|\ds.*\dc</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -5887,7 +5925,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -5906,11 +5944,68 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Requires Arena Rating</Name>
+          <Pattern>Arena Rating</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Arena Points</Name>
+          <Pattern>Arena Points$|Blazzek the Biter|Argex Irongut|Nargle Lashcord|Grex Brainboiler|Trapjaw Rix|for 0  Points| 0 PVP|Kezzik the Striker|Big Zokk Torquewrench|Xazi Smolderpipe</Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
+        <ItemFilterRegex>
+          <RegexList />
+          <OtherRegexEnabled>true</OtherRegexEnabled>
+          <Name>Honor Points</Name>
+          <Pattern>Honor Points$|Doris Volanthius|Lieutenant Tristia|Captain Dirgehammer|Sergeant Thunderhorn|Leeni </Pattern>
+          <BoA>true</BoA>
+          <BoE>true</BoE>
+          <BoP>true</BoP>
+          <BoU>true</BoU>
+          <BoN>true</BoN>
+          <MinItemLevel>0</MinItemLevel>
+          <MaxItemLevel>1000</MaxItemLevel>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
+          <AdditiveFilter>true</AdditiveFilter>
+          <AppliesToItems>true</AppliesToItems>
+          <AppliesToGems>false</AppliesToGems>
+          <Enabled>true</Enabled>
+        </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
@@ -5927,14 +6022,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Honor Points</Name>
-          <Pattern>Honor Points|Doris Volanthius|Lieutenant Tristia</Pattern>
+          <Name>Emblem of Valor</Name>
+          <Pattern>Magister Brasael</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5946,14 +6041,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Arena Points</Name>
-          <Pattern>Arena Points|Blazzek the Biter|Argex Irongut|Nargle Lashcord|Grex Brainboiler|Trapjaw Rix</Pattern>
+          <Name>Emblem of Heroism</Name>
+          <Pattern>Magistrix Lambriesse</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5965,14 +6060,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Venture Coin</Name>
-          <Pattern>Venture Coin</Pattern>
+          <Name>Emblem of Conquest</Name>
+          <Pattern>Arcanist Firael</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -5984,14 +6079,14 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>true</OtherRegexEnabled>
           <Name>? (Refresh from Armory)</Name>
-          <Pattern>(?&gt;! 0 )PvP Points|for 0  Points| 0 PVP|PvP Item</Pattern>
+          <Pattern>(?&gt;! 0 )PvP Points|PvP Item$</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -6003,13 +6098,13 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>true</Enabled>
         </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>PVP</Name>
-      <Pattern>Points|Mark of Honor|Hall of Legends|Champions' Hall|Griz Gutshank|Argex Irongut|Travis Day|Nargle Lashcord|Blazzek the Biter|Ecton Brasstumbler|Doris Volanthius|Evee Copperspring|Trapjaw Rix|PvP.*|Grex Brainboiler|Kezzik the Striker|Knight Dameron|Lieutenant Tristia|Wintergrasp|Titan-Forged</Pattern>
+      <Name>PvP</Name>
+      <Pattern>PVP|Goodman|Points|Mark of Honor|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni </Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -6021,7 +6116,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -6040,14 +6135,14 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Name>World Drop</Name>
-      <Pattern>World Drop</Pattern>
+      <Pattern>World Drop|Nascent Val'kyr|Bone Chewer</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -6059,7 +6154,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -6078,7 +6173,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -6097,26 +6192,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
-    </ItemFilterRegex>
-    <ItemFilterRegex>
-      <RegexList />
-      <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Mob Drops</Name>
-      <Pattern>Nascent Val'kyr</Pattern>
-      <BoA>true</BoA>
-      <BoE>true</BoE>
-      <BoP>true</BoP>
-      <BoU>true</BoU>
-      <BoN>true</BoN>
-      <MinItemLevel>0</MinItemLevel>
-      <MaxItemLevel>1000</MaxItemLevel>
-      <MinItemQuality>Temp</MinItemQuality>
-      <MaxItemQuality>Heirloom</MaxItemQuality>
-      <AdditiveFilter>true</AdditiveFilter>
-      <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -6135,72 +6211,14 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
-    </ItemFilterRegex>
-    <ItemFilterRegex>
-      <RegexList>
-        <ItemFilterRegex>
-          <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Refresh from Armory</Name>
-          <Pattern>Unknown|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList />
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Name>Refresh from Wowhead</Name>
-          <Pattern>Drops from  in $|(?&lt;!Reward from.*) in Ulduar$</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
-        </ItemFilterRegex>
-      </RegexList>
-      <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Unknown (Refresh)</Name>
-      <Pattern>(?&gt;!Onyxia.*)Unknown|Drops from  in $|Lady Palanseer|Champions' Cache in $|Onyxia in $|Alexstrasza's Gift in $|Sjonnir The Ironshaper in $|Zuramat the Obliterator in $|Drakkari Elemental in $|Unknown Location, please refresh</Pattern>
-      <BoA>true</BoA>
-      <BoE>true</BoE>
-      <BoP>true</BoP>
-      <BoU>true</BoU>
-      <BoN>true</BoN>
-      <MinItemLevel>0</MinItemLevel>
-      <MaxItemLevel>1000</MaxItemLevel>
-      <MinItemQuality>Temp</MinItemQuality>
-      <MaxItemQuality>Heirloom</MaxItemQuality>
-      <AdditiveFilter>true</AdditiveFilter>
-      <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList />
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Name>Not found on armory</Name>
-      <Pattern>Not found on armory|Armory reports no source</Pattern>
+      <Name>Unknown/Not found on armory</Name>
+      <Pattern>Unknown|Not found on armory|Armory reports no source</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -6212,7 +6230,7 @@
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>true</AppliesToItems>
-      <AppliesToGems>true</AppliesToGems>
+      <AppliesToGems>false</AppliesToGems>
       <Enabled>true</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
@@ -6259,7 +6277,7 @@
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Name>Disable PvP</Name>
-          <Pattern>Points|Stone Keeper's Shard</Pattern>
+          <Pattern>PvP|Stone Keeper's Shard</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -6296,7 +6314,8 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable Epic Level Gems</Name>
+          <Name>Disable Quest Rewards</Name>
+          <Pattern>Reward from</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -6304,8 +6323,8 @@
           <BoN>true</BoN>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Epic</MinItemQuality>
-          <MaxItemQuality>Epic</MaxItemQuality>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
@@ -6314,7 +6333,8 @@
         <ItemFilterRegex>
           <RegexList />
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable Blue Level Gems (Hides Metas Too)</Name>
+          <Name>Disable Unknown/Not found on armory</Name>
+          <Pattern>Unknown|Not found on armory|Armory reports no source</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -6322,26 +6342,8 @@
           <BoN>true</BoN>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Rare</MinItemQuality>
-          <MaxItemQuality>Rare</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>false</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
-          <Enabled>false</Enabled>
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Disable Green Level and 'Perfect' Gems</Name>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>70</MinItemLevel>
-          <MaxItemLevel>70</MaxItemLevel>
-          <MinItemQuality>Poor</MinItemQuality>
-          <MaxItemQuality>Uncommon</MaxItemQuality>
+          <MinItemQuality>Temp</MinItemQuality>
+          <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
@@ -6535,7 +6537,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6554,7 +6556,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6572,7 +6574,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6590,7 +6592,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6608,7 +6610,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6626,7 +6628,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6644,7 +6646,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
@@ -6662,7 +6664,7 @@
           <MaxItemQuality>Heirloom</MaxItemQuality>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>true</AppliesToGems>
+          <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
       </RegexList>
@@ -6756,24 +6758,6 @@
           <AppliesToGems>false</AppliesToGems>
           <Enabled>false</Enabled>
         </ItemFilterRegex>
-        <ItemFilterRegex>
-          <RegexList />
-          <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Name>Binds on ? (Refresh from Armory)</Name>
-          <BoA>false</BoA>
-          <BoE>false</BoE>
-          <BoP>false</BoP>
-          <BoU>false</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>false</AppliesToGems>
-          <Enabled>false</Enabled>
-        </ItemFilterRegex>
       </RegexList>
       <OtherRegexEnabled>false</OtherRegexEnabled>
       <Name>Disable by Bind Type</Name>
@@ -6790,6 +6774,24 @@
       <AppliesToItems>true</AppliesToItems>
       <AppliesToGems>false</AppliesToGems>
       <Enabled>false</Enabled>
+    </ItemFilterRegex>
+    <ItemFilterRegex>
+      <RegexList />
+      <OtherRegexEnabled>true</OtherRegexEnabled>
+      <Name>BOE Items (possible AH)</Name>
+      <BoA>false</BoA>
+      <BoE>true</BoE>
+      <BoP>false</BoP>
+      <BoU>false</BoU>
+      <BoN>false</BoN>
+      <MinItemLevel>0</MinItemLevel>
+      <MaxItemLevel>1000</MaxItemLevel>
+      <MinItemQuality>Temp</MinItemQuality>
+      <MaxItemQuality>Heirloom</MaxItemQuality>
+      <AdditiveFilter>true</AdditiveFilter>
+      <AppliesToItems>true</AppliesToItems>
+      <AppliesToGems>false</AppliesToGems>
+      <Enabled>true</Enabled>
     </ItemFilterRegex>
   </RegexList>
   <OtherRegexEnabled>true</OtherRegexEnabled>
