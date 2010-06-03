@@ -1194,6 +1194,11 @@ namespace Rawr {
                 // Zod, kneel before him
                 stats.ZodProc = (ilvl == 277 ? 0.05f : 0.04f);
             }
+            else if ((match = Regex.Match(line, @"Each time your spells heal a target you have a chance to cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for 6 sec")).Success)
+            {
+                // Trauma; Procs on Healing Hit and HoTs; Hits at least 5 people
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 5 }, 6f, 0f, 0.01f, 1));
+            }
             #endregion
             #region 3.3 Trinkets
             else if ((match = Regex.Match(line, @"Each time you are struck by a melee attack, you have a 60% chance to gain (?<stamina>\d+) stamina for the next 10 sec, stacking up to 10 times")).Success)
@@ -1235,11 +1240,11 @@ namespace Rawr {
                 float averageSP = (min + max) / 2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = averageSP }, time, 45f, 0.1f));
             }
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec").Match(line)).Success)
+            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<armor>\d+) armor for 10 sec").Match(line)).Success)
             {
                 // Corpse Tongue Coin
                 // Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec.  Cannot occur more than once every 30 sec.
-                float fArmor = 5712;
+                float fArmor = (float)int.Parse(match.Groups["armor"].Value);;
                 float fDuration = 10;
                 float fICD = 30;
                 // Assuming the target will be under 35% health for that amount of time.
@@ -1265,6 +1270,27 @@ namespace Rawr {
             }
 
 
+            #endregion
+            #region 3.3.5 Trinkets
+            else if ((match = Regex.Match(line, @"For the next 15 sec, each time your direct healing spells heal a target you cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for 6 sec")).Success)
+            {
+                // Eyes of Twilight; Procs on Healing Hit and HoTs; Hits at least 5 people
+                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 15f, 2f * 60f);
+                SpecialEffect secondary = new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 5 }, 6f, 0f, 0.01f, 1);
+                primary.Stats.AddSpecialEffect(secondary);
+                stats.AddSpecialEffect(primary);
+            }
+			else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
+            {
+                // Petrified Twilight Scale
+                // Melee attacks which reduce you below 35% health cause you to gain 733 dodge rating for 10 sec.  Cannot occur more than once every 45 sec.
+                float fDodge = int.Parse(match.Groups["amount"].Value);
+                float fDuration = 10;
+                float fICD = 45;
+                // Assuming the target will be under 35% health for that amount of time.
+                float fChance = .35f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { Dodge = fDodge }, fDuration, fICD, fChance));
+            }
             #endregion
             else
             {
