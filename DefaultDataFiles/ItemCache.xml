@@ -120503,6 +120503,19 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_coin_18</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTaken</Trigger>
+          <Stats>
+            <Armor>6426</Armor>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>30</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>172</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -120556,6 +120569,19 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_coin_18</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTaken</Trigger>
+          <Stats>
+            <Armor>5712</Armor>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>30</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <DodgeRating>152</DodgeRating>
     </Stats>
     <Quality>Epic</Quality>
@@ -120819,6 +120845,23 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_trinket_06</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <FrostResistance>239</FrostResistance>
+            <NatureResistance>239</NatureResistance>
+            <FireResistance>239</FireResistance>
+            <ShadowResistance>239</ShadowResistance>
+            <ArcaneResistance>239</ArcaneResistance>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>228</Stamina>
     </Stats>
     <Quality>Epic</Quality>
@@ -120905,6 +120948,23 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_jewelry_trinket_06</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <FrostResistance>268</FrostResistance>
+            <NatureResistance>268</NatureResistance>
+            <FireResistance>268</FireResistance>
+            <ShadowResistance>268</ShadowResistance>
+            <ArcaneResistance>268</ArcaneResistance>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>258</Stamina>
     </Stats>
     <Quality>Epic</Quality>
@@ -147021,6 +147081,19 @@
     <DisplaySlot>12</DisplaySlot>
     <IconPath>inv_misc_rubysanctum3</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTaken</Trigger>
+          <Stats>
+            <DodgeRating>733</DodgeRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <BonusArmor>2282</BonusArmor>
     </Stats>
     <Quality>Epic</Quality>
