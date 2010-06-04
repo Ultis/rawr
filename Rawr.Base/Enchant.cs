@@ -601,9 +601,16 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3225, "Executioner", ItemSlot.OneHand, executioner));
             
             Stats mongoose = new Stats();
-            mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, PhysicalHaste = 0.02f }, 15f, 0f, -1f));
+            mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, HasteRating = 30f, PhysicalHaste = 0.0027f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(2673, "Mongoose", ItemSlot.OneHand, mongoose));
 
+			// Once at 35% Health, your melee Hits restores 400 health per stack
+            Stats blood_drain_a = new Stats();
+            blood_drain_a.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { HealthRestore = ( 360f + 440f ) / 2f }, 20f, 0f, 1f, 5));
+            Stats blood_drain = new Stats();
+            blood_drain.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f);
+            defaultEnchants.Add(new Enchant(3870, "Blood Draining", ItemSlot.OneHand, blood_drain));
+            
             Stats icebreaker = new Stats();
             icebreaker.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
                 new Stats() { // the .85 and .15 are simming spell hits vs spell crits, obsolete with new special dmg proc method
