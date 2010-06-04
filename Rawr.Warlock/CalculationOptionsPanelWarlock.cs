@@ -148,6 +148,8 @@ namespace Rawr.Warlock {
             targetLevelCombo.Text = _options.TargetLevel.ToString();
             fightLengthSpinner.Value = (decimal) _options.Duration;
             latencySpinner.Value = (decimal) _options.Latency * 1000;
+            thirtyFiveSpinner.Value = (decimal) _options.ThirtyFive * 100;
+            twentyFiveSpinner.Value = (decimal) _options.TwentyFive * 100;
             RefreshRotationPanel();
 
             --_ignoreCount;
@@ -388,6 +390,26 @@ namespace Rawr.Warlock {
             } else {
                 _options.GetActiveRotation().Execute = executeCombo.Text;
             }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void thirtyFiveSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.ThirtyFive = (float) thirtyFiveSpinner.Value / 100f;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void twentyFiveSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.TwentyFive = (float) twentyFiveSpinner.Value / 100f;
             Character.OnCalculationsInvalidated();
         }
 

@@ -286,36 +286,62 @@ namespace Rawr.Warlock {
                     Options.Latency);
 
             float timeRemaining = Options.Duration;
-            float manaRemaining = CalcUsableMana(timeRemaining);
+            float totalMana = CalcUsableMana(timeRemaining);
+            float maxMana = StatUtils.CalcMana(PreProcStats);
+            float manaFromEffects = totalMana - maxMana;
+            float manaUsed = 0f;
 
             #region Calculate NumCasts for each spell
 
-            Priorities = new List<Spell>();
-            foreach (
-                string spellName
-                in Options.GetActiveRotation().GetPrioritiesForCalcs(Talents)) {
-
-                Spell spell = GetSpell(spellName);
-                if (spell.IsCastable()) {
-                    Priorities.Add(spell);
-                    CastSpells.Add(spellName, spell);
+            // execute stage collision delays
+            Spell execute = null;
+            float executePercent = 0f;
+            string executeName = Options.GetActiveRotation().Execute;
+            if (executeName != null && executeName.Equals("Soul Fire")) {
+                execute = GetSpell(executeName);
+                if (execute.IsCastable()) {
+                    if (execute is SoulFire) {
+                        executePercent = Options.ThirtyFive;
+                    } else {
+                        executePercent = Options.TwentyFive;
+                    }
+                    SetupSpells(true);
+                    RecordCollisionDelays(
+                        new CastingState(this, execute, executePercent));
                 }
             }
 
-            
-
+            // normal collision delays
             Spell filler = GetSpell(Options.GetActiveRotation().Filler);
-            RecordCollisionDelays(new CastingState(this, filler));
+            SetupSpells(false);
+            RecordCollisionDelays(
+                new CastingState(this, filler, 1f - executePercent));
+
+            // calc numcasts
             foreach (Spell spell in Priorities) {
                 float numCasts = spell.GetNumCasts();
-                timeRemaining -= spell.GetAvgTimeUsed() * numCasts;
-                manaRemaining -= spell.ManaCost * numCasts;
+                timeRemaining -= numCasts * spell.GetAvgTimeUsed();
+                manaUsed += numCasts * spell.ManaCost;
             }
             LifeTap lifeTap = (LifeTap) GetSpell("Life Tap");
+            if (executePercent > 0) {
+                float executeTime = executePercent * timeRemaining;
+                float taps
+                    = lifeTap.AddCastsForRegen(
+                        timeRemaining * executePercent,
+                        maxMana + (manaFromEffects - manaUsed) * executePercent,
+                        execute);
+                executeTime -= taps * lifeTap.GetAvgTimeUsed();
+                manaUsed += taps * lifeTap.ManaCost;
+                execute.Spam(executeTime);
+                timeRemaining -= executeTime;
+                manaUsed += execute.ManaCost * execute.GetNumCasts();
+                CastSpells.Add(Options.GetActiveRotation().Execute, execute);
+            }
             timeRemaining
                 -= lifeTap.GetAvgTimeUsed()
                     * lifeTap.AddCastsForRegen(
-                        timeRemaining, manaRemaining, filler);
+                        timeRemaining, totalMana - manaUsed, filler);
             filler.Spam(timeRemaining);
             CastSpells.Add(Options.GetActiveRotation().Filler, filler);
 
@@ -872,6 +898,24 @@ namespace Rawr.Warlock {
             chances[(int) Trigger.DoTTick] = 1f;
             chances[(int) Trigger.CorruptionTick]
                 = corruptionPeriod == 0f ? 0f : 1f;
+        }
+
+        private void SetupSpells(bool execute) {
+
+            Priorities = new List<Spell>();
+            foreach (
+                string spellName
+                in Options.GetActiveRotation().GetPrioritiesForCalcs(
+                    Talents, execute)) {
+
+                Spell spell = GetSpell(spellName);
+                if (spell.IsCastable()) {
+                    Priorities.Add(spell);
+                    if (!CastSpells.ContainsKey(spellName)) {
+                        CastSpells.Add(spellName, spell);
+                    }
+                }
+            }
         }
 
         // This technique assumes that if you pick a random time during filler

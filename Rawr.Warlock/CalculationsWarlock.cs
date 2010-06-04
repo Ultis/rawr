@@ -120,6 +120,7 @@ namespace Rawr.Warlock {
                         "Destruction:Incinerate",
                         "Destruction:Incinerate (Under Backdraft)",
                         "Destruction:Incinerate (Under Molten Core)",
+                        "Destruction:Soul Fire",
                         "Destruction:Shadow Bolt",
                         "Destruction:Shadow Bolt (Instant)" };
                 return _characterDisplayCalculationLabels;

@@ -118,10 +118,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="notesBox.Text" xml:space="preserve">
-    <value>The Warlock model you are using is still under development.  It has known problems, and some important features are not yet implemented (for example, pet dps is off, especially for the Felguard).  However, it should still work well for at least Affliction and Destruction Warlocks.
+    <value>The Warlock model you are using is still under development.  It has known problems, and some important features are not yet implemented (for example, pet dps is unverified).  However, it coming closer and closer to complete, and should be safe to use now for gear choices.
 
-Please visit http://rawr.codeplex.com/wikipage?title=Rawr.Warlock.  It will be updated with known problems, warnings and info about the model.  If you find a problem with a feature that is supposed to be working according to that page, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it.  If not then create a new issue for it, and be sure to attach your character file.
-
-I appologize for the relative obscurity of this important information, but this is the most prominant place I could put it without modifying more than just the Warlock model.</value>
+Please visit http://rawr.codeplex.com/wikipage?title=Rawr.Warlock.  It will be updated with known problems, warnings and info about the model.  If you find a problem with a feature that is supposed to be working according to that page, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it.  If not then create a new issue for it, and be sure to attach your character file.</value>
   </data>
 </root>

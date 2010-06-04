@@ -57,21 +57,27 @@
             this.latencyLabel = new System.Windows.Forms.Label();
             this.infernalCheck = new System.Windows.Forms.CheckBox();
             this.tabbedPane = new System.Windows.Forms.TabControl();
-            this.notesPage = new System.Windows.Forms.TabPage();
-            this.notesBox = new System.Windows.Forms.TextBox();
             this.optionsPage = new System.Windows.Forms.TabPage();
+            this.twentyFiveLabel = new System.Windows.Forms.Label();
+            this.thirtyFiveLabel = new System.Windows.Forms.Label();
+            this.twentyFiveSpinner = new System.Windows.Forms.NumericUpDown();
+            this.thirtyFiveSpinner = new System.Windows.Forms.NumericUpDown();
             this.imbueLabel = new System.Windows.Forms.Label();
             this.imbueCombo = new System.Windows.Forms.ComboBox();
             this.debugTab = new System.Windows.Forms.TabPage();
             this.TimerButton = new System.Windows.Forms.Button();
             this.ProcCheckbox = new System.Windows.Forms.CheckBox();
+            this.notesPage = new System.Windows.Forms.TabPage();
+            this.notesBox = new System.Windows.Forms.TextBox();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
             this.tabbedPane.SuspendLayout();
-            this.notesPage.SuspendLayout();
             this.optionsPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.twentyFiveSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.thirtyFiveSpinner)).BeginInit();
             this.debugTab.SuspendLayout();
+            this.notesPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // petCombo
@@ -140,9 +146,9 @@
             this.rotationBox.Controls.Add(this.rotationCombo);
             this.rotationBox.Controls.Add(this.deleteRotationButton);
             this.rotationBox.Controls.Add(this.rotationList);
-            this.rotationBox.Location = new System.Drawing.Point(3, 162);
+            this.rotationBox.Location = new System.Drawing.Point(3, 214);
             this.rotationBox.Name = "rotationBox";
-            this.rotationBox.Size = new System.Drawing.Size(283, 306);
+            this.rotationBox.Size = new System.Drawing.Size(283, 313);
             this.rotationBox.TabIndex = 7;
             this.rotationBox.TabStop = false;
             this.rotationBox.Text = "Spell Priorities";
@@ -159,7 +165,6 @@
             // executeCombo
             // 
             this.executeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.executeCombo.Enabled = false;
             this.executeCombo.FormattingEnabled = true;
             this.executeCombo.Items.AddRange(new object[] {
             "None",
@@ -399,43 +404,22 @@
             // 
             // tabbedPane
             // 
-            this.tabbedPane.Controls.Add(this.notesPage);
             this.tabbedPane.Controls.Add(this.optionsPage);
             this.tabbedPane.Controls.Add(this.debugTab);
+            this.tabbedPane.Controls.Add(this.notesPage);
             this.tabbedPane.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabbedPane.Location = new System.Drawing.Point(0, 0);
             this.tabbedPane.Name = "tabbedPane";
             this.tabbedPane.SelectedIndex = 0;
-            this.tabbedPane.Size = new System.Drawing.Size(300, 500);
+            this.tabbedPane.Size = new System.Drawing.Size(300, 600);
             this.tabbedPane.TabIndex = 19;
-            // 
-            // notesPage
-            // 
-            this.notesPage.Controls.Add(this.notesBox);
-            this.notesPage.Location = new System.Drawing.Point(4, 22);
-            this.notesPage.Name = "notesPage";
-            this.notesPage.Padding = new System.Windows.Forms.Padding(3);
-            this.notesPage.Size = new System.Drawing.Size(292, 474);
-            this.notesPage.TabIndex = 1;
-            this.notesPage.Text = "Important";
-            this.notesPage.UseVisualStyleBackColor = true;
-            // 
-            // notesBox
-            // 
-            this.notesBox.AcceptsReturn = true;
-            this.notesBox.AcceptsTab = true;
-            this.notesBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.notesBox.Location = new System.Drawing.Point(3, 3);
-            this.notesBox.Multiline = true;
-            this.notesBox.Name = "notesBox";
-            this.notesBox.ReadOnly = true;
-            this.notesBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.notesBox.Size = new System.Drawing.Size(286, 468);
-            this.notesBox.TabIndex = 0;
-            this.notesBox.Text = resources.GetString("notesBox.Text");
             // 
             // optionsPage
             // 
+            this.optionsPage.Controls.Add(this.twentyFiveLabel);
+            this.optionsPage.Controls.Add(this.thirtyFiveLabel);
+            this.optionsPage.Controls.Add(this.twentyFiveSpinner);
+            this.optionsPage.Controls.Add(this.thirtyFiveSpinner);
             this.optionsPage.Controls.Add(this.imbueLabel);
             this.optionsPage.Controls.Add(this.imbueCombo);
             this.optionsPage.Controls.Add(this.petCombo);
@@ -451,10 +435,48 @@
             this.optionsPage.Location = new System.Drawing.Point(4, 22);
             this.optionsPage.Name = "optionsPage";
             this.optionsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.optionsPage.Size = new System.Drawing.Size(292, 474);
+            this.optionsPage.Size = new System.Drawing.Size(292, 574);
             this.optionsPage.TabIndex = 0;
             this.optionsPage.Text = "Options";
             this.optionsPage.UseVisualStyleBackColor = true;
+            // 
+            // twentyFiveLabel
+            // 
+            this.twentyFiveLabel.AutoSize = true;
+            this.twentyFiveLabel.Location = new System.Drawing.Point(6, 190);
+            this.twentyFiveLabel.Name = "twentyFiveLabel";
+            this.twentyFiveLabel.Size = new System.Drawing.Size(111, 13);
+            this.twentyFiveLabel.TabIndex = 22;
+            this.twentyFiveLabel.Text = "% of Fight Below 25%:";
+            // 
+            // thirtyFiveLabel
+            // 
+            this.thirtyFiveLabel.AutoSize = true;
+            this.thirtyFiveLabel.Location = new System.Drawing.Point(6, 164);
+            this.thirtyFiveLabel.Name = "thirtyFiveLabel";
+            this.thirtyFiveLabel.Size = new System.Drawing.Size(110, 13);
+            this.thirtyFiveLabel.TabIndex = 21;
+            this.thirtyFiveLabel.Text = "% of Fight below 35%:";
+            // 
+            // twentyFiveSpinner
+            // 
+            this.twentyFiveSpinner.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.twentyFiveSpinner.Location = new System.Drawing.Point(159, 188);
+            this.twentyFiveSpinner.Name = "twentyFiveSpinner";
+            this.twentyFiveSpinner.Size = new System.Drawing.Size(127, 20);
+            this.twentyFiveSpinner.TabIndex = 20;
+            this.twentyFiveSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.twentyFiveSpinner.ValueChanged += new System.EventHandler(this.twentyFiveSpinner_ValueChanged);
+            // 
+            // thirtyFiveSpinner
+            // 
+            this.thirtyFiveSpinner.Anchor = ((System.Windows.Forms.AnchorStyles) ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.thirtyFiveSpinner.Location = new System.Drawing.Point(159, 162);
+            this.thirtyFiveSpinner.Name = "thirtyFiveSpinner";
+            this.thirtyFiveSpinner.Size = new System.Drawing.Size(127, 20);
+            this.thirtyFiveSpinner.TabIndex = 19;
+            this.thirtyFiveSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.thirtyFiveSpinner.ValueChanged += new System.EventHandler(this.thirtyFiveSpinner_ValueChanged);
             // 
             // imbueLabel
             // 
@@ -486,7 +508,7 @@
             this.debugTab.Location = new System.Drawing.Point(4, 22);
             this.debugTab.Name = "debugTab";
             this.debugTab.Padding = new System.Windows.Forms.Padding(3);
-            this.debugTab.Size = new System.Drawing.Size(292, 474);
+            this.debugTab.Size = new System.Drawing.Size(292, 574);
             this.debugTab.TabIndex = 2;
             this.debugTab.Text = "Debug";
             this.debugTab.UseVisualStyleBackColor = true;
@@ -512,24 +534,51 @@
             this.ProcCheckbox.UseVisualStyleBackColor = true;
             this.ProcCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);
             // 
+            // notesPage
+            // 
+            this.notesPage.Controls.Add(this.notesBox);
+            this.notesPage.Location = new System.Drawing.Point(4, 22);
+            this.notesPage.Name = "notesPage";
+            this.notesPage.Padding = new System.Windows.Forms.Padding(3);
+            this.notesPage.Size = new System.Drawing.Size(292, 574);
+            this.notesPage.TabIndex = 1;
+            this.notesPage.Text = "Info";
+            this.notesPage.UseVisualStyleBackColor = true;
+            // 
+            // notesBox
+            // 
+            this.notesBox.AcceptsReturn = true;
+            this.notesBox.AcceptsTab = true;
+            this.notesBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.notesBox.Location = new System.Drawing.Point(3, 3);
+            this.notesBox.Multiline = true;
+            this.notesBox.Name = "notesBox";
+            this.notesBox.ReadOnly = true;
+            this.notesBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.notesBox.Size = new System.Drawing.Size(286, 568);
+            this.notesBox.TabIndex = 0;
+            this.notesBox.Text = resources.GetString("notesBox.Text");
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabbedPane);
             this.Name = "CalculationOptionsPanelWarlock";
-            this.Size = new System.Drawing.Size(300, 500);
+            this.Size = new System.Drawing.Size(300, 600);
             this.rotationBox.ResumeLayout(false);
             this.rotationBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).EndInit();
             this.tabbedPane.ResumeLayout(false);
-            this.notesPage.ResumeLayout(false);
-            this.notesPage.PerformLayout();
             this.optionsPage.ResumeLayout(false);
             this.optionsPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.twentyFiveSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.thirtyFiveSpinner)).EndInit();
             this.debugTab.ResumeLayout(false);
             this.debugTab.PerformLayout();
+            this.notesPage.ResumeLayout(false);
+            this.notesPage.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -572,5 +621,9 @@
         private System.Windows.Forms.Label imbueLabel;
         private System.Windows.Forms.Label executeLabel;
         private System.Windows.Forms.ComboBox executeCombo;
+        private System.Windows.Forms.Label twentyFiveLabel;
+        private System.Windows.Forms.Label thirtyFiveLabel;
+        private System.Windows.Forms.NumericUpDown twentyFiveSpinner;
+        private System.Windows.Forms.NumericUpDown thirtyFiveSpinner;
     }
 }

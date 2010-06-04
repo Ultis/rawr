@@ -395,7 +395,7 @@ namespace Rawr.Warlock {
             NumCasts += timeRemaining / GetAvgTimeUsed();
             if (CanGetPyroclasm()) {
                 Spell conflagrate = Mommy.CastSpells["Conflagrate"];
-                CastingState fillerState = new CastingState(Mommy, null);
+                CastingState fillerState = new CastingState(Mommy, null, 1f);
                 RecordSimulatedStat(
                     "Pyroclasm Uprate",
                     conflagrate.GetUprate(fillerState, this),
@@ -1640,7 +1640,8 @@ namespace Rawr.Warlock {
                 MagicSchool.Fire, // magicSchool,
                 SpellTree.Destruction, // spellTree,
                 .09f, // percentBaseMana,
-                6f, // baseCastTime,
+                (6f - mommy.Talents.Bane * .4f)
+                    * (1 - mommy.Talents.Decimation * .2f), // baseCastTime,
                 0f, // cooldown,
                 0f, // recastPeriod,
                 1323f, // lowDirectDamage,
@@ -1649,6 +1650,11 @@ namespace Rawr.Warlock {
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) { }
+
+        public override bool IsCastable() {
+            
+            return Mommy.Talents.Decimation > 0;
+        }
     }
 
     public class UnstableAffliction : Spell {

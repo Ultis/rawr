@@ -20,10 +20,12 @@ namespace Rawr.Warlock {
         public int MoltenCoreCharges;
 
         public CastingState(
-            CharacterCalculationsWarlock mommy, Spell precedingSpell) {
+            CharacterCalculationsWarlock mommy,
+            Spell precedingSpell,
+            float probability) {
 
             Mommy = mommy;
-            Probability = 1f;
+            Probability = probability;
             Cooldowns = new Dictionary<Spell, float>();
             SeriesPriorities = new List<int>();
             Series = new List<Spell>();

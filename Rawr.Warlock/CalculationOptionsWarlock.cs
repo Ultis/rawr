@@ -63,7 +63,8 @@ namespace Rawr.Warlock {
         /// </summary>
         /// <param name="spellPriority"></param>
         /// <returns></returns>
-        public List<string> GetPrioritiesForCalcs(WarlockTalents talents) {
+        public List<string> GetPrioritiesForCalcs(
+            WarlockTalents talents, bool execute) {
 
             List<string> forCalcs = new List<string>(SpellPriority);
             if (talents.Backdraft > 0
@@ -72,7 +73,8 @@ namespace Rawr.Warlock {
                 forCalcs.Insert(
                     forCalcs.Count, "Incinerate (Under Backdraft)");
             }
-            if (Filler.Equals("Shadow Bolt")
+            if (!execute
+                && Filler.Equals("Shadow Bolt")
                 && !forCalcs.Contains("Shadow Bolt (Instant)")
                 && ShadowBolt_Instant.IsCastable(talents, forCalcs)) {
 
@@ -152,6 +154,8 @@ namespace Rawr.Warlock {
         public int TargetLevel;
         public float Duration;
         public float Latency;
+        public float ThirtyFive = .25f; // default for backward compatibility
+        public float TwentyFive = .15f; // default for backward compatibility
 
         public List<Rotation> Rotations;
         public int ActiveRotationIndex;
