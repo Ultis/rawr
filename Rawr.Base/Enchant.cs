@@ -608,7 +608,7 @@ namespace Rawr
             Stats blood_drain_a = new Stats();
             blood_drain_a.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { HealthRestore = ( 360f + 440f ) / 2f }, 20f, 0f, 1f, 5));
             Stats blood_drain = new Stats();
-            blood_drain.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f);
+            blood_drain.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f));
             defaultEnchants.Add(new Enchant(3870, "Blood Draining", ItemSlot.OneHand, blood_drain));
             
             Stats icebreaker = new Stats();

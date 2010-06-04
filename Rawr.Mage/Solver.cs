@@ -3499,7 +3499,7 @@ namespace Rawr.Mage
                         evoStateIVHero = CastingState.NewRaw(this, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | mask);
                     }
                 }
-                if (useIncrementalOptimizations)
+                if (useIncrementalOptimizations && segmentMana)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
