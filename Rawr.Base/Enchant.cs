@@ -601,7 +601,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3225, "Executioner", ItemSlot.OneHand, executioner));
             
             Stats mongoose = new Stats();
-            mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, HasteRating = 30f, PhysicalHaste = 0.0027f }, 15f, 0f, -1f));
+            mongoose.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { Agility = 120, HasteRating = 30f }, 15f, 0f, -1f));
             defaultEnchants.Add(new Enchant(2673, "Mongoose", ItemSlot.OneHand, mongoose));
 
 			// Once at 35% Health, your melee Hits restores 400 health per stack
