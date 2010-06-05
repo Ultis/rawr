@@ -233,6 +233,8 @@ namespace Rawr.Rogue
             else if (finisher == 2 && finisherCP > 0)
             {
                 #region Envenom
+                float bla = 0;
+                if (finisherCP == 5) bla = 1;
                 float averageEnvenomCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
                 + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]);
                 float envenomDamageMultiplier = Math.Min(1f,
@@ -380,10 +382,10 @@ namespace Rawr.Rogue
                                        kSDmgBonus * kSDuration / Duration * offHandCount +
                                        kSDmgBonus * kSAttacks) *
                                        OffHandStats.DamagePerSwing * HFBMultiplier;
-            float backstabDamageTotal = (cpgCount == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
-            float hemoDamageTotal = (cpgCount == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing * HFBMultiplier;
-            float sStrikeDamageTotal = (cpgCount == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
-            float mutiDamageTotal = (cpgCount == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing * HFBMultiplier;
+            float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
+            float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing * HFBMultiplier;
+            float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
+            float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing * HFBMultiplier;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * HFBMultiplier;
             float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
@@ -404,10 +406,10 @@ namespace Rawr.Rogue
 
                 MainHandCount = mainHandCount,
                 OffHandCount = offHandCount,
-                BackstabCount = (cpgCount == 2 ? cpgCount : 0),
-                HemoCount = (cpgCount == 3 ? cpgCount : 0),
-                SStrikeCount = (cpgCount == 1 ? cpgCount : 0),
-                MutiCount = (cpgCount == 0 ? cpgCount : 0),
+                BackstabCount = (CPG == 2 ? cpgCount : 0),
+                HemoCount = (CPG == 3 ? cpgCount : 0),
+                SStrikeCount = (CPG == 1 ? cpgCount : 0),
+                MutiCount = (CPG == 0 ? cpgCount : 0),
                 RuptCount = ruptCount,
                 EvisCount = evisCount,
                 EnvenomCount = envenomCount,
@@ -480,7 +482,8 @@ namespace Rawr.Rogue
                 if (BackstabCount > 0) rotation.Append("Use Backstab for combo points.\r\n");
                 else if (HemoCount > 0) rotation.Append("Use Hemorrhage for combo points.\r\n");
                 else if (SStrikeCount > 0) rotation.Append("Use Sinister Strike for combo points.\r\n");
-                else rotation.Append("Use Mutilate for combo points.\r\n");
+                else if (MutiCount > 0) rotation.Append("Use Mutilate for combo points.\r\n");
+                else rotation.Append("Error: no CPG used, please create an issue on rawr.codeplex.com including your char file.\r\n");
                 if (MHPoison == 1) rotation.Append("Use Instant Poison on Mainhand.\r\n");
                 else if (MHPoison == 2) rotation.Append("Use Deadly Poison on Mainhand.\r\n");
                 else if (MHPoison == 3) rotation.Append("Use Wound Poison on Mainhand.\r\n");

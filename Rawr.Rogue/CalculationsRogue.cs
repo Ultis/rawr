@@ -600,7 +600,7 @@ namespace Rawr.Rogue
             for (int snDCP = 1; snDCP < 6; snDCP++)
                 for (int finisher = 0; finisher < 3; finisher++)
                     for (int finisherCP = 1; finisherCP < 6; finisherCP++)
-                        for (int CPG = (character.RogueTalents.Mutilate > 0 ? 0 : 1); CPG < (character.RogueTalents.Hemorrhage > 0 ? 4 : 3); CPG++)
+                        for (int CPG = (mutiStats.DamagePerSwing > 0 ? 0 : 1); CPG < (hemoStats.DamagePerSwing > 0 ? 4 : 3); CPG++)
                             for (int mHPoison = targetPoisonable || mainHand == null ? 1 : 0; targetPoisonable ? mHPoison < 4 : mHPoison < 1; mHPoison++)
                                 for (int oHPoison = targetPoisonable || offHand == null ? 1 : 0; targetPoisonable ? oHPoison < 4 : oHPoison < 1; oHPoison++)
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
