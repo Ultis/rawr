@@ -166,6 +166,8 @@ namespace Rawr.Warlock {
                         "DPS", Color.FromArgb(255, 255, 0, 0));
                     _subPointNameColors.Add(
                         "Pet DPS", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add(
+                        "Raid Buff", Color.FromArgb(255, 0, 255, 0));
                 }
                 return _subPointNameColors;
             }
@@ -336,24 +338,51 @@ namespace Rawr.Warlock {
             WarlockTalents talents,
             List<Buff> activeBuffs) {
 
-            if (pet.Equals("Imp")) {
-                stats.Health += StatUtils.GetBuffEffect(
-                    activeBuffs,
-                    1330f * (1 + talents.ImprovedImp * .1f),
-                    "Health",
-                    s => s.Health);
-            } else if (pet.Equals("Felhunter")) {
-                stats.Intellect += StatUtils.GetBuffEffect(
-                    activeBuffs,
-                    48f * (1 + talents.ImprovedFelhunter * .05f),
-                    "Intellect",
-                    s => s.Intellect);
-                stats.Spirit += StatUtils.GetBuffEffect(
-                    activeBuffs,
-                    64f * (1 + talents.ImprovedFelhunter * .05f),
-                    "Spirit",
-                    s => s.Spirit);
+            stats.Health += CalcPetHealthBuff(pet, talents, activeBuffs);
+            stats.Intellect += CalcPetIntBuff(pet, talents, activeBuffs);
+            stats.Spirit += CalcPetSpiBuff(pet, talents, activeBuffs);
+        }
+
+        public static float CalcPetHealthBuff(
+            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
+            if (!pet.Equals("Imp")) {
+                return 0f;
             }
+
+            return StatUtils.GetBuffEffect(
+                activeBuffs,
+                1330f * (1 + talents.ImprovedImp * .1f),
+                "Health",
+                s => s.Health);
+        }
+
+        public static float CalcPetIntBuff(
+            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
+            if (!pet.Equals("Felhunter")) {
+                return 0f;
+            }
+
+            return StatUtils.GetBuffEffect(
+                activeBuffs,
+                48f * (1 + talents.ImprovedFelhunter * .05f),
+                "Intellect",
+                s => s.Intellect);
+        }
+
+        public static float CalcPetSpiBuff(
+            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
+            if (!pet.Equals("Felhunter")) {
+                return 0f;
+            }
+
+            return StatUtils.GetBuffEffect(
+                activeBuffs,
+                64f * (1 + talents.ImprovedFelhunter * .05f),
+                "Spirit",
+                s => s.Spirit);
         }
 
         /// <summary>

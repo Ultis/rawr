@@ -406,11 +406,19 @@ namespace Rawr.Warlock {
         public virtual float GetNumCasts() {
 
             if (NumCasts == 0) {
+                float duration = Mommy.Options.Duration;
+                if (!IsCastDuringExecute()) {
+                    duration *= 1 - Mommy.GetExecutePercentage();
+                }
                 float delay = SimulatedStats["delay"].GetValue();
-                NumCasts
-                    = Mommy.Options.Duration / (GetAvgRequeueTime() + delay);
+                NumCasts = duration / (GetAvgRequeueTime() + delay);
             }
             return NumCasts;
+        }
+
+        public virtual bool IsCastDuringExecute() {
+
+            return true;
         }
 
         private bool IsBinary() {
@@ -1460,6 +1468,11 @@ namespace Rawr.Warlock {
 
             return Mommy.Talents.MoltenCore > 0
                 && GetRotation().Contains("Corruption");
+        }
+
+        public override bool IsCastDuringExecute() {
+            
+            return true;
         }
 
         public override float GetQueueProbability(CastingState state) {

@@ -143,6 +143,7 @@ namespace Rawr.Warlock {
             _options = (CalculationOptionsWarlock) Character.CalculationOptions;
             ++_ignoreCount;
 
+            // options tab
             petCombo.SelectedItem = _options.Pet;
             imbueCombo.SelectedItem = _options.Imbue;
             targetLevelCombo.Text = _options.TargetLevel.ToString();
@@ -152,13 +153,26 @@ namespace Rawr.Warlock {
             twentyFiveSpinner.Value = (decimal) _options.TwentyFive * 100;
             RefreshRotationPanel();
 
+            // raid buff tab
+            raidSPSpinner.Value = (decimal) _options.PerSP;
+            raidTotemCheckbox.Checked = _options.ConvertTotem;
+            raidTotemSpinner.Value = (decimal) _options.PerFlametongue;
+            raidMagicSpinner.Value = (decimal) _options.PerMagicBuff;
+            raidCritSpinner.Value = (decimal) _options.PerCritBuff;
+            raidIntSpinner.Value = (decimal) _options.PerInt;
+            raidSpiSpinner.Value = (decimal) _options.PerSpi;
+            raidHealthSpinner.Value = (decimal) _options.PerHealth;
+
+            // debug tab
+            procCheckbox.Checked = _options.NoProcs;
+
             --_ignoreCount;
         }
 
         #endregion
 
 
-        #region event handlers
+        #region options tab event handlers
 
         private void petCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
@@ -416,11 +430,98 @@ namespace Rawr.Warlock {
         #endregion
 
 
-        #region debug operations
+        #region raid buff tab event handlers
+
+        private void raidSPSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerSP = (float) raidSPSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidTotemCheckbox_CheckedChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.ConvertTotem = raidTotemCheckbox.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidTotemSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerFlametongue = (float) raidTotemSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidMagicSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerMagicBuff = (float) raidMagicSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidCritSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerCritBuff = (float) raidCritSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidIntSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerInt = (float) raidIntSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidSpiSpinner_ValueChanged(object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerSpi = (float) raidSpiSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void raidHealthSpinner_ValueChanged(
+            object sender, EventArgs e) {
+
+            if (_ignoreCount > 0) {
+                return;
+            }
+
+            _options.PerHealth = (float) raidHealthSpinner.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        #endregion
+
+
+        #region debug stuff
 
         private void procCheckbox_CheckedChanged(object sender, EventArgs e) {
 
-            _options.NoProcs = ProcCheckbox.Checked;
+            _options.NoProcs = procCheckbox.Checked;
             Character.OnCalculationsInvalidated();
         }
 

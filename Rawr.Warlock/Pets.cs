@@ -323,6 +323,13 @@ namespace Rawr.Warlock {
 
         public float ApplyPactProcBenefit() {
 
+            float benefit = GetPactProcBenefit();
+            Stats.SpellPower += benefit;
+            return benefit;
+        }
+
+        public float GetPactProcBenefit() {
+
             float pact = .02f * Mommy.Talents.DemonicPact;
             if (pact == 0) {
                 return 0f;
@@ -367,9 +374,7 @@ namespace Rawr.Warlock {
                 triggerRate,
                 Mommy.Options.Duration);
 
-            float benefit = uprate * buff;
-            Stats.SpellPower += benefit;
-            return benefit;
+            return uprate * buff;
         }
 
         protected float GetEmpowermentCooldown() {

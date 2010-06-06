@@ -156,9 +156,17 @@ namespace Rawr.Warlock {
         public float Latency;
         public float ThirtyFive = .25f; // default for backward compatibility
         public float TwentyFive = .15f; // default for backward compatibility
-
         public List<Rotation> Rotations;
         public int ActiveRotationIndex;
+
+        public float PerSP;
+        public bool ConvertTotem;
+        public float PerFlametongue = 500f; // default for back. compat.
+        public float PerMagicBuff;
+        public float PerCritBuff;
+        public float PerInt;
+        public float PerSpi;
+        public float PerHealth;
 
         public bool NoProcs;
 

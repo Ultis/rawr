@@ -23,6 +23,15 @@ namespace Rawr.Warlock {
             string group,
             StatExtractor extractor) {
 
+            float active = GetActiveBuff(activeBuffs, group, extractor);
+            return Math.Max(0f, candidateBuff - active);
+        }
+
+        public static float GetActiveBuff(
+            List<Buff> activeBuffs,
+            string group,
+            StatExtractor extractor) {
+
             float active = 0f;
             foreach (Buff buff in activeBuffs) {
                 if (buff.ConflictingBuffs.Contains(group)) {
@@ -34,7 +43,7 @@ namespace Rawr.Warlock {
                     }
                 }
             }
-            return Math.Max(0f, candidateBuff - active);
+            return active;
         }
 
         public static float CalcStamina(Stats stats) {

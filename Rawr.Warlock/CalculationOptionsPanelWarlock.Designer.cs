@@ -64,11 +64,27 @@
             this.thirtyFiveSpinner = new System.Windows.Forms.NumericUpDown();
             this.imbueLabel = new System.Windows.Forms.Label();
             this.imbueCombo = new System.Windows.Forms.ComboBox();
+            this.raidBuffTab = new System.Windows.Forms.TabPage();
+            this.raidHealthSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidHealthLabel = new System.Windows.Forms.Label();
+            this.raidMagicSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidMagicLabel = new System.Windows.Forms.Label();
+            this.raidSpiLabel = new System.Windows.Forms.Label();
+            this.raidSpiSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidIntLabel = new System.Windows.Forms.Label();
+            this.raidIntSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidCritSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidTotemSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidCritLabel = new System.Windows.Forms.Label();
+            this.raidExlpanationLabel = new System.Windows.Forms.Label();
+            this.raidSPSpinner = new System.Windows.Forms.NumericUpDown();
+            this.raidSPLabel = new System.Windows.Forms.Label();
             this.debugTab = new System.Windows.Forms.TabPage();
             this.TimerButton = new System.Windows.Forms.Button();
-            this.ProcCheckbox = new System.Windows.Forms.CheckBox();
+            this.procCheckbox = new System.Windows.Forms.CheckBox();
             this.notesPage = new System.Windows.Forms.TabPage();
             this.notesBox = new System.Windows.Forms.TextBox();
+            this.raidTotemCheckbox = new System.Windows.Forms.CheckBox();
             this.rotationBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.fightLengthSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.latencySpinner)).BeginInit();
@@ -76,6 +92,14 @@
             this.optionsPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.twentyFiveSpinner)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.thirtyFiveSpinner)).BeginInit();
+            this.raidBuffTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.raidHealthSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidMagicSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidSpiSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidIntSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidCritSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidTotemSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidSPSpinner)).BeginInit();
             this.debugTab.SuspendLayout();
             this.notesPage.SuspendLayout();
             this.SuspendLayout();
@@ -405,6 +429,7 @@
             // tabbedPane
             // 
             this.tabbedPane.Controls.Add(this.optionsPage);
+            this.tabbedPane.Controls.Add(this.raidBuffTab);
             this.tabbedPane.Controls.Add(this.debugTab);
             this.tabbedPane.Controls.Add(this.notesPage);
             this.tabbedPane.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -501,10 +526,202 @@
             this.imbueCombo.TabIndex = 3;
             this.imbueCombo.SelectedIndexChanged += new System.EventHandler(this.imbueCombo_SelectedIndexChanged);
             // 
+            // raidBuffTab
+            // 
+            this.raidBuffTab.Controls.Add(this.raidTotemCheckbox);
+            this.raidBuffTab.Controls.Add(this.raidHealthSpinner);
+            this.raidBuffTab.Controls.Add(this.raidHealthLabel);
+            this.raidBuffTab.Controls.Add(this.raidMagicSpinner);
+            this.raidBuffTab.Controls.Add(this.raidMagicLabel);
+            this.raidBuffTab.Controls.Add(this.raidSpiLabel);
+            this.raidBuffTab.Controls.Add(this.raidSpiSpinner);
+            this.raidBuffTab.Controls.Add(this.raidIntLabel);
+            this.raidBuffTab.Controls.Add(this.raidIntSpinner);
+            this.raidBuffTab.Controls.Add(this.raidCritSpinner);
+            this.raidBuffTab.Controls.Add(this.raidTotemSpinner);
+            this.raidBuffTab.Controls.Add(this.raidCritLabel);
+            this.raidBuffTab.Controls.Add(this.raidExlpanationLabel);
+            this.raidBuffTab.Controls.Add(this.raidSPSpinner);
+            this.raidBuffTab.Controls.Add(this.raidSPLabel);
+            this.raidBuffTab.Location = new System.Drawing.Point(4, 22);
+            this.raidBuffTab.Name = "raidBuffTab";
+            this.raidBuffTab.Padding = new System.Windows.Forms.Padding(3);
+            this.raidBuffTab.Size = new System.Drawing.Size(292, 574);
+            this.raidBuffTab.TabIndex = 3;
+            this.raidBuffTab.Text = "Raid Buff";
+            this.raidBuffTab.UseVisualStyleBackColor = true;
+            // 
+            // raidHealthSpinner
+            // 
+            this.raidHealthSpinner.DecimalPlaces = 1;
+            this.raidHealthSpinner.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.raidHealthSpinner.Location = new System.Drawing.Point(215, 238);
+            this.raidHealthSpinner.Name = "raidHealthSpinner";
+            this.raidHealthSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidHealthSpinner.TabIndex = 14;
+            this.raidHealthSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidHealthSpinner.ValueChanged += new System.EventHandler(this.raidHealthSpinner_ValueChanged);
+            // 
+            // raidHealthLabel
+            // 
+            this.raidHealthLabel.AutoSize = true;
+            this.raidHealthLabel.Location = new System.Drawing.Point(6, 240);
+            this.raidHealthLabel.Name = "raidHealthLabel";
+            this.raidHealthLabel.Size = new System.Drawing.Size(60, 13);
+            this.raidHealthLabel.TabIndex = 13;
+            this.raidHealthLabel.Text = "Per Health:";
+            // 
+            // raidMagicSpinner
+            // 
+            this.raidMagicSpinner.Location = new System.Drawing.Point(215, 134);
+            this.raidMagicSpinner.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.raidMagicSpinner.Name = "raidMagicSpinner";
+            this.raidMagicSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidMagicSpinner.TabIndex = 12;
+            this.raidMagicSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidMagicSpinner.ValueChanged += new System.EventHandler(this.raidMagicSpinner_ValueChanged);
+            // 
+            // raidMagicLabel
+            // 
+            this.raidMagicLabel.AutoSize = true;
+            this.raidMagicLabel.Location = new System.Drawing.Point(6, 136);
+            this.raidMagicLabel.Name = "raidMagicLabel";
+            this.raidMagicLabel.Size = new System.Drawing.Size(124, 13);
+            this.raidMagicLabel.TabIndex = 11;
+            this.raidMagicLabel.Text = "Per 13% Magic Damage:";
+            // 
+            // raidSpiLabel
+            // 
+            this.raidSpiLabel.AutoSize = true;
+            this.raidSpiLabel.Location = new System.Drawing.Point(6, 214);
+            this.raidSpiLabel.Name = "raidSpiLabel";
+            this.raidSpiLabel.Size = new System.Drawing.Size(52, 13);
+            this.raidSpiLabel.TabIndex = 10;
+            this.raidSpiLabel.Text = "Per Spirit:";
+            // 
+            // raidSpiSpinner
+            // 
+            this.raidSpiSpinner.DecimalPlaces = 1;
+            this.raidSpiSpinner.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            65536});
+            this.raidSpiSpinner.Location = new System.Drawing.Point(215, 212);
+            this.raidSpiSpinner.Name = "raidSpiSpinner";
+            this.raidSpiSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidSpiSpinner.TabIndex = 9;
+            this.raidSpiSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidSpiSpinner.ValueChanged += new System.EventHandler(this.raidSpiSpinner_ValueChanged);
+            // 
+            // raidIntLabel
+            // 
+            this.raidIntLabel.AutoSize = true;
+            this.raidIntLabel.Location = new System.Drawing.Point(6, 188);
+            this.raidIntLabel.Name = "raidIntLabel";
+            this.raidIntLabel.Size = new System.Drawing.Size(66, 13);
+            this.raidIntLabel.TabIndex = 8;
+            this.raidIntLabel.Text = "Per Intellect:";
+            // 
+            // raidIntSpinner
+            // 
+            this.raidIntSpinner.DecimalPlaces = 1;
+            this.raidIntSpinner.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            65536});
+            this.raidIntSpinner.Location = new System.Drawing.Point(215, 186);
+            this.raidIntSpinner.Name = "raidIntSpinner";
+            this.raidIntSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidIntSpinner.TabIndex = 7;
+            this.raidIntSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidIntSpinner.ValueChanged += new System.EventHandler(this.raidIntSpinner_ValueChanged);
+            // 
+            // raidCritSpinner
+            // 
+            this.raidCritSpinner.DecimalPlaces = 1;
+            this.raidCritSpinner.Location = new System.Drawing.Point(215, 160);
+            this.raidCritSpinner.Name = "raidCritSpinner";
+            this.raidCritSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidCritSpinner.TabIndex = 6;
+            this.raidCritSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidCritSpinner.ValueChanged += new System.EventHandler(this.raidCritSpinner_ValueChanged);
+            // 
+            // raidTotemSpinner
+            // 
+            this.raidTotemSpinner.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.raidTotemSpinner.Location = new System.Drawing.Point(215, 108);
+            this.raidTotemSpinner.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.raidTotemSpinner.Name = "raidTotemSpinner";
+            this.raidTotemSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidTotemSpinner.TabIndex = 5;
+            this.raidTotemSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidTotemSpinner.ValueChanged += new System.EventHandler(this.raidTotemSpinner_ValueChanged);
+            // 
+            // raidCritLabel
+            // 
+            this.raidCritLabel.AutoSize = true;
+            this.raidCritLabel.Location = new System.Drawing.Point(6, 162);
+            this.raidCritLabel.Name = "raidCritLabel";
+            this.raidCritLabel.Size = new System.Drawing.Size(87, 13);
+            this.raidCritLabel.TabIndex = 3;
+            this.raidCritLabel.Text = "Per 5% Spell Crit:";
+            // 
+            // raidExlpanationLabel
+            // 
+            this.raidExlpanationLabel.AutoSize = true;
+            this.raidExlpanationLabel.Location = new System.Drawing.Point(6, 3);
+            this.raidExlpanationLabel.MaximumSize = new System.Drawing.Size(288, 0);
+            this.raidExlpanationLabel.Name = "raidExlpanationLabel";
+            this.raidExlpanationLabel.Size = new System.Drawing.Size(281, 65);
+            this.raidExlpanationLabel.TabIndex = 2;
+            this.raidExlpanationLabel.Text = resources.GetString("raidExlpanationLabel.Text");
+            // 
+            // raidSPSpinner
+            // 
+            this.raidSPSpinner.DecimalPlaces = 1;
+            this.raidSPSpinner.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            65536});
+            this.raidSPSpinner.Location = new System.Drawing.Point(215, 80);
+            this.raidSPSpinner.Name = "raidSPSpinner";
+            this.raidSPSpinner.Size = new System.Drawing.Size(71, 20);
+            this.raidSPSpinner.TabIndex = 1;
+            this.raidSPSpinner.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.raidSPSpinner.ValueChanged += new System.EventHandler(this.raidSPSpinner_ValueChanged);
+            // 
+            // raidSPLabel
+            // 
+            this.raidSPLabel.AutoSize = true;
+            this.raidSPLabel.Location = new System.Drawing.Point(6, 82);
+            this.raidSPLabel.Name = "raidSPLabel";
+            this.raidSPLabel.Size = new System.Drawing.Size(85, 13);
+            this.raidSPLabel.TabIndex = 0;
+            this.raidSPLabel.Text = "Per Spell Power:";
+            // 
             // debugTab
             // 
             this.debugTab.Controls.Add(this.TimerButton);
-            this.debugTab.Controls.Add(this.ProcCheckbox);
+            this.debugTab.Controls.Add(this.procCheckbox);
             this.debugTab.Location = new System.Drawing.Point(4, 22);
             this.debugTab.Name = "debugTab";
             this.debugTab.Padding = new System.Windows.Forms.Padding(3);
@@ -523,16 +740,16 @@
             this.TimerButton.UseVisualStyleBackColor = true;
             this.TimerButton.Click += new System.EventHandler(this.TimerButton_Click);
             // 
-            // ProcCheckbox
+            // procCheckbox
             // 
-            this.ProcCheckbox.AutoSize = true;
-            this.ProcCheckbox.Location = new System.Drawing.Point(6, 6);
-            this.ProcCheckbox.Name = "ProcCheckbox";
-            this.ProcCheckbox.Size = new System.Drawing.Size(132, 17);
-            this.ProcCheckbox.TabIndex = 19;
-            this.ProcCheckbox.Text = "Disable special effects";
-            this.ProcCheckbox.UseVisualStyleBackColor = true;
-            this.ProcCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);
+            this.procCheckbox.AutoSize = true;
+            this.procCheckbox.Location = new System.Drawing.Point(6, 6);
+            this.procCheckbox.Name = "procCheckbox";
+            this.procCheckbox.Size = new System.Drawing.Size(132, 17);
+            this.procCheckbox.TabIndex = 19;
+            this.procCheckbox.Text = "Disable special effects";
+            this.procCheckbox.UseVisualStyleBackColor = true;
+            this.procCheckbox.CheckedChanged += new System.EventHandler(this.procCheckbox_CheckedChanged);
             // 
             // notesPage
             // 
@@ -559,6 +776,17 @@
             this.notesBox.TabIndex = 0;
             this.notesBox.Text = resources.GetString("notesBox.Text");
             // 
+            // raidTotemCheckbox
+            // 
+            this.raidTotemCheckbox.AutoSize = true;
+            this.raidTotemCheckbox.Location = new System.Drawing.Point(9, 109);
+            this.raidTotemCheckbox.Name = "raidTotemCheckbox";
+            this.raidTotemCheckbox.Size = new System.Drawing.Size(142, 17);
+            this.raidTotemCheckbox.TabIndex = 15;
+            this.raidTotemCheckbox.Text = "Convert Flametongue to:";
+            this.raidTotemCheckbox.UseVisualStyleBackColor = true;
+            this.raidTotemCheckbox.CheckedChanged += new System.EventHandler(this.raidTotemCheckbox_CheckedChanged);
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -575,6 +803,15 @@
             this.optionsPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.twentyFiveSpinner)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.thirtyFiveSpinner)).EndInit();
+            this.raidBuffTab.ResumeLayout(false);
+            this.raidBuffTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.raidHealthSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidMagicSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidSpiSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidIntSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidCritSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidTotemSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.raidSPSpinner)).EndInit();
             this.debugTab.ResumeLayout(false);
             this.debugTab.PerformLayout();
             this.notesPage.ResumeLayout(false);
@@ -615,7 +852,7 @@
         private System.Windows.Forms.TabPage notesPage;
         private System.Windows.Forms.TextBox notesBox;
         private System.Windows.Forms.TabPage debugTab;
-        private System.Windows.Forms.CheckBox ProcCheckbox;
+        private System.Windows.Forms.CheckBox procCheckbox;
         private System.Windows.Forms.Button TimerButton;
         private System.Windows.Forms.ComboBox imbueCombo;
         private System.Windows.Forms.Label imbueLabel;
@@ -625,5 +862,21 @@
         private System.Windows.Forms.Label thirtyFiveLabel;
         private System.Windows.Forms.NumericUpDown twentyFiveSpinner;
         private System.Windows.Forms.NumericUpDown thirtyFiveSpinner;
+        private System.Windows.Forms.TabPage raidBuffTab;
+        private System.Windows.Forms.NumericUpDown raidSPSpinner;
+        private System.Windows.Forms.Label raidSPLabel;
+        private System.Windows.Forms.Label raidExlpanationLabel;
+        private System.Windows.Forms.NumericUpDown raidTotemSpinner;
+        private System.Windows.Forms.Label raidCritLabel;
+        private System.Windows.Forms.NumericUpDown raidCritSpinner;
+        private System.Windows.Forms.Label raidSpiLabel;
+        private System.Windows.Forms.NumericUpDown raidSpiSpinner;
+        private System.Windows.Forms.Label raidIntLabel;
+        private System.Windows.Forms.NumericUpDown raidIntSpinner;
+        private System.Windows.Forms.NumericUpDown raidHealthSpinner;
+        private System.Windows.Forms.Label raidHealthLabel;
+        private System.Windows.Forms.NumericUpDown raidMagicSpinner;
+        private System.Windows.Forms.Label raidMagicLabel;
+        private System.Windows.Forms.CheckBox raidTotemCheckbox;
     }
 }

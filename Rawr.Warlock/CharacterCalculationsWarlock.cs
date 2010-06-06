@@ -82,8 +82,9 @@ namespace Rawr.Warlock {
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
-            SubPoints = new float[] { personalDps, petDps };
-            OverallPoints = personalDps + petDps;
+            float raidBuff = CalcRaidBuff();
+            SubPoints = new float[] { personalDps, petDps, raidBuff };
+            OverallPoints = personalDps + petDps + raidBuff;
         }
 
         #endregion
@@ -295,20 +296,13 @@ namespace Rawr.Warlock {
 
             // execute stage collision delays
             Spell execute = null;
-            float executePercent = 0f;
+            float executePercent = GetExecutePercentage();
             string executeName = Options.GetActiveRotation().Execute;
-            if (executeName != null && executeName.Equals("Soul Fire")) {
+            if (executePercent > 0) {
                 execute = GetSpell(executeName);
-                if (execute.IsCastable()) {
-                    if (execute is SoulFire) {
-                        executePercent = Options.ThirtyFive;
-                    } else {
-                        executePercent = Options.TwentyFive;
-                    }
-                    SetupSpells(true);
-                    RecordCollisionDelays(
-                        new CastingState(this, execute, executePercent));
-                }
+                SetupSpells(true);
+                RecordCollisionDelays(
+                    new CastingState(this, execute, executePercent));
             }
 
             // normal collision delays
@@ -371,29 +365,9 @@ namespace Rawr.Warlock {
                     = PetBuffs.BonusNatureDamageMultiplier
                     = .13f;
             }
-            if (Talents.ImprovedShadowBolt > 0
-                && Stats.SpellCritOnTarget < .05f) {
-
-                // TODO this should somehow affect Pyroclasm
-
-                // If the 5% crit debuff is not already being maintained by
-                // somebody else (i.e. it's not selected in the buffs tab), we
-                // may supply it via Improved Shadow Bolt.
-                float casts = 0f;
-                if (CastSpells.ContainsKey("Shadow Bolt")) {
-                    casts += CastSpells["Shadow Bolt"].GetNumCasts();
-                }
-                if (CastSpells.ContainsKey("Shadow Bolt (Instant)")) {
-                    casts += CastSpells["Shadow Bolt (Instant)"].GetNumCasts();
-                }
-                float uprate = Spell.CalcUprate(
-                    Talents.ImprovedShadowBolt * .2f, // proc rate
-                    30f, // duration
-                    Options.Duration / casts); // trigger period
-                float benefit = .05f - Stats.SpellCritOnTarget;
-                Stats.SpellCritOnTarget += benefit * uprate;
-                PetBuffs.SpellCritOnTarget += benefit * uprate;
-            }
+            float critBuff = CalcAddedCritBuff();
+            Stats.SpellCritOnTarget += critBuff;
+            PetBuffs.SpellCritOnTarget += critBuff;
             Stats.SpellPower += lifeTap.GetAvgBonusSpellPower();
 
             // create the SpellModifiers object
@@ -483,6 +457,100 @@ namespace Rawr.Warlock {
             } else {
                 return Pet.CalcMeleeDps() + Pet.CalcSpecialDps();
             }
+        }
+
+        private float CalcRaidBuff() {
+
+            float raidBuff = 0f;
+
+            float perSP = Options.PerSP;
+            if (perSP > 0 && Pet != null) {
+                raidBuff += perSP * Pet.GetPactProcBenefit();
+                if (Options.ConvertTotem) {
+                    float curTotem
+                        = StatUtils.GetActiveBuff(
+                            Character.ActiveBuffs,
+                            "Spell Power",
+                            s => s.SpellPower);
+                    if (curTotem == 144f || curTotem == 165f) {
+                        raidBuff += Options.PerFlametongue;
+                    }
+                }
+            }
+
+            if (CastSpells.ContainsKey("Curse Of The Elements")) {
+                raidBuff += Options.PerMagicBuff;
+            }
+
+            raidBuff += Options.PerCritBuff * (CalcAddedCritBuff() / .05f);
+
+            raidBuff
+                += Options.PerInt
+                    * CalculationsWarlock.CalcPetIntBuff(
+                        Options.Pet, Talents, Character.ActiveBuffs);
+            raidBuff
+                += Options.PerSpi
+                    * CalculationsWarlock.CalcPetSpiBuff(
+                        Options.Pet, Talents, Character.ActiveBuffs);
+            raidBuff
+                += Options.PerHealth
+                    * CalculationsWarlock.CalcPetHealthBuff(
+                        Options.Pet, Talents, Character.ActiveBuffs);
+
+            return raidBuff;
+        }
+
+        public float GetExecutePercentage() {
+
+            string executeName = Options.GetActiveRotation().Execute;
+            if (executeName == null || executeName.Equals("Drain Soul")) {
+                return 0f;
+            }
+
+            Spell execute = GetSpell(executeName);
+            if (!execute.IsCastable()) {
+                return 0f;
+            }
+
+            if (execute is SoulFire) {
+                return Options.ThirtyFive;
+            } else {
+                return Options.TwentyFive;
+            }
+        }
+
+        private float CalcAddedCritBuff() {
+
+            // If the 5% crit debuff is not already being maintained by
+            // somebody else (i.e. it's not selected in the buffs tab), we
+            // may supply it via Improved Shadow Bolt.
+            if (Talents.ImprovedShadowBolt == 0
+                || StatUtils.GetActiveBuff(
+                        Character.ActiveBuffs,
+                        "Spell Critical Strike Taken",
+                        s => s.SpellCritOnTarget)
+                    > 0) {
+
+                return 0f;
+            }
+
+            float casts = 0f;
+            if (CastSpells.ContainsKey("Shadow Bolt")) {
+                casts += CastSpells["Shadow Bolt"].GetNumCasts();
+            }
+            if (CastSpells.ContainsKey("Shadow Bolt (Instant)")) {
+                casts += CastSpells["Shadow Bolt (Instant)"].GetNumCasts();
+            }
+            if (casts == 0) {
+                return 0f;
+            }
+
+            float uprate = Spell.CalcUprate(
+                Talents.ImprovedShadowBolt * .2f, // proc rate
+                30f, // duration
+                Options.Duration / casts); // trigger period
+            float benefit = .05f - Stats.SpellCritOnTarget;
+            return benefit * uprate;
         }
 
         private void CalcHasteAndManaProcs() {
@@ -909,7 +977,9 @@ namespace Rawr.Warlock {
                     Talents, execute)) {
 
                 Spell spell = GetSpell(spellName);
-                if (spell.IsCastable()) {
+                if (spell.IsCastable()
+                    && (!execute || spell.IsCastDuringExecute())) {
+
                     Priorities.Add(spell);
                     if (!CastSpells.ContainsKey(spellName)) {
                         CastSpells.Add(spellName, spell);

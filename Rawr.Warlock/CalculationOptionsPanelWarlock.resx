@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="raidExlpanationLabel.Text" xml:space="preserve">
+    <value>This tab allows you to give value to raid buffs you supply.  Enter the dps-equivalent for each category below.  Note that, for example, your Fel Hunter's Int buff will not benefit the raid if you have an equal-or-better int buff selected in the buffs tab.</value>
+  </data>
   <data name="notesBox.Text" xml:space="preserve">
     <value>The Warlock model you are using is still under development.  It has known problems, and some important features are not yet implemented (for example, pet dps is unverified).  However, it coming closer and closer to complete, and should be safe to use now for gear choices.
 
