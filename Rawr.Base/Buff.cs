@@ -5001,13 +5001,16 @@ namespace Rawr
                 Stats = { BonusArmorMultiplier = 0.3f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Nightmare Seed",
-                Group = "Temporary Buffs",
-                Stats = { Health = 2000 },
-                ConflictingBuffs = new List<string>(new string[] { })
-            });
+			// Nightmare Seeds no longer drop from Nightmare Vine; Confirmed with Blue Post
+			// "Sorry for the late response, but I just confirmed that Nightmare Seeds were intentionally removed. You will no longer be able to get them in game. Thanks!"
+			// ~Ujumqin - http://forums.worldofwarcraft.com/thread.html?topicId=25170440756&pageNo=1&sid=1
+            //defaultBuffs.Add(new Buff()
+            //{
+            //    Name = "Nightmare Seed",
+            //    Group = "Temporary Buffs",
+            //    Stats = { Health = 2000 },
+            //    ConflictingBuffs = new List<string>(new string[] { })
+            //});
             #endregion
 
             return defaultBuffs;
