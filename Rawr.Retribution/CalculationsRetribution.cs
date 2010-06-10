@@ -27,16 +27,23 @@ namespace Rawr.Retribution
 
                 //Yellow
                 int[] rigid = { 39915, 40014, 40125, 42156 };  // +hit
+                int[] quick = { 39918, 40017, 40128, 42150 };  // +haste
 
                 //Red
                 int[] bold = { 39900, 39996, 40111, 42142 };  // +str
+                int[] precise = { 39910, 40003, 40118, 42154 }; // +exp
 
-                //Orange
+                //Orange (dual color gems don't have a JC variant)
                 int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
                 int[] etched = { 39948, 40038, 40143 };  // +str,+hit
+                int[] fierce = { 39951, 40041, 40146 };  // +str,+haste
+                // int[] expcrit = { ????, ????, ????, } // +exp,+crit  Doesn't exist
+                int[] accurate = { 39966, 40058, 40162 };  // +exp,+hit
+                // int[] exphaste = { ????, ????, ????, } // +exp,+haste  Doesn't exist
 
                 //Purple
                 int[] sovereign = { 39934, 40022, 40129 }; // +str,+stam
+                int[] guardians = { 39940, 40034, 40141 }; // +exp, +stam
 
                 //Green
                 int[] vivid = { 39975, 40088, 40166 }; // +hit,+stam
@@ -94,7 +101,7 @@ namespace Rawr.Retribution
                         MetaId = relentless,
                         Enabled = i == 2
                     });
-                    retval.Add(new GemmingTemplate()    // Hit in every slot - Match colors (catch for serious hit deficienty)
+                    retval.Add(new GemmingTemplate()    // Hit in every slot - Match colors (catch for hit deficiency)
                     {
                         Model = "Retribution",
                         Group = groupName[i],
@@ -102,6 +109,17 @@ namespace Rawr.Retribution
                         YellowId = rigid[i],
                         BlueId = vivid[i],
                         PrismaticId = rigid[i],
+                        MetaId = relentless,
+                        Enabled = i == 2
+                    });
+                    retval.Add(new GemmingTemplate()    // Expertise in every slot - Match colors (catch for expertise deficiency)
+                    {
+                        Model = "Retribution",
+                        Group = groupName[i],
+                        RedId = precise[i],
+                        YellowId = accurate[i],         // Fill with hit, no other (useful) yellow sockets have expertise.
+                        BlueId = guardians[i],
+                        PrismaticId = precise[i],
                         MetaId = relentless,
                         Enabled = i == 2
                     });
