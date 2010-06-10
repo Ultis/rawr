@@ -886,8 +886,8 @@ namespace Rawr.Retribution
                             Trigger.Use,
                             Trigger.SpellCrit,        
                             Trigger.SpellHit,             
-                            Trigger.DamageSpellCrit,        // Black magic enchant ?
-                            Trigger.DamageSpellHit,
+                            Trigger.DamageSpellCrit,        
+                            Trigger.DamageSpellHit,         // Black magic enchant ?
                             Trigger.PhysicalCrit,
                             Trigger.PhysicalHit,
                             Trigger.MeleeCrit,
