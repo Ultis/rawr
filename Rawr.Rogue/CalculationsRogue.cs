@@ -740,6 +740,7 @@ namespace Rawr.Rogue
             triggerIntervals[Trigger.Use] = 0f;
             triggerIntervals[Trigger.MeleeHit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalHit] = meleeHitInterval;
+            triggerIntervals[Trigger.MeleeAttack] = meleeHitInterval;
             triggerIntervals[Trigger.MeleeCrit] = meleeHitInterval;
             triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
             triggerIntervals[Trigger.DoTTick] = 0f;
@@ -749,6 +750,7 @@ namespace Rawr.Rogue
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
+            triggerChances[Trigger.MeleeAttack] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.MeleeCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
             triggerChances[Trigger.DoTTick] = 1f;
@@ -771,6 +773,13 @@ namespace Rawr.Rogue
                         triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
                         triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
                         upTime);
+                }
+                else if (effect.Stats.MoteOfAnger > 0)
+                {
+                    // When in effect stats, MoteOfAnger is % of melee hits
+                    // When in character stats, MoteOfAnger is average procs per second
+                    statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
+                        triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
                 }
                 else
                 {
@@ -973,6 +982,7 @@ namespace Rawr.Rogue
                PhysicalHit = stats.PhysicalHit,
                PhysicalCrit = stats.PhysicalCrit,
                HighestStat = stats.HighestStat,
+               MoteOfAnger = stats.MoteOfAnger,
                
                /*
                ArcaneResistance = stats.ArcaneResistance,
@@ -1020,7 +1030,8 @@ namespace Rawr.Rogue
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
                 || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
-                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellHit)
+                    || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellHit
+                     || effect.Trigger == Trigger.MeleeAttack)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1087,6 +1098,7 @@ namespace Rawr.Rogue
                     // Trinket Procs
                     stats.Paragon +
                     stats.DeathbringerProc +
+                    stats.MoteOfAnger +
 
                     // Damage Procs
                     stats.ShadowDamage +
@@ -1107,6 +1119,7 @@ namespace Rawr.Rogue
                 if (effect.Trigger == Trigger.Use
                     || effect.Trigger == Trigger.MeleeHit
                     || effect.Trigger == Trigger.MeleeCrit
+                    || effect.Trigger == Trigger.MeleeAttack
                     || effect.Trigger == Trigger.PhysicalHit
                     || effect.Trigger == Trigger.PhysicalCrit
                     || effect.Trigger == Trigger.DoTTick

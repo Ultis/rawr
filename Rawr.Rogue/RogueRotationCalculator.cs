@@ -145,8 +145,8 @@ namespace Rawr.Rogue
             float averageFinisherCP = 5f + _chanceExtraCP[4];
 			
 			#region Melee
-			float mainHandCount = Duration / MainHandSpeed;
-            float offHandCount = Duration / OffHandSpeed;
+			float mainHandCount = Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
+            float offHandCount = Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
             totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack * AvoidedWhiteAttacks +
                                     ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
                                     ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
@@ -233,8 +233,6 @@ namespace Rawr.Rogue
             else if (finisher == 2 && finisherCP > 0)
             {
                 #region Envenom
-                float bla = 0;
-                if (finisherCP == 5) bla = 1;
                 float averageEnvenomCP = ((float)finisherCP + 1f) * _chanceExtraCP[finisherCP - 1]
                 + ((float)finisherCP) * (1f - _chanceExtraCP[finisherCP - 1]);
                 float envenomDamageMultiplier = Math.Min(1f,
@@ -374,14 +372,14 @@ namespace Rawr.Rogue
             #region Damage Totals
             float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + BonusDamageMultiplierHFB: 1f;
 
-            float mainHandDamageTotal = ((Duration - kSDuration) / Duration * mainHandCount +
-                                        kSDmgBonus * kSDuration / Duration * mainHandCount +
-                                        kSDmgBonus * kSAttacks) *
-                                        MainHandStats.DamagePerSwing * HFBMultiplier;
-            float offHandDamageTotal = ((Duration - kSDuration) / Duration * offHandCount +
-                                       kSDmgBonus * kSDuration / Duration * offHandCount +
-                                       kSDmgBonus * kSAttacks) *
-                                       OffHandStats.DamagePerSwing * HFBMultiplier;
+            float mainHandDamageTotal = ((Duration - kSDuration) / Duration * (mainHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+                                        kSDmgBonus * kSDuration / Duration * (mainHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+                                        kSDmgBonus * kSAttacks) * MainHandStats.DamagePerSwing * HFBMultiplier +
+                                        0.5f * Stats.MoteOfAnger * Duration * 0.5f * MainHandStats.DamagePerSwing * HFBMultiplier;
+            float offHandDamageTotal = ((Duration - kSDuration) / Duration * (offHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+                                       kSDmgBonus * kSDuration / Duration * (offHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+                                       kSDmgBonus * kSAttacks) * OffHandStats.DamagePerSwing * HFBMultiplier +
+                                       0.5f * Stats.MoteOfAnger * Duration * 0.5f * OffHandStats.DamagePerSwing * HFBMultiplier;
             float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
             float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing * HFBMultiplier;
             float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
