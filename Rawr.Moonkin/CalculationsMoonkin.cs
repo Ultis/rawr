@@ -1206,7 +1206,8 @@ namespace Rawr.Moonkin
                         effect.Stats.Mp5 > 0 ||
                         effect.Stats.BonusArcaneDamageMultiplier > 0 ||
                         effect.Stats.BonusNatureDamageMultiplier > 0 ||
-                        effect.Stats.ValkyrDamage > 0)
+                        effect.Stats.ValkyrDamage > 0 ||
+                        effect.Stats.MovementSpeed > 0)
                     {
                         s.AddSpecialEffect(effect);
                     }
@@ -1216,6 +1217,28 @@ namespace Rawr.Moonkin
         }
 
         public override bool HasRelevantStats(Stats stats)
+        {
+            if (stats.ContainsSpecialEffect())
+            {
+                return IsSpecialEffectRelevant(stats);
+            }
+            float moonkinStats = stats.Intellect + stats.Spirit + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating
+                + stats.Mp5 + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.SpellHaste
+                + stats.SpellHit + stats.BonusIntellectMultiplier
+                + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
+                + stats.BonusNatureDamageMultiplier + stats.BonusSpiritMultiplier
+                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM + stats.StarfireDmg
+                + stats.MoonfireDmg + stats.WrathDmg + stats.UnseenMoonDamageBonus
+                + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
+                + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
+                + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
+                + stats.MoonfireDotCrit + + stats.MovementSpeed + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot; 
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
+            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
+            return moonkinStats > 0 || (commonStats > 0 && ignoreStats == 0.0f);
+        }
+
+        private bool IsSpecialEffectRelevant(Stats stats)
         {
             // Check for special effects that meet the following criteria:
             // 1) On-use OR
@@ -1255,26 +1278,14 @@ namespace Rawr.Moonkin
                         effect.Stats.Mp5 > 0 ||
                         effect.Stats.BonusArcaneDamageMultiplier > 0 ||
                         effect.Stats.BonusNatureDamageMultiplier > 0 ||
-                        effect.Stats.ValkyrDamage > 0)
+                        effect.Stats.ValkyrDamage > 0 ||
+                        effect.Stats.MovementSpeed > 0)
                     {
                         return true;
                     }
                 }
             }
-            float moonkinStats = stats.Intellect + stats.Spirit + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating
-                + stats.Mp5 + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.SpellHaste
-                + stats.SpellHit + stats.BonusIntellectMultiplier
-                + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
-                + stats.BonusNatureDamageMultiplier + stats.BonusSpiritMultiplier
-                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM + stats.StarfireDmg
-                + stats.MoonfireDmg + stats.WrathDmg + stats.UnseenMoonDamageBonus
-                + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
-                + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
-                + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot;
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.MovementSpeed;
-            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
-            return moonkinStats > 0 || (commonStats > 0 && ignoreStats == 0.0f);
+            return false;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsMoonkin calcOpts) {
