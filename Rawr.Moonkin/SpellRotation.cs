@@ -357,9 +357,14 @@ namespace Rawr.Moonkin
 
             Spell preLunarCast = solver.FindSpell("W");
 
+            preLunarCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage;
+            preLunarCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+
             // Do improved Insect Swarm
             if (insectSwarm != null)
                 preLunarCast.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
+
+            preLunarCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             Spell solarEclipseCast = new Spell(preLunarCast);
 
@@ -375,8 +380,16 @@ namespace Rawr.Moonkin
             if (moonfire != null)
                 preSolarCast.CriticalChanceModifier += 0.01f * impInsectSwarm;
 
+            preSolarCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage;
+            preSolarCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            preLunarCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+
             Spell lunarEclipseCast = new Spell(preSolarCast);
             lunarEclipseCast.CriticalChanceModifier = (float)Math.Min(1.0f - spellCrit, lunarEclipseCast.CriticalChanceModifier + eclipseMultiplier);
+
+            lunarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage;
+            lunarEclipseCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            lunarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             DoMainNuke(talents, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(talents, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
