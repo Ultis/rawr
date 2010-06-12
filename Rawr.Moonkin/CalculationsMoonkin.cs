@@ -738,13 +738,13 @@ namespace Rawr.Moonkin
 
             Stats statsEarthAndMoon = new Stats()
             {
-                BonusSpellPowerMultiplier = 0.01f * character.DruidTalents.EarthAndMoon
+                BonusSpellPowerMultiplier = 0.02f * character.DruidTalents.EarthAndMoon
             };
 
             Stats statsMasterSS = new Stats()
             {
                 BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form")) ?
-                                            0.01f * character.DruidTalents.MasterShapeshifter : 0.0f
+                                            0.02f * character.DruidTalents.MasterShapeshifter : 0.0f
             };
 
             Stats statsTalents = statsHotW + statsImpMotW + statsLivingSpirit + statsSotF + statsFuror + statsEarthAndMoon + statsMasterSS;

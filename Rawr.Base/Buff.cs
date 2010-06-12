@@ -2886,7 +2886,7 @@ namespace Rawr
             #region Regalia
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lasherweave's Regalia (T10) 2 Piece Bonus",
+                Name = "Lasherweave Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(),
@@ -2897,7 +2897,7 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lasherweave's Regalia (T10) 4 Piece Bonus",
+                Name = "Lasherweave Regalia (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonkinT10CritDot = 0.07f },
@@ -2917,7 +2917,6 @@ namespace Rawr
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { BonusArcaneDamageMultiplier = 0.15f, BonusNatureDamageMultiplier = 0.15f }, 6.0f, 0f, 0.06f, 1));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Lasherweave Garb (T10) 4 Piece Bonus",

@@ -161,9 +161,15 @@ namespace Rawr.Moonkin
                     if (spellHaste > 0)
                         sHa += spellHaste;
                     if (arcaneModifier > 0)
-                        c.BasicStats.BonusArcaneDamageMultiplier += arcaneModifier;
+                    {
+                        storedStats.BonusArcaneDamageMultiplier = c.BasicStats.BonusArcaneDamageMultiplier;
+                        c.BasicStats.BonusArcaneDamageMultiplier += ((1 + c.BasicStats.BonusArcaneDamageMultiplier) * (1 + arcaneModifier)) - (1 + c.BasicStats.BonusArcaneDamageMultiplier);
+                    }
                     if (natureModifier > 0)
-                        c.BasicStats.BonusNatureDamageMultiplier += natureModifier;
+                    {
+                        storedStats.BonusNatureDamageMultiplier = c.BasicStats.BonusNatureDamageMultiplier;
+                        c.BasicStats.BonusNatureDamageMultiplier += ((1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + natureModifier)) - (1 + c.BasicStats.BonusNatureDamageMultiplier);
+                    }
                     if (spirit > 0)
                     {
                         Stats s = c.BasicStats.Clone();
@@ -211,9 +217,9 @@ namespace Rawr.Moonkin
                     float natureModifier = st.BonusNatureDamageMultiplier;
 
                     if (arcaneModifier > 0)
-                        c.BasicStats.BonusArcaneDamageMultiplier -= arcaneModifier;
+                        c.BasicStats.BonusArcaneDamageMultiplier = storedStats.BonusArcaneDamageMultiplier;
                     if (natureModifier > 0)
-                        c.BasicStats.BonusNatureDamageMultiplier -= natureModifier;
+                        c.BasicStats.BonusNatureDamageMultiplier = storedStats.BonusNatureDamageMultiplier;
                     if (spellPower > 0)
                         sp -= spellPower * maxStack;
                     if (critRating > 0)

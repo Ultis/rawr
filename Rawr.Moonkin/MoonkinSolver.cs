@@ -203,6 +203,7 @@ namespace Rawr.Moonkin
 
             // Do Starfall calculations.
             bool starfallGlyph = talents.GlyphOfStarfall;
+            Buff tier102PieceBuff = character.ActiveBuffs.Find(theBuff => theBuff.Name == "Lasherweave Regalia (T10) 2 Piece Bonus");
             float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit,
                 (1 + calcs.BasicStats.BonusDamageMultiplier) *
                 (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
@@ -216,6 +217,15 @@ namespace Rawr.Moonkin
             if (starfallDiff > 0 && starfallDiff < 10)
                 numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
+            // Approximate the effect of the 2T10 set bonus
+            if (tier102PieceBuff != null)
+            {
+                Stats.SpecialEffectEnumerator enumerator = tier102PieceBuff.Stats.SpecialEffects();
+                enumerator.MoveNext();
+                SpecialEffect effect = enumerator.Current;
+                float upTime = effect.GetAverageUptime(1.5f, 1f);
+                starfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
+            }
             float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
             float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f;
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
