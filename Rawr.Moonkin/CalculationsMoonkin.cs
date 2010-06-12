@@ -529,6 +529,8 @@ namespace Rawr.Moonkin
                     "Spell Info:Wrath",
                     "Spell Info:Moonfire",
                     "Spell Info:Insect Swarm",
+                    "Spell Info:Starfall",
+                    "Spell Info:Treants"
                     };
                 }
                 return characterDisplayCalculationLabels;

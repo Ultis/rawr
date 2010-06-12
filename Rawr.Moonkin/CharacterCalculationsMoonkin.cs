@@ -30,6 +30,8 @@ namespace Rawr.Moonkin
         public Dictionary<string, RotationData> Rotations { get; set; }
         private Stats baseStats;
         public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
+        public float StarfallMana { get; set; }
+        public float TreantDamage { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> retVal = new Dictionary<string, string>();
@@ -124,6 +126,13 @@ namespace Rawr.Moonkin
                 SelectedRotation.InsectSwarmCastTime,
                 SelectedRotation.InsectSwarmAvgHit,
                 SelectedRotation.InsectSwarmManaCost));
+            retVal.Add("Starfall", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per star\n{3:F0} avg mana",
+                SelectedRotation.StarfallDamage / 10.0f,
+                SelectedRotation.StarfallDamage,
+                SelectedRotation.StarfallDamage / SelectedRotation.StarfallStars,
+                StarfallMana));
+            retVal.Add("Treants", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per tree",
+                TreantDamage / 30.0f, TreantDamage, TreantDamage / 3.0f));
 
             return retVal;
         }

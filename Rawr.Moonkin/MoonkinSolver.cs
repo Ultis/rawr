@@ -217,16 +217,6 @@ namespace Rawr.Moonkin
             if (starfallDiff > 0 && starfallDiff < 10)
                 numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
-            // Approximate the effect of the 2T10 set bonus
-            if (tier102PieceBuff != null)
-            {
-                Stats.SpecialEffectEnumerator enumerator = tier102PieceBuff.Stats.SpecialEffects();
-                enumerator.MoveNext();
-                SpecialEffect effect = enumerator.Current;
-                float upTime = effect.GetAverageUptime(1.5f, 1f);
-                starfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
-            }
-            float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
             float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f;
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
@@ -299,6 +289,7 @@ namespace Rawr.Moonkin
                             ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
+                        RecreateSpells(character.DruidTalents, ref calcs);
                         float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         spellDetails[0] = Starfire.DamagePerHit;
                         spellDetails[1] = Wrath.DamagePerHit;
@@ -368,6 +359,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
+                RecreateSpells(character.DruidTalents, ref calcs);
                 float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
                 spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
@@ -396,8 +388,22 @@ namespace Rawr.Moonkin
                     rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
                     sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
                 }
+                float t10StarfallDamage = starfallDamage;
+                // Approximate the effect of the 2T10 set bonus
+                if (tier102PieceBuff != null)
+                {
+                    Stats.SpecialEffectEnumerator enumerator = tier102PieceBuff.Stats.SpecialEffects();
+                    enumerator.MoveNext();
+                    SpecialEffect effect = enumerator.Current;
+                    float upTime = effect.GetAverageUptime(rot.Duration / rot.CastCount, 1f);
+                    t10StarfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
+                }
+                float starfallDPS = t10StarfallDamage / (calcOpts.FightLength * 60.0f);
                 burstDPS += trinketDPS + treeDPS + starfallDPS;
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
+
+                rot.StarfallDamage = t10StarfallDamage / numStarfallCasts;
+                rot.StarfallStars = 10.0f;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
                 rot.StarfireAvgHit = spellDetails[0];
@@ -443,6 +449,8 @@ namespace Rawr.Moonkin
                     cachedResults[rot.Name] = rot.RotationData;
             }
             // Present the findings to the user.
+            calcs.TreantDamage = treeDamage / treeCasts;
+            calcs.StarfallMana = starfallManaUsage / numStarfallCasts;
             calcs.SelectedRotation = maxRotation;
             calcs.BurstDPSRotation = maxBurstRotation;
             calcs.SubPoints = new float[] { maxDamageDone, maxBurstDamageDone };
