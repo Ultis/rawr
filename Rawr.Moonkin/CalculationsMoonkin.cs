@@ -586,30 +586,6 @@ namespace Rawr.Moonkin
             }
         }
 
-        private List<ItemType> relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes
-        {
-            get
-            {
-                if (relevantItemTypes == null)
-                {
-                    relevantItemTypes = new List<ItemType>(new ItemType[]
-                        {
-                            ItemType.None,
-                            ItemType.Cloth,
-                            ItemType.Leather,
-                            ItemType.Dagger,
-                            ItemType.Staff,
-                            ItemType.FistWeapon,
-                            ItemType.OneHandMace,
-                            ItemType.TwoHandMace,
-                            ItemType.Idol,
-                        });
-                }
-                return relevantItemTypes;
-            }
-        }
-
 		public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
@@ -742,14 +718,17 @@ namespace Rawr.Moonkin
             {
                 BonusSpellPowerMultiplier = 0.02f * character.DruidTalents.EarthAndMoon
             };
-
+            Stats statsMoonkinForm = new Stats()
+            {
+                BaseArmorMultiplier = character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0 ? 3.7f : 0.0f
+            };
             Stats statsMasterSS = new Stats()
             {
                 BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form")) ?
                                             0.02f * character.DruidTalents.MasterShapeshifter : 0.0f
             };
 
-            Stats statsTalents = statsHotW + statsImpMotW + statsLivingSpirit + statsSotF + statsFuror + statsEarthAndMoon + statsMasterSS;
+            Stats statsTalents = statsHotW + statsImpMotW + statsLivingSpirit + statsSotF + statsFuror + statsEarthAndMoon + statsMoonkinForm + statsMasterSS;
 
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace + statsTalents;
@@ -766,15 +745,14 @@ namespace Rawr.Moonkin
 
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
-            if (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form"))
-			{
-				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor/* + statsEnchants.Armor*/) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
-			}
-			else
-			{
-				statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
-			}
+            // Armor
+            statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor = statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier);
+            statsTotal.Armor += statsTotal.BonusArmor;
+            statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
             statsTotal.SpellCombatManaRegeneration += (float)Math.Round(character.DruidTalents.Intensity / 6.0f, 2);
@@ -1120,175 +1098,405 @@ namespace Rawr.Moonkin
             }
         }
 
+        #region Relevancy Methods
+
+        /// <summary>
+        /// List of itemtypes that are relevant for moonkin
+        /// </summary>
+       private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
+        {
+            get
+            {
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
+                {
+                            ItemType.None,
+                            ItemType.Cloth,
+                            ItemType.Leather,
+                            ItemType.Dagger,
+                            ItemType.Staff,
+                            ItemType.FistWeapon,
+                            ItemType.OneHandMace,
+                            ItemType.TwoHandMace,
+                            ItemType.Idol,
+                }));
+            }
+        }
+
+        /// <summary>
+        /// List of SpecialEffect Triggers that are relevant for moonkin model
+        /// Every trigger listed here needs an implementation in ProcessSpecialEffects()
+        /// A trigger not listed here should not appear in ProcessSpecialEffects()
+        /// </summary>
+       internal static List<Trigger> _RelevantTriggers = null;
+        internal static List<Trigger> RelevantTriggers
+        {
+            get
+            {
+                return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                            Trigger.Use,
+                            Trigger.DamageSpellCast,
+                            Trigger.DamageSpellCrit,        // Black magic enchant ?
+                            Trigger.DamageSpellHit,
+                            Trigger.SpellCast,
+                            Trigger.SpellCrit,        
+                            Trigger.SpellHit, 
+                            Trigger.SpellMiss,
+                            Trigger.DoTTick,
+                            Trigger.DamageDone,
+                            Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
+                            Trigger.InsectSwarmOrMoonfireTick,
+                            Trigger.InsectSwarmTick,
+                            Trigger.MoonfireTick,
+                            Trigger.MoonfireCast,
+                        });
+            }
+            //set { _RelevantTriggers = value; }
+        }
+
+        public override bool IsItemRelevant(Item item)
+        {
+            // First we let normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsItemRelevant(item);
+
+            // Next we use our special stat relevancy filtering.
+            if (relevant)
+                relevant = HasPrimaryStats(item.Stats) || (HasSecondaryStats(item.Stats) && !HasUnwantedStats(item.Stats));
+
+            return relevant;
+        }
+
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            // First we let normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsBuffRelevant(buff, character);
+
+            // Temporary FIX (?): buf.AllowedClasses is not currently being tested as part of base.IsBuffRelevant(). So we'll do it ourselves.
+            if (relevant && !buff.AllowedClasses.Contains(CharacterClass.Druid))
+                relevant = false;
+
+            // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
+            if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
+                relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
+
+            return relevant;
+        }
+
+        public override bool IsEnchantRelevant(Enchant enchant, Character character)
+        {
+            // First we let the normal rules (profession, class, relevant stats) decide
+            bool relevant = base.IsEnchantRelevant(enchant, character);
+
+            // Next we use our special stat relevancy filtering.
+            if (relevant)
+                relevant = HasPrimaryStats(enchant.Stats) || (HasSecondaryStats(enchant.Stats) && !HasUnwantedStats(enchant.Stats));
+
+           return relevant;
+        }
+
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
             {
+                // -- State Properties --
+                // Base Stats
+                Health = stats.Health,
+                Mana = stats.Mana,
+                Agility = stats.Agility,
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
-                Health = stats.Health,
-                Mp5 = stats.Mp5,
-                CritRating = stats.CritRating,
-                SpellPower = stats.SpellPower,
+                Armor = stats.Armor,
                 HasteRating = stats.HasteRating,
                 HitRating = stats.HitRating,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
-                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
-                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                Mana = stats.Mana,
-                Armor = stats.Armor,
-                Resilience = stats.Resilience,
-                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
-                StarfireDmg = stats.StarfireDmg,
-                MoonfireDmg = stats.MoonfireDmg,
-                WrathDmg = stats.WrathDmg,
-                UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
-                InnervateCooldownReduction = stats.InnervateCooldownReduction,
-                StarfireBonusWithDot = stats.StarfireBonusWithDot,
-                MoonfireExtension = stats.MoonfireExtension,
-                BonusInsectSwarmDamage = stats.BonusInsectSwarmDamage,
-                BonusNukeCritChance = stats.BonusNukeCritChance,
-                StarfireCritChance = stats.StarfireCritChance,
-                BonusManaPotion = stats.BonusManaPotion,
+                CritRating = stats.CritRating,
+                SpellPower = stats.SpellPower,
+                // SpellPenetration = stats.SpellPenetration,
+                Mp5 = stats.Mp5,
+                BonusArmor = stats.BonusArmor,
+
+                // Buffs / Debuffs
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreFromBaseManaPPM  = stats.ManaRestoreFromBaseManaPPM,
-                SpellHaste = stats.SpellHaste,
+
+                // Combat Values
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHit = stats.SpellHit,
-                ArmorPenetration = stats.ArmorPenetration,
-                EclipseBonus = stats.EclipseBonus,
+                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+
+                // Spell Combat Ratings
+                SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
+                SpellNatureDamageRating = stats.SpellNatureDamageRating,
+        
+                // Equipment Effects
+                ManaRestore = stats.ManaRestore,
+                ShadowDamage = stats.ShadowDamage,
+                NatureDamage = stats.NatureDamage,
+                FireDamage = stats.FireDamage,
+                ValkyrDamage = stats.ValkyrDamage,
+
+                // Moonkin
+                StarfireDmg = stats.StarfireDmg,
+                UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
                 InsectSwarmDmg = stats.InsectSwarmDmg,
+                MoonfireDmg = stats.MoonfireDmg,
+                WrathDmg = stats.WrathDmg,
+                InnervateCooldownReduction = stats.InnervateCooldownReduction,
+               StarfireBonusWithDot = stats.StarfireBonusWithDot,
+                MoonfireExtension = stats.MoonfireExtension,
+                StarfireCritChance = stats.StarfireCritChance,
+                BonusInsectSwarmDamage = stats.BonusInsectSwarmDamage,
+                BonusNukeCritChance = stats.BonusNukeCritChance,
+                EclipseBonus = stats.EclipseBonus,
+                StarfireProc = stats.StarfireProc,
                 MoonfireDotCrit = stats.MoonfireDotCrit,
                 BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
                 MoonkinT10CritDot = stats.MoonkinT10CritDot,
-                MovementSpeed = stats.MovementSpeed
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                ArmorPenetration = stats.ArmorPenetration,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
+                BonusArmorMultiplier = stats.BonusArmorMultiplier,
+                SpellHaste = stats.SpellHaste,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+
+                // -- NoStackStats
+                MovementSpeed = stats.MovementSpeed,
+                BonusManaPotion = stats.BonusManaPotion,
+                HighestStat = stats.HighestStat,
             };
-            // Add special effects that meet the following criteria:
-            // 1) On-use OR
-            // 2) On damaging spell hit/crit/cast OR
-            // 3) On all spell hit/crit/cast/miss, AND
-            // 4) Proc is spell power OR
-            // 5) Proc is spell crit OR
-            // 6) Proc is spell haste
+
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.DamageSpellCast ||
-                    effect.Trigger == Trigger.DamageSpellCrit ||
-                    effect.Trigger == Trigger.DamageSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageOrHealingDone ||
-                    effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
-                    effect.Trigger == Trigger.InsectSwarmTick ||
-                    effect.Trigger == Trigger.MoonfireTick ||
-                    effect.Trigger == Trigger.MoonfireCast)
-                {
-                    if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.CritRating > 0 ||
-                        effect.Stats.HasteRating > 0 ||
-                        effect.Stats.SpellHaste > 0 ||
-                        effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0 ||
-                        effect.Stats.NatureDamage > 0 ||
-                        effect.Stats.FireDamage > 0 ||
-                        effect.Stats.StarfireProc > 0 ||
-                        effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0 ||
-                        effect.Stats.BonusArcaneDamageMultiplier > 0 ||
-                        effect.Stats.BonusNatureDamageMultiplier > 0 ||
-                        effect.Stats.ValkyrDamage > 0 ||
-                        effect.Stats.MovementSpeed > 0)
-                    {
-                        s.AddSpecialEffect(effect);
-                    }
-                }
+                if (RelevantTriggers.Contains(effect.Trigger) && HasRelevantStats(effect.Stats))
+                   s.AddSpecialEffect(effect);
             }
             return s;
         }
 
-        public override bool HasRelevantStats(Stats stats)
+       public override bool HasRelevantStats(Stats stats)
         {
-            if (stats.ContainsSpecialEffect())
-            {
-                return IsSpecialEffectRelevant(stats);
-            }
-            float moonkinStats = stats.Intellect + stats.Spirit + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating
-                + stats.Mp5 + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellPower + stats.SpellHaste
-                + stats.SpellHit + stats.BonusIntellectMultiplier
-                + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier
-                + stats.BonusNatureDamageMultiplier + stats.BonusSpiritMultiplier
-                + stats.Mana + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromBaseManaPPM + stats.StarfireDmg
-                + stats.MoonfireDmg + stats.WrathDmg + stats.UnseenMoonDamageBonus
-                + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot
-                + stats.BonusManaPotion + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration
-                + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.EclipseBonus + stats.InsectSwarmDmg
-                + stats.MoonfireDotCrit + + stats.MovementSpeed + stats.BonusMoonkinNukeDamage + stats.MoonkinT10CritDot; 
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
-            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
-            return moonkinStats > 0 || (commonStats > 0 && ignoreStats == 0.0f);
+            // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
+            return HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
         }
 
-        private bool IsSpecialEffectRelevant(Stats stats)
+        /// <summary>
+        /// HasPrimaryStats() should return true if the Stats object has any stats that define the item
+        /// as being 'for your class/spec'. For melee classes this is typical melee stats like Strength, 
+        /// Agility, AP, Expertise... For casters it would be spellpower, intellect, ...
+        /// As soon as an item/enchant/buff has any of the stats listed here, it will be assumed to be 
+        /// relevant unless explicitely filtered out.
+        /// Stats that could be usefull for both casters and melee such as HitRating, CritRating and Haste
+        /// don't belong here, but are SecondaryStats. Specific melee versions of these do belong here 
+        /// for melee, spell versions would fit here for casters.
+        /// </summary>
+        public bool HasPrimaryStats(Stats stats)
         {
-            // Check for special effects that meet the following criteria:
-            // 1) On-use OR
-            // 2) On damaging spell hit/crit/cast OR
-            // 3) On all spell hit/crit/cast/miss, AND
-            // 4) Proc is spell power OR
-            // 5) Proc is spell crit OR
-            // 6) Proc is spell haste
-            foreach (SpecialEffect effect in stats.SpecialEffects())
+
+            float ignoreStats = stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
+
+            bool PrimaryStats =
+                // -- State Properties --
+                // Base Stats
+                stats.Intellect > 0 ||
+                stats.Spirit > 0 ||
+                stats.SpellPower > 0 ||
+                // stats.SpellPenetration > 0 ||
+
+                // Combat Values
+                stats.SpellCrit > 0 ||
+                stats.SpellCritOnTarget > 0 ||
+                stats.SpellHit > 0 ||
+
+                // Spell Combat Ratings
+                stats.SpellArcaneDamageRating > 0 ||
+                stats.SpellNatureDamageRating > 0 ||
+
+                // Moonkin
+                stats.StarfireDmg > 0 ||
+                stats.UnseenMoonDamageBonus > 0 ||
+                stats.InsectSwarmDmg > 0 ||
+                stats.MoonfireDmg > 0 ||
+                stats.WrathDmg > 0 ||
+                stats.InnervateCooldownReduction > 0 ||
+                stats.StarfireBonusWithDot > 0 ||
+                stats.MoonfireExtension > 0 ||
+                stats.StarfireCritChance > 0 ||
+                stats.BonusInsectSwarmDamage > 0 ||
+                stats.BonusNukeCritChance > 0 ||
+                stats.EclipseBonus > 0 ||
+                stats.StarfireProc > 0 ||
+                stats.MoonfireDotCrit > 0 ||
+                stats.BonusMoonkinNukeDamage > 0 ||
+                stats.MoonkinT10CritDot > 0 ||
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                stats.BonusIntellectMultiplier > 0 ||
+                stats.BonusSpiritMultiplier > 0 ||
+                stats.SpellHaste > 0 ||
+                stats.BonusSpellCritMultiplier > 0 ||
+                stats.BonusSpellPowerMultiplier > 0 ||
+                stats.BonusArcaneDamageMultiplier > 0 ||
+                stats.BonusNatureDamageMultiplier > 0;
+
+            if (!PrimaryStats)
             {
-                if (effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.DamageSpellCast ||
-                    effect.Trigger == Trigger.DamageSpellCrit ||
-                    effect.Trigger == Trigger.DamageSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.SpellMiss ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageOrHealingDone ||
-                    effect.Trigger == Trigger.InsectSwarmTick ||
-                    effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
-                    effect.Trigger == Trigger.MoonfireTick ||
-                    effect.Trigger == Trigger.MoonfireCast)
+                foreach (SpecialEffect effect in stats.SpecialEffects())
                 {
-                    if (effect.Stats.SpellPower > 0 ||
-                        effect.Stats.CritRating > 0 ||
-                        effect.Stats.HasteRating > 0 ||
-                        effect.Stats.SpellHaste > 0 ||
-                        effect.Stats.HighestStat > 0 ||
-                        effect.Stats.ShadowDamage > 0 ||
-                        effect.Stats.NatureDamage > 0 ||
-                        effect.Stats.FireDamage > 0 ||
-                        effect.Stats.StarfireProc > 0 ||
-                        effect.Stats.Spirit > 0 ||
-                        effect.Stats.Mp5 > 0 ||
-                        effect.Stats.BonusArcaneDamageMultiplier > 0 ||
-                        effect.Stats.BonusNatureDamageMultiplier > 0 ||
-                        effect.Stats.ValkyrDamage > 0 ||
-                        effect.Stats.MovementSpeed > 0)
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasPrimaryStats(effect.Stats))
                     {
-                        return true;
+                        PrimaryStats = true;
+                        break;
                     }
                 }
             }
-            return false;
+
+            return PrimaryStats;
         }
+
+        /// <summary>
+        /// HasSecondaryStats() should return true if the Stats object has any stats that are relevant for the 
+        /// model but only to a smaller degree, so small that you wouldn't typically consider the item.
+        /// Stats that are usefull to both melee and casters (HitRating, CritRating & Haste) fit in here also.
+        /// An item/enchant/buff having these stats would be considered only if it doesn't have any of the 
+        /// unwanted stats.  Group/Party buffs are slighly different, they would be considered regardless if 
+        /// they have unwanted stats.
+       /// Note that a stat may be listed here since it impacts the model, but may also be listed as an unwanted stat.
+        /// </summary>
+        public bool HasSecondaryStats(Stats stats)
+        {
+            bool SecondaryStats =
+                // -- State Properties --
+                // Base Stats
+                stats.Mana > 0 ||
+                stats.HasteRating > 0 ||
+                stats.HitRating > 0 ||
+                stats.CritRating > 0 ||
+                stats.Mp5 > 0 ||
+
+                // Buffs / Debuffs
+                stats.ManaRestoreFromBaseManaPPM > 0 ||
+                stats.ManaRestoreFromMaxManaPerSecond > 0 ||
+
+                // Combat Values
+                stats.SpellCombatManaRegeneration > 0 ||
+
+                // Equipment Effects
+                stats.ManaRestore > 0 ||
+                stats.ShadowDamage > 0 ||
+                stats.NatureDamage > 0 ||
+               stats.FireDamage > 0 ||
+                stats.ValkyrDamage > 0 ||
+
+                // -- MultiplicativeStats --
+                // Buffs / Debuffs
+                stats.ArmorPenetration > 0 ||       // benefits trees
+                stats.BonusManaMultiplier > 0 ||
+                stats.BonusCritMultiplier > 0 ||
+               stats.BonusDamageMultiplier > 0 ||
+
+                // -- NoStackStats
+                stats.MovementSpeed > 0 ||
+                stats.BonusManaPotion > 0 ||
+                stats.HighestStat > 0;
+
+            if (!SecondaryStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasSecondaryStats(effect.Stats))
+                    {
+                        SecondaryStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return SecondaryStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object has any stats that don't influence the model but that you do want 
+        /// to display in tooltips and in calculated summary values.
+        /// </summary>
+        public bool HasExtraStats(Stats stats)
+        {
+            bool ExtraStats =   
+                stats.Health > 0 ||
+                stats.Agility > 0 ||
+                stats.Stamina > 0 ||
+                stats.Armor > 0 ||
+                stats.BonusArmor > 0 ||
+                stats.BonusHealthMultiplier > 0 ||
+                stats.BonusAgilityMultiplier > 0 ||
+                stats.BonusStaminaMultiplier > 0  ||
+                stats.BaseArmorMultiplier > 0 ||
+                stats.BonusArmorMultiplier > 0;
+
+            if (!ExtraStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (RelevantTriggers.Contains(effect.Trigger) && HasExtraStats(effect.Stats))
+                    {
+                        ExtraStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return ExtraStats;
+        }
+
+        /// <summary>
+        /// Return true if the Stats object contains any stats that are making the item undesired.
+        /// Any item having only Secondary stats would be removed if it also has one of these.
+        /// </summary>
+        public bool HasUnwantedStats(Stats stats)
+        {
+            /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
+            bool UnwantedStats = 
+                stats.Strength > 0 ||
+                stats.Agility > 0 ||
+                stats.AttackPower > 0 ||
+                stats.ArmorPenetrationRating > 0 ||
+                stats.ExpertiseRating > 0 ||
+                stats.DefenseRating > 0 ||
+                stats.DodgeRating > 0 ||
+                stats.ParryRating > 0 ||
+                stats.BlockRating > 0 ||
+                stats.Resilience > 0 ||
+                stats.BlockValue > 0;
+
+            if (!UnwantedStats)
+            {
+                foreach (SpecialEffect effect in stats.SpecialEffects())
+                {
+                    if (/*RelevantTriggers.Contains(effect.Trigger) && */HasUnwantedStats(effect.Stats))    // An unwanted stat could be behind a trigger we don't model.
+                    {
+                        UnwantedStats = true;
+                        break;
+                    }
+                }
+            }
+
+            return UnwantedStats;
+        }
+        #endregion
 
         public Stats GetBuffsStats(Character character, CalculationOptionsMoonkin calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
