@@ -540,14 +540,21 @@ namespace Rawr.Moonkin
             // AOE situations gives 20 stars.
             // CORRECTION 2010/06/12: single-target damage DOES do splash, if the star hits.
 
-            float damagePerBigStarHit = baseDamagePerStar + effectiveArcaneDamage * mainStarCoefficient;
-            float damagePerSmallStarHit = baseSplashDamage + effectiveArcaneDamage * splashCoefficient;
-            float damagePerStar = (damagePerBigStarHit + damagePerSmallStarHit) * hitDamageModifier;
-            float critDamagePerStar = damagePerStar * critDamageModifier;
+            float damagePerBigStarHit = (baseDamagePerStar + effectiveArcaneDamage * mainStarCoefficient) * hitDamageModifier;
+            float damagePerSmallStarHit = (baseSplashDamage + effectiveArcaneDamage * splashCoefficient) * hitDamageModifier;
+
+            float critDamagePerBigStarHit = damagePerBigStarHit * critDamageModifier;
+            float critDamagePerSmallStarHit = damagePerSmallStarHit * critDamageModifier;
+
+            float averageDamagePerBigStar = spellCrit * critDamagePerBigStarHit + (1 - spellCrit) * damagePerBigStarHit;
+            float averageDamagePerSmallStar = spellCrit * critDamagePerSmallStarHit + (1 - spellCrit) * damagePerSmallStarHit;
 
             numberOfStarHits = 10.0f;
 
-            return numberOfStarHits * (spellHit * (critDamagePerStar * spellCrit + damagePerStar * (1 - spellCrit)));
+            float avgNumBigStarsHit = spellHit * numberOfStarHits;
+            float avgNumSmallStarsHit = avgNumBigStarsHit * spellHit;
+
+            return avgNumBigStarsHit * averageDamagePerBigStar + avgNumSmallStarsHit * averageDamagePerSmallStar;
         }
 
         // Redo the spell calculations
