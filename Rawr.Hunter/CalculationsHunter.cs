@@ -2525,7 +2525,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
                     float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
                     SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusPetDamageMultiplier = 0.50f, BonusDamageMultiplier = val1, ManaCostPerc = val2 },
+                        new Stats() { BonusPetDamageMultiplier = (0.50f /* / (1f + val1)*/), BonusDamageMultiplier = val1, ManaCostPerc = val2 },
                         10f, cooldown);
                     statsTalents.AddSpecialEffect(WrathBeastWithin);
                 }
