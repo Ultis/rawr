@@ -204,11 +204,12 @@ namespace Rawr.Moonkin
             // Do Starfall calculations.
             bool starfallGlyph = talents.GlyphOfStarfall;
             Buff tier102PieceBuff = character.ActiveBuffs.Find(theBuff => theBuff.Name == "Lasherweave Regalia (T10) 2 Piece Bonus");
+            float numberOfStarHits = 10.0f;
             float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit,
                 (1 + calcs.BasicStats.BonusDamageMultiplier) *
                 (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
                 (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
-                (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier) : 0.0f;
+                (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
             float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
             float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallCD) + 1.0f;
             // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
@@ -403,7 +404,7 @@ namespace Rawr.Moonkin
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
 
                 rot.StarfallDamage = t10StarfallDamage / numStarfallCasts;
-                rot.StarfallStars = 10.0f;
+                rot.StarfallStars = numberOfStarHits;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
                 rot.StarfireAvgHit = spellDetails[0];
@@ -528,21 +529,25 @@ namespace Rawr.Moonkin
         }
 
         // Starfall
-        private float DoStarfallCalcs(float effectiveArcaneDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
+        private float DoStarfallCalcs(float effectiveArcaneDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier, out float numberOfStarHits)
         {
-            float baseDamagePerStar = (562.0f + 652.0f) / 2.0f;
-            float mainStarCoefficient = 0.37f;
-            float baseSplashDamage = 100.0f;
+            float baseDamagePerStar = (563.0f + 653.0f) / 2.0f;
+            float mainStarCoefficient = 0.30f;
+            float baseSplashDamage = 101.0f;
             float splashCoefficient = 0.13f;
-            int numStars = 10;  // TODO: in AOE situations, you get up to 20 stars
 
-            // TODO: Right now, calculating single-target only, which is 10 stars with no splash damage.
-            // AOE situations gives 20 stars and potential for splash damage.
+            // TODO: Right now, calculating single-target only, which is 10 stars with splash damage.
+            // AOE situations gives 20 stars.
+            // CORRECTION 2010/06/12: single-target damage DOES do splash, if the star hits.
 
-            float damagePerStar = (baseDamagePerStar + mainStarCoefficient * effectiveArcaneDamage) * hitDamageModifier;
+            float damagePerBigStarHit = baseDamagePerStar + effectiveArcaneDamage * mainStarCoefficient;
+            float damagePerSmallStarHit = baseSplashDamage + effectiveArcaneDamage * splashCoefficient;
+            float damagePerStar = (damagePerBigStarHit + damagePerSmallStarHit) * hitDamageModifier;
             float critDamagePerStar = damagePerStar * critDamageModifier;
 
-            return numStars * (spellHit * (critDamagePerStar * spellCrit + damagePerStar * (1 - spellCrit)));
+            numberOfStarHits = 10.0f;
+
+            return numberOfStarHits * (spellHit * (critDamagePerStar * spellCrit + damagePerStar * (1 - spellCrit)));
         }
 
         // Redo the spell calculations
