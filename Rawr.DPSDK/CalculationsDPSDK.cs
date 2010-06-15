@@ -13,6 +13,7 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
+        private Stats _cachedstats_;
         public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -227,9 +228,17 @@ namespace Rawr.DPSDK
                    ItemSlot.None, 500, 1500, ItemDamageType.Physical, 3.6f, "");
             }*/
 #endif
+            Stats stats = new Stats();
 
-            Stats stats = GetCharacterStats(character, additionalItem);
-
+            if (true)
+            {
+                stats = GetCharacterStats(character, additionalItem);
+//                _cachedstats_ = stats.Clone();
+            }
+            else
+            {
+//                stats = _cachedstats_.Clone();
+            }
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             calcs.BasicStats = stats;
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -884,18 +893,18 @@ namespace Rawr.DPSDK
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsGearEnchantsBuffs.ExpertiseRating);
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
+            float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
 
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
+                    // TODO: This code is very expensive for some reason.  
+                    // Need to isolate and fix what's going on here to improve performance
                     if (effect.Stats.ArmorPenetrationRating > 0f
                         && ((effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating) > tempCap))
                     {
-                        Stats tempStats = new Stats();
-                        tempStats += effect.Stats;
-                        SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, tempStats, effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
+                        SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, effect.Stats.Clone(), effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
                         tempEffect.Stats.ArmorPenetrationRating =
                             (tempCap - statsTotal.ArmorPenetrationRating > 0f ? tempCap - statsTotal.ArmorPenetrationRating : 0f);
                         se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
@@ -1465,6 +1474,7 @@ namespace Rawr.DPSDK
             }
             return relevantStats(stats);
         }
+
         private bool relevantStats(Stats stats)
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
