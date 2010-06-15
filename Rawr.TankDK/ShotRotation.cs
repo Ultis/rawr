@@ -392,21 +392,92 @@ namespace Rawr.TankDK {
         /// <param name="t"></param>
         public void GetRotationByTalents(DeathKnightTalents t)
         {
-            managedRP = true;
-            #region Frost Rotations
-            if (t.HowlingBlast > 0 || t.FrostStrike > 0)
+            if (curRotationType == Type.Custom)
             {
-                curRotationType = Type.Frost;
-
+                managedRP = false;
+                // if talents are all 0, then setup a basic rotation:
+                curRotationType = Type.Custom;
+                // we're going to just spam a very basic rotation.
+                // IT-PS-BS-BS-DS-DS-RP
+                // Need to find a way to actually implement this properly.
                 numDisease = 2f;
                 diseaseUptime = 100f;
-                DeathCoil = 0f;
+                IcyTouch = 2f;
+                PlagueStrike = 2f;
+                BloodStrike = 2f;
+                Obliterate = 0f;
+                DeathStrike = 2f;
+                RuneStrike = 3f;
+                Pestilence = 0f;
+
+                DeathCoil = 2f;
+                ScourgeStrike = 0f;
+                FrostStrike = 0f;
+                HowlingBlast = 0f;
+                HeartStrike = 0f;
+                curRotationDuration = 15f;
+            }
+            const int indexBlood = 0; // Number of Blood Talents.
+            const int indexFrost = 28; // Number of Frost Talents.
+            const int indexUnholy = 28+29; // Number of Unholy Talents.
+            int[] TalentCounter = new int[4];
+            int index = 0;
+            foreach (int i in t.Data)
+            {
+                if (i > 0)
+                {
+                    // Blood
+                    if (index < indexFrost)
+                        TalentCounter[(int)Type.Blood]++;
+                    // Frost
+                    else if ((indexFrost <= index) && (index < indexUnholy))
+                    {
+                        TalentCounter[(int)Type.Frost]++;
+                    }
+                    // Unholy
+                    else if (index >= indexUnholy)
+                    {
+                        TalentCounter[(int)Type.Unholy]++;
+                    }
+                }
+                index++;
+            }
+            if ((TalentCounter[(int)Type.Blood] > TalentCounter[(int)Type.Frost]) && (TalentCounter[(int)Type.Blood] > TalentCounter[(int)Type.Unholy]))
+            {
+                // Blood
+                curRotationType = Type.Blood;
+            }
+            else if ((TalentCounter[(int)Type.Frost] > TalentCounter[(int)Type.Blood]) && (TalentCounter[(int)Type.Frost] > TalentCounter[(int)Type.Unholy]))
+            {
+                // Frost
+                curRotationType = Type.Frost;
+            }
+            else if ((TalentCounter[(int)Type.Unholy] > TalentCounter[(int)Type.Frost]) && (TalentCounter[(int)Type.Unholy] > TalentCounter[(int)Type.Blood]))
+            {
+                // Unholy
+                curRotationType = Type.Unholy;
+            }
+
+            managedRP = true;
+            #region Frost Rotations
+            if (curRotationType == Type.Frost)
+            {
+                numDisease = 2f;
+                diseaseUptime = 100f;
                 IcyTouch = 2f;
                 PlagueStrike = 2f;
                 ScourgeStrike = 0f;
                 FrostStrike = 0f;
                 if (t.FrostStrike > 0)
-                    FrostStrike = 1f;
+                {
+                    DeathCoil = 0f;
+                    FrostStrike = 2f;
+                }
+                else
+                {
+                    DeathCoil = 2f;
+                    FrostStrike = 0f;
+                }
                 HowlingBlast = 0f;
                 Obliterate = 3f;
                 BloodStrike = 2f;
@@ -433,10 +504,8 @@ namespace Rawr.TankDK {
             }
             #endregion
             #region Blood Rotations
-            else if (t.HeartStrike > 0)
+            else if (curRotationType == Type.Blood)
             {
-                curRotationType = Type.Blood;
-
                 numDisease = 2f;
                 diseaseUptime = 100f;
                 DeathCoil = 2f;
@@ -447,22 +516,28 @@ namespace Rawr.TankDK {
                 HowlingBlast = 0f;
                 Obliterate = 0f;
                 DeathStrike = 2f;
-                BloodStrike = 0f;
-                HeartStrike = 6f;
+                if (HeartStrike > 0)
+                {
+                    HeartStrike = 6f;
+                    BloodStrike = 0f;
+                }
+                else
+                {
+                    HeartStrike = 0f;
+                    BloodStrike = 6f;
+                }
                 Pestilence = 0f;
                 RuneStrike = 2f;
                 curRotationDuration = 15f;
             }
             #endregion
             #region Unholy Rotations
-            else if (t.EbonPlaguebringer > 0 || t.ScourgeStrike > 0)
+            else if (curRotationType == Type.Unholy)
             // UnHoly
             {
-                curRotationType = Type.Unholy;
-
                 numDisease = 3f;
                 diseaseUptime = 100f;
-                DeathCoil = 0f;
+                DeathCoil = 2f;
                 IcyTouch = 1f;
                 PlagueStrike = 1f;
                 ScourgeStrike = 0f;
@@ -482,32 +557,7 @@ namespace Rawr.TankDK {
                 Pestilence = 0f;
             }
             #endregion
-            else
-            // Unknown/custom build.
-            {
-                managedRP = false;
-                // if talents are all 0, then setup a basic rotation:
-                curRotationType = Type.Custom;
-                // we're going to just spam a very basic rotation.
-                // IT-PS-BS-BS-DS-DS-RP
-                // Need to find a way to actually implement this properly.
-                numDisease = 2f;
-                diseaseUptime = 100f;
-                IcyTouch = 2f;
-                PlagueStrike = 2f;
-                BloodStrike = 2f;
-                Obliterate = 0f;
-                DeathStrike = 2f;
-                RuneStrike = 3f;
-                Pestilence = 0f;
 
-                DeathCoil = 2f;
-                ScourgeStrike = 0f;
-                FrostStrike = 0f;
-                HowlingBlast = 0f;
-                HeartStrike = 0f;
-                curRotationDuration = 15f;
-            }
         }
 
     }

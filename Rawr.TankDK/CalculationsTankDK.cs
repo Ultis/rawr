@@ -689,7 +689,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Get the values of each type of damage in %.
             // So first we get each type of damage in the same units: DPS.
-            float fPhyDamageDPS = GetDPS(opts.IncomingDamage, opts.BossAttackSpeed);
+            float fPhyDamageDPS = GetDPS(opts.IncomingDamage, opts.BossAttackSpeed * 1.14f);
             float fBleedDamageDPS = GetDPS(opts.IncomingBleedDamage, opts.BleedTickFrequency);
             float fMagicDamageDPS = GetDPS(opts.IncomingMagicDamage, opts.IncomingFromMagicFrequency);
             // Get the total DPS.
@@ -885,23 +885,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #region ** Haste Mitigation **
             // Placeholder for comparing differing DPS values related to haste.
             float fNewIncPhysDPS = 0;
-            float fBossAverageAttackSpeed = opts.BossAttackSpeed;
             // Let's just look at Imp Icy Touch 
             #region Improved Icy Touch
-            if (character.DeathKnightTalents.ImprovedIcyTouch > 0)
+            // Get the new slowed AttackSpeed based on ImpIcyTouch
+            // Factor in the base slow caused by FF (14% base).
+            float fBossAverageAttackSpeed = opts.BossAttackSpeed * 1.14f * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
+            // Figure out what the new Physical DPS should be based on that.
+            fNewIncPhysDPS = GetDPS(fPerShotPhysical, fBossAverageAttackSpeed);
+            // Send the difference to the Mitigation value.
+            fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
+            fTotalMitigation += fSegmentMitigation;
+            if (opts.AdditiveMitigation)
             {
-                // Get the new slowed AttackSpeed based on ImpIcyTouch
-                fBossAverageAttackSpeed = opts.BossAttackSpeed * (1f + (.02f * character.DeathKnightTalents.ImprovedIcyTouch));
-                // Figure out what the new Physical DPS should be based on that.
-                fNewIncPhysDPS = (fPerShotPhysical / fBossAverageAttackSpeed);
-                // Send the difference to the Mitigation value.
-                fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
-                fTotalMitigation += fSegmentMitigation;
-                if (opts.AdditiveMitigation)
-                {
-                    // Lets' remove the Damage that was avoided.
-                    fPhyDamageDPS -= fSegmentMitigation;
-                }
+                // Lets' remove the Damage that was avoided.
+                fPhyDamageDPS -= fSegmentMitigation;
             }
             #endregion
 
@@ -941,18 +938,21 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     fCharacterShotCount += ct.totalParryableAbilities;
 
                     #region Max Parry-Hasted Damage
-                    fPhyDamageDPS = GetParryHastedDPS(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
+//                    fPhyDamageDPS = GetParryHastedDPS(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
+                    float fMaxHastedBossAttackSpeed = GetParryHastedAttackSpeed(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration);
+                    float fMaxPhyDamageDPS = GetDPS(fPerShotPhysical, fMaxHastedBossAttackSpeed);
                     #endregion
 
                     #region Actual Parry-haste for this character
                     // Now, what's the actual expertise-based hasted damage?
-                    fNewIncPhysDPS = GetParryHastedDPS(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
+//                    fNewIncPhysDPS = GetParryHastedDPS(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
+                    fBossAverageAttackSpeed = GetParryHastedAttackSpeed(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration);
+                    fNewIncPhysDPS = GetDPS(fPerShotPhysical, fBossAverageAttackSpeed);
                     #endregion
 
                     // Still need to translate this to how much is mitigated by Expertise.
-                    fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
+                    fSegmentMitigation = fMaxPhyDamageDPS - fNewIncPhysDPS;
 
-                    fBossAverageAttackSpeed = fRotDuration / fBossShotCountPerRot;
                     fTotalMitigation += fSegmentMitigation;
                     if (opts.AdditiveMitigation)
                     {
@@ -1419,8 +1419,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // 1% per point increase to str.
             if (character.DeathKnightTalents.AbominationsMight > 0)
             {
+                // This happens no matter what:
                 FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
-                FullCharacterStats.BonusAttackPowerMultiplier += (.5f * character.DeathKnightTalents.AbominationsMight);
+                // This happens only if there isn't Trueshot Aura available:
+                if (!character.ActiveBuffsContains("Trueshot Aura") && !character.ActiveBuffsContains("Unleashed Rage") && !character.ActiveBuffsContains("Abomination's Might"))
+                    FullCharacterStats.BonusAttackPowerMultiplier += (.5f * character.DeathKnightTalents.AbominationsMight);
             }
 
             // Bloodworms
@@ -1645,7 +1648,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // As per Blue Post Effect *does* stack w/ existing IcyTalons.
                 // However, it will not stack if already included on Buffs tab.
                 // Now passive - no longer procs.
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Icy Talons")) != true)
+                if (character.ActiveBuffsContains("Improved Icy Talons") != true 
+                    && !character.ActiveBuffsContains("Windfury Totem"))
                 {
                     FullCharacterStats.PhysicalHaste += .2f;
                 }
@@ -1901,27 +1905,32 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 FullCharacterStats.PhysicalCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
                 FullCharacterStats.SpellCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
-                float fBonus = 0f;
-                switch (character.DeathKnightTalents.EbonPlaguebringer)
+                if (!character.ActiveBuffsContains("Earth and Moon")
+                    && !character.ActiveBuffsContains("Curse of the Elements")
+                    && !character.ActiveBuffsContains("Ebon Plaguebringer"))
                 {
-                    case 1:
-                        fBonus = .04f;
-                        break;
-                    case 2:
-                        fBonus = .09f;
-                        break;
-                    case 3:
-                        fBonus = .13f;
-                        break;
-                    default:
-                        break;
+                    float fBonus = 0f;
+                    switch (character.DeathKnightTalents.EbonPlaguebringer)
+                    {
+                        case 1:
+                            fBonus = .04f;
+                            break;
+                        case 2:
+                            fBonus = .09f;
+                            break;
+                        case 3:
+                            fBonus = .13f;
+                            break;
+                        default:
+                            break;
+                    }
+                    FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
+                    FullCharacterStats.BonusFireDamageMultiplier += fBonus;
+                    FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
+                    FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
+                    FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
+                    FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
                 }
-                FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
-                FullCharacterStats.BonusFireDamageMultiplier += fBonus;
-                FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
-                FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
-                FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
-                FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
             }
 
             // Sourge Strike
@@ -2375,6 +2384,25 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // How much DPS is the hasted amount?
             fPhyDamageDPS = (float)Math.Floor((fBossShotCountPerRot * fPerShotPhysical) / fRotDuration);
             return fPhyDamageDPS;
+        }
+
+        private float GetParryHastedAttackSpeed(float fParryChance, float fCharacterShotCount, float fBossAverageAttackSpeed, float fRotDuration)
+        {
+            // What was the max POTENTIAL hasted damage?
+            // The number of shots taken * the chance to be parried.
+            // can't be higher than cap.
+            float localParryChance = Math.Min(fParryChance, StatConversion.WHITE_PARRY_CHANCE_CAP[83 - 80]);
+            // can't be lower than 0
+            localParryChance = Math.Max(localParryChance, 0);
+            float fShotsParried = fParryChance * fCharacterShotCount;
+            float fBossParryHastedSpeed = fBossAverageAttackSpeed * (1f - 0.24f);
+
+            float fTimeHasted = fShotsParried * fBossParryHastedSpeed;
+            float fTimeNormal = fRotDuration - fTimeHasted;
+            // Update the shot count w/ the new # of normal shots + the number of hasted shots.
+            float fBossShotCountPerRot = (fTimeNormal / fBossAverageAttackSpeed) + fShotsParried;
+            // How much DPS is the hasted amount?
+            return (fRotDuration / fBossShotCountPerRot);
         }
 
         /// <summary>Deserializes the model's CalculationOptions data object from xml</summary>
