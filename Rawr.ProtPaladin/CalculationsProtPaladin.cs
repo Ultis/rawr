@@ -253,9 +253,12 @@ focus on Survival Points.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
-                    "% Hit Chance",
+                    // "% Hit Chance",
                     "% Spell Hit Chance",
                     "% Chance to be Avoided",
+                    "% Chance to be Missed",
+                    "% Chance to be Dodged",
+                    "% Chance to be Parried",
                     };
                 return _optimizableCalculationLabels;
             }

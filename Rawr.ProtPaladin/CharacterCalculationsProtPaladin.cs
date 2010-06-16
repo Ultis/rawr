@@ -286,7 +286,10 @@ namespace Rawr.ProtPaladin
                 case "Block Value": return StaticBlockValue;
                 case "% Block Chance": return Block * 100.0f;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
-                case "% Hit Chance": return Hit * 100.0f;
+                case "% Chance to be Missed": return MissedAttacks * 100.0f;
+                case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
+                case "% Chance to be Parried": return ParriedAttacks * 100.0f;
+                // case "% Hit Chance": return Hit * 100.0f;
                 case "% Spell Hit Chance": return SpellHit * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
