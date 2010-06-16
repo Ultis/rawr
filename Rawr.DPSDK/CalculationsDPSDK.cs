@@ -30,8 +30,12 @@ namespace Rawr.DPSDK
                 //Orange
                 int[] inscribed = { 39947, 40037, 40142 };
 
+                // Prismatic 
+                int[] tear = { 42702, 42702, 49110 };
+
                 //Meta
                 int chaotic = 41285;
+                int relentless = 41398;
 
                 return new List<GemmingTemplate>()
 				{
@@ -39,11 +43,15 @@ namespace Rawr.DPSDK
 						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
 						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
+						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
 						
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
 						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
 						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
+						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
