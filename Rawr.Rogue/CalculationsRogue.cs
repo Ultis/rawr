@@ -301,15 +301,18 @@ namespace Rawr.Rogue
             ////Crit Chances
             float chanceCritYellow = 0f;
             float chanceHitYellow = 0f;
-            float cpPerCPG = 0f;
             float chanceCritBackstab = 0f;
             float chanceHitBackstab = 0f;
+            float cpPerBackstab = 0f;
             float chanceCritMuti = 0f;
             float chanceHitMuti = 0f;
+            float cpPerMuti = 0f;
             float chanceCritSStrike = 0f;
             float chanceHitSStrike = 0f;
+            float cpPerSStrike = 0f;
             float chanceCritHemo = 0f;
             float chanceHitHemo = 0f;
+            float cpPerHemo = 0f;
             float chanceCritEvis = 0f;
             float chanceHitEvis = 0f;
             //float chanceCritBleed = 0f;
@@ -336,23 +339,26 @@ namespace Rawr.Rogue
                     + stats.SpellCritOnTarget
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
                 float chanceHitPoisonTemp = 1f - chanceCritPoisonTemp;
-                float cpPerCPGTemp = (chanceHitYellowTemp + chanceCritYellowTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Backstab - Identical to Yellow, with higher crit chance
                 float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bonusBackstabCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitBackstabTemp = 1f - chanceCritBackstabTemp;
+                float cpPerBackstabTemp = (chanceHitBackstabTemp + chanceCritBackstabTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Mutilate - Identical to Yellow, with higher crit chance
                 float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + bonusMutiCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitMutiTemp = 1f - chanceCritMutiTemp;
+                float cpPerMutiTemp = (1 + chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Sinister Strike - Identical to Yellow, with higher crit chance
                 float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
+                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Hemorrhage - Identical to Yellow, with higher crit chance
                 float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitHemoTemp = 1f - chanceCritHemoTemp;
+                float cpPerHemoTemp = (chanceHitHemoTemp + chanceCritHemoTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
 
                 //Eviscerate - Identical to Yellow, with higher crit chance
                 float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + bonusEvisCrit);
@@ -374,15 +380,18 @@ namespace Rawr.Rogue
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
                 chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
-                cpPerCPG += iStat.Chance * cpPerCPGTemp;
                 chanceCritBackstab += iStat.Chance * chanceCritBackstabTemp;
                 chanceHitBackstab += iStat.Chance * chanceHitBackstabTemp;
+                cpPerBackstab += iStat.Chance * cpPerBackstabTemp;
                 chanceCritMuti += iStat.Chance * chanceCritMutiTemp;
                 chanceHitMuti += iStat.Chance * chanceHitMutiTemp;
+                cpPerMuti += iStat.Chance * cpPerMutiTemp;
                 chanceCritSStrike += iStat.Chance * chanceCritSStrikeTemp;
                 chanceHitSStrike += iStat.Chance * chanceHitSStrikeTemp;
+                cpPerSStrike += iStat.Chance * cpPerSStrikeTemp;
                 chanceCritHemo += iStat.Chance * chanceCritHemoTemp;
                 chanceHitHemo += iStat.Chance * chanceHitHemoTemp;
+                cpPerHemo += iStat.Chance * cpPerHemoTemp;
                 chanceCritEvis += iStat.Chance * chanceCritEvisTemp;
                 chanceHitEvis += iStat.Chance * chanceHitEvisTemp;
                 chanceGlance += iStat.Chance * chanceGlanceTemp;
@@ -509,6 +518,7 @@ namespace Rawr.Rogue
                 DamagePerSwing = backstabDamageAverage,
                 EnergyCost = backstabEnergyAverage,
                 CritChance = chanceCritBackstab,
+                CPPerSwing = cpPerBackstab,
             };
             RogueAbilityStats hemoStats = new RogueHemoStats()
             {
@@ -516,6 +526,7 @@ namespace Rawr.Rogue
                 DamagePerSwing = hemoDamageAverage,
                 EnergyCost = hemoEnergyAverage,
                 CritChance = chanceCritYellow,
+                CPPerSwing = cpPerHemo,
             };
             RogueAbilityStats sStrikeStats = new RogueSStrikeStats()
             {
@@ -523,6 +534,7 @@ namespace Rawr.Rogue
                 DamagePerSwing = sStrikeDamageAverage,
                 EnergyCost = sStrikeEnergyAverage,
                 CritChance = chanceCritYellow,
+                CPPerSwing = cpPerSStrike,
             };
             RogueAbilityStats mutiStats = new RogueMutiStats()
             {
@@ -530,6 +542,7 @@ namespace Rawr.Rogue
                 DamagePerSwing = mutiDamageAverage,
                 EnergyCost = mutiEnergyAverage,
                 CritChance = chanceCritMuti,
+                CPPerSwing = cpPerMuti,
             };
             RogueAbilityStats ruptStats = new RogueRuptStats()
             {
@@ -588,9 +601,9 @@ namespace Rawr.Rogue
             #endregion
 
             #region Rotations
-            RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, stats, calcOpts, cpPerCPG,
+            RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, stats, calcOpts, 
                 maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
-                chanceWhiteAvoided, chanceAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * 0.2f * character.RogueTalents.SealFate, chanceCritMuti * 0.2f * character.RogueTalents.SealFate,
+                chanceWhiteAvoided, chanceAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * 0.2f * character.RogueTalents.SealFate, (1f - chanceHitMuti * chanceHitMuti) * 0.2f * character.RogueTalents.SealFate,
                 mainHandStats, offHandStats, backstabStats, hemoStats, sStrikeStats, mutiStats,
                 ruptStats, evisStats, envenomStats, snDStats, iPStats, dPStats, wPStats, aPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
