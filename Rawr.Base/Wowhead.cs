@@ -1266,7 +1266,7 @@ namespace Rawr
                     line = line.Replace(toRemove, "");
                 }
                 // Swap out to real spaces
-                while (line.Contains("nbsp;")) { line = line.Replace("nbsp;", " "); }
+                while (line.Contains("&nbsp;")) { line = line.Replace("&nbsp;", " "); }
                 // Remove the Spell Links
                 // Later we will instead USE the spell links but we aren't set up for that right now
                 while (line.Contains("<a"))
