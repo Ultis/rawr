@@ -309,7 +309,7 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowhead.com/?quest={0}&xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.wowhead.com/?quest={0}")]
         public string QuestWowheadURI {
             get {
                 return ((string)(this["QuestWowheadURI"]));

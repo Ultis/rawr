@@ -84,7 +84,7 @@
       <Value Profile="(Default)">http://www.wowarmory.com/wow-icons/_images/_talents31x31/{0}</Value>
     </Setting>
     <Setting Name="QuestWowheadURI" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.wowhead.com/?quest={0}&amp;xml</Value>
+      <Value Profile="(Default)">http://www.wowhead.com/?quest={0}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

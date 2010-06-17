@@ -417,12 +417,13 @@ namespace Rawr
             return doc;
         }
 
-        public XmlDocument DownloadQuestWowhead(string id) 
+        public string DownloadQuestWowhead(string id) 
         {
-            XmlDocument doc = null;
+            // Quest data is only available as HTML, no XML variant
+            string doc = null;
             if (!string.IsNullOrEmpty(id))
             {
-                doc = DownloadXml(string.Format(NetworkSettingsProvider.QuestWowheadURI, id), true, false);
+                doc = DownloadText(string.Format(NetworkSettingsProvider.QuestWowheadURI, id));
             }
             return doc;
         }
