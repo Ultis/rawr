@@ -212,6 +212,7 @@ namespace Rawr.Retribution
         /// <summary>
         /// Labels of the stats available to the Optimizer.
         /// </summary>
+        /// The list of labels listed here needs to match with the list in GetOptimizableCalculationValue override in CharacterCalculationsRetribution.cs
         public override string[] OptimizableCalculationLabels
         {
             get
@@ -219,7 +220,11 @@ namespace Rawr.Retribution
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
 					"Health",
-                    "Melee Avoid %",
+                    "% Chance to Miss (Melee)",
+                    "% Chance to Miss (Spells)",
+                    "% Chance to be Dodged",
+                    "% Chance to be Parried",
+                    "% Chance to be Avoided (Melee/Dodge)",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -444,9 +449,10 @@ namespace Rawr.Retribution
 
             calc.AttackSpeed = combats.AttackSpeed;
             calc.WeaponDamage = combats.WeaponDamage;
-            calc.ToMiss = CombatStats.GetMissChance(stats.PhysicalHit, calcOpts.TargetLevel);
-            calc.ToDodge = CombatStats.GetDodgeChance(stats.Expertise, calcOpts.TargetLevel);
-            calc.ToResist = CombatStats.GetResistChance(stats.SpellHit, calcOpts.TargetLevel);
+            calc.ToMiss = combats.GetMeleeMissChance();
+            calc.ToBeDodged = combats.GetToBeDodgedChance();
+            calc.ToBeParried = combats.GetToBeParriedChance();
+            calc.ToBeResisted = combats.GetSpellMissChance();
 
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()

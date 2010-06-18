@@ -37,8 +37,9 @@ namespace Rawr.Retribution
         public Skill HammerOfWrathSkill { get; set; }
 
         public float ToMiss { get; set; }
-        public float ToDodge { get; set; }
-        public float ToResist { get; set; }
+        public float ToBeDodged { get; set; }
+        public float ToBeParried { get; set; }
+        public float ToBeResisted { get; set; }
 
         public float AverageSoVStack { get; set; }
         public float SoVOvertake { get; set; }
@@ -66,7 +67,7 @@ namespace Rawr.Retribution
             dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
             dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating);
             dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
-            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToDodge, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
+            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToBeDodged, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
             dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
             dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
             dictValues["Attack Speed"] = AttackSpeed.ToString("N2");
@@ -106,12 +107,22 @@ namespace Rawr.Retribution
             return dictValues;
         }
 
+        /// <summary>
+        /// Obtain optimizable values.
+        /// </summary>
+        /// <param name="calculation"></param>
+        /// <returns></returns>
+        /// The list of labels listed here needs to match with the list in OptimizableCalculationLabels override in CalculationsRetribution.cs
         public override float GetOptimizableCalculationValue(string calculation)
         {
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Melee Avoid %": return (WhiteSkill.Combats.GetMeleeAvoid() * 100f);
+                case "% Chance to Miss (Melee)": return ToMiss * 100f;  // White and Melee hit for ret are identical since we can't dual wield.
+                case "% Chance to Miss (Spells)": return ToBeResisted * 100f;
+                case "% Chance to be Dodged": return ToBeDodged * 100f;
+                case "% Chance to be Parried": return ToBeParried * 100f;
+                case "% Chance to be Avoided (Yellow/Dodge)" : return (ToMiss + ToBeDodged) * 100f;
             }
             return 0f;
         }

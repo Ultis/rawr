@@ -80,15 +80,15 @@ namespace Rawr.Retribution
         {
             if (AbilityType == AbilityType.Melee)
             {
-                return Combats.GetMeleeAvoid();
+                return 1 - (Combats.GetMeleeMissChance() + Combats.GetToBeDodgedChance() + Combats.GetToBeParriedChance() * _calcOpts.InFront);
             }
             else if (AbilityType == AbilityType.Range)
             {
-                return Combats.GetRangeAvoid();
+                return 1 - Combats.GetRangedMissChance();
             }
             else // Spell
             {
-                return Combats.GetSpellAvoid();
+                return 1 - Combats.GetSpellMissChance();
             }
         }
 

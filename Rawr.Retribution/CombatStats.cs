@@ -37,28 +37,26 @@ namespace Rawr.Retribution
         public float ArmorReduction = 1f;
         public readonly float PartialResist = 0.94f;
 
-        protected static readonly float[] DodgeChance = { 0.05f, 0.055f, 0.06f, 0.065f };
-        protected static readonly float[] ParryChance = { 0.05f, 0.055f, 0.06f, 0.13f };
-        protected static readonly float[] MissChance = { 0.05f, 0.052f, 0.054f, 0.08f };
-        protected static readonly float[] ResistChance = { 0.04f, 0.05f, 0.06f, 0.17f };
-        public static float GetMissChance(float hit, int targetLevel) { return (float)Math.Max(MissChance[targetLevel - 80] - hit, 0f); }
-        public static float GetDodgeChance(float expertise, int targetLevel) { return (float)Math.Max(DodgeChance[targetLevel - 80] - expertise * .0025f, 0f); }
-        public static float GetResistChance(float spellHit, int targetLevel) { return (float)Math.Max(ResistChance[targetLevel - 80] - spellHit, 0f); }
-        public static float GetParryChance(float expertise, int targetLevel) { return (float)Math.Max(ParryChance[targetLevel - 80] - expertise * .0025f, 0f); }
-        public float GetMeleeAvoid()
+        public float GetMeleeMissChance()    // Chance to miss a white/yellow
         {
-            return 1f
-                - GetMissChance(_stats.PhysicalHit, _calcOpts.TargetLevel)
-                - GetDodgeChance(_stats.Expertise, _calcOpts.TargetLevel)
-                - GetParryChance(_stats.Expertise, _calcOpts.TargetLevel) * _calcOpts.InFront;
+            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 80] - _stats.PhysicalHit, 0f);
         }
-        public float GetRangeAvoid()
+        public float GetRangedMissChance()    // Chance to miss a ranged attack (HoW)
         {
-            return 1f - GetMissChance(Stats.PhysicalHit, _calcOpts.TargetLevel);
+            // Should be 'RangedHit' instead of PhysicalHit, pala's won't be gearing for specific ranged hit, and there's no RangedHit stat in Stats (only RangedHitRating).
+            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 80] - _stats.PhysicalHit, 0f);
         }
-        public float GetSpellAvoid()
+        public float GetToBeParriedChance()    
         {
-            return 1f - GetResistChance(Stats.SpellHit, _calcOpts.TargetLevel);
+            return (float)Math.Max(StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
+        }
+        public float GetToBeDodgedChance()
+        {
+            return (float)Math.Max(StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
+        }
+        public float GetSpellMissChance()
+        {
+            return StatConversion.GetSpellMiss(_calcOpts.TargetLevel - 80, false);
         }
 
         public void UpdateCalcs()
