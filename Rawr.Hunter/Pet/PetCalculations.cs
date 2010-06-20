@@ -213,7 +213,7 @@ namespace Rawr.Hunter
                 Armor = HunterStats.Armor * 0.35f,
                 SpellPenetration = HunterStats.SpellPenetration,
                 Resilience = HunterStats.Resilience,
-                BonusDamageMultiplier = (1f + (HunterStats.BonusDamageMultiplier / (1f + Talents.TheBeastWithin * 0.10f)))
+                BonusDamageMultiplier = (1f + (HunterStats.BonusDamageMultiplier /* / (1f + Talents.TheBeastWithin * 0.10f)*/))
                                       * (1f + (character.Race == CharacterRace.Orc ? 0.05f : 0f))
                                       - 1f,
                 BonusPetDamageMultiplier = HunterStats.BonusPetDamageMultiplier,
