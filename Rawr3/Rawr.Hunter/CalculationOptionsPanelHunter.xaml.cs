@@ -848,6 +848,165 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
             if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.AspectUsage = AspectUsage.ViperRegen;
             Character.OnCalculationsInvalidated();
         }
+        // Rotations
+        private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // only do anything if we weren't set to 0
+            if (isLoading || CB_PriorityDefaults.SelectedIndex == 0) return;
+
+            isLoading = true;
+
+            int i = 0;
+            //if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.BeastMaster.ShotList[i].Index; i++; } }
+            //else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Marksman.ShotList[i].Index; i++; } }
+            //else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Survival.ShotList[i].Index; i++; } }
+
+            /* I want to do a conglomerate one:
+                CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
+                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BestialWrath.Index;
+                CB_ShotPriority_03.SelectedIndex = CalculationOptionsHunter.Readiness.Index;
+                CB_ShotPriority_04.SelectedIndex = CalculationOptionsHunter.SerpentSting.Index;
+                CB_ShotPriority_05.SelectedIndex = CalculationOptionsHunter.ChimeraShot.Index;
+                CB_ShotPriority_06.SelectedIndex = CalculationOptionsHunter.KillShot.Index;
+                CB_ShotPriority_07.SelectedIndex = CalculationOptionsHunter.ExplosiveShot.Index;
+                CB_ShotPriority_08.SelectedIndex = CalculationOptionsHunter.BlackArrow.Index;
+                CB_ShotPriority_09.SelectedIndex = CalculationOptionsHunter.AimedShot.Index;
+                CB_ShotPriority_10.SelectedIndex = CalculationOptionsHunter.SilencingShot.Index;
+                CB_ShotPriority_11.SelectedIndex = CalculationOptionsHunter.ArcaneShot.Index;
+                CB_ShotPriority_12.SelectedIndex = CalculationOptionsHunter.SteadyShot.Index;
+             * But this requires 2 extra slots minimum
+             * Gotta add even more for volley and traps, etc.
+             * So frack it, I'll just forget it until we have the
+             * new rotation setup where this stuff doesn't matter
+             */
+            isLoading = false;
+
+            int j = 0;
+            int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+            //foreach (ComboBox cb in ShotPriorityBoxes) { _prioIndxs[j] = cb.SelectedIndex; j++; }
+            //CalcOpts.PriorityIndexes = _prioIndxs;
+
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex1 = CB_ShotPrio_01.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_02_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex2 = CB_ShotPrio_02.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_03_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex3 = CB_ShotPrio_03.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_04_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex4 = CB_ShotPrio_04.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_05_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex5 = CB_ShotPrio_05.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_06_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex6 = CB_ShotPrio_06.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_07_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex7 = CB_ShotPrio_07.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_08_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex8 = CB_ShotPrio_08.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_09_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex9 = CB_ShotPrio_09.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_ShotPrio_10_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PriorityIndex10 = CB_ShotPrio_10.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority1 = (PetAttacks)CB_PetPrio_01.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_02_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority2 = (PetAttacks)CB_PetPrio_02.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_03_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority3 = (PetAttacks)CB_PetPrio_03.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_04_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority4 = (PetAttacks)CB_PetPrio_04.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_05_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority5 = (PetAttacks)CB_PetPrio_05.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_06_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority6 = (PetAttacks)CB_PetPrio_06.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_PetPrio_07_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            CalcOpts.PetPriority7 = (PetAttacks)CB_PetPrio_07.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
         //
         public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

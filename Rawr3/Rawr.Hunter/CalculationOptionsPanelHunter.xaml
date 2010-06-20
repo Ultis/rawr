@@ -123,40 +123,40 @@ d:DesignWidth="341">
             		<ComboBoxItem Content="Survival"/>
             	</ComboBox>
             	<dataInput:Label x:Name="LB_ShotPrio_01" HorizontalAlignment="Left" Margin="8,59,0,0" VerticalAlignment="Top" Content="Priority 01:" Height="23"/>
-            	<ComboBox x:Name="CB_ShotPrio_01" Height="23" VerticalAlignment="Top" Margin="75,59,8,0"/>
+            	<ComboBox x:Name="CB_ShotPrio_01" Height="23" VerticalAlignment="Top" Margin="75,59,8,0" SelectionChanged="CB_ShotPrio_01_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_02" Height="23" HorizontalAlignment="Left" Margin="8,86,0,0" VerticalAlignment="Top" Content="Priority 02:"/>
-            	<ComboBox x:Name="CB_ShotPrio_02" Height="23" Margin="75,86,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_02" Height="23" Margin="75,86,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_02_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_03" Height="23" HorizontalAlignment="Left" Margin="8,113,0,0" VerticalAlignment="Top" Content="Priority 03:"/>
-            	<ComboBox x:Name="CB_ShotPrio_03" Height="23" Margin="75,113,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_03" Height="23" Margin="75,113,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_03_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_04" Height="23" HorizontalAlignment="Left" Margin="8,140,0,0" VerticalAlignment="Top" Content="Priority 04:"/>
-            	<ComboBox x:Name="CB_ShotPrio_04" Height="23" Margin="75,140,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_04" Height="23" Margin="75,140,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_04_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_05" Height="23" HorizontalAlignment="Left" Margin="8,167,0,0" VerticalAlignment="Top" Content="Priority 05:"/>
-            	<ComboBox x:Name="CB_ShotPrio_05" Height="23" Margin="75,167,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_05" Height="23" Margin="75,167,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_05_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_06" Height="23" HorizontalAlignment="Left" Margin="8,194,0,0" VerticalAlignment="Top" Content="Priority 06:"/>
-            	<ComboBox x:Name="CB_ShotPrio_06" Height="23" Margin="75,194,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_06" Height="23" Margin="75,194,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_06_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_07" Height="23" HorizontalAlignment="Left" Margin="8,221,0,0" VerticalAlignment="Top" Content="Priority 07:"/>
-            	<ComboBox x:Name="CB_ShotPrio_07" Height="23" Margin="75,221,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_07" Height="23" Margin="75,221,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_07_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_08" Height="23" HorizontalAlignment="Left" Margin="8,248,0,0" VerticalAlignment="Top" Content="Priority 08:"/>
-            	<ComboBox x:Name="CB_ShotPrio_08" Height="23" Margin="75,248,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_08" Height="23" Margin="75,248,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_08_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_09" Height="23" HorizontalAlignment="Left" Margin="8,275,0,0" VerticalAlignment="Top" Content="Priority 09:"/>
-            	<ComboBox x:Name="CB_ShotPrio_09" Height="23" Margin="75,275,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_09" Height="23" Margin="75,275,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_09_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_ShotPrio_10" Height="23" HorizontalAlignment="Left" Margin="8,302,0,0" VerticalAlignment="Top" Content="Priority 10:"/>
-            	<ComboBox x:Name="CB_ShotPrio_10" Height="23" Margin="75,302,8,0" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_ShotPrio_10" Height="23" Margin="75,302,8,0" VerticalAlignment="Top" SelectionChanged="CB_ShotPrio_10_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PShotPrios" FontWeight="Bold" Height="23" Margin="8,329,8,0" VerticalAlignment="Top" Content="Pet Skill Priority"/>
             	<dataInput:Label x:Name="LB_PetPrio_01" HorizontalAlignment="Left" Margin="8,356,0,0" Content="Priority 01:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_01" Margin="75,356,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_01" Margin="75,356,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_01_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_02" HorizontalAlignment="Left" Margin="8,383,0,0" Content="Priority 02:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_02" Margin="75,383,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_02" Margin="75,383,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_02_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_03" HorizontalAlignment="Left" Margin="8,412,0,0" Content="Priority 03:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_03" Margin="75,411,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_03" Margin="75,411,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_03_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_04" HorizontalAlignment="Left" Margin="8,438,0,0" Content="Priority 04:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_04" Margin="75,438,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_04" Margin="75,438,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_04_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_05" HorizontalAlignment="Left" Margin="8,465,0,0" Content="Priority 05:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_05" Margin="75,465,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_05" Margin="75,465,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_05_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_06" HorizontalAlignment="Left" Margin="8,492,0,0" Content="Priority 06:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_06" Margin="75,492,8,0" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_06" Margin="75,492,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_06_SelectedIndexChanged"/>
             	<dataInput:Label x:Name="LB_PetPrio_07" HorizontalAlignment="Left" Margin="8,519,0,0" Content="Priority 07:" Height="23" VerticalAlignment="Top"/>
-            	<ComboBox x:Name="CB_PetPrio_07" Margin="75,519,8,8" Height="23" VerticalAlignment="Top"/>
+            	<ComboBox x:Name="CB_PetPrio_07" Margin="75,519,8,8" Height="23" VerticalAlignment="Top" SelectionChanged="CB_PetPrio_07_SelectedIndexChanged"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_03_PetTalents" Header="Pet Talents">

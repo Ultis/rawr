@@ -13,7 +13,7 @@ namespace Rawr.Hunter
         ICalculationOptionBase,
         INotifyPropertyChanged
 	{
-        #region Basics
+        #region Basics Tab
         // ==== Fight Settings ====
         private int _TargetLevel;
         public int TargetLevel
@@ -113,7 +113,7 @@ namespace Rawr.Hunter
             set { _UseRotationTest = value; OnPropertyChanged("UseRotationTest"); }
         }
         // Use Random Procs
-        public bool _RandomizeProcs = false; // not editable
+        public bool _RandomizeProcs = false;
         public bool RandomizeProcs
         {
             get { return _RandomizeProcs; }
@@ -125,35 +125,30 @@ namespace Rawr.Hunter
         public bool prioritiseArcAimedOverSteady = true; // not editable
         public bool debugShotRotation = false; // not editable
         // ==== Misc ====
-        // Hide Spell Gear
         private bool _HideBadItems_Spl;
         public bool HideBadItems_Spl
         {
             get { return _HideBadItems_Spl; }
             set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
         }
-        // Hide PvP Gear
         private bool _HideBadItems_PvP;
         public bool HideBadItems_PvP
         {
             get { return _HideBadItems_PvP; }
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
         }
-        // PTR Mode
         private bool _PTRMode = false;
         public bool PTRMode
         {
             get { return _PTRMode; }
             set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
         }
-        // Survival Scale
         private float _SurvScale;
         public float SurvScale
         {
             get { return _SurvScale; }
             set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
         }
-        // Use Duration for Special Effects
         private bool _SE_UseDur = true;
         public bool SE_UseDur
         {
@@ -161,21 +156,18 @@ namespace Rawr.Hunter
             set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
         }
         // ==== Stats Graph ====
-        // Agility, AP, Crit, Haste, ArP, Hit
         private bool[] _statsList = new bool[] { true, true, true, true, true, true };
         public bool[] StatsList
         {
             get { return _statsList; }
             set { _statsList = value; OnPropertyChanged("StatsList"); }
         }
-        // Increment
         private int _StatsIncrement = 100;
         public int StatsIncrement
         {
             get { return _StatsIncrement; }
             set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
         }
-        // Calc to Graph
         private string _calculationToGraph = "Overall Rating";
         public string CalculationToGraph
         {
@@ -183,15 +175,136 @@ namespace Rawr.Hunter
             set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
         }
         #endregion
+        #region Rotations Tab
+        public int _PriorityIndex1 = 0;
+        public int PriorityIndex1
+        {
+            get { return _PriorityIndex1; }
+            set { _PriorityIndex1 = value; OnPropertyChanged("PriorityIndex1"); }
+        }
+        public int _PriorityIndex2 = 0;
+        public int PriorityIndex2
+        {
+            get { return _PriorityIndex2; }
+            set { _PriorityIndex2 = value; OnPropertyChanged("PriorityIndex2"); }
+        }
+        public int _PriorityIndex3 = 0;
+        public int PriorityIndex3
+        {
+            get { return _PriorityIndex3; }
+            set { _PriorityIndex3 = value; OnPropertyChanged("PriorityIndex3"); }
+        }
+        public int _PriorityIndex4 = 0;
+        public int PriorityIndex4
+        {
+            get { return _PriorityIndex4; }
+            set { _PriorityIndex4 = value; OnPropertyChanged("PriorityIndex4"); }
+        }
+        public int _PriorityIndex5 = 0;
+        public int PriorityIndex5
+        {
+            get { return _PriorityIndex5; }
+            set { _PriorityIndex5 = value; OnPropertyChanged("PriorityIndex5"); }
+        }
+        public int _PriorityIndex6 = 0;
+        public int PriorityIndex6
+        {
+            get { return _PriorityIndex6; }
+            set { _PriorityIndex6 = value; OnPropertyChanged("PriorityIndex6"); }
+        }
+        public int _PriorityIndex7 = 0;
+        public int PriorityIndex7
+        {
+            get { return _PriorityIndex7; }
+            set { _PriorityIndex7 = value; OnPropertyChanged("PriorityIndex7"); }
+        }
+        public int _PriorityIndex8 = 0;
+        public int PriorityIndex8
+        {
+            get { return _PriorityIndex8; }
+            set { _PriorityIndex8 = value; OnPropertyChanged("PriorityIndex8"); }
+        }
+        public int _PriorityIndex9 = 0;
+        public int PriorityIndex9
+        {
+            get { return _PriorityIndex9; }
+            set { _PriorityIndex9 = value; OnPropertyChanged("PriorityIndex9"); }
+        }
+        public int _PriorityIndex10 = 0;
+        public int PriorityIndex10
+        {
+            get { return _PriorityIndex10; }
+            set { _PriorityIndex10 = value; OnPropertyChanged("PriorityIndex10"); }
+        }
+        [XmlIgnore]
+        public int[] PriorityIndexes
+        {
+            get
+            {
+                int[] _PriorityIndexes = { PriorityIndex1, PriorityIndex2, PriorityIndex3, PriorityIndex4, PriorityIndex5, 
+                                           PriorityIndex6, PriorityIndex7, PriorityIndex8, PriorityIndex9, PriorityIndex10 };
+                return _PriorityIndexes;
+            }
+            set
+            {
+                int[] _PriorityIndexes = value;
+                PriorityIndex1 = _PriorityIndexes[0];
+                PriorityIndex2 = _PriorityIndexes[1];
+                PriorityIndex3 = _PriorityIndexes[2];
+                PriorityIndex4 = _PriorityIndexes[3];
+                PriorityIndex5 = _PriorityIndexes[4];
+                PriorityIndex6 = _PriorityIndexes[5];
+                PriorityIndex7 = _PriorityIndexes[6];
+                PriorityIndex8 = _PriorityIndexes[7];
+                PriorityIndex9 = _PriorityIndexes[8];
+                PriorityIndex10 = _PriorityIndexes[9];
+            }
+        }
+        #endregion
 
         #region Pet
-        public PetAttacks PetPriority1 = PetAttacks.Growl;
-        public PetAttacks PetPriority2 = PetAttacks.Bite;
-        public PetAttacks PetPriority3 = PetAttacks.None;
-        public PetAttacks PetPriority4 = PetAttacks.None;
-        public PetAttacks PetPriority5 = PetAttacks.None;
-        public PetAttacks PetPriority6 = PetAttacks.None;
-        public PetAttacks PetPriority7 = PetAttacks.None;
+        public PetAttacks _PetPriority1 = PetAttacks.Growl;
+        public PetAttacks PetPriority1
+        {
+            get { return _PetPriority1; }
+            set { _PetPriority1 = value; OnPropertyChanged("PetPriority1"); }
+        }
+        public PetAttacks _PetPriority2 = PetAttacks.Bite;
+        public PetAttacks PetPriority2
+        {
+            get { return _PetPriority2; }
+            set { _PetPriority2 = value; OnPropertyChanged("PetPriority2"); }
+        }
+        public PetAttacks _PetPriority3 = PetAttacks.None;
+        public PetAttacks PetPriority3
+        {
+            get { return _PetPriority3; }
+            set { _PetPriority3 = value; OnPropertyChanged("PetPriority3"); }
+        }
+        public PetAttacks _PetPriority4 = PetAttacks.None;
+        public PetAttacks PetPriority4
+        {
+            get { return _PetPriority4; }
+            set { _PetPriority4 = value; OnPropertyChanged("PetPriority4"); }
+        }
+        public PetAttacks _PetPriority5 = PetAttacks.None;
+        public PetAttacks PetPriority5
+        {
+            get { return _PetPriority5; }
+            set { _PetPriority5 = value; OnPropertyChanged("PetPriority5"); }
+        }
+        public PetAttacks _PetPriority6 = PetAttacks.None;
+        public PetAttacks PetPriority6
+        {
+            get { return _PetPriority6; }
+            set { _PetPriority6 = value; OnPropertyChanged("PetPriority6"); }
+        }
+        public PetAttacks _PetPriority7 = PetAttacks.None;
+        public PetAttacks PetPriority7
+        {
+            get { return _PetPriority7; }
+            set { _PetPriority7 = value; OnPropertyChanged("PetPriority7"); }
+        }
         [XmlIgnore]
         public int _SelectedArmoryPet = 0;
         public int SelectedArmoryPet {
@@ -383,41 +496,6 @@ namespace Rawr.Hunter
         public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
         public int LALShotsReplaced = 2; // not editable
         public float LALProcChance = 2; // not editable
-
-        // new priority rotation stuff
-        public int PriorityIndex1 = 0;
-        public int PriorityIndex2 = 0;
-        public int PriorityIndex3 = 0;
-        public int PriorityIndex4 = 0;
-        public int PriorityIndex5 = 0;
-        public int PriorityIndex6 = 0;
-        public int PriorityIndex7 = 0;
-        public int PriorityIndex8 = 0;
-        public int PriorityIndex9 = 0;
-        public int PriorityIndex10 = 0;
-        [XmlIgnore]
-        public int[] PriorityIndexes {
-            get
-            {
-                int[] _PriorityIndexes = { PriorityIndex1, PriorityIndex2, PriorityIndex3, PriorityIndex4, PriorityIndex5, 
-                                           PriorityIndex6, PriorityIndex7, PriorityIndex8, PriorityIndex9, PriorityIndex10 };
-                return _PriorityIndexes;
-            }
-            set
-            {
-                int[] _PriorityIndexes = value;
-                PriorityIndex1 = _PriorityIndexes[0];
-                PriorityIndex2 = _PriorityIndexes[1];
-                PriorityIndex3 = _PriorityIndexes[2];
-                PriorityIndex4 = _PriorityIndexes[3];
-                PriorityIndex5 = _PriorityIndexes[4]; 
-                PriorityIndex6 = _PriorityIndexes[5];
-                PriorityIndex7 = _PriorityIndexes[6];
-                PriorityIndex8 = _PriorityIndexes[7];
-                PriorityIndex9 = _PriorityIndexes[8];
-                PriorityIndex10 = _PriorityIndexes[9];
-            }
-        }
 
         #region Shots
         [XmlIgnore]
