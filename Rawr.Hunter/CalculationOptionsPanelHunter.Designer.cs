@@ -318,6 +318,7 @@
             this.LB_ArmoryPets.Size = new System.Drawing.Size(66, 13);
             this.LB_ArmoryPets.TabIndex = 0;
             this.LB_ArmoryPets.Text = "Armory Pets:";
+            this.LB_ArmoryPets.Click += new System.EventHandler(this.LB_ArmoryPets_Click);
             // 
             // CB_ArmoryPets
             // 
@@ -383,6 +384,7 @@
             this.GB_PetTalents_Tenacity.TabIndex = 0;
             this.GB_PetTalents_Tenacity.TabStop = false;
             this.GB_PetTalents_Tenacity.Text = "Tenacity Talents";
+            this.GB_PetTalents_Tenacity.Enter += new System.EventHandler(this.GB_PetTalents_Tenacity_Enter);
             // 
             // TLP_Tenacity
             // 
@@ -1020,6 +1022,7 @@
             this.GB_PetTalents_Cunning.TabIndex = 1;
             this.GB_PetTalents_Cunning.TabStop = false;
             this.GB_PetTalents_Cunning.Text = "Cunning Talents";
+            this.GB_PetTalents_Cunning.Enter += new System.EventHandler(this.GB_PetTalents_Cunning_Enter);
             // 
             // TLP_Cunning
             // 
@@ -2290,6 +2293,7 @@
             this.LB_PetFamilies.Size = new System.Drawing.Size(58, 13);
             this.LB_PetFamilies.TabIndex = 2;
             this.LB_PetFamilies.Text = "Pet Family:";
+            this.LB_PetFamilies.Click += new System.EventHandler(this.LB_PetFamilies_Click);
             // 
             // CB_PetFamily
             // 

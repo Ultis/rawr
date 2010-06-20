@@ -89,27 +89,27 @@
                 		<ComboBoxItem x:Name="CBI_AspUsage_Fully" Content="Viper - Fully Regen"/>
                 	</ComboBox>
                 	<CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Left" Margin="8,361,0,0" VerticalAlignment="Top" Content="Use Aspect of the Beast during Bestial Wrath" Width="313" Height="23"/>
-                	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,389" Content="Use Shot Rotation Test instead of Frequencies"/>
-                	<CheckBox x:Name="CK_RandomProcs" Margin="29,0,8,362" Content="Randomize Procs on Shot Rotation Test" Height="23" VerticalAlignment="Bottom" d:LayoutOverrides="Height"/>
-                	<dataInput:Label x:Name="LB_Misc" FontWeight="Bold" Height="23" Margin="8,0,8,335" VerticalAlignment="Bottom" Content="Misc"/>
-                	<CheckBox x:Name="CK_HideSplGear" Height="23" Margin="8,0,152,308" VerticalAlignment="Bottom" Content="Hide Spell Gear *" IsChecked="True"/>
-                	<CheckBox x:Name="CK_HidePvPGear" Height="23" Margin="8,0,152,281" VerticalAlignment="Bottom" Content="Hide PvP Gear *" IsChecked="True"/>
-                	<CheckBox x:Name="CK_PTRMode" Height="23" Margin="8,0,0,254" VerticalAlignment="Bottom" Content="PTR Mode *" HorizontalAlignment="Left" Width="100"/>
-                	<dataInput:Label x:Name="LB_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,0,11,308" VerticalAlignment="Bottom" Width="137" Content="Survivability Scale:"/>
-                	<inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,0,40,281" VerticalAlignment="Bottom" Width="108" Value="1" Maximum="10" Increment="0.1" DecimalPlaces="1"/>
-                	<CheckBox x:Name="CK_SE_UseDur" Height="23" Margin="112,0,11,254" VerticalAlignment="Bottom" Content="Use Duration for Special Effects"/>
-                	<dataInput:Label x:Name="LB_StatsGraph" Height="23" Margin="8,0,8,227" VerticalAlignment="Bottom" Content="Stats Graph" FontWeight="Bold"/>
-                	<CheckBox x:Name="CK_StatsAgility" Height="23" HorizontalAlignment="Left" Margin="8,0,0,200" VerticalAlignment="Bottom" Content="Agility"/>
-                	<CheckBox x:Name="CK_StatsAP" Height="23" HorizontalAlignment="Left" Margin="8,0,0,173" VerticalAlignment="Bottom" Content="Attack Power"/>
-                	<CheckBox x:Name="CK_StatsCrit" Height="23" HorizontalAlignment="Left" Margin="8,0,0,146" VerticalAlignment="Bottom" Content="Crit Rating"/>
-                	<CheckBox x:Name="CK_StatsHaste" Height="23" VerticalAlignment="Bottom" Content="Haste" Margin="163,0,114,200" d:LayoutOverrides="Width"/>
-                	<CheckBox x:Name="CK_StatsArP" Height="23" Margin="163,0,48,173" VerticalAlignment="Bottom" Content="Armor Pen Rating" d:LayoutOverrides="Width"/>
-                	<CheckBox x:Name="CK_StatsHit" Height="23" Margin="163,0,91,146" VerticalAlignment="Bottom" Content="Hit Rating" d:LayoutOverrides="Width"/>
-                	<dataInput:Label x:Name="LB_StatsRatingToGraph" Height="23" HorizontalAlignment="Left" Margin="8,0,0,119" VerticalAlignment="Bottom" Width="100" Content="Rating to Graph"/>
-                	<ComboBox x:Name="CB_CalculationToGraph" Height="23" Margin="112,0,8,119" VerticalAlignment="Bottom"/>
-                	<dataInput:Label x:Name="LB_StatsIncrement" Height="23" Margin="8,0,0,92" VerticalAlignment="Bottom" Width="68" HorizontalAlignment="Left" Content="Increment:"/>
-                	<inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" Margin="80,0,0,92" VerticalAlignment="Bottom" Height="23" Maximum="5000" Value="100" HorizontalAlignment="Left" Width="77"/>
-                	<Button x:Name="BT_StatsGraph" Height="23" Margin="161,0,8,92" VerticalAlignment="Bottom" Content="Display Stats Graph"/>
+                	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,0" Content="Use Shot Rotation Test instead of Frequencies" Height="17" VerticalAlignment="Top"/>
+                	<CheckBox x:Name="CK_RandomProcs" Margin="29,409,8,0" Content="Randomize Procs on Shot Rotation Test" Height="23" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
+                	<dataInput:Label x:Name="LB_Misc" FontWeight="Bold" Height="23" Margin="8,436,8,0" VerticalAlignment="Top" Content="Misc"/>
+                	<CheckBox x:Name="CK_HideSplGear" Height="23" Margin="8,463,152,0" VerticalAlignment="Top" Content="Hide Spell Gear *" IsChecked="True"/>
+                	<CheckBox x:Name="CK_HidePvPGear" Height="23" Margin="8,490,152,0" VerticalAlignment="Top" Content="Hide PvP Gear *" IsChecked="True"/>
+                	<CheckBox x:Name="CK_PTRMode" Height="23" Margin="8,517,0,0" VerticalAlignment="Top" Content="PTR Mode *" HorizontalAlignment="Left" Width="100"/>
+                	<dataInput:Label x:Name="LB_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,463,11,0" VerticalAlignment="Top" Width="137" Content="Survivability Scale:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,490,40,0" VerticalAlignment="Top" Width="108" Value="1" Maximum="10" Increment="0.1" DecimalPlaces="1"/>
+                	<CheckBox x:Name="CK_SE_UseDur" Height="23" Margin="112,517,11,0" VerticalAlignment="Top" Content="Use Duration for Special Effects"/>
+                	<dataInput:Label x:Name="LB_StatsGraph" Height="23" Margin="8,544,8,0" VerticalAlignment="Top" Content="Stats Graph" FontWeight="Bold"/>
+                	<CheckBox x:Name="CK_StatsAgility" Height="23" HorizontalAlignment="Left" Margin="8,571,0,0" VerticalAlignment="Top" Content="Agility"/>
+                	<CheckBox x:Name="CK_StatsAP" Height="23" HorizontalAlignment="Left" Margin="8,598,0,0" VerticalAlignment="Top" Content="Attack Power"/>
+                	<CheckBox x:Name="CK_StatsCrit" Height="23" HorizontalAlignment="Left" Margin="8,625,0,0" VerticalAlignment="Top" Content="Crit Rating"/>
+                	<CheckBox x:Name="CK_StatsHaste" Height="23" VerticalAlignment="Top" Content="Haste" Margin="163,571,114,0" d:LayoutOverrides="Width"/>
+                	<CheckBox x:Name="CK_StatsArP" Height="23" Margin="163,598,48,0" VerticalAlignment="Top" Content="Armor Pen Rating" d:LayoutOverrides="Width"/>
+                	<CheckBox x:Name="CK_StatsHit" Height="23" Margin="163,625,91,0" VerticalAlignment="Top" Content="Hit Rating" d:LayoutOverrides="Width"/>
+                	<dataInput:Label x:Name="LB_StatsRatingToGraph" Height="23" HorizontalAlignment="Left" Margin="8,652,0,0" VerticalAlignment="Top" Width="100" Content="Rating to Graph"/>
+                	<ComboBox x:Name="CB_CalculationToGraph" Height="23" Margin="112,652,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_StatsIncrement" Height="23" Margin="8,679,0,8" VerticalAlignment="Top" Width="68" HorizontalAlignment="Left" Content="Increment:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" Margin="80,679,0,8" VerticalAlignment="Top" Height="23" Maximum="5000" Value="100" HorizontalAlignment="Left" Width="77"/>
+                	<Button x:Name="BT_StatsGraph" Height="23" Margin="161,679,8,8" VerticalAlignment="Top" Content="Display Stats Graph"/>
                 </Grid>
             </controls:TabItem>
             <controls:TabItem x:Name="Page_02_Rotations" Header="Rotations">
@@ -155,17 +155,24 @@
                 	<dataInput:Label x:Name="LB_PetPrio_06" HorizontalAlignment="Left" Margin="8,492,0,0" Content="Priority 06:" Height="23" VerticalAlignment="Top"/>
                 	<ComboBox x:Name="CB_PetPrio_06" Margin="75,492,8,0" Height="23" VerticalAlignment="Top"/>
                 	<dataInput:Label x:Name="LB_PetPrio_07" HorizontalAlignment="Left" Margin="8,519,0,0" Content="Priority 07:" Height="23" VerticalAlignment="Top"/>
-                	<ComboBox x:Name="CB_PetPrio_07" Margin="75,519,8,0" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_07" Margin="75,519,8,8" Height="23" VerticalAlignment="Top"/>
                 </Grid>
             </controls:TabItem>
             <controls:TabItem x:Name="Page_03_PetTalents" Header="Pet Talents">
-            	<Grid x:Name="Page_03_Layout"/>
+            	<Grid x:Name="Page_03_Layout">
+            		<dataInput:Label x:Name="LB_ArmoryPets" Height="23" HorizontalAlignment="Left" Margin="8,8,0,0" VerticalAlignment="Top" Content="Armory Pets:"/>
+            		<ComboBox x:Name="CB_ArmoryPets" HorizontalAlignment="Right" Width="208" Height="23" VerticalAlignment="Top" Margin="0,8,8,0"/>
+            		<dataInput:Label x:Name="LB_PetFamilies" Height="23" HorizontalAlignment="Left" Margin="8,35,0,0" VerticalAlignment="Top" Width="80" Content="Pet Family:"/>
+            		<ComboBox x:Name="CB_PetFamily" HorizontalAlignment="Right" Width="208" VerticalAlignment="Top" Margin="0,35,8,0" Height="23"/>
+            		<ComboBox x:Name="CB_PetTalentsSpecSwitcher" Margin="8,62,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="249">
+            			<ComboBoxItem Content="Custom" IsSelected="True"/>
+            		</ComboBox>
+            		<Button x:Name="BT_PetTalentsSaveDel" Margin="0,62,8,0" Content="Save" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60"/>
+            		<ScrollViewer x:Name="FLP_PetFamilies" Height="500" Margin="8,91,8,8" VerticalAlignment="Bottom"/>
+            	</Grid>
             </controls:TabItem>
             <controls:TabItem x:Name="Page_04_PetBuffs" Header="Pet Buffs">
             	<Grid x:Name="Page_04_Layout"/>
-            </controls:TabItem>
-            <controls:TabItem x:Name="Page_05_Details" Header="Details">
-                <Grid x:Name="Page_05_Layout"/>
             </controls:TabItem>
         </controls:TabControl>
     </Grid>
