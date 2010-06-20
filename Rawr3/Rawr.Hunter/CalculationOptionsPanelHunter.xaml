@@ -8,9 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     x:Class="Rawr.Hunter.CalculationOptionsPanelHunter"
-    mc:Ignorable="d">
+    mc:Ignorable="d" d:DesignWidth="341">
     <Grid x:Name="LayoutRoot">
-        <controls:TabControl x:Name="Tabs" TabStripPlacement="Top">
+        <controls:TabControl x:Name="Tabs" TabStripPlacement="Top" Margin="0,-22,0,22">
             <controls:TabItem x:Name="Page_00_Instructions" Header="Instructions">
                 <Grid x:Name="Page_00_Layout">
                     <controls:TabControl x:Name="Tab_Instr" Margin="0">
@@ -41,20 +41,131 @@
                     </controls:TabControl>
                 </Grid>
             </controls:TabItem>
-            <controls:TabItem x:Name="Page_03_FightInfo" Background="#FF1F3B53" Header="Boss Selector">
-                <Grid x:Name="Page_03_Layout">
-                    <dataInput:Label x:Name="LB_Where2" Height="21" Margin="8,8,0,0" VerticalAlignment="Top" Content="Where" HorizontalAlignment="Left" Width="40" TabIndex="0"/>
+            <controls:TabItem x:Name="Page_01_Basics" Background="#FF1F3B53" Header="Basics">
+                <Grid x:Name="Page_01_Layout">
+                    <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Height="23" Margin="8,8,8,0" VerticalAlignment="Top" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment"/>
+                	<dataInput:Label x:Name="LB_TargLvl" Height="23" Margin="8,37,152,0" VerticalAlignment="Top" Content="Target's Level:"/>
+                	<ComboBox x:Name="CB_TargetLevel" Height="23" Margin="129,35,8,0" VerticalAlignment="Top">
+                		<ComboBoxItem x:Name="CBI_TargLvl_80" Content="80"/>
+                		<ComboBoxItem x:Name="CBI_TargLvl_81" Content="81"/>
+                		<ComboBoxItem x:Name="CBI_TargLvl_82" Content="82"/>
+                		<ComboBoxItem x:Name="CBI_TargLvl_83" Content="83" IsSelected="True"/>
+                	</ComboBox>
+                    <dataInput:Label x:Name="LB_TargArmor" Margin="8,62,152,0" VerticalAlignment="Top" Content="Target's Armor:" TabIndex="0" Height="23"/>
+                	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top">
+                		<ComboBoxItem x:Name="CB_TargArm_80" Content="9729"/>
+                		<ComboBoxItem x:Name="CB_TargArm_81" Content="10034"/>
+                		<ComboBoxItem x:Name="CB_TargArm_82" Content="10338"/>
+                		<ComboBoxItem x:Name="CB_TargArm_83" Content="10643" IsSelected="True"/>
+                	</ComboBox>
+                	<dataInput:Label x:Name="LB_Latency" Height="23" Margin="8,89,152,0" VerticalAlignment="Top" Content="Latency (ms):"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_Latency" HorizontalAlignment="Right" Margin="0,89,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="200" Increment="50"/>
+                	<dataInput:Label x:Name="LB_CDCutoff" Height="23" Margin="8,116,152,0" VerticalAlignment="Top" Content="CDCutoff(s):"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_CDCutOff" HorizontalAlignment="Right" Margin="0,117,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="60" Value="30"/>
+                	<dataInput:Label x:Name="LB_Duration" Height="23" Margin="8,143,152,0" VerticalAlignment="Top" Content="Duration (in seconds):"/>
+                	<inputToolkit:NumericUpDown x:Name="CB_Duration" HorizontalAlignment="Right" Margin="0,144,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="360" Increment="20"/>
+                	<dataInput:Label x:Name="LB_Sub20" Height="23" Margin="8,170,152,0" VerticalAlignment="Top" Content="Time spent sub 20%:" d:LayoutOverrides="VerticalAlignment"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_Time20" HorizontalAlignment="Right" Margin="0,171,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="72" Increment="20"/>
+                	<dataInput:Label x:Name="LB_Sub35" Height="23" Margin="8,197,152,0" VerticalAlignment="Top" Content="Time spent 35%-20%:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_35" HorizontalAlignment="Right" Margin="0,198,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="54" Increment="20"/>
+                	<dataInput:Label x:Name="LB_BossStartHPPerc" Height="23" Margin="8,224,152,0" VerticalAlignment="Top" Content="Boss Starting HP%:" d:LayoutOverrides="Height"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_BossHP" HorizontalAlignment="Right" Margin="0,225,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Value="100" Increment="20"/>
+                	<CheckBox x:Name="CK_MultipleTargets" Height="23" Margin="8,251,152,0" VerticalAlignment="Top" Content="Multiple Targs Uptime %:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_MultiTargsUptime" HorizontalAlignment="Right" Margin="0,252,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Increment="5"/>
+                	<dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Margin="8,278,8,0" Content="Hunter Settings" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_Aspect" Height="23" HorizontalAlignment="Left" Margin="8,305,0,0" VerticalAlignment="Top" Width="100" Content="Aspect:"/>
+                	<ComboBox x:Name="CB_Aspect" Height="23" Margin="129,305,8,0" VerticalAlignment="Top">
+                		<ComboBoxItem x:Name="CBI_Aspect_None" Content="None"/>
+                		<ComboBoxItem x:Name="CBI_Aspect_Beast" Content="Beast"/>
+                		<ComboBoxItem x:Name="CBI_Aspect_Hawk" Content="Hawk"/>
+                		<ComboBoxItem x:Name="CBI_Aspect_Viper" Content="Viper"/>
+                		<ComboBoxItem x:Name="CBI_Aspect_Monkey" Content="Monkey"/>
+                		<ComboBoxItem x:Name="CBI_Aspect_Dragonhawk" Content="Dragonhawk" IsSelected="True"/>
+                	</ComboBox>
+                	<dataInput:Label x:Name="LB_ViperUsage" Height="23" HorizontalAlignment="Left" Margin="8,334,0,0" VerticalAlignment="Top" Width="100" Content="Viper Usage:"/>
+                	<ComboBox x:Name="CB_AspectUsage" Margin="129,334,8,0" Height="23" VerticalAlignment="Top">
+                		<ComboBoxItem x:Name="CBI_AspUsage_No" Content="No Viper"/>
+                		<ComboBoxItem x:Name="CBI_AspUsage_Just" Content="Viper - Just Enough" IsSelected="True"/>
+                		<ComboBoxItem x:Name="CBI_AspUsage_Fully" Content="Viper - Fully Regen"/>
+                	</ComboBox>
+                	<CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Left" Margin="8,361,0,0" VerticalAlignment="Top" Content="Use Aspect of the Beast during Bestial Wrath" Width="313" Height="23"/>
+                	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,389" Content="Use Shot Rotation Test instead of Frequencies"/>
+                	<CheckBox x:Name="CK_RandomProcs" Margin="29,0,8,362" Content="Randomize Procs on Shot Rotation Test" Height="23" VerticalAlignment="Bottom" d:LayoutOverrides="Height"/>
+                	<dataInput:Label x:Name="LB_Misc" FontWeight="Bold" Height="23" Margin="8,0,8,335" VerticalAlignment="Bottom" Content="Misc"/>
+                	<CheckBox x:Name="CK_HideSplGear" Height="23" Margin="8,0,152,308" VerticalAlignment="Bottom" Content="Hide Spell Gear *" IsChecked="True"/>
+                	<CheckBox x:Name="CK_HidePvPGear" Height="23" Margin="8,0,152,281" VerticalAlignment="Bottom" Content="Hide PvP Gear *" IsChecked="True"/>
+                	<CheckBox x:Name="CK_PTRMode" Height="23" Margin="8,0,0,254" VerticalAlignment="Bottom" Content="PTR Mode *" HorizontalAlignment="Left" Width="100"/>
+                	<dataInput:Label x:Name="LB_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,0,11,308" VerticalAlignment="Bottom" Width="137" Content="Survivability Scale:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,0,40,281" VerticalAlignment="Bottom" Width="108" Value="1" Maximum="10" Increment="0.1" DecimalPlaces="1"/>
+                	<CheckBox x:Name="CK_SE_UseDur" Height="23" Margin="112,0,11,254" VerticalAlignment="Bottom" Content="Use Duration for Special Effects"/>
+                	<dataInput:Label x:Name="LB_StatsGraph" Height="23" Margin="8,0,8,227" VerticalAlignment="Bottom" Content="Stats Graph" FontWeight="Bold"/>
+                	<CheckBox x:Name="CK_StatsAgility" Height="23" HorizontalAlignment="Left" Margin="8,0,0,200" VerticalAlignment="Bottom" Content="Agility"/>
+                	<CheckBox x:Name="CK_StatsAP" Height="23" HorizontalAlignment="Left" Margin="8,0,0,173" VerticalAlignment="Bottom" Content="Attack Power"/>
+                	<CheckBox x:Name="CK_StatsCrit" Height="23" HorizontalAlignment="Left" Margin="8,0,0,146" VerticalAlignment="Bottom" Content="Crit Rating"/>
+                	<CheckBox x:Name="CK_StatsHaste" Height="23" VerticalAlignment="Bottom" Content="Haste" Margin="163,0,114,200" d:LayoutOverrides="Width"/>
+                	<CheckBox x:Name="CK_StatsArP" Height="23" Margin="163,0,48,173" VerticalAlignment="Bottom" Content="Armor Pen Rating" d:LayoutOverrides="Width"/>
+                	<CheckBox x:Name="CK_StatsHit" Height="23" Margin="163,0,91,146" VerticalAlignment="Bottom" Content="Hit Rating" d:LayoutOverrides="Width"/>
+                	<dataInput:Label x:Name="LB_StatsRatingToGraph" Height="23" HorizontalAlignment="Left" Margin="8,0,0,119" VerticalAlignment="Bottom" Width="100" Content="Rating to Graph"/>
+                	<ComboBox x:Name="CB_CalculationToGraph" Height="23" Margin="112,0,8,119" VerticalAlignment="Bottom"/>
+                	<dataInput:Label x:Name="LB_StatsIncrement" Height="23" Margin="8,0,0,92" VerticalAlignment="Bottom" Width="68" HorizontalAlignment="Left" Content="Increment:"/>
+                	<inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" Margin="80,0,0,92" VerticalAlignment="Bottom" Height="23" Maximum="5000" Value="100" HorizontalAlignment="Left" Width="77"/>
+                	<Button x:Name="BT_StatsGraph" Height="23" Margin="161,0,8,92" VerticalAlignment="Bottom" Content="Display Stats Graph"/>
                 </Grid>
             </controls:TabItem>
-            <controls:TabItem x:Name="Page_02_Maintenance" Header="Abilities">
+            <controls:TabItem x:Name="Page_02_Rotations" Header="Rotations">
                 <Grid x:Name="Page_02_Layout">
-                    <dataInput:Label x:Name="LB_Where3" Height="21" Margin="8,8,0,0" VerticalAlignment="Top" Content="Where" HorizontalAlignment="Left" Width="40" TabIndex="0"/>
+                	<dataInput:Label x:Name="LB_HShotPrios" Margin="8,8,8,0" VerticalAlignment="Top" Content="Hunter Shot Priority" FontWeight="Bold" Height="23"/>
+                	<ComboBox x:Name="CB_PriorityDefaults" Margin="8,35,8,0" VerticalAlignment="Top">
+                		<ComboBoxItem Content="Custom" IsSelected="True"/>
+                		<ComboBoxItem Content="Beast Master"/>
+                		<ComboBoxItem Content="Marksman"/>
+                		<ComboBoxItem Content="Survival"/>
+                	</ComboBox>
+                	<dataInput:Label x:Name="LB_ShotPrio_01" HorizontalAlignment="Left" Margin="8,59,0,0" VerticalAlignment="Top" Content="Priority 01:" Height="23"/>
+                	<ComboBox x:Name="CB_ShotPrio_01" Height="23" VerticalAlignment="Top" Margin="75,59,8,0"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_02" Height="23" HorizontalAlignment="Left" Margin="8,86,0,0" VerticalAlignment="Top" Content="Priority 02:"/>
+                	<ComboBox x:Name="CB_ShotPrio_02" Height="23" Margin="75,86,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_03" Height="23" HorizontalAlignment="Left" Margin="8,113,0,0" VerticalAlignment="Top" Content="Priority 03:"/>
+                	<ComboBox x:Name="CB_ShotPrio_03" Height="23" Margin="75,113,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_04" Height="23" HorizontalAlignment="Left" Margin="8,140,0,0" VerticalAlignment="Top" Content="Priority 04:"/>
+                	<ComboBox x:Name="CB_ShotPrio_04" Height="23" Margin="75,140,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_05" Height="23" HorizontalAlignment="Left" Margin="8,167,0,0" VerticalAlignment="Top" Content="Priority 05:"/>
+                	<ComboBox x:Name="CB_ShotPrio_05" Height="23" Margin="75,167,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_06" Height="23" HorizontalAlignment="Left" Margin="8,194,0,0" VerticalAlignment="Top" Content="Priority 06:"/>
+                	<ComboBox x:Name="CB_ShotPrio_06" Height="23" Margin="75,194,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_07" Height="23" HorizontalAlignment="Left" Margin="8,221,0,0" VerticalAlignment="Top" Content="Priority 07:"/>
+                	<ComboBox x:Name="CB_ShotPrio_07" Height="23" Margin="75,221,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_08" Height="23" HorizontalAlignment="Left" Margin="8,248,0,0" VerticalAlignment="Top" Content="Priority 08:"/>
+                	<ComboBox x:Name="CB_ShotPrio_08" Height="23" Margin="75,248,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_09" Height="23" HorizontalAlignment="Left" Margin="8,275,0,0" VerticalAlignment="Top" Content="Priority 09:"/>
+                	<ComboBox x:Name="CB_ShotPrio_09" Height="23" Margin="75,275,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_ShotPrio_10" Height="23" HorizontalAlignment="Left" Margin="8,302,0,0" VerticalAlignment="Top" Content="Priority 10:"/>
+                	<ComboBox x:Name="CB_ShotPrio_10" Height="23" Margin="75,302,8,0" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PShotPrios" FontWeight="Bold" Height="23" Margin="8,329,8,0" VerticalAlignment="Top" Content="Pet Skill Priority"/>
+                	<dataInput:Label x:Name="LB_PetPrio_01" HorizontalAlignment="Left" Margin="8,356,0,0" Content="Priority 01:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_01" Margin="75,356,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_02" HorizontalAlignment="Left" Margin="8,383,0,0" Content="Priority 02:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_02" Margin="75,383,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_03" HorizontalAlignment="Left" Margin="8,412,0,0" Content="Priority 03:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_03" Margin="75,411,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_04" HorizontalAlignment="Left" Margin="8,438,0,0" Content="Priority 04:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_04" Margin="75,438,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_05" HorizontalAlignment="Left" Margin="8,465,0,0" Content="Priority 05:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_05" Margin="75,465,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_06" HorizontalAlignment="Left" Margin="8,492,0,0" Content="Priority 06:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_06" Margin="75,492,8,0" Height="23" VerticalAlignment="Top"/>
+                	<dataInput:Label x:Name="LB_PetPrio_07" HorizontalAlignment="Left" Margin="8,519,0,0" Content="Priority 07:" Height="23" VerticalAlignment="Top"/>
+                	<ComboBox x:Name="CB_PetPrio_07" Margin="75,519,8,0" Height="23" VerticalAlignment="Top"/>
                 </Grid>
             </controls:TabItem>
-            <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
-                <Grid x:Name="Page_04_Layout">
-                    <dataInput:Label x:Name="LB_Where4" Height="21" Margin="8,8,0,0" VerticalAlignment="Top" Content="Where" HorizontalAlignment="Left" Width="40" TabIndex="0"/>
-                </Grid>
+            <controls:TabItem x:Name="Page_03_PetTalents" Header="Pet Talents">
+            	<Grid x:Name="Page_03_Layout"/>
+            </controls:TabItem>
+            <controls:TabItem x:Name="Page_04_PetBuffs" Header="Pet Buffs">
+            	<Grid x:Name="Page_04_Layout"/>
+            </controls:TabItem>
+            <controls:TabItem x:Name="Page_05_Details" Header="Details">
+                <Grid x:Name="Page_05_Layout"/>
             </controls:TabItem>
         </controls:TabControl>
     </Grid>
