@@ -827,14 +827,35 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
                 }
             }
         }
+        private void CB_Aspect_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            if (CB_Aspect.SelectedIndex == 0) CalcOpts.SelectedAspect = Aspect.None;
+            if (CB_Aspect.SelectedIndex == 1) CalcOpts.SelectedAspect = Aspect.Beast;
+            if (CB_Aspect.SelectedIndex == 2) CalcOpts.SelectedAspect = Aspect.Hawk;
+            if (CB_Aspect.SelectedIndex == 3) CalcOpts.SelectedAspect = Aspect.Viper;
+            if (CB_Aspect.SelectedIndex == 4) CalcOpts.SelectedAspect = Aspect.Monkey;
+            if (CB_Aspect.SelectedIndex == 5) CalcOpts.SelectedAspect = Aspect.Dragonhawk;
+            Character.OnCalculationsInvalidated();
+        }
+        private void CB_AspectUsage_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isLoading) return;
+            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.AspectUsage = AspectUsage.None;
+            if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.AspectUsage = AspectUsage.ViperToOOM;
+            if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.AspectUsage = AspectUsage.ViperRegen;
+            Character.OnCalculationsInvalidated();
+        }
         //
         public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            // Target Armor/Level
+            /*// Target Armor/Level
             if (!isLoading && CB_TargLevel.SelectedIndex == -1) { CB_TargLevel.SelectedIndex = 0; }
             if (!isLoading && CB_TargArmor.SelectedIndex == -1) { CB_TargArmor.SelectedIndex = 0; }
-            /* // Fix the enables
+            // Fix the enables
             LB_InBehindPerc.IsEnabled = calcOpts.InBack;
             CB_InBackPerc.IsEnabled = calcOpts.InBack;
             LB_Max.IsEnabled = calcOpts.MultipleTargets;

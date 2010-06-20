@@ -180,30 +180,30 @@ namespace Rawr.Hunter
                 CB_PetFamily.SelectedItem = CalcOpts.PetFamily;
                 isLoading = true;
                 CB_Duration.Value = CalcOpts.Duration;
-                NUD_Time20.Value = CalcOpts.timeSpentSub20;
-                NUD_35.Value = CalcOpts.timeSpent35To20;
-                NUD_BossHP.Value = (decimal)Math.Round(100 * CalcOpts.bossHPPercentage);
+                NUD_Time20.Value = CalcOpts.TimeSpentSub20;
+                NUD_35.Value = CalcOpts.TimeSpent35To20;
+                NUD_BossHP.Value = (decimal)Math.Round(100 * CalcOpts.BossHPPerc);
 
-                NUD_CDCutOff.Value = CalcOpts.cooldownCutoff;
+                NUD_CDCutOff.Value = CalcOpts.CDCutoff;
 
                 NUD_Time20.Maximum = CB_Duration.Value;
                 NUD_35.Maximum = CB_Duration.Value;
                 isLoading = true;
-                if (CalcOpts.selectedAspect == Aspect.None) CB_Aspect.SelectedIndex = 0;
-                if (CalcOpts.selectedAspect == Aspect.Beast) CB_Aspect.SelectedIndex = 1;
-                if (CalcOpts.selectedAspect == Aspect.Hawk) CB_Aspect.SelectedIndex = 2;
-                if (CalcOpts.selectedAspect == Aspect.Viper) CB_Aspect.SelectedIndex = 3;
-                if (CalcOpts.selectedAspect == Aspect.Monkey) CB_Aspect.SelectedIndex = 4;
-                if (CalcOpts.selectedAspect == Aspect.Dragonhawk) CB_Aspect.SelectedIndex = 5;
+                if (CalcOpts.SelectedAspect == Aspect.None) CB_Aspect.SelectedIndex = 0;
+                if (CalcOpts.SelectedAspect == Aspect.Beast) CB_Aspect.SelectedIndex = 1;
+                if (CalcOpts.SelectedAspect == Aspect.Hawk) CB_Aspect.SelectedIndex = 2;
+                if (CalcOpts.SelectedAspect == Aspect.Viper) CB_Aspect.SelectedIndex = 3;
+                if (CalcOpts.SelectedAspect == Aspect.Monkey) CB_Aspect.SelectedIndex = 4;
+                if (CalcOpts.SelectedAspect == Aspect.Dragonhawk) CB_Aspect.SelectedIndex = 5;
 
-                if (CalcOpts.aspectUsage == AspectUsage.None) CB_AspectUsage.SelectedIndex = 0;
-                if (CalcOpts.aspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
-                if (CalcOpts.aspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
+                if (CalcOpts.AspectUsage == AspectUsage.None) CB_AspectUsage.SelectedIndex = 0;
+                if (CalcOpts.AspectUsage == AspectUsage.ViperToOOM) CB_AspectUsage.SelectedIndex = 1;
+                if (CalcOpts.AspectUsage == AspectUsage.ViperRegen) CB_AspectUsage.SelectedIndex = 2;
                 isLoading = true;
-                CK_UseBeastDuringBW.Checked = CalcOpts.useBeastDuringBestialWrath;
-                CK_UseRotation.Checked = CalcOpts.useRotationTest;
+                CK_UseBeastDuringBW.Checked = CalcOpts.UseBeastDuringBestialWrath;
+                CK_UseRotation.Checked = CalcOpts.UseRotationTest;
                 CK_RandomProcs.Enabled = CK_UseRotation.Checked;
-                CK_RandomProcs.Checked = CalcOpts.randomizeProcs;
+                CK_RandomProcs.Checked = CalcOpts.RandomizeProcs;
                 isLoading = true;
                 PopulateAbilities();
                 isLoading = true;
@@ -362,7 +362,7 @@ namespace Rawr.Hunter
         }
         private void NUD_CDCutOff_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.cooldownCutoff = (int)NUD_CDCutOff.Value;
+            CalcOpts.CDCutoff = (int)NUD_CDCutOff.Value;
             Character.OnCalculationsInvalidated();
         }
         private void NUD_Duration_ValueChanged(object sender, EventArgs e) {
@@ -374,50 +374,50 @@ namespace Rawr.Hunter
         }
         private void NUD_Time20_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.timeSpentSub20 = (int)NUD_Time20.Value;
+            CalcOpts.TimeSpentSub20 = (int)NUD_Time20.Value;
             Character.OnCalculationsInvalidated();
         }
         private void NUD_Time35_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.timeSpent35To20 = (int)NUD_35.Value;
+            CalcOpts.TimeSpent35To20 = (int)NUD_35.Value;
             Character.OnCalculationsInvalidated();
         }
         private void NUD_BossHP_ValueChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.bossHPPercentage = (float)(NUD_BossHP.Value / 100);
+            CalcOpts.BossHPPerc = (float)(NUD_BossHP.Value / 100);
             Character.OnCalculationsInvalidated();
         }
         private void CB_Aspect_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            if (CB_Aspect.SelectedIndex == 0) CalcOpts.selectedAspect = Aspect.None;
-            if (CB_Aspect.SelectedIndex == 1) CalcOpts.selectedAspect = Aspect.Beast;
-            if (CB_Aspect.SelectedIndex == 2) CalcOpts.selectedAspect = Aspect.Hawk;
-            if (CB_Aspect.SelectedIndex == 3) CalcOpts.selectedAspect = Aspect.Viper;
-            if (CB_Aspect.SelectedIndex == 4) CalcOpts.selectedAspect = Aspect.Monkey;
-            if (CB_Aspect.SelectedIndex == 5) CalcOpts.selectedAspect = Aspect.Dragonhawk;
+            if (CB_Aspect.SelectedIndex == 0) CalcOpts.SelectedAspect = Aspect.None;
+            if (CB_Aspect.SelectedIndex == 1) CalcOpts.SelectedAspect = Aspect.Beast;
+            if (CB_Aspect.SelectedIndex == 2) CalcOpts.SelectedAspect = Aspect.Hawk;
+            if (CB_Aspect.SelectedIndex == 3) CalcOpts.SelectedAspect = Aspect.Viper;
+            if (CB_Aspect.SelectedIndex == 4) CalcOpts.SelectedAspect = Aspect.Monkey;
+            if (CB_Aspect.SelectedIndex == 5) CalcOpts.SelectedAspect = Aspect.Dragonhawk;
             Character.OnCalculationsInvalidated();
         }
         private void CB_AspectUsage_SelectedIndexChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.aspectUsage = AspectUsage.None;
-            if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.aspectUsage = AspectUsage.ViperToOOM;
-            if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.aspectUsage = AspectUsage.ViperRegen;
+            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.AspectUsage = AspectUsage.None;
+            if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.AspectUsage = AspectUsage.ViperToOOM;
+            if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.AspectUsage = AspectUsage.ViperRegen;
             Character.OnCalculationsInvalidated();
         }
         private void CK_UseBeastDuringBW_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.useBeastDuringBestialWrath = CK_UseBeastDuringBW.Checked;
+            CalcOpts.UseBeastDuringBestialWrath = CK_UseBeastDuringBW.Checked;
             Character.OnCalculationsInvalidated();
         }
         private void CK_UseRotation_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.useRotationTest = CK_UseRotation.Checked;
+            CalcOpts.UseRotationTest = CK_UseRotation.Checked;
             CK_RandomProcs.Enabled = CK_UseRotation.Checked;
             Character.OnCalculationsInvalidated();
         }
         private void CK_RandomProcs_CheckedChanged(object sender, EventArgs e) {
             if (isLoading) return;
-            CalcOpts.randomizeProcs = CK_RandomProcs.Checked;
+            CalcOpts.RandomizeProcs = CK_RandomProcs.Checked;
             Character.OnCalculationsInvalidated();
         }
         private void CK_HideBadItems_Spl_CheckedChanged(object sender, EventArgs e) {

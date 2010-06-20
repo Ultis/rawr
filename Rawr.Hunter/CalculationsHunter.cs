@@ -1212,7 +1212,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // We can calculate the rough frequencies now
             calculatedStats.priorityRotation.initializeTimings();
-            if (!calcOpts.useRotationTest) {
+            if (!calcOpts.UseRotationTest) {
                 calculatedStats.priorityRotation.calculateFrequencies();
                 calculatedStats.priorityRotation.calculateLALProcs(character);
                 calculatedStats.priorityRotation.calculateFrequencies();
@@ -1257,7 +1257,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //RotationTest
                 rotationTest = new RotationTest(character, calculatedStats, calcOpts);
 
-            if (calcOpts.useRotationTest) {
+            if (calcOpts.UseRotationTest) {
                 // The following properties of CalculatedStats must be ready by this call:
                 //  * priorityRotation (shot order, durations, cooldowns)
                 //  * quickShotsEffect
@@ -1272,7 +1272,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
             calculatedStats.steadyShot.Cd = 2f / (1f + calculatedStats.hasteStaticTotal);
-            if (calcOpts.useRotationTest) {
+            if (calcOpts.UseRotationTest) {
                 calculatedStats.priorityRotation.initializeTimings();
                 calculatedStats.priorityRotation.recalculateRatios();
                 calculatedStats.priorityRotation.calculateFrequencySums();
@@ -1463,7 +1463,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float ISSProcChance = 0.05f * talents.ImprovedSteadyShot;
             if (ISSProcChance > 0f)
             {                
-                if (calcOpts.useRotationTest)
+                if (calcOpts.UseRotationTest)
                 {
                     ISSChimeraShotDamageAdjust = 1f + rotationTest.ISSChimeraUptime * 0.15f;
                     ISSArcaneShotDamageAdjust  = 1f + rotationTest.ISSArcaneUptime * 0.15f;
@@ -1540,7 +1540,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             
             // Viper Regen if viper is up 100%
             calculatedStats.manaRegenConstantViper = 0;
-            if (calcOpts.selectedAspect == Aspect.Viper) {
+            if (calcOpts.SelectedAspect == Aspect.Viper) {
                 float viperGlyphAdjust  = talents.GlyphOfAspectOfTheViper ? 1.1f : 1;
                 float viperRegenShots   = calculatedStats.BasicStats.Mana * rangedWeaponSpeed / 100f * totalShotsPerSecond * viperGlyphAdjust;
                 float viperRegenPassive = calculatedStats.BasicStats.Mana * 0.04f / 3f;
@@ -1642,24 +1642,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < calcOpts.Duration) {
-                if      (calcOpts.aspectUsage == AspectUsage.ViperRegen) {
+                if      (calcOpts.AspectUsage == AspectUsage.ViperRegen) {
                     aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, calculatedStats.manaTimeToFull) / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
-                }else if(calcOpts.aspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f) {
+                }else if(calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f) {
                     aspectUptimeViper = Math.Min(calcOpts.Duration - calculatedStats.manaTimeToOOM, viperTimeNeededToLastFight) / calcOpts.Duration;
-                }else if(calcOpts.aspectUsage == AspectUsage.None) {
+                }else if(calcOpts.AspectUsage == AspectUsage.None) {
                     PercTimeNoDPSforNoMana = (calcOpts.Duration - calculatedStats.manaTimeToOOM) / calcOpts.Duration;
                 }
             }
 
-            float aspectUptimeBeast = calcOpts.useBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
+            float aspectUptimeBeast = calcOpts.UseBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
                 ? (calculatedStats.bestialWrath.Duration * (calcOpts.Duration / calculatedStats.bestialWrath.Cd)) / calcOpts.Duration : 0;
 
-            switch (calcOpts.selectedAspect) {
+            switch (calcOpts.SelectedAspect) {
                 case Aspect.Viper:
-                    aspectUptimeViper = calcOpts.useBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
+                    aspectUptimeViper = calcOpts.UseBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
                     break;
                 case Aspect.Beast:
-                    aspectUptimeBeast = (calcOpts.aspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
+                    aspectUptimeBeast = (calcOpts.AspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
                     break;
                 case Aspect.Hawk:
                 case Aspect.Dragonhawk:
@@ -1840,7 +1840,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                 * tier7ViperDamageAdjust;
 
             float QSBaseFrequencyIncrease = 0f;
-            if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
+            if ((calcOpts.SelectedAspect == Aspect.Hawk || calcOpts.SelectedAspect == Aspect.Dragonhawk)
                 && talents.ImprovedAspectOfTheHawk > 0)
             {
                 float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
@@ -2308,7 +2308,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region August 2009 Kill Shot Sub-20% Usage
 
             float killShotCurrentFreq = calculatedStats.killShot.Freq;
-            float killShotPossibleFreq = calcOpts.useRotationTest ? calculatedStats.killShot.Freq : calculatedStats.killShot.start_freq;
+            float killShotPossibleFreq = calcOpts.UseRotationTest ? calculatedStats.killShot.Freq : calculatedStats.killShot.start_freq;
             float steadyShotCurrentFreq = calculatedStats.steadyShot.Freq;
 
             float steadyShotNewFreq = steadyShotCurrentFreq;
@@ -2328,8 +2328,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
             float timeSpentSubTwenty = 0;
-            if (calcOpts.Duration > 0 && calcOpts.timeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.timeSpentSub20 / (float)calcOpts.Duration;
-            if (calcOpts.bossHPPercentage < 0.2f) timeSpentSubTwenty = 1f;
+            if (calcOpts.Duration > 0 && calcOpts.TimeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.TimeSpentSub20 / (float)calcOpts.Duration;
+            if (calcOpts.BossHPPerc < 0.2f) timeSpentSubTwenty = 1f;
 
             float killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
 
@@ -2499,7 +2499,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
                     statsTalents.AddSpecialEffect(mt);
                 }
-                if ((calcOpts.selectedAspect == Aspect.Hawk || calcOpts.selectedAspect == Aspect.Dragonhawk)
+                if ((calcOpts.SelectedAspect == Aspect.Hawk || calcOpts.SelectedAspect == Aspect.Dragonhawk)
                     && talents.ImprovedAspectOfTheHawk > 0)
                 {
                     float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
@@ -2509,7 +2509,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         12f, 0f, 0.10f);
                     statsTalents.AddSpecialEffect(QuickShots);
                 }
-                if (calcOpts.selectedAspect == Aspect.Hawk || (calcOpts.selectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
+                if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                     statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
                 }
                 if (petTalents.CallOfTheWild.Value > 0) {

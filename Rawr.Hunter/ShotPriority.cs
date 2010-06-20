@@ -231,7 +231,7 @@ namespace Rawr.Hunter {
             //lal_proc_chance = 0.06; //isolation testing for LAL
             float lal_proc_freq = 0f;
 
-            if (CalcOpts.useRotationTest) {
+            if (CalcOpts.UseRotationTest) {
                 // the spreadsheet gets the LAL proc frequency from the rotation test,
                 // but it doesn't really matter because it's only used to calculate some
                 // stats we'll throw away (final_freq via lal_freq).

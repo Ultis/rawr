@@ -238,7 +238,7 @@ namespace Rawr.Hunter
             if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_mps = 0;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_mps = 0;
 
-            if (!Priority.CalcOpts.useRotationTest && (Type == Shots.ExplosiveShot || Type == Shots.ArcaneShot)) {
+            if (!Priority.CalcOpts.UseRotationTest && (Type == Shots.ExplosiveShot || Type == Shots.ArcaneShot)) {
                 MPS = inbet_mps;
             } else {
                 MPS = is_refreshed ? 0 : final_mps;

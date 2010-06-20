@@ -14,6 +14,7 @@ namespace Rawr.Hunter
         INotifyPropertyChanged
 	{
         #region Basics
+        // ==== Fight Settings ====
         private int _TargetLevel;
         public int TargetLevel
         {
@@ -25,6 +26,161 @@ namespace Rawr.Hunter
         {
             get { return _TargetArmor; }
             set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
+        }
+        #region Latency
+        private float _Lag;
+        public float Lag
+        {
+            get { return _Lag; }
+            set { _Lag = value; OnPropertyChanged("Lag"); }
+        }
+        private float _React;
+        public float React
+        {
+            get { return _React; }
+            set { _React = value; OnPropertyChanged("React"); }
+        }
+        public float Latency { get { return Lag / 1000f; } }
+        public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
+        public float FullLatency { get { return AllowedReact + Latency; } }
+        #endregion
+        public int _CDCutoff;
+        public int CDCutoff
+        {
+            get { return _CDCutoff; }
+            set { _CDCutoff = value; OnPropertyChanged("CDCutoff"); }
+        }
+        private int _Duration;
+        public int Duration
+        {
+            get { return _Duration; }
+            set { _Duration = value; OnPropertyChanged("Duration"); }
+        }
+        public int _TimeSpentSub20;
+        public int TimeSpentSub20
+        {
+            get { return _TimeSpentSub20; }
+            set { _TimeSpentSub20 = value; OnPropertyChanged("TimeSpentSub20"); }
+        }
+        public int _TimeSpent35To20;
+        public int TimeSpent35To20
+        {
+            get { return _TimeSpent35To20; }
+            set { _TimeSpent35To20 = value; OnPropertyChanged("TimeSpent35To20"); }
+        }
+        public float _BossHPPerc;
+        public float BossHPPerc
+        {
+            get { return _BossHPPerc; }
+            set { _BossHPPerc = value; OnPropertyChanged("BossHPPerc"); }
+        }
+        private bool _MultipleTargets;
+        public bool MultipleTargets
+        {
+            get { return _MultipleTargets; }
+            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
+        }
+        private float _MultipleTargetsPerc;
+        public float MultipleTargetsPerc
+        {
+            get { return _MultipleTargetsPerc; }
+            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
+        }
+        // ==== Hunter Settings ====
+        private Aspect _SelectedAspect = Aspect.Dragonhawk;
+        public Aspect SelectedAspect
+        {
+            get { return _SelectedAspect; }
+            set { _SelectedAspect = value; OnPropertyChanged("SelectedAspect"); }
+        }
+        public AspectUsage _AspectUsage = AspectUsage.ViperToOOM;
+        public AspectUsage AspectUsage
+        {
+            get { return _AspectUsage; }
+            set { _AspectUsage = value; OnPropertyChanged("AspectUsage"); }
+        }
+        public bool _UseBeastDuringBestialWrath = false;
+        public bool UseBeastDuringBestialWrath
+        {
+            get { return _UseBeastDuringBestialWrath; }
+            set { _UseBeastDuringBestialWrath = value; OnPropertyChanged("UseBeastDuringBestialWrath"); }
+        }
+        // Use Rotation
+        public bool _UseRotationTest = true;
+        public bool UseRotationTest
+        {
+            get { return _UseRotationTest; }
+            set { _UseRotationTest = value; OnPropertyChanged("UseRotationTest"); }
+        }
+        // Use Random Procs
+        public bool _RandomizeProcs = false; // not editable
+        public bool RandomizeProcs
+        {
+            get { return _RandomizeProcs; }
+            set { _RandomizeProcs = value; OnPropertyChanged("RandomizeProcs"); }
+        }
+        // Others
+        public float waitForCooldown = 0.8f; // not editable
+        public bool interleaveLAL = false; // not editable
+        public bool prioritiseArcAimedOverSteady = true; // not editable
+        public bool debugShotRotation = false; // not editable
+        // ==== Misc ====
+        // Hide Spell Gear
+        private bool _HideBadItems_Spl;
+        public bool HideBadItems_Spl
+        {
+            get { return _HideBadItems_Spl; }
+            set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
+        }
+        // Hide PvP Gear
+        private bool _HideBadItems_PvP;
+        public bool HideBadItems_PvP
+        {
+            get { return _HideBadItems_PvP; }
+            set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
+        }
+        // PTR Mode
+        private bool _PTRMode = false;
+        public bool PTRMode
+        {
+            get { return _PTRMode; }
+            set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
+        }
+        // Survival Scale
+        private float _SurvScale;
+        public float SurvScale
+        {
+            get { return _SurvScale; }
+            set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
+        }
+        // Use Duration for Special Effects
+        private bool _SE_UseDur = true;
+        public bool SE_UseDur
+        {
+            get { return _SE_UseDur; }
+            set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
+        }
+        // ==== Stats Graph ====
+        // Agility, AP, Crit, Haste, ArP, Hit
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true };
+        public bool[] StatsList
+        {
+            get { return _statsList; }
+            set { _statsList = value; OnPropertyChanged("StatsList"); }
+        }
+        // Increment
+        private int _StatsIncrement = 100;
+        public int StatsIncrement
+        {
+            get { return _StatsIncrement; }
+            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
+        }
+        // Calc to Graph
+        private string _calculationToGraph = "Overall Rating";
+        public string CalculationToGraph
+        {
+            get { return _calculationToGraph; }
+            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
         }
         #endregion
 
@@ -96,18 +252,6 @@ namespace Rawr.Hunter
         {
             get { return _InBackPerc; }
             set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
-        }
-        private bool _MultipleTargets;
-        public bool MultipleTargets
-        {
-            get { return _MultipleTargets; }
-            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
-        }
-        private float _MultipleTargetsPerc;
-        public float MultipleTargetsPerc
-        {
-            get { return _MultipleTargetsPerc; }
-            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
         }
         private float _MultipleTargetsMax;
         public float MultipleTargetsMax
@@ -231,61 +375,14 @@ namespace Rawr.Hunter
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
         #endregion
-        #region Latency
-        private float _Lag;
-        public float Lag
-        {
-            get { return _Lag; }
-            set { _Lag = value; OnPropertyChanged("Lag"); }
-        }
-        private float _React;
-        public float React
-        {
-            get { return _React; }
-            set { _React = value; OnPropertyChanged("React"); }
-        }
-        public float Latency { get { return Lag / 1000f; } }
-        public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
-        public float FullLatency { get { return AllowedReact + Latency; } }
-        #endregion
 
-        public int Duration = 360;
-        public int timeSpentSub20 = 72;
-        public int timeSpent35To20 = 54;
-        public float bossHPPercentage = 1;
-        public bool useBeastDuringBestialWrath = false;
         public bool useKillCommand = true;
-        public Aspect selectedAspect = Aspect.Dragonhawk;
-        public AspectUsage aspectUsage = AspectUsage.ViperToOOM;
         public float gcdsToLayImmoTrap = 2.0f; // not editable
         public float gcdsToLayExploTrap = 2.0f; // not editable
         public float gcdsToVolley = 4.0f; // not editable, 6 seconds
         public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
         public int LALShotsReplaced = 2; // not editable
         public float LALProcChance = 2; // not editable
-
-        private float _SurvScale;
-        public float SurvScale {
-            get { return _SurvScale; }
-            set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
-        }
-
-        private bool _PTRMode = false;
-        public bool PTRMode {
-            get { return _PTRMode; }
-            set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
-        }
-
-        // rotation test
-        public bool useRotationTest = true;
-        // 29-10-2009: Drizz: Updated this to 30s from 15(being the default in spreadsheet v92b
-        // This value is also able to be updated in the spreadsheet... i.e. should be added to the optionspage.
-        public int cooldownCutoff = 30; // not editable (not sure what this does)
-        public bool randomizeProcs = false; // not editable
-        public float waitForCooldown = 0.8f; // not editable
-        public bool interleaveLAL = false; // not editable
-        public bool prioritiseArcAimedOverSteady = true; // not editable
-        public bool debugShotRotation = false; // not editable
 
         // new priority rotation stuff
         public int PriorityIndex1 = 0;
@@ -320,45 +417,6 @@ namespace Rawr.Hunter
                 PriorityIndex9 = _PriorityIndexes[8];
                 PriorityIndex10 = _PriorityIndexes[9];
             }
-        }
-
-        private bool _HideBadItems_Spl;
-        public bool HideBadItems_Spl
-        {
-            get { return _HideBadItems_Spl; }
-            set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
-        }
-        private bool _HideBadItems_PvP;
-        public bool HideBadItems_PvP
-        {
-            get { return _HideBadItems_PvP; }
-            set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
-        }
-
-        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true };
-        public bool[] StatsList
-        {
-            get { return _statsList; }
-            set { _statsList = value; OnPropertyChanged("StatsList"); }
-        }
-        private int _StatsIncrement = 100;
-        public int StatsIncrement
-        {
-            get { return _StatsIncrement; }
-            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
-        }
-        private string _calculationToGraph = "Overall Rating";
-        public string CalculationToGraph
-        {
-            get { return _calculationToGraph; }
-            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
-        }
-
-        private bool _SE_UseDur = true;
-        public bool SE_UseDur
-        {
-            get { return _SE_UseDur; }
-            set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
         }
 
         #region Shots

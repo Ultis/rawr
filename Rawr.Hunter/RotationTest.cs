@@ -49,7 +49,7 @@ namespace Rawr.Hunter
         {
             float FightLength = options.Duration;
             float Latency = options.Latency;
-            float CDCutoff = options.cooldownCutoff;
+            float CDCutoff = options.CDCutoff;
             float Longevity = character.HunterTalents.Longevity;
             float GCD = 1.5f;
             float BA = calculatedStats.blackArrow.Duration;
@@ -59,7 +59,7 @@ namespace Rawr.Hunter
             float frt = calculatedStats.frostTrap.Duration;
             float vly = calculatedStats.volley.Duration;
             float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * options.LALProcChance : -1;
-            bool RandomProcs = options.randomizeProcs;
+            bool RandomProcs = options.RandomizeProcs;
             int ISSfix = 0;
             int IAotHfix = 0;
             int LALfix = 0;
@@ -74,8 +74,8 @@ namespace Rawr.Hunter
             int ISSprocsAimed = 0;
             int ISSProcsArcane = 0;
             int ISSProcsChimera = 0;
-            float BossHPPercentage = options.bossHPPercentage * 100;
-            float Sub20Time = (BossHPPercentage > 20) ? FightLength - options.timeSpentSub20 : 0; // time *until* we hit sub-20
+            float BossHPPercentage = options.BossHPPerc * 100;
+            float Sub20Time = (BossHPPercentage > 20) ? FightLength - options.TimeSpentSub20 : 0; // time *until* we hit sub-20
             bool UseKillShot = calculatedStats.priorityRotation.containsShot(Shots.KillShot);
             bool BMSpec = character.HunterTalents.BestialWrath + character.HunterTalents.TheBeastWithin > 0;
 

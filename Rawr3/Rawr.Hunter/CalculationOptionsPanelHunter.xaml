@@ -44,38 +44,38 @@ d:DesignWidth="341">
         </controls:TabItem>
         <controls:TabItem x:Name="Page_01_Basics" Header="Basics">
             <Grid x:Name="Page_01_Layout">
-                <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Height="23" Margin="8,8,8,0" VerticalAlignment="Top" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment"/>
-            	<dataInput:Label x:Name="LB_TargLevel" Height="23" Margin="8,37,0,0" VerticalAlignment="Top" Content="Target's Level:" HorizontalAlignment="Left" Width="117"/>
-                <ComboBox x:Name="CB_TargLevel" Height="23" Margin="129,35,8,0" VerticalAlignment="Top" SelectionChanged="CB_TargLevel_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Height="23" Margin="8,8,8,0" VerticalAlignment="Top" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment" TabIndex="0"/>
+            	<dataInput:Label x:Name="LB_TargLevel" Height="23" Margin="8,37,0,0" VerticalAlignment="Top" Content="Target's Level:" HorizontalAlignment="Left" Width="117" TabIndex="1"/>
+                <ComboBox x:Name="CB_TargLevel" Height="23" Margin="129,35,8,0" VerticalAlignment="Top" SelectionChanged="CB_TargLevel_SelectedIndexChanged" TabIndex="2">
                     <ComboBoxItem x:Name="CBI_TargLvl_80" Content="80"/>
             		<ComboBoxItem x:Name="CBI_TargLvl_81" Content="81"/>
             		<ComboBoxItem x:Name="CBI_TargLvl_82" Content="82"/>
             		<ComboBoxItem x:Name="CBI_TargLvl_83" Content="83" IsSelected="True"/>
             	</ComboBox>
-                <dataInput:Label x:Name="LB_TargArmor" Margin="8,62,0,0" VerticalAlignment="Top" Content="Target's Armor:" TabIndex="0" Height="23" HorizontalAlignment="Left" Width="117"/>
-            	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top" SelectionChanged="CB_ArmorBosses_SelectedIndexChanged">
+                <dataInput:Label x:Name="LB_TargArmor" Margin="8,62,0,0" VerticalAlignment="Top" Content="Target's Armor:" TabIndex="3" Height="23" HorizontalAlignment="Left" Width="117"/>
+            	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top" SelectionChanged="CB_ArmorBosses_SelectedIndexChanged" TabIndex="4">
             		<ComboBoxItem x:Name="CBI_TargArm_80" Content="9729"/>
             		<ComboBoxItem x:Name="CBI_TargArm_81" Content="10034"/>
             		<ComboBoxItem x:Name="CBI_TargArm_82" Content="10338"/>
             		<ComboBoxItem x:Name="CBI_TargArm_83" Content="10643" IsSelected="True"/>
             	</ComboBox>
-            	<dataInput:Label x:Name="LB_Latency" Height="23" Margin="8,89,152,0" VerticalAlignment="Top" Content="Latency (ms):"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_Latency" HorizontalAlignment="Right" Margin="0,89,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50"/>
-            	<dataInput:Label x:Name="LB_CDCutoff" Height="23" Margin="8,116,152,0" VerticalAlignment="Top" Content="CDCutoff(s):"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_CDCutOff" HorizontalAlignment="Right" Margin="0,117,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="60" Value="{Binding CDCutOff, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-            	<dataInput:Label x:Name="LB_Duration" Height="23" Margin="8,143,152,0" VerticalAlignment="Top" Content="Duration (in seconds):"/>
-            	<inputToolkit:NumericUpDown x:Name="CB_Duration" HorizontalAlignment="Right" Margin="0,144,8,0" VerticalAlignment="Top" Value="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=Default}" Width="140" d:LayoutOverrides="Height" Maximum="1200" Increment="20" />
-            	<dataInput:Label x:Name="LB_Sub20" Height="23" Margin="8,170,152,0" VerticalAlignment="Top" Content="Time spent sub 20%:" d:LayoutOverrides="VerticalAlignment"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_Time20" HorizontalAlignment="Right" Margin="0,171,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="72" Increment="20"/>
-            	<dataInput:Label x:Name="LB_Sub35" Height="23" Margin="8,197,152,0" VerticalAlignment="Top" Content="Time spent 35%-20%:"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_35" HorizontalAlignment="Right" Margin="0,198,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="54" Increment="20"/>
-            	<dataInput:Label x:Name="LB_BossStartHPPerc" Height="23" Margin="8,224,152,0" VerticalAlignment="Top" Content="Boss Starting HP%:" d:LayoutOverrides="Height"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_BossHP" HorizontalAlignment="Right" Margin="0,225,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Value="100" Increment="20"/>
-            	<CheckBox x:Name="CK_MultipleTargets" Height="23" Margin="8,251,152,0" VerticalAlignment="Top" Content="Multiple Targs Uptime %:"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_MultiTargsUptime" HorizontalAlignment="Right" Margin="0,252,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Increment="5"/>
-            	<dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Margin="8,278,8,0" Content="Hunter Settings" Height="23" VerticalAlignment="Top"/>
-            	<dataInput:Label x:Name="LB_Aspect" Height="23" HorizontalAlignment="Left" Margin="8,305,0,0" VerticalAlignment="Top" Width="100" Content="Aspect:"/>
-            	<ComboBox x:Name="CB_Aspect" Height="23" Margin="129,305,8,0" VerticalAlignment="Top">
+            	<dataInput:Label x:Name="LB_Latency" Height="23" Margin="8,89,152,0" VerticalAlignment="Top" Content="Latency (ms):" TabIndex="5"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_Latency" HorizontalAlignment="Right" Margin="0,89,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50" TabIndex="6"/>
+            	<dataInput:Label x:Name="LB_CDCutoff" Height="23" Margin="8,116,152,0" VerticalAlignment="Top" Content="CDCutoff(s):" TabIndex="7"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_CDCutOff" HorizontalAlignment="Right" Margin="0,117,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="60" Value="{Binding CDCutOff, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="8"/>
+            	<dataInput:Label x:Name="LB_Duration" Height="23" Margin="8,143,152,0" VerticalAlignment="Top" Content="Duration (in seconds):" TabIndex="9"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_Duration" HorizontalAlignment="Right" Margin="0,144,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Increment="20" Value="{Binding Duration, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="10" />
+            	<dataInput:Label x:Name="LB_Sub20" Height="23" Margin="8,170,152,0" VerticalAlignment="Top" Content="Time spent sub 20%:" d:LayoutOverrides="VerticalAlignment" TabIndex="11"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_Time20" HorizontalAlignment="Right" Margin="0,171,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="{Binding TimeSpentSub20, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="20" TabIndex="12"/>
+            	<dataInput:Label x:Name="LB_Sub35" Height="23" Margin="8,197,152,0" VerticalAlignment="Top" Content="Time spent 35%-20%:" TabIndex="13"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_35" HorizontalAlignment="Right" Margin="0,198,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Maximum="1200" Value="{Binding TimeSpent35To20, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="20" TabIndex="14"/>
+            	<dataInput:Label x:Name="LB_BossStartHPPerc" Height="23" Margin="8,224,152,0" VerticalAlignment="Top" Content="Boss Starting HP%:" d:LayoutOverrides="Height" TabIndex="15"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_BossHP" HorizontalAlignment="Right" Margin="0,225,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Value="{Binding BossHPPerc, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="20" TabIndex="16"/>
+            	<CheckBox x:Name="CK_MultipleTargets" Height="23" Margin="8,251,152,0" VerticalAlignment="Top" Content="Multiple Targs Uptime %:" IsChecked="{Binding MultipleTargets, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="17"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_MultiTargsUptime" HorizontalAlignment="Right" Margin="0,252,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Increment="5" Value="{Binding MultipleTargetsPerc, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="{Binding IsChecked, ElementName=CK_MultipleTargets, Mode=OneWay}" TabIndex="18"/>
+            	<dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Margin="8,278,8,0" Content="Hunter Settings" Height="23" VerticalAlignment="Top" TabIndex="19"/>
+            	<dataInput:Label x:Name="LB_Aspect" Height="23" HorizontalAlignment="Left" Margin="8,305,0,0" VerticalAlignment="Top" Width="100" Content="Aspect:" TabIndex="20"/>
+            	<ComboBox x:Name="CB_Aspect" Height="23" Margin="129,305,8,0" VerticalAlignment="Top" SelectionChanged="CB_Aspect_SelectedIndexChanged" TabIndex="21">
             		<ComboBoxItem x:Name="CBI_Aspect_None" Content="None"/>
             		<ComboBoxItem x:Name="CBI_Aspect_Beast" Content="Beast"/>
             		<ComboBoxItem x:Name="CBI_Aspect_Hawk" Content="Hawk"/>
@@ -83,34 +83,34 @@ d:DesignWidth="341">
             		<ComboBoxItem x:Name="CBI_Aspect_Monkey" Content="Monkey"/>
             		<ComboBoxItem x:Name="CBI_Aspect_Dragonhawk" Content="Dragonhawk" IsSelected="True"/>
             	</ComboBox>
-            	<dataInput:Label x:Name="LB_ViperUsage" Height="23" HorizontalAlignment="Left" Margin="8,334,0,0" VerticalAlignment="Top" Width="100" Content="Viper Usage:"/>
-            	<ComboBox x:Name="CB_AspectUsage" Margin="129,334,8,0" Height="23" VerticalAlignment="Top">
+            	<dataInput:Label x:Name="LB_ViperUsage" Height="23" HorizontalAlignment="Left" Margin="8,334,0,0" VerticalAlignment="Top" Width="100" Content="Viper Usage:" TabIndex="22"/>
+            	<ComboBox x:Name="CB_AspectUsage" Margin="129,334,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_AspectUsage_SelectedIndexChanged" TabIndex="23">
             		<ComboBoxItem x:Name="CBI_AspUsage_No" Content="No Viper"/>
             		<ComboBoxItem x:Name="CBI_AspUsage_Just" Content="Viper - Just Enough" IsSelected="True"/>
             		<ComboBoxItem x:Name="CBI_AspUsage_Fully" Content="Viper - Fully Regen"/>
             	</ComboBox>
-            	<CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Left" Margin="8,361,0,0" VerticalAlignment="Top" Content="Use Aspect of the Beast during Bestial Wrath" Width="313" Height="23"/>
-            	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,0" Content="Use Shot Rotation Test instead of Frequencies" Height="17" VerticalAlignment="Top"/>
-            	<CheckBox x:Name="CK_RandomProcs" Margin="29,409,8,0" Content="Randomize Procs on Shot Rotation Test" Height="23" VerticalAlignment="Top" d:LayoutOverrides="Height"/>
-            	<dataInput:Label x:Name="LB_Misc" FontWeight="Bold" Height="23" Margin="8,436,8,0" VerticalAlignment="Top" Content="Misc"/>
-            	<CheckBox x:Name="CK_HideSplGear" Height="23" Margin="8,463,152,0" VerticalAlignment="Top" Content="Hide Spell Gear *" IsChecked="True"/>
-            	<CheckBox x:Name="CK_HidePvPGear" Height="23" Margin="8,490,152,0" VerticalAlignment="Top" Content="Hide PvP Gear *" IsChecked="True"/>
-            	<CheckBox x:Name="CK_PTRMode" Height="23" Margin="8,517,0,0" VerticalAlignment="Top" Content="PTR Mode *" HorizontalAlignment="Left" Width="100"/>
-            	<dataInput:Label x:Name="LB_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,463,11,0" VerticalAlignment="Top" Width="137" Content="Survivability Scale:"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,490,40,0" VerticalAlignment="Top" Width="108" Value="1" Maximum="10" Increment="0.1" DecimalPlaces="1"/>
-            	<CheckBox x:Name="CK_SE_UseDur" Height="23" Margin="112,517,11,0" VerticalAlignment="Top" Content="Use Duration for Special Effects"/>
-            	<dataInput:Label x:Name="LB_StatsGraph" Height="23" Margin="8,544,8,0" VerticalAlignment="Top" Content="Stats Graph" FontWeight="Bold"/>
-            	<CheckBox x:Name="CK_StatsAgility" Height="23" HorizontalAlignment="Left" Margin="8,571,0,0" VerticalAlignment="Top" Content="Agility"/>
-            	<CheckBox x:Name="CK_StatsAP" Height="23" HorizontalAlignment="Left" Margin="8,598,0,0" VerticalAlignment="Top" Content="Attack Power"/>
-            	<CheckBox x:Name="CK_StatsCrit" Height="23" HorizontalAlignment="Left" Margin="8,625,0,0" VerticalAlignment="Top" Content="Crit Rating"/>
-            	<CheckBox x:Name="CK_StatsHaste" Height="23" VerticalAlignment="Top" Content="Haste" Margin="163,571,114,0" d:LayoutOverrides="Width"/>
-            	<CheckBox x:Name="CK_StatsArP" Height="23" Margin="163,598,48,0" VerticalAlignment="Top" Content="Armor Pen Rating" d:LayoutOverrides="Width"/>
-            	<CheckBox x:Name="CK_StatsHit" Height="23" Margin="163,625,91,0" VerticalAlignment="Top" Content="Hit Rating" d:LayoutOverrides="Width"/>
-            	<dataInput:Label x:Name="LB_StatsRatingToGraph" Height="23" HorizontalAlignment="Left" Margin="8,652,0,0" VerticalAlignment="Top" Width="100" Content="Rating to Graph"/>
-            	<ComboBox x:Name="CB_CalculationToGraph" Height="23" Margin="112,652,8,0" VerticalAlignment="Top"/>
-            	<dataInput:Label x:Name="LB_StatsIncrement" Height="23" Margin="8,679,0,8" VerticalAlignment="Top" Width="68" HorizontalAlignment="Left" Content="Increment:"/>
-            	<inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" Margin="80,679,0,8" VerticalAlignment="Top" Height="23" Maximum="5000" Value="100" HorizontalAlignment="Left" Width="77"/>
-            	<Button x:Name="BT_StatsGraph" Height="23" Margin="161,679,8,8" VerticalAlignment="Top" Content="Display Stats Graph"/>
+            	<CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Left" Margin="8,361,0,0" VerticalAlignment="Top" Content="Use Aspect of the Beast during Bestial Wrath" Width="313" Height="23" IsChecked="{Binding UseBeastDuringBestialWrath, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="24"/>
+            	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,0" Content="Use Shot Rotation Test instead of Frequencies" Height="17" VerticalAlignment="Top" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="25"/>
+            	<CheckBox x:Name="CK_RandomProcs" Margin="29,409,8,0" Content="Randomize Procs on Shot Rotation Test" Height="23" VerticalAlignment="Top" d:LayoutOverrides="Height" IsChecked="{Binding RandomizeProcs, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="26"/>
+            	<dataInput:Label x:Name="LB_Misc" FontWeight="Bold" Height="23" Margin="8,436,8,0" VerticalAlignment="Top" Content="Misc" TabIndex="27"/>
+            	<CheckBox x:Name="CK_HideSplGear" Height="23" Margin="8,463,152,0" VerticalAlignment="Top" Content="Hide Spell Gear *" IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="28"/>
+            	<CheckBox x:Name="CK_HidePvPGear" Height="23" Margin="8,490,152,0" VerticalAlignment="Top" Content="Hide PvP Gear *" IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="29"/>
+            	<CheckBox x:Name="CK_PTRMode" Height="23" Margin="8,517,0,0" VerticalAlignment="Top" Content="PTR Mode *" HorizontalAlignment="Left" Width="100" IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="30"/>
+            	<dataInput:Label x:Name="LB_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,463,11,0" VerticalAlignment="Top" Width="137" Content="Survivability Scale:" TabIndex="31"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Height="23" HorizontalAlignment="Right" Margin="0,490,40,0" VerticalAlignment="Top" Width="108" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Increment="0.1" DecimalPlaces="1" TabIndex="32"/>
+            	<CheckBox x:Name="CK_SE_UseDur" Height="23" Margin="112,517,11,0" VerticalAlignment="Top" Content="Use Duration for Special Effects" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="33"/>
+            	<dataInput:Label x:Name="LB_StatsGraph" Height="23" Margin="8,544,8,0" VerticalAlignment="Top" Content="Stats Graph" FontWeight="Bold" IsEnabled="False" TabIndex="34"/>
+            	<CheckBox x:Name="CK_StatsAgility" Height="23" HorizontalAlignment="Left" Margin="8,571,0,0" VerticalAlignment="Top" Content="Agility" IsEnabled="False" TabIndex="35"/>
+            	<CheckBox x:Name="CK_StatsAP" Height="23" HorizontalAlignment="Left" Margin="8,598,0,0" VerticalAlignment="Top" Content="Attack Power" IsEnabled="False" TabIndex="36"/>
+            	<CheckBox x:Name="CK_StatsCrit" Height="23" HorizontalAlignment="Left" Margin="8,625,0,0" VerticalAlignment="Top" Content="Crit Rating" IsEnabled="False" TabIndex="37"/>
+            	<CheckBox x:Name="CK_StatsHaste" Height="23" VerticalAlignment="Top" Content="Haste" Margin="163,571,114,0" d:LayoutOverrides="Width" IsEnabled="False" TabIndex="38"/>
+            	<CheckBox x:Name="CK_StatsArP" Height="23" Margin="163,598,48,0" VerticalAlignment="Top" Content="Armor Pen Rating" d:LayoutOverrides="Width" IsEnabled="False" TabIndex="39"/>
+            	<CheckBox x:Name="CK_StatsHit" Height="23" Margin="163,625,91,0" VerticalAlignment="Top" Content="Hit Rating" d:LayoutOverrides="Width" IsEnabled="False" TabIndex="40"/>
+            	<dataInput:Label x:Name="LB_StatsRatingToGraph" Height="23" HorizontalAlignment="Left" Margin="8,652,0,0" VerticalAlignment="Top" Width="100" Content="Rating to Graph" IsEnabled="False" TabIndex="41"/>
+            	<ComboBox x:Name="CB_CalculationToGraph" Height="23" Margin="112,652,8,0" VerticalAlignment="Top" IsEnabled="False" TabIndex="42"/>
+            	<dataInput:Label x:Name="LB_StatsIncrement" Height="23" Margin="8,679,0,8" VerticalAlignment="Top" Width="68" HorizontalAlignment="Left" Content="Increment:" IsEnabled="False" TabIndex="43"/>
+            	<inputToolkit:NumericUpDown x:Name="NUD_StatsIncrement" Margin="80,679,0,8" VerticalAlignment="Top" Height="23" Maximum="5000" Value="100" HorizontalAlignment="Left" Width="77" IsEnabled="False" TabIndex="44"/>
+            	<Button x:Name="BT_StatsGraph" Height="23" Margin="161,679,8,8" VerticalAlignment="Top" Content="Display Stats Graph" IsEnabled="False" TabIndex="45"/>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_02_Rotations" Header="Rotations">

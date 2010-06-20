@@ -685,7 +685,7 @@ namespace Rawr.Hunter
             // Feeding Frenzy
             float damageAdjustFeedingFrenzy = 1;
             if (PetTalents.FeedingFrenzy.Value > 0) {
-                float feedingFrenzyTimeSpent = CalcOpts.timeSpentSub20 + CalcOpts.timeSpent35To20;
+                float feedingFrenzyTimeSpent = CalcOpts.TimeSpentSub20 + CalcOpts.TimeSpent35To20;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / CalcOpts.Duration : 0;
                 damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy.Value * 0.08f;
             }
