@@ -798,14 +798,43 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
                 RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
             }*/
         }
+        // Basics
+        private void CB_ArmorBosses_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (!isLoading) {
+                if (Character != null && Character.CalculationOptions != null) {
+                    CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                    //
+                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargArmor.SelectedItem);
+                    string text = (string)newItem.Content;
+                    calcOpts.TargetArmor = int.Parse(text);
+                    //CB_BossList.Text = "Custom";
+                    //
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+        private void CB_TargLevel_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (!isLoading) {
+                if (Character != null && Character.CalculationOptions != null) {
+                    CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                    //
+                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargLevel.SelectedItem);
+                    string text = (string)newItem.Content;
+                    calcOpts.TargetLevel = int.Parse(text);
+                    //CB_BossList.Text = "Custom";
+                    //
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
         //
         public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
             // Target Armor/Level
-            /*if (!isLoading && CB_TargLvl.SelectedIndex == -1) { CB_TargLvl.SelectedIndex = 0; }
+            if (!isLoading && CB_TargLevel.SelectedIndex == -1) { CB_TargLevel.SelectedIndex = 0; }
             if (!isLoading && CB_TargArmor.SelectedIndex == -1) { CB_TargArmor.SelectedIndex = 0; }
-            // Fix the enables
+            /* // Fix the enables
             LB_InBehindPerc.IsEnabled = calcOpts.InBack;
             CB_InBackPerc.IsEnabled = calcOpts.InBack;
             LB_Max.IsEnabled = calcOpts.MultipleTargets;
@@ -850,6 +879,52 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
             }*/
             //
             Character.OnCalculationsInvalidated();
+        }
+        //
+        private int _CurrentSpec;
+        private int CurrentSpec
+        {
+            get { return _CurrentSpec; }
+            set { _CurrentSpec = value; }
+        }
+        public enum Specs { BeastMaster = 1, Marksman, Survival }
+    }
+    public static class ShotRotationFunctions
+    {
+        public static int ShotRotationGetRightSpec(Character character)
+        {
+            int specIndex = 0;
+            int Iter = 0;
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += character.HunterTalents.Data[Iter]; }
+            // No Shot Priority set up, use a default based on talent spec
+            if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
+            if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }
+            if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Survival; }
+            return specIndex;
+        }
+        public static int ShotRotationGetRightSpec(HunterTalents talents)
+        {
+            int specIndex = 0;
+            int Iter = 0;
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += talents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += talents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += talents.Data[Iter]; }
+            // No Shot Priority set up, use a default based on talent spec
+            if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
+            if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }
+            if (SpecTalentCount_SV > SpecTalentCount_MM && SpecTalentCount_SV > SpecTalentCount_BM) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Survival; }
+            return specIndex;
+        }
+        public static bool ShotRotationIsntSet(CalculationOptionsHunter CalcOpts)
+        {
+            return ((CalcOpts.PriorityIndex1 + CalcOpts.PriorityIndex2 +
+                     CalcOpts.PriorityIndex3 + CalcOpts.PriorityIndex4 +
+                     CalcOpts.PriorityIndex5 + CalcOpts.PriorityIndex6 +
+                     CalcOpts.PriorityIndex7 + CalcOpts.PriorityIndex8 +
+                     CalcOpts.PriorityIndex9 + CalcOpts.PriorityIndex10)
+                    == 0);
         }
     }
 }

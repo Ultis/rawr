@@ -13,8 +13,20 @@ namespace Rawr.Hunter
         ICalculationOptionBase,
         INotifyPropertyChanged
 	{
-		private int _TargetLevel = 83;
-		private int _TargetArmor = 10643; //Wrath boss armor
+        #region Basics
+        private int _TargetLevel;
+        public int TargetLevel
+        {
+            get { return _TargetLevel; }
+            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
+        }
+        private float _TargetArmor;
+        public float TargetArmor
+        {
+            get { return _TargetArmor; }
+            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
+        }
+        #endregion
 
         #region Pet
         public PetAttacks PetPriority1 = PetAttacks.Growl;
@@ -309,17 +321,6 @@ namespace Rawr.Hunter
                 PriorityIndex10 = _PriorityIndexes[9];
             }
         }
-
-        public int TargetLevel
-		{
-			get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
-		}
-		public int TargetArmor
-		{
-			get { return _TargetArmor; }
-            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
-		}
 
         private bool _HideBadItems_Spl;
         public bool HideBadItems_Spl
