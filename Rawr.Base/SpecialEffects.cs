@@ -1293,8 +1293,8 @@ namespace Rawr {
                 float fDuration = 10;
                 float fICD = 45;
                 // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Dodge = fDodge }, fDuration, fICD, fChance));
+                float fChance = .35f/2;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { Dodge = fDodge }, fDuration, fICD, fChance));
             }
             #endregion
             else
