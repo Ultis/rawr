@@ -15,13 +15,13 @@ namespace Rawr.Hunter
 	{
         #region Basics Tab
         // ==== Fight Settings ====
-        private int _TargetLevel;
+        private int _TargetLevel = 83;
         public int TargetLevel
         {
             get { return _TargetLevel; }
             set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
         }
-        private float _TargetArmor;
+        private float _TargetArmor = StatConversion.NPC_ARMOR[3];
         public float TargetArmor
         {
             get { return _TargetArmor; }
@@ -44,43 +44,43 @@ namespace Rawr.Hunter
         public float AllowedReact { get { return Math.Max(0f, (React - 250f) / 1000f); } }
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
-        public int _CDCutoff;
+        public int _CDCutoff = 0;
         public int CDCutoff
         {
             get { return _CDCutoff; }
             set { _CDCutoff = value; OnPropertyChanged("CDCutoff"); }
         }
-        private int _Duration;
+        private int _Duration = 300;
         public int Duration
         {
             get { return _Duration; }
             set { _Duration = value; OnPropertyChanged("Duration"); }
         }
-        public int _TimeSpentSub20;
+        public int _TimeSpentSub20 = 72;
         public int TimeSpentSub20
         {
             get { return _TimeSpentSub20; }
             set { _TimeSpentSub20 = value; OnPropertyChanged("TimeSpentSub20"); }
         }
-        public int _TimeSpent35To20;
+        public int _TimeSpent35To20 = 54;
         public int TimeSpent35To20
         {
             get { return _TimeSpent35To20; }
             set { _TimeSpent35To20 = value; OnPropertyChanged("TimeSpent35To20"); }
         }
-        public float _BossHPPerc;
+        public float _BossHPPerc = 1.00f;
         public float BossHPPerc
         {
             get { return _BossHPPerc; }
             set { _BossHPPerc = value; OnPropertyChanged("BossHPPerc"); }
         }
-        private bool _MultipleTargets;
+        private bool _MultipleTargets = false;
         public bool MultipleTargets
         {
             get { return _MultipleTargets; }
             set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
         }
-        private float _MultipleTargetsPerc;
+        private float _MultipleTargetsPerc = 0;
         public float MultipleTargetsPerc
         {
             get { return _MultipleTargetsPerc; }
@@ -125,13 +125,13 @@ namespace Rawr.Hunter
         public bool prioritiseArcAimedOverSteady = true; // not editable
         public bool debugShotRotation = false; // not editable
         // ==== Misc ====
-        private bool _HideBadItems_Spl;
+        private bool _HideBadItems_Spl = true;
         public bool HideBadItems_Spl
         {
             get { return _HideBadItems_Spl; }
             set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
         }
-        private bool _HideBadItems_PvP;
+        private bool _HideBadItems_PvP = true;
         public bool HideBadItems_PvP
         {
             get { return _HideBadItems_PvP; }
@@ -143,7 +143,7 @@ namespace Rawr.Hunter
             get { return _PTRMode; }
             set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
         }
-        private float _SurvScale;
+        private float _SurvScale = 1.0f;
         public float SurvScale
         {
             get { return _SurvScale; }
