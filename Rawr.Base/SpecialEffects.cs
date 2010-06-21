@@ -1199,6 +1199,11 @@ namespace Rawr {
                 // Trauma; Procs on Healing Hit and HoTs; Hits at least 5 people
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 5 }, 6f, 0f, 0.01f, 1));
             }
+			else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you Blessing of Light, increasing your strength by (?<stramount>\d+) and your healing received by up to (?<healamount>\d+) for 10 sec")).Success)
+            {
+                // Last Word
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Strength = int.Parse(match.Groups["stramount"].Value), BonusHealingReceived = int.Parse(match.Groups["healamount"].Value) }, 10f, 0f, 0.37f, 1));
+            }
             #endregion
             #region 3.3 Trinkets
             else if ((match = Regex.Match(line, @"Each time you are struck by a melee attack, you have a 60% chance to gain (?<stamina>\d+) stamina for the next 10 sec, stacking up to 10 times")).Success)
