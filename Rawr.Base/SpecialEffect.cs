@@ -103,8 +103,9 @@ namespace Rawr
         RejuvenationTick,
         MangleCatHit,
         MangleBearHit,
-        SwipeBearOrLacerateHit,
+		SwipeBearOrLacerateHit,
 		MangleCatOrShredHit,
+		MangleCatOrShredOrInfectedWoundsHit,
 		RakeTick,
 		LacerateTick,
         #endregion

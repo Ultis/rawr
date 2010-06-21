@@ -873,7 +873,7 @@ namespace Rawr {
             #region Armor
             else if ((match = new Regex(@"Each time a melee attack strikes you, you have a chance to gain (?<amount>\d\d*) armor for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // The Black Heart
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken,
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 45f, 0.25f));
             }
@@ -1209,7 +1209,7 @@ namespace Rawr {
             else if ((match = Regex.Match(line, @"Each time you are struck by a melee attack, you have a 60% chance to gain (?<stamina>\d+) stamina for the next 10 sec, stacking up to 10 times")).Success)
             {
                 // Unidentifiable Organ
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Stamina = int.Parse(match.Groups["stamina"].Value) }, 10.0f, 0.0f, 0.6f, 10));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { Stamina = int.Parse(match.Groups["stamina"].Value) }, 10.0f, 0.0f, 0.6f, 10));
             }
             else if (line.StartsWith("Your attacks have a chance to awaken the powers of the races of Northrend, temporarily transforming you and increasing your combat capabilities for 30 sec"))
             {
@@ -1253,8 +1253,8 @@ namespace Rawr {
                 float fDuration = 10;
                 float fICD = 30;
                 // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, new Stats() { Armor = fArmor }, fDuration, fICD, fChance));
+                float fChance = .35f/2f;
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { BonusArmor = fArmor }, fDuration, fICD, fChance));
             }
             #endregion
             #region 3.3 rings

@@ -596,7 +596,7 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.MissedAttacks = chanceMiss;
 
 			float baseDamage = 137f + (stats.AttackPower / 14f) * 2.5f;
-			float bearThreatMultiplier = 29f / 14f;
+			float bearThreatMultiplier = (29f / 14f) * (1f + stats.ThreatIncreaseMultiplier);
 
 			//Calculate the raw damage of each ability
 			float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
@@ -703,8 +703,11 @@ the Threat Scale defined on the Options tab.",
 									rotationCalculationTPS = rotationCalculation;
 							}
 
+			float abomDPS = (stats.MoteOfAnger * meleeDamageAverage);
+			float abomTPS = (stats.MoteOfAnger * meleeThreatAverage);
+			
 			//Fill the results into the CharacterCalculationsBear object
-			calculatedStats.ThreatPoints = rotationCalculationTPS.TPS * calcOpts.ThreatScale;
+			calculatedStats.ThreatPoints = (rotationCalculationTPS.TPS + abomTPS) * calcOpts.ThreatScale;
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.HighestTPSRotation = rotationCalculationTPS;
 			calculatedStats.SwipeRotation = rotationCalculator.GetRotationCalculations(null, false, true, false, false);
@@ -915,6 +918,18 @@ the Threat Scale defined on the Options tab.",
 					case Trigger.PhysicalHit:
 						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceHit, 2.5f);
 						break;
+					case Trigger.MeleeAttack:
+						if (effect.Stats.MoteOfAnger > 0)
+						{
+							// When in effect stats, MoteOfAnger is % of melee hits
+							// When in character stats, MoteOfAnger is average procs per second
+							statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(meleeHitInterval, 1f, 2.5f, 300f) / effect.MaxStack;
+						}
+						else
+						{
+							statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
+						}
+						break;
 					case Trigger.MeleeCrit:
 					case Trigger.PhysicalCrit:
 						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 2.5f);
@@ -930,7 +945,14 @@ the Threat Scale defined on the Options tab.",
                         break;
 					case Trigger.MangleBearHit:
 						if (talents.Mangle > 0)
-							statsProcs += effect.GetAverageStats(4.5f, chanceHit, 2.5f);
+							statsProcs += effect.GetAverageStats(6f - statsTalents.MangleCooldownReduction, chanceHit, 2.5f);
+						break;
+					case Trigger.MangleCatOrShredOrInfectedWoundsHit:
+						if (talents.Mangle > 0)
+							statsProcs += effect.GetAverageStats(1f /
+								(1f / (6f - statsTalents.MangleCooldownReduction) + //Mangles Per Second
+								1f / meleeHitInterval) //Mauls Per Second
+								, chanceHit, 2.5f);
 						break;
 					case Trigger.SwipeBearOrLacerateHit:
 						statsProcs += effect.GetAverageStats(2.25f, chanceHit, 2.5f);
@@ -939,7 +961,10 @@ the Threat Scale defined on the Options tab.",
 						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
 						break;
 					case Trigger.DamageTaken:
-                        statsProcs += effect.GetAverageStats(TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+						statsProcs += effect.GetAverageStats(TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+						break;
+					case Trigger.DamageTakenPhysical:
+						statsProcs += effect.GetAverageStats(TargAttackSpeed, 1f - (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
 				}
 			}
@@ -1356,6 +1381,7 @@ the Threat Scale defined on the Options tab.",
 				PhysicalCrit = stats.PhysicalCrit,
                 HitRating = stats.HitRating,
 				PhysicalHit = stats.PhysicalHit,
+				MoteOfAnger = stats.MoteOfAnger,
                 HasteRating = stats.HasteRating,
 				PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
@@ -1375,14 +1401,16 @@ the Threat Scale defined on the Options tab.",
 				SpellCritOnTarget = stats.SpellCritOnTarget,
 				Intellect = stats.Intellect,
 				BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-				SpellHit = stats.SpellHit
+				SpellHit = stats.SpellHit,
+				ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier
 			};
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
-				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
 				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
 				|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.LacerateTick
-                || effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageOrHealingDone)
+				|| effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
+				|| effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone)
 				{
 					if (HasRelevantStats(effect.Stats))
 					{
@@ -1397,7 +1425,7 @@ the Threat Scale defined on the Options tab.",
 		{
 			bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
-				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + 
+				stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.MoteOfAnger +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
@@ -1410,15 +1438,16 @@ the Threat Scale defined on the Options tab.",
                  + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier
 				 + stats.SpellCrit + stats.SpellCritOnTarget + stats.Intellect + stats.BonusNatureDamageMultiplier
-				 + stats.SpellHit
+				 + stats.SpellHit + stats.ThreatIncreaseMultiplier
 				 ) != 0;
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
-				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
 					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
 					|| effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
-					|| effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.LacerateTick)
+					|| effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
+					|| effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.LacerateTick)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;

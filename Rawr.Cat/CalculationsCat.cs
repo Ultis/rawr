@@ -342,7 +342,7 @@ namespace Rawr.Cat
 			float modArmor = 0f;
 			for (int i = 0; i < arPenUptimes.Length; i++)
 			{
-				modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+				modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetLevel, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 			}
 
 			modArmor = 1f - modArmor;
@@ -585,7 +585,8 @@ namespace Rawr.Cat
 			calculatedStats.BiteStats = biteStats;
 
 			float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
-			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS;
+			float abomDPS = (stats.MoteOfAnger * meleeDamageAverage);
+			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS + abomDPS;
 			calculatedStats.SurvivabilityPoints = stats.Health / 100f;
 			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			return calculatedStats;
@@ -693,10 +694,13 @@ namespace Rawr.Cat
                                 + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceHit = 1f - chanceAvoided;
+			bool usesMangle = (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"));
+			
 
 			Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
 			Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
 			triggerIntervals[Trigger.Use] = 0f;
+			triggerIntervals[Trigger.MeleeAttack] = meleeHitInterval;
 			triggerIntervals[Trigger.MeleeHit] = meleeHitInterval;
 			triggerIntervals[Trigger.PhysicalHit] = meleeHitInterval;
 			triggerIntervals[Trigger.MeleeCrit] = meleeHitInterval;
@@ -705,10 +709,12 @@ namespace Rawr.Cat
 			triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
             triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to Add Self-Heals
 			triggerIntervals[Trigger.RakeTick] = 3f + (float)calcOpts.LagVariance / 3000f;
-			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
-				triggerIntervals[Trigger.MangleCatHit] = talents.GlyphOfMangle ? 18f : 12f;
-			triggerIntervals[Trigger.MangleCatOrShredHit] = 4f;
+			if (usesMangle)
+				triggerIntervals[Trigger.MangleCatHit] = 60f;
+			triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
+			triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
 			triggerChances[Trigger.Use] = 1f;
+			triggerChances[Trigger.MeleeAttack] = 1f;
 			triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
 			triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
 			triggerChances[Trigger.MeleeCrit] = Math.Max(0f, chanceCrit);
@@ -718,8 +724,9 @@ namespace Rawr.Cat
             triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
 			triggerChances[Trigger.RakeTick] = 1f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
-				triggerChances[Trigger.MangleCatHit] = 1f;
+				triggerChances[Trigger.MangleCatHit] = chanceHit;
 			triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
+			triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
 
             // Handle Trinket procs
 			Stats statsProcs = new Stats();
@@ -736,7 +743,16 @@ namespace Rawr.Cat
                         triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
                         triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
                         upTime);
-                }else{
+                }
+				else if (effect.Stats.MoteOfAnger > 0)
+				{
+					// When in effect stats, MoteOfAnger is % of melee hits
+					// When in character stats, MoteOfAnger is average procs per second
+					statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
+						triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
+				}
+				else
+				{
                     statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
                         triggerChances[effect.Trigger], 1f, calcOpts.Duration),
                         effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
@@ -945,6 +961,7 @@ namespace Rawr.Cat
 					BonusRipCrit = stats.BonusRipCrit,
                     BonusRakeCrit = stats.BonusRakeCrit,
                     RipCostReduction = stats.RipCostReduction,
+					MoteOfAnger = stats.MoteOfAnger,
 
 					ArcaneResistance = stats.ArcaneResistance,
 					NatureResistance = stats.NatureResistance,
@@ -960,10 +977,10 @@ namespace Rawr.Cat
 				};
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
-				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-				|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
+					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
 					|| effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.RakeTick
-					|| effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.DamageOrHealingDone)
+					|| effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone)
 				{
 					if (HasRelevantStats(effect.Stats))
 					{
@@ -983,7 +1000,7 @@ namespace Rawr.Cat
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
-				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit +
+				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit + stats.MoteOfAnger +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
@@ -993,9 +1010,10 @@ namespace Rawr.Cat
 
 			foreach (SpecialEffect effect in stats.SpecialEffects())
 			{
-				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
+				if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit || effect.Trigger == Trigger.MeleeAttack
 					|| effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.RakeTick
-					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit || effect.Trigger == Trigger.DamageOrHealingDone)
+					|| effect.Trigger == Trigger.MangleCatHit || effect.Trigger == Trigger.MangleCatOrShredHit 
+					|| effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone)
 				{
 					relevant |= HasRelevantStats(effect.Stats);
 					if (relevant) break;

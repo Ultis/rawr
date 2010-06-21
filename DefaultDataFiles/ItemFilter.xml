@@ -3890,10 +3890,10 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Frozen Throne</Name>
                   <Pattern>The Lich King</Pattern>
                   <BoA>true</BoA>
@@ -3908,7 +3908,7 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>false</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
               <OtherRegexEnabled>true</OtherRegexEnabled>
@@ -3969,7 +3969,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4007,7 +4007,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4026,7 +4026,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
@@ -4317,7 +4317,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4336,7 +4336,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4374,7 +4374,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
                   <OtherRegexEnabled>true</OtherRegexEnabled>
@@ -4413,7 +4413,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4432,7 +4432,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4451,10 +4451,10 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Plagueworks</Name>
                   <Pattern>Festergut|Rotface|Professor Putricide</Pattern>
                   <BoA>true</BoA>
@@ -4469,7 +4469,7 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>false</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList>
@@ -4490,7 +4490,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4509,10 +4509,10 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Crimson Hall</Name>
                   <Pattern>Prince Valanar|Blood-Queen Lana'thel</Pattern>
                   <BoA>true</BoA>
@@ -4527,7 +4527,7 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>false</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList>
@@ -4548,7 +4548,7 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                     <ItemFilterRegex>
                       <RegexList />
@@ -4567,10 +4567,10 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Frostwing Hall</Name>
                   <Pattern>Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa</Pattern>
                   <BoA>true</BoA>
@@ -4585,7 +4585,7 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>false</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
                 <ItemFilterRegex>
                   <RegexList>
@@ -4606,10 +4606,10 @@
                       <AdditiveFilter>true</AdditiveFilter>
                       <AppliesToItems>true</AppliesToItems>
                       <AppliesToGems>false</AppliesToGems>
-                      <Enabled>false</Enabled>
+                      <Enabled>true</Enabled>
                     </ItemFilterRegex>
                   </RegexList>
-                  <OtherRegexEnabled>false</OtherRegexEnabled>
+                  <OtherRegexEnabled>true</OtherRegexEnabled>
                   <Name>The Frozen Throne</Name>
                   <Pattern>The Lich King</Pattern>
                   <BoA>true</BoA>
@@ -4624,7 +4624,7 @@
                   <AdditiveFilter>true</AdditiveFilter>
                   <AppliesToItems>true</AppliesToItems>
                   <AppliesToGems>false</AppliesToGems>
-                  <Enabled>false</Enabled>
+                  <Enabled>true</Enabled>
                 </ItemFilterRegex>
               </RegexList>
               <OtherRegexEnabled>true</OtherRegexEnabled>
@@ -6252,7 +6252,7 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
@@ -6290,7 +6290,7 @@
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>false</AppliesToItems>
           <AppliesToGems>true</AppliesToGems>
-          <Enabled>true</Enabled>
+          <Enabled>false</Enabled>
         </ItemFilterRegex>
         <ItemFilterRegex>
           <RegexList />
@@ -6365,7 +6365,7 @@
       <AdditiveFilter>false</AdditiveFilter>
       <AppliesToItems>false</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
-      <Enabled>true</Enabled>
+      <Enabled>false</Enabled>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <RegexList>

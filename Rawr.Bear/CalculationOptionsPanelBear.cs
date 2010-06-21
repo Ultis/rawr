@@ -65,7 +65,16 @@ namespace Rawr.Bear
 				case "85000": comboBoxTargetDamage.SelectedIndex = 9; break; //T9 Raids (10, Heroic)
 				case "80000": comboBoxTargetDamage.SelectedIndex = 10; break; //T9 Raids (25)
 				case "95000": comboBoxTargetDamage.SelectedIndex = 11; break; //T9 Raids (25, Heroic)
-				default: comboBoxTargetDamage.SelectedIndex = 12; break; //Custom...
+
+				case "92000": comboBoxTargetDamage.SelectedIndex = 12; break; //T10 Raids (10)
+				case "120000": comboBoxTargetDamage.SelectedIndex = 13; break; //T10 Raids (10, Heroic)
+				case "100000": comboBoxTargetDamage.SelectedIndex = 14; break; //T10 Raids (25)
+				case "150000": comboBoxTargetDamage.SelectedIndex = 15; break; //T10 Raids (25, Heroic)
+				case "105000": comboBoxTargetDamage.SelectedIndex = 16; break; //Lich King (10)
+				case "160000": comboBoxTargetDamage.SelectedIndex = 17; break; //Lich King (10, Heroic)
+				case "155000": comboBoxTargetDamage.SelectedIndex = 18; break; //Lich King (25)
+				case "200000": comboBoxTargetDamage.SelectedIndex = 19; break; //Lich King (25, Heroic)
+				default: comboBoxTargetDamage.SelectedIndex = 20; break; //Custom...
 			}
 
 			switch (numericUpDownSurvivalSoftCap.Value.ToString())
@@ -82,7 +91,16 @@ namespace Rawr.Bear
 				case "210000": comboBoxSurvivalSoftCap.SelectedIndex = 9; break; //T9 Raids (10, Heroic)
 				case "190000": comboBoxSurvivalSoftCap.SelectedIndex = 10; break; //T9 Raids (25)
 				case "225000": comboBoxSurvivalSoftCap.SelectedIndex = 11; break; //T9 Raids (25, Heroic)
-				default: comboBoxSurvivalSoftCap.SelectedIndex = 12; break;
+
+				case "300000": comboBoxSurvivalSoftCap.SelectedIndex = 12; break; //T10 Raids (10)
+				case "355000": comboBoxSurvivalSoftCap.SelectedIndex = 13; break; //T10 Raids (10, Heroic)
+				case "350000": comboBoxSurvivalSoftCap.SelectedIndex = 14; break; //T10 Raids (25)
+				case "400000": comboBoxSurvivalSoftCap.SelectedIndex = 15; break; //T10 Raids (25, Heroic)
+				case "360000": comboBoxSurvivalSoftCap.SelectedIndex = 16; break; //Lich King (10)
+				case "410000": comboBoxSurvivalSoftCap.SelectedIndex = 17; break; //Lich King (10, Heroic)
+				case "405000": comboBoxSurvivalSoftCap.SelectedIndex = 18; break; //Lich King (25)
+				case "500000": comboBoxSurvivalSoftCap.SelectedIndex = 19; break; //Lich King (25, Heroic)
+				default: comboBoxSurvivalSoftCap.SelectedIndex = 20; break;
 			}
 
 			_loadingCalculationOptions = false;
@@ -121,18 +139,18 @@ namespace Rawr.Bear
 		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 12;
-			if (comboBoxTargetDamage.SelectedIndex < 12)
+			if (comboBoxTargetDamage.SelectedIndex < 20)
 				numericUpDownTargetDamage.Value =
-					(new decimal[] { 30000, 37000, 40000, 47000, 55000, 75000, 71000, 90000, 70000, 85000, 80000, 95000 })
+					(new decimal[] { 30000, 37000, 40000, 47000, 55000, 75000, 71000, 90000, 70000, 85000, 80000, 95000, 92000, 120000, 100000, 150000, 105000, 160000, 155000, 200000 })
 					[comboBoxTargetDamage.SelectedIndex];
 		}
 
 		private void comboBoxSurvivalSoftCap_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 12;
-			if (comboBoxSurvivalSoftCap.SelectedIndex < 12)
+			if (comboBoxSurvivalSoftCap.SelectedIndex < 20)
 				numericUpDownSurvivalSoftCap.Value =
-					(new decimal[] { 90000, 110000, 120000, 140000, 170000, 195000, 185000, 215000, 180000, 210000, 190000, 225000 })
+					(new decimal[] { 90000, 110000, 120000, 140000, 170000, 195000, 185000, 215000, 180000, 210000, 190000, 225000, 300000, 355000, 350000, 400000, 360000, 410000, 405000, 500000 })
 					[comboBoxSurvivalSoftCap.SelectedIndex];
 		}
 	}

@@ -78240,7 +78240,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
             <BonusArmor>7056</BonusArmor>
           </Stats>
@@ -121290,13 +121290,13 @@
   </Item>
   <Item>
     <ItemLevel>251</ItemLevel>
-    <DisplayId>64923</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_ore_feliron_01</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
             <Stamina>24</Stamina>
           </Stats>
@@ -121389,13 +121389,13 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64923</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_ore_feliron_01</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
             <Stamina>27</Stamina>
           </Stats>
@@ -121527,13 +121527,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
-            <Armor>6426</Armor>
+            <BonusArmor>6426</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.35</Chance>
+          <Chance>0.175</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -121560,7 +121560,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
+          <Trigger>MeleeAttack</Trigger>
           <Stats>
             <MoteOfAnger>0.5</MoteOfAnger>
           </Stats>
@@ -121587,19 +121587,19 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64239</DisplayId>
-    <DisplaySlot>12</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_misc_coin_18</IconPath>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
-            <Armor>5712</Armor>
+            <BonusArmor>5712</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.35</Chance>
+          <Chance>0.175</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -126426,7 +126426,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
+          <Trigger>MeleeAttack</Trigger>
           <Stats>
             <MoteOfAnger>0.5</MoteOfAnger>
           </Stats>

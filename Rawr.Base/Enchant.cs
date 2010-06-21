@@ -594,7 +594,7 @@ namespace Rawr
 
             Stats blackMagic = new Stats();
             blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { HasteRating = 250f }, 10f, 35f, 0.35f));
-			blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredHit, new Stats() { HasteRating = 250f }, 10f, 35f, 0.35f));
+			blackMagic.AddSpecialEffect(new SpecialEffect(Trigger.MangleCatOrShredOrInfectedWoundsHit, new Stats() { HasteRating = 250f }, 10f, 35f, 0.35f));
             defaultEnchants.Add(new Enchant(3790, "Black Magic", ItemSlot.OneHand, blackMagic));
 
             Stats executioner = new Stats();
