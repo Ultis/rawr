@@ -716,7 +716,8 @@ namespace Rawr
             // Updated Razorice for patch 3.3.3
             razorice.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusFrostDamageMultiplier = 0.02f }, 20f, 0f, 1f, 5));
             Stats RotFC = new Stats();
-            RotFC.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f));
+            RotFC.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1));
+            RotFC.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1));
             Stats Cinderglacier = new Stats();
             Cinderglacier.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { CinderglacierProc = 2f }, 0f, 0f, -1.5f));
             defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", ItemSlot.OneHand, RotFC));

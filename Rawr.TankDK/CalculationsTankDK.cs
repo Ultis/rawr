@@ -1077,6 +1077,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Health Returned by DS and other sources:
             if (DSperSec > 0)
                 fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health) * DSperSec, stats.HealingReceivedMultiplier);
+            if (stats.HealthRestoreFromMaxHealth > 0)
+                fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health), stats.HealingReceivedMultiplier);
             fTotalMitigation += fSegmentMitigation;
 
             calcs.Mitigation = fTotalMitigation;

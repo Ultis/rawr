@@ -49,8 +49,8 @@ namespace Rawr.TankDK
                     case Trigger.DamageDone:
                     case Trigger.DamageOrHealingDone:
                         trigger = (1f / rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
-                        chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
                         break;
                     case Trigger.DamageSpellCast:
                     case Trigger.SpellCast:
@@ -109,17 +109,27 @@ namespace Rawr.TankDK
                 }
                 if (!float.IsInfinity(trigger) && !float.IsNaN(trigger))
                 {
-/*                    if ((trigger < duration) && (effect.MaxStack > 1))
+                    if (effect.UsesPPM())
                     {
-                        float FightLengthInSec = calcOpts.FightLength * 60;
-                        float MaxLengthByStack = trigger * effect.MaxStack / effect.GetChance(unhastedAttackSpeed);
-                        float timeToMax = (float)Math.Min(FightLengthInSec, MaxLengthByStack);
-                        statsAverage += effect.Stats * (effect.MaxStack * (((calcOpts.FightLength * 60) - .5f * timeToMax) / (calcOpts.FightLength * 60)));
+                        // If effect.chance < 0 , then it's using PPM.
+                        // Let's get the duration * how many times it procs per min:
+                        float UptimePerMin = 0;
+                        float fWeight = 0; 
+                        if (duration == 0) // Duration of 0 means that it's a 1 time effect that procs every time the proc comes up.
+                        {
+                            fWeight = Math.Abs(effect.Chance) / 60 ;
+                        }
+                        else
+                        {
+                            UptimePerMin = duration * Math.Abs(effect.Chance);
+                            fWeight = UptimePerMin / 60;
+                        }
+                        statsAverage.Accumulate(effect.Stats, fWeight);
                     }
                     else
-                    {*/
+                    {
                         effect.AccumulateAverageStats(statsAverage, trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
-  //                  }
+                    }
                 }
             }
             return statsAverage;
