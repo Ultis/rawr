@@ -1683,5 +1683,11 @@ namespace Rawr
             s.Append(")");
             return s.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj.ToString() == this.ToString();
+            // return base.Equals(obj);
+        }
     }
 }

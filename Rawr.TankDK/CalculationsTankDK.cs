@@ -499,6 +499,28 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
             #endregion 
 
+            // Filter out the duplicate Runes:
+            if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && character.MainHandEnchant == character.OffHandEnchant)
+            {
+                SpecialEffect FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
+                SpecialEffect FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+                bool bFC1Found = false;
+                bool bFC2Found = false;
+                foreach (SpecialEffect se1 in stats.SpecialEffects())
+                {
+                    // if we've already found them, and we're seeing them again, then remove these repeats.
+                    if (bFC1Found && se1.Equals(FC1))
+                        stats.RemoveSpecialEffect(se1);
+                    else if (bFC2Found && se1.Equals(FC2))
+                        stats.RemoveSpecialEffect(se1);
+                    else if (se1.Equals(FC1))
+                        bFC1Found = true;
+                    else if (se1.Equals(FC2))
+                        bFC2Found = true;
+                }
+            }
+
             #region Special Effects
             // For now we just factor them in once.
             StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
@@ -1159,7 +1181,15 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return statsTotal;
             }
             CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
-            
+
+            // Filter out the duplicate Runes:
+            if (character.MainHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && character.MainHandEnchant == character.OffHandEnchant)
+            {
+                // Remove one of the enchants.
+                character.OffHandEnchant = null;
+            }
+
             // Start populating data w/ Basic racial & class baseline.
             statsTotal = BaseStats.GetBaseStats(character);
             statsTotal.BaseAgility = BaseStats.GetBaseStats(character).Agility;
