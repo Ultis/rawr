@@ -382,20 +382,6 @@
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
-    <DisplayId>9995</DisplayId>
-    <DisplaySlot>4</DisplaySlot>
-    <IconPath>inv_chest_leather_04</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <Name>Brawler's Harness</Name>
-    <Id>6125</Id>
-    <Slot>Shirt</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>1</ItemLevel>
     <DisplayId>10112</DisplayId>
     <DisplaySlot>4</DisplaySlot>
     <IconPath>inv_shirt_14</IconPath>
@@ -578,6 +564,22 @@
     <Name>Sawbones Shirt</Name>
     <Id>14617</Id>
     <Slot>Shirt</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>40</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_tabardpvp_03</IconPath>
+    <Stats />
+    <Quality>Common</Quality>
+    <Type>None</Type>
+    <Faction>Alliance</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Knight's Colors</Name>
+    <Id>15198</Id>
+    <Slot>Tabard</Slot>
   </Item>
   <Item>
     <ItemLevel>20</ItemLevel>
@@ -8881,6 +8883,417 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_06</IconPath>
+    <Stats>
+      <Armor>113</Armor>
+      <Stamina>30</Stamina>
+      <AttackPower>64</AttackPower>
+      <CritRating>28</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Bay Buccaneer's Cape</Name>
+    <Id>38353</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_20</IconPath>
+    <Stats>
+      <Armor>113</Armor>
+      <Intellect>23</Intellect>
+      <SpellPower>32</SpellPower>
+      <CritRating>30</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Oil-Stained Tarp</Name>
+    <Id>38354</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_10</IconPath>
+    <Stats>
+      <Armor>113</Armor>
+      <Stamina>45</Stamina>
+      <Strength>27</Strength>
+      <DodgeRating>23</DodgeRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Thick Goblin Back Protector </Name>
+    <Id>38355</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_wand_18</IconPath>
+    <Stats>
+      <Stamina>6</Stamina>
+      <SpellPower>18</SpellPower>
+      <CritRating>24</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Wand</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>262</MinDamage>
+    <MaxDamage>487</MaxDamage>
+    <DamageType>Frost</DamageType>
+    <Speed>2.1</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Battle Wand</Name>
+    <Id>38356</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_coin_10</IconPath>
+    <Stats>
+      <AttackPower>30</AttackPower>
+      <CritRating>23</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Thrown</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>161</MinDamage>
+    <MaxDamage>243</MaxDamage>
+    <Speed>1.6</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Sharpened Throwing Gizmo</Name>
+    <Id>38357</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_armorkit_22</IconPath>
+    <Stats>
+      <SpellPower>57</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Arcane Revitalizer</Name>
+    <Id>38358</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_armorkit_22</IconPath>
+    <Stats>
+      <AttackPower>98</AttackPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Goblin Repetition Reducer</Name>
+    <Id>38359</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_root_02</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MoonfireCast</Trigger>
+          <Stats>
+            <Spirit>131</Spirit>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.4</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Idol</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Idol of Arcane Terror</Name>
+    <Id>38360</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>spell_fire_felfire</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <LavaBurstBonus>121</LavaBurstBonus>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <LavaBurstBonus>121</LavaBurstBonus>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Totem</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Co. Lightning Rod</Name>
+    <Id>38361</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_stonetablet_05</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <DivineStormDamage>81</DivineStormDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Libram</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Co. Libram of Retribution</Name>
+    <Id>38362</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_book_07</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ShieldofRighteousness</Trigger>
+          <Stats>
+            <BonusShieldOfRighteousnessDamage>96</BonusShieldOfRighteousnessDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <BonusShieldOfRighteousnessDamage>96</BonusShieldOfRighteousnessDamage>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Libram</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Co. Libram of Protection</Name>
+    <Id>38363</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_stonetablet_04</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats />
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Libram</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Co. Libram of Mostly Holy Deeds</Name>
+    <Id>38364</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>ability_druid_demoralizingroar</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <BonusMaulDamageMultiplier>0.034</BonusMaulDamageMultiplier>
+            <BonusBearSwipeDamageMultiplier>0.024</BonusBearSwipeDamageMultiplier>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Idol</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Idol of Perspicacious Attacks</Name>
+    <Id>38365</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>ability_druid_treeoflife</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>RejuvenationTick</Trigger>
+          <Stats>
+            <RejuvenationHealBonus>33</RejuvenationHealBonus>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <RejuvenationHealBonus>33</RejuvenationHealBonus>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Idol</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Idol of Pure Thoughts</Name>
+    <Id>38366</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>spell_fire_burnout</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ShamanLavaLash</Trigger>
+          <Stats />
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Totem</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Venture Co. Flame Slicer</Name>
+    <Id>38367</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>spell_shaman_earthlivingweapon</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>HealingSpellHit</Trigger>
+          <Stats>
+            <TotemCHBaseHeal>102</TotemCHBaseHeal>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <TotemCHBaseHeal>102</TotemCHBaseHeal>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Totem</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Totem of the Bay</Name>
+    <Id>38368</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>183</ItemLevel>
     <DisplayId>39122</DisplayId>
     <DisplaySlot>11</DisplaySlot>
@@ -9026,6 +9439,186 @@
     <Name>Hammer of Grief</Name>
     <Id>38618</Id>
     <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>154</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_candle_01</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>145</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpellPower>56</SpellPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Mendicant's Charm</Name>
+    <Id>38760</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>154</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_horn_05</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <AttackPower>248</AttackPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <HasteRating>48</HasteRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Talon of Hatred</Name>
+    <Id>38761</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>154</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>spell_fire_playingwithfire</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>145</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <CritRating>48</CritRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Insignia of Bloody Fire</Name>
+    <Id>38762</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_rune_10</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <Spirit>184</Spirit>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpellPower>62</SpellPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Futuresight Rune</Name>
+    <Id>38763</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_rune_10</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <HasteRating>208</HasteRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <CritRating>47</CritRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Rune of Finite Variation</Name>
+    <Id>38764</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_rune_10</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>202</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <HitRating>55</HitRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Rune of Infinite Power</Name>
+    <Id>38765</Id>
+    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>200</ItemLevel>
@@ -15665,6 +16258,105 @@
     <Name>Cowl of the Perished</Name>
     <Id>39768</Id>
     <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>158</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_rune_05</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>183</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Intellect>46</Intellect>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Badge of the Infiltrator</Name>
+    <Id>39811</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>158</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_rune_05</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>145</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Mp5>24</Mp5>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Spiritist's Focus</Name>
+    <Id>39821</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>158</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_horn_01</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <HolyDamage>1280</HolyDamage>
+          </Stats>
+          <Duration>1</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>RangedHit</Trigger>
+          <Stats>
+            <HolyDamage>1280</HolyDamage>
+          </Stats>
+          <Duration>1</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Horn of Argent Fury</Name>
+    <Id>39889</Id>
+    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>70</ItemLevel>
@@ -23728,8 +24420,8 @@
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
-    <DisplayId>57020</DisplayId>
-    <DisplaySlot>10</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_gauntlets_17</IconPath>
     <Stats>
       <Armor>192</Armor>
@@ -28755,6 +29447,36 @@
     <Slot>Feet</Slot>
   </Item>
   <Item>
+    <ItemLevel>167</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_gizmo_goblinboombox_01</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <AttackPower>430</AttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Stamina>81</Stamina>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <Name>Sonic Booster</Name>
+    <Id>40767</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
     <ItemLevel>200</ItemLevel>
     <DisplayId>55801</DisplayId>
     <DisplaySlot>5</DisplaySlot>
@@ -29717,6 +30439,37 @@
     <Slot>Head</Slot>
   </Item>
   <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>IcyTouchHit</Trigger>
+          <Stats>
+            <BonusIcyTouchDamage>111</BonusIcyTouchDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <BonusIcyTouchDamage>111</BonusIcyTouchDamage>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Sigil</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Sigil of the Frozen Conscience</Name>
+    <Id>40822</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
     <ItemLevel>213</ItemLevel>
     <DisplayId>55813</DisplayId>
     <DisplaySlot>1</DisplaySlot>
@@ -30599,6 +31352,36 @@
     <Slot>Shoulders</Slot>
   </Item>
   <Item>
+    <ItemLevel>167</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_gizmo_goblinboombox_01</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTaken</Trigger>
+          <Stats>
+            <DamageAbsorbed>1100</DamageAbsorbed>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpellPower>63</SpellPower>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <Name>Noise Machine</Name>
+    <Id>40865</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
     <ItemLevel>232</ItemLevel>
     <DisplayId>0</DisplayId>
     <DisplaySlot>0</DisplaySlot>
@@ -30623,6 +31406,37 @@
     <Name>Furious Gladiator's Plate Shoulders</Name>
     <Id>40866</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <BonusDeathCoilDamage>80</BonusDeathCoilDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <BonusDeathCoilDamage>80</BonusDeathCoilDamage>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Sigil</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Sigil of the Wild Buck</Name>
+    <Id>40867</Id>
+    <Slot>Ranged</Slot>
   </Item>
   <Item>
     <ItemLevel>232</ItemLevel>
@@ -30753,6 +31567,36 @@
     <Name>Relentless Gladiator's Scaled Shoulders</Name>
     <Id>40872</Id>
     <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>150</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_shield_56</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>ScourgeStrikeHit</Trigger>
+          <Stats>
+            <BonusScourgeStrikeDamage>91.35</BonusScourgeStrikeDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Sigil</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Sigil of Arthritic Binding</Name>
+    <Id>40875</Id>
+    <Slot>Ranged</Slot>
   </Item>
   <Item>
     <ItemLevel>213</ItemLevel>
@@ -31714,8 +32558,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59241</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_12</IconPath>
     <Stats>
       <Armor>1321</Armor>
@@ -31740,8 +32584,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59246</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_plate_08</IconPath>
     <Stats>
       <Armor>1614</Armor>
@@ -31841,8 +32685,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59238</DisplayId>
-    <DisplaySlot>9</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_bracer_17</IconPath>
     <Stats>
       <Armor>1027</Armor>
@@ -33293,8 +34137,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59262</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_13</IconPath>
     <Stats>
       <Armor>739</Armor>
@@ -33371,8 +34215,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59255</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_plate_09</IconPath>
     <Stats>
       <Armor>903</Armor>
@@ -33587,8 +34431,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59262</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_13</IconPath>
     <Stats>
       <Armor>739</Armor>
@@ -33665,8 +34509,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59255</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_plate_09</IconPath>
     <Stats>
       <Armor>903</Armor>
@@ -35403,8 +36247,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59264</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_belt_13</IconPath>
     <Stats>
       <Armor>739</Armor>
@@ -39550,6 +40394,30 @@
     <Slot>Feet</Slot>
   </Item>
   <Item>
+    <ItemLevel>226</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_boots_cloth_05</IconPath>
+    <Stats>
+      <Armor>406</Armor>
+      <Stamina>96</Stamina>
+      <Intellect>42</Intellect>
+      <SpellPower>90</SpellPower>
+      <CritRating>48</CritRating>
+      <Resilience>56</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Rogue|Druid</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus />
+    <Name>Furious Gladiator's Boots of Dominance</Name>
+    <Id>41635</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
     <ItemLevel>245</ItemLevel>
     <DisplayId>0</DisplayId>
     <DisplaySlot>0</DisplaySlot>
@@ -41107,8 +41975,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59305</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_cloth_05</IconPath>
     <Stats>
       <Armor>406</Armor>
@@ -42022,8 +42890,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59301</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_cloth_12</IconPath>
     <Stats>
       <Armor>216</Armor>
@@ -42247,8 +43115,8 @@
   </Item>
   <Item>
     <ItemLevel>226</ItemLevel>
-    <DisplayId>59299</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_boots_cloth_12</IconPath>
     <Stats>
       <Armor>216</Armor>
@@ -49930,6 +50798,146 @@
     <Name>Earthshatter Hauberk</Name>
     <Id>43767</Id>
     <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_jewelry_talisman_01</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <ExpertiseRating>258</ExpertiseRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>RangedHit</Trigger>
+          <Stats>
+            <ExpertiseRating>258</ExpertiseRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+      <AttackPower>106</AttackPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Crusader's Locket</Name>
+    <Id>43829</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_jewelry_talisman_03</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <HasteRating>212</HasteRating>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <HasteRating>43</HasteRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Thorny Rose Brooch</Name>
+    <Id>43836</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>achievement_dungeon_ulduar77</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>281</SpellPower>
+          </Stats>
+          <Duration>20</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Spirit>33</Spirit>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Softly Glowing Orb</Name>
+    <Id>43837</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>174</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_box_04</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <CritRating>258</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>RangedHit</Trigger>
+          <Stats>
+            <CritRating>258</CritRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.15</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+      <AttackPower>53</AttackPower>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Chuchu's Tiny Box of Horrors</Name>
+    <Id>43838</Id>
+    <Slot>Trinket</Slot>
   </Item>
   <Item>
     <ItemLevel>187</ItemLevel>
@@ -117715,6 +118723,20 @@
     <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_mace_114</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <Strength>100</Strength>
+            <BonusHealingReceived>300</BonusHealingReceived>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.37</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>104</Stamina>
     </Stats>
     <Quality>Epic</Quality>
@@ -125461,6 +126483,20 @@
     <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_mace_114</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <Strength>115</Strength>
+            <BonusHealingReceived>340</BonusHealingReceived>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.37</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Stamina>94</Stamina>
     </Stats>
     <Quality>Epic</Quality>
@@ -146664,7 +147700,9 @@
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
     <SocketColor1>Red</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <SpellPower>5</SpellPower>
+    </SocketBonus>
     <Name>Saviana's Tribute</Name>
     <Id>53116</Id>
     <Slot>Finger</Slot>
@@ -146739,7 +147777,9 @@
     <Faction>Neutral</Faction>
     <SocketColor1>Blue</SocketColor1>
     <SocketColor2>Red</SocketColor2>
-    <SocketBonus />
+    <SocketBonus>
+      <SpellPower>7</SpellPower>
+    </SocketBonus>
     <Name>Surrogate Belt</Name>
     <Id>53121</Id>
     <Slot>Waist</Slot>
@@ -147154,5 +148194,138 @@
     <Name>Glowing Twilight Scale</Name>
     <Id>54573</Id>
     <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>649</Armor>
+      <Stamina>100</Stamina>
+      <Strength>67</Strength>
+      <DodgeRating>35</DodgeRating>
+      <DefenseRating>35</DefenseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Icebound Cloak</Name>
+    <Id>54801</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>159</Armor>
+      <Agility>67</Agility>
+      <Stamina>67</Stamina>
+      <AttackPower>89</AttackPower>
+      <CritRating>51</CritRating>
+      <HasteRating>34</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>The Frost Lord's War Cloak</Name>
+    <Id>54802</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>159</Armor>
+      <Stamina>76</Stamina>
+      <Strength>76</Strength>
+      <CritRating>45</CritRating>
+      <ExpertiseRating>45</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>The Frost Lord's Battle Shroud</Name>
+    <Id>54803</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>159</Armor>
+      <Stamina>51</Stamina>
+      <Intellect>51</Intellect>
+      <SpellPower>78</SpellPower>
+      <CritRating>45</CritRating>
+      <HasteRating>45</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Shroud of Winter's Chill</Name>
+    <Id>54804</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_cape_16</IconPath>
+    <Stats>
+      <Armor>159</Armor>
+      <Stamina>51</Stamina>
+      <Intellect>51</Intellect>
+      <Spirit>45</Spirit>
+      <SpellPower>78</SpellPower>
+      <HasteRating>45</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Cloak of the Frigid Winds</Name>
+    <Id>54805</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_staff_78</IconPath>
+    <Stats>
+      <Stamina>92</Stamina>
+      <Intellect>92</Intellect>
+      <SpellPower>550</SpellPower>
+      <CritRating>80</CritRating>
+      <HasteRating>80</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Staff</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>343</MinDamage>
+    <MaxDamage>643</MaxDamage>
+    <Speed>3.2</Speed>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <Name>Frostscythe of Lord Ahune</Name>
+    <Id>54806</Id>
+    <Slot>TwoHand</Slot>
   </Item>
 </ArrayOfItem>
