@@ -813,6 +813,14 @@ These numbers to do not include racial bonuses.",
             }
         }
 
+        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
+            return 
+                IsEnchantAllowedForClass(enchant, character.Class) && 
+                IsProfEnchantRelevant(enchant, character) && 
+                (HasWantedStats(enchant.Stats) || 
+                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
+        }
+
         public override bool IsBuffRelevant(Buff buff, Character character) {
             string name = buff.Name;
             // Force some buffs to active
@@ -831,15 +839,6 @@ These numbers to do not include racial bonuses.",
             bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
             return retVal;
         }
-
-        public override bool IsEnchantRelevant(Enchant enchant, Character character) {
-            return 
-                IsEnchantAllowedForClass(enchant, character.Class) && 
-                IsProfEnchantRelevant(enchant, character) && 
-                (HasWantedStats(enchant.Stats) || 
-                    (HasSurvivabilityStats(enchant.Stats) && !HasIgnoreStats(enchant.Stats)));
-        }
-
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
@@ -981,7 +980,6 @@ These numbers to do not include racial bonuses.",
 
             return statsBuffs;
         }
-
         private void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
         {
             foreach (Buff b in buffGroup)
@@ -1407,8 +1405,19 @@ These numbers to do not include racial bonuses.",
             {
                 BonusStrengthMultiplier = (calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 PhysicalCrit = (calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
-                    
+
                 DamageTakenMultiplier = (calcOpts.FuryStance ? 0.05f : 0f),
+
+                // Battle Shout
+                AttackPower = (calcOpts.M_BattleShout ? (548f * (1f + talents.CommandingPresence * 0.05f)) : 0f),
+                // Commanding Shout
+                Health = (calcOpts.M_CommandingShout ? (2255f * (1f + talents.CommandingPresence * 0.05f)) : 0f),
+                // Demo Shout
+                BossAttackPower = (calcOpts.M_DemoralizingShout ? (-411f * (1f + talents.ImprovedDemoralizingShout * 0.08f)) : 0f),
+                // Sunder Armor
+                ArmorPenetration = (calcOpts.M_SunderArmor ? 0.04f * 5f : 0f),
+                // Thunder Clap
+                BossAttackSpeedMultiplier = (calcOpts.M_ThunderClap ? -0.20f * (1f + talents.ImprovedThunderClap * (10f/3f)) : 0f),
             };
             #endregion
             #region From Talents
@@ -1479,7 +1488,6 @@ These numbers to do not include racial bonuses.",
             statsTotal = UpdateStatsAndAdd(statsTotal, null, character);
             //Stats statsProcs = new Stats();
 
-           
             // Dodge (your dodging incoming attacks)
             statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, character.Class);
             statsTotal.Dodge += StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, character.Class);
