@@ -1294,7 +1294,7 @@ namespace Rawr {
                 float fICD = 45;
                 // Assuming the target will be under 35% health for that amount of time.
                 float fChance = .35f/2f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { Dodge = fDodge }, fDuration, fICD, fChance));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { DodgeRating = fDodge }, fDuration, fICD, fChance));
             }
             #endregion
             else

@@ -114485,7 +114485,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Ruby Sanctum (25)</Area>
+          <Area>Unknown - 4987 (25)</Area>
           <Heroic>false</Heroic>
           <Boss>Halion</Boss>
         </ItemLocation>

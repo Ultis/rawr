@@ -116838,8 +116838,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>64514</DisplayId>
-    <DisplaySlot>21</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_mace_118</IconPath>
     <Stats>
       <SpecialEffects>
@@ -125843,8 +125843,8 @@
   </Item>
   <Item>
     <ItemLevel>277</ItemLevel>
-    <DisplayId>64515</DisplayId>
-    <DisplaySlot>21</DisplaySlot>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
     <IconPath>inv_mace_118</IconPath>
     <Stats>
       <SpecialEffects>
@@ -125872,9 +125872,7 @@
     <Speed>1.8</Speed>
     <Bind>BoP</Bind>
     <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <SpellPower>5</SpellPower>
-    </SocketBonus>
+    <SocketBonus />
     <Name>Trauma</Name>
     <Id>50685</Id>
     <Slot>MainHand</Slot>
@@ -148123,13 +148121,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTaken</Trigger>
+          <Trigger>DamageTakenPhysical</Trigger>
           <Stats>
             <DodgeRating>733</DodgeRating>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>45</Cooldown>
-          <Chance>0.35</Chance>
+          <Chance>0.175</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
