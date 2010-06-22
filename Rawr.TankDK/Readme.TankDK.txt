@@ -3,6 +3,13 @@
 Currently targeting: 
 * Wow version 3.3.3a
 
+2.3.19:
+* Fix for Defect 17837: Dual Rune of FC issue.
+* No Defect: Missing part of the Fallen Crusader Rune.  Adjusting special effects to better handle PPM.
+* No Defect: Improved Rotation selection
+* Defect 17964: There were certain talents that were showing negative at odd times.  So I fixed that.
+* Fix for Defect 17762: Performance issues
+
 2.3.18:
 * Defect 17712: Fix for a crash on some Vista systems.
 
