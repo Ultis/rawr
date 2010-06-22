@@ -20,24 +20,34 @@ namespace Rawr.Rogue
                 //Red
                 int[] delicate = { 39905, 39997, 40112, 42143 }; // Agi
                 int[] fractured = { 39909, 40002, 40117, 42153 }; // ArP
+                int[] precise = { 39910, 40003, 40118, 42154 }; // Exp
+                int[] bright = { 39906, 39999, 40114, 36766 }; // AP
 
                 //Purple
                 int[] shifting = { 39935, 40023, 40130, 40130 }; // Agi/Sta
                 int[] puissant = { 39933, 40033, 40140, 40140 }; // ArP/Sta
+                int[] balanced = { 39937, 40029, 40136, 40136 }; // AP/Sta
+                int[] guardian = { 39940, 40034, 40141, 40141 }; // Exp/Sta
 
                 //Blue
                 int[] solid = { 39919, 40008, 40119, 36767 }; // Sta
 
                 //Green
                 int[] forceful = { 39978, 40091, 40169, 40169 }; // Haste/Sta
+                int[] vivid = { 39975, 40088, 40166, 40166 }; // Hit/Sta
 
                 //Yellow
                 int[] quick = { 39918, 40017, 40128, 42150 }; // Haste
+                int[] rigid = { 39915, 40014, 40125, 40156 }; // Hit
 
                 //Orange
                 int[] glinting = { 39953, 40044, 40148, 40148 }; // Agi/Hit
                 int[] deadly = { 39952, 40043, 40147, 40147 }; // Agi/Crit
                 int[] deft = { 39955, 40046, 40150, 40150 }; // Agi/Haste
+                int[] pristine = { 39961, 40053, 40157, 40157 }; // AP/Hit
+                int[] wicked = { 39960, 40052, 40156, 40156 }; // AP/Crit
+                int[] stark = { 39963, 40055, 40159, 40159 }; // AP/Haste
+                int[] accurate = { 39966, 40058, 40162, 40162 }; // Exp/Hit
 
                 // Prismatic
                 int[] nightmare = { 49110, 49110, 49110, 49110 }; // All stats
@@ -59,9 +69,23 @@ namespace Rawr.Rogue
 						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Haste
 						RedId = delicate[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Attack Power
+						RedId = bright[0], YellowId = bright[0], BlueId = bright[0], PrismaticId = bright[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Crit
+						RedId = bright[0], YellowId = wicked[0], BlueId = balanced[0], PrismaticId = bright[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Haste
+						RedId = bright[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = bright[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Expertise
+						RedId = precise[0], YellowId = precise[0], BlueId = precise[0], PrismaticId = precise[0], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Hit
 					    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Hit
+					    RedId = bright[0], YellowId = pristine[0], BlueId = balanced[0], PrismaticId = bright[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Exp+/Hit
+					    RedId = precise[0], YellowId = accurate[0], BlueId = guardian[0], PrismaticId = precise[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Exp/Hit+
+					    RedId = accurate[0], YellowId = rigid[0], BlueId = vivid[0], PrismaticId = rigid[0], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max ArP
 						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = relentless },
@@ -75,6 +99,14 @@ namespace Rawr.Rogue
 						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste 
 						RedId = delicate[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Attack Power
+						RedId = bright[1], YellowId = bright[1], BlueId = bright[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Crit 
+						RedId = bright[1], YellowId = wicked[1], BlueId = balanced[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Haste 
+						RedId = bright[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Expertise
+						RedId = precise[1], YellowId = precise[1], BlueId = precise[1], PrismaticId = precise[1], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max ArP
 						RedId = fractured[1], YellowId = fractured[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
@@ -88,9 +120,23 @@ namespace Rawr.Rogue
 						RedId = delicate[1], YellowId = deadly[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste 
 						RedId = delicate[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Attack Power
+						RedId = bright[1], YellowId = bright[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Crit 
+						RedId = bright[1], YellowId = wicked[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Haste 
+						RedId = bright[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Expertise
+						RedId = precise[1], YellowId = precise[1], BlueId = nightmare[1], PrismaticId = precise[1], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Hit
 					    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Hit
+					    RedId = bright[1], YellowId = pristine[1], BlueId = balanced[1], PrismaticId = bright[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Exp+/Hit
+					    RedId = precise[1], YellowId = accurate[1], BlueId = guardian[1], PrismaticId = precise[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Exp/Hit+
+					    RedId = accurate[1], YellowId = rigid[1], BlueId = vivid[1], PrismaticId = rigid[1], MetaId = relentless },
 						
 					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max ArP
 						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = relentless },
@@ -104,6 +150,14 @@ namespace Rawr.Rogue
 						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Haste 
 						RedId = delicate[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Attack Power
+						RedId = bright[2], YellowId = bright[2], BlueId = bright[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Crit 
+						RedId = bright[2], YellowId = wicked[2], BlueId = balanced[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Haste 
+						RedId = bright[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Expertise
+						RedId = precise[2], YellowId = precise[2], BlueId = precise[2], PrismaticId = precise[2], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max ArP
 						RedId = fractured[2], YellowId = fractured[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
@@ -117,9 +171,23 @@ namespace Rawr.Rogue
 						RedId = delicate[2], YellowId = deadly[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Haste 
 						RedId = delicate[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Attack Power
+						RedId = bright[2], YellowId = bright[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Crit 
+						RedId = bright[2], YellowId = wicked[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Haste 
+						RedId = bright[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Expertise
+						RedId = precise[2], YellowId = precise[2], BlueId = nightmare[2], PrismaticId = precise[2], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Hit
 					    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Hit
+					    RedId = bright[2], YellowId = pristine[2], BlueId = balanced[2], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Exp+/Hit
+					    RedId = precise[2], YellowId = accurate[2], BlueId = guardian[2], PrismaticId = precise[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Exp/Hit+
+					    RedId = accurate[2], YellowId = rigid[2], BlueId = vivid[2], PrismaticId = rigid[2], MetaId = relentless },
 						
 					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max ArP
 						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = relentless },
@@ -133,6 +201,14 @@ namespace Rawr.Rogue
 						RedId = delicate[3], YellowId = quick[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Haste
 						RedId = delicate[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Attack Power
+						RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Crit
+						RedId = bright[3], YellowId = quick[3], BlueId = balanced[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Haste
+						RedId = bright[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Expertise
+						RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max ArP
 						RedId = fractured[3], YellowId = fractured[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
@@ -146,9 +222,25 @@ namespace Rawr.Rogue
 						RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
 					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Haste
 						RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Attack Power
+						RedId = bright[3], YellowId = bright[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Crit
+						RedId = bright[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Haste
+						RedId = bright[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Expertise
+						RedId = precise[3], YellowId = precise[3], BlueId = nightmare[3], PrismaticId = precise[3], MetaId = relentless },
 
 					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agility Heavy
 						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Attack Power Heavy
+						RedId = bright[2], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Expertise Heavy
+						RedId = precise[2], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Exp+/Hit
+					    RedId = precise[3], YellowId = accurate[3], BlueId = guardian[3], PrismaticId = precise[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Exp/Hit+
+					    RedId = accurate[3], YellowId = rigid[3], BlueId = vivid[3], PrismaticId = rigid[3], MetaId = relentless },
 			    };
             }
         }
