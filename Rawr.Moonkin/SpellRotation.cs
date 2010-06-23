@@ -60,7 +60,7 @@ namespace Rawr.Moonkin
             int naturesGrace = talents.NaturesGrace;
             int starlightWrath = talents.StarlightWrath;
 
-            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
+            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
             overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) : (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
             overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
@@ -85,7 +85,7 @@ namespace Rawr.Moonkin
         public void DoSpecialStarfire(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
-            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
             overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             mainNuke.CastTime = mainNuke.BaseCastTime;
@@ -117,10 +117,10 @@ namespace Rawr.Moonkin
 
             float naturesGrace = talents.NaturesGrace;
 
-            float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
             overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
-            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
             dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             float gcd = 1.5f / (1.0f + spellHaste);
@@ -158,7 +158,7 @@ namespace Rawr.Moonkin
 
             float naturesGrace = talents.NaturesGrace;
 
-            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
+            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
             dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             float gcd = 1.5f / (1.0f + spellHaste);
