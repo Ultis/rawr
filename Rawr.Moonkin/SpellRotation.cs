@@ -60,6 +60,10 @@ namespace Rawr.Moonkin
             int naturesGrace = talents.NaturesGrace;
             int starlightWrath = talents.StarlightWrath;
 
+            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
+            overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) : (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
+            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
             float ngGCD = (float)Math.Max(gcd / 1.2f, 1.0f);
@@ -73,7 +77,7 @@ namespace Rawr.Moonkin
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / mainNuke.NGCastTime) + 1.0f);
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
             // Damage calculations
-            float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
+            float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
         }
@@ -81,6 +85,8 @@ namespace Rawr.Moonkin
         public void DoSpecialStarfire(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
             float latency = calcs.Latency;
+            float overallDamageModifier = mainNuke.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             mainNuke.CastTime = mainNuke.BaseCastTime;
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
@@ -90,7 +96,7 @@ namespace Rawr.Moonkin
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / mainNuke.NGCastTime) + 1.0f);
             mainNuke.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * mainNuke.NGCastTime;
             // Damage calculations
-            float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
+            float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
         }
@@ -109,7 +115,13 @@ namespace Rawr.Moonkin
         {
             float latency = calcs.Latency;
 
-			float naturesGrace = talents.NaturesGrace;
+            float naturesGrace = talents.NaturesGrace;
+
+            float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+
+            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+            dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -121,7 +133,7 @@ namespace Rawr.Moonkin
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
             dotSpell.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * NGCastTime;
 
-            float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.AllDamageModifier;
+            float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * overallDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
             dotSpell.DamagePerHit = (totalCritChance * mfCritDamage + (1 - totalCritChance) * mfDirectDamage) * spellHit;
@@ -130,11 +142,11 @@ namespace Rawr.Moonkin
             if (dotSpell.DotEffect.CanCrit)
             {
                 float critDamagePerTick = normalDamagePerTick * dotSpell.CriticalDamageModifier;
-                damagePerTick = (totalCritChance * critDamagePerTick + (1 - totalCritChance) * normalDamagePerTick) * dotSpell.DotEffect.AllDamageModifier;
+                damagePerTick = (totalCritChance * critDamagePerTick + (1 - totalCritChance) * normalDamagePerTick) * dotEffectDamageModifier;
             }
             else
             {
-                damagePerTick = normalDamagePerTick * dotSpell.DotEffect.AllDamageModifier;
+                damagePerTick = normalDamagePerTick * dotEffectDamageModifier;
             }
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
@@ -144,7 +156,10 @@ namespace Rawr.Moonkin
         {
             float latency = calcs.Latency;
 
-			float naturesGrace = talents.NaturesGrace;
+            float naturesGrace = talents.NaturesGrace;
+
+            float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerDemonicPactMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
+            dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -155,7 +170,7 @@ namespace Rawr.Moonkin
             float NGProcChance = spellCrit * naturesGrace / 3.0f;
             float NGUptime = 1.0f - (float)Math.Pow(1.0f - NGProcChance, Math.Floor(3.0f / normalCastTime) + 1.0f);
             dotSpell.CastTime = (1 - NGUptime) * normalCastTime + NGUptime * NGCastTime;
-            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.DotEffect.AllDamageModifier;
+            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * (spellPower + dotSpell.IdolExtraSpellPower)) * dotEffectDamageModifier;
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
 
@@ -367,10 +382,8 @@ namespace Rawr.Moonkin
             // Eclipse bonus and improved Insect Swarm
             // NOTE: Eclipse bonus additive with Moonfury and 4T9; multiplicative with everything else
             solarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage + eclipseMultiplier;
-            solarEclipseCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
             if (insectSwarm != null)
                 solarEclipseCast.AllDamageModifier *= 1 + 0.01f * impInsectSwarm;
-            solarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             Spell preSolarCast = solver.FindSpell("SF");
             if (moonfire != null)
@@ -378,10 +391,6 @@ namespace Rawr.Moonkin
 
             Spell lunarEclipseCast = new Spell(preSolarCast);
             lunarEclipseCast.CriticalChanceModifier = (float)Math.Min(1.0f - spellCrit, lunarEclipseCast.CriticalChanceModifier + eclipseMultiplier);
-
-            lunarEclipseCast.AllDamageModifier = 1 + (float)Math.Floor(talents.Moonfury * 10 / 3.0f) / 100.0f + calcs.BasicStats.BonusMoonkinNukeDamage;
-            lunarEclipseCast.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-            lunarEclipseCast.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
 
             DoMainNuke(talents, calcs, ref preSolarCast, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(talents, calcs, ref solarEclipseCast, spellPower, spellHit, spellCrit, spellHaste);

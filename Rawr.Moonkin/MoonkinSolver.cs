@@ -290,7 +290,6 @@ namespace Rawr.Moonkin
                             ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        RecreateSpells(character.DruidTalents, ref calcs);
                         float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         spellDetails[0] = Starfire.DamagePerHit;
                         spellDetails[1] = Wrath.DamagePerHit;
@@ -360,7 +359,6 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                RecreateSpells(character.DruidTalents, ref calcs);
                 float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
                 spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
@@ -685,21 +683,6 @@ namespace Rawr.Moonkin
             InsectSwarm.DotEffect.Duration += 2.0f * talents.NaturesSplendor;
             // Moonfire: Crit chance +(0.05 * Imp Moonfire)
             Moonfire.CriticalChanceModifier += 0.05f * talents.ImprovedMoonfire;
-
-            // Wrath, Insect Swarm: Nature spell damage multipliers
-            Wrath.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-            InsectSwarm.DotEffect.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-            // Starfire, Moonfire: Arcane damage multipliers
-            Starfire.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-            Moonfire.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-            Moonfire.DotEffect.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
-
-            // Level-based partial resistances
-            Wrath.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            Starfire.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            Moonfire.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            Moonfire.DotEffect.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            // Insect Swarm is a binary spell
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
