@@ -1671,8 +1671,8 @@ These numbers to do not include racial bonuses.",
 
             if (tempArPenEffects.Count == 0)
             {
-                tempArPenRatings.Add(0.0f);
-                tempArPenRatingUptimes.Add(1.0f);
+                //tempArPenRatings.Add(0.0f);
+                //tempArPenRatingUptimes.Add(1.0f);
             }
             else if (tempArPenEffects.Count == 1)
             { //Only one, add it to
