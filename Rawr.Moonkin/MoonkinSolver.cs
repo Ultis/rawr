@@ -310,6 +310,7 @@ namespace Rawr.Moonkin
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
                             activatedEffects[idx].Deactivate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
+                        if (tempUpTime == 0) continue;
                         // Adjust previous probability tables by the current factor
                         // At the end of the algorithm, this ensures that the probability table will contain the individual
                         // probabilities of each effect or set of effects.
@@ -327,12 +328,9 @@ namespace Rawr.Moonkin
 
                                 // Calculate the "layer" of the current subset by getting the set bit count.
                                 int subsetLength = 0;
-                                for (int j = subset; j > 0; j >>= 1)
+                                for (int j = subset; j > 0; ++subsetLength)
                                 {
-                                  if ((j & 1) > 0)
-                                  {
-                                      ++subsetLength;
-                                  }
+                                    j &= --j;
                                 }
 
                                 // Set the sign of the operation: Evenly separated layers are added, oddly separated layers are subtracted
@@ -352,13 +350,11 @@ namespace Rawr.Moonkin
                     sign = -sign;
                 }
                 float accumulatedDPS = 0.0f;
-                for (int i = 0; i < NUM_SPELL_DETAILS; ++i)
-                {
-                    spellDetails[i] = 0.0f;
-                }
+                Array.Clear(spellDetails, 0, spellDetails.Length);
                 // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
                 foreach (KeyValuePair<int, float> kvp in cachedUptimes)
                 {
+                    if (kvp.Value == 0) continue;
                     accumulatedDPS += kvp.Value * cachedDamages[kvp.Key];
                     for (int i = 0; i < NUM_SPELL_DETAILS; ++i)
                     {
