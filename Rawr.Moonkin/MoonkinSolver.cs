@@ -319,21 +319,27 @@ namespace Rawr.Moonkin
                             List<int> keys = new List<int>(cachedUptimes.Keys);
                             foreach (int subset in keys)
                             {
+                                // Truly a subset?
+                                if ((pairs & subset) != subset)
+                                {
+                                    continue;
+                                }
+
                                 // Calculate the "layer" of the current subset by getting the set bit count.
                                 int subsetLength = 0;
-                                for (int j = 0; j < 32; ++j)
-                                    if ((subset & (1 << j)) > 0)
-                                        ++subsetLength;
-                                // Entries that are in the current "layer" or higher in the table are not subsets, by definition
-                                if (subsetLength >= lengthCounter) break;
+                                for (int j = subset; j > 0; j >>= 1)
+                                {
+                                  if ((j & 1) > 0)
+                                  {
+                                      ++subsetLength;
+                                  }
+                                }
+
                                 // Set the sign of the operation: Evenly separated layers are added, oddly separated layers are subtracted
                                 int newSign = ((lengthCounter - subsetLength) % 2 == 0) ? 1 : -1;
-                                // Check for subset.
-                                // If it is a subset, adjust by current uptime * sign of operation.
-                                if ((pairs & subset) == subset)
-                                {
-                                    cachedUptimes[subset] += newSign * tempUpTime;
-                                }
+
+                                // Adjust by current uptime * sign of operation.
+                                cachedUptimes[subset] += newSign * tempUpTime;
                             }
                         }
                         // Cache the results to be calculated later

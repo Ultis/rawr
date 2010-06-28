@@ -15,7 +15,7 @@ namespace Rawr.Moonkin
         public Spell(Spell copy)
         {
             this.Name = copy.Name;
-            this.School = copy.School;
+            this.School = copy.School == SpellSchool.Arcane ? SpellSchool.Arcane : SpellSchool.Nature;
             this.BaseCastTime = copy.BaseCastTime;
             this.BaseDamage = copy.BaseDamage;
             this.AllDamageModifier = copy.AllDamageModifier;
