@@ -59,6 +59,7 @@ namespace Rawr.Rogue
         public float VanishCDReduction { get; set; }
 
         private float[] _averageNormalCP = new float[6];
+        private float[] _averageSStrikeCP = new float[6];
         private float[] _averageMutiCP = new float[6];
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, bool maintainBleed,
@@ -99,6 +100,7 @@ namespace Rawr.Rogue
             WPStats = wPStats;
             APStats = aPStats;
 
+            #region Talent bonuses
             BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
             BonusDamageMultiplierHFB = (0.05f + (Char.RogueTalents.GlyphOfHungerforBlood ? 0.03f : 0f)) * Char.RogueTalents.HungerForBlood;
             BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
@@ -119,20 +121,30 @@ namespace Rawr.Rogue
             ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
             ToTTCostReduction = 5 * Char.RogueTalents.FilthyTricks;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
+            #endregion
 
+            #region Probability tables
             float c = ChanceExtraCPPerHit, h = (1f - c), f = CPOnFinisher, nf = (1f - f);
             _averageNormalCP[1] = 1 * (f + nf * h) + 2 * (nf * c);
             _averageNormalCP[2] = 2 * (f * h + nf * c + nf * h * h) + 3 * (f * c);
             _averageNormalCP[3] = 3 * (f * c + f * h * h + 2 * nf * c * h + nf * h * h * h) + 4 * (f * h * c + nf * c * c + nf * h * h * c);
             _averageNormalCP[4] = 4 * (2 * f * c * h + f * h * h * h + nf * c * c + 3 * nf * c * h * h + nf * h * h * h * h) + 5 * (f * c * c + f * h * h * c + 2 * nf * c * h * c + nf * h * h * h * c);
-            _averageNormalCP[5] = 5 * (f * c * c + 3 * f + c * h * h + f * h * h * h * h + 3 * nf * c * c * h + 4 * nf * c * h * h * h + nf * h * h * h * h * h) + 6 * (2 * f * c * h * c + f * h * h * h * c + nf * c * c * c + 3 * nf * c * h * h * c + nf * h * h * h * h * c);
-
-            float cM = ChanceExtraCPPerMutiHit, hM = (1f - cM * cM);
-            _averageMutiCP[1] = 1 * (f) + 2 * (nf * hM) + 3 * (nf * cM);
-            _averageMutiCP[2] = 2 * (nf * hM) + 3 * (f * hM + nf * cM) + 4 * (f * cM);
-            _averageMutiCP[3] = 3 * (f * hM + nf * cM) + 4 * (f * cM + nf * hM * hM) + 5 * (nf * hM * cM);
-            _averageMutiCP[4] = 4 * (f * cM + nf * hM * hM) + 5 * (f * hM * hM + 2 * nf * hM * cM) + 6 * (f * hM * cM + nf * cM * cM);
-            _averageMutiCP[5] = 5 * (f * hM * hM + 2 * nf * hM * cM) + 6 * (2 * f * hM * cM + nf * hM * hM * hM + nf * cM * cM) + 7 * (f * cM * cM + nf * hM * hM * cM);
+            _averageNormalCP[5] = 5 * (f * c * c + 3 * f * c * h * h + f * h * h * h * h + 3 * nf * c * c * h + 4 * nf * c * h * h * h + nf * h * h * h * h * h) + 6 * (2 * f * c * h * c + f * h * h * h * c + nf * c * c * c + 3 * nf * c * h * h * c + nf * h * h * h * h * c);
+            
+            c = ChanceExtraCPPerHit + ChanceOnCPOnSSCrit * SStrikeStats.CritChance; h = (1f - c);
+            _averageSStrikeCP[1] = 1 * (f + nf * h) + 2 * (nf * c);
+            _averageSStrikeCP[2] = 2 * (f * h + nf * c + nf * h * h) + 3 * (f * c + nf * h * c);
+            _averageSStrikeCP[3] = 3 * (f * c + f * h * h + 2 * nf * c * h + nf * h * h * h) + 4 * (f * h * c + nf * c * c + nf * h * h * c);
+            _averageSStrikeCP[4] = 4 * (2 * f * c * h + f * h * h * h + nf * c * c + 3 * nf * c * h * h + nf * h * h * h * h) + 5 * (f * c * c + f * h * h * c + 2 * nf * c * h * c + nf * h * h * h * c);
+            _averageSStrikeCP[5] = 5 * (f * c * c + 3 * f * c * h * h + f * h * h * h * h + 3 * nf * c * c * h + 4 * nf * c * h * h * h + nf * h * h * h * h * h) + 6 * (2 * f * c * h * c + f * h * h * h * c + nf * c * c * c + 3 * nf * c * h * h * c + nf * h * h * h * h * c);
+            
+            c = ChanceExtraCPPerMutiHit; h = (1f - c * c);
+            _averageMutiCP[1] = 1 * (f) + 2 * (nf * h) + 3 * (nf * c);
+            _averageMutiCP[2] = 2 * (nf * h) + 3 * (f * h + nf * c) + 4 * (f * c);
+            _averageMutiCP[3] = 3 * (f * h + nf * c) + 4 * (f * c + nf * h * h) + 5 * (nf * h * c);
+            _averageMutiCP[4] = 4 * (f * c + nf * h * h) + 5 * (f * h * h + 2 * nf * h * c) + 6 * (f * h * c + nf * c * c);
+            _averageMutiCP[5] = 5 * (f * h * h + 2 * nf * h * c) + 6 * (2 * f * h * c + nf * h * h * h + nf * c * c) + 7 * (f * c * c + nf * h * h * c);
+            #endregion
         }
 
         public RogueRotationCalculation GetRotationCalculations(int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool PTRMode)
@@ -148,7 +160,7 @@ namespace Rawr.Rogue
             float averageGCD = 1f / (1f - AvoidedAttacks);
             float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
-            float[] _averageCP = CPG == 0 ? _averageMutiCP : _averageNormalCP;
+            float[] _averageCP = CPG == 0 ? _averageMutiCP : CPG == 1 ? _averageSStrikeCP : _averageNormalCP;
             float averageFinisherCP = _averageCP[5];
 			
 			#region Melee
@@ -162,8 +174,7 @@ namespace Rawr.Rogue
             #region Combo Point Generator
             float cpgCount = 0f;
             float cpgEnergy = CPG == 2 ? BackstabStats.EnergyCost : CPG == 3 ? HemoStats.EnergyCost : CPG == 1 ? SStrikeStats.EnergyCost : MutiStats.EnergyCost;
-            float tempCPPerCPG = CPG == 2 ? BackstabStats.CPPerSwing : CPG == 3 ? HemoStats.CPPerSwing : CPG == 1 ? SStrikeStats.CPPerSwing : MutiStats.CPPerSwing;
-            float CPPerCPG = tempCPPerCPG + (CPG == 1 ? ChanceOnCPOnSSCrit * SStrikeStats.CritChance : 0f);
+            float CPPerCPG = CPG == 2 ? BackstabStats.CPPerSwing : CPG == 3 ? HemoStats.CPPerSwing : CPG == 1 ? SStrikeStats.CPPerSwing : MutiStats.CPPerSwing;
             #endregion
 
             #region Slice and Dice
