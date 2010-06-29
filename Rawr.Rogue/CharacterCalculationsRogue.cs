@@ -47,7 +47,8 @@ namespace Rawr.Rogue
         public float CritChance { get; set; }
         public float MainHandSpeed { get; set; }
         public float OffHandSpeed { get; set; }
-        public float ArmorMitigation { get; set; }
+        public float ArmorMitigationMH { get; set; }
+        public float ArmorMitigationOH { get; set; }
         public float Duration { get; set; }
 
         public RogueAbilityStats MainHandStats { get; set; }
@@ -138,7 +139,8 @@ namespace Rawr.Rogue
             dictValues.Add("Crit Chance", CritChance.ToString() + "%");
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
             dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
-            dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
+            dictValues.Add("Armor Mitigation MainHand", ArmorMitigationMH.ToString() + "%");
+            dictValues.Add("Armor Mitigation OffHand", ArmorMitigationOH.ToString() + "%");
 
             dictValues.Add("Optimal Rotation", HighestDPSRotation.ToString());
             dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
