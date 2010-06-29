@@ -122,7 +122,7 @@ namespace Rawr.Moonkin
                         / timeBetweenProcs;
                 };
             }
-            else if (Effect.Trigger == Trigger.DamageDone ||
+            else if ((Effect.Trigger == Trigger.DamageDone ||
                 Effect.Trigger == Trigger.DamageOrHealingDone ||
                 Effect.Trigger == Trigger.DamageSpellCast ||
                 Effect.Trigger == Trigger.DamageSpellCrit ||
@@ -136,48 +136,28 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
                 Effect.Trigger == Trigger.MoonfireTick ||
                 Effect.Trigger == Trigger.InsectSwarmTick ||
-				Effect.Trigger == Trigger.DoTTick)
+				Effect.Trigger == Trigger.DoTTick) &&
+                (Effect.Stats.HasteRating > 0 ||
+                Effect.Stats.SpellHaste > 0  ||
+                Effect.Stats.CritRating > 0 ||
+                Effect.Stats.HighestStat > 0))
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
                 {
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
                     Stats st = e.Stats;
-                    float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
-                    float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
-                    float arcaneModifier = st.BonusArcaneDamageMultiplier;
-                    float natureModifier = st.BonusNatureDamageMultiplier;
 
-                    if (spellPower > 0)
-                        sp += spellPower * maxStack;
                     if (critRating > 0)
                         sc += spellCrit;
                     if (spellHaste > 0)
                         sHa += spellHaste;
-                    if (arcaneModifier > 0)
-                    {
-                        storedStats.BonusArcaneDamageMultiplier = c.BasicStats.BonusArcaneDamageMultiplier;
-                        c.BasicStats.BonusArcaneDamageMultiplier += ((1 + c.BasicStats.BonusArcaneDamageMultiplier) * (1 + arcaneModifier)) - (1 + c.BasicStats.BonusArcaneDamageMultiplier);
-                    }
-                    if (natureModifier > 0)
-                    {
-                        storedStats.BonusNatureDamageMultiplier = c.BasicStats.BonusNatureDamageMultiplier;
-                        c.BasicStats.BonusNatureDamageMultiplier += ((1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + natureModifier)) - (1 + c.BasicStats.BonusNatureDamageMultiplier);
-                    }
-                    if (spirit > 0)
-                    {
-                        Stats s = c.BasicStats.Clone();
-                        s.Spirit += spirit;
-                        CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
-                        storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
-                        sp += storedStats.SpellPower;
-                    }
                     if (highestStat > 0)
                     {
                         if (c.BasicStats.Spirit > c.BasicStats.Intellect)
@@ -205,31 +185,17 @@ namespace Rawr.Moonkin
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
                     Stats st = e.Stats;
-                    float spellPower = st.SpellPower;
                     float critRating = st.CritRating;
                     float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
-                    float spirit = st.Spirit;
                     float highestStat = st.HighestStat;
-                    float arcaneModifier = st.BonusArcaneDamageMultiplier;
-                    float natureModifier = st.BonusNatureDamageMultiplier;
 
-                    if (arcaneModifier > 0)
-                        c.BasicStats.BonusArcaneDamageMultiplier = storedStats.BonusArcaneDamageMultiplier;
-                    if (natureModifier > 0)
-                        c.BasicStats.BonusNatureDamageMultiplier = storedStats.BonusNatureDamageMultiplier;
-                    if (spellPower > 0)
-                        sp -= spellPower * maxStack;
                     if (critRating > 0)
                         sc -= spellCrit;
                     if (spellHaste > 0)
                         sHa -= spellHaste;
-                    if (spirit > 0)
-                    {
-                        sp -= storedStats.SpellPower;
-                    }
                     if (highestStat > 0)
                     {
                         sp -= storedStats.SpellPower;
@@ -258,7 +224,7 @@ namespace Rawr.Moonkin
                             upTime = Effect.GetAverageUptime(r.Duration / r.CastCount, 1f);
                             break;
                         case Trigger.MoonfireCast:
-                            upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireCasts, r.Solver.GetSpellHit(c));
+                            upTime = Effect.GetAverageUptime(r.Duration / r.MoonfireCasts, 1f);
                             break;
                         case Trigger.InsectSwarmOrMoonfireTick:
                             upTime = Effect.GetAverageUptime(r.Duration / (r.InsectSwarmTicks + r.MoonfireTicks), 1f);
@@ -271,6 +237,10 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.DoTTick:
                             upTime = Effect.GetAverageUptime(r.Duration / (r.MoonfireTicks + r.InsectSwarmTicks), 1f);
+                            break;
+                        case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
+                            upTime = Effect.GetAverageUptime(((r.Duration / r.CastCount) + (r.Duration / (r.MoonfireTicks + r.InsectSwarmTicks))) / 2.0f, 1f);
                             break;
                         default:
                             break;

@@ -238,6 +238,9 @@ namespace Rawr.Moonkin
 
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
+            float oldArcaneMultiplier = calcs.BasicStats.BonusArcaneDamageMultiplier;
+            float oldNatureMultiplier = calcs.BasicStats.BonusNatureDamageMultiplier;
+
             foreach (SpellRotation rot in rotations)
             {
                 rot.Solver = this;
@@ -245,25 +248,82 @@ namespace Rawr.Moonkin
                 float totalUpTime = 0.0f;
                 float[] spellDetails = new float[NUM_SPELL_DETAILS];
                 List<ProcEffect> activatedEffects = new List<ProcEffect>();
+
+                rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+
+                float currentSpellPower = baseSpellPower;
+                calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
+                calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
                 // Separate stat-boosting proc trinkets into their own list
                 foreach (ProcEffect proc in procEffects)
                 {
                     if (proc.CalculateDPS != null)
                     {
-                        if (rot.Duration == 0.0f)
-                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         accumulatedDamage += proc.CalculateDPS(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) * rot.Duration;
                     }
                     else if (proc.Activate != null)
                     {
                         activatedEffects.Add(proc);
                     }
-                    if (proc.CalculateMP5 != null)
+                    else if (proc.CalculateMP5 != null)
                     {
-                        if (rot.Duration == 0.0f)
-                            rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                         manaGained += proc.CalculateMP5(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
+                    }
+                    else
+                    {
+                        if (proc.Effect.Stats.SpellPower > 0)
+                        {
+                            switch (proc.Effect.Trigger)
+                            {
+                                case Trigger.DamageDone:
+                                case Trigger.DamageOrHealingDone:
+                                    currentSpellPower += proc.Effect.GetAverageStats(((rot.Duration / rot.CastCount) + (rot.Duration / (rot.MoonfireTicks + rot.InsectSwarmTicks))) / 2.0f).SpellPower;
+                                    break;
+                                case Trigger.Use:
+                                    currentSpellPower += proc.Effect.GetAverageStats(0f, 1f).SpellPower;
+                                    break;
+                                case Trigger.SpellHit:
+                                case Trigger.DamageSpellHit:
+                                    currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, GetSpellHit(calcs)).SpellPower;
+                                    break;
+                                case Trigger.SpellCrit:
+                                case Trigger.DamageSpellCrit:
+                                    currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / (rot.CastCount - rot.InsectSwarmCasts), baseCrit).SpellPower;
+                                    break;
+                                case Trigger.SpellCast:
+                                case Trigger.DamageSpellCast:
+                                    currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, 1f).SpellPower;
+                                    break;
+                                case Trigger.MoonfireCast:
+                                    currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.MoonfireCasts, 1f).SpellPower;
+                                    break;
+                                case Trigger.DoTTick:
+                                case Trigger.InsectSwarmOrMoonfireTick:
+                                    currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / (rot.InsectSwarmTicks + rot.MoonfireTicks), 1f).SpellPower;
+                                    break;
+                                case Trigger.MoonfireTick:
+                                    currentSpellPower = proc.Effect.GetAverageStats(rot.Duration / rot.MoonfireTicks, 1f).SpellPower;
+                                    break;
+                                case Trigger.InsectSwarmTick:
+                                    currentSpellPower = proc.Effect.GetAverageStats(rot.Duration / rot.InsectSwarmTicks, 1f).SpellPower;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        else if (proc.Effect.Stats.Spirit > 0)
+                        {
+                            currentSpellPower += proc.Effect.GetAverageStats().Spirit * 0.3f;
+                        }
+                        else if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
+                        {
+                            calcs.BasicStats.BonusArcaneDamageMultiplier *= 1 + proc.Effect.GetAverageStats(rot.Duration / rot.CastCount).BonusArcaneDamageMultiplier;
+                        }
+                        else if (proc.Effect.Stats.BonusNatureDamageMultiplier > 0)
+                        {
+                            calcs.BasicStats.BonusNatureDamageMultiplier *= 1 + proc.Effect.GetAverageStats(rot.Duration / rot.CastCount).BonusNatureDamageMultiplier;
+                        }
                     }
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
@@ -288,9 +348,9 @@ namespace Rawr.Moonkin
                         {
                             pairs |= 1 << idx;
                             ++lengthCounter;
-                            activatedEffects[idx].Activate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        float tempDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
                         spellDetails[0] = Starfire.DamagePerHit;
                         spellDetails[1] = Wrath.DamagePerHit;
                         spellDetails[2] = Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
@@ -308,7 +368,7 @@ namespace Rawr.Moonkin
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
-                            activatedEffects[idx].Deactivate(character, calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
                         if (tempUpTime == 0) continue;
                         // Adjust previous probability tables by the current factor
@@ -361,7 +421,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, baseCrit, baseHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
                 spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
                 spellDetails[1] += (1 - totalUpTime) * Wrath.DamagePerHit;
