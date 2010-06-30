@@ -248,9 +248,12 @@ namespace Rawr.Moonkin
                 float totalUpTime = 0.0f;
                 float[] spellDetails = new float[NUM_SPELL_DETAILS];
                 List<ProcEffect> activatedEffects = new List<ProcEffect>();
+                List<ProcEffect> alwaysUpEffects = new List<ProcEffect>();
 
+                // Pre-calculate rotational variables with base stats
                 rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
 
+                // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
                 calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
@@ -301,6 +304,7 @@ namespace Rawr.Moonkin
                     {
                         currentSpellPower += proc.Effect.GetAverageStats().Spirit * 0.3f;
                     }
+                    // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
                     {
                         calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, 1f).BonusArcaneDamageMultiplier;
@@ -320,7 +324,16 @@ namespace Rawr.Moonkin
                     }
                     else if (proc.Activate != null)
                     {
-                        activatedEffects.Add(proc);
+                        float upTime = proc.UpTime(rot, calcs);
+                        // Procs with 100% uptime should be activated and not put into the combination loop
+                        if (upTime == 1)
+                        {
+                            alwaysUpEffects.Add(proc);
+                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                        }
+                        // Procs with uptime 0 < x < 100 should be activated
+                        else if (upTime > 0)
+                            activatedEffects.Add(proc);
                     }
                     else if (proc.CalculateMP5 != null)
                     {
@@ -509,6 +522,12 @@ namespace Rawr.Moonkin
                 }
                 else
                     cachedResults[rot.Name] = rot.RotationData;
+
+                // Deactivate always-up procs
+                foreach (ProcEffect proc in alwaysUpEffects)
+                {
+                    proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                }
             }
             // Present the findings to the user.
             calcs.TreantDamage = treeDamage / treeCasts;
