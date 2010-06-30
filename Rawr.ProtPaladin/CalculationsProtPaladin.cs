@@ -709,6 +709,7 @@ focus on Survival Points.",
                             statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageDone, chanceDamageDone));
                             break;
                         case Trigger.DamageTaken:
+                        case Trigger.DamageTakenPhysical:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed));
                             break;
                         case Trigger.JudgementHit:
@@ -1174,7 +1175,7 @@ focus on Survival Points.",
                     trigger == Trigger.ShieldofRighteousness || trigger == Trigger.HammeroftheRighteous ||
                     trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
                     trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
-                    trigger == Trigger.DivinePlea
+                    trigger == Trigger.DivinePlea            || trigger == Trigger.DamageTakenPhysical
             );
         }
 
