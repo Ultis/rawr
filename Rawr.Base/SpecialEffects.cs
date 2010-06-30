@@ -713,7 +713,7 @@ namespace Rawr {
                     (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
             else if ((match = new Regex(@"When you deal damage you have a chance to gain (?<amount>\d\d*) attack power for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Whispering Fanged Skull
+            {   // Whispering Fanged Skull & Sharpened Twilight Scale
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone,
                     new Stats() { AttackPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 45f, 0.35f));
@@ -1277,6 +1277,7 @@ namespace Rawr {
 
             #endregion
             #region 3.3.5 Trinkets
+                // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
             else if ((match = Regex.Match(line, @"For the next 15 sec, each time your direct healing spells heal a target you cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for 6 sec")).Success)
             {
                 // Eyes of Twilight; Procs on Healing Hit and HoTs; Hits at least 5 people
@@ -1295,6 +1296,12 @@ namespace Rawr {
                 // Assuming the target will be under 35% health for that amount of time.
                 float fChance = .35f/2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { DodgeRating = fDodge }, fDuration, fICD, fChance));
+            }
+            else if ((match = new Regex(@"Your damaging spells have a chance to grant (?<spellPower>\d+) spell power for 15 sec").Match(line)).Success)
+            {
+                // Charred Twilight Scale
+                float spellPower = int.Parse(match.Groups["spellPower"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellPower }, 15.0f, 45.0f, 0.1f));
             }
             #endregion
             else
