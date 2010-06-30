@@ -1278,14 +1278,6 @@ namespace Rawr {
             #endregion
             #region 3.3.5 Trinkets
                 // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
-            else if ((match = Regex.Match(line, @"For the next 15 sec, each time your direct healing spells heal a target you cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for 6 sec")).Success)
-            {
-                // Eyes of Twilight; Procs on Healing Hit and HoTs; Hits at least 5 people
-                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 15f, 2f * 60f);
-                SpecialEffect secondary = new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 5 }, 6f, 0f, 0.01f, 1);
-                primary.Stats.AddSpecialEffect(secondary);
-                stats.AddSpecialEffect(primary);
-            }
 			else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
             {
                 // Petrified Twilight Scale
@@ -2103,6 +2095,14 @@ namespace Rawr {
                     ShadowResistance = amount,
                     },
                     fDuration, fCD));
+            } else if ((match = Regex.Match(line, @"For the next 15 sec, each time your direct healing spells heal a target you cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for (?<seconds>\d+) sec")).Success) {
+                // Glowing Twilight Scale proc (Eyes of Twilight); Procs on Healing Hit, NOT HoTs; Hits average of 5 people;
+                int amount = int.Parse(match.Groups["amount"].Value);
+                int seconds = int.Parse(match.Groups["seconds"].Value);
+                SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats(), 15f, 2f * 60f);
+                SpecialEffect secondary = new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = amount * 5 }, seconds, 0f);
+                primary.Stats.AddSpecialEffect(secondary);
+                stats.AddSpecialEffect(primary);
             }
         }
 
