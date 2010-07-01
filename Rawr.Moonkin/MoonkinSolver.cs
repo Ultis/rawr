@@ -260,58 +260,64 @@ namespace Rawr.Moonkin
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
                 foreach (ProcEffect proc in procEffects)
                 {
-                    if (proc.Effect.Stats.SpellPower > 0)
+                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.Spirit > 0)
                     {
+                        float procSpellPower = proc.Effect.Stats.SpellPower;
+                        if (proc.Effect.Stats.Spirit > 0)
+                            procSpellPower += proc.Effect.Stats.Spirit * (0.1f * talents.ImprovedMoonkinForm);
+
+                        float triggerInterval = 0.0f, triggerChance = 1.0f;
                         switch (proc.Effect.Trigger)
                         {
                             case Trigger.DamageDone:
                             case Trigger.DamageOrHealingDone:
-                                currentSpellPower += proc.Effect.GetAverageStats(((rot.Duration / rot.CastCount) + (rot.Duration / (rot.MoonfireTicks + rot.InsectSwarmTicks))) / 2.0f).SpellPower;
+                                triggerInterval = ((rot.Duration / rot.CastCount) + (rot.Duration / (rot.MoonfireTicks + rot.InsectSwarmTicks))) / 2.0f;
                                 break;
                             case Trigger.Use:
-                                currentSpellPower += proc.Effect.GetAverageStats(0f, 1f).SpellPower;
                                 break;
                             case Trigger.SpellHit:
                             case Trigger.DamageSpellHit:
-                                currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, GetSpellHit(calcs)).SpellPower;
+                                triggerInterval = rot.Duration / rot.CastCount;
+                                triggerChance = GetSpellHit(calcs);
                                 break;
                             case Trigger.SpellCrit:
                             case Trigger.DamageSpellCrit:
-                                currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / (rot.CastCount - rot.InsectSwarmCasts), baseCrit).SpellPower;
+                                triggerInterval = rot.Duration / (rot.CastCount - rot.InsectSwarmCasts);
+                                triggerChance = baseCrit;
                                 break;
                             case Trigger.SpellCast:
                             case Trigger.DamageSpellCast:
-                                currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, 1f).SpellPower;
+                                triggerInterval = rot.Duration / rot.CastCount;
                                 break;
                             case Trigger.MoonfireCast:
-                                currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / rot.MoonfireCasts, 1f).SpellPower;
+                                triggerInterval = rot.Duration / rot.MoonfireCasts;
                                 break;
                             case Trigger.DoTTick:
                             case Trigger.InsectSwarmOrMoonfireTick:
-                                currentSpellPower += proc.Effect.GetAverageStats(rot.Duration / (rot.InsectSwarmTicks + rot.MoonfireTicks), 1f).SpellPower;
+                                triggerInterval = rot.Duration / (rot.InsectSwarmTicks + rot.MoonfireTicks);
                                 break;
                             case Trigger.MoonfireTick:
-                                currentSpellPower = proc.Effect.GetAverageStats(rot.Duration / rot.MoonfireTicks, 1f).SpellPower;
+                                triggerInterval = rot.Duration / rot.MoonfireTicks;
                                 break;
                             case Trigger.InsectSwarmTick:
-                                currentSpellPower = proc.Effect.GetAverageStats(rot.Duration / rot.InsectSwarmTicks, 1f).SpellPower;
+                                triggerInterval = rot.Duration / rot.InsectSwarmTicks;
                                 break;
                             default:
+                                triggerChance = 0.0f;
                                 break;
                         }
-                    }
-                    if (proc.Effect.Stats.Spirit > 0)
-                    {
-                        currentSpellPower += proc.Effect.GetAverageStats().Spirit * 0.3f;
+                        if (triggerChance > 0)
+                            currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
+                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellPower;
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
                     {
-                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, 1f).BonusArcaneDamageMultiplier;
+                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.Duration / rot.CastCount, 1f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
                     }
                     if (proc.Effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
-                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageStats(rot.Duration / rot.CastCount, 1f).BonusNatureDamageMultiplier;
+                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.Duration / rot.CastCount, 1f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
                 }
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
