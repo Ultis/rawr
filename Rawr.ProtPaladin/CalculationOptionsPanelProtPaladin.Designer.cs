@@ -43,6 +43,10 @@ namespace Rawr.ProtPaladin
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelCustomSurvivalSoftCap = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.labelSurvivalSoftCap = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.numericUpDownSurvivalSoftCap = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxSurvivalSoftCap = new System.Windows.Forms.ComboBox();
             this.extendedToolTipDamageTakenMode = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipProtWarrMode = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.radioButtonDamageTakenMode = new System.Windows.Forms.RadioButton();
@@ -91,6 +95,7 @@ namespace Rawr.ProtPaladin
             ((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
@@ -125,7 +130,7 @@ namespace Rawr.ProtPaladin
             this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 45);
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(181, 45);
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(181, 42);
             this.trackBarTargetArmor.TabIndex = 5;
             this.trackBarTargetArmor.TickFrequency = 1000;
             this.trackBarTargetArmor.Value = 10643;
@@ -197,7 +202,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackValue.Maximum = 100000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
-            this.trackBarBossAttackValue.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 1;
             this.trackBarBossAttackValue.TickFrequency = 5000;
@@ -222,7 +227,7 @@ namespace Rawr.ProtPaladin
             this.labelThreatScaleText.Size = new System.Drawing.Size(80, 45);
             this.labelThreatScaleText.TabIndex = 0;
             this.labelThreatScaleText.Text = "Threat Scale: * (Default: 1.0)";
-            this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
                 "e changes";
             // 
@@ -235,7 +240,7 @@ namespace Rawr.ProtPaladin
             this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
             this.trackBarThreatScale.Maximum = 300;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
-            this.trackBarThreatScale.Size = new System.Drawing.Size(178, 45);
+            this.trackBarThreatScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarThreatScale.TabIndex = 1;
             this.trackBarThreatScale.TickFrequency = 10;
             this.trackBarThreatScale.Value = 100;
@@ -261,7 +266,7 @@ namespace Rawr.ProtPaladin
             this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
             this.trackBarMitigationScale.Maximum = 300;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
-            this.trackBarMitigationScale.Size = new System.Drawing.Size(178, 45);
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(178, 42);
             this.trackBarMitigationScale.TabIndex = 3;
             this.trackBarMitigationScale.TickFrequency = 10;
             this.trackBarMitigationScale.Value = 100;
@@ -282,6 +287,10 @@ namespace Rawr.ProtPaladin
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.labelCustomSurvivalSoftCap);
+            this.groupBox1.Controls.Add(this.labelSurvivalSoftCap);
+            this.groupBox1.Controls.Add(this.numericUpDownSurvivalSoftCap);
+            this.groupBox1.Controls.Add(this.comboBoxSurvivalSoftCap);
             this.groupBox1.Controls.Add(this.extendedToolTipDamageTakenMode);
             this.groupBox1.Controls.Add(this.extendedToolTipProtWarrMode);
             this.groupBox1.Controls.Add(this.radioButtonDamageTakenMode);
@@ -301,10 +310,94 @@ namespace Rawr.ProtPaladin
             this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(270, 246);
+            this.groupBox1.Size = new System.Drawing.Size(270, 290);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
+            // 
+            // labelCustomSurvivalSoftCap
+            // 
+            this.labelCustomSurvivalSoftCap.AutoSize = true;
+            this.labelCustomSurvivalSoftCap.Location = new System.Drawing.Point(6, 264);
+            this.labelCustomSurvivalSoftCap.Name = "labelCustomSurvivalSoftCap";
+            this.labelCustomSurvivalSoftCap.Size = new System.Drawing.Size(137, 13);
+            this.labelCustomSurvivalSoftCap.TabIndex = 19;
+            this.labelCustomSurvivalSoftCap.Text = "Custom Survival Soft Cap: *";
+            this.labelCustomSurvivalSoftCap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelCustomSurvivalSoftCap.ToolTipText = "The exact point at which Rawr applies Diminishing Returns on your Survival score." +
+                "";
+            // 
+            // labelSurvivalSoftCap
+            // 
+            this.labelSurvivalSoftCap.AutoSize = true;
+            this.labelSurvivalSoftCap.Location = new System.Drawing.Point(6, 238);
+            this.labelSurvivalSoftCap.Name = "labelSurvivalSoftCap";
+            this.labelSurvivalSoftCap.Size = new System.Drawing.Size(99, 13);
+            this.labelSurvivalSoftCap.TabIndex = 17;
+            this.labelSurvivalSoftCap.Text = "Survival Soft Cap: *";
+            this.labelSurvivalSoftCap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelSurvivalSoftCap.ToolTipText = "Select the dungeon you wish to tank, and Rawr will automatically determine the po" +
+                "int at which Diminishing Returns should apply to your Survival score.";
+            // 
+            // numericUpDownSurvivalSoftCap
+            // 
+            this.numericUpDownSurvivalSoftCap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSurvivalSoftCap.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownSurvivalSoftCap.Location = new System.Drawing.Point(147, 262);
+            this.numericUpDownSurvivalSoftCap.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.numericUpDownSurvivalSoftCap.Name = "numericUpDownSurvivalSoftCap";
+            this.numericUpDownSurvivalSoftCap.Size = new System.Drawing.Size(117, 20);
+            this.numericUpDownSurvivalSoftCap.TabIndex = 20;
+            this.numericUpDownSurvivalSoftCap.ThousandsSeparator = true;
+            this.numericUpDownSurvivalSoftCap.Value = new decimal(new int[] {
+            160000,
+            0,
+            0,
+            0});
+            this.numericUpDownSurvivalSoftCap.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // comboBoxSurvivalSoftCap
+            // 
+            this.comboBoxSurvivalSoftCap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxSurvivalSoftCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSurvivalSoftCap.FormattingEnabled = true;
+            this.comboBoxSurvivalSoftCap.Items.AddRange(new object[] {
+            "Normal Dungeons",
+            "Heroic Dungeons",
+            "T7 Raids (10)",
+            "T7 Raids (25)",
+            "T8 Raids (10)",
+            "T8 Raids (10, Hard)",
+            "T8 Raids (25)",
+            "T8 Raids (25, Hard)",
+            "T9 Raids (10)",
+            "T9 Raids (10, Heroic)",
+            "T9 Raids (25)",
+            "T9 Raids (25, Heroic)",
+            "T10 Raids (10)",
+            "T10 Raids (10, Heroic)",
+            "T10 Raids (25)",
+            "T10 Raids (25, Heroic)",
+            "Lich King (10)",
+            "Lich King (10, Heroic)",
+            "Lich King (25)",
+            "Lich King (25, Heroic)",
+            "Custom..."});
+            this.comboBoxSurvivalSoftCap.Location = new System.Drawing.Point(147, 235);
+            this.comboBoxSurvivalSoftCap.Name = "comboBoxSurvivalSoftCap";
+            this.comboBoxSurvivalSoftCap.Size = new System.Drawing.Size(117, 21);
+            this.comboBoxSurvivalSoftCap.TabIndex = 18;
+            this.comboBoxSurvivalSoftCap.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetDamage_SelectedIndexChanged);
             // 
             // extendedToolTipDamageTakenMode
             // 
@@ -573,7 +666,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeed.Maximum = 20;
             this.trackBarBossAttackSpeed.Minimum = 1;
             this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
-            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackSpeed.TabIndex = 4;
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -720,7 +813,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackValueMagic.Maximum = 100000;
             this.trackBarBossAttackValueMagic.Minimum = 500;
             this.trackBarBossAttackValueMagic.Name = "trackBarBossAttackValueMagic";
-            this.trackBarBossAttackValueMagic.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackValueMagic.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackValueMagic.TabIndex = 3;
             this.trackBarBossAttackValueMagic.TickFrequency = 5000;
             this.trackBarBossAttackValueMagic.Value = 8000;
@@ -746,7 +839,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeedMagic.Maximum = 240;
             this.trackBarBossAttackSpeedMagic.Minimum = 4;
             this.trackBarBossAttackSpeedMagic.Name = "trackBarBossAttackSpeedMagic";
-            this.trackBarBossAttackSpeedMagic.Size = new System.Drawing.Size(178, 45);
+            this.trackBarBossAttackSpeedMagic.Size = new System.Drawing.Size(178, 42);
             this.trackBarBossAttackSpeedMagic.TabIndex = 6;
             this.trackBarBossAttackSpeedMagic.TickFrequency = 40;
             this.trackBarBossAttackSpeedMagic.Value = 40;
@@ -787,7 +880,7 @@ namespace Rawr.ProtPaladin
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.extendedToolTipLabel3);
             this.groupBox5.Controls.Add(this.comboBoxTrinketOnUseHandling);
-            this.groupBox5.Location = new System.Drawing.Point(6, 258);
+            this.groupBox5.Location = new System.Drawing.Point(6, 302);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(270, 56);
             this.groupBox5.TabIndex = 1;
@@ -859,6 +952,7 @@ namespace Rawr.ProtPaladin
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetLevel)).EndInit();
@@ -940,6 +1034,10 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.ComboBox comboBoxMagicDamageType;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox CK_PTRMode;
+        private CustomControls.ExtendedToolTipLabel labelCustomSurvivalSoftCap;
+        private CustomControls.ExtendedToolTipLabel labelSurvivalSoftCap;
+        private System.Windows.Forms.NumericUpDown numericUpDownSurvivalSoftCap;
+        private System.Windows.Forms.ComboBox comboBoxSurvivalSoftCap;
 
 	}
 }

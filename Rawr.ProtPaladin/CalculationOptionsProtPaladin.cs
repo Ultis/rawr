@@ -129,6 +129,13 @@ namespace Rawr.ProtPaladin
             set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
         }
 
+        private int _survivalSoftCap = 300000;
+        public int SurvivalSoftCap
+        {
+            get { return _survivalSoftCap; }
+            set { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); }
+        }
+
         #region ICalculationOptionBase members
         
         public string GetXml()

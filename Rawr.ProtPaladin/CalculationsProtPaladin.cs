@@ -417,7 +417,7 @@ focus on Survival Points.",
                 #region Alternative Ranking Modes
                 case 2:
                     // Tank Points Mode
-                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     calculatedStats.MitigationPoints = Math.Min(dm.TankPoints - dm.EffectiveHealth, VALUE_CAP);
                     calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints * 3.0f, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
@@ -439,7 +439,7 @@ focus on Survival Points.",
                     break;
                 case 5:
                     // ProtWarr Model (Average damage mitigated - EvanM Model)
-                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     scale = (calcOpts.MitigationScale / 17000.0f) * 0.125f * 100.0f;
                     calculatedStats.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * scale, VALUE_CAP);
                     calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
@@ -447,7 +447,7 @@ focus on Survival Points.",
                     break;
                 case 6:
                     // Damage Taken of Boss Attack Value Mode
-                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
                     calculatedStats.MitigationPoints = Math.Min(dm.DamageTaken * calcOpts.BossAttackValue * scale, VALUE_CAP);
                     calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
@@ -456,7 +456,7 @@ focus on Survival Points.",
                 case 7:
                     // Damage Taken of Boss Attack Value Mode
                     // Note: Will crash Rawr when you optimize for Mitigation Points
-                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     calculatedStats.MitigationPoints = Math.Min(-dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale), VALUE_CAP);
                     calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
@@ -471,7 +471,7 @@ focus on Survival Points.",
                 #endregion
                 default:
                     // Mitigation Scale Mode (Bear Model)
-                    calculatedStats.SurvivalPoints = Math.Min(dm.EffectiveHealth, VALUE_CAP);
+                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     calculatedStats.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
                     calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
                     calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
@@ -479,6 +479,28 @@ focus on Survival Points.",
             }
 
             return calculatedStats;
+        }
+
+        // Original code from CalculationsBear, thanks Astrylian!
+        private float CapSurvival(float survivalScore, CalculationOptionsProtPaladin calcOpts)
+        {
+            double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
+            double survivalRaw = survivalScore / 1000f;
+
+            //Implement Survival Soft Cap
+            if (survivalRaw <= survivalCap) {
+                return survivalScore;
+            } else {
+                double x = survivalRaw;
+                double cap = survivalCap;
+                double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
+                double topLeft = Math.Pow(((x - cap) / cap) + fourToTheNegativeFourThirds, 1d / 4d);
+                double topRight = Math.Pow(fourToTheNegativeFourThirds, 1d / 4d);
+                double fracTop = topLeft - topRight;
+                double fraction = fracTop / 2d;
+                double y = (cap * fraction + cap);
+                return 1000f * (float)y;
+            }
         }
 
         public override Stats GetItemStats(Character character, Item additionalItem)

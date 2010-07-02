@@ -70,7 +70,8 @@ namespace Rawr.ProtPaladin
             trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1) || (calcOpts.RankingMode == 5) || (calcOpts.RankingMode == 6);
             comboBoxTrinketOnUseHandling.SelectedItem = calcOpts.TrinketOnUseHandling.ToString();
-            
+            numericUpDownSurvivalSoftCap.Value = calcOpts.SurvivalSoftCap;
+
             // Seal Choice
             radioButtonSoR.Checked = (calcOpts.SealChoice == "Seal of Righteousness");
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
@@ -85,6 +86,32 @@ namespace Rawr.ProtPaladin
             labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
             labelThreatScale.Text = String.Format("{0:0.00}", ((float)(trackBarThreatScale.Value) * 0.01f));
             labelMitigationScale.Text = String.Format("{0:0.00}", ((float)(trackBarMitigationScale.Value) * 0.01f));
+
+            switch (numericUpDownSurvivalSoftCap.Value.ToString()) {
+                case "90000": comboBoxSurvivalSoftCap.SelectedIndex = 0; break; //Normal Dungeons
+                case "110000": comboBoxSurvivalSoftCap.SelectedIndex = 1; break; //Heroic Dungeons
+                case "120000": comboBoxSurvivalSoftCap.SelectedIndex = 2; break; //T7 Raids (10)
+                case "140000": comboBoxSurvivalSoftCap.SelectedIndex = 3; break; //T7 Raids (25)
+                case "170000": comboBoxSurvivalSoftCap.SelectedIndex = 4; break; //T8 Raids (10)
+                case "195000": comboBoxSurvivalSoftCap.SelectedIndex = 5; break; //T8 Raids (10, Hard)
+                case "185000": comboBoxSurvivalSoftCap.SelectedIndex = 6; break; //T8 Raids (25)
+                case "215000": comboBoxSurvivalSoftCap.SelectedIndex = 7; break; //T8 Raids (25, Hard)
+                case "180000": comboBoxSurvivalSoftCap.SelectedIndex = 8; break; //T9 Raids (10)
+                case "210000": comboBoxSurvivalSoftCap.SelectedIndex = 9; break; //T9 Raids (10, Heroic)
+                case "190000": comboBoxSurvivalSoftCap.SelectedIndex = 10; break; //T9 Raids (25)
+                case "225000": comboBoxSurvivalSoftCap.SelectedIndex = 11; break; //T9 Raids (25, Heroic)
+
+                case "300000": comboBoxSurvivalSoftCap.SelectedIndex = 12; break; //T10 Raids (10)
+                case "355000": comboBoxSurvivalSoftCap.SelectedIndex = 13; break; //T10 Raids (10, Heroic)
+                case "350000": comboBoxSurvivalSoftCap.SelectedIndex = 14; break; //T10 Raids (25)
+                case "400000": comboBoxSurvivalSoftCap.SelectedIndex = 15; break; //T10 Raids (25, Heroic)
+                case "360000": comboBoxSurvivalSoftCap.SelectedIndex = 16; break; //Lich King (10)
+                case "410000": comboBoxSurvivalSoftCap.SelectedIndex = 17; break; //Lich King (10, Heroic)
+                case "405000": comboBoxSurvivalSoftCap.SelectedIndex = 18; break; //Lich King (25)
+                case "500000": comboBoxSurvivalSoftCap.SelectedIndex = 19; break; //Lich King (25, Heroic)
+                default: comboBoxSurvivalSoftCap.SelectedIndex = 20; break;
+            }
+            numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 20;
 
 			_loadingCalculationOptions = false;
 		}
@@ -114,6 +141,7 @@ namespace Rawr.ProtPaladin
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
                 calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value / 10.0f));
                 calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 170.0f);
+                calcOpts.SurvivalSoftCap = (int)numericUpDownSurvivalSoftCap.Value;
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -282,6 +310,15 @@ namespace Rawr.ProtPaladin
                 calcOpts.PTRMode = CK_PTRMode.Checked;
                 Character.OnCalculationsInvalidated();
             }
+        }
+
+        private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
+		{
+            numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 20;
+            if (comboBoxSurvivalSoftCap.SelectedIndex < 20)
+                numericUpDownSurvivalSoftCap.Value =
+                    (new decimal[] { 90000, 110000, 120000, 140000, 170000, 195000, 185000, 215000, 180000, 210000, 190000, 225000, 300000, 355000, 350000, 400000, 360000, 410000, 405000, 500000 })
+                    [comboBoxSurvivalSoftCap.SelectedIndex];
         }
 	}
 }
