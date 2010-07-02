@@ -138,7 +138,7 @@ namespace Rawr.Bear
 
 		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 12;
+			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 20;
 			if (comboBoxTargetDamage.SelectedIndex < 20)
 				numericUpDownTargetDamage.Value =
 					(new decimal[] { 30000, 37000, 40000, 47000, 55000, 75000, 71000, 90000, 70000, 85000, 80000, 95000, 92000, 120000, 100000, 150000, 105000, 160000, 155000, 200000 })
@@ -147,7 +147,7 @@ namespace Rawr.Bear
 
 		private void comboBoxSurvivalSoftCap_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 12;
+			numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 20;
 			if (comboBoxSurvivalSoftCap.SelectedIndex < 20)
 				numericUpDownSurvivalSoftCap.Value =
 					(new decimal[] { 90000, 110000, 120000, 140000, 170000, 195000, 185000, 215000, 180000, 210000, 190000, 225000, 300000, 355000, 350000, 400000, 360000, 410000, 405000, 500000 })
