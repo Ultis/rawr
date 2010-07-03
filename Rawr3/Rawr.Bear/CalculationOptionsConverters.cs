@@ -81,11 +81,11 @@ namespace Rawr.Bear
                 case "T8 Raids (10, Hard)": return 195000;
                 case "T8 Raids (25)": return 185000;
 				case "T8 Raids (25, Hard)": return 215000;
-				case "T9 Raids (10": return 180000;
+				case "T9 Raids (10)": return 180000;
 				case "T9 Raids (10, Heroic)": return 210000;
 				case "T9 Raids (25)": return 190000;
 				case "T9 Raids (25, Heroic)": return 225000;
-				case "T10 Raids (10": return 250000;
+				case "T10 Raids (10)": return 250000;
 				case "T10 Raids (10, Heroic)": return 300000;
 				case "T10 Raids (25)": return 300000;
 				case "T10 Raids (25, Heroic)": return 350000;
