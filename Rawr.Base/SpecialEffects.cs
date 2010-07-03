@@ -1175,6 +1175,7 @@ namespace Rawr {
             #region 3.0.1 Trinkets
             else if ((match = Regex.Match(line, @"Chance on melee or ranged attack to enter Wracking Pains, during which your attacks will each grant 15 crit rating, stacking up to 10 times. Expires after 20 sec")).Success)
             {
+                // Death Knight's Anguish
                 SpecialEffect primary = new SpecialEffect(Trigger.PhysicalHit, new Stats() { }, 20f, 45f, 0.10f);
                 SpecialEffect secondary = new SpecialEffect(Trigger.PhysicalHit, new Stats() { CritRating = 15, }, 20f, 0f, 1f, 10);
                 primary.Stats.AddSpecialEffect(secondary);

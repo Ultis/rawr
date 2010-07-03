@@ -1225,16 +1225,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-            #endregion
-
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {

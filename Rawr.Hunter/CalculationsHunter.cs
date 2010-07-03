@@ -696,16 +696,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float hasRelevantBuff;
 
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd("Heroic Presence");
-            }
-            #endregion
-
             List<Buff> buffGroup = new List<Buff>();
             #region Passive Ability Auto-Fixing
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are

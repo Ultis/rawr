@@ -137,7 +137,7 @@ namespace Rawr
                     GroupBoxes[buff.Group].Controls.Add(checkBox);
                     checkBox.BringToFront();
                     // only add Draenei Heroic Presence buff if Alliance
-                    if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
+                    /*if (buff.Name.Equals("Heroic Presence") && FormMain.Instance.IsHandleCreated)
                     {
                         if (FormMain.Instance.Character.Faction == CharacterFaction.Alliance)
                             CheckBoxes.Add(buff, checkBox);
@@ -145,7 +145,8 @@ namespace Rawr
                             checkBox.Enabled = false;
                     }
                     else
-                        CheckBoxes.Add(buff, checkBox);
+                        CheckBoxes.Add(buff, checkBox);*/
+                    CheckBoxes.Add(buff, checkBox);
 
                     foreach (Buff improvement in buff.Improvements)
                     {
@@ -281,8 +282,17 @@ namespace Rawr
 			foreach (CheckBox checkBox in CheckBoxes.Values)
 			{
 				checkBox.Enabled = true;
-				Buff buff = checkBox.Tag as Buff;
-				if (!string.IsNullOrEmpty(buff.SetName))
+				//Buff buff = checkBox.Tag as Buff;
+                Buff buff = (Buff) checkBox.Tag;
+                if (Character != null && buff.Name == "Heroic Presence") {
+                    if (Character.Race == CharacterRace.Draenei ||
+                        Character.Faction == CharacterFaction.Horde)
+                    {
+                        checkBox.Enabled = false;
+                        continue;
+                    }
+                }
+                if (!string.IsNullOrEmpty(buff.SetName))
 				{
 					checkBox.Enabled = false;
 					continue;

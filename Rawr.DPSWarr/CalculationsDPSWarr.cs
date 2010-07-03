@@ -843,16 +843,6 @@ These numbers to do not include racial bonuses.",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffsContains("Heroic Presence"))
-            {
-                character.ActiveBuffsAdd("Heroic Presence");
-            }
-            #endregion
-
             List<Buff> buffGroup = new List<Buff>();
             #region Maintenance Auto-Fixing
             // Removes the Sunder Armor if you are maintaining it yourself

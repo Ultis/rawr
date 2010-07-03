@@ -917,14 +917,6 @@ namespace Rawr.RestoSham
         /// <returns>Stats object containing the stats of all the active buffs on the character</returns>
         private Stats GetBuffsStats(Character character)
         {
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-
             return GetBuffsStats(character.ActiveBuffs);
         }
         

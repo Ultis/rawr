@@ -582,8 +582,10 @@ namespace Rawr //O O . .
 		public void ActiveBuffsAdd(string buffName)
 		{
 			Buff buff = Buff.GetBuffByName(buffName);
-			if (buff != null)
-				ActiveBuffs.Add(buff);
+            if (buff != null && !ActiveBuffs.Contains(buff))
+            {
+                ActiveBuffs.Add(buff);
+            }
 		}
 
         public bool ActiveBuffsContains(string buff)
@@ -857,7 +859,12 @@ namespace Rawr //O O . .
             if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf)
                 _faction = CharacterFaction.Alliance;
             else
+            {
                 _faction = CharacterFaction.Horde;
+
+                // horde don't get heroic presence muahahaha
+                ActiveBuffs.RemoveAll(b => b.Name == "Heroic Presence");
+            }
         }
          
         [XmlIgnore]
@@ -1726,6 +1733,7 @@ namespace Rawr //O O . .
             InvalidateItemInstances();
             if (IsLoading) return;
 			RecalculateSetBonuses();
+            RecalculatePassiveBonuses();
 
 			if (CalculationsInvalidated != null)
 			{
@@ -1786,34 +1794,13 @@ namespace Rawr //O O . .
             }
         }
 
-        //public void RecalculateSetBonuses()
-        //{
-        //    //Compute Set Bonuses
-        //    Dictionary<string, int> setCounts = new Dictionary<string, int>();
-        //    foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Legs, Neck,
-        //        Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, MainHand, OffHand, Ranged, Wrist})
-        //    {
-        //        if (item != null && !string.IsNullOrEmpty(item.SetName))
-        //        {
-        //            int count;
-        //            setCounts.TryGetValue(item.SetName, out count);
-        //            setCounts[item.SetName] = count + 1;
-        //        }
-        //    }
-
-        //    // eliminate searching in active buffs: first remove all set bonuses, then add active ones
-        //    ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-        //    foreach (KeyValuePair<string, int> pair in setCounts)
-        //    {
-        //        foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
-        //        {
-        //            if (pair.Value >= buff.SetThreshold)
-        //            {
-        //                ActiveBuffs.Add(buff);
-        //            }
-        //        }
-        //    }
-        //}
+        public void RecalculatePassiveBonuses()
+        {
+            if (Race == CharacterRace.Draenei)
+            {
+                ActiveBuffsAdd("Heroic Presence");
+            }
+        }
 
         [XmlIgnore]
         public ItemInstance this[CharacterSlot slot]
@@ -2020,8 +2007,8 @@ namespace Rawr //O O . .
 
 			EnforceGemRequirements = true;
             WaistBlacksmithingSocketEnabled = true;
+            _activeBuffs = new List<Buff>();
             SetFaction();
-            _activeBuffs = new List<Buff>(); 
             IsLoading = false;
             RecalculateSetBonuses();
 
@@ -2067,8 +2054,8 @@ namespace Rawr //O O . .
             Ranged = ranged;
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
-            SetFaction();
             _activeBuffs = new List<Buff>();
+            SetFaction();
             IsLoading = false;
             RecalculateSetBonuses();
             BossOptions = boss.Clone();
@@ -2108,9 +2095,9 @@ namespace Rawr //O O . .
             _item[(int)CharacterSlot.Ranged] = ranged;
             _item[(int)CharacterSlot.Projectile] = projectile;
             _item[(int)CharacterSlot.ProjectileBag] = projectileBag;
-            SetFaction();
             IsLoading = false;
             ActiveBuffs = new List<Buff>(activeBuffs);
+            SetFaction();
             CurrentModel = model;
             RecalculateSetBonuses();
 
@@ -2168,10 +2155,10 @@ namespace Rawr //O O . .
             _region = region;
             _race = race;
             Array.Copy(items, _item, items.Length);
-            SetFaction();
 
             IsLoading = false;
             ActiveBuffs = new List<Buff>(activeBuffs);
+            SetFaction();
             CurrentModel = model;
             RecalculateSetBonuses();
 

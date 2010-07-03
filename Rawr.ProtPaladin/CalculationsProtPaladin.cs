@@ -1397,16 +1397,6 @@ focus on Survival Points.",
 
             //float hasRelevantBuff;
 
-            #region Racials to Force Enable
-            // Draenei should always have this buff activated
-            // NOTE: for other races we don't wanna take it off if the user has it active, so not adding code for that
-            if (character.Race == CharacterRace.Draenei
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-            {
-                character.ActiveBuffsAdd(("Heroic Presence"));
-            }
-            #endregion
-
             #region Passive Ability Auto-Fixing
             // NOTE: THIS CODE IS FROM DPSWARR, PROTPALADIN MAY MAKE USE OF IT EVENTUALLY TO HANDLE CONFLICTS LIKE CONCENTRATION AURA
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are

@@ -819,14 +819,6 @@ namespace Rawr.Retribution
         {
             List<Buff> buffs = new List<Buff>(character.ActiveBuffs);
 
-            // TODO: Should be somewhere in the base class probably
-            if (character.Race == CharacterRace.Draenei)
-            {
-                Buff heroicPresence = Buff.GetBuffByName("Heroic Presence");
-                if (!buffs.Contains(heroicPresence))
-                    buffs.Add(heroicPresence);
-            }
-
             var buffStats = GetBuffsStats(buffs);
 
             // If the character itself has any rank of Swift Retribution.
