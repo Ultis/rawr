@@ -104,7 +104,17 @@ namespace Rawr.UI
             foreach (CheckBox checkBox in CheckBoxes.Values)
             {
                 checkBox.IsEnabled = true;
-                Buff buff = checkBox.Tag as Buff;
+                //Buff buff = checkBox.Tag as Buff;
+                Buff buff = (Buff)checkBox.Tag;
+                if (Character != null && buff.Name == "Heroic Presence")
+                {
+                    if (Character.Race == CharacterRace.Draenei ||
+                        Character.Faction == CharacterFaction.Horde)
+                    {
+                        checkBox.IsEnabled = false;
+                        continue;
+                    }
+                }
                 if (!string.IsNullOrEmpty(buff.SetName))
                 {
                     checkBox.IsEnabled = false;

@@ -1247,6 +1247,9 @@ namespace Rawr
         /// </summary>
         public void ProgressiveOptimize()
         {
+            if ( CurrentBatchCharacter.Character == null )
+                return;
+
             if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.ProgressiveOptimize;
