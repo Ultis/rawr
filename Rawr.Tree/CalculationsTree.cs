@@ -1920,6 +1920,7 @@ applied and result is scaled down by 100)",
                 Armor = stats.Armor,
                 Stamina = stats.Stamina,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                MovementSpeed = stats.MovementSpeed,
                 #endregion
                 #region Trinkets
                 HighestStat = stats.HighestStat,
@@ -1988,7 +1989,7 @@ applied and result is scaled down by 100)",
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
                 /*+ stats.Armor + stats.Stamina*/ + stats.ManaRestoreFromMaxManaPerSecond
-                + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
+                + stats.MovementSpeed + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
                 #region Trinkets
                 + stats.HighestStat + stats.SpellsManaReduction + stats.HealingOmenProc
                 #endregion
