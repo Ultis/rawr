@@ -18,6 +18,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30"/>
 			<RowDefinition Height="*"/>
+			<RowDefinition Height="30"/>
 		</Grid.RowDefinitions>
 	
 		<Grid.ColumnDefinitions>
@@ -50,7 +51,7 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+        <StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal" d:IsHidden="True">
 			<ComboBox x:Name="FileMenu" HorizontalAlignment="Left" SelectedIndex="0" Width="75" Margin="4,0,4,0" SelectionChanged="FileMenu_SelectionChanged">
 				<ComboBoxItem Content="File" Visibility="Collapsed"/>
 				<ComboBoxItem Content="New"/>
@@ -298,9 +299,26 @@
     		</controls:TabControl>
     	</toolkit:DockPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
-            <TextBlock VerticalAlignment="Center" Text="b8" Foreground="#99999999" Margin="0,4,8,4"/>
             <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
            <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
          </StackPanel>
+        <Rectangle VerticalAlignment="Stretch" Margin="0,0,-2,-1" Grid.ColumnSpan="4" Grid.Row="2">
+        	<Rectangle.Stroke>
+        		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+        			<GradientStop Color="#FFA3AEB9"/>
+        			<GradientStop Color="#FF8399A9" Offset="0.375"/>
+        			<GradientStop Color="#FF718597" Offset="0.375"/>
+        			<GradientStop Color="#FF617584" Offset="1"/>
+        		</LinearGradientBrush>
+        	</Rectangle.Stroke>
+        	<Rectangle.Fill>
+        		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+        			<GradientStop Color="#FFDEDEDE" Offset="1"/>
+        			<GradientStop Color="#FFFFFFFF" Offset="0"/>
+        		</LinearGradientBrush>
+        	</Rectangle.Fill>
+        </Rectangle>
+        <TextBlock x:Name="StatusText" Margin="4,6" Grid.ColumnSpan="4" Text="TextBlock" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="2"/>
+        <TextBlock x:Name="VersionText" VerticalAlignment="Center" Text="Rawr3 b9" Foreground="#99999999" Margin="0,4,8,4" HorizontalAlignment="Right" Grid.Row="2" Grid.ColumnSpan="4"/>
     </Grid>
 </UserControl>

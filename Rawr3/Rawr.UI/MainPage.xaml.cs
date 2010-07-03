@@ -209,6 +209,7 @@ namespace Rawr.UI
             //_unsavedChanges = true;
             referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
             CalculationDisplay.SetCalculations(referenceCalculation.GetCharacterDisplayCalculationValues());
+            UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
             if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
             {
                 asyncCalculation = AsyncOperationManager.CreateOperation(null);
@@ -222,6 +223,25 @@ namespace Rawr.UI
 			System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
 #endif
         }
+
+        public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues, CharacterCalculationsBase _calculatedStats)
+        {
+            //calculationDisplay1.SetCalculations(displayCalculationValues);
+            string status;
+            if (!displayCalculationValues.TryGetValue("Status", out status))
+            {
+                int i = 0;
+                status = "Overall: " + Math.Round(_calculatedStats.OverallPoints);
+                foreach (KeyValuePair<string, Color> kvp in Calculations.SubPointNameColors)
+                {
+                    status += ", " + kvp.Key + ": " + Math.Round(_calculatedStats.SubPoints[i]);
+                    i++;
+                }
+                //status = "Rawr version " + typeof(Calculations).Assembly.GetName().Version.ToString();
+            }
+            StatusText.Text = status;
+        }
+
 
         public MainPage()
         {
