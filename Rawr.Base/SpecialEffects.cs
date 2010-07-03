@@ -1206,8 +1206,8 @@ namespace Rawr {
             }
             else if ((match = Regex.Match(line, @"Each time your spells heal a target you have a chance to cause the target of your heal to heal themselves and friends within 10 yards for (?<amount>\d+) each sec for 6 sec")).Success)
             {
-                // Trauma; Procs on Healing Hit and HoTs; Hits at least 5 people
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 5 }, 6f, 0f, 0.01f, 1));
+                // Trauma; Procs on Healing Hit and HoTs; Hits up to 20 people
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 20 }, 6f, 0f, 0.01f, 0));
             }
 			else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you Blessing of Light, increasing your strength by (?<stramount>\d+) and your healing received by up to (?<healamount>\d+) for 10 sec")).Success)
             {

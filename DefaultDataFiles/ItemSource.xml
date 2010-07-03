@@ -93265,8 +93265,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -93290,8 +93288,8 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
+          <VendorName>Toravon the Ice Watcher</VendorName>
+          <VendorArea>Vault of Archavon</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -93315,8 +93313,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -93365,8 +93361,8 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
+          <VendorName>Toravon the Ice Watcher</VendorName>
+          <VendorArea>Vault of Archavon</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -93515,8 +93511,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -95845,8 +95839,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -96651,8 +96643,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -96717,8 +96707,8 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
+          <VendorName>Toravon the Ice Watcher</VendorName>
+          <VendorArea>Vault of Archavon</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -97509,8 +97499,8 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Alana Moonstrike</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
+          <VendorName>Toravon the Ice Watcher</VendorName>
+          <VendorArea>Vault of Archavon</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -97971,8 +97961,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -100479,8 +100467,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -101595,8 +101581,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -101886,8 +101870,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -101919,8 +101901,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -103384,8 +103364,6 @@
             </item>
           </TokenMap>
           <Cost>0</Cost>
-          <VendorName>Tortunok</VendorName>
-          <VendorArea>Icecrown Citadel</VendorArea>
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
@@ -114485,7 +114463,7 @@
     <value>
       <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <ItemLocation xsi:type="StaticDrop">
-          <Area>Unknown - 4987 (25)</Area>
+          <Area>Ruby Sanctum (25)</Area>
           <Heroic>false</Heroic>
           <Boss>Halion</Boss>
         </ItemLocation>
@@ -119818,6 +119796,520 @@
           <Cost>429375</Cost>
           <VendorName>Geen</VendorName>
           <VendorArea>Sholazar Basin</VendorArea>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54589</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54588</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54591</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54590</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54585</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54576</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54581</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54583</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54582</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54584</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54580</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54587</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54577</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54579</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54586</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54578</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (25)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54564</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54565</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54559</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54558</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>53119</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>false</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>5458</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Teldrassil</Area>
+          <Quest>Oakenscowl</Quest>
+          <MinLevel>4</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54566</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54560</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54561</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54562</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54556</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54567</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54563</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>54557</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="StaticDrop">
+          <Area>Ruby Sanctum (10)</Area>
+          <Heroic>true</Heroic>
+          <Boss>Halion</Boss>
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>38212</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Borean Tundra</Area>
+          <Quest>Buying Some Time</Quest>
+          <MinLevel>68</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>38743</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Grizzly Hills</Area>
+          <Quest>Vordrassil's Seeds</Quest>
+          <MinLevel>73</MinLevel>
+          <Party>0</Party>
+          <Type />
+        </ItemLocation>
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>39844</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="NoSource" />
+        <ItemLocation xsi:nil="true" />
+      </ArrayOfItemLocation>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>37574</string>
+    </key>
+    <value>
+      <ArrayOfItemLocation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <ItemLocation xsi:type="QuestItem">
+          <Area>Borean Tundra</Area>
+          <Quest>Get Me Outa Here!</Quest>
+          <MinLevel>69</MinLevel>
+          <Party>0</Party>
+          <Type />
         </ItemLocation>
         <ItemLocation xsi:nil="true" />
       </ArrayOfItemLocation>
