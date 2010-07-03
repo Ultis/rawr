@@ -54,6 +54,9 @@
 					</Border>
 					<StackPanel x:Name="GemStat3" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,4,0" MaxWidth="85"/>
 				</StackPanel>
+				<TextBlock x:Name="GemNamesLabel1" TextWrapping="Wrap"/>
+				<TextBlock x:Name="GemNamesLabel2" TextWrapping="Wrap"/>
+				<TextBlock x:Name="GemNamesLabel3" TextWrapping="Wrap"/>
 				<TextBlock x:Name="SocketBonusLabel"/>
 				<TextBlock x:Name="EnchantLabel" Foreground="#FF3A7414" Visibility="Collapsed"/>
                 <TextBlock x:Name="LocationLabel"/>

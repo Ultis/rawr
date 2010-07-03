@@ -308,6 +308,7 @@ namespace Rawr.UI
                 GemColor1.Visibility = Visibility.Collapsed;
                 GemImage1.Visibility = Visibility.Collapsed;
                 GemStat1.Visibility = Visibility.Collapsed;
+                GemNamesLabel1.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -319,6 +320,7 @@ namespace Rawr.UI
 
                 GemStat1.Visibility = Visibility.Visible;
                 GemStat1.Children.Clear();
+                GemNamesLabel1.Visibility = Visibility.Visible;
                 hasGems = true;
             }
             if (actualItem == null || actualItem.SocketColor2 == ItemSlot.None)
@@ -326,6 +328,7 @@ namespace Rawr.UI
                 GemColor2.Visibility = Visibility.Collapsed;
                 GemImage2.Visibility = Visibility.Collapsed;
                 GemStat2.Visibility = Visibility.Collapsed;
+                GemNamesLabel2.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -337,6 +340,7 @@ namespace Rawr.UI
 
                 GemStat2.Visibility = Visibility.Visible;
                 GemStat2.Children.Clear();
+                GemNamesLabel2.Visibility = Visibility.Visible;
                 hasGems = true;
             }
             if (actualItem == null || actualItem.SocketColor3 == ItemSlot.None)
@@ -344,6 +348,7 @@ namespace Rawr.UI
                 GemColor3.Visibility = Visibility.Collapsed;
                 GemImage3.Visibility = Visibility.Collapsed;
                 GemStat3.Visibility = Visibility.Collapsed;
+                GemNamesLabel3.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -355,6 +360,7 @@ namespace Rawr.UI
 
                 GemStat3.Visibility = Visibility.Visible;
                 GemStat3.Children.Clear();
+                GemNamesLabel3.Visibility = Visibility.Visible;
                 hasGems = true;
             }
             if (hasGems)
@@ -396,6 +402,7 @@ namespace Rawr.UI
                         t.Text = r.Trim();
                         GemStat1.Children.Add(t);
                     }
+                    GemNamesLabel1.Text = "- " + ItemInstance.Gem1.Name;
                 }
                 if (ItemInstance.Gem2 != null)
                 {
@@ -417,6 +424,7 @@ namespace Rawr.UI
                         t.Text = r.Trim();
                         GemStat2.Children.Add(t);
                     }
+                    GemNamesLabel2.Text = "- " + ItemInstance.Gem2.Name;
                 }
                 if (ItemInstance.Gem3 != null)
                 {
@@ -438,6 +446,7 @@ namespace Rawr.UI
                         t.Text = r.Trim();
                         GemStat3.Children.Add(t);
                     }
+                    GemNamesLabel3.Text = "- " + ItemInstance.Gem3.Name;
                 }
                 if (actualItem != null && (!Item.GemMatchesSlot(itemInstance.Gem1, actualItem.SocketColor1) ||
                                     !Item.GemMatchesSlot(itemInstance.Gem2, actualItem.SocketColor2) ||
