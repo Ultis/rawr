@@ -5,7 +5,6 @@ using System.Windows.Media;
 #else
 using System.Drawing;
 #endif
-
 using Rawr;
 
 namespace Rawr.HolyPriest
@@ -839,7 +838,7 @@ namespace Rawr.HolyPriest
                 || se.Trigger == Trigger.SpellCrit
                 || se.Trigger == Trigger.Use)
             {
-                return _HasRelevantStats(se.Stats);
+                return _HasRelevantStats(se.Stats) || (se.Stats._rawSpecialEffectDataSize > 0 && _HasRelevantStats(se.Stats._rawSpecialEffectData[0].Stats));
             }
             return false;
         }
