@@ -255,6 +255,20 @@ namespace Rawr.UI
             MainPage.Tooltip.Show(fe, 367, 0);
         }
 
+        private void item_Clicked(object sender, MouseButtonEventArgs e) {
+            if (!_buildingListItems && IsEnchantList)
+            {
+                FrameworkElement fe = sender as FrameworkElement;
+                ItemListItem listItem = fe.DataContext as ItemListItem;
+
+                int selectedEnchantId = -1;
+                Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
+                if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
+
+                if (listItem.EnchantId == selectedEnchantId) { this.Close(); }
+            }
+        }
+
 		public ItemListControl()
 		{
 			// Required to initialize variables
