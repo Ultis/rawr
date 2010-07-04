@@ -103,6 +103,28 @@ namespace Rawr
             "<br>À distance",
             "<br>Armes de jet",
             "<br>Projectile",
+
+            // Russian
+            "<br>Голова",
+            "<br>Шея",
+            "<br>Плечо",
+            "<br>Спина",
+            "<br>Грудь",
+            "<br>Запястья",
+            "<br>Кисти рук",
+            "<br>Пояс",
+            "<br>Ноги",
+            "<br>Ступни",
+            "<br>Палец",
+            "<br>Аксессуар",
+            "<br>Правая рука",
+            "<br>Одноручное",
+            "<br>Левая рука",
+            "<br>Двуручное",
+            "<br>Реликвия",
+            "<br>Дальний бой",
+            "<br>Метательное",
+            "<br>Projectile",
         };
 
 		static CharacterProfilerCharacter()
@@ -287,7 +309,7 @@ namespace Rawr
 			}
 		}
 
-		static int getTalentPointsFromTree(SavedVariablesDictionary talent_tree, string spec, string talent)
+        static int getTalentPointsFromTree(SavedVariablesDictionary talent_tree, string spec, TalentDataAttribute talent)
 		{
 			int points = 0;
 
@@ -295,9 +317,9 @@ namespace Rawr
 			{
 				SavedVariablesDictionary spec_tree = talent_tree[spec] as SavedVariablesDictionary;
 
-				if (spec_tree.ContainsKey(talent))
+				if (spec_tree.ContainsKey(talent.Name))
 				{
-					SavedVariablesDictionary talent_info = spec_tree[talent] as SavedVariablesDictionary;
+					SavedVariablesDictionary talent_info = spec_tree[talent.Name] as SavedVariablesDictionary;
 
 					string rank_info = talent_info["Rank"] as string;
 
@@ -313,6 +335,31 @@ namespace Rawr
 			}
 			else
 			{
+                // we're most likely dealing with non-English data, try to determine by position in tree
+                foreach (SavedVariablesDictionary tree in talent_tree.Values)
+                {
+                    if ((long)tree["Order"] == talent.Tree + 1)
+                    {
+                        string loc = talent.Row + ":" + talent.Column;
+                        foreach (object t in tree.Values)
+                        {
+                            SavedVariablesDictionary td = t as SavedVariablesDictionary;
+                            if (td != null)
+                            {
+                                if ((string)td["Location"] == loc)
+                                {
+                                    string rank_info = td["Rank"] as string;
+
+                                    int split_pos = rank_info.IndexOf(':');
+                                    string points_str = rank_info.Remove(split_pos);
+
+                                    points = (int)Int32.Parse(points_str);
+                                    return points;
+                                }
+                            }
+                        }
+                    }
+                }
 				Debug.WriteLine("Talent Tree Not Found: " + spec);
 			}
 
@@ -343,7 +390,7 @@ namespace Rawr
 					{
 						TalentDataAttribute talentData = talentDatas[0];
 
-						int points = getTalentPointsFromTree(talent_tree, treeNames[talentData.Tree], talentData.Name);
+						int points = getTalentPointsFromTree(talent_tree, treeNames[talentData.Tree], talentData);
 						m_character.CurrentTalents.Data[talentData.Index] = points;
 					}
 				}
