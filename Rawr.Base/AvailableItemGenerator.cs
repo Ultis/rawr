@@ -1272,9 +1272,20 @@ namespace Rawr.Optimizer
 				List<string> templateGems = new List<string>();
 				// this could actually be empty, but in practice they will populate it at least once before
 				// however as a sanity check if it is null fetch the template from the model
-				for (int index = 0; index < models.Length; index++)
+                for (int index = 0; index < characters.Length; index++)
 				{
                     foreach (GemmingTemplate template in characters[index].CurrentGemmingTemplates)
+                    {
+                        if (template.Enabled)
+                        {
+                            if (!templateGems.Contains(template.RedId.ToString())) templateGems.Add(template.RedId.ToString());
+                            if (!templateGems.Contains(template.YellowId.ToString())) templateGems.Add(template.YellowId.ToString());
+                            if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
+                            if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
+                            if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                        }
+                    }
+                    foreach (GemmingTemplate template in characters[index].CustomGemmingTemplates)
                     {
                         if (template.Enabled && template.Model == models[index].Name)
                         {
