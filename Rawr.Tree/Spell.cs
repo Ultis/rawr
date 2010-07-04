@@ -1,13 +1,14 @@
 ﻿using System;
 
 namespace Rawr.Tree {
+
     public abstract class Spell {
         protected float minHeal             = 0f;
-        public float    MinHeal     { get { return minHeal + spellPower * coefDH; } }
+        public float    MinHeal     { get { return healModifier * (minHeal + spellPower * coefDH); } }
         public float    BaseMinHeal { get { return minHeal; } }
 
         protected float maxHeal             = 0f;
-        public float    MaxHeal     { get { return maxHeal + spellPower * coefDH; } }
+        public float    MaxHeal     { get { return healModifier * (maxHeal + spellPower * coefDH); } }
         public float    BaseMaxHeal { get { return maxHeal; } }
 
         protected int numberOfCasts = 1;
@@ -47,15 +48,16 @@ namespace Rawr.Tree {
         public float PeriodicTickTime { get { return periodicTickTime; } }
 
         protected float extraHealing = 0f; // for BonusHoTOnDirectHeals
+        protected float healModifier = 1f; // for BonusHealingDoneMultiplier
 
-        virtual public float AverageHealing { get { return extraHealing + (minHeal + maxHeal) / 2f + SpellPower * coefDH; } }
+        virtual public float AverageHealing { get { return healModifier * (extraHealing + (minHeal + maxHeal) / 2f + SpellPower * coefDH); } }
 
         /// <summary>
         ///  Direct heal component of this spell
         /// </summary>
         public float AverageHealingwithCrit { get { return (AverageHealing * (100f - CritPercent) + (AverageHealing * CritModifier) * CritPercent) / 100f; } }
 
-        virtual public float PeriodicTick { get { return periodicTick + spellPower * coefHoT; } }
+        virtual public float PeriodicTick { get { return healModifier * (periodicTick + spellPower * coefHoT); } }
 
         virtual public float PeriodicTickwithCrit { get { return (PeriodicTick * (100f - critHoTPercent) + (PeriodicTick * CritModifier) * critHoTPercent) / 100f; } }
 
@@ -98,6 +100,7 @@ namespace Rawr.Tree {
         {
             speed = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste);
             critModifier = 1.5f * (1f + stats.BonusCritHealMultiplier);
+            healModifier = (1f + stats.BonusHealingDoneMultiplier);
             extraHealing = stats.BonusHealingReceived;
             applyHaste();
         }
