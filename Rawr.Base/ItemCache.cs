@@ -390,7 +390,8 @@ namespace Rawr
             if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
             {
                 // find all items in item cache with same name
-                Item item251 = null, item264 = null, item277 = null;
+                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null;
+
                 lock (Items)
                 {
                     List<Item> list;
@@ -412,13 +413,25 @@ namespace Rawr
                             {
                                 item251 = i;
                             }
+                            else if (i.ItemLevel == 258)
+                            {
+                                item258 = i;
+                            }
                             else if (i.ItemLevel == 264)
                             {
                                 item264 = i;
                             }
+                            else if (i.ItemLevel == 271)
+                            {
+                                item271 = i;
+                            }
                             else if (i.ItemLevel == 277)
                             {
                                 item277 = i;
+                            }
+                            else if (i.ItemLevel == 284)
+                            {
+                                item284 = i;
                             }
                         }
                     }
@@ -438,6 +451,20 @@ namespace Rawr
                     item277.UniqueId = new List<int>() { item264.Id, item277.Id };
                 }
 
+                // normal/heroic pair 10 man RS with same name
+                if ((object)item258 != null && (object)item271 != null)
+                {
+                    item258.UniqueId = new List<int>() { item258.Id, item271.Id };
+                    item271.UniqueId = new List<int>() { item258.Id, item271.Id };
+                }
+
+                // normal/heroic pair 25 man RS with same name
+                if ((object)item271 != null && (object)item284 != null)
+                {
+                    item271.UniqueId = new List<int>() { item271.Id, item284.Id };
+                    item284.UniqueId = new List<int>() { item271.Id, item284.Id };
+                }
+                
                 // special rules for Ashen Verdict Rings
                 // Ashen Band of Courage
                 if (item.Id == 50375 || item.Id == 50404 || item.Id == 50388 || item.Id == 50403)

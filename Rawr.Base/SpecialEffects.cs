@@ -1570,7 +1570,8 @@ namespace Rawr {
                 else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
 				else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
 				else if (statName.Equals("the block value of your shield", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
-
+                else if (statName.Equals("master rating", StringComparison.InvariantCultureIgnoreCase)) { s.MasteryRating = amount; }
+                
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
             }
             // Victor's Call and Vengeance of the Forsaken (232 & 245)
