@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -242,12 +243,30 @@ namespace Rawr.UI
             StatusText.Text = status;
         }
 
-
         public MainPage()
         {
             Instance = this;
             InitializeComponent();
 			if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
+
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            string version = "debug";
+            if (asm.FullName != null) {
+                string[] parts = asm.FullName.Split(',');
+                version = parts[1];
+                if (version.Contains("Version=")) { version = version.Replace("Version=",""); }
+                if (version.Contains(" ")) { version = version.Replace(" ", ""); }
+            }
+            
+            VersionText.Text = string.Format("Rawr b{0}",
+                version
+                //typeof(Rawr.UI.MainPage).Assembly.GetName().Version.ToString()
+                //Assembly.GetExecutingAssembly().GetName().Version
+                );
+
+
+
 
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 

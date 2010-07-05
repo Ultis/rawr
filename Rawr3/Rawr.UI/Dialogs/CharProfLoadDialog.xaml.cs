@@ -81,7 +81,14 @@ namespace Rawr.UI
                 //System.IO.Stream file = ofd.File.OpenRead();
                 System.IO.FileInfo file = ofd.File;
 
-                TB_FilePath.Text = file.FullName;
+                try
+                {
+                    TB_FilePath.Text = file.FullName;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error reading saved variable file: " + ex.Message);
+                }
             }
         }
 	}

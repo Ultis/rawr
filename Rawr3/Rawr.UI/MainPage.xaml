@@ -18,7 +18,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30"/>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="30"/>
+			<RowDefinition Height="24"/>
 		</Grid.RowDefinitions>
 	
 		<Grid.ColumnDefinitions>
@@ -318,7 +318,9 @@
         		</LinearGradientBrush>
         	</Rectangle.Fill>
         </Rectangle>
-        <TextBlock x:Name="StatusText" Margin="4,6" Grid.ColumnSpan="4" Text="TextBlock" TextWrapping="Wrap" d:LayoutOverrides="Height" Grid.Row="2"/>
-        <TextBlock x:Name="VersionText" VerticalAlignment="Center" Text="Rawr3 b9" Foreground="#99999999" Margin="0,4,8,4" HorizontalAlignment="Right" Grid.Row="2" Grid.ColumnSpan="4"/>
+        <Grid Margin="0,0,-2,-1" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2">
+        	<TextBlock x:Name="StatusText" Margin="8,4,120,4" Text="Status"/>
+        	<TextBlock x:Name="VersionText" Text="Rawr b3.0.3.20" Foreground="#99393939" Margin="0,4,8,4" HorizontalAlignment="Right" TextAlignment="Right"/>
+        </Grid>
     </Grid>
 </UserControl>
