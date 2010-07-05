@@ -1,4 +1,4 @@
-Rawr v2.3.19.0
+Rawr v2.3.20.0
 ------------
 
 We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're reading the readme for), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
@@ -13,27 +13,18 @@ We're pleased to announce that, after long last, Rawr3 has entered public beta. 
  Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!
    
    
-And now back to Rawr v2.3.19.0.
+And now back to Rawr v2.3.20.0.
    
 Recent Changes:
- - Further improved default filters (keep any feedback coming) and itemcache. Should include everything from Midsummer and Ruby Sanctum that's know so far. Default filters shouldn't have anything hidden by default this time.
- - Updated modeling of a variety of weapon enchants (Mongoose changed, Black Magic works for some non-casters) and trinkets (mostly from ICC).
- - Fixed a slight miscalculation in Armor Penetration effects.
- - Improved Wowhead parsing.
- - Rawr.Cat: Improved modeling for a whole bunch of trinkets and other special effects. Yes, those weapon enchants are actually correct; say goodbye to Mongoose, and hello to Black Magic (for some high end cats, anyway).
- - Rawr.Bear: Improved modeling for a whole bunch of trinkets and other special effects. Updated the presets on the options tab for T10.
- - Rawr.Mage: Fix for incremental optimizations on Evocation withotu mana segmentation (should solve odd issue where certain stats change in value drastically when you're right on the edge of needing to evocate during a fight).
- - Rawr.DPSDK: Fix for getting the DW penalty when wearing a 2H + a disabled OH. Fix for some runeforges stacking. Added gemming templates using Relentless meta.
- - Rawr.TankDK: Fix for some runeforges stacking. Fix for a few talents showing up as negative value.
- - Rawr.DPSWarr: Fix for the DPS cost of maintaining buffs/debuffs.
- - Rawr.Hunter: Improvements to the options UI. Fix for Beast Within calculations.
- - Rawr.Retribution: Fix for a bug with target parry chance. Improved optimizable values. Added some default gemming templates.
- - Rawr.Rogue: Added more default gemming templates. Fixes for Relentless Strikes value, Envenom cycles, Mutilate requirements, Mutilate CP generation, and probability of extra CP procs. Modeled Tiny Abomination in a Jar. Fix for Hack and Slash proccing off Slice and Dice. Modeled Heartpierce proc.
- - Rawr.ProtPaladin: Improved optimizable values.
- - Rawr.Moonkin: Fixes for Starfall damage, 2T10, Earth and Moon, and Master Shapeshifter. Improved relevency handling. Added Starfall/Treants to the spell breakdown display.
- - Rawr.Warlock: Added options to value raid buffs. Added Decimate execute stage. Fixes for crit procs, Haunt recasting, Nibelung, Bloodlust on pets, Demonic Empowerment, 2T9 for Demo.
- - Rawr.Enhance: Modeled Tiny Abomination in a Jar.
- 
+ - Fixed a bug with gems in custom gemming templates not being considered available when they should be.
+ - Rawr.Bear: Several performance improvements. Fix for editing the custom values for the presetable fields on the Options tab.
+ - Rawr.Cat: Several performance improvements.
+ - Rawr.DPSWarr: Fix for ArPen calculations being broken.
+ - Rawr.Moonkin: Fix for calculation of 2T10. Several performance improvements.
+ - Rawr.Rogue: Fix for Mace Spec, Serrated Blades, Glyph of Sinister Strike, and Mutilate damage calculations. Fix for the CP generation probability tables for non-Mutilate.
+ - Rawr.ProtPaladin: Support for more trinket effects. Implemented Survival Soft Cap, which is a feature to impose diminishing returns on Survival, past a customizable value.
+ - Rawr.Tree: Fix for movement speed not being considered relevant.
+ - Rawr.ProtWarrior: Added Block Value as an optimizable stats.
 
 Instructions
 ------------
@@ -138,6 +129,25 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.19.0
+ - Further improved default filters (keep any feedback coming) and itemcache. Should include everything from Midsummer and Ruby Sanctum that's know so far. Default filters shouldn't have anything hidden by default this time.
+ - Updated modeling of a variety of weapon enchants (Mongoose changed, Black Magic works for some non-casters) and trinkets (mostly from ICC).
+ - Fixed a slight miscalculation in Armor Penetration effects.
+ - Improved Wowhead parsing.
+ - Rawr.Cat: Improved modeling for a whole bunch of trinkets and other special effects. Yes, those weapon enchants are actually correct; say goodbye to Mongoose, and hello to Black Magic (for some high end cats, anyway).
+ - Rawr.Bear: Improved modeling for a whole bunch of trinkets and other special effects. Updated the presets on the options tab for T10.
+ - Rawr.Mage: Fix for incremental optimizations on Evocation withotu mana segmentation (should solve odd issue where certain stats change in value drastically when you're right on the edge of needing to evocate during a fight).
+ - Rawr.DPSDK: Fix for getting the DW penalty when wearing a 2H + a disabled OH. Fix for some runeforges stacking. Added gemming templates using Relentless meta.
+ - Rawr.TankDK: Fix for some runeforges stacking. Fix for a few talents showing up as negative value.
+ - Rawr.DPSWarr: Fix for the DPS cost of maintaining buffs/debuffs.
+ - Rawr.Hunter: Improvements to the options UI. Fix for Beast Within calculations.
+ - Rawr.Retribution: Fix for a bug with target parry chance. Improved optimizable values. Added some default gemming templates.
+ - Rawr.Rogue: Added more default gemming templates. Fixes for Relentless Strikes value, Envenom cycles, Mutilate requirements, Mutilate CP generation, and probability of extra CP procs. Modeled Tiny Abomination in a Jar. Fix for Hack and Slash proccing off Slice and Dice. Modeled Heartpierce proc.
+ - Rawr.ProtPaladin: Improved optimizable values.
+ - Rawr.Moonkin: Fixes for Starfall damage, 2T10, Earth and Moon, and Master Shapeshifter. Improved relevency handling. Added Starfall/Treants to the spell breakdown display.
+ - Rawr.Warlock: Added options to value raid buffs. Added Decimate execute stage. Fixes for crit procs, Haunt recasting, Nibelung, Bloodlust on pets, Demonic Empowerment, 2T9 for Demo.
+ - Rawr.Enhance: Modeled Tiny Abomination in a Jar.
+
 v2.3.18.0
  - Fix for bug in parsing characters with certain abnormal characters in their data.
  - Fix for a lockup in the item editor.
