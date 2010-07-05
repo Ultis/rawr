@@ -4,7 +4,16 @@ using System.IO;
 
 namespace Rawr
 {
-    /**
+#if RAWR3 || SILVERLIGHT
+    public class InvalidDataException : IOException
+    {
+        public InvalidDataException(string msg) : base(msg)
+        {
+        }
+    }
+#endif
+
+    /*
      * SavedVariablesParser
      * @author Charinna
      * This class is a utility function that should (I hope) act as a general parser for

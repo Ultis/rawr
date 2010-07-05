@@ -418,6 +418,20 @@ namespace Rawr.UI
             Status = null;
         }
 
+        private void charprofLoad_Closed(object sender, EventArgs e)
+        {
+            CharProfLoadDialog cpld = sender as CharProfLoadDialog;
+            if (((CharProfLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            {
+                Character character = cpld.Character;
+
+                // So we can use that for recall later on what was last used
+                Rawr.Properties.RecentSettings.Default.RecentCharProfiler = cpld.TB_FilePath.Text;
+
+                this.Character = character;
+            }
+        }
+
         #region Menus
 #if SILVERLIGHT
         private void FileMenu_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -434,7 +448,7 @@ namespace Rawr.UI
                     else if (newIndex == 3) SaveCharacter(null, null);
                     else if (newIndex == 4) OpenSavedUpgradeList(null, null);
                     else if (newIndex == 6) LoadFromArmory(null, null);
-                    //else if (newIndex == 7) LoadFromCharacterProfiler(0;
+                    //else if (newIndex == 7) LoadFromCharacterProfiler(null, null);
                     else new ErrorWindow() { Message = "Not yet implemented." }.Show();
                 }
             }
@@ -581,7 +595,9 @@ namespace Rawr.UI
 
         private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)
         {
-            // TODO
+            CharProfLoadDialog charprofLoad = new CharProfLoadDialog();
+            charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
+            charprofLoad.Show();
         }
         #endregion
 

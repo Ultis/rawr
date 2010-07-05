@@ -3,11 +3,13 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+#if !RAWR3 && !SILVERLIGHT
 using System.Windows.Forms;
+#endif
 
 namespace Rawr
 {
-	/**
+	/*
 	 * CharacterProfilerCharacter
 	 * @author Charinna
 	 * This class is a container of Character classes that imports its data from a saved variables
@@ -370,7 +372,11 @@ namespace Rawr
 		{
             if (!characterInfo.ContainsKey("Talents"))
             {
+#if RAWR3 || SILVERLIGHT
+                //new ErrorWindow() { Message = "Not yet implemented." }.Show();
+#else
                 MessageBox.Show("Talent data was not found, and must be manually added.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+#endif
                 return;
             }
 
@@ -542,15 +548,9 @@ namespace Rawr
 			m_sName = sName;
 		}
 
-		public string Name
-		{
-			get { return m_sName; }
-		}
+		public string Name { get { return m_sName; } }
         
-		public List<CharacterProfilerCharacter> Characters
-		{
-			get { return m_aCharacters; }
-		}
+		public List<CharacterProfilerCharacter> Characters { get { return m_aCharacters; } }
 	}
 
 	public class CharacterProfilerFailedImport
@@ -605,8 +605,8 @@ namespace Rawr
 
 			if (!savedVariables.ContainsKey("myProfile"))
 			{
-				throw new InvalidDataException("Expected myProfile variable in file.");
-			}
+                throw new InvalidDataException("Expected myProfile variable in file.");
+            }
 
 			SavedVariablesDictionary realms = (SavedVariablesDictionary)savedVariables["myProfile"];
 

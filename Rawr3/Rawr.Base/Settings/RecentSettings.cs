@@ -24,6 +24,8 @@ namespace Rawr.Properties
             _default.RecentChars = new List<string>() { };
             _default.RecentServers = new List<string>() { };
             _default.RecentRegion = "US";
+
+            _default.RecentCharProfiler = "C:\\Program Files\\World of Warcraft\\WTF\\Account\\";
 		}
 
         private static RecentSettings _default;
@@ -42,5 +44,7 @@ namespace Rawr.Properties
         public List<string> RecentServers { get; set; }
         /// <summary>For Load from Armory dialog, so we can remember last several characters loaded</summary>
         public string RecentRegion { get; set; }
+        /// <summary>For Load from Character Profiler dialog, so we can remember where the last toon was pulled from the addon</summary>
+        public string RecentCharProfiler { get; set; }
     }
 }

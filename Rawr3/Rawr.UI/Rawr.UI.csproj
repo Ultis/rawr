@@ -105,6 +105,12 @@
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\CharProfLoadDialog.xaml.cs">
+      <DependentUpon>CharProfLoadDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\FormChooseCharacter.xaml.cs">
+      <DependentUpon>FormChooseCharacter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\WelcomeWindow.xaml.cs">
       <DependentUpon>WelcomeWindow.xaml</DependentUpon>
     </Compile>
@@ -254,6 +260,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\ArmoryLoadDialog.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\CharProfLoadDialog.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\FormChooseCharacter.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

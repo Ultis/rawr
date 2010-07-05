@@ -129,6 +129,9 @@
     <Compile Include="..\..\Rawr.Base\Character.cs">
       <Link>Character.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\CharacterProfilerData.cs">
+      <Link>CharacterProfilerData.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\ClassGlyphs.cs">
       <Link>ClassGlyphs.cs</Link>
     </Compile>
@@ -176,6 +179,9 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs">
       <Link>SavedTalentSpec.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\SavedVariablesParser.cs">
+      <Link>SavedVariablesParser.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs">
       <Link>SerializableDictionary.cs</Link>
