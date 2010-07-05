@@ -458,7 +458,7 @@ namespace Rawr.ShadowPriest {
                 * modifiers;
 
             ManaCost = (int)Math.Floor((BaseManaCost / 100f * BaseMana - stats.SpellsManaReduction)
-                * (1f - talents.MentalAgility * 0.1f / 3f)
+                //* (1f - talents.MentalAgility * 0.1f / 3f)
                 * (1f - talents.ShadowFocus * 0.02f)
                 * (1f - talents.FocusedMind * 0.05f));
 
@@ -590,6 +590,7 @@ namespace Rawr.ShadowPriest {
                     + character.PriestTalents.ImprovedDevouringPlague * 0.05f
                     + stats.DevouringPlagueBonusDamage)
                 * (1f + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0f))
+                * (1f + stats.BonusDiseaseDamageMultiplier)
                 * (1f + character.PriestTalents.Shadowform * 0.15f);
 
             MinDamage = MaxDamage = (BaseMinDamage +
@@ -645,6 +646,7 @@ namespace Rawr.ShadowPriest {
                     + character.PriestTalents.FocusedPower * 0.02f      // FIXME: Doublecheck
                     + character.PriestTalents.ImprovedDevouringPlague * 0.1f)
                 * (1f + ((character.PriestTalents.ShadowWeaving > 0) ? 0.05f : 0f))
+                * (1f + stats.BonusDiseaseDamageMultiplier)
                 * (1f + character.PriestTalents.Shadowform * 0.15f);
 
             MinDamage = MaxDamage = (BaseMinDamage +

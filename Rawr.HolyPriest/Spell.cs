@@ -692,7 +692,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) * 2;
+                return (AvgHeal * (1 - CritChance) + AvgCrit * CritChance) * 2;
             }
         }
 

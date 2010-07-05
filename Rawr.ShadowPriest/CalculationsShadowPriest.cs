@@ -192,6 +192,7 @@ namespace Rawr.ShadowPriest
             character.ActiveBuffsAdd(("Judgement of Wisdom"));
             character.ActiveBuffsAdd(("Earth and Moon"));
             character.ActiveBuffsAdd(("Misery"));
+            character.ActiveBuffsAdd(("Crypt Fever"));
             character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
             character.ActiveBuffsAdd(("Spell Power Food"));
             character.ActiveBuffsAdd(("Heroism/Bloodlust"));
@@ -649,7 +650,7 @@ namespace Rawr.ShadowPriest
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
-                //BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,    // Apparently no longer workie.
+                BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
                 PriestInnerFire = stats.PriestInnerFire,
                 MovementSpeed = stats.MovementSpeed,
                 SWPDurationIncrease = stats.SWPDurationIncrease,
@@ -713,7 +714,6 @@ namespace Rawr.ShadowPriest
 
         protected bool RelevantTrinket(SpecialEffect se)
         {
-            bool bRelevant = false;
             if (se.Trigger == Trigger.DamageSpellCrit
                 || se.Trigger == Trigger.DamageSpellHit
                 || se.Trigger == Trigger.DamageSpellCast
@@ -724,7 +724,7 @@ namespace Rawr.ShadowPriest
                 || se.Trigger == Trigger.SpellMiss
                 || se.Trigger == Trigger.Use)
             {
-                bRelevant = _HasRelevantStats(se.Stats);
+                bool bRelevant = _HasRelevantStats(se.Stats);
                 foreach (SpecialEffect s in se.Stats.SpecialEffects())
                     bRelevant |= RelevantTrinket(s);
                 return bRelevant;
@@ -744,7 +744,7 @@ namespace Rawr.ShadowPriest
                 + stats.BonusIntellectMultiplier + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
                 + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
-                // + stats.BonusDiseaseDamageMultiplier     // No longer workie.
+                + stats.BonusDiseaseDamageMultiplier
                 + stats.PriestInnerFire + stats.MovementSpeed
 
                 + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
