@@ -34,6 +34,7 @@ namespace Rawr.Bear
 			numericUpDownSurvivalSoftCap.Value = calcOpts.SurvivalSoftCap;
 			numericUpDownTargetDamage.Value = calcOpts.TargetDamage;
 			numericUpDownTargetAttackSpeed.Value = (decimal)calcOpts.TargetAttackSpeed;
+			trackBarTemporarySurvivalEffectValue.Value = (int)(100f * calcOpts.TemporarySurvivalScale);
 
 			checkBoxMaul.Checked = calcOpts.CustomUseMaul;
             checkBoxMangle.Checked = calcOpts.CustomUseMangle;
@@ -114,6 +115,7 @@ namespace Rawr.Bear
 				CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
+				calcOpts.TemporarySurvivalScale = (float)trackBarTemporarySurvivalEffectValue.Value / 100f;
 				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
 				calcOpts.SurvivalSoftCap = (int)numericUpDownSurvivalSoftCap.Value;
 				calcOpts.TargetDamage = (int)numericUpDownTargetDamage.Value;

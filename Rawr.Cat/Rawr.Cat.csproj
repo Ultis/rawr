@@ -97,6 +97,7 @@
     <Compile Include="CatRotationCalculator.cs" />
     <Compile Include="CharacterCalculationsCat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsCat.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelCat.resx">

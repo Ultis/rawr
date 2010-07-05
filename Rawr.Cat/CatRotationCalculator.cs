@@ -6,7 +6,7 @@ namespace Rawr.Cat
 {
 	public class CatRotationCalculator
 	{
-		public Stats Stats { get; set; }
+		public StatsCat Stats { get; set; }
 		public float Duration { get; set; }
 		public float CPPerCPG { get; set; }
 		public bool MaintainMangle { get; set; }
@@ -50,7 +50,7 @@ namespace Rawr.Cat
 
 		private float[] _chanceExtraCP = new float[5];
 
-		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, 
+		public CatRotationCalculator(StatsCat stats, float duration, float cpPerCPG, bool maintainMangle, 
 			float berserkDuration, float attackSpeed, bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, 
 			float chanceExtraCPPerHit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance, 
 			CatAbilityStats meleeStats, CatAbilityStats mangleStats, CatAbilityStats shredStats, CatAbilityStats rakeStats, 

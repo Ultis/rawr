@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelBear));
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
@@ -50,12 +51,23 @@
 			this.comboBoxTargetDamage = new System.Windows.Forms.ComboBox();
 			this.comboBoxSurvivalSoftCap = new System.Windows.Forms.ComboBox();
 			this.checkBoxTargetParryHastes = new System.Windows.Forms.CheckBox();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.trackBarTemporarySurvivalEffectValue = new System.Windows.Forms.TrackBar();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.panel2 = new System.Windows.Forms.Panel();
+			this.panel3 = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetDamage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetAttackSpeed)).BeginInit();
+			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTemporarySurvivalEffectValue)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -418,10 +430,98 @@
 			this.checkBoxTargetParryHastes.UseVisualStyleBackColor = true;
 			this.checkBoxTargetParryHastes.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.panel3);
+			this.groupBox2.Controls.Add(this.panel2);
+			this.groupBox2.Controls.Add(this.panel1);
+			this.groupBox2.Controls.Add(this.label10);
+			this.groupBox2.Controls.Add(this.label9);
+			this.groupBox2.Controls.Add(this.label8);
+			this.groupBox2.Controls.Add(this.trackBarTemporarySurvivalEffectValue);
+			this.groupBox2.Controls.Add(this.label7);
+			this.groupBox2.Location = new System.Drawing.Point(3, 337);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(254, 218);
+			this.groupBox2.TabIndex = 5;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Temporary Survival Effect Value";
+			this.groupBox2.Visible = false;
+			// 
+			// label7
+			// 
+			this.label7.Location = new System.Drawing.Point(6, 16);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(242, 148);
+			this.label7.TabIndex = 6;
+			this.label7.Text = resources.GetString("label7.Text");
+			// 
+			// trackBarTemporarySurvivalEffectValue
+			// 
+			this.trackBarTemporarySurvivalEffectValue.LargeChange = 50;
+			this.trackBarTemporarySurvivalEffectValue.Location = new System.Drawing.Point(6, 167);
+			this.trackBarTemporarySurvivalEffectValue.Maximum = 200;
+			this.trackBarTemporarySurvivalEffectValue.Name = "trackBarTemporarySurvivalEffectValue";
+			this.trackBarTemporarySurvivalEffectValue.Size = new System.Drawing.Size(242, 45);
+			this.trackBarTemporarySurvivalEffectValue.SmallChange = 5;
+			this.trackBarTemporarySurvivalEffectValue.TabIndex = 7;
+			this.trackBarTemporarySurvivalEffectValue.TickFrequency = 5;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(3, 199);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(33, 13);
+			this.label8.TabIndex = 0;
+			this.label8.Text = "None";
+			// 
+			// label9
+			// 
+			this.label9.Location = new System.Drawing.Point(104, 199);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(47, 13);
+			this.label9.TabIndex = 0;
+			this.label9.Text = "Average";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(223, 199);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(23, 13);
+			this.label10.TabIndex = 0;
+			this.label10.Text = "Full";
+			// 
+			// panel1
+			// 
+			this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.panel1.Location = new System.Drawing.Point(19, 192);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(1, 8);
+			this.panel1.TabIndex = 6;
+			// 
+			// panel2
+			// 
+			this.panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.panel2.Location = new System.Drawing.Point(127, 192);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(1, 8);
+			this.panel2.TabIndex = 7;
+			// 
+			// panel3
+			// 
+			this.panel3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+			this.panel3.Location = new System.Drawing.Point(234, 192);
+			this.panel3.Name = "panel3";
+			this.panel3.Size = new System.Drawing.Size(1, 8);
+			this.panel3.TabIndex = 7;
+			// 
 			// CalculationOptionsPanelBear
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.checkBoxTargetParryHastes);
 			this.Controls.Add(this.numericUpDownSurvivalSoftCap);
@@ -440,7 +540,7 @@
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Name = "CalculationOptionsPanelBear";
-			this.Size = new System.Drawing.Size(260, 363);
+			this.Size = new System.Drawing.Size(260, 559);
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
 			this.groupBox1.ResumeLayout(false);
@@ -448,6 +548,9 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetDamage)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetAttackSpeed)).EndInit();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTemporarySurvivalEffectValue)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -477,5 +580,14 @@
 		private System.Windows.Forms.ComboBox comboBoxSurvivalSoftCap;
 		private System.Windows.Forms.CheckBox checkBoxTargetParryHastes;
         private System.Windows.Forms.CheckBox checkBoxMaul;
+		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.TrackBar trackBarTemporarySurvivalEffectValue;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Panel panel3;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.Panel panel1;
 	}
 }

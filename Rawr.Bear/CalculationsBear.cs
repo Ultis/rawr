@@ -397,7 +397,7 @@ the Threat Scale defined on the Options tab.",
             if (calcOpts == null) calcOpts = new CalculationOptionsBear();
 			int targetLevel = calcOpts.TargetLevel;
 			int characterLevel = character.Level;
-			Stats stats = GetCharacterStats(character, additionalItem);
+			StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
 			float levelDifference = (targetLevel - characterLevel) * 0.002f;
             float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
 			
@@ -543,7 +543,7 @@ the Threat Scale defined on the Options tab.",
 		/// <param name="targetLevel">The level of the target</param>
 		/// <param name="calculatedStats">The CharacterCalculationsBear object to fill with results</param>
 		/// <param name="character">The Character to calculate the threat properties of</param>
-        private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, Character character)
+        private void CalculateThreat(StatsBear stats, int targetLevel, CharacterCalculationsBear calculatedStats, Character character)
         {
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
             if (calcOpts == null) calcOpts = new CalculationOptionsBear();
@@ -772,7 +772,6 @@ the Threat Scale defined on the Options tab.",
 		{
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
             if (calcOpts == null) calcOpts = new CalculationOptionsBear();
-            Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Bear);
 			
 			/* TODO:
 			 * Threat-only:
@@ -807,11 +806,14 @@ the Threat Scale defined on the Options tab.",
 
 			DruidTalents talents = character.DruidTalents;
 			
-			Stats statsItems = GetItemStats(character, additionalItem);
-			//Stats statsEnchants = GetEnchantsStats(character);
-			Stats statsBuffs = GetBuffsStats(character, calcOpts);
-			Stats statsTalents = new Stats()
+			StatsBear statsTotal = new StatsBear()
 			{
+				BonusMangleDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (talents.GlyphOfMangle ? 1.1f : 1.0f) - 1f,
+				BonusMaulDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (1f + 0.04f * talents.RendAndTear) - 1f,
+				BonusEnrageDamageMultiplier = 0.05f * talents.KingOfTheJungle,
+				MangleCooldownReduction = (0.5f * talents.ImprovedMangle),
+				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
+				
 				PhysicalCrit = 0.02f * talents.SharpenedClaws
                              + ((character.ActiveBuffsContains("Leader of the Pack")
                                  || character.ActiveBuffsContains("Rampage"))
@@ -823,21 +825,18 @@ the Threat Scale defined on the Options tab.",
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusAttackPowerMultiplier = 0.02f * talents.ProtectorOfThePack,
 				BonusPhysicalDamageMultiplier = (1f + 0.02f * talents.Naturalist) * (1f + 0.02f * talents.MasterShapeshifter) - 1f,
-				BonusMangleDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (talents.GlyphOfMangle ? 1.1f : 1.0f) - 1f,
-				BonusMaulDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (1f + 0.04f * talents.RendAndTear) - 1f,
-				BonusEnrageDamageMultiplier = 0.05f * talents.KingOfTheJungle,
-				MangleCooldownReduction = (0.5f * talents.ImprovedMangle),
 				BonusRageOnCrit = (2.5f * talents.PrimalFury),
 				Expertise = 5f * talents.PrimalPrecision,
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
-				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
-                DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
+				DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ||
 					character.ActiveBuffsContains("Trauma") ? 0f : 0.3f * talents.Mangle),
 				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.11f * talents.SurvivalOfTheFittest) - 1f,
 			};
-			
-			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+			statsTotal.Accumulate(BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Bear));
+			statsTotal.Accumulate(GetItemStats(character, additionalItem));
+			statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
+
 
 			float predatoryStrikesAP = 0f;
 			float fap = 0f;
@@ -856,7 +855,7 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
 			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f + fap + predatoryStrikesAP;
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.Health += ((statsTotal.Stamina - 20f) * 10f) + 20;
+			statsTotal.Health += ((statsTotal.Stamina - 20f) * 10f) + 20f;
             statsTotal.Health *= (1f + statsTotal.BonusHealthMultiplier);
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
 			statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
@@ -866,8 +865,6 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
-            // Haste trinket (Meteorite Whetstone)
-            //statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
 
             int targetLevel = calcOpts.TargetLevel;
 
@@ -907,16 +904,17 @@ the Threat Scale defined on the Options tab.",
             float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
 
 			Stats statsProcs = new Stats();
+			float uptime;
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				switch (effect.Trigger)
 				{
 					case Trigger.Use:
-						statsProcs += effect.GetAverageStats(0f, 1f, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, 0f, 1f, 2.5f);
 						break;
 					case Trigger.MeleeHit:
 					case Trigger.PhysicalHit:
-						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceHit, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceHit, 2.5f);
 						break;
 					case Trigger.MeleeAttack:
 						if (effect.Stats.MoteOfAnger > 0)
@@ -927,44 +925,44 @@ the Threat Scale defined on the Options tab.",
 						}
 						else
 						{
-							statsProcs += effect.GetAverageStats(meleeHitInterval, 1f, 2.5f);
+							effect.AccumulateAverageStats(statsProcs, meleeHitInterval, 1f, 2.5f);
 						}
 						break;
 					case Trigger.MeleeCrit:
 					case Trigger.PhysicalCrit:
-						statsProcs += effect.GetAverageStats(meleeHitInterval, chanceCrit, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceCrit, 2.5f);
 						break;
 					case Trigger.DoTTick:
-						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f);
 						break;
 					case Trigger.DamageDone:
-						statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f);
 						break;
                     case Trigger.DamageOrHealingDone:
-                        statsProcs += effect.GetAverageStats(meleeHitInterval / 2f, 1f, 2.5f); // also needs healing
+                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f); // also needs healing
                         break;
 					case Trigger.MangleBearHit:
 						if (talents.Mangle > 0)
-							statsProcs += effect.GetAverageStats(6f - statsTalents.MangleCooldownReduction, chanceHit, 2.5f);
+							effect.AccumulateAverageStats(statsProcs, 6f - statsTotal.MangleCooldownReduction, chanceHit, 2.5f);
 						break;
 					case Trigger.MangleCatOrShredOrInfectedWoundsHit:
 						if (talents.Mangle > 0)
-							statsProcs += effect.GetAverageStats(1f /
-								(1f / (6f - statsTalents.MangleCooldownReduction) + //Mangles Per Second
+							effect.AccumulateAverageStats(statsProcs, 1f /
+								(1f / (6f - statsTotal.MangleCooldownReduction) + //Mangles Per Second
 								1f / meleeHitInterval) //Mauls Per Second
 								, chanceHit, 2.5f);
 						break;
 					case Trigger.SwipeBearOrLacerateHit:
-						statsProcs += effect.GetAverageStats(2.25f, chanceHit, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, 2.25f, chanceHit, 2.5f);
 						break;
 					case Trigger.LacerateTick:
-						statsProcs += effect.GetAverageStats(3f, 1f, 2.5f);
+						effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f);
 						break;
 					case Trigger.DamageTaken:
-						statsProcs += effect.GetAverageStats(TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+						effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
 					case Trigger.DamageTakenPhysical:
-						statsProcs += effect.GetAverageStats(TargAttackSpeed, 1f - (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+						effect.AccumulateAverageStats(statsProcs, TargAttackSpeed, 1f - (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
 						break;
 				}
 			}
@@ -979,11 +977,31 @@ the Threat Scale defined on the Options tab.",
 			statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
 			statsProcs.Armor += 2f * (float)Math.Floor(statsProcs.Agility) + statsProcs.BonusArmor;
 			statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
-			statsTotal += statsProcs;
+			statsTotal.Accumulate(statsProcs);
 
-			//statsTotal.Agility += (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusAgilityMultiplier));
-			//statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.HighestStat * (1f + statsTotal.BonusArmorMultiplier));
 			return statsTotal;
+		}
+
+
+		//NOTE: This is currently unused, because it doesn't account for procs which are both mitigation and survival (ie armor and agility procs)
+		private void AccumulateSpecialEffect(Stats statsProcs, Stats statsEffect, float effectUptime, float temporarySurvivalScale)
+		{
+			if (temporarySurvivalScale != 1f && statsEffect.Armor + statsEffect.Health + statsEffect.Stamina > 0f)
+			{
+				//Subject to Temporary Survival scaling
+				if (temporarySurvivalScale < 1f)
+				{
+					statsProcs.Accumulate(statsEffect, effectUptime * temporarySurvivalScale);
+				}
+				else
+				{
+					statsProcs.Accumulate(statsEffect, 1f - ((2f - temporarySurvivalScale) * (1f - effectUptime)));
+				}
+			}
+			else
+			{
+				statsProcs.Accumulate(statsEffect, effectUptime);
+			}
 		}
 
 		/// <summary>
@@ -1391,7 +1409,6 @@ the Threat Scale defined on the Options tab.",
 				BonusMangleBearThreat = stats.BonusMangleBearThreat,
 				BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
 				BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
-                BonusSwipeDamageMultiplier = stats.BonusSwipeDamageMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
@@ -1434,7 +1451,7 @@ the Threat Scale defined on the Options tab.",
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
-                 + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
+                 + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier
                  + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating + stats.BossAttackSpeedMultiplier
 				 + stats.SpellCrit + stats.SpellCritOnTarget + stats.Intellect + stats.BonusNatureDamageMultiplier
@@ -1595,7 +1612,7 @@ the Threat Scale defined on the Options tab.",
 			set { _subPoints[2] = value; }
         }
 
-		public Stats BasicStats { get; set; }
+		public StatsBear BasicStats { get; set; }
 		public int TargetLevel { get; set; }
 		public float Dodge { get; set; }
 		public float Miss { get; set; }

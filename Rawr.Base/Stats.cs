@@ -56,9 +56,7 @@ namespace Rawr {
         MangleCostReduction,
         MasteryRating,
         Paragon,
-        RakeCostReduction,
         RipCostReduction,
-        ShredCostReduction,
         Miss,
         MoonfireDmg,
         MoonfireExtension,
@@ -104,10 +102,6 @@ namespace Rawr {
         ManacostReduceWithin15OnHealingCast,
         SpellPower,
         BonusRageOnCrit,
-        BonusCPOnCrit,
-        BonusEnergyOnTigersFury,
-        FinisherEnergyOnAvoid,
-		MangleCooldownReduction,
 		BonusFerociousBiteCrit,
 		BonusRipCrit,
         BonusRakeCrit,
@@ -387,9 +381,7 @@ namespace Rawr {
         BonusCritHealMultiplier,
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
-		BonusMaulDamageMultiplier,
 		BonusBearSwipeDamageMultiplier,
-        BonusEnrageDamageMultiplier,
         BonusShadowDamageMultiplier,
         BonusHolyDamageMultiplier,
         BonusDiseaseDamageMultiplier,
@@ -431,11 +423,6 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Feral
         BonusLacerateDamageMultiplier,
-        BonusSwipeDamageMultiplier,
-        BonusMangleDamageMultiplier,
-        BonusShredDamageMultiplier,
-        BonusRakeDamageMultiplier,
-        BonusFerociousBiteDamageMultiplier,
         BonusRipDamageMultiplier,
         #endregion
         #region Added by Rawr.HolyPriest
@@ -1848,13 +1835,13 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.MangleCostReduction] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float RakeCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.RakeCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Category("Feral")]
+		//public float RakeCostReduction
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.RakeCostReduction]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
+		//}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
@@ -1864,13 +1851,13 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.RipCostReduction] = value; }
         }
         
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        public float ShredCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShredCostReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShredCostReduction] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Category("Feral")]
+		//public float ShredCostReduction
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.ShredCostReduction]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.ShredCostReduction] = value; }
+		//}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
@@ -3888,75 +3875,75 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRipDamageMultiplier] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Ferocious Bite Dmg")]
-        public float BonusFerociousBiteDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Ferocious Bite Dmg")]
+		//public float BonusFerociousBiteDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Swipe Dmg")]
-        public float BonusSwipeDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Swipe Dmg")]
+		//public float BonusSwipeDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Mangle Dmg")]
-        public float BonusMangleDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Mangle Dmg")]
+		//public float BonusMangleDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Maul Dmg")]
-        public float BonusMaulDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Maul Dmg")]
+		//public float BonusMaulDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Rake Dmg")]
-        public float BonusRakeDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Rake Dmg")]
+		//public float BonusRakeDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Shred Dmg")]
-        public float BonusShredDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Shred Dmg")]
+		//public float BonusShredDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Feral")]
-        [DisplayName("% Enrage Dmg")]
-        public float BonusEnrageDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Percentage]
+		//[Category("Feral")]
+		//[DisplayName("% Enrage Dmg")]
+		//public float BonusEnrageDamageMultiplier
+		//{
+		//    get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier]; }
+		//    set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier] = value; }
+		//}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("Bonus Rip Crit Chance")]
@@ -3995,23 +3982,23 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.BonusFerociousBiteCrit] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("Bonus CP on Crit")]
-        public float BonusCPOnCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Category("Feral")]
+		//[DisplayName("Bonus CP on Crit")]
+		//public float BonusCPOnCrit
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Feral")]
-        [DisplayName("Mangle Cooldown Reduction")]
-        public float MangleCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[Category("Feral")]
+		//[DisplayName("Mangle Cooldown Reduction")]
+		//public float MangleCooldownReduction
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction] = value; }
+		//}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Feral")]
@@ -4022,23 +4009,23 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.TigersFuryCooldownReduction] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Bonus Energy On Tiger's Fury")]
-        [Category("Feral")]
-        public float BonusEnergyOnTigersFury
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[DisplayName("Bonus Energy On Tiger's Fury")]
+		//[Category("Feral")]
+		//public float BonusEnergyOnTigersFury
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury] = value; }
+		//}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Finisher Energy On Avoid")]
-        [Category("Feral")]
-        public float FinisherEnergyOnAvoid
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid] = value; }
-        }
+		//[System.ComponentModel.DefaultValueAttribute(0f)]
+		//[DisplayName("Finisher Energy On Avoid")]
+		//[Category("Feral")]
+		//public float FinisherEnergyOnAvoid
+		//{
+		//    get { return _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid]; }
+		//    set { _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid] = value; }
+		//}
         #endregion
         #region Added by Rawr.HolyPriest
         /* See SpellCombatManaRegeneration, a stat that does exactly what the Primal Mooncloth set does

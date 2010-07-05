@@ -35,7 +35,13 @@ namespace Rawr.Bear
         {
             get { return _threatScale; }
             set { if (_threatScale != value) { _threatScale = value; OnPropertyChanged("ThreatScale"); } }
-        }
+		}
+		private float _temporarySurvivalScale = 1f;
+		public float TemporarySurvivalScale
+		{
+			get { return _temporarySurvivalScale; }
+			set { if (_temporarySurvivalScale != value) { _temporarySurvivalScale = value; OnPropertyChanged("TemporarySurvivalScale"); } }
+		}
 		private int _targetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
         public int TargetArmor
         {
