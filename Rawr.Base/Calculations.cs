@@ -1483,13 +1483,12 @@ namespace Rawr
 				// Create new CCB, populate, and return it.
                 ccb = Calculations.CreateNewComparisonCalculation();
 				ccb.Name = Extensions.DisplayName(property);
-                //      transfer OverallPoints
-                ccb.OverallPoints = scale * (charCalcsUpper.OverallPoints - charCalcsLower.OverallPoints) / changePointDifference;
-                //      transfer SubPoints
+                // Populate SubPoints and OverallPoints
                 ccb.SubPoints = new float[charCalcsUpper.SubPoints.Length];
                 for (int i = 0; i < charCalcsUpper.SubPoints.Length; i++)
                 {
                     ccb.SubPoints[i] = scale * (charCalcsUpper.SubPoints[i] - charCalcsLower.SubPoints[i]) / changePointDifference;
+                    ccb.OverallPoints += ccb.SubPoints[i];
                 }
                 ccb.Description = string.Format("If you had {0} more{1}", scale, ccb.Name);
             }

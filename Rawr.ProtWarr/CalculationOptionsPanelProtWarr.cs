@@ -34,13 +34,17 @@ namespace Rawr.ProtWarr {
             // Stupid hack since you can't put in newlines into the VS editor properties
             LB_UseParryHaste.ToolTipText = LB_UseParryHaste.ToolTipText.Replace("May not", Environment.NewLine + "May not");
 
+            // Fix for Saves With TankPoints Still Enabled
+            if (calcOpts.RankingMode == 2)
+                calcOpts.RankingMode = 1;
+
             // Ranking System
             if (calcOpts.ThreatScale > 24.0f) { calcOpts.ThreatScale = 8f; }// Old scale value being saved, reset to default
             if (calcOpts.MitigationScale > 1.0f) { calcOpts.MitigationScale = (1f / 8f); }// Old scale value being saved, reset to default
             Bar_ThreatScale.Value = Convert.ToInt32(calcOpts.ThreatScale / 8f / 0.1f);
             Bar_MitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale * 8.0f / 0.1f));
             RB_MitigationScale.Checked = (calcOpts.RankingMode == 1);
-            RB_TankPoints.Checked = (calcOpts.RankingMode == 2);
+            //RB_TankPoints.Checked = (calcOpts.RankingMode == 2);
             RB_BurstTime.Checked = (calcOpts.RankingMode == 3);
             RB_DamageOutput.Checked = (calcOpts.RankingMode == 4);
             Bar_ThreatScale.Enabled = LB_ThreatScale.Enabled = (calcOpts.RankingMode != 4);
@@ -102,10 +106,10 @@ namespace Rawr.ProtWarr {
         private void radioButton_CheckedChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
                 CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-                if      (RB_TankPoints.Checked  ) { calcOpts.RankingMode = 2; Bar_ThreatScale.Value = 10;
-                }else if(RB_BurstTime.Checked   ) { calcOpts.RankingMode = 3; Bar_ThreatScale.Value =  0;
-                }else if(RB_DamageOutput.Checked) { calcOpts.RankingMode = 4; Bar_ThreatScale.Value = 10;
-                }else                             { calcOpts.RankingMode = 1; Bar_ThreatScale.Value = 10; }
+                //if      (RB_TankPoints.Checked  ) { calcOpts.RankingMode = 2; Bar_ThreatScale.Value = 10; }
+                if (RB_BurstTime.Checked   )      { calcOpts.RankingMode = 3; Bar_ThreatScale.Value =  0; }
+                else if (RB_DamageOutput.Checked) { calcOpts.RankingMode = 4; Bar_ThreatScale.Value = 10; }
+                else                              { calcOpts.RankingMode = 1; Bar_ThreatScale.Value = 10; }
                 Bar_ThreatScale.Enabled = LB_ThreatScale.Enabled = (calcOpts.RankingMode != 4);
                 Bar_MitigationScale.Enabled = LB_MitigationScaleValue.Enabled = (calcOpts.RankingMode == 1);
 
@@ -127,10 +131,10 @@ namespace Rawr.ProtWarr {
                 RB_MitigationScale.Checked = true;
         }
 
-        private void extendedToolTipTankPoints_Click(object sender, EventArgs e) {
-            if (!RB_TankPoints.Checked)
-                RB_TankPoints.Checked = true;
-        }
+        //private void extendedToolTipTankPoints_Click(object sender, EventArgs e) {
+        //    if (!RB_TankPoints.Checked)
+        //        RB_TankPoints.Checked = true;
+        //}
 
         private void extendedToolTipBurstTime_Click(object sender, EventArgs e) {
             if (!RB_BurstTime.Checked)

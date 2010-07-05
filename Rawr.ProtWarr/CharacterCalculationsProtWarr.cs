@@ -12,7 +12,7 @@ namespace Rawr.ProtWarr
 
         public override float OverallPoints
         {
-            get { return _subPoints[0] + _subPoints[1] + _subPoints[2]; }
+            get { return (_subPoints[0] + _subPoints[1] + _subPoints[2]); }
             set { }
         }
 
@@ -213,6 +213,7 @@ namespace Rawr.ProtWarr
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "% Avoidance": return DodgePlusMissPlusParry * 100.0f;
                 case "% Avoidance+Block": return DodgePlusMissPlusParryPlusBlock * 100.0f;
+                case "Block Value": return BlockValue;
 
                 case "Threat/sec": return ThreatPerSecond;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;

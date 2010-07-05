@@ -196,6 +196,7 @@ threat and limited threat scaled by the threat scale.",
                     "% Chance to be Crit",
                     "% Avoidance",
                     "% Avoidance+Block",
+                    "Block Value",
                     "Threat/sec",
                     "% Chance to be Avoided", 
                     "% Chance to be Dodged",
@@ -391,7 +392,6 @@ threat and limited threat scaled by the threat scale.",
             if (needsDisplayCalculations)
             {
                 calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Warrior));
-                calculatedStats.BlockValue = stats.BlockValue;
                 calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, options.TargetLevel);
                 calculatedStats.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, options.TargetLevel);
                 calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
@@ -428,6 +428,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Block = dm.DefendTable.Block;
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.DodgePlusMissPlusParry + calculatedStats.Block;
+            calculatedStats.BlockValue = stats.BlockValue;
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
@@ -477,8 +478,9 @@ threat and limited threat scaled by the threat scale.",
                     break;
                 default:
                     // Mitigation Scale Mode
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = dm.Mitigation * options.BossAttackValue * options.MitigationScale * 100.0f;
+                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 10.0f;
+                    calculatedStats.MitigationPoints = dm.Mitigation * options.BossAttackValue * options.MitigationScale * 10.0f;
+                    calculatedStats.ThreatPoints /= 10.0f;
                     break;
             }
             //calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
