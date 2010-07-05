@@ -101,20 +101,21 @@ namespace Rawr.Tree {
                     // [4] jewelcrafting
 
                     // Reds
-                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // spell power
+                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // ** spell power
                     // Blue
-                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5
-                    int[] sparkling = { 39920, 41442, 40009, 40120, 42145 }; // spi
+                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5 [pure]
+                    int[] sparkling = { 39920, 41442, 40009, 40120, 42145 }; // spi [pure]
                     // Yellow
-                    int[] brilliant = { 39912, 41444, 40012, 40123, 42148 }; // int
+                    int[] brilliant = { 39912, 41444, 40012, 40123, 42148 }; // int [pure]
                     // Purple
-                    int[] purified = { 39941, 41457, 40026, 40133 }; // spell power + spirit
+                    int[] purified = { 39941, 41457, 40026, 40133 }; // ** spell power + spirit
                     int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
                     // Green
                     int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
                     int[] seers = { 39979, 41473, 40092, 40170 }; // int + spi
                     // Orange
                     int[] luminous = { 39946, 41494, 40047, 40151 }; // int + spell power
+                    int[] reckless = { 39959, 41497, 40051, 40155 }; // ** spell power + haste
 
                     /*
                      * Gemmings
@@ -128,40 +129,32 @@ namespace Rawr.Tree {
                      */
 
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], revitalizing);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], ember);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Uncommon (Insightful)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], insightful);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], revitalizing);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], ember);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Perfect (Insightful)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], insightful);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], luminous[2], seers[2], brilliant[2], revitalizing);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], luminous[2], seers[2], brilliant[2], ember);
-					AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Rare (Insightful)", false, runed[2], purified[2], luminous[2], seers[2], brilliant[2], insightful);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Epic (Revitalizing)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], revitalizing);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Epic (Ember)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], ember);
-                    AddGemmingTemplateGroup(  _defaultGemmingTemplates, "Epic (Insightful)", true, runed[3], purified[3], luminous[3], seers[3], brilliant[3], insightful);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], sparkling[4], brilliant[4], revitalizing);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], sparkling[4], brilliant[4], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], reckless[0], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], reckless[0], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Insightful)", false, runed[0], purified[0], reckless[0], insightful);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], reckless[1], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], reckless[1], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Insightful)", false, runed[1], purified[1], reckless[1], insightful);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], reckless[2], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], reckless[2], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Insightful)", false, runed[2], purified[2], reckless[2], insightful);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", false, runed[3], purified[3], reckless[3], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", false, runed[3], purified[3], reckless[3], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Insightful)", true, runed[3], purified[3], reckless[3], insightful);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], revitalizing);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], ember);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Insightful)", false, runed[4], insightful);
                 }
                 return _defaultGemmingTemplates;
             }
         }
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int purified, int luminous, int seers, int brilliant, int meta) {
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int purified, int reckless, int meta) {
             // Overrides, only "runed" and "seers"
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = seers, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
-
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = luminous, BlueId = purified, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = luminous, YellowId = brilliant, BlueId = seers, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = luminous, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = purified, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = seers, BlueId = seers, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = reckless, BlueId = purified, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
-        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int sparkling, int brilliant, int meta) {
-            // Overrides, only "runed" and "seers"
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int meta) {
             list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = sparkling, YellowId = sparkling, BlueId = sparkling, PrismaticId = sparkling, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = brilliant, BlueId = sparkling, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
         private static List<string> _relevantGlyphs;
