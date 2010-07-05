@@ -64,6 +64,9 @@
     <Compile Include="..\..\Rawr.Bear\CalculationsBear.cs">
       <Link>CalculationsBear.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Bear\StatsBear.cs">
+      <Link>StatsBear.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsConverters.cs" />
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">
       <DependentUpon>CalculationOptionsPanelBear.xaml</DependentUpon>

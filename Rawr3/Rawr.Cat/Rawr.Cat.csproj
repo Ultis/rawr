@@ -70,6 +70,9 @@
     <Compile Include="..\..\Rawr.Cat\CharacterCalculationsCat.cs">
       <Link>CharacterCalculationsCat.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Cat\StatsCat.cs">
+      <Link>StatsCat.cs</Link>
+    </Compile>
     <Compile Include="CalculationOptionsPanelCat.xaml.cs">
       <DependentUpon>CalculationOptionsPanelCat.xaml</DependentUpon>
     </Compile>
