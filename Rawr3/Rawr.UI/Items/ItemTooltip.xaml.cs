@@ -368,6 +368,7 @@ namespace Rawr.UI
             }
             if (hasGems)
             {
+                GemStack.Visibility = Visibility.Visible;
                 SocketBonusLabel.Visibility = Visibility.Visible;
                 SocketBonusLabel.Text = "Socket Bonus: " + (actualItem.SocketBonus.ToString().Length == 0 ? "None" : actualItem.SocketBonus.ToString());
             }
