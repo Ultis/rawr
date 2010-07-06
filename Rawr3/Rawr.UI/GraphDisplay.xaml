@@ -11,6 +11,7 @@
 		
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Rectangle x:Name="BarBackground" VerticalAlignment="Stretch" Margin="0,0,0,-1" Canvas.ZIndex="1">
@@ -111,7 +112,8 @@
                 <local:ItemFilterPopup HorizontalAlignment="Left"/>
             </StackPanel>
         </Grid>
-    	<ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="1" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto">
+		<local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1"/>
+    	<ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto">
 			<local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
 		</ScrollViewer>
 	</Grid>

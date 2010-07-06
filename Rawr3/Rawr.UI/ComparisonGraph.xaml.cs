@@ -123,11 +123,12 @@ namespace Rawr.UI
 						{
 							foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
 						}
-						LegendStack.Children.Clear();
+						/*LegendStack.Children.Clear();
+                        LegendStack.Visibility = Visibility.Collapsed;
 						foreach (KeyValuePair<string, Color> kvp in legendItems)
 						{
 							LegendStack.Children.Add(new ComparisonGraphBar() { Color = kvp.Value, Title = kvp.Key });
-						}
+						}*/
 					}
 				}
             }

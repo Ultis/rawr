@@ -246,6 +246,7 @@ namespace Rawr.UI
 			_itemCalculations = FilterTopXGemmings(listItemCalculations);
 
 
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
 			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
 			ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
 			ComparisonGraph.DisplayCalcs(_itemCalculations);
@@ -263,6 +264,7 @@ namespace Rawr.UI
         {
             SetGraphControl(ComparisonGraph);
             ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
@@ -298,6 +300,7 @@ namespace Rawr.UI
 
 			_itemCalculations = FilterTopXGemmings(new List<ComparisonCalculationBase>(_itemCalculations));
 
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
 			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(_itemCalculations);
@@ -314,6 +317,7 @@ namespace Rawr.UI
         private void UpdateGraphBuffs(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(Calculations.GetBuffCalculations(Character, 
@@ -376,6 +380,7 @@ namespace Rawr.UI
                         newChar.CurrentTalents.Data[talentData.Index] = orig;
                     }
                 }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
@@ -412,6 +417,7 @@ namespace Rawr.UI
                     compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, "Custom", true);
                     talentCalculations.Add(compare);
                 }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
@@ -455,6 +461,7 @@ namespace Rawr.UI
                         }
                     }
                 }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
@@ -484,6 +491,7 @@ namespace Rawr.UI
 					}
 				}
 
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
 				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
 				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
 				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
@@ -502,7 +510,8 @@ namespace Rawr.UI
 				foreach (ItemSlot slot in slots)
 					foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
 						itemCalculations.Add(calc);
-				
+
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
 				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
 				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
 				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
@@ -714,6 +723,7 @@ namespace Rawr.UI
             SetGraphControl(ComparisonGraph);
             if (subgraph == "Relative Stat Values")
             {
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(CalculationsBase.GetRelativeStatValues(Character));
@@ -732,6 +742,7 @@ namespace Rawr.UI
             {
                 SetGraphControl(ComparisonGraph);
                 var calcs = Calculations.GetCustomChartData(Character, subgraph); // should be called before requesting SubPointNameColors because some models swap colors depending on subgraph, ideally an api would be changed that allows query of subpoints based on chart name
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(calcs);
