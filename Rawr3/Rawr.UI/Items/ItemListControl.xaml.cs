@@ -358,5 +358,31 @@ namespace Rawr.UI
 			if (comboBoxSort.SelectedIndex >= 0)
 				Items.Sort = (ComparisonSort)(comboBoxSort.SelectedIndex - 2);
 		}
+
+        private void listBoxItems_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            int direction = Math.Sign(e.Delta);
+
+            bool shiftKey = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift; 
+            
+            int scrollAmount = (shiftKey // Holding Shift makes it jump 3 times as far for fast scrolling
+                ? (direction < 0) ? ScrollAmount.LargeIncrement : ScrollAmount.LargeDecrement
+                : (direction < 0) ? ScrollAmount.SmallIncrement : ScrollAmount.SmallDecrement);
+
+            ScrollViewer scrollProvider = listBoxItems.GetScrollHost();
+            scrollProvider.ScrollToVerticalOffset(scrollProvider.VerticalOffset + scrollAmount);
+        }
 	}
+    public static class ScrollAmount {
+        private static int _NoAmount = 0;
+        private static int _SmallDecrement = -4;
+        private static int _SmallIncrement =  4;
+        private static int _LargeDecrement = -4 * 3;
+        private static int _LargeIncrement =  4 * 3;
+        public static int NoAmount { get { return _NoAmount; } set {  _NoAmount = value; } }
+        public static int SmallDecrement { get { return _SmallDecrement; } set { _SmallDecrement = value; } }
+        public static int SmallIncrement { get { return _SmallIncrement; } set { _SmallIncrement = value; } }
+        public static int LargeDecrement { get { return _LargeDecrement; } set { _LargeDecrement = value; } }
+        public static int LargeIncrement { get { return _LargeIncrement; } set { _LargeIncrement = value; } }
+    }
 }

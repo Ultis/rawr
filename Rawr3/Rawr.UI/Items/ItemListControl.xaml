@@ -28,7 +28,7 @@
         </controls:DockPanel>
         <ListBox Grid.Row="1" x:Name="listBoxItems" BorderThickness="0"
            ItemsSource="{Binding Items}" ScrollViewer.VerticalScrollBarVisibility="Visible"
-           SelectionChanged="listBoxItems_SelectionChanged">
+           SelectionChanged="listBoxItems_SelectionChanged" MouseWheel="listBoxItems_MouseWheel">
           <ListBox.ItemContainerStyle>
             <Style TargetType="ContentControl">
               <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
