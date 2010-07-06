@@ -149,11 +149,14 @@ namespace Rawr.UI
 
                 ItemName.Text = Title;
                 ItemName.Foreground = new SolidColorBrush(Colors.Purple);
-                //ItemName.FontSize = 10;
-                //ItemLevel.Text = "";
 
+                // Hide Item related fields
+                TypesPanel.Visibility = Visibility.Collapsed;
                 StatPanel.Visibility = Visibility.Collapsed;
                 GemStack.Visibility = Visibility.Collapsed;
+                GemNamesLabel1.Visibility = Visibility.Collapsed;
+                GemNamesLabel2.Visibility = Visibility.Collapsed;
+                GemNamesLabel3.Visibility = Visibility.Collapsed;
                 SocketBonusLabel.Visibility = Visibility.Collapsed;
                 EnchantLabel.Visibility = Visibility.Collapsed;
 
