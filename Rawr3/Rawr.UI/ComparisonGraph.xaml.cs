@@ -361,6 +361,14 @@ namespace Rawr.UI
                     }
                     AxisLabels[j].Text = Math.Round(i, 2).ToString();
                 }
+                if ((int)NameColumn.Width.Value != Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20)
+                {
+                    // Reset the width of the name section
+                    //ColumnsGrid.ColumnDefinitions[0].Width
+                    int width = 142 + Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20;
+                    NameColumn.Width = new GridLength(width, GridUnitType.Pixel);
+                    ChartTopLine.Margin = new Thickness(width, 24, 0, 0);
+                }
             }
         }
 

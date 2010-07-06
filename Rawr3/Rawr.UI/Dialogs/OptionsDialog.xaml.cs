@@ -76,24 +76,14 @@ namespace Rawr.UI
             GeneralSettings.Default.ItemNameWidthSetting = CB_ItemNameWidthSetting.SelectedIndex;
             switch (OptimizationMethodCombo.SelectedIndex)
             {
-                case 0:
-                    OptimizerSettings.Default.OptimizationMethod = OptimizationMethod.GeneticAlgorithm;
-                    break;
-                case 1:
-                    OptimizerSettings.Default.OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
-                    break;
+                case 0: OptimizerSettings.Default.OptimizationMethod = OptimizationMethod.GeneticAlgorithm; break;
+                case 1: OptimizerSettings.Default.OptimizationMethod = OptimizationMethod.SimulatedAnnealing; break;
             }
             switch (GreedyMethodCombo.SelectedIndex)
             {
-                case 0:
-                    OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.AllCombinations;
-                    break;
-                case 1:
-                    OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.SingleChanges;
-                    break;
-                case 2:
-                    OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.GreedyBest;
-                    break;
+                case 0: OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.AllCombinations; break;
+                case 1: OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.SingleChanges; break;
+                case 2: OptimizerSettings.Default.GreedyOptimizationMethod = GreedyOptimizationMethod.GreedyBest; break;
             }
             GeneralSettings.Default.ProcEffectMode = ProcEffectModeCombo.SelectedIndex;
             GeneralSettings.Default.CombinationEffectMode = EffectCombinationsCalculationMode.SelectedIndex;

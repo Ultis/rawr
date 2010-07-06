@@ -152,6 +152,8 @@ namespace Rawr.UI
 		{
             if (ActualWidth > (GraphBarStart + 8))//150
             {
+                NameGridCol.Width = new GridLength(GraphBarStart);
+                NameGrid.Width = GraphBarStart;
                 PositiveStack.Children.Clear();
                 NegativeStack.Children.Clear();
 
@@ -184,7 +186,6 @@ namespace Rawr.UI
                         NegativeStack.Children.Add(rects[i]);
                     }
                 }
-                NameGrid.Width = GraphBarStart;
                 PositiveStack.Children.Add(TotalLabel);
             }
 		}
