@@ -259,7 +259,6 @@ namespace Rawr.UI
 			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
 		}
         
-
         private void UpdateGraphEnchants(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
@@ -312,7 +311,6 @@ namespace Rawr.UI
 			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
 			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
 		}
-
 
         private void UpdateGraphBuffs(string subgraph)
         {
@@ -789,6 +787,35 @@ namespace Rawr.UI
         {
             if (SortCombo != null)
                 ComparisonGraph.Sort = (ComparisonSort)(SortCombo.SelectedIndex - 2);
+        }
+
+        private void TB_LiveFilter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // search next selected item
+                int sel = ComparisonGraph.FindItem(TB_LiveFilter.Text, 0/*ComparisonGraph.SelectedItemIndex + 1*/);
+
+                // change
+                ComparisonGraph.SelectedItemIndex = sel;
+
+                // if N/A - ding
+                TB_LiveFilter.Background = new SolidColorBrush(((sel < 0) ? Color.FromArgb(255, 255, 218, 248) : Colors.White));
+
+                // Weird Focus issue
+                //toolStripItemComparison.Focus();
+                //txtFilterBox.Focus();
+
+                // we handled it fine
+                e.Handled = true;
+            }
+            else
+            {
+                if (TB_LiveFilter.Background != new SolidColorBrush(Colors.White))
+                    TB_LiveFilter.Background = new SolidColorBrush(Colors.White);
+                // Weird Focus issue
+                //TB_LiveFilter.Focus();
+            }
         }
     }
 }

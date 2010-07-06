@@ -25,6 +25,7 @@
 			</Grid.ColumnDefinitions>
 			<Image x:Name="AvailableImage" Source="Images/DiamondOutline.png" Margin="2,2,2,2" MouseLeftButtonDown="AvailableClicked"/>
 			<Rectangle x:Name="EquippedRect" Grid.Column="1" Fill="#402AFF00" Visibility="Collapsed" />
+			<Rectangle x:Name="HighLightedRect" Grid.Column="1" Fill="#4000EBFF" Visibility="Collapsed" />
 			<TextBlock x:Name="TextLabel" Grid.Column="1" TextWrapping="Wrap" MaxHeight="30" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,8,0" Text="test"/>
 		</Grid>
 		<StackPanel x:Name="NegativeStack" Margin="0,0,1,0" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right"/>

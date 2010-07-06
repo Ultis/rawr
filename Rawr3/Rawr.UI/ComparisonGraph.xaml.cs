@@ -379,6 +379,102 @@ namespace Rawr.UI
             Overall
         }
 
+        #region Selecting an Item: find, select, redraw, scroll to
+
+        public int SelectedItemIndex
+        {
+            get { return _selItemIndex; }
+            set
+            {
+                if (_selItemIndex != value)
+                {
+                    // change
+                    _selItemIndex = value;
+
+                    // redraw
+                    Redraw();
+
+                    // scroll to 
+                    ScrollTo(value);
+                }
+            }
+        }
+        private int _selItemIndex = -1;
+
+        public void Redraw()
+        {
+            // cleanup
+            //if (_prerenderedGraph != null) { _prerenderedGraph.Dispose(); }
+            //_prerenderedGraph = null;
+
+            // get it
+            //PrerenderedGraph.ToString();
+
+            // mark for next update
+            //this.Invalidate();
+
+            foreach (ComparisonGraphItem cgi in comparisonItems) {
+                cgi.HighLightedRect.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public int FindItem(string sText, int nStartIndex)
+        {
+            if (!string.IsNullOrEmpty(sText))
+            {
+                for (int i = nStartIndex; i < comparisonItems.Count; i++)
+                {
+                    if (comparisonItems[i].TextLabel.Text.IndexOf(sText, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            // none
+            return -1;
+        }
+
+        public void ScrollTo(int nIndex)
+        {
+            if (nIndex >= 0 && nIndex < comparisonItems.Count)
+            {
+                ScrollViewer ScrollBar = this.Parent as ScrollViewer;
+                double height = comparisonItems[0].ActualHeight + 4;
+
+                // offset in prerendered zone
+                var nOffset = 24 + nIndex * height;
+
+                // viewport start/end Y
+                var start = ScrollBar.VerticalOffset;// Value;
+                var end = start + ScrollBar.ActualHeight;
+                double scroll = 0;
+
+                // check if visible
+                if (nOffset < start || nOffset > end)
+                {
+                    // nice delta
+                    var nice = (ScrollBar.ActualHeight / 2) - (height / 2);
+
+                    // calc new offset
+                    scroll = Math.Max(nOffset - nice, 0/*ScrollBar.Minimum*/);
+                    scroll = Math.Min(scroll, this.ActualHeight/*Maximum*/);
+
+                    // change it
+                    //ScrollBar.VerticalOffset = scroll;// Value
+                    ScrollBar.ScrollToVerticalOffset(scroll);
+                    //this.Invalidate();
+                }
+                comparisonItems[nIndex].HighLightedRect.Visibility = Visibility.Visible;
+                /*new ErrorWindow()
+                {
+                    Message = string.Format("VO: {0}\r\nSB Height: {1}\r\nthis Height: {2}\r\nOffset: {3}\r\nStart: {4}\r\nEnd: {5}\r\nScroll: {6}",
+                        ScrollBar.VerticalOffset, ScrollBar.ActualHeight, this.ActualHeight, nOffset, start, end, scroll)
+                }.Show();*/
+            }
+        }
+
+        #endregion // Selecting an Item: find, select, redraw, scroll to
     }
 
     public enum ComparisonSort
