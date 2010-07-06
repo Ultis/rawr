@@ -106,7 +106,9 @@ namespace Rawr
                 Item item = ItemInstance.Item;
                 bool blacksmithingSocket = true;
                 Character character = FormItemSelection.Character;
-                if ((itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled))
+                if ((itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled)
+                    || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled)
+                    || (itemButtonWithEnchant.CharacterSlot == CharacterSlot.Waist && character.WaistBlacksmithingSocketEnabled))
                 {
                     blacksmithingSocket = true;
                 }

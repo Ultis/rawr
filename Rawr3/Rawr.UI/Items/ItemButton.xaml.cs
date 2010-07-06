@@ -26,7 +26,7 @@ namespace Rawr.UI
             }
         }
 
-        private ItemInstance item;
+        public ItemInstance Item;
         private Character character;
         public Character Character
         {
@@ -48,14 +48,14 @@ namespace Rawr.UI
 		{
             if (character != null)
             {
-                item = character[Slot];
-                if (item == null)
+                Item = character[Slot];
+                if (Item == null)
                 {
                     IconImage.Source = null;
                 }
                 else
                 {
-                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
+                    IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace Rawr.UI
         {
             if (!ListPopup.IsOpen)
             {
-                MainPage.Tooltip.ItemInstance = item;
+                MainPage.Tooltip.ItemInstance = Item;
                 MainPage.Tooltip.Show(MainButton, 72, 0);
             }
         }

@@ -27,7 +27,7 @@ namespace Rawr.UI
             }
         }
 
-        private ItemInstance item;
+        public ItemInstance Item;
         private Character character;
         public Character Character
         {
@@ -52,8 +52,8 @@ namespace Rawr.UI
 		{
             if (character != null)
             {
-                item = character[Slot];
-                if (item == null)
+                Item = character[Slot];
+                if (Item == null)
                 {
                     IconImage.Source = null;
                     EnchantButton.Content = "";
@@ -62,14 +62,14 @@ namespace Rawr.UI
                 }
                 else
                 {
-                    IconImage.Source = Icons.ItemIcon(item.Item.IconPath);
-                    EnchantButton.Content = item.Enchant.ShortName;
-                    gear = item;
+                    IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
+                    EnchantButton.Content = Item.Enchant.ShortName;
+                    gear = Item;
 
                     Item eItem = new Item();
-                    eItem.Name = item.Enchant.Name;
+                    eItem.Name = Item.Enchant.Name;
                     eItem.Quality = ItemQuality.Temp;
-                    eItem.Stats = item.Enchant.Stats;
+                    eItem.Stats = Item.Enchant.Stats;
                     enchant = eItem;
                 }
             }

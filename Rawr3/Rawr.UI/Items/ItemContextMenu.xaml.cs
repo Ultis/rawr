@@ -200,7 +200,7 @@ namespace Rawr.UI
         private void custom_Closed(object sender, EventArgs e)
         {
             CustomItemInstance custom = sender as CustomItemInstance;
-            if (custom.DialogResult.GetValueOrDefault())
+            if (custom.DialogResult.GetValueOrDefault(false))
             {
 
             }

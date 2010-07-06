@@ -33,7 +33,7 @@ namespace Rawr
             this.gem3Button = new Rawr.ItemButton();
             this.gem2Button = new Rawr.ItemButton();
             this.gem1Button = new Rawr.ItemButton();
-            this.label5 = new System.Windows.Forms.Label();
+            this.LB_Info = new System.Windows.Forms.Label();
             this.itemButtonWithEnchant = new Rawr.ItemButtonWithEnchant();
             this.SuspendLayout();
             // 
@@ -114,13 +114,13 @@ namespace Rawr
             this.gem1Button.Click += new System.EventHandler(this.gem1Button_Click);
             this.gem1Button.Leave += new System.EventHandler(this.gem1Button_Leave);
             // 
-            // label5
+            // LB_Info
             // 
-            this.label5.Location = new System.Drawing.Point(12, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(298, 31);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Select gems and enchant for the item.";
+            this.LB_Info.Location = new System.Drawing.Point(12, 9);
+            this.LB_Info.Name = "LB_Info";
+            this.LB_Info.Size = new System.Drawing.Size(298, 31);
+            this.LB_Info.TabIndex = 1;
+            this.LB_Info.Text = "Select gems and enchant for the item.";
             // 
             // itemButtonWithEnchant
             // 
@@ -148,7 +148,7 @@ namespace Rawr
             this.Controls.Add(this.itemButtonWithEnchant);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.LB_Info);
             this.Controls.Add(this.gem3Button);
             this.Controls.Add(this.gem2Button);
             this.Controls.Add(this.gem1Button);
@@ -167,7 +167,7 @@ namespace Rawr
         private ItemButton gem3Button;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label LB_Info;
         private ItemButtonWithEnchant itemButtonWithEnchant;
     }
 }
