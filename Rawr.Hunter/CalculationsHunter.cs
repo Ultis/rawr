@@ -101,11 +101,11 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=rigd[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Mp5  /Hit
 #endregion
 #region Consider Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
+new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
 #endregion
 });
                     }
