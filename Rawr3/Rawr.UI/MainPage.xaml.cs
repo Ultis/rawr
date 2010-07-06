@@ -249,24 +249,16 @@ namespace Rawr.UI
             InitializeComponent();
 			if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
 
-
+            // Assign the Version number to the status bar
             Assembly asm = Assembly.GetExecutingAssembly();
-            string version = "debug";
+            string version = "Debug";
             if (asm.FullName != null) {
                 string[] parts = asm.FullName.Split(',');
                 version = parts[1];
                 if (version.Contains("Version=")) { version = version.Replace("Version=",""); }
                 if (version.Contains(" ")) { version = version.Replace(" ", ""); }
             }
-            
-            VersionText.Text = string.Format("Rawr b{0}",
-                version
-                //typeof(Rawr.UI.MainPage).Assembly.GetName().Version.ToString()
-                //Assembly.GetExecutingAssembly().GetName().Version
-                );
-
-
-
+            VersionText.Text = string.Format("Rawr b{0}", version);
 
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 

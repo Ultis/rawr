@@ -752,7 +752,14 @@ namespace Rawr
 			{
 				#region Metagem Requirements
 				volatileRequirements = true;
-				if (character == null || !character.EnforceGemRequirements) return true;
+                if (character == null
+#if !RAWR3 && !SILVERLIGHT
+                    || !character.EnforceGemRequirements
+#else
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_Meta
+#endif
+                    ) { return true; }
 
 				int redGems = 0, yellowGems = 0, blueGems = 0;
 				if (character != null)
@@ -876,13 +883,27 @@ namespace Rawr
 				if (IsJewelersGem)
 				{
 					volatileRequirements = true;
-					if (character == null) return true;
+					if (character == null
+#if !RAWR3 && !SILVERLIGHT
+                    || !character.EnforceGemRequirements
+#else
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_JC
+#endif
+                    ) { return true; }
 					meetsRequirements = character.JewelersGemCount <= 3;
 				}
 				else if (Unique)
 				{
 					volatileRequirements = true;
-					if (character == null || !character.EnforceGemRequirements) return true;
+                    if (character == null
+#if !RAWR3 && !SILVERLIGHT
+                    || !character.EnforceGemRequirements
+#else
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
+                    || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_Unique
+#endif
+                    ) { return true; }
 					meetsRequirements = character.GetGemIdCount(Id) <= 1;
 				}
 				else

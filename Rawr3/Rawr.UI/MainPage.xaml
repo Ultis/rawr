@@ -244,8 +244,7 @@
     					</ComboBox>
     					<TextBlock HorizontalAlignment="Right" Margin="0,44,61,0" VerticalAlignment="Top" Text="Model:" TextWrapping="Wrap" Width="43"/>
     					<ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" HorizontalAlignment="Right" Margin="0,60,0,0" VerticalAlignment="Top" Width="104" d:LayoutOverrides="HorizontalAlignment" Height="24"/>
-    					<CheckBox x:Name="EnforceGemCheck" HorizontalAlignment="Left" Margin="0,132,0,0" VerticalAlignment="Top" Content="Enforce Gem Requirements*" IsChecked="{Binding Mode=TwoWay, Path=EnforceGemRequirements}" ToolTipService.ToolTip="If enabled, metagems will only be counted if their gem color requirements are met, and gems will only be counted if their uniqueness is met."/>
-    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,153,0,0"/>
+    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,132,0,0"/>
     					<TextBlock HorizontalAlignment="Left" Text="First Profession:" TextWrapping="Wrap" Margin="0,88,0,0" VerticalAlignment="Top" Width="114" d:LayoutOverrides="HorizontalAlignment"/>
     					<ComboBox x:Name="CB_Prof1" Margin="0,108,166,0" VerticalAlignment="Top" SelectedIndex="{Binding Mode=TwoWay, Path=PriProfIndex}">
     						<ComboBoxItem x:Name="Prof1_None" Content="None"/>
