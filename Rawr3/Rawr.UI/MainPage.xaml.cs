@@ -309,6 +309,33 @@ namespace Rawr.UI
                     ModelCombo.SelectedItem = item;
                 }
             }
+            if (CMP_ClassModel != null)
+            {
+                try
+                {
+                    bool found = false;
+                    foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem i in CMP_ClassModel.Items)
+                    {
+                        foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem j in i.Items)
+                        {
+                            if (j.Header == Character.CurrentModel)
+                            {
+                                CMP_ClassModel.PrimaryItem = i;
+                                CMP_ClassModel.PrimaryItem.SelectedItem = j;
+                                CMP_ClassModel.TextBlockClassModelButtonPrimary.Text = CMP_ClassModel.PrimaryItem.Header;
+                                CMP_ClassModel.TextBlockClassModelButtonSecondary.Text = CMP_ClassModel.PrimaryItem.SelectedItem.Header;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) break;
+                    }
+                }
+                catch (Exception ex) {
+                    new ErrorWindow() { Message = string.Format("Message: {0}\r\nInner Exception: {1}\r\n\r\nStack Trace:\r\n{2}",
+                        ex.Message, ex.InnerException, ex.StackTrace) }.Show();
+                }
+            }
             OptionsView.Content = Calculations.CalculationOptionsPanel;
             if (!Character.IsLoading) Character = Character;
         }

@@ -105,6 +105,9 @@
     <Compile Include="ComparisonGraphLegend.xaml.cs">
       <DependentUpon>ComparisonGraphLegend.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClassModelPicker.xaml.cs">
+      <DependentUpon>ClassModelPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ArmoryLoadDialog.xaml.cs">
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
@@ -263,6 +266,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ComparisonGraphLegend.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClassModelPicker.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
