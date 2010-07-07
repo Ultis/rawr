@@ -72,7 +72,7 @@
         </ToggleButton>
         <Popup x:Name="PopupClassModelPicker" Margin="4">
             <Grid Background="#00000000" Margin="-10000,-10000,-10000,-10000" IsHitTestVisible="True" MouseLeftButtonDown="Background_MouseLeftButtonDown">
-	            <Border BorderThickness="1" Width="350" Height="260" Margin="10000,10000,10000,10000" CornerRadius="0,0,4,4" BorderBrush="#CC000066" Background="#F3F3F3FF">
+	            <Border BorderThickness="1" Width="350" Height="270" Margin="10000,10000,10000,10000" CornerRadius="0,0,4,4" BorderBrush="#CC000066" Background="#F3F3F3FF">
 	                <Grid x:Name="LayoutRoot">
 	                    <Grid.ColumnDefinitions>
 	                        <ColumnDefinition Width="5*"/>
