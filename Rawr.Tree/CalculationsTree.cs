@@ -138,8 +138,8 @@ namespace Rawr.Tree {
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], reckless[2], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], reckless[2], ember);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Insightful)", false, runed[2], purified[2], reckless[2], insightful);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", false, runed[3], purified[3], reckless[3], revitalizing);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", false, runed[3], purified[3], reckless[3], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", true, runed[3], purified[3], reckless[3], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", true, runed[3], purified[3], reckless[3], ember);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Insightful)", true, runed[3], purified[3], reckless[3], insightful);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], revitalizing);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], ember);
