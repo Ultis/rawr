@@ -255,6 +255,8 @@ namespace Rawr.Moonkin
 
                 // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
+                float currentCrit = baseCrit;
+                float currentHaste = baseHaste;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
                 calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
@@ -319,6 +321,24 @@ namespace Rawr.Moonkin
                     {
                         calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.Duration / rot.CastCount, 1f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
+                    if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
+                    {
+                        SpecialEffect childEffect = proc.Effect.Stats._rawSpecialEffectData[0];
+                        // Nevermelting Ice Crystal
+                        if (childEffect.Stats.CritRating != 0)
+                        {
+                            float maxStack = proc.Effect.Stats.CritRating;
+                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.Duration / (rot.CastCount - rot.InsectSwarmCasts), baseCrit, 3.0f, proc.Effect.Duration);
+                            float averageNegativeValue = childEffect.Stats.CritRating * numNegativeStacks;
+                            float averageCritRating = maxStack + averageNegativeValue;
+                            currentCrit += StatConversion.GetSpellCritFromRating(averageCritRating * proc.Effect.GetAverageUptime(0f, 1f));
+                        }
+                        // Fetish of Volatile Power
+                        else if (childEffect.Stats.HasteRating != 0)
+                        {
+                            currentHaste += StatConversion.GetSpellHasteFromRating(childEffect.Stats.HasteRating * childEffect.GetAverageStackSize(rot.Duration / rot.CastCount, 1f, 3.0f, proc.Effect.Duration) * proc.Effect.GetAverageUptime(0f, 1f));
+                        }
+                    }
                 }
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
                 // Separate stat-boosting proc trinkets into their own list
@@ -326,7 +346,7 @@ namespace Rawr.Moonkin
                 {
                     if (proc.CalculateDPS != null)
                     {
-                        accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, baseCrit, baseHaste) * rot.Duration;
+                        accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.Duration;
                     }
                     else if (proc.Activate != null)
                     {
@@ -335,7 +355,7 @@ namespace Rawr.Moonkin
                         if (upTime == 1)
                         {
                             alwaysUpEffects.Add(proc);
-                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
                         // Procs with uptime 0 < x < 100 should be activated
                         else if (upTime > 0)
@@ -343,7 +363,7 @@ namespace Rawr.Moonkin
                     }
                     else if (proc.CalculateMP5 != null)
                     {
-                        manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
+                        manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * calcs.FightLength * 60.0f;
                     }
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
@@ -368,9 +388,9 @@ namespace Rawr.Moonkin
                         {
                             pairs |= 1 << idx;
                             ++lengthCounter;
-                            activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
-                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, baseCrit, baseHaste) / rot.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / rot.Duration;
                         spellDetails[0] = Starfire.DamagePerHit;
                         spellDetails[1] = Wrath.DamagePerHit;
                         spellDetails[2] = Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
@@ -388,7 +408,7 @@ namespace Rawr.Moonkin
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
-                            activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                            activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
                         if (tempUpTime == 0) continue;
                         // Adjust previous probability tables by the current factor
@@ -441,7 +461,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, baseCrit, baseHaste);
+                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.Duration;
                 spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
                 spellDetails[1] += (1 - totalUpTime) * Wrath.DamagePerHit;
@@ -532,7 +552,7 @@ namespace Rawr.Moonkin
                 // Deactivate always-up procs
                 foreach (ProcEffect proc in alwaysUpEffects)
                 {
-                    proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                    proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                 }
             }
             // Present the findings to the user.

@@ -122,7 +122,8 @@ namespace Rawr.Moonkin
                         / timeBetweenProcs;
                 };
             }
-            else if ((Effect.Trigger == Trigger.DamageDone ||
+            else if (Effect.Stats._rawSpecialEffectDataSize == 0 && 
+                (Effect.Trigger == Trigger.DamageDone ||
                 Effect.Trigger == Trigger.DamageOrHealingDone ||
                 Effect.Trigger == Trigger.DamageSpellCast ||
                 Effect.Trigger == Trigger.DamageSpellCrit ||
