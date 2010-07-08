@@ -24,6 +24,13 @@ namespace Rawr.UI
                 }
                 _BossOptions = value;
                 DataContext = _BossOptions;
+                CB_Level.SelectedIndex = _BossOptions.Level - 80;
+                for (int i=0; i < 4; i++) {
+                    if(_BossOptions.Armor == StatConversion.NPC_ARMOR[i]) {
+                        CB_Armor.SelectedIndex = i;
+                        break;
+                    }
+                }
                 _BossOptions.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
                 bossOpts_PropertyChanged(this, null);
             }
@@ -54,17 +61,13 @@ namespace Rawr.UI
         private bool isLoading = false;
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //BossHandler bossOpts = Character.BossOptions;
             // Target Armor/Level
             if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
             if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
             // Fix the enables
-            LB_InBehindPerc.IsEnabled = (bool)CK_InBack.IsChecked;
             CB_InBackPerc.IsEnabled = (bool)CK_InBack.IsChecked;
-            //LB_Max.IsEnabled = (bool)CK_MultiTargs.IsChecked;
             CB_MultiTargsMax.IsEnabled = (bool)CK_MultiTargs.IsChecked;
             CB_MultiTargsPerc.IsEnabled = (bool)CK_MultiTargs.IsChecked;
-            LB_MultiTargsPerc.IsEnabled = (bool)CK_MultiTargs.IsChecked;
             BT_Moves.IsEnabled = (bool)CK_MovingTargs.IsChecked;
             BT_Stuns.IsEnabled = (bool)CK_StunningTargs.IsChecked;
             BT_Fears.IsEnabled = (bool)CK_FearingTargs.IsChecked;
@@ -164,5 +167,96 @@ namespace Rawr.UI
             }*/
         }
 
+        private void CB_Level_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BossOptions.Level = 80 + CB_Level.SelectedIndex;
+        }
+
+        private void CB_Armor_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BossOptions.Armor = int.Parse((string)((ComboBoxItem)(CB_Armor.SelectedItem)).Content);
+        }
+
+        DG_BossSitChanges Box = null;
+
+        private void BT_Stuns_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Stuns, DG_BossSitChanges.Flags.Stun);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
+
+        private void BT_Moves_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Moves, DG_BossSitChanges.Flags.Move);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
+
+        private void BT_Fears_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Fears, DG_BossSitChanges.Flags.Fear);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
+
+        private void BT_Roots_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Roots, DG_BossSitChanges.Flags.Root);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
+
+        private void BT_Disarms_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Disarms, DG_BossSitChanges.Flags.Disarm);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
+
+        private void BT_Attacks_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DG_BossSitChanges_Closed(object sender, EventArgs e)
+        {
+            if ((bool)Box.DialogResult)
+            {
+                switch (Box.Flag) {
+                    case DG_BossSitChanges.Flags.Stun: {
+                        Character.BossOptions.Stuns = Box.TheList;
+                        BT_Stuns.Content = Character.BossOptions.Stuns.Count == 0 ?
+                            "None" : Character.BossOptions.DynamicCompiler_Stun.ToString();
+                        break;
+                    }
+                    case DG_BossSitChanges.Flags.Move: {
+                        Character.BossOptions.Moves = Box.TheList;
+                        BT_Moves.Content = Character.BossOptions.Moves.Count == 0 ?
+                            "None" : Character.BossOptions.DynamicCompiler_Move.ToString();
+                        break;
+                    }
+                    case DG_BossSitChanges.Flags.Fear: {
+                        Character.BossOptions.Fears = Box.TheList;
+                        BT_Fears.Content = Character.BossOptions.Fears.Count == 0 ?
+                            "None" : Character.BossOptions.DynamicCompiler_Fear.ToString();
+                        break;
+                    }
+                    case DG_BossSitChanges.Flags.Root: {
+                        Character.BossOptions.Roots = Box.TheList;
+                        BT_Roots.Content = Character.BossOptions.Roots.Count == 0 ?
+                            "None" : Character.BossOptions.DynamicCompiler_Root.ToString();
+                        break;
+                    }
+                    default: {
+                        Character.BossOptions.Disarms = Box.TheList;
+                        BT_Disarms.Content = Character.BossOptions.Disarms.Count == 0 ?
+                            "None" : Character.BossOptions.DynamicCompiler_Disarm.ToString();
+                        break;
+                    }
+                }
+                //CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
     }
 }

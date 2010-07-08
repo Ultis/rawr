@@ -71,6 +71,9 @@
     <Compile Include="BatchTools.xaml.cs">
       <DependentUpon>BatchTools.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BossHandler\DG_BossSitChanges.xaml.cs">
+      <DependentUpon>DG_BossSitChanges.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BossHandler\BossPicker.xaml.cs">
       <DependentUpon>BossPicker.xaml</DependentUpon>
     </Compile>
@@ -230,6 +233,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="BatchTools.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BossHandler\DG_BossSitChanges.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -123,10 +123,46 @@ namespace Rawr {
     /// </summary>
     public enum PLAYER_ROLES { ROLE_MainTank=0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     #endregion
+
 #if !RAWR3 && !SILVERLIGHT
     [Serializable]
 #endif
-    public class BossHandler {
+    public partial class BossOptions : BossHandler
+    {
+        public BossOptions() { }
+        public BossOptions Clone() {
+            BossOptions clone = (BossOptions)this.MemberwiseClone();
+            return clone;
+        }
+        #region Variables
+        private bool INBACK = false;
+        public bool InBack { get { return INBACK; } set { INBACK = value; OnPropertyChanged("InBack"); } }
+        private bool MULTITARGS = false;
+        public bool MultiTargs { get { return MULTITARGS; } set { MULTITARGS = value; OnPropertyChanged("MultiTargs"); } }
+        private bool STUNNINGTARGS = false;
+        public bool StunningTargs { get { return STUNNINGTARGS; } set { STUNNINGTARGS = value; OnPropertyChanged("StunningTargs"); } }
+        private bool MOVINGTARGS = false;
+        public bool MovingTargs { get { return MOVINGTARGS; } set { MOVINGTARGS = value; OnPropertyChanged("MovingTargs"); } }
+        private bool FEARINGTARGS = false;
+        public bool FearingTargs { get { return FEARINGTARGS; } set { FEARINGTARGS = value; OnPropertyChanged("FearingTargs"); } }
+        private bool ROOTINGTARGS = false;
+        public bool RootingTargs { get { return ROOTINGTARGS; } set { ROOTINGTARGS = value; OnPropertyChanged("RootingTargs"); } }
+        private bool DISARMINGTARGS = false;
+        public bool DisarmingTargs { get { return DISARMINGTARGS; } set { DISARMINGTARGS = value; OnPropertyChanged("DisarmingTargs"); } }
+        private bool DAMAGINGTARGS = false;
+        public bool DamagingTargs { get { return DAMAGINGTARGS; } set { DAMAGINGTARGS = value; OnPropertyChanged("DamagingTargs"); } }
+
+        private double UNDER35PERC = 0.10d;
+        public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
+        private double UNDER20PERC = 0.15d;
+        public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
+        #endregion
+    }
+
+#if !RAWR3 && !SILVERLIGHT
+    [Serializable]
+#endif
+    public partial class BossHandler {
         public const int NormCharLevel = 80;
         public BossHandler() {
             // Basics
@@ -899,7 +935,7 @@ namespace Rawr {
         #endregion
 
         #region INotifyPropertyChanged Members
-        private void OnPropertyChanged(string property)
+        protected void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }

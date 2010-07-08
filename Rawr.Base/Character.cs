@@ -352,15 +352,16 @@ namespace Rawr //O O . .
         }
 
         [XmlElement("Boss")]
-        public BossHandler SerializableBoss {
+        public BossOptions SerializableBoss {
             get { return BossOptions; }
             set { BossOptions = value.Clone(); }
         }
         [XmlIgnore]
-        private BossHandler _bossOptions = null;
+        private BossOptions _bossOptions = null;
         [XmlIgnore]
-        public BossHandler BossOptions {
-            get { return _bossOptions ?? (_bossOptions = new BossHandler()); }
+        public BossOptions BossOptions
+        {
+            get { return _bossOptions ?? (_bossOptions = new BossOptions()); }
             set { _bossOptions = value; }
         }
 
@@ -1968,7 +1969,7 @@ namespace Rawr //O O . .
             _activeBuffs = new List<Buff>();
         }
 
-		public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+		public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
 			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
@@ -2015,7 +2016,7 @@ namespace Rawr //O O . .
             BossOptions = boss.Clone();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
             ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -2062,7 +2063,7 @@ namespace Rawr //O O . .
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
 			ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
 			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
@@ -2145,7 +2146,7 @@ namespace Rawr //O O . .
             RecalculateSetBonuses();
         }
 
-        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossHandler boss,
+        public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
             ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
             Initialize();

@@ -97,6 +97,8 @@ namespace Rawr.UI
 
                     BuffControl.Character = character;
 
+                    BossPicker.Character = character;
+
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                     character.ClassChanged += new EventHandler(character_ClassChanged);
                     character.AvailableItemsChanged += new EventHandler(character_AvailableItemsChanged);
