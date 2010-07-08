@@ -16,9 +16,9 @@ using Rawr.Base;
  * 
  * Custom Rotation Priority
  * Threat Value/Weight
+ * Vigilance Threat pulling
  * Pot Usage (Needs to pull GCDs)
  * Healing Recieved
- * Vigilance Threat pulling
  */
 
 namespace Rawr.DPSWarr {
@@ -56,6 +56,7 @@ namespace Rawr.DPSWarr {
                 SetUpFAQ();
                 SetUpPatchNotes();
                 SetUpOther();
+                SetUpToolTips();
 
                 // Create our local Boss List
                 //if (bosslist == null) { bosslist = new BossList(); }
@@ -987,6 +988,128 @@ Additional Situations to manage will be coming soon.
 The Ability Maintenance Tab
 
 Select additional abilities to watch how they affect your DPS. Thunder Clap applies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.";
+        }
+        private string wrapText(string toWrap) {
+            int wrapWidth = 63;
+            if (toWrap.Length <= wrapWidth) { return toWrap; } // Don't bother wrapping
+
+            string retVal = toWrap;
+            bool eos = false;
+            bool foundspace = false;
+            int i = wrapWidth;
+
+            while (!eos)
+            {
+                while (!foundspace && i >= 0)
+                {
+                    if (retVal[i] == ' ') { foundspace = true; break; }
+                    i--; // didn't find a space so backtrack a char
+                }
+                if (foundspace) {
+                    retVal = retVal.Insert(i + 1, "\r\n"); // +1 because we want it after the space
+                    i++; foundspace = false;
+                }
+                // Continue to next part of string unless we're at or close to the end
+                if (i + wrapWidth >= retVal.Length - 1) { eos = true; } else { i += wrapWidth; }
+            }
+
+            return retVal;
+        }
+        private void settooltip(DependencyObject element, string name, string desc, string whatitdo)
+        {
+            string Format = "{0}\r\n\r\nDesc:\r\n{1}\r\n\r\nWhat Checking this does:\r\n{2}";
+            ToolTipService.SetToolTip(element, string.Format(Format, name, wrapText(desc), wrapText(whatitdo)));
+        }
+        private void SetUpToolTips()
+        {
+            string MultiTargets = "This ability will also do additional damage if there are multiple mobs present per the Boss Handler.";
+            // Arms
+            settooltip(CK_M_A_BLS, "Bladestorm",
+                "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.",
+                "Four GCDs are consumed and Damage is put out. " + MultiTargets);
+            settooltip(CK_M_A_MS, "Mortal Strike",
+                "A vicious strike that deals weapon damage plus x and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",
+                "A GCD is consumed and Damage is put out.");
+            settooltip(CK_M_A_RD, "Rend",
+                "Wounds the target causing them to bleed for x damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.",
+                "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
+            settooltip(CK_M_A_OP, "Overpower",
+                "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.",
+                "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+            settooltip(CK_M_A_TB, "Taste for Blood",
+                "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.",
+                "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+            settooltip(CK_M_A_SD, "Sudden Death",
+                "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.",
+                "A GCD is consumed and Damage is put out.");
+            settooltip(CK_M_A_SL, "Slam",
+                "Slams the opponent, causing weapon damage plus x.",
+                "A GCD is consumed and Damage is put out.");
+            //
+            settooltip(CK_M_A_TH, "Thunder Clap",
+                "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.",
+                "A GCD will be consumed and the debuff will become active after each cooldown period. " + MultiTargets);
+            settooltip(CK_M_A_ST, "Shattering Throw",
+                "Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power), reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.",
+                "A GCD will be consumed and the debuff will become active after each cooldown period");
+            settooltip(CK_M_A_SW, "Sweeping Strikes",
+                "Your next 5 melee attacks strike an additional nearby opponent.",
+                "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
+            // Fury
+            settooltip(CK_M_F_WW, "Whirlwind",
+                "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.", 
+                "A GCD is consumed and Damage is put out. " + MultiTargets);
+            settooltip(CK_M_F_BT, "Bloodthirst",
+                "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.",
+                "A GCD is consumed and Damage is put out.");
+            settooltip(CK_M_F_BS, "Bloodsurge",
+                "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.",
+                "A GCD is consumed and Damage is put out.");
+            //
+            settooltip(CK_M_F_DW, "Death Wish",
+                "When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.",
+                "A GCD will be consumed and the buff will become active after each cooldown period");
+            settooltip(CK_M_F_RK, "Recklessness",
+                "Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.",
+                "A GCD will be consumed and the buff will become active after each cooldown period");
+            // Rage Gen
+            settooltip(CK_Zerker, "Berserker Rage",
+                "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra rage when taking damage. Lasts 10 sec.",
+                "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
+            settooltip(CK_BloodRage, "Bloodrage",
+                "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.",
+                "This adds to the total rage for maintaining your rotation (usually resulting in more Heroic Strikes).");
+            // Rage Dump
+            settooltip(CK_Cleave, "Cleave",
+                "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.",
+                "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
+            settooltip(CK_HeroicStrike, "Heroic Strike",
+                "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.",
+                "You White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
+            // Shout
+            settooltip(RB_Shout_Battle, "Battle Shout",
+                "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.",
+                "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
+            settooltip(RB_Shout_Comm, "Commanding Shout",
+                "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.",
+                "The Buff version of Commanding Shout (and it's equivalents) will be disabled in favor of your own Commanding Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
+            settooltip(RB_Shout_None, "No Shout",
+                "You opt to not put up a shout yourself",
+                "The Buff Versions of Battle and Commanding Shout will become available and you will not consume GCDs for shouts");
+            // DeBuff
+            settooltip(CK_DemoShout, "Demoralizing Shout",
+                "Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.",
+                "A GCD will be consumed and the debuff will become active after each cooldown period");
+            settooltip(CK_Sunder, "Sunder Armor",
+                "Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.",
+                "A GCD will be consumed and the debuff will become active after each cooldown period");
+            settooltip(CK_Hamstring, "Hamstring",
+                "Maims the enemy, reducing movement speed by 50% for 15 sec.",
+                "A GCD will be consumed and the debuff will become active after each cooldown period");
+            // Other
+            settooltip(CK_EnragedRegen, "Enraged Regeneration",
+                "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.",
+                "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
         }
         private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
             /*try {

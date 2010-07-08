@@ -827,6 +827,5 @@ namespace Rawr.DPSWarr.Skills
         }
         public float StackCap;
     }
-
     #endregion
 }
