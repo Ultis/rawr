@@ -105,6 +105,7 @@
   <ItemGroup>
     <Compile Include="CalculationOptionsHunter.cs" />
     <Compile Include="CalculationOptionsPanelHunter.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CalculationOptionsPanelHunter.Designer.cs">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>
