@@ -10,13 +10,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Rawr.Base;
 
 namespace Rawr.UI
 {
     public partial class BossPicker : UserControl
     {
-        private BossHandler _BossOptions;
-        public BossHandler BossOptions {
+        private BossOptions _BossOptions;
+        public BossOptions BossOptions {
             get { return _BossOptions; }
             set {
                 if (_BossOptions != null) {
@@ -24,7 +25,7 @@ namespace Rawr.UI
                 }
                 _BossOptions = value;
                 DataContext = _BossOptions;
-                CB_Level.SelectedIndex = _BossOptions.Level - 80;
+                CB_Level.SelectedIndex = _BossOptions.Level - Character.Level;
                 for (int i=0; i < 4; i++) {
                     if(_BossOptions.Armor == StatConversion.NPC_ARMOR[i]) {
                         CB_Armor.SelectedIndex = i;
@@ -35,6 +36,10 @@ namespace Rawr.UI
                 bossOpts_PropertyChanged(this, null);
             }
         }
+
+        private bool isLoading = false;
+        private bool firstload = true;
+        private BossList bosslist = null;
 
         private Character _char;
         public Character Character {
@@ -58,7 +63,6 @@ namespace Rawr.UI
             UpdateSavedBosses();
         }
 
-        private bool isLoading = false;
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // Target Armor/Level
@@ -75,12 +79,46 @@ namespace Rawr.UI
             BT_Disarms.IsEnabled = (bool)CK_DisarmTargs.IsChecked;
             BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;
             //
+            CB_BossList.SelectedIndex = 0; // Sets it to Custom
+            //
             Character.OnCalculationsInvalidated();
         }
 
         public BossPicker()
         {
-            InitializeComponent();
+            isLoading = true;
+            try {
+                InitializeComponent();
+
+                // Create our local Boss List
+                if (bosslist == null) { bosslist = new BossList(); }
+                // Populate the Boss List ComboBox
+                if (CB_BossList.Items.Count < 1) { CB_BossList.Items.Add("Custom"); }
+                if (CB_BossList.Items.Count < 2) {
+                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                }
+                // Set the default Filter Type
+                if (CB_BL_FilterType.SelectedIndex == -1) { CB_BL_FilterType.SelectedIndex = 0; }
+                // Set the Default filter to All and Populate the list based upon the Filter Type
+                // E.g.- If the type is Content, the Filter List will be { "All", "T7", "T7.5",... }
+                // E.g.- If the type is Version, the Filter List will be { "All", "10 Man", "25 man", "25 Man Heroic",... }
+                if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                if (CB_BL_Filter.SelectedItem == null) { CB_BL_Filter.SelectedIndex = 0; }
+                bosslist.GenCalledList(BossList.FilterType.Content, (string)((ComboBoxItem)(CB_BL_Filter.SelectedItem)).Content);
+                if (CB_BL_Filter.Items.Count < 2) {
+                    foreach (string s in bosslist.GetFilterListAsArray((BossList.FilterType)(CB_BL_FilterType.SelectedIndex))) {
+                        CB_BL_Filter.Items.Add(s);
+                    }
+                }
+
+                if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                CB_BossList.Items.Add("Custom");
+                foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+            } catch (Exception ex) {
+                new ErrorBox("Error in creating the BossTab Pane",
+                    ex.Message, "BossPicker()", ex.InnerException.Message, ex.StackTrace);
+            }
+            isLoading = false;
         }
 
         public void BossAspectsChanged(object sender, EventArgs e)
@@ -88,12 +126,9 @@ namespace Rawr.UI
             UpdateSavedBosses();
             Character.OnCalculationsInvalidated();
         }
-
         // Stolen from TalentPicker:
-        // This is for saving multiple custom bosses and
-        // recalling them, doesn't do anything right now
+        // This is for saving multiple custom bosses and recalling them, doesn't do anything right now
         public bool HasCustomBoss { get; private set; }
-
         //private bool updating;
         private void UpdateSavedBosses()
         {
@@ -130,7 +165,6 @@ namespace Rawr.UI
             }
             updating = false;*/
         }
-
         private void SaveDelete_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             /*SavedTalentSpec currentSpec = SavedCombo.SelectedItem as SavedTalentSpec;
@@ -147,7 +181,6 @@ namespace Rawr.UI
                 UpdateSavedSpecs();
             }*/
         }
-
         private void dialog_Closed(object sender, EventArgs e)
         {
             /*if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
@@ -155,7 +188,6 @@ namespace Rawr.UI
                 UpdateSavedSpecs();
             }*/
         }
-
         private void SavedCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             /*if (!updating)
@@ -167,58 +199,179 @@ namespace Rawr.UI
             }*/
         }
 
+        // Boss Selector
+        private void CB_BL_FilterType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            try {
+                if (!isLoading) {
+                    isLoading = true;
+                    // Use Filter Type Box to adjust Filter Box
+                    if (CB_BL_Filter.Items.Count > 0) { CB_BL_Filter.Items.Clear(); }
+                    if (CB_BL_Filter.Items.Count < 1) { CB_BL_Filter.Items.Add("All"); }
+                    CB_BL_Filter.SelectedItem = "All";
+                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    bosslist.GenCalledList(ftype, CB_BL_Filter.SelectedItem.ToString());
+                    foreach (string s in bosslist.GetFilterListAsArray(ftype)) { CB_BL_Filter.Items.Add(s); }
+                    CB_BL_Filter.SelectedItem = "All";
+                    // Now edit the Boss List to the new filtered list of bosses
+                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    CB_BossList.Items.Add("Custom");
+                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    CB_BossList.SelectedItem = "Custom";
+                    // Save the new names
+                    if (!firstload) {
+                        BossOptions.FilterType = (BossList.FilterType)((ComboBoxItem)(CB_BL_FilterType.SelectedItem)).Content;
+                        BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
+                        BossOptions.BossName = CB_BossList.SelectedItem.ToString();
+                    }
+                    //
+                    Character.OnCalculationsInvalidated();
+                    isLoading = false;
+                }
+            }catch (Exception ex){
+                new ErrorBox("Error in the Boss Options",
+                    ex.Message, "CB_BL_FilterType_SelectedIndexChanged()",
+                    "No Additional Info", ex.StackTrace);
+            }
+        }
+        private void CB_BL_Filter_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            try {
+                if (!isLoading) {
+                    isLoading = true;
+                    // Use Filter Type Box to adjust Filter Box
+                    BossList.FilterType ftype = (BossList.FilterType)(CB_BL_FilterType.SelectedIndex);
+                    //ComboBoxItem a = (ComboBoxItem)CB_BL_Filter.SelectedItem;
+                    bosslist.GenCalledList(ftype, CB_BL_Filter.SelectedItem.ToString());//a.Content.ToString());
+                    // Now edit the Boss List to the new filtered list of bosses
+                    if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
+                    CB_BossList.Items.Add("Custom");
+                    foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
+                    CB_BossList.SelectedItem = "Custom";
+                    // Save the new names
+                    if (!firstload) {
+                        BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedItem;
+                        BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
+                        BossOptions.BossName = CB_BossList.SelectedItem.ToString();
+                    }
+                    //
+                    Character.OnCalculationsInvalidated();
+                    isLoading = false;
+                }
+            }catch (Exception ex){
+                new ErrorBox("Error in the Boss Options",
+                    ex.Message, "CB_BL_Filter_SelectedIndexChanged()",
+                    "No Additional Info", ex.StackTrace);
+            }
+        }
+        private void CB_BossList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            try {
+                if (!isLoading) {
+                    if (CB_BossList.SelectedIndex != 0) { // "Custom"
+                        isLoading = true;
+                        // Get Values
+                        BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.SelectedItem.ToString()); // "T7 : Naxxramas : 10 man : Patchwerk"
+                        BossOptions.Level = boss.Level;
+                        BossOptions.Armor = (int)boss.Armor;
+                        BossOptions.BerserkTimer = boss.BerserkTimer;
+                        BossOptions.InBack = ((BossOptions.InBackPerc_Melee = (int)(boss.InBackPerc_Melee * 100f)) != 0);
+                        BossOptions.MultiTargs = ((BossOptions.MultiTargsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
+                        BossOptions.MaxNumTargets = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
+                        BossOptions.Stuns = boss.Stuns;
+                        BossOptions.Moves = boss.Moves;
+                        BossOptions.Fears = boss.Fears;
+                        BossOptions.Roots = boss.Roots;
+                        BossOptions.Disarms = boss.Disarms;
+
+                        // Set Controls to those Values
+                        CB_Level.SelectedIndex = BossOptions.Level - Character.Level;
+                        int i = 0;
+                        while (i < 4) { if (StatConversion.NPC_ARMOR[i] == BossOptions.Armor) { break; } i++; }
+                        CB_Armor.SelectedIndex = i;
+
+                        //NUD_AoEFreq.IsEnabled = BossOptions.AoETargs;
+                        //NUD_AoEDMG.IsEnabled = BossOptions.AoETargs;
+
+                        TB_BossInfo.Text = boss.GenInfoString();
+                        // Save the new names
+                        if (!firstload) {
+                            BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedItem;
+                            BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
+                            BossOptions.BossName = CB_BossList.SelectedItem.ToString();
+                        }
+                        isLoading = false;
+                    } else {
+                        isLoading = true;
+                        BossHandler boss = new BossHandler();
+                        //
+                        boss.Name              = "Custom";
+                        boss.Level             = int.Parse((string)((ComboBoxItem)CB_Level.SelectedItem).Content) + 80;
+                        boss.Armor             = (float)int.Parse(((string)((ComboBoxItem)CB_Armor.SelectedItem).Content) == ""
+                                                       ? "10643" : (string)((ComboBoxItem)CB_Armor.SelectedItem).Content);
+                        boss.BerserkTimer      = (int)NUD_Duration.Value;
+                        boss.InBackPerc_Melee  = ((float)CB_InBackPerc.Value / 100f);
+                        boss.MaxNumTargets     = (float)CB_MultiTargsMax.Value;
+                        boss.MultiTargsPerc    = ((float)CB_MultiTargsPerc.Value / 100f);
+                        
+                        BossOptions.BossName = boss.Name;
+                        //
+                        TB_BossInfo.Text = boss.GenInfoString();
+                        isLoading = false;
+                    }
+                    Character.OnCalculationsInvalidated();
+                }
+            } catch (Exception ex) {
+                new ErrorBox("Error in setting BossPicker Character settings from Boss",
+                    ex.Message, "CB_BossList_SelectedIndexChanged()",
+                    "No Additional Info", ex.StackTrace);
+            }
+            isLoading = false;
+        }
+
+        // Basics
         private void CB_Level_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BossOptions.Level = 80 + CB_Level.SelectedIndex;
         }
-
         private void CB_Armor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BossOptions.Armor = int.Parse((string)((ComboBoxItem)(CB_Armor.SelectedItem)).Content);
         }
 
+        // Impedences
         DG_BossSitChanges Box = null;
-
         private void BT_Stuns_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Stuns, DG_BossSitChanges.Flags.Stun);
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-
         private void BT_Moves_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Moves, DG_BossSitChanges.Flags.Move);
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-
         private void BT_Fears_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Fears, DG_BossSitChanges.Flags.Fear);
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-
         private void BT_Roots_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Roots, DG_BossSitChanges.Flags.Root);
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-
         private void BT_Disarms_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Disarms, DG_BossSitChanges.Flags.Disarm);
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-
         private void BT_Attacks_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
         private void DG_BossSitChanges_Closed(object sender, EventArgs e)
         {
             if ((bool)Box.DialogResult)

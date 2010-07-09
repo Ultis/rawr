@@ -23,27 +23,27 @@
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		<TextBlock x:Name="LB_NoticeNon" FontWeight="SemiBold" Foreground="#FFDC1111" Text="NOTICE: This Tab is non-functional at this time." TextAlignment="Center" TextWrapping="Wrap" Margin="8,4" d:LayoutOverrides="Width"/>
-		<TextBlock x:Name="LB_Notice" FontWeight="SemiBold" Foreground="#FFB4B524" Text="NOTICE: Many models do not yet support the Boss Handler so changes here will not have any effect on your character in those models." TextAlignment="Center" TextWrapping="Wrap" Margin="8,4" Grid.Row="1"/>
-		<local:GroupBox x:Name="GB_Preset" Header="Select a Preset" Margin="4" d:LayoutOverrides="Width" Grid.Row="2">
+		<TextBlock x:Name="LB_NoticeNon" FontWeight="SemiBold" Foreground="#FFDC1111" Text="NOTICE: This Tab is non-functional at this time." TextAlignment="Center" TextWrapping="Wrap" Margin="2" d:LayoutOverrides="Width" Visibility="Collapsed"/>
+		<TextBlock x:Name="LB_Notice" FontWeight="SemiBold" Foreground="#FFB4B524" Text="NOTICE: Many models do not yet support the Boss Handler so changes here will not have any effect on your character in those models." TextAlignment="Center" TextWrapping="Wrap" Margin="2" Grid.Row="1" Visibility="Collapsed"/>
+		<local:GroupBox x:Name="GB_Preset" Header="Select a Preset" Margin="2" d:LayoutOverrides="Width" Grid.Row="2">
 			<Grid Margin="0">
 				<dataInput:Label x:Name="LB_where" Height="15" HorizontalAlignment="Left" Margin="3,6,0,0" VerticalAlignment="Top" Content="Where"/>
 				<dataInput:Label x:Name="LB_Is" Height="15" HorizontalAlignment="Left" Margin="127,6,0,0" VerticalAlignment="Top" Content="is"/>
-				<ComboBox x:Name="CB_BL_FilterType" Height="21" HorizontalAlignment="Left" Margin="44,3,0,0" VerticalAlignment="Top" Width="80">
-					<ComboBoxItem x:Name="CBI_Content" Content="Content" IsSelected="True"/>
+				<ComboBox x:Name="CB_BL_FilterType" Height="21" HorizontalAlignment="Left" Margin="44,3,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
+					<ComboBoxItem x:Name="CBI_Content" Content="Content"/>
 					<ComboBoxItem x:Name="CBI_Instance" Content="Instance"/>
 					<ComboBoxItem x:Name="CBI_Version" Content="Version"/>
 					<ComboBoxItem x:Name="CBI_Name" Content="Name"/>
 				</ComboBox>
-				<ComboBox x:Name="CB_BL_Filter" Height="21" Margin="139,3,3,0" VerticalAlignment="Top">
-					<ComboBoxItem x:Name="CBI_All" Content="All" IsSelected="True"/>
+				<ComboBox x:Name="CB_BL_Filter" Height="21" Margin="139,3,3,0" VerticalAlignment="Top" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
+					<ComboBoxItem x:Name="CBI_All" Content="All"/>
 				</ComboBox>
-				<ComboBox x:Name="CB_BossList" Height="21" Margin="3,28,3,0" VerticalAlignment="Top">
-					<ComboBoxItem x:Name="CBI_Custom" Content="Custom" IsSelected="True"/>
+				<ComboBox x:Name="CB_BossList" Height="21" Margin="3,28,3,0" VerticalAlignment="Top" SelectionChanged="CB_BossList_SelectedIndexChanged">
+					<ComboBoxItem x:Name="CBI_Custom" Content="Custom"/>
 				</ComboBox>
 			</Grid>
 		</local:GroupBox>
-		<ScrollViewer Margin="0" Grid.Row="3" VerticalContentAlignment="Top" HorizontalContentAlignment="Left">
+		<ScrollViewer Margin="2" Grid.Row="3" VerticalContentAlignment="Top" HorizontalContentAlignment="Left">
 			<Grid ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
@@ -116,6 +116,6 @@
 				<Button x:Name="BT_Attacks" FontSize="7" Margin="0,2" Content="F: 2.5sec D: 80000 C: 100% : PH" Grid.Column="1" Grid.Row="13" Grid.ColumnSpan="4" Height="20" VerticalAlignment="Center" Click="BT_Attacks_Click" />
 			</Grid>
 		</ScrollViewer>
-		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="4" Text="Boss Information would normally be displayed here" Grid.Row="4" VerticalScrollBarVisibility="Auto"/>
+		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2" Text="Boss Information would normally be displayed here" Grid.Row="4" VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" MinHeight="100" MaxHeight="250"/>
 	</Grid>
 </UserControl>

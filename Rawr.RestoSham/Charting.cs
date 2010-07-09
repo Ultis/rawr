@@ -86,8 +86,7 @@ namespace Rawr.RestoSham
             {
 #if RAWR3
                 return new string[0];
-#endif
-
+#else
                 if (Charts == null || Charts.Length == 0)
                     return null;
 
@@ -97,6 +96,7 @@ namespace Rawr.RestoSham
                     chartNames[i] = Charts[i].ToString();
                 }
                 return chartNames;
+#endif
             }
         }
         public static ChartCalculator GetChartCalculator(string chartName)

@@ -156,6 +156,13 @@ namespace Rawr {
         public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
         private double UNDER20PERC = 0.15d;
         public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
+
+        private BossList.FilterType FILTERTYPE = BossList.FilterType.Content;
+        public BossList.FilterType FilterType { get { return FILTERTYPE; } set { FILTERTYPE = value; OnPropertyChanged("FilterType"); } }
+        private string FILTER = "";
+        public string Filter { get { return FILTER; } set { FILTER = value; OnPropertyChanged("Filter"); } }
+        private string BOSSNAME = "";
+        public string BossName { get { return BOSSNAME; } set { BOSSNAME = value; OnPropertyChanged("BossName"); } }
         #endregion
     }
 
@@ -942,5 +949,10 @@ namespace Rawr {
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+
+        public override string ToString()
+        {
+            return Content.ToString() + " : " + Instance + " : (" + Version.ToString() + ") : " + Name;
+        }
     }
 }
