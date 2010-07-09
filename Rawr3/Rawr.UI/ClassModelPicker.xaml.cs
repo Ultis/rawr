@@ -43,7 +43,7 @@ namespace Rawr.UI
             Items.Add(new ClassModelPickerItem("Hunter", "Hunter"));
             Items.Add(new ClassModelPickerItem("Mage", "Mage"));
             Items.Add(new ClassModelPickerItem("Paladin", "Healadin", "ProtPaladin", "Retribution"));
-            Items.Add(new ClassModelPickerItem("Priest", "HealPriest", "Shadow"));
+            Items.Add(new ClassModelPickerItem("Priest", "HealPriest", "ShadowPriest"));
             Items.Add(new ClassModelPickerItem("Rogue", "Rogue"));
             Items.Add(new ClassModelPickerItem("Shaman", "Elemental", "Enhance", "RestoSham"));
             Items.Add(new ClassModelPickerItem("Warlock", "Warlock"));
