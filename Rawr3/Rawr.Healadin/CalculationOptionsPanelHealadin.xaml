@@ -6,7 +6,7 @@
     mc:Ignorable="d" xmlns:local="clr-namespace:Rawr.Healadin"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 	x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
-    d:DesignHeight="513" d:DesignWidth="340">
+    d:DesignWidth="330" d:DesignHeight="600">
 	<UserControl.DataContext>
 		<local:CalculationOptionsHealadin/>
 	</UserControl.DataContext>
