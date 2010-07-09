@@ -802,12 +802,12 @@ applied and result is scaled down by 100)",
 
                 if (false)//calcOpts.IgnoreAllHasteEffects)
                 {
-                    stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
+                    /*stats.SpellHaste = calculationResult.BasicStats.SpellHaste;
                     stats.HasteRating = calculationResult.BasicStats.HasteRating;
 
                     rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
                     cfs = rot.getCombatFactors();
-                    cfs.Compute();
+                    cfs.Compute();*/
                 }
                 else
                 {

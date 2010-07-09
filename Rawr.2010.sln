@@ -50,7 +50,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tree.2010", "Rawr.Tree
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham.2010", "Rawr.RestoSham\Rawr.RestoSham.2010.csproj", "{CE44F58E-AE57-4969-8819-0AD7F8362881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HolyPriest.2010", "Rawr.HolyPriest\Rawr.HolyPriest.2010.csproj", "{95E3AFED-1207-45FB-9B22-64DCFD1279B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HealPriest.2010", "Rawr.HealPriest\Rawr.HealPriest.2010.csproj", "{95E3AFED-1207-45FB-9B22-64DCFD1279B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK.2010", "Rawr.DPSDK\Rawr.DPSDK.2010.csproj", "{450A384E-26CD-4775-A021-9062B810C91B}"
 EndProject
@@ -114,9 +114,9 @@ Global
 		SccProjectUniqueName13 = Rawr.RestoSham\\Rawr.RestoSham.2010.csproj
 		SccProjectName13 = Rawr.RestoSham
 		SccLocalPath13 = Rawr.RestoSham
-		SccProjectUniqueName14 = Rawr.HolyPriest\\Rawr.HolyPriest.2010.csproj
-		SccProjectName14 = Rawr.HolyPriest
-		SccLocalPath14 = Rawr.HolyPriest
+		SccProjectUniqueName14 = Rawr.HealPriest\\Rawr.HealPriest.2010.csproj
+		SccProjectName14 = Rawr.HealPriest
+		SccLocalPath14 = Rawr.HealPriest
 		SccProjectUniqueName15 = Rawr.DPSDK\\Rawr.DPSDK.2010.csproj
 		SccProjectName15 = Rawr.DPSDK
 		SccLocalPath15 = Rawr.DPSDK

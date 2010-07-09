@@ -120,7 +120,7 @@ namespace Rawr {
         ClearcastOnBleedChance,
         CritChanceReduction,    // Improper use: used as a talent intermediate, please cleanup
         #endregion
-        #region Added by Rawr.HolyPriest
+        #region Added by Rawr.HealPriest
         PriestInnerFire,
         RenewDurationIncrease,
         ManaGainOnGreaterHealOverheal,
@@ -425,7 +425,7 @@ namespace Rawr {
         BonusLacerateDamageMultiplier,
         BonusRipDamageMultiplier,
         #endregion
-        #region Added by Rawr.HolyPriest
+        #region Added by Rawr.HealPriest
         BonusPoHManaCostReductionMultiplier,
         BonusGHHealingMultiplier,
         #endregion
@@ -4027,7 +4027,7 @@ namespace Rawr {
 		//    set { _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid] = value; }
 		//}
         #endregion
-        #region Added by Rawr.HolyPriest
+        #region Added by Rawr.HealPriest
         /* See SpellCombatManaRegeneration, a stat that does exactly what the Primal Mooncloth set does
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Multiplicative]

@@ -904,7 +904,7 @@ the Threat Scale defined on the Options tab.",
             float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
 
 			Stats statsProcs = new Stats();
-			float uptime;
+			//float uptime;
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects())
 			{
 				switch (effect.Trigger)

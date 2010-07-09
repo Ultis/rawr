@@ -1059,7 +1059,7 @@ namespace Rawr
                 case CharacterClass.Priest:
                     Result.PriestTalents = new PriestTalents(talentCode);
                     if (Result.PriestTalents.Shadowform > 0) Result.CurrentModel = "ShadowPriest";
-                    else Result.CurrentModel = "HolyPriest";
+                    else Result.CurrentModel = "HealPriest";
                     break;
                 case CharacterClass.Shaman:
                     Result.ShamanTalents = new ShamanTalents(talentCode);

@@ -469,9 +469,9 @@
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.HolyPriest\Rawr.HolyPriest.csproj">
+    <ProjectReference Include="..\Rawr.HolyPriest\Rawr.HealPriest.csproj">
       <Project>{859EB628-A235-482E-A2DA-643DAB35A626}</Project>
-      <Name>Rawr.HolyPriest</Name>
+      <Name>Rawr.HealPriest</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.Hunter\Rawr.Hunter.csproj">
       <Project>{5FEA13E2-1D46-400A-ACD8-DD2E5DBADB3E}</Project>

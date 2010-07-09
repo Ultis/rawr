@@ -222,7 +222,7 @@ v2.3.12.0
  - Rawr.DPSDK: 3.3.3 Frost changes implemented.
  - Rawr.Mage: 3.3.3 changes to Incanters Absorbtion implemented. Haste procs should be modeled more accurately now.
  - Rawr.Healadin: Implemented Infusion of Light. 4T9 set bonus should now be modeled correctly. 4T10 set bonus is now modeled correctly.
- - Rawr.HolyPriest: New "Renew" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.
+ - Rawr.HealPriest: New "Renew" rotation has been added to the Role dropdown list. 2T9 and 4T9 set bonuses added.
 
 v2.3.11.0
  - Load from Armory code cleaned up. 
@@ -400,7 +400,7 @@ v2.3.0.0
  - Rawr.Mage: Fixes and improvements for sequence reconstruction. Some support for 2T10 in cycle analyzer for frost. Currently it's only feasible for manual comparisons, not for automated optimum search.
  - Rawr.TankDK: Updated for 3.3 changes.
  - Rawr.SPriest: Updated for 3.3 changes.
- - Rawr.HolyPriest: Updated for 3.3 changes.
+ - Rawr.HealPriest: Updated for 3.3 changes.
 
 v2.2.28.0
  - Teir 10 set bonus added for most classes.
@@ -535,7 +535,7 @@ v2.2.16.0
  - Rawr.ProtWarr: Added support for 2T9, and a couple more trinkets. Added threat/damage from Deep Wouds
  - Rawr.TankDK: Fix for blood threat numbers being way off.
  - Rawr.DPSDK: Added support for 3.2.2 PTR changes.
- - Rawr.HolyPriest: Added support for 2T9 and 4T9.
+ - Rawr.HealPriest: Added support for 2T9 and 4T9.
  - Rawr.ShadowPriest: Added support for 2T9 and 4T9. Added 3.2.2 changes.
  - Rawr.Elemental: Fix for T9 bonuses.
 
@@ -684,7 +684,7 @@ the 3.1 modeling changes.
  - Rawr.ProtWarr: Improvements to proc values.
  - Rawr.RestoSham: Updates to glyphs, and added healing stream calculations.
  - Rawr.Elemental: Fix for haste valuing from buffs.
- - Rawr.HolyPriest: Haste fixes and tweaks.
+ - Rawr.HealPriest: Haste fixes and tweaks.
  - Rawr.ShadowPriest: Haste fixes.
  
 v2.2.6.0
@@ -703,7 +703,7 @@ the 3.1 modeling changes.
  - Rawr.ProtWarr: Improvements to proc values.
  - Rawr.RestoSham: Updates to glyphs, and added healing stream calculations.
  - Rawr.Elemental: Fix for haste valuing from buffs.
- - Rawr.HolyPriest: Haste fixes and tweaks.
+ - Rawr.HealPriest: Haste fixes and tweaks.
  - Rawr.ShadowPriest: Haste fixes.
 
 v2.2.5.0
@@ -720,7 +720,7 @@ the 3.1 modeling changes.
  - Rawr.DPSWarr: Fix for agility miscalculation, better proc handling, better arms/fury rotation handling
  - Rawr.Enhance: Minor calculation improvements
  - Rawr.Moonkin: Fix for some proc handling
- - Rawr.HolyPriest: Calculation tweaks
+ - Rawr.HealPriest: Calculation tweaks
  - Rawr.ShadowPriest: Improved haste calculations, and proc calculations
  - Rawr.Hunter: Starting to get up to date! Still largely incomplete, but progress is being made!
  - Rawr.Tree: Improved rotations, set bonuses.
@@ -732,7 +732,7 @@ v2.2.4.0
  - Fix for the PPMs of several weapon enchants
  - Rawr.Retribution: Updated to 3.1 boss armor values
  - Rawr.Cat: Fix for stacking of temporary ArPen effects, with different uptimes.
- - Rawr.HolyPriest: Better support for a few trinkets.
+ - Rawr.HealPriest: Better support for a few trinkets.
 
 v2.2.3.0
  - Not all models are completely ready for final release. Specifically in some models the trinket effects might be missing. If that is the case please manually edit the items and give them average stats until we make everything work. We have decided that even not being completely ready we should make a release so that you can work with all the 3.1 modeling changes.
@@ -745,7 +745,7 @@ v2.2.3.0
  - Rawr.Healadin: Added some optimizable values
  - Rawr.Warlock: Support for glyphs, and fix for Supression double dipping, lots of haste fixes
  - Rawr.DPSWarr: Many calculation improvements
- - Rawr.HolyPriest: Support for 2T8, new default talents
+ - Rawr.HealPriest: Support for 2T8, new default talents
  - Rawr.ShadowPriest: Support for 2T8, gemmings fixed
  - Rawr.Mage: Improvements to the advanced solver, updated 4T8 to 25% chance, and added support for Frost Warding as a mana regen source
  - Rawr.ProtWarr: Added support for Vigilance threat and glyph.
@@ -761,7 +761,7 @@ v2.2.2.0
  - Rawr.Enhance: Further calculation improvements
  - Rawr.DPSDK: More 3.1 updates
  - Rawr.ShadowPriest: Updated to 3.1
- - Rawr.HolyPriest: Updated built-in rotations
+ - Rawr.HealPriest: Updated built-in rotations
  - Rawr.Retribution: Better proc support
  - Rawr.Moonkin: Updated set bonuses, glyphs, innervate calculations, added support for more trinkets 
  - Rawr.ProtPaladin: Support for a few more buffs, calculation improvements
@@ -777,7 +777,7 @@ v2.2.1.0
  - Rawr.Cat: More 3.1 updates
  - Rawr.Bear: More 3.1 updates
  - Rawr.Moonkin: More 3.1 updates
- - Rawr.HolyPriest: More 3.1 updates
+ - Rawr.HealPriest: More 3.1 updates
  - Rawr.ShadowPriest: More 3.1 updates
  - Rawr.Mage: More 3.1 updates
  - Rawr.EnhSham: More 3.1 updates
@@ -794,7 +794,7 @@ v2.2.0.9
  - Fix for tooltip rendering
  - Rawr.ProtPaladin: calculation fixes
  - Rawr.TankDK: updated for 3.1
- - Rawr.HolyPriest, Rawr.ShadowPriest: glyph updates
+ - Rawr.HealPriest, Rawr.ShadowPriest: glyph updates
  - Rawr.Tree: Nature's Bounty, Revitalize
   
 v2.2.0.8
@@ -863,7 +863,7 @@ v2.2.0b5
  - Rawr.Cat: Support for more 3.1 changes.
  - Rawr.Moonkin: Support for more 3.1 changes.
  - Rawr.Mage: Support for more 3.1 changes.
- - Rawr.HolyPriest: New Custom Role feature (please test this!)
+ - Rawr.HealPriest: New Custom Role feature (please test this!)
  - Rawr.Retribution: Support for more 3.1 changes.
  - Rawr.Healadin: Support for more 3.1 changes.
  - Rawr.Tankadin: Support for more 3.1 changes.
@@ -920,7 +920,7 @@ v2.2.0b1
  - Rawr.Mage: Support for 3.0.9 changes. Fixes for a few obscure calcultion bugs.
  - Rawr.Moonkin: Brand new spell calculation engine, powered by WrathCalcs.
  - Rawr.ProtWarr: Significant improvements to accuracy. Added additional rating choices, and additional customization to existing rating ratios. See the Options tab for details. Added support for parry hasting
- - Rawr.HolyPriest: Fix for Build Upgrade List, several calculation improvements. Support for 3.1 Mana Regen model.
+ - Rawr.HealPriest: Fix for Build Upgrade List, several calculation improvements. Support for 3.1 Mana Regen model.
  - Rawr.ShadowPriest: Fix for Build Upgrade List, several calculation improvements.
  - Rawr.Tree: Overhaul of casting system, should provide much more useful results.
  - Rawr.Elemental: Significant fixes and new features.
@@ -943,7 +943,7 @@ Here's a quick rundown of the status of each model:
    •Rawr.Elemental: Partially functional for 3.0 & level 80.
    •Rawr.Enhance: Partially functional for 3.0 & level 80.
    •Rawr.Healadin: Fully functional for 3.0 & level 80.
-   •Rawr.HolyPriest: Fully functional for 3.0 & level 80.
+   •Rawr.HealPriest: Fully functional for 3.0 & level 80.
    •Rawr.Hunter: Partially functional for 3.0 & level 80.
    •Rawr.Mage: Fully functional for 3.0 & level 80.
    •Rawr.Moonkin: Fully functional for 3.0 & level 80.
@@ -973,7 +973,7 @@ v2.1.9:
 	Rawr.RestoSham: Support for some glyphs, and more customizable healing rotations. Also enabled cloth/leather.
 	Rawr.ProtWarr: Major updates. Threat should be accurate, and a variety of minor fixes and additional options
 	Rawr.TankDK/DPSDK: Updated for 3.0.8 changes. A wide variety of major fixes and improvements.
-	Rawr.HolyPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
+	Rawr.HealPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
 	Rawr.Elemental: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Elemental in conjunction with other theorycrafting tools.
 
 v2.1.8:
@@ -981,7 +981,7 @@ v2.1.8:
 	Fixed several bugs with Wowhead parsing, and updated the default itemcache with the new 3.0.8 data from Wowhead.
 	Added the two new enchants from 3.0.8.
 	Rawr.Healadin: Removed profession benefits from Options since they are now all correctly modelled in there respective places. Support for Judgements missing, and effect of Hit rating. Fixed bug that capped HL too high incorrectly. Added support for FoL Glyph. Updated 2T6 and 4T6 bonuses.
-	Rawr.HolyPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
+	Rawr.HealPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
 	Rawr.Tankadin: Adjusted calculations for new Sacred Duty.
 	Rawr.Retribution: Fix for loading the saved glyphs.
 	Rawr.Tree: New custom chart for Spell Rotations. New feature to choose the ratio of burst vs sustained healing used in Overall ratings. 
@@ -1003,7 +1003,7 @@ v2.1.7:
 	Rawr.Retribution: Base miss chance lowered to 8%.
 	Rawr.Tankadin: Base miss chance lowered to 8%.
 	Rawr.ProtWarr: Block Value formula changed. Updates to armor calculations to account for Base vs Bonus Armor. Base racial stats updated. Support for the Armored to the Teeth talent.
-	Rawr.HolyPriest/ShadowPriest: Initial Glyph support.
+	Rawr.HealPriest/ShadowPriest: Initial Glyph support.
 	Rawr.Mage: Significant updates to 3.0.8 support and to Arcane cycles. Added Rune of Razorice and Lightweave Embroidery. Enhanced hit rating tooltip. Fix for FBScPyro never being chosen when Global Optimizations were on. Added shatter combo cycles for Frost.
 	Rawr.DPSWarr: Initial draft of 3.0 version. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.DPSWarr in conjunction with other theorycrafting tools.
 	Rawr.TankDK: Fixed expertise calculations.
@@ -1028,7 +1028,7 @@ v2.1.5:
 	Added parsing for Greatness cards.
 	Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror. Added support for soft-capping Survivability.
 	Rawr.Cat: Fix for damage reduction calculations for different level targets. Added support for Mongoose, Berserking, Trauma, and Mangle from another feral. Fixed calculations for Idol of Terror.
-	Rawr.HolyPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
+	Rawr.HealPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
 	Rawr.Mage: Added custom graphs for stats scaling. Supports extra crit rate from encounter effects (ie, Loatheb). Fix for new cycles ignoring flame caps. Support for reconjuring mana gems.
 	Rawr.ProtWarr: Adjusted miss rate from 9% to 8%, and dodge rate from 6.5% to 6.4%.
 	Rawr.ShadowPriest Added Arcane Torrent for blood elves. Fixed display issue with Misery/Faerie Fire hit. Support for more trinket effects. Support for more set bonuses.
@@ -1038,13 +1038,13 @@ v2.1.5:
 	Rawr.Enhance: Updated the default and available target levels from 70-73 to 80-83, and raised the maximum target armor.
 		
 		
-v2.1.4: Added tracking of item levels, and filtering by item level and a few other item properties. Added support for several additional buffs and enchants. Fixed Wowhead and Armory parsing for a few stats. Fixed CharacterProfiler support. ShadowPriest: Fixes for Optimization, and support for a few more buffs. HolyPriest: Fixes for Optimization and Haste calculations. Moonkin: Added support for a couple trinkets, allowed fist weapons, fixes to Starfire glyph calculations, fix for double application of Kings, and added support for user-defined rotations. Healadin: Added Burst Healing rating, support for Divine Favor and Divine Illumination. ProtWarr: Updated with correct base stats for all races at 80. Mage: Added a 3.0.8 calculation mode. Tree: Fixed haste and crit calculations. Cat: Adjusted base miss rate to 8%, added support for total % damage increases. Bear: Fixed a minor bug in DR calculations.
+v2.1.4: Added tracking of item levels, and filtering by item level and a few other item properties. Added support for several additional buffs and enchants. Fixed Wowhead and Armory parsing for a few stats. Fixed CharacterProfiler support. ShadowPriest: Fixes for Optimization, and support for a few more buffs. HealPriest: Fixes for Optimization and Haste calculations. Moonkin: Added support for a couple trinkets, allowed fist weapons, fixes to Starfire glyph calculations, fix for double application of Kings, and added support for user-defined rotations. Healadin: Added Burst Healing rating, support for Divine Favor and Divine Illumination. ProtWarr: Updated with correct base stats for all races at 80. Mage: Added a 3.0.8 calculation mode. Tree: Fixed haste and crit calculations. Cat: Adjusted base miss rate to 8%, added support for total % damage increases. Bear: Fixed a minor bug in DR calculations.
 
 v2.1.3: Improvements to CharacterProfiler support. Can now load items by exact name, as well as load from Armory and fail over to Wowhead if not found. Support for several new set bonuses and proc/use effects. Fixed base stat calculations in Retribution and Tankadin, and a few more calculation fixes in Retribution. Fixes for a few buff/enchant stats.
 
-v2.1.2: Improvements to launch time, and item editor performance. Support for more set bonuses and abnormal item stats. Fix for crash in Priest models. Updates to base stats and rating conversions for several models. Fixes for requirements and optimization of several gems. Added ghost hit for Frostfire bolt in Mage. Fixed the formula for PW: Shield in HolyPriest. Improved calculations for Cat and Bear, and made Cat results more descriptive.
+v2.1.2: Improvements to launch time, and item editor performance. Support for more set bonuses and abnormal item stats. Fix for crash in Priest models. Updates to base stats and rating conversions for several models. Fixes for requirements and optimization of several gems. Added ghost hit for Frostfire bolt in Mage. Fixed the formula for PW: Shield in HealPriest. Improved calculations for Cat and Bear, and made Cat results more descriptive.
 
-v2.1.1: Improved calculations for level 80 combat for several models (Cat, Bear, HolyPriest, ShadowPriest, Mage, Moonkin, Tree, Healadin). Added Leatherworking and Inscription self-enchants. Fixed some bugs with mass gem replacement and the optimizer.
+v2.1.1: Improved calculations for level 80 combat for several models (Cat, Bear, HealPriest, ShadowPriest, Mage, Moonkin, Tree, Healadin). Added Leatherworking and Inscription self-enchants. Fixed some bugs with mass gem replacement and the optimizer.
 
 v2.1: Updated for level 80 content. Removed models which haven't yet been updated for WoW 3.0. Added two brand new models: Enhance and DPSDK! Welcome to Rawr, Enhancement Shamans and DPS Death Knights!
 
@@ -1081,7 +1081,7 @@ Beta 16:
    - Added support for HT in rotations
  - Rawr.RestoSham:
    - Added Cloth and Leather as relevant item types
- - Rawr.HolyPriest:
+ - Rawr.HealPriest:
    - Added support for Bangle and Blue Dragon
  - Rawr.ProtWarr:
    - Updated the calculations for PPM enchants (like Mongoose)
@@ -1105,7 +1105,7 @@ Beta 15.1:
  - Rawr.Healadin:
    - Fixed value of haste
    - Increased the maximum fight duration to 60min from 20min
- - Rawr.HolyPriest:
+ - Rawr.HealPriest:
    - Increased the maximum fight duration to 60min from 20min
    - Fixed some calculations that were slightly off with basic stats
  - Rawr.Warlock:
@@ -1124,7 +1124,7 @@ Beta 15.1:
    - Stability and performance improvements for SMP
 
 Beta 15:
- - Added the Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HolyPriest models! These are our first versions of these models, so please report any bugs you find with them!
+ - Added the Tree, RestoSham, DPSWarr (Arms-only for this release), Hunter (BM-only for this release), Tankadin, and HealPriest models! These are our first versions of these models, so please report any bugs you find with them!
  - Revamp of item availability mechanics: Items can be marked to allow regemming and restrict which enchants are available. Left click on diamond as before marks item to be available withot restrictions (regemming and all enchants), CTRL+click marks the item to be available for this specific gemming. By right clicking on the diamond it is possible to restrict which enchants are available (if there are any restrictions active this is indicated by a dot next to diamond). Optimizer has an option to override whether items that aren't specifically marked for regemming/reenchanting can be regemmed or reenchanted.
  - The optimizer upgrade comparison chart will now display all slots used to achieve the displayed upgrade value in its tooltip, and has a contextual menu item on click to equip all items
  - Significant performance improvements all around for calculations, especially in the Optimizer

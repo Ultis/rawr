@@ -226,7 +226,7 @@ namespace Rawr
 					case CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talentCode);
 						if (character.PriestTalents.Shadowform > 0) character.CurrentModel = "ShadowPriest";
-						else character.CurrentModel = "HolyPriest";
+						else character.CurrentModel = "HealPriest";
 						break;
 					case CharacterClass.Shaman:
 						character.ShamanTalents = new ShamanTalents(talentCode);

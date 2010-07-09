@@ -457,7 +457,7 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.ShamanShock, new Stats() { AttackPower = 110 }, 10f, 45f));
             }
             #endregion
-            #region Added by Priest: HolyPriest
+            #region Added by Priest: HealPriest
             #endregion
             #region Added by Priest: Shadow
             #endregion

@@ -333,7 +333,7 @@ namespace Rawr.UnitTests.Rogue
         BonusNukeCritChance,
         BonusHoTOnDirectHeals,
         TigersFuryCooldownReduction,
-        #region Added by Rawr.HolyPriest
+        #region Added by Rawr.HealPriest
         PriestInnerFire,
         RenewDurationIncrease,
         ManaGainOnGreaterHealOverheal,

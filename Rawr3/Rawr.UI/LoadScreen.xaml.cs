@@ -114,7 +114,7 @@ namespace Rawr.UI
                 Calculations.RegisterModel(typeof(Rawr.Elemental.CalculationsElemental));
                 Calculations.RegisterModel(typeof(Rawr.Enhance.CalculationsEnhance));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-                Calculations.RegisterModel(typeof(Rawr.HolyPriest.CalculationsHolyPriest));
+                Calculations.RegisterModel(typeof(Rawr.HealPriest.CalculationsHealPriest));
                 Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
                 Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
                 Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));

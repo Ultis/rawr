@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.WPF", "Rawr.WPF\Rawr.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental.WPF", "Rawr.Elemental\Rawr.Elemental.WPF.csproj", "{48F82E5A-5B78-4D87-8AE2-1949BAF278EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HolyPriest.WPF", "Rawr.HolyPriest\Rawr.HolyPriest.WPF.csproj", "{6B85524B-DB76-48EC-9999-A01A92E07CA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HealPriest.WPF", "Rawr.HealPriest\Rawr.HealPriest.WPF.csproj", "{6B85524B-DB76-48EC-9999-A01A92E07CA4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter.WPF", "Rawr.Hunter\Rawr.Hunter.WPF.csproj", "{35B1AB81-6904-4959-90A8-BB9D89AA281D}"
 EndProject
@@ -109,9 +109,9 @@ Global
 		SccProjectUniqueName16 = Rawr.Elemental\\Rawr.Elemental.WPF.csproj
 		SccProjectName16 = Rawr.Elemental
 		SccLocalPath16 = Rawr.Elemental
-		SccProjectUniqueName17 = Rawr.HolyPriest\\Rawr.HolyPriest.WPF.csproj
-		SccProjectName17 = Rawr.HolyPriest
-		SccLocalPath17 = Rawr.HolyPriest
+		SccProjectUniqueName17 = Rawr.HealPriest\\Rawr.HealPriest.WPF.csproj
+		SccProjectName17 = Rawr.HealPriest
+		SccLocalPath17 = Rawr.HealPriest
 		SccProjectUniqueName18 = Rawr.Hunter\\Rawr.Hunter.WPF.csproj
 		SccProjectName18 = Rawr.Hunter
 		SccLocalPath18 = Rawr.Hunter
