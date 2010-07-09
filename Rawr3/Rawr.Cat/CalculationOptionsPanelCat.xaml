@@ -9,7 +9,7 @@
 	xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
 	xmlns:System="clr-namespace:System;assembly=mscorlib" 
 	x:Class="Rawr.Cat.CalculationOptionsPanelCat"
-	d:DesignWidth="297" d:DesignHeight="469" 
+	d:DesignWidth="330" d:DesignHeight="600" 
     >
     <layoutToolkit:Accordion x:Name="LayoutRoot" HorizontalAlignment="Stretch" SelectionMode="ZeroOrMore">
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch">
@@ -84,18 +84,26 @@
                 </ComboBox>
             </Grid>
         </layoutToolkit:AccordionItem>
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch">
+        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <layoutToolkit:AccordionItem.Header>
                 <TextBlock Margin="0,-2,0,2"><Run Text="Misc"/></TextBlock>
             </layoutToolkit:AccordionItem.Header>
-            <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Margin="2" Text="Trinket Offset: "/>
-                    <TextBlock Margin="2" Text="{Binding TrinketOffset}"/>
-                </StackPanel>
-                <Slider Margin="2" Value="{Binding TrinketOffset, Mode=TwoWay}" Minimum="0" Maximum="60" />
-                <TextBlock Margin="2" TextWrapping="Wrap" Text="This indicates that you unequip and then reequip one of your trinkets before you begin attackin, in order to desynchronize their proc timers. This is benefitial when you have two trinkets whose procs provide stats which have caps (such as Armor Penetration), so that you can gain the benefit of both a majority of the time."/>
-            </StackPanel>
+            <Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				
+        		<TextBlock Margin="2" Text="Trinket Offset: "/>
+        		<TextBlock Margin="2" Text="{Binding TrinketOffset}" Grid.Column="1"/>
+        		<Slider Margin="2" Value="{Binding TrinketOffset, Mode=TwoWay}" Minimum="0" Maximum="60" d:LayoutOverrides="Height" Grid.Row="1" Grid.ColumnSpan="2" />
+        		<TextBlock Margin="2" TextWrapping="Wrap" Text="This indicates that you unequip and then reequip one of your trinkets before you begin attackin, in order to desynchronize their proc timers. This is benefitial when you have two trinkets whose procs provide stats which have caps (such as Armor Penetration), so that you can gain the benefit of both a majority of the time." Grid.Row="2" Grid.ColumnSpan="2" Width="310"/>
+        	</Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>
 </UserControl>
