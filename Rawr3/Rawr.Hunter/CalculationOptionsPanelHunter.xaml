@@ -62,10 +62,10 @@ x:Class="Rawr.Hunter.CalculationOptionsPanelHunter"
             	</ComboBox>
                 <dataInput:Label x:Name="LB_TargArmor" Margin="8,62,0,0" VerticalAlignment="Top" Content="Target's Armor:" TabIndex="3" Height="23" HorizontalAlignment="Left" Width="117"/>
             	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top" SelectedItem="{Binding TargetArmor, Mode=TwoWay}">
-            		<System:Single>9729</System:Single>
-            		<System:Single>10034</System:Single>
-            		<System:Single>10338</System:Single>
-            		<System:Single>10643</System:Single>
+            		<System:Int32>9729</System:Int32>
+            		<System:Int32>10034</System:Int32>
+            		<System:Int32>10338</System:Int32>
+            		<System:Int32>10643</System:Int32>
             	</ComboBox>
             	<dataInput:Label x:Name="LB_Latency" Height="23" Margin="8,89,152,0" VerticalAlignment="Top" Content="Latency (ms):" TabIndex="5"/>
             	<inputToolkit:NumericUpDown x:Name="NUD_Latency" HorizontalAlignment="Right" Margin="0,89,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50" TabIndex="6"/>

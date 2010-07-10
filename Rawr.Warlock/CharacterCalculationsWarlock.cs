@@ -308,8 +308,7 @@ namespace Rawr.Warlock {
             // normal collision delays
             Spell filler = GetSpell(Options.GetActiveRotation().Filler);
             SetupSpells(false);
-            RecordCollisionDelays(
-                new CastingState(this, filler, 1f - executePercent));
+            RecordCollisionDelays(new CastingState(this, filler, 1f - executePercent));
 
             // calc numcasts
             foreach (Spell spell in Priorities) {
@@ -503,7 +502,7 @@ namespace Rawr.Warlock {
         public float GetExecutePercentage() {
 
             string executeName = Options.GetActiveRotation().Execute;
-            if (executeName == null || executeName.Equals("Drain Soul")) {
+            if (executeName == null || executeName == "" || executeName.Equals("Drain Soul")) {
                 return 0f;
             }
 
@@ -1098,7 +1097,6 @@ namespace Rawr.Warlock {
 
 
         public Spell GetSpell(string spellName) {
-
             if (Spells.ContainsKey(spellName)) {
                 return Spells[spellName];
             }
@@ -1107,8 +1105,7 @@ namespace Rawr.Warlock {
             className = className.Replace("(", "_");
             className = className.Replace(")", "");
             Type type = Type.GetType("Rawr.Warlock." + className);
-            Spell spell
-                = (Spell) Activator.CreateInstance(type, new object[] { this });
+            Spell spell = (Spell) Activator.CreateInstance(type, new object[] { this });
             Spells[spellName] = spell;
             return spell;
         }

@@ -10,7 +10,6 @@ namespace Rawr.Warlock {
         public static List<string> ALL_PETS = new List<String>();
 
         static Pet() {
-
             Type petType = Type.GetType("Rawr.Warlock.Pet");
             foreach (Type type in Assembly.GetExecutingAssembly().GetTypes()) {
                 if (type.IsSubclassOf(petType)) {

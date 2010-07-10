@@ -8,13 +8,12 @@ namespace Rawr.Warlock {
 
     public class Rotation {
 
-        public string Name;
-        public string Filler;
-        public string Execute;
-        public List<string> SpellPriority;
+        public string Name = "Dummy";
+        public string Filler = "Shadow Bolt";
+        public string Execute = "";
+        public List<string> SpellPriority = new List<string>();
 
         public Rotation() {
-
             // here for XML deserialization
         }
 
@@ -85,7 +84,6 @@ namespace Rawr.Warlock {
         }
 
         public bool Contains(string spellname) {
-
             return SpellPriority.Contains(spellname)
                 || Filler.Equals(spellname);
         }
@@ -148,27 +146,27 @@ namespace Rawr.Warlock {
 
         #region properties
 
-        private string _Pet;
+        private string _Pet = "None";
         private string _Imbue = "Grand Spellstone"; // default it here for backward compatibility w/ files from before it was added
-        private bool _UseInfernal;
-        private int _TargetLevel;
-        private float _Duration;
-        private float _Latency;
-        private float _ThirtyFive = .25f; // default for backward compatibility
-        private float _TwentyFive = .15f; // default for backward compatibility
-        private List<Rotation> _Rotations;
-        private int _ActiveRotationIndex;
+        private bool _UseInfernal = false;
+        private int _TargetLevel = 83;
+        private float _Duration = 300;
+        private float _Latency = 200;
+        private float _ThirtyFive = 0.25f; // default for backward compatibility
+        private float _TwentyFive = 0.15f; // default for backward compatibility
+        private List<Rotation> _Rotations = new List<Rotation>();
+        private int _ActiveRotationIndex = 0;
 
-        private float _PerSP;
-        private bool _ConvertTotem;
+        private float _PerSP = 1;
+        private bool _ConvertTotem = false;
         private float _PerFlametongue = 500f; // default for back. compat.
-        private float _PerMagicBuff;
-        private float _PerCritBuff;
-        private float _PerInt;
-        private float _PerSpi;
-        private float _PerHealth;
+        private float _PerMagicBuff = 0;
+        private float _PerCritBuff = 0;
+        private float _PerInt = 0;
+        private float _PerSpi = 0;
+        private float _PerHealth = 0;
 
-        private bool _NoProcs;
+        private bool _NoProcs = false;
 
         public string Pet { get { return _Pet; } set { _Pet = value; OnPropertyChanged("Pet"); } }
         public string Imbue { get { return _Imbue; } set { _Imbue = value; OnPropertyChanged("Imbue"); } }
@@ -196,7 +194,9 @@ namespace Rawr.Warlock {
 
         #region methods
 
-        public Rotation GetActiveRotation() { return Rotations[ActiveRotationIndex]; }
+        public Rotation GetActiveRotation() {
+            return (Rotations.Count > 0 ? Rotations[ActiveRotationIndex] : new Rotation());
+        }
 
         public void RemoveActiveRotation() {
             Rotations.RemoveAt(ActiveRotationIndex);
