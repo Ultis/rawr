@@ -88,13 +88,6 @@ namespace Rawr.DPSDK
 			set { _BossArmor = value; OnPropertyChanged("BossArmor"); }
 		}
 		
-		private DeathKnightTalents _talents = null;
-		public DeathKnightTalents talents
-		{
-			get { return _talents; }
-			set { _talents = value; OnPropertyChanged("talents"); }
-		}
-
         private bool _getRefreshForReferenceCalcs = true;
         public bool GetRefreshForReferenceCalcs
         {

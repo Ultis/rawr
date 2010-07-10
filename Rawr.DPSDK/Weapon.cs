@@ -6,7 +6,7 @@ namespace Rawr.DPSDK {
     public class Weapon {
         public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, DPS, damage;
 
-        public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, float expertise) {
+        public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, DeathKnightTalents talents, float expertise) {
             if (stats == null || calcOpts == null) { return; }
 
             if (i == null) {
@@ -28,7 +28,7 @@ namespace Rawr.DPSDK {
             #region Attack Speed
             {
                 hastedSpeed = baseSpeed / ((1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1 + stats.PhysicalHaste));
-                hastedSpeed /= 1f + 0.05f * (float)calcOpts.talents.ImprovedIcyTalons;
+                hastedSpeed /= 1f + 0.05f * (float)talents.ImprovedIcyTalons;
             }
             #endregion
 

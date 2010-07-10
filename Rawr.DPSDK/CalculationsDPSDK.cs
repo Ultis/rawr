@@ -226,7 +226,7 @@ namespace Rawr.DPSDK
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
             int targetLevel = calcOpts.TargetLevel;
-            GetTalents(character);
+            //GetTalents(character); // calcOpts.talents was causing infinite recursion, and it shouldn't have been saved there in the first place
 
 #if RAWR3
    /*         if (character != null && character.MainHand != null && character.MainHand.Item == null)
@@ -250,7 +250,7 @@ namespace Rawr.DPSDK
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             calcs.BasicStats = stats;
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-            calcs.Talents = calcOpts.talents;
+            calcs.Talents = character.DeathKnightTalents;
 
             CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts/*, additionalItem*/);
             
@@ -267,7 +267,7 @@ namespace Rawr.DPSDK
             float dpsBloodworms = 0f;
 
             //shared variables
-            DeathKnightTalents talents = calcOpts.talents;
+            DeathKnightTalents talents = character.DeathKnightTalents;
             bool DW = combatTable.DW;
             float missedSpecial = 0f;
 
@@ -873,7 +873,7 @@ namespace Rawr.DPSDK
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            DeathKnightTalents talents = calcOpts.talents;
+            DeathKnightTalents talents = character.DeathKnightTalents;
 
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -997,7 +997,7 @@ namespace Rawr.DPSDK
         public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            DeathKnightTalents talents = calcOpts.talents;
+            DeathKnightTalents talents = character.DeathKnightTalents;
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
@@ -1586,20 +1586,6 @@ namespace Rawr.DPSDK
             }
 
             return statsBuffs;
-        }
-
-        /// <summary>
-        /// Saves the talents for the character
-        /// </summary>
-        /// <param name="character">The character for whom the talents should be saved</param>
-        public void GetTalents(Character character)
-        {
-            CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            // When switching from TankDK to DPSDK, I see calcOpts as null.  Check first before using.
-            if (null != calcOpts)
-            {
-                calcOpts.talents = character.DeathKnightTalents;
-            }
         }
 
         private string[] _optimizableCalculationLabels = null;

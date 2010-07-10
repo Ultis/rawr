@@ -233,15 +233,15 @@ namespace Rawr.DPSDK
             }
 
 
-            MH = new Weapon(null, stats, calcOpts, 0f);
-            OH = new Weapon(null, null, null, 0f);
+            MH = new Weapon(null, stats, calcOpts, talents, 0f);
+            OH = new Weapon(null, null, null, talents, 0f);
 
             DW = character.MainHand != null && character.OffHand != null &&
                 character.MainHand.Slot != ItemSlot.TwoHand;
 
             if (character.MainHand != null)
             {
-                MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
+                MH = new Weapon(character.MainHand.Item, stats, calcOpts, talents, MHExpertise);
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
@@ -249,7 +249,7 @@ namespace Rawr.DPSDK
 
             if (character.OffHand != null && DW)
             {
-                OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
+                OH = new Weapon(character.OffHand.Item, stats, calcOpts, talents, OHExpertise);
 
                // float OHMult = .05f * (float)talents.NervesOfColdSteel;
                // OH.damage *= .5f + OHMult;
@@ -261,14 +261,14 @@ namespace Rawr.DPSDK
 
             if (additionalItem != null && ((additionalItem.Slot == ItemSlot.MainHand) || (additionalItem.Slot == ItemSlot.TwoHand) || additionalItem.Slot == ItemSlot.OneHand))
             {
-                MH = new Weapon(additionalItem, stats, calcOpts, MHExpertise);
+                MH = new Weapon(additionalItem, stats, calcOpts, talents, MHExpertise);
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
             }
             else if (additionalItem != null && (additionalItem.Slot == ItemSlot.OffHand || additionalItem.Slot == ItemSlot.OneHand))
             {
-                OH = new Weapon(additionalItem, stats, calcOpts, OHExpertise);
+                OH = new Weapon(additionalItem, stats, calcOpts, talents, OHExpertise);
                 calcs.OHAttackSpeed = OH.hastedSpeed;
                 calcs.OHWeaponDamage = OH.damage;
                 calcs.OHExpertise = OH.effectiveExpertise;
