@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -93,7 +94,8 @@ namespace Rawr.Warlock {
     /// <summary>
     /// Holds the options the user selects from the options tab.
     /// </summary>
-    public class CalculationOptionsWarlock : ICalculationOptionBase {
+    public class CalculationOptionsWarlock : ICalculationOptionBase, INotifyPropertyChanged
+    {
 
         public static CalculationOptionsWarlock MakeDefaultOptions() {
 
@@ -137,54 +139,68 @@ namespace Rawr.Warlock {
             return options;
         }
 
-
         #region constants
 
-        private static readonly int[] hitRatesByLevelDifference 
-            = { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
+        private static readonly int[] hitRatesByLevelDifference =
+            { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
 
         #endregion
-
 
         #region properties
 
-        public string Pet;
-        public string Imbue = "Grand Spellstone"; // default it here for backward compatibility w/ files from before it was added
-        public bool UseInfernal;
-        public int TargetLevel;
-        public float Duration;
-        public float Latency;
-        public float ThirtyFive = .25f; // default for backward compatibility
-        public float TwentyFive = .15f; // default for backward compatibility
-        public List<Rotation> Rotations;
-        public int ActiveRotationIndex;
+        private string _Pet;
+        private string _Imbue = "Grand Spellstone"; // default it here for backward compatibility w/ files from before it was added
+        private bool _UseInfernal;
+        private int _TargetLevel;
+        private float _Duration;
+        private float _Latency;
+        private float _ThirtyFive = .25f; // default for backward compatibility
+        private float _TwentyFive = .15f; // default for backward compatibility
+        private List<Rotation> _Rotations;
+        private int _ActiveRotationIndex;
 
-        public float PerSP;
-        public bool ConvertTotem;
-        public float PerFlametongue = 500f; // default for back. compat.
-        public float PerMagicBuff;
-        public float PerCritBuff;
-        public float PerInt;
-        public float PerSpi;
-        public float PerHealth;
+        private float _PerSP;
+        private bool _ConvertTotem;
+        private float _PerFlametongue = 500f; // default for back. compat.
+        private float _PerMagicBuff;
+        private float _PerCritBuff;
+        private float _PerInt;
+        private float _PerSpi;
+        private float _PerHealth;
 
-        public bool NoProcs;
+        private bool _NoProcs;
+
+        public string Pet { get { return _Pet; } set { _Pet = value; OnPropertyChanged("Pet"); } }
+        public string Imbue { get { return _Imbue; } set { _Imbue = value; OnPropertyChanged("Imbue"); } }
+        public bool UseInfernal { get { return _UseInfernal; } set { _UseInfernal = value; OnPropertyChanged("UseInfernal"); } }
+        public int TargetLevel { get { return _TargetLevel; } set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); } }
+        public float Duration { get { return _Duration; } set { _Duration = value; OnPropertyChanged("Duration"); } }
+        public float Latency { get { return _Latency; } set { _Latency = value; OnPropertyChanged("Latency"); } }
+        public float ThirtyFive { get { return _ThirtyFive; } set { _ThirtyFive = value; OnPropertyChanged("ThirtyFive"); } }
+        public float TwentyFive { get { return _TwentyFive; } set { _TwentyFive = value; OnPropertyChanged("TwentyFive"); } }
+        public List<Rotation> Rotations { get { return _Rotations; } set { _Rotations = value; OnPropertyChanged("Rotations"); } }
+        public int ActiveRotationIndex { get { return _ActiveRotationIndex; } set { _ActiveRotationIndex = value; OnPropertyChanged("ActiveRotationIndex"); } }
+
+        public float PerSP { get { return _PerSP; } set { _PerSP = value; OnPropertyChanged("PerSP"); } }
+        public bool ConvertTotem { get { return _ConvertTotem; } set { _ConvertTotem = value; OnPropertyChanged("ConvertTotem"); } }
+        public float PerFlametongue { get { return _PerFlametongue; } set { _PerFlametongue = value; OnPropertyChanged("PerFlametongue"); } }
+        public float PerMagicBuff { get { return _PerMagicBuff; } set { _PerMagicBuff = value; OnPropertyChanged("PerMagicBuff"); } }
+        public float PerCritBuff { get { return _PerCritBuff; } set { _PerCritBuff = value; OnPropertyChanged("PerCritBuff"); } }
+        public float PerInt { get { return _PerInt; } set { _PerInt = value; OnPropertyChanged("PerInt"); } }
+        public float PerSpi { get { return _PerSpi; } set { _PerSpi = value; OnPropertyChanged("PerSpi"); } }
+        public float PerHealth { get { return _PerHealth; } set { _PerHealth = value; OnPropertyChanged("PerHealth"); } }
+
+        public bool NoProcs { get { return _NoProcs; } set { _NoProcs = value; OnPropertyChanged("NoProcs"); } }
 
         #endregion
 
-
         #region methods
 
-        public Rotation GetActiveRotation() {
-
-            return Rotations[ActiveRotationIndex];
-        }
+        public Rotation GetActiveRotation() { return Rotations[ActiveRotationIndex]; }
 
         public void RemoveActiveRotation() {
-
             Rotations.RemoveAt(ActiveRotationIndex);
-            ActiveRotationIndex
-                = Math.Min(ActiveRotationIndex, Rotations.Count - 1);
+            ActiveRotationIndex = Math.Min(ActiveRotationIndex, Rotations.Count - 1);
         }
 
         public int GetBaseHitRate() {
@@ -194,17 +210,21 @@ namespace Rawr.Warlock {
         }
 
         public string GetXml() {
-
-            XmlSerializer serializer
-                = new XmlSerializer(typeof(CalculationOptionsWarlock));
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
             StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter writer
-                = new System.IO.StringWriter(
-                    xml, System.Globalization.CultureInfo.InvariantCulture);
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml, System.Globalization.CultureInfo.InvariantCulture);
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
 
+        #endregion
+
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
+        }
         #endregion
     }
 }

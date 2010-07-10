@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.Elemental
 {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsElemental : ICalculationOptionBase
+    public class CalculationOptionsElemental : ICalculationOptionBase, INotifyPropertyChanged
 	{
-		[System.Xml.Serialization.XmlIgnore]
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsElemental));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
+
+        [XmlIgnore]
 		public CharacterCalculationsElemental calculatedStats = null;
 
 		private int _BSRatio = 75; // goes from 0 to 100
@@ -84,33 +94,12 @@ namespace Rawr.Elemental
             set { _UseDpsTotem = value; OnPropertyChanged("UseDpsTotem"); }
         }
 
-        private Character _Character = null;
-        public Character Character
-        {
-            get { return _Character; }
-            set { _Character = value; }
-        }
-
+        #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-            if (Character != null)
-            {
-                Character.OnCalculationsInvalidated();
-            }
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
         }
-
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-	}
+        #endregion
+    }
 }

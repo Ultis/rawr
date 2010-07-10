@@ -181,7 +181,9 @@ namespace Rawr.Tree {
         public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
         
         #region INotifyPropertyChanged Members
-        private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }
+        private void OnPropertyChanged(string name) {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
@@ -229,10 +231,12 @@ namespace Rawr.Tree {
         public bool IgnoreNaturesGrace { get { return ignoreNaturesGrace; } set { ignoreNaturesGrace = value; OnPropertyChanged("IgnoreNaturesGrace"); } }
         public int ProcType { get { return procType; } set { procType = value; OnPropertyChanged("ProcType"); } }
 
-
         #region INotifyPropertyChanged Members
-        private void OnPropertyChanged(string name) { if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name)); }
         public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string name)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
         #endregion
     }
 }

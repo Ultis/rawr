@@ -19,6 +19,8 @@ namespace Rawr.DPSDK
         {
             InitializeComponent();
         }
+
+        #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
         private Character character;
@@ -27,21 +29,24 @@ namespace Rawr.DPSDK
             get { return character; }
             set
             {
-                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsDPSDK)
-                {
-               //     ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
-                }
-
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsDPSDK)
+                    ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+                // Apply the new character
                 character = value;
-                //if (character.CalculationOptions == null) character.CalculationOptions = new CalculationOptionsDPSDK();
-                //LayoutRoot.DataContext = Character.CalculationOptions;
+                // Load the new CalcOpts
                 LoadCalculationOptions();
-
+                // Model Specific Code
+                // Set the Data Context
+                //LayoutRoot.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK);
                 RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK).rotation;
                 OptionsTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK);
-
-                ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
-
+                // Add new event connections
+                (Character.CalculationOptions as CalculationOptionsDPSDK).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+                // Run it once for any special UI config checks
+                //CalculationOptionsPanelDPSDK_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
 
@@ -50,17 +55,27 @@ namespace Rawr.DPSDK
         {
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsDPSDK();
-
+            // Model Specific Code
+            //
             _loadingCalculationOptions = false;
+        }
+
+        void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
+            if (e.PropertyName == "SomeProperty")
+            {
+                // Do some code
+            }
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
 
         void ButtonClickHandler(object sender, RoutedEventArgs e)
         {
             Character.OnCalculationsInvalidated();
         }
-
-        void CalculationOptionsPanelDPSDK_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-        }
+        #endregion
     }
 }

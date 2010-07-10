@@ -10,9 +10,15 @@ xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Win
 xmlns:System="clr-namespace:System;assembly=mscorlib"
 mc:Ignorable="d"
 d:DesignWidth="330" d:DesignHeight="600"
+xmlns:local="clr-namespace:Rawr.ShadowPriest"
 x:Class="Rawr.ShadowPriest.CalculationOptionsPanelShadowPriest"
 >
-<Grid x:Name="LayoutRoot">
+
+<UserControl.Resources>
+    <local:CalculationOptionsShadowPriest x:Key="CalculationOptionsShadowPriestDataSource" d:IsDataSource="True"/>
+</UserControl.Resources>
+
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsShadowPriestDataSource}}">
 	<TextBlock Text="ShadowPriest Options Go Here"/>
 </Grid>
 </UserControl>

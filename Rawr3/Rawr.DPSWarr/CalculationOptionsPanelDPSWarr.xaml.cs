@@ -23,7 +23,7 @@ using Rawr.Base;
 
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
-        private bool isLoading = false;
+        private bool _loadingCalculationOptions = false;
         //private bool firstload = true;
         //private BossList bosslist = null;
         CalculationOptionsDPSWarr calcOpts = null;
@@ -31,27 +31,31 @@ namespace Rawr.DPSWarr {
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
         public UserControl PanelControl { get { return this; } }
-        private Character _char;
+        private Character character;
         public Character Character
         {
-            get { return _char; }
+            get { return character; }
             set {
-                if (_char != null && _char.CalculationOptions != null
-                    && _char.CalculationOptions is CalculationOptionsDPSWarr)
-                    ((CalculationOptionsDPSWarr)_char.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
-
-                _char = value;
-                if (_char.CalculationOptions == null)
-                    _char.CalculationOptions = new CalculationOptionsDPSWarr();
-
-                calcOpts = _char.CalculationOptions as CalculationOptionsDPSWarr;
-                DataContext = calcOpts;
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsDPSWarr)
+                    ((CalculationOptionsDPSWarr)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSWarr_PropertyChanged);
+                // Apply the new character
+                character = value;
+                // Load the new CalcOpts
+                LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = calcOpts;
+                // Add new event connections
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSWarr_PropertyChanged);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelDPSWarr_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
         public CalculationOptionsPanelDPSWarr() {
-            isLoading = true;
+            _loadingCalculationOptions = true;
             try {
                 InitializeComponent();
                 SetUpFAQ();
@@ -63,69 +67,34 @@ namespace Rawr.DPSWarr {
                     ex.Message, "CalculationOptionsPanelDPSWarr()",
                     ex.InnerException.Message, ex.StackTrace);
             }
-            isLoading = false;
+            _loadingCalculationOptions = false;
         }
         public void LoadCalculationOptions()
         {
             string info = "";
-            isLoading = true;
+            _loadingCalculationOptions = true;
             try {
                 if (Character != null && Character.CalculationOptions == null)
                 {
                     // If it's broke, make a new one with the defaults
                     Character.CalculationOptions = new CalculationOptionsDPSWarr();
-                    isLoading = true;
+                    _loadingCalculationOptions = true;
                 }
                 else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-                //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                //CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
-                //CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString();
+                // == Model Specific Code ==
+                // Bad Gear Hiding
                 CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
                 CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 CalculationsDPSWarr.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
                 ItemCache.OnItemsChanged();
-
-                // Boss Selector
-                // Save the new names
-                //CB_BL_FilterType.Text = calcOpts.FilterType;
-                //firstload = true;
-                //isLoading = false; CB_BL_FilterType_SelectedIndexChanged(null, null); isLoading = true;
-                //CB_BL_Filter.Text = calcOpts.Filter;
-                //isLoading = false; CB_BL_Filter_SelectedIndexChanged(null, null); isLoading = true;
-                //CB_BossList.Text = calcOpts.BossName;
-                //isLoading = false; CB_BossList_SelectedIndexChanged(null, null); isLoading = true;
-                //firstload = false;
-
-                // Rotational Changes
-                //LB_InBehindPerc.IsEnabled = calcOpts.InBack;
-                //CB_InBackPerc.IsEnabled = calcOpts.InBack;
-                //LB_Max.IsEnabled = calcOpts.MultipleTargets;
-                //LB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-                //CB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-                //CB_MultiTargsMax.IsEnabled = calcOpts.MultipleTargets;
-                //NUD_MoveFreq.IsEnabled = calcOpts.MovingTargets;
-                //NUD_MoveDur.IsEnabled = calcOpts.MovingTargets;
-                //NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
-                //NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-                //NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
-                //NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-                //NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
-                //NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-                //NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
-                //NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
-                //NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
-                //NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
-
                 // Abilities to Maintain
                 LoadAbilBools(calcOpts);
-                //
-                calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
                 new ErrorBox("Error in loading the DPSWarr Options Pane",
                     ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
             }
-            isLoading = false;
+            _loadingCalculationOptions = false;
         }
         private void SetUpFAQ() {
 FAQStuff.Add(
@@ -1214,35 +1183,15 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         private void LoadAbilBools(CalculationOptionsDPSWarr calcOpts)
         {
             CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
-            calcOpts_PropertyChanged(null, null);
+            CalculationOptionsPanelDPSWarr_PropertyChanged(null, null);
         }
         //
-        public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void CalculationOptionsPanelDPSWarr_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // Target Armor/Level
-            //if (!isLoading && CB_TargLvl.SelectedIndex   == -1) { CB_TargLvl.SelectedIndex   = 0; }
-            //if (!isLoading && CB_TargArmor.SelectedIndex == -1) { CB_TargArmor.SelectedIndex = 0; }
-            // Fix the enables
-            //LB_InBehindPerc.IsEnabled = calcOpts.InBack;
-            //CB_InBackPerc.IsEnabled = calcOpts.InBack;
-            //LB_Max.IsEnabled = calcOpts.MultipleTargets;
-            //LB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-            //CB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-            //CB_MultiTargsMax.IsEnabled = calcOpts.MultipleTargets;
-            //NUD_MoveFreq.IsEnabled = calcOpts.MovingTargets;
-            //NUD_MoveDur.IsEnabled = calcOpts.MovingTargets;
-            //NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
-            //NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-            //NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
-            //NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-            //NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
-            //NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-            //NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
-            //NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
-            //NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
-            //NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
-            // Change abilities if stance changes
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName == "FuryStance") {
+                // Change Rotations if stance changes
                 bool Checked = calcOpts.FuryStance;
                 // Fury
                 CK_M_F_WW.IsChecked = Checked;
@@ -1265,7 +1214,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
             }
             //
-            Character.OnCalculationsInvalidated();
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
     }
 }

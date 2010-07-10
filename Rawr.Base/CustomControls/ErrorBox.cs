@@ -90,10 +90,10 @@ namespace Rawr.Base
 #else
             System.Windows.Forms.MessageBox.Show(buildFullMessage(), Title);
 #endif
-            Console.WriteLine(Title + "\n" + buildFullMessage());
+            /*Console.WriteLine(Title + "\n" + buildFullMessage());
             System.IO.StreamWriter file = System.IO.File.CreateText("DEBUGME.log");
             file.Write("\n=====" + System.DateTime.Now.ToShortDateString() + "\n" + Title + "\n" + buildFullMessage() + "\n");
-            file.Close();
+            file.Close();*/
 #endif
         }
     }

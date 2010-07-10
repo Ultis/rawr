@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -17,24 +18,36 @@ namespace Rawr.Elemental
 		public CalculationOptionsPanelElemental()
 		{
 			InitializeComponent();
-			DataContext = this;
 		}
 
 		#region ICalculationOptionsPanel Members
 		public UserControl PanelControl { get { return this; } }
 
+        CalculationOptionsElemental calcOpts = null;
+
 		private Character character;
 		public Character Character
 		{
-			get
-			{
-				return character;
-			}
+			get { return character; }
 			set
 			{
-				character = value;
-				LoadCalculationOptions();
-			}
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsElemental)
+                    ((CalculationOptionsElemental)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelElemental_PropertyChanged);
+                // Apply the new character
+                character = value;
+                // Load the new CalcOpts
+                LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = calcOpts;
+                // Add new event connections
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelElemental_PropertyChanged);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelElemental_PropertyChanged(null, new PropertyChangedEventArgs(""));
+            }
 		}
 
 		private bool _loadingCalculationOptions;
@@ -42,9 +55,23 @@ namespace Rawr.Elemental
 		{
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsElemental();
-
-			_loadingCalculationOptions = false;
+            calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            // Model Specific Code
+            //
+            _loadingCalculationOptions = false;
 		}
-		#endregion
+
+        void CalculationOptionsPanelElemental_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
+            if (e.PropertyName == "SomeProperty")
+            {
+                // Do some code
+            }
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
+        }
+        #endregion
 	}
 }

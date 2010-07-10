@@ -8,9 +8,7 @@ namespace Rawr.DPSWarr {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsDPSWarr : 
-        ICalculationOptionBase,
-        INotifyPropertyChanged
+	public class CalculationOptionsDPSWarr : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Constructors
         public CalculationOptionsDPSWarr()
@@ -586,11 +584,11 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(property)); }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
 }

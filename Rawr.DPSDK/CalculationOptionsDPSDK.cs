@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.DPSDK
 {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsDPSDK : 
-        ICalculationOptionBase,
-        INotifyPropertyChanged
+	public class CalculationOptionsDPSDK : ICalculationOptionBase, INotifyPropertyChanged
 	{
 		public string GetXml()
 		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSDK));
+			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);
@@ -169,15 +167,12 @@ namespace Rawr.DPSDK
             set { _weightScale = value; }
         }
 
-		
 		#region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
-            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(property)); }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         #endregion
 	}
 }

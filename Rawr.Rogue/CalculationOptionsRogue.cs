@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.Rogue
@@ -9,15 +9,11 @@ namespace Rawr.Rogue
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsRogue : 
-        ICalculationOptionBase,
-        INotifyPropertyChanged,
-        ICharacterCalculationOptions
+	public class CalculationOptionsRogue :  ICalculationOptionBase, INotifyPropertyChanged
     {
         public string GetXml()
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsRogue));
             StringBuilder xml = new StringBuilder();
             System.IO.StringWriter writer = new System.IO.StringWriter(xml);
             serializer.Serialize(writer, this);
@@ -127,32 +123,11 @@ namespace Rawr.Rogue
             set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
         }
 
-        private Character _character;
-        [XmlIgnore]
-        public Character Character
-        {
-            get
-            {
-                return _character;
-            }
-            set
-            {
-                _character = value;
-            }
-        }
-
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-            if (Character != null)
-            {
-                Character.OnCalculationsInvalidated();
-            }
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
         }
         #endregion
     }

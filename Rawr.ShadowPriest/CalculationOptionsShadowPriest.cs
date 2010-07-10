@@ -1,61 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.ShadowPriest
 {
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsShadowPriest : ICalculationOptionBase
+	public class CalculationOptionsShadowPriest : ICalculationOptionBase, INotifyPropertyChanged
 	{
-		public int TargetLevel { get; set; }
-		public float FightLength { get; set; }
-		public float FSRRatio { get; set; }
-		public float Delay { get; set; }
-		public float Shadowfiend { get; set; }
-		public float Replenishment { get; set; }
-		public float JoW { get; set; }
-		public float Survivability { get; set; }
-        public float MoveFrequency { get; set; }
-        public float MoveDuration { get; set; }
-        public bool PTR { get; set; }
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsShadowPriest));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 
-		public List<string> SpellPriority { get; set; }
+        private int _TargetLevel = 3;
+        private float _FightLength = 6f;
+        private float _FSRRatio = 100f;
+        private float _Delay = 350f;
+        private float _Shadowfiend = 100f;
+        private float _Replenishment = 100f;
+        private float _JoW = 100f;
+        private float _Survivability = 2f;
+        private float _MoveFrequency = 60f;
+        private float _MoveDuration = 5f;
+        private bool _PTR = false;
+        private List<string> _SpellPriority = null;
+        private int _ManaPot = 4;
+
+        public int TargetLevel { get { return _TargetLevel; } set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); } }
+        public float FightLength { get { return _FightLength; } set { _FightLength = value; OnPropertyChanged("FightLength"); } }
+        public float FSRRatio { get { return _FSRRatio; } set { _FSRRatio = value; OnPropertyChanged("FSRRatio"); } }
+        public float Delay { get { return _Delay; } set { _Delay = value; OnPropertyChanged("Delay"); } }
+        public float Shadowfiend { get { return _Shadowfiend; } set { _Shadowfiend = value; OnPropertyChanged("Shadowfiend"); } }
+        public float Replenishment { get { return _Replenishment; } set { _Replenishment = value; OnPropertyChanged("Replenishment"); } }
+        public float JoW { get { return _JoW; } set { _JoW = value; OnPropertyChanged("JoW"); } }
+        public float Survivability { get { return _Survivability; } set { _Survivability = value; OnPropertyChanged("Survivability"); } }
+        public float MoveFrequency { get { return _MoveFrequency; } set { _MoveFrequency = value; OnPropertyChanged("MoveFrequency"); } }
+        public float MoveDuration { get { return _MoveDuration; } set { _MoveDuration = value; OnPropertyChanged("MoveDuration"); } }
+        public bool PTR { get { return _PTR; } set { _PTR = value; OnPropertyChanged("PTR"); } }
+        public List<string> SpellPriority { get { return _SpellPriority; } set { _SpellPriority = value; OnPropertyChanged("SpellPriority"); } }
+        public int ManaPot { get { return _ManaPot; } set { _ManaPot = value; OnPropertyChanged("ManaPot"); } }
 
 		private static readonly List<int> targetHit = new List<int>() { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
 		public int TargetHit { get { return targetHit[TargetLevel]; } }
 
 		private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
-		public int ManaPot { get; set; }
-		public int ManaAmt { get { return manaAmt[ManaPot]; } }
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
 
-		public CalculationOptionsShadowPriest()
-		{
-			TargetLevel = 3;
-			FightLength = 6f;
-			FSRRatio = 100f;
-			Delay = 350f;
-			Shadowfiend = 100f;
-			Replenishment = 100f;
-			JoW = 100f;
-			Survivability = 2f;
-            MoveFrequency = 60f;
-            MoveDuration = 5f;
-            PTR = false;
-
-			SpellPriority = null;
-			ManaPot = 4;
-		}
-
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsShadowPriest));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-	}
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
+        }
+        #endregion
+    }
 }

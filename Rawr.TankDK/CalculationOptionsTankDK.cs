@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.TankDK
@@ -9,9 +9,7 @@ namespace Rawr.TankDK
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsTankDK : 
-        ICalculationOptionBase,
-        INotifyPropertyChanged
+	public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
 	{
         #region Options
         private int _TargetLevel = 83;
@@ -265,7 +263,6 @@ namespace Rawr.TankDK
             set { _m_rotation = value; }
         }
 
-
         [XmlIgnore]
         public float CurRotationDuration
         {
@@ -385,12 +382,10 @@ namespace Rawr.TankDK
 
         public DeathKnightTalents talents;
 
-
         #region XML IO
         public string GetXml()
 		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsTankDK));
+			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);

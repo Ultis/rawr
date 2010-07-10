@@ -11,7 +11,7 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     x:Class="Rawr.UI.BossPicker"
-    d:DesignWidth="340" d:DesignHeight="580">
+    d:DesignWidth="330" d:DesignHeight="600">
     <UserControl.DataContext>
         <Rawr:BossOptions/>
     </UserControl.DataContext>
