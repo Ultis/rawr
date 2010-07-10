@@ -84,29 +84,29 @@ x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK"
 		<controls:TabItem Header="Options" x:Name="OptionsTab">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,0" Text="Target Level:" Grid.Row="1"/>
-                <TextBlock Height="auto" Width="auto" HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="0,0,0,0" Text="Fight Duration:" Grid.Row="2" ToolTipService.ToolTip="In Minutes"/>
-                <ComboBox Margin="0,2,0,2" Grid.Column="1" SelectedItem="{Binding Path=TargetLevel, Mode=TwoWay}" Height="Auto" Grid.Row="1">
+                <TextBlock Height="Auto" Width="Auto" VerticalAlignment="Center" Margin="4,2,2,2" Text="Target Level:" Grid.Row="1"/>
+                <TextBlock Height="Auto" Width="Auto" VerticalAlignment="Center" Margin="4,2,2,2" Text="Fight Duration:" Grid.Row="2" ToolTipService.ToolTip="In Minutes"/>
+                <ComboBox Margin="2,2,4,2" Grid.Column="1" SelectedItem="{Binding Path=TargetLevel, Mode=TwoWay}" Height="24" Grid.Row="1">
                     <System:Int32>80</System:Int32>
                     <System:Int32>81</System:Int32>
                     <System:Int32>82</System:Int32>
                     <System:Int32>83</System:Int32>
                 </ComboBox>
-                <TextBox Margin="8,0,-64,0" Grid.Column="1" Text="{Binding FightLength, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="2"/>
+                <TextBox Margin="2,2,4,2" Grid.Column="1" Text="{Binding FightLength, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="2"/>
             </Grid>
         </controls:TabItem>
 	</controls:TabControl>

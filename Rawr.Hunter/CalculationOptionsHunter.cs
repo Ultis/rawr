@@ -9,9 +9,7 @@ namespace Rawr.Hunter
 #if !SILVERLIGHT
 	[Serializable]
 #endif
-	public class CalculationOptionsHunter : 
-        ICalculationOptionBase,
-        INotifyPropertyChanged
+	public class CalculationOptionsHunter : ICalculationOptionBase, INotifyPropertyChanged
 	{
         #region Basics Tab
         // ==== Fight Settings ====
@@ -353,149 +351,21 @@ namespace Rawr.Hunter
         }
         #endregion
 
-        #region Rotational Changes
-        private bool _InBack;
-        public bool InBack
-        {
-            get { return _InBack; }
-            set { _InBack = value; OnPropertyChanged("InBack"); }
-        }
-        private float _InBackPerc;
-        public float InBackPerc
-        {
-            get { return _InBackPerc; }
-            set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
-        }
-        private float _MultipleTargetsMax;
-        public float MultipleTargetsMax
-        {
-            get { return _MultipleTargetsMax; }
-            set { _MultipleTargetsMax = value; OnPropertyChanged("MultipleTargetsMax"); }
-        }
-        private bool _MovingTargets;
-        public bool MovingTargets
-        {
-            get { return _MovingTargets; }
-            set { _MovingTargets = value; OnPropertyChanged("MovingTargets"); }
-        }
-        private bool _StunningTargets;
-        public bool StunningTargets
-        {
-            get { return _StunningTargets; }
-            set { _StunningTargets = value; OnPropertyChanged("StunningTargets"); }
-        }
-        private int _StunningTargetsFreq;
-        public int StunningTargetsFreq
-        {
-            get { return _StunningTargetsFreq; }
-            set { _StunningTargetsFreq = value; OnPropertyChanged("StunningTargetsFreq"); }
-        }
-        private float _StunningTargetsDur;
-        public float StunningTargetsDur
-        {
-            get { return _StunningTargetsDur; }
-            set { _StunningTargetsDur = value; OnPropertyChanged("StunningTargetsDur"); }
-        }
-        private bool _FearingTargets;
-        public bool FearingTargets
-        {
-            get { return _FearingTargets; }
-            set { _FearingTargets = value; OnPropertyChanged("FearingTargets"); }
-        }
-        private bool _RootingTargets;
-        public bool RootingTargets
-        {
-            get { return _RootingTargets; }
-            set { _RootingTargets = value; OnPropertyChanged("RootingTargets"); }
-        }
-        private int _RootingTargetsFreq;
-        public int RootingTargetsFreq
-        {
-            get { return _RootingTargetsFreq; }
-            set { _RootingTargetsFreq = value; OnPropertyChanged("RootingTargetsFreq"); }
-        }
-        private float _RootingTargetsDur;
-        public float RootingTargetsDur
-        {
-            get { return _RootingTargetsDur; }
-            set { _RootingTargetsDur = value; OnPropertyChanged("RootingTargetsDur"); }
-        }
-        private bool _DisarmingTargets;
-        public bool DisarmingTargets
-        {
-            get { return _DisarmingTargets; }
-            set { _DisarmingTargets = value; OnPropertyChanged("DisarmingTargets"); }
-        }
-        private int _DisarmingTargetsFreq;
-        public int DisarmingTargetsFreq
-        {
-            get { return _DisarmingTargetsFreq; }
-            set { _DisarmingTargetsFreq = value; OnPropertyChanged("DisarmingTargetsFreq"); }
-        }
-        private float _DisarmingTargetsDur;
-        public float DisarmingTargetsDur
-        {
-            get { return _DisarmingTargetsDur; }
-            set { _DisarmingTargetsDur = value; OnPropertyChanged("DisarmingTargetsDur"); }
-        }
-        private bool _AoETargets;
-        public bool AoETargets
-        {
-            get { return _AoETargets; }
-            set { _AoETargets = value; OnPropertyChanged("AoETargets"); }
-        }
-        private int _AoETargetsFreq;
-        public int AoETargetsFreq
-        {
-            get { return _AoETargetsFreq; }
-            set { _AoETargetsFreq = value; OnPropertyChanged("AoETargetsFreq"); }
-        }
-        private float _AoETargetsDMG;
-        public float AoETargetsDMG
-        {
-            get { return _AoETargetsDMG; }
-            set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
-        }
-        // ==============================================================
-        private List<Impedence> _stuns;
-        public List<Impedence> Stuns
-        {
-            get { return _stuns ?? (_stuns = new List<Impedence>()); }
-            set { _stuns = value; OnPropertyChanged("Stuns"); }
-        }
-        private List<Impedence> _moves;
-        public List<Impedence> Moves
-        {
-            get { return _moves ?? (_moves = new List<Impedence>()); }
-            set { _moves = value; OnPropertyChanged("Moves"); }
-        }
-        private List<Impedence> _fears;
-        public List<Impedence> Fears
-        {
-            get { return _fears ?? (_fears = new List<Impedence>()); }
-            set { _fears = value; OnPropertyChanged("Fears"); }
-        }
-        private List<Impedence> _roots;
-        public List<Impedence> Roots
-        {
-            get { return _roots ?? (_roots = new List<Impedence>()); }
-            set { _roots = value; OnPropertyChanged("Roots"); }
-        }
-        private List<Impedence> _disarms;
-        public List<Impedence> Disarms
-        {
-            get { return _disarms ?? (_disarms = new List<Impedence>()); }
-            set { _disarms = value; OnPropertyChanged("Disarms"); }
-        }
-        #endregion
+        private bool _useKillCommand = true;
+        private float _gcdsToLayImmoTrap = 2.0f; // not editable
+        private float _gcdsToLayExploTrap = 2.0f; // not editable
+        private float _gcdsToVolley = 4.0f; // not editable, 6 seconds
+        private Shots _LALShotToUse = Shots.ExplosiveShot; // not editable
+        private int _LALShotsReplaced = 2; // not editable
+        private float _LALProcChance = 2; // not editable
 
-        public bool useKillCommand = true;
-        public float gcdsToLayImmoTrap = 2.0f; // not editable
-        public float gcdsToLayExploTrap = 2.0f; // not editable
-        public float gcdsToVolley = 4.0f; // not editable, 6 seconds
-        public Shots LALShotToUse = Shots.ExplosiveShot; // not editable
-        public int LALShotsReplaced = 2; // not editable
-        public float LALProcChance = 2; // not editable
+        public bool useKillCommand { get { return _useKillCommand; } set { _useKillCommand = value; OnPropertyChanged("useKillCommand"); } }
+        public float gcdsToLayImmoTrap { get { return _gcdsToLayImmoTrap; } set { _gcdsToLayImmoTrap = value; OnPropertyChanged("gcdsToLayImmoTrap"); } }
+        public float gcdsToLayExploTrap { get { return _gcdsToLayExploTrap; } set { _gcdsToLayExploTrap = value; OnPropertyChanged("gcdsToLayExploTrap"); } }
+        public float gcdsToVolley { get { return _gcdsToVolley; } set { _gcdsToVolley = value; OnPropertyChanged("gcdsToVolley"); } }
+        public Shots LALShotToUse { get { return _LALShotToUse; } set { _LALShotToUse = value; OnPropertyChanged("LALShotToUse"); } }
+        public int LALShotsReplaced { get { return _LALShotsReplaced; } set { _LALShotsReplaced = value; OnPropertyChanged("LALShotsReplaced"); } }
+        public float LALProcChance { get { return _LALProcChance; } set { _LALProcChance = value; OnPropertyChanged("LALProcChance"); } }
 
         #region Shots
         [XmlIgnore]
@@ -709,12 +579,11 @@ namespace Rawr.Hunter
 		}
 		#endregion
         #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
     public class Shot

@@ -13,75 +13,106 @@ using System.Windows.Shapes;
 using Rawr.Base;
 
 namespace Rawr.Hunter {
-	public partial class CalculationOptionsPanelHunter : ICalculationOptionsPanel {
-        private bool isLoading = false;
+	public partial class CalculationOptionsPanelHunter : ICalculationOptionsPanel
+    {
+        public CalculationOptionsPanelHunter()
+        {
+		    InitializeComponent();
+            //
+            SetUpFAQ();
+            SetUpPatchNotes();
+            SetUpOther();
+        }
+        
         private bool firstload = true;
-        /// <summary>This Model's local bosslist</summary>
-        private BossList bosslist = null;
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
+
+        #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
-        private Character _char;
+
+        CalculationOptionsHunter calcOpts = null;
+
+        private Character character;
         public Character Character
         {
-            get { return _char; }
+            get { return character; }
             set {
-                if (_char != null && _char.CalculationOptions != null
-                    && _char.CalculationOptions is CalculationOptionsHunter)
-                    ((CalculationOptionsHunter)_char.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
-
-                _char = value;
-                if (_char.CalculationOptions == null)
-                    _char.CalculationOptions = new CalculationOptionsHunter();
-
-                CalculationOptionsHunter calcOpts = _char.CalculationOptions as CalculationOptionsHunter;
-                DataContext = calcOpts;
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsHunter)
+                    ((CalculationOptionsHunter)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
+                // Apply the new character
+                character = value;
+                // Load the new CalcOpts
+                LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = calcOpts;
+                // Add new event connections
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelHunter_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
-        public CalculationOptionsPanelHunter() {
-            isLoading = true;
-            try {
-			    InitializeComponent();
-                SetUpFAQ();
-                SetUpPatchNotes();
-                SetUpOther();
-            } catch (Exception ex) {
-                new ErrorBox("Error in creating the Hunter Options Pane",
-                    ex.Message, "CalculationOptionsPanelHunter()",
-                    ex.InnerException.Message, ex.StackTrace);
-            }
-            isLoading = false;
-        }
+
+        private bool _loadingCalculationOptions = false;
         public void LoadCalculationOptions()
         {
             string info = "";
-            isLoading = true;
+            _loadingCalculationOptions = true;
             try {
-                CalculationOptionsHunter calcOpts;
-                if (Character != null && Character.CalculationOptions == null)
-                {
+                if (Character != null && Character.CalculationOptions == null) {
                     // If it's broke, make a new one with the defaults
                     Character.CalculationOptions = new CalculationOptionsHunter();
-                    isLoading = true;
+                    _loadingCalculationOptions = true;
                 }
                 else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                //CB_BossList.Text = calcOpts.BossName; line = 6; info = calcOpts.TargetLevel.ToString();
-                //CB_TargLvl.SelectedItem = calcOpts.TargetLevel.ToString();
-                //CB_TargArmor.SelectedItem = calcOpts.TargetArmor.ToString();
+                // Bad Item Hiding
                 CalculationsHunter.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 CalculationsHunter.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
                 ItemCache.OnItemsChanged();
-                //
-                calcOpts_PropertyChanged(null, null);
             } catch (Exception ex) {
                 new ErrorBox("Error in loading the Hunter Options Pane",
                     ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
             }
-            isLoading = false;
+            _loadingCalculationOptions = false;
         }
+
+        public void CalculationOptionsPanelHunter_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // Change abilities if stance changes
+            /*if (e.PropertyName == "FuryStance")
+            {
+                bool Checked = calcOpts.FuryStance;
+                // Fury
+                CK_M_F_WW.IsChecked = Checked;
+                CK_M_F_BS.IsChecked = Checked;
+                CK_M_F_BT.IsChecked = Checked;
+                // Fury Special
+                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
+                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
+                // Arms
+                CK_M_A_BLS.IsChecked = !Checked;
+                CK_M_A_MS.IsChecked = !Checked;
+                CK_M_A_RD.IsChecked = !Checked;
+                CK_M_A_OP.IsChecked = !Checked;
+                CK_M_A_TB.IsChecked = !Checked;
+                CK_M_A_SD.IsChecked = !Checked;
+                CK_M_A_SL.IsChecked = !Checked;
+                // Arms Special
+                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
+                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
+                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
+            }*/
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
+        }
+        #endregion
+
         private void SetUpFAQ()
         {
             FAQStuff.Add(
@@ -128,12 +159,12 @@ namespace Rawr.Hunter {
             "Why can't I select X weapon type or Y Armor Type?",
             @"Some weapon types are pointless to factor in, Staves and one handed weapons definitely being the big part of this. Same for Armor, though we can wear cloth, cloth can't physically boost our DPS in any way compared to Plate. Leather and Mail at top end items have a chance to beat out your DPS plate in some circumstances. If you want to enable Leather and Mail you can by use of Refine Types of Items Listed from the Tools menu."
             );
-            /*//CB_FAQ_Questions.Items.Add("All");
+            CB_FAQ_Questions.Items.Add("All");
             string[] arr = new string[FAQStuff.Keys.Count];
             FAQStuff.Keys.CopyTo(arr,0);
-            //CB_FAQ_Questions.Items.AddRange(arr);
-            //CB_FAQ_Questions.SelectedIndex = 0;
-            CB_FAQ_Questions_SelectedIndexChanged(null, null);*/
+            foreach (string s in arr) { CB_FAQ_Questions.Items.Add(s); }
+            CB_FAQ_Questions.SelectedIndex = 0;
+            CB_FAQ_Questions_SelectedIndexChanged(null, null);
         }
         private void SetUpPatchNotes()
         { // No Significant Changes due to short period of time between releases.
@@ -679,12 +710,13 @@ Rawr.HunterSE:
 * Started adding pet talents.
 -  	Hunter Pet DPS section updated to 3.1.2
 - File missing from previous build, PetSkills.cs now present");
-            /*CB_Version.Items.Add("All");
+
+            CB_Version.Items.Add("All");
             string[] arr = new string[PNStuff.Keys.Count];
             PNStuff.Keys.CopyTo(arr, 0);
-            CB_Version.Items.AddRange(arr);
+            foreach (string s in arr) { CB_Version.Items.Add(s); }
             CB_Version.SelectedIndex = 0;
-            CB_PatchNotes_SelectedIndexChanged(null, null);*/
+            CB_Version_SelectedIndexChanged(null, null);
         }
         private void SetUpOther()
         {
@@ -719,49 +751,43 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*try {
                 string text = "";
-                if (true /*CB_FAQ_Questions.Text == "All"*/
-            /*) {
-int Iter = 1;
-text += "== CONTENTS ==" + "\r\n";
-foreach (string s in FAQStuff.Keys) {
-text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
-Iter++;
-} Iter = 1;
-text += "\r\n";
-text += "== READ ON ==" + "\r\n";
-foreach (string s in FAQStuff.Keys) {
-string a = "invalid";
-text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
-bool ver = FAQStuff.TryGetValue(s, out a);
-text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\r\n"; // Answer
-text += "\r\n" + "\r\n";
-Iter++;
-} Iter = 1;
-RTB_FAQ.Text = text;
-} else {
-string s = "";//CB_FAQ_Questions.Text;
-string a = "invalid";
-bool ver = FAQStuff.TryGetValue(s, out a);
-text += s + "\r\n";
-text += "\r\n";
-text += (ver ? a : "An error occurred calling the string");
-RTB_FAQ.Text = text;
-RTB_FAQ.SelectAll();
-//RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
-//RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
-}
-} catch(Exception ex){
-new ErrorBoxDPSWarr("Error in setting the FAQ Item",
-ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
-}*/
+                if (true /*CB_FAQ_Questions.Text == "All"*/) {
+                    int Iter = 1;
+                    text += "== CONTENTS ==" + "\r\n";
+                    foreach (string s in FAQStuff.Keys) {
+                    text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
+                    Iter++;
+                    } Iter = 1;
+                    text += "\r\n";
+                    text += "== READ ON ==" + "\r\n";
+                    foreach (string s in FAQStuff.Keys) {
+                    string a = "invalid";
+                    text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
+                    bool ver = FAQStuff.TryGetValue(s, out a);
+                    text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\r\n"; // Answer
+                    text += "\r\n" + "\r\n";
+                    Iter++;
+                    } Iter = 1;
+                    RTB_FAQ.Text = text;
+                } else {
+                    string s = "";//CB_FAQ_Questions.Text;
+                    string a = "invalid";
+                    bool ver = FAQStuff.TryGetValue(s, out a);
+                    text += s + "\r\n";
+                    text += "\r\n";
+                    text += (ver ? a : "An error occurred calling the string");
+                    RTB_FAQ.Text = text;
+                    RTB_FAQ.SelectAll();
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+                    RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+                }
         }
         private void CB_Version_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            /*string text = "";
-            if (CB_Version.Text == "All")
+            string text = "";
+            if ((string)CB_Version.SelectedItem == "All")
             {
                 int Iter = 1;
                 text += "== CONTENTS ==" + "\r\n";
@@ -782,10 +808,8 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
                     Iter++;
                 } Iter = 1;
                 RTB_Version.Text = text;
-            }
-            else
-            {
-                string s = CB_Version.Text;
+            } else {
+                string s = (string)CB_Version.SelectedItem;
                 string a = "invalid";
                 bool ver = PNStuff.TryGetValue(s, out a);
                 text += s + "\r\n";
@@ -793,68 +817,18 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
                 text += (ver ? a : "An error occurred calling the string");
                 RTB_Version.Text = text;
                 RTB_Version.SelectAll();
-                RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+                //RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
                 RTB_Version.Select(0, RTB_Version.Text.IndexOf('\n'));
-                RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
-            }*/
-        }
-        // Basics
-        private void CB_ArmorBosses_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                if (Character != null && Character.CalculationOptions != null) {
-                    CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                    //
-                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargArmor.SelectedItem);
-                    string text = (string)newItem.Content;
-                    calcOpts.TargetArmor = int.Parse(text);
-                    //CB_BossList.Text = "Custom";
-                    //
-                    Character.OnCalculationsInvalidated();
-                }
+                //RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
             }
-        }
-        private void CB_TargLevel_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (!isLoading) {
-                if (Character != null && Character.CalculationOptions != null) {
-                    CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                    //
-                    ComboBoxItem newItem = (ComboBoxItem)(CB_TargLevel.SelectedItem);
-                    string text = (string)newItem.Content;
-                    calcOpts.TargetLevel = int.Parse(text);
-                    //CB_BossList.Text = "Custom";
-                    //
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-        private void CB_Aspect_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            if (CB_Aspect.SelectedIndex == 0) CalcOpts.SelectedAspect = Aspect.None;
-            if (CB_Aspect.SelectedIndex == 1) CalcOpts.SelectedAspect = Aspect.Beast;
-            if (CB_Aspect.SelectedIndex == 2) CalcOpts.SelectedAspect = Aspect.Hawk;
-            if (CB_Aspect.SelectedIndex == 3) CalcOpts.SelectedAspect = Aspect.Viper;
-            if (CB_Aspect.SelectedIndex == 4) CalcOpts.SelectedAspect = Aspect.Monkey;
-            if (CB_Aspect.SelectedIndex == 5) CalcOpts.SelectedAspect = Aspect.Dragonhawk;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_AspectUsage_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            if (CB_AspectUsage.SelectedIndex == 0) CalcOpts.AspectUsage = AspectUsage.None;
-            if (CB_AspectUsage.SelectedIndex == 1) CalcOpts.AspectUsage = AspectUsage.ViperToOOM;
-            if (CB_AspectUsage.SelectedIndex == 2) CalcOpts.AspectUsage = AspectUsage.ViperRegen;
-            Character.OnCalculationsInvalidated();
         }
         // Rotations
         private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             // only do anything if we weren't set to 0
-            if (isLoading || CB_PriorityDefaults.SelectedIndex == 0) return;
+            if (_loadingCalculationOptions || CB_PriorityDefaults.SelectedIndex == 0) return;
 
-            isLoading = true;
+            _loadingCalculationOptions = true;
 
             int i = 0;
             //if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.BeastMaster.ShotList[i].Index; i++; } }
@@ -879,7 +853,7 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
              * So frack it, I'll just forget it until we have the
              * new rotation setup where this stuff doesn't matter
              */
-            isLoading = false;
+            _loadingCalculationOptions = false;
 
             int j = 0;
             int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
@@ -890,174 +864,104 @@ ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
         }
         private void CB_ShotPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex1 = CB_ShotPrio_01.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex1 = CB_ShotPrio_01.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_02_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex2 = CB_ShotPrio_02.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex2 = CB_ShotPrio_02.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_03_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex3 = CB_ShotPrio_03.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex3 = CB_ShotPrio_03.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_04_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex4 = CB_ShotPrio_04.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex4 = CB_ShotPrio_04.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_05_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex5 = CB_ShotPrio_05.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex5 = CB_ShotPrio_05.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_06_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex6 = CB_ShotPrio_06.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex6 = CB_ShotPrio_06.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_07_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex7 = CB_ShotPrio_07.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex7 = CB_ShotPrio_07.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_08_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex8 = CB_ShotPrio_08.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex8 = CB_ShotPrio_08.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_09_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex9 = CB_ShotPrio_09.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex9 = CB_ShotPrio_09.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_ShotPrio_10_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PriorityIndex10 = CB_ShotPrio_10.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PriorityIndex10 = CB_ShotPrio_10.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority1 = (PetAttacks)CB_PetPrio_01.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority1 = (PetAttacks)CB_PetPrio_01.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_02_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority2 = (PetAttacks)CB_PetPrio_02.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority2 = (PetAttacks)CB_PetPrio_02.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_03_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority3 = (PetAttacks)CB_PetPrio_03.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority3 = (PetAttacks)CB_PetPrio_03.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_04_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority4 = (PetAttacks)CB_PetPrio_04.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority4 = (PetAttacks)CB_PetPrio_04.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_05_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority5 = (PetAttacks)CB_PetPrio_05.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority5 = (PetAttacks)CB_PetPrio_05.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_06_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority6 = (PetAttacks)CB_PetPrio_06.SelectedIndex;
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority6 = (PetAttacks)CB_PetPrio_06.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         private void CB_PetPrio_07_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (isLoading) return;
-            CalculationOptionsHunter CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            CalcOpts.PetPriority7 = (PetAttacks)CB_PetPrio_07.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        //
-        public void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            /*// Target Armor/Level
-            if (!isLoading && CB_TargLevel.SelectedIndex == -1) { CB_TargLevel.SelectedIndex = 0; }
-            if (!isLoading && CB_TargArmor.SelectedIndex == -1) { CB_TargArmor.SelectedIndex = 0; }
-            // Fix the enables
-            LB_InBehindPerc.IsEnabled = calcOpts.InBack;
-            CB_InBackPerc.IsEnabled = calcOpts.InBack;
-            LB_Max.IsEnabled = calcOpts.MultipleTargets;
-            LB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-            CB_MultiTargsPerc.IsEnabled = calcOpts.MultipleTargets;
-            CB_MultiTargsMax.IsEnabled = calcOpts.MultipleTargets;
-            NUD_MoveFreq.IsEnabled = calcOpts.MovingTargets;
-            NUD_MoveDur.IsEnabled = calcOpts.MovingTargets;
-            NUD_StunFreq.IsEnabled = calcOpts.StunningTargets;
-            NUD_StunDur.IsEnabled = calcOpts.StunningTargets;
-            NUD_FearFreq.IsEnabled = calcOpts.FearingTargets;
-            NUD_FearDur.IsEnabled = calcOpts.FearingTargets;
-            NUD_RootFreq.IsEnabled = calcOpts.RootingTargets;
-            NUD_RootDur.IsEnabled = calcOpts.RootingTargets;
-            NUD_DisarmFreq.IsEnabled = calcOpts.DisarmingTargets;
-            NUD_DisarmDur.IsEnabled = calcOpts.DisarmingTargets;
-            NUD_AoEFreq.IsEnabled = calcOpts.AoETargets;
-            NUD_AoEDMG.IsEnabled = calcOpts.AoETargets;
-            // Change abilities if stance changes
-            if (e.PropertyName == "FuryStance")
-            {
-                bool Checked = calcOpts.FuryStance;
-                // Fury
-                CK_M_F_WW.IsChecked = Checked;
-                CK_M_F_BS.IsChecked = Checked;
-                CK_M_F_BT.IsChecked = Checked;
-                // Fury Special
-                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
-                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
-                // Arms
-                CK_M_A_BLS.IsChecked = !Checked;
-                CK_M_A_MS.IsChecked = !Checked;
-                CK_M_A_RD.IsChecked = !Checked;
-                CK_M_A_OP.IsChecked = !Checked;
-                CK_M_A_TB.IsChecked = !Checked;
-                CK_M_A_SD.IsChecked = !Checked;
-                CK_M_A_SL.IsChecked = !Checked;
-                // Arms Special
-                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
-                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
-                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
-            }*/
-            //
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority7 = (PetAttacks)CB_PetPrio_07.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
         //

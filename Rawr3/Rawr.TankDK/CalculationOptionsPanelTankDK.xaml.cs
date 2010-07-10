@@ -79,5 +79,6 @@ namespace Rawr.TankDK
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
+        #endregion
     }
 }

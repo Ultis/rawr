@@ -13,7 +13,12 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.Hunter"
 x:Class="Rawr.Hunter.CalculationOptionsPanelHunter"
 >
-<Grid x:Name="LayoutRoot">
+
+<UserControl.Resources>
+    <local:CalculationOptionsHunter x:Key="CalculationOptionsHunterDataSource" d:IsDataSource="True"/>
+</UserControl.Resources>
+
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsHunterDataSource}}">
     <controls:TabControl x:Name="Tabs" TabStripPlacement="Top">
         <controls:TabItem x:Name="Page_00_Instructions" Header="Instructions">
             <Grid x:Name="Page_00_Layout">
@@ -49,18 +54,18 @@ x:Class="Rawr.Hunter.CalculationOptionsPanelHunter"
             <Grid x:Name="Page_01_Layout">
                 <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Height="23" Margin="8,8,8,0" VerticalAlignment="Top" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment" TabIndex="0"/>
             	<dataInput:Label x:Name="LB_TargLevel" Height="23" Margin="8,37,0,0" VerticalAlignment="Top" Content="Target's Level:" HorizontalAlignment="Left" Width="117" TabIndex="1"/>
-                <ComboBox x:Name="CB_TargLevel" Height="23" Margin="129,35,8,0" VerticalAlignment="Top" SelectionChanged="CB_TargLevel_SelectedIndexChanged" TabIndex="2">
-                    <ComboBoxItem x:Name="CBI_TargLvl_80" Content="80"/>
-            		<ComboBoxItem x:Name="CBI_TargLvl_81" Content="81"/>
-            		<ComboBoxItem x:Name="CBI_TargLvl_82" Content="82"/>
-            		<ComboBoxItem x:Name="CBI_TargLvl_83" Content="83" IsSelected="True"/>
+                <ComboBox x:Name="CB_TargLevel" Height="23" Margin="129,35,8,0" VerticalAlignment="Top" SelectedItem="{Binding TargetLevel, Mode=TwoWay}">
+	                <System:Int32>80</System:Int32>
+	                <System:Int32>81</System:Int32>
+	                <System:Int32>82</System:Int32>
+	                <System:Int32>83</System:Int32>
             	</ComboBox>
                 <dataInput:Label x:Name="LB_TargArmor" Margin="8,62,0,0" VerticalAlignment="Top" Content="Target's Armor:" TabIndex="3" Height="23" HorizontalAlignment="Left" Width="117"/>
-            	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top" SelectionChanged="CB_ArmorBosses_SelectedIndexChanged" TabIndex="4">
-            		<ComboBoxItem x:Name="CBI_TargArm_80" Content="9729"/>
-            		<ComboBoxItem x:Name="CBI_TargArm_81" Content="10034"/>
-            		<ComboBoxItem x:Name="CBI_TargArm_82" Content="10338"/>
-            		<ComboBoxItem x:Name="CBI_TargArm_83" Content="10643" IsSelected="True"/>
+            	<ComboBox x:Name="CB_TargArmor" Height="23" Margin="129,62,8,0" VerticalAlignment="Top" SelectedItem="{Binding TargetArmor, Mode=TwoWay}">
+            		<System:Single>9729</System:Single>
+            		<System:Single>10034</System:Single>
+            		<System:Single>10338</System:Single>
+            		<System:Single>10643</System:Single>
             	</ComboBox>
             	<dataInput:Label x:Name="LB_Latency" Height="23" Margin="8,89,152,0" VerticalAlignment="Top" Content="Latency (ms):" TabIndex="5"/>
             	<inputToolkit:NumericUpDown x:Name="NUD_Latency" HorizontalAlignment="Right" Margin="0,89,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50" TabIndex="6"/>
@@ -78,19 +83,19 @@ x:Class="Rawr.Hunter.CalculationOptionsPanelHunter"
             	<inputToolkit:NumericUpDown x:Name="NUD_MultiTargsUptime" HorizontalAlignment="Right" Margin="0,252,8,0" VerticalAlignment="Top" Width="140" d:LayoutOverrides="Height" Increment="5" Value="{Binding MultipleTargetsPerc, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEnabled="{Binding IsChecked, ElementName=CK_MultipleTargets, Mode=OneWay}" TabIndex="18"/>
             	<dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Margin="8,278,8,0" Content="Hunter Settings" Height="23" VerticalAlignment="Top" TabIndex="19"/>
             	<dataInput:Label x:Name="LB_Aspect" Height="23" HorizontalAlignment="Left" Margin="8,305,0,0" VerticalAlignment="Top" Width="100" Content="Aspect:" TabIndex="20"/>
-            	<ComboBox x:Name="CB_Aspect" Height="23" Margin="129,305,8,0" VerticalAlignment="Top" SelectionChanged="CB_Aspect_SelectedIndexChanged" TabIndex="21">
-            		<ComboBoxItem x:Name="CBI_Aspect_None" Content="None"/>
-            		<ComboBoxItem x:Name="CBI_Aspect_Beast" Content="Beast"/>
-            		<ComboBoxItem x:Name="CBI_Aspect_Hawk" Content="Hawk"/>
-            		<ComboBoxItem x:Name="CBI_Aspect_Viper" Content="Viper"/>
-            		<ComboBoxItem x:Name="CBI_Aspect_Monkey" Content="Monkey"/>
-            		<ComboBoxItem x:Name="CBI_Aspect_Dragonhawk" Content="Dragonhawk" IsSelected="True"/>
+            	<ComboBox x:Name="CB_Aspect" Height="23" Margin="129,305,8,0" VerticalAlignment="Top" SelectedItem="{Binding SelectedAspect, Mode=TwoWay}">
+            		<local:Aspect>Beast</local:Aspect>
+            		<local:Aspect>Hawk</local:Aspect>
+            		<local:Aspect>Viper</local:Aspect>
+            		<local:Aspect>Monkey</local:Aspect>
+            		<local:Aspect>Dragonhawk</local:Aspect>
+            		<local:Aspect>None</local:Aspect>
             	</ComboBox>
             	<dataInput:Label x:Name="LB_ViperUsage" Height="23" HorizontalAlignment="Left" Margin="8,334,0,0" VerticalAlignment="Top" Width="100" Content="Viper Usage:" TabIndex="22"/>
-            	<ComboBox x:Name="CB_AspectUsage" Margin="129,334,8,0" Height="23" VerticalAlignment="Top" SelectionChanged="CB_AspectUsage_SelectedIndexChanged" TabIndex="23">
-            		<ComboBoxItem x:Name="CBI_AspUsage_No" Content="No Viper"/>
-            		<ComboBoxItem x:Name="CBI_AspUsage_Just" Content="Viper - Just Enough" IsSelected="True"/>
-            		<ComboBoxItem x:Name="CBI_AspUsage_Fully" Content="Viper - Fully Regen"/>
+            	<ComboBox x:Name="CB_AspectUsage" Margin="129,334,8,0" Height="23" VerticalAlignment="Top" SelectedItem="{Binding AspectUsage, Mode=TwoWay}">
+            		<local:AspectUsage>None</local:AspectUsage>
+            		<local:AspectUsage>ViperToOOM</local:AspectUsage>
+            		<local:AspectUsage>ViperRegen</local:AspectUsage>
             	</ComboBox>
             	<CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Left" Margin="8,361,0,0" VerticalAlignment="Top" Content="Use Aspect of the Beast during Bestial Wrath" Width="313" Height="23" IsChecked="{Binding UseBeastDuringBestialWrath, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="24"/>
             	<CheckBox x:Name="CK_UseRotation" Margin="8,388,8,0" Content="Use Shot Rotation Test instead of Frequencies" Height="17" VerticalAlignment="Top" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" TabIndex="25"/>

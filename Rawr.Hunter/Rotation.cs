@@ -417,7 +417,7 @@ namespace Rawr.Hunter {
         protected virtual float RageGenOverDur_IncDmg {
             get {
                 // Invalidate bad things
-                if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
+                /*if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
                 float RageMod = 2.5f / 453.3f;
                 float damagePerSec = 0f;
                 float freq = CalcOpts.AoETargetsFreq;
@@ -435,7 +435,8 @@ namespace Rawr.Hunter {
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
                 damagePerSec = (acts * Math.Min(dmgCap, dmg)) / FightDuration;
                 
-                return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
+                return (damagePerSec * RageMod * zerkerMOD) * FightDuration;*/
+                return 0;
             }
         }
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }

@@ -46,7 +46,7 @@ namespace Rawr.Hunter.Skills
                 {
                     //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                     return 1f +
-                        (Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) *
+                        //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) *
                         CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
                 }
                 else { return 1f; }
@@ -286,8 +286,8 @@ namespace Rawr.Hunter.Skills
                     _AvgTargets = 1f +
                        (CalcOpts.MultipleTargets ?
                            StatS.BonusTargets +
-                           CalcOpts.MultipleTargetsPerc / 100f *
-                           (Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
+                           CalcOpts.MultipleTargetsPerc / 100f // *
+                           //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
                            : 0f);
                 }
                 return _AvgTargets;
