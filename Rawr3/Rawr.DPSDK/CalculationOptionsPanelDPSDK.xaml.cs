@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -9,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.ComponentModel;
 
 namespace Rawr.DPSDK
 {
@@ -23,6 +23,8 @@ namespace Rawr.DPSDK
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
+        CalculationOptionsDPSDK calcOpts = null;
+
         private Character character;
         public Character Character
         {
@@ -32,21 +34,20 @@ namespace Rawr.DPSDK
                 // Kill any old event connections
                 if (character != null && character.CalculationOptions != null
                     && character.CalculationOptions is CalculationOptionsDPSDK)
-                    ((CalculationOptionsDPSDK)character.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+                    calcOpts.PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
                 // Apply the new character
                 character = value;
                 // Load the new CalcOpts
                 LoadCalculationOptions();
                 // Model Specific Code
                 // Set the Data Context
-                //LayoutRoot.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK);
-                RotationTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK).rotation;
-                OptionsTab.DataContext = (Character.CalculationOptions as CalculationOptionsDPSDK);
+                LayoutRoot.DataContext = calcOpts;
+                RotationTab.DataContext = calcOpts.rotation;
+                //OptionsTab.DataContext = calcOpts;
                 // Add new event connections
-                (Character.CalculationOptions as CalculationOptionsDPSDK).PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
                 // Run it once for any special UI config checks
-                //CalculationOptionsPanelDPSDK_PropertyChanged(null, new PropertyChangedEventArgs(""));
+                CalculationOptionsPanelDPSDK_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
 
@@ -55,6 +56,7 @@ namespace Rawr.DPSDK
         {
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsDPSDK();
+            calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             // Model Specific Code
             //
             _loadingCalculationOptions = false;
