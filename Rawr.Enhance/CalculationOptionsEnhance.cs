@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
-using System.ComponentModel;
 
 namespace Rawr.Enhance
 {
@@ -192,13 +192,11 @@ namespace Rawr.Enhance
         }
 
         #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         #endregion
 	}
 }

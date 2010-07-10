@@ -13,9 +13,11 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.RestoSham" 
 x:Class="Rawr.RestoSham.CalculationOptionsPanelRestoSham" 
 >
+
 <UserControl.Resources>
 	<local:CalculationOptionsRestoSham x:Key="CalculationOptionsRestoShamDataSource" d:IsDataSource="True"/>
 </UserControl.Resources>
+
 <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsRestoShamDataSource}}">
 	<Grid.ColumnDefinitions>
 		<ColumnDefinition Width="*"/>

@@ -20,21 +20,35 @@ namespace Rawr.Enhance
             InitializeComponent();
             btnExport.Click += new RoutedEventHandler(btnExport_Click);
             SetEnhSimTextBoxText();
-            DataContext = this;
         }
 
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
-        private CalculationOptionsEnhance _calcOpts;
+        private CalculationOptionsEnhance calcOpts;
+
         private Character character;
         public Character Character
         {
             get { return character; }
             set
             {
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null
+                    && character.CalculationOptions is CalculationOptionsEnhance)
+                    ((CalculationOptionsEnhance)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelEnhance_PropertyChanged);
+                // Apply the new character
                 character = value;
+                // Load the new CalcOpts
                 LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = calcOpts;
+                // Add new event connections
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelEnhance_PropertyChanged);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelEnhance_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
 
@@ -42,32 +56,31 @@ namespace Rawr.Enhance
         public void LoadCalculationOptions()
         {
             _loadingCalculationOptions = true;
-            if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsEnhance)
-                ((CalculationOptionsEnhance)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
-
-            if (character.CalculationOptions == null)
-                character.CalculationOptions = new CalculationOptionsEnhance();
-
-            _calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            DataContext = _calcOpts;
-            _calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
-
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsEnhance();
+            calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+            // Model Specific Code
+            //
             _loadingCalculationOptions = false;
         }
-        #endregion
 
-        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void CalculationOptionsPanelEnhance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-            // set all the options from calcOpts
-            Character.OnCalculationsInvalidated();
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
+            if (e.PropertyName == "SomeProperty")
+            {
+                // Do some code
+            }
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
+        #endregion
 
         private void btnExport_Click(Object sender,RoutedEventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
-                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, _calcOpts);
+                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, calcOpts);
                 simExport.copyToClipboard();
             }
         }

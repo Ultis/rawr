@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -9,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.ComponentModel;
 
 namespace Rawr.Healadin
 {
@@ -24,33 +24,54 @@ namespace Rawr.Healadin
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
+        CalculationOptionsHealadin calcOpts = null;
+
         private Character character;
         public Character Character
         {
-            get
-            {
-                return character;
-            }
+            get { return character; }
             set
             {
+                // Kill any old event connections
                 if (character != null && character.CalculationOptions != null
                     && character.CalculationOptions is CalculationOptionsHealadin)
                     ((CalculationOptionsHealadin)character.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
-
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelHealadin_PropertyChanged);
+                // Apply the new character
                 character = value;
-                if (character.CalculationOptions == null)
-                    character.CalculationOptions = new CalculationOptionsHealadin();
-
-                CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-                DataContext = calcOpts;
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+                // Load the new CalcOpts
+                LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = calcOpts;
+                // Add new event connections
+                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelHealadin_PropertyChanged);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelHealadin_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
 
-        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private bool _loadingCalculationOptions;
+        public void LoadCalculationOptions()
         {
-            Character.OnCalculationsInvalidated();
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsHealadin();
+            calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+            // Model Specific Code
+            //
+            _loadingCalculationOptions = false;
+        }
+
+        void CalculationOptionsPanelHealadin_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
+            if (e.PropertyName == "SomeProperty")
+            {
+                // Do some code
+            }
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
     }

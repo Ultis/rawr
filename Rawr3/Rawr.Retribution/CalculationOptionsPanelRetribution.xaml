@@ -14,6 +14,7 @@ xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
 xmlns:local="clr-namespace:Rawr.Retribution"
 x:Class="Rawr.Retribution.CalculationOptionsPanelRetribution"
 >
+
 <UserControl.Resources>
 	<Style x:Key="LabelDescriptionStyle" TargetType="TextBlock">
 		<Setter Property="HorizontalAlignment" Value="Right"/>
@@ -33,12 +34,10 @@ x:Class="Rawr.Retribution.CalculationOptionsPanelRetribution"
 		<Setter Property="DecimalPlaces" Value="2"/>
 		<Setter Property="Increment" Value="0.1"/>
 	</Style>
+    <local:CalculationOptionsRetribution x:Key="CalculationOptionsRetributionDataSource" d:IsDataSource="True"/>
 </UserControl.Resources>
-<UserControl.DataContext>
-	<local:CalculationOptionsRetribution/>
-</UserControl.DataContext>
-<Grid x:Name="LayoutRoot" Background="White">
 
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsRetributionDataSource}}">
 	<controls:TabControl VerticalAlignment="Stretch">
 		<controls:TabItem Header="Fight Parameters">
 			<Grid VerticalAlignment="Top">

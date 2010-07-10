@@ -9,11 +9,12 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.Healadin"
 x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin" 
 >
-<UserControl.DataContext>
-	<local:CalculationOptionsHealadin/>
-</UserControl.DataContext>
-<Grid x:Name="LayoutRoot">
 
+<UserControl.Resources>
+    <local:CalculationOptionsHealadin x:Key="CalculationOptionsHealadinDataSource" d:IsDataSource="True"/>
+</UserControl.Resources>
+
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsHealadinDataSource}}">
 	<Grid.ColumnDefinitions>
 		<ColumnDefinition Width="*"/>
 		<ColumnDefinition Width="*"/>
@@ -34,6 +35,7 @@ x:Class="Rawr.Healadin.CalculationOptionsPanelHealadin"
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
 	</Grid.RowDefinitions>
+        
 	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Text="Fight Length:"/>
 	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Activity:"/>
 	<TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Replenishment:"/>

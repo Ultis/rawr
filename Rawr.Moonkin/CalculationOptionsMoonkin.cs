@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace Rawr.Moonkin
 {
@@ -12,20 +13,11 @@ namespace Rawr.Moonkin
 	{
 		public string GetXml()
 		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsMoonkin));
+			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsMoonkin));
 			StringBuilder xml = new StringBuilder();
 			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
 			serializer.Serialize(writer, this);
 			return xml.ToString();
-		}
-
-		public CalculationOptionsMoonkin()
-		{
-		}
-
-		public CalculationOptionsMoonkin(Character character)
-		{
 		}
 
 		private int targetLevel = 83;
@@ -117,16 +109,12 @@ namespace Rawr.Moonkin
             set { ptrMode = value; OnPropertyChanged("PTRMode"); }
         }
 
-
 		#region INotifyPropertyChanged Members
-
-		private void OnPropertyChanged(string property)
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string property)
 		{
 			if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
 		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		#endregion
 	}
 }

@@ -10,10 +10,12 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.Moonkin"
 x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin" 
 >
-<UserControl.DataContext>
-	<local:CalculationOptionsMoonkin/>
-</UserControl.DataContext>
-<Grid x:Name="LayoutRoot">
+
+<UserControl.Resources>
+    <local:CalculationOptionsMoonkin x:Key="CalculationOptionsMoonkinDataSource" d:IsDataSource="True"/>
+</UserControl.Resources>
+
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsMoonkinDataSource}}">
 	<Grid.RowDefinitions>
 		<RowDefinition Height="Auto"/>
 		<RowDefinition Height="Auto"/>
@@ -34,6 +36,7 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 		<ColumnDefinition Width="*"/>
 		<ColumnDefinition Width="*"/>
 	</Grid.ColumnDefinitions>
+    
 	<TextBlock x:Name="LB_Level" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Target Level:" VerticalAlignment="Center"/>
 	<inputToolkit:NumericUpDown x:Name="NUD_Level" Grid.Column="1" d:LayoutOverrides="Height" Margin="2" Maximum="83" Minimum="80" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Center" />
 	<TextBlock x:Name="LB_Latency" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Latency:" Grid.Row="1" VerticalAlignment="Center"/>

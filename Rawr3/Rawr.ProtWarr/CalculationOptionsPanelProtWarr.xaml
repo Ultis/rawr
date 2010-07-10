@@ -13,11 +13,12 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.ProtWarr"
 x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr" 
 >
-<UserControl.DataContext>
-    <local:CalculationOptionsProtWarr/>
-</UserControl.DataContext>
-<Grid x:Name="LayoutRoot">
 
+<UserControl.Resources>
+    <local:CalculationOptionsProtWarr x:Key="CalculationOptionsProtWarrDataSource" d:IsDataSource="True"/>
+</UserControl.Resources>
+
+<Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsProtWarrDataSource}}">
 	<Grid.ColumnDefinitions>
 		<ColumnDefinition Width="0.5*"/>
 		<ColumnDefinition Width="0.5*"/>

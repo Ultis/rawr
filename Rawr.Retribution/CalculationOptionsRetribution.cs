@@ -6,10 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.Retribution
 {
-    public class CalculationOptionsRetribution : 
-        ICalculationOptionBase, 
-        INotifyPropertyChanged,
-        ICharacterCalculationOptions
+    public class CalculationOptionsRetribution : ICalculationOptionBase, INotifyPropertyChanged
     {
 
         public string GetXml()
@@ -357,21 +354,6 @@ namespace Rawr.Retribution
 
         #endregion
 
-        private Character _character;
-        [XmlIgnore]
-        public Character Character
-        {
-            get
-            {
-                return _character;
-            }
-            set
-            {
-                _character = value;
-            }
-        }
-
-
         public float GetEffectiveAbilityCooldown(Ability ability)
         {
             return effectiveAbilityCooldowns[(int)ability];
@@ -381,7 +363,6 @@ namespace Rawr.Retribution
         {
             return effectiveAbilityCooldownsAfter20PercentHealth[(int)ability];
         }
-
 
         private void SetEffectiveAbilityCooldown(Ability ability, float effectiveCooldown)
         {
@@ -393,22 +374,12 @@ namespace Rawr.Retribution
             effectiveAbilityCooldownsAfter20PercentHealth[(int)ability] = effectiveCooldown;
         }
 
-
         #region INotifyPropertyChanged Members
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-            if (Character != null)
-            {
-                Character.OnCalculationsInvalidated();
-            }
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
         }
-
         #endregion
     }
 }
