@@ -20,7 +20,7 @@ namespace Rawr.Moonkin
         protected override void LoadCalculationOptions()
         {
 			if (Character.CalculationOptions == null)
-				Character.CalculationOptions = new CalculationOptionsMoonkin(Character);
+				Character.CalculationOptions = new CalculationOptionsMoonkin();
 
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();

@@ -20,7 +20,7 @@ namespace Rawr.DPSDK
             InitializeComponent();
             this.calcOpts = calcOpts;
             rotation = calcOpts.rotation;
-            talents = calcOpts.talents;
+            talents = character.DeathKnightTalents;
             this.character = character;
 
          //   cbPresence.Items.Clear();
