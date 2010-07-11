@@ -71,6 +71,10 @@
     <Compile Include="BatchTools.xaml.cs">
       <DependentUpon>BatchTools.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BossHandler\BossConverters.cs" />
+    <Compile Include="BossHandler\DG_BossAttacks.xaml.cs">
+      <DependentUpon>DG_BossAttacks.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BossHandler\DG_BossSitChanges.xaml.cs">
       <DependentUpon>DG_BossSitChanges.xaml</DependentUpon>
     </Compile>
@@ -233,6 +237,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="BatchTools.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BossHandler\DG_BossAttacks.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>

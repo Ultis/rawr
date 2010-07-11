@@ -33,6 +33,7 @@ namespace Rawr {
         public float AttackSpeed;
         /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
+        public bool UseParryHaste = false;
         #region Player Avoidance
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
@@ -65,6 +66,16 @@ namespace Rawr {
         #region Player Negation
         public bool Interruptable = false;
         #endregion
+
+        public override string ToString()
+        {
+            if (AttackSpeed <= 0) { return "None"; }
+            return string.Format("Spd: {0}sec D: {1}{2} #T: {3} {4}",
+                AttackSpeed,
+                DamagePerHit, DamageIsPerc ? "%" : "",
+                MaxNumTargets,
+                UseParryHaste ? ": PH" : "");
+        }
     }
     public partial class DoT : Attack {
         /// <summary>The initial damage of the dot, separate from the over time portion</summary>
@@ -744,6 +755,57 @@ namespace Rawr {
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
+        public Attack DynamicCompiler_Attacks
+        {
+            get
+            {
+                // Make one
+                Attack retVal = new Attack()
+                {
+                    // Basics
+                    Name = "Dynamic",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = 80f * 1000f,
+                    DamageIsPerc = false,
+                    MaxNumTargets = 1,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    UseParryHaste = true,
+                    Interruptable = false,
+                    // Player Avoidances
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
+                    // Targetting Ignores
+                    IgnoresMTank = false,
+                    IgnoresOTank = false,
+                    IgnoresTTank = false,
+                    IgnoresHealers = false,
+                    IgnoresMeleeDPS = false,
+                    IgnoresRangedDPS = false,
+                };
+                if (Attacks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
+                // Find the averaged _____
+                int numTargs = 0;
+                float speeds = 0;
+                foreach(Attack a in Attacks){
+                    retVal.DamagePerHit += a.DamagePerHit / Attacks.Count;
+                    numTargs += (int)a.MaxNumTargets;
+                    speeds += (int)a.AttackSpeed;
+                }
+                // Mark those into the retVal
+                retVal.MaxNumTargets = (int)((float)numTargs / (float)Attacks.Count);
+                retVal.AttackSpeed = (int)(speeds / (float)Attacks.Count);
+                // Double-check we aren't sending a bad one
+                if (retVal.AttackSpeed <= 0f)
+                {
+                    retVal.AttackSpeed = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
         // ==== Methods for Pulling Boss DPS ==========
         public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
             List<Attack> attacks = new List<Attack>();

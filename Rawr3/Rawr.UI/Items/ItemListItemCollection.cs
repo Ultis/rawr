@@ -86,7 +86,7 @@ namespace Rawr.UI
                 int itemId = (itemCalculation.ItemInstance == null ? itemCalculation.Item.Id : itemCalculation.ItemInstance.Id);
                 if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
                 if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
-                    itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
+                    itemCalculation.Equipped || (itemCalculation.ItemInstance != null && itemCalculation.ItemInstance.ForceDisplay))
                 {
                     yield return itemCalculation;
                 }

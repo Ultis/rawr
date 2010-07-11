@@ -25,13 +25,13 @@ namespace Rawr.UI
                 }
                 _BossOptions = value;
                 DataContext = _BossOptions;
-                CB_Level.SelectedIndex = _BossOptions.Level - Character.Level;
+                /*CB_Level.SelectedIndex = _BossOptions.Level - Character.Level;
                 for (int i=0; i < 4; i++) {
                     if(_BossOptions.Armor == StatConversion.NPC_ARMOR[i]) {
                         CB_Armor.SelectedIndex = i;
                         break;
                     }
-                }
+                }*/
                 _BossOptions.PropertyChanged += new PropertyChangedEventHandler(bossOpts_PropertyChanged);
                 bossOpts_PropertyChanged(this, null);
             }
@@ -66,8 +66,8 @@ namespace Rawr.UI
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // Target Armor/Level
-            if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
-            if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
+            //if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
+            //if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
             // Fix the enables
             CB_InBackPerc.IsEnabled = (bool)CK_InBack.IsChecked;
             CB_MultiTargsMax.IsEnabled = (bool)CK_MultiTargs.IsChecked;
@@ -282,14 +282,17 @@ namespace Rawr.UI
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            string addInfo = "No Additional Info";
             try {
                 if (!isLoading) {
+                    addInfo = "Not Loading";
                     if (CB_BossList.SelectedIndex != 0) { // "Custom"
+                        addInfo += "\r\nCB_BossList.SelectedIndex != 0";
                         isLoading = true;
                         // Get Values
                         BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.SelectedItem.ToString()); // "T7 : Naxxramas : 10 man : Patchwerk"
                         BossOptions.Level = boss.Level;
-                        BossOptions.Armor = (int)boss.Armor;
+                        BossOptions.Armor = boss.Armor;
                         BossOptions.BerserkTimer = boss.BerserkTimer;
                         BossOptions.InBack = ((BossOptions.InBackPerc_Melee = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                         BossOptions.MultiTargs = ((BossOptions.MultiTargsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
@@ -299,36 +302,26 @@ namespace Rawr.UI
                         BossOptions.Fears = boss.Fears;
                         BossOptions.Roots = boss.Roots;
                         BossOptions.Disarms = boss.Disarms;
+                        BossOptions.Attacks = boss.Attacks;
+                        addInfo += "\r\nBoss Info Set";
 
                         // Set Controls to those Values
-                        CB_Level.SelectedIndex = BossOptions.Level - Character.Level;
-                        int i = 0;
-                        while (i < 4) { if (StatConversion.NPC_ARMOR[i] == BossOptions.Armor) { break; } i++; }
-                        CB_Armor.SelectedIndex = i;
-
-                        //NUD_AoEFreq.IsEnabled = BossOptions.AoETargs;
-                        //NUD_AoEDMG.IsEnabled = BossOptions.AoETargs;
-
                         TB_BossInfo.Text = boss.GenInfoString();
+
                         // Save the new names
                         if (!firstload) {
+                            addInfo += "\r\n!firstlost";
                             BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedItem;
                             BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
                             BossOptions.BossName = CB_BossList.SelectedItem.ToString();
                         }
                         isLoading = false;
                     } else {
+                        addInfo += "\r\nCB_BossList.SelectedIndex == 0";
                         isLoading = true;
                         BossHandler boss = new BossHandler();
                         //
-                        boss.Name              = "Custom";
-                        boss.Level             = (int)CB_Level.SelectedItem + 80;
-                        boss.Armor             = (int)CB_Armor.SelectedItem;
-                        boss.BerserkTimer      = (int)NUD_Duration.Value;
-                        boss.InBackPerc_Melee  = ((float)CB_InBackPerc.Value / 100f);
-                        boss.MaxNumTargets     = (float)CB_MultiTargsMax.Value;
-                        boss.MultiTargsPerc    = ((float)CB_MultiTargsPerc.Value / 100f);
-                        
+                        boss.Name = "Custom";
                         BossOptions.BossName = boss.Name;
                         //
                         TB_BossInfo.Text = boss.GenInfoString();
@@ -339,7 +332,7 @@ namespace Rawr.UI
             } catch (Exception ex) {
                 new ErrorBox("Error in setting BossPicker Character settings from Boss",
                     ex.Message, "CB_BossList_SelectedIndexChanged()",
-                    "No Additional Info", ex.StackTrace);
+                    addInfo, ex.StackTrace);
             }
             isLoading = false;
         }
@@ -376,10 +369,6 @@ namespace Rawr.UI
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
-        private void BT_Attacks_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         private void DG_BossSitChanges_Closed(object sender, EventArgs e)
         {
             if ((bool)Box.DialogResult)
@@ -411,6 +400,23 @@ namespace Rawr.UI
                         break;
                     }
                 }
+                //CB_BossList_SelectedIndexChanged(null, null);
+            }
+        }
+
+        // Offensive
+        DG_BossAttacks BoxA = null;
+        private void BT_Attacks_Click(object sender, RoutedEventArgs e)
+        {
+            BoxA = new DG_BossAttacks(Character.BossOptions.Attacks);
+            BoxA.Closed += new EventHandler(DG_BossAttacks_Closed);
+            BoxA.Show();
+        }
+        private void DG_BossAttacks_Closed(object sender, EventArgs e)
+        {
+            if ((bool)BoxA.DialogResult)
+            {
+                Character.BossOptions.Attacks = BoxA.TheList;
                 //CB_BossList_SelectedIndexChanged(null, null);
             }
         }
