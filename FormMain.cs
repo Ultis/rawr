@@ -2143,12 +2143,10 @@ Please remember that it's still a beta, though, so lots of things are likely to 
         private void reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), comboBoxRegion.SelectedItem.ToString());
-            if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
-            {
-                MessageBox.Show("A valid character has not been loaded, unable to reload.", "No Character Loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
+            if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm)) {
+                MessageBox.Show("A valid character has not been loaded, unable to reload.",
+                    "No Character Loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } else {
                 OpenFileDialog dialog = new OpenFileDialog();
                 dialog.DefaultExt = ".lua";
                 dialog.Filter = "Character Profiler Saved Variables Files | *.lua";

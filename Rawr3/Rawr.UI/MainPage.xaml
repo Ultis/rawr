@@ -200,20 +200,60 @@
     		<controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch">
     			<controls:TabItem x:Name="StatsTab" Header="Stats">
     				<Grid>
-    					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Text="Name:" TextWrapping="Wrap"/>
-    					<TextBlock Margin="146,0,124,0" VerticalAlignment="Top" Text="Realm:" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
-    					<TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" Text="Region:" TextWrapping="Wrap" Margin="0,0,11,0"/>
-    					<TextBox x:Name="NameText" HorizontalAlignment="Left" Margin="0,16,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Width="142" Text="{Binding Mode=TwoWay, Path=Name}"/>
-    					<TextBox x:Name="RealmText" Margin="146,16,58,0" VerticalAlignment="Top" Text="{Binding Mode=TwoWay, Path=Realm}" TextWrapping="Wrap" RenderTransformOrigin="1.13,0.417"/>
-    					<ComboBox x:Name="RegionCombo" HorizontalAlignment="Right" Margin="0,16,0,0" VerticalAlignment="Top" Width="54" Height="24" IsDropDownOpen="False" SelectedIndex="{Binding Mode=TwoWay, Path=RegionIndex}">
-    						<ComboBoxItem Content="US"/>
-    						<ComboBoxItem Content="EU"/>
-    						<ComboBoxItem Content="KR"/>
-    						<ComboBoxItem Content="TW"/>
-    						<ComboBoxItem Content="CN"/>
-    					</ComboBox>
-    					<TextBlock x:Name="LB_Race" Margin="0,92,0,0" VerticalAlignment="Top" Text="Race:" TextWrapping="Wrap" HorizontalAlignment="Left"/>
-    					<ComboBox x:Name="RaceCombo" Margin="0,112,0,0" VerticalAlignment="Top" Height="24" SelectedIndex="{Binding Mode=TwoWay, Path=RaceIndex}" HorizontalAlignment="Left" Width="150">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						
+						<Grid Grid.ColumnSpan="2">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							
+	    					<TextBlock Text="Name:" TextWrapping="Wrap" Margin="1,0,2,0"/>
+	    					<TextBlock Margin="2,0" Text="Realm:" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.Column="1"/>
+	    					<TextBlock Text="Region:" TextWrapping="Wrap" Margin="2,0,1,0" Grid.Column="2"/>
+	    					<TextBox x:Name="NameText" Margin="1,0,2,0" TextWrapping="Wrap" Text="{Binding Mode=TwoWay, Path=Name}" Grid.Row="1"/>
+	    					<TextBox x:Name="RealmText" Margin="2,0" Text="{Binding Mode=TwoWay, Path=Realm}" TextWrapping="Wrap" RenderTransformOrigin="1.13,0.417" Grid.Column="1" Grid.Row="1"/>
+	    					<ComboBox x:Name="RegionCombo" Margin="2,0,1,0" Width="54" Height="22" IsDropDownOpen="False" SelectedIndex="{Binding Mode=TwoWay, Path=RegionIndex}" Grid.Column="2" Grid.Row="1">
+	    						<ComboBoxItem Content="US"/>
+	    						<ComboBoxItem Content="EU"/>
+	    						<ComboBoxItem Content="KR"/>
+	    						<ComboBoxItem Content="TW"/>
+	    						<ComboBoxItem Content="CN"/>
+	    					</ComboBox>
+						</Grid>
+						<TextBlock x:Name="LB_Class" HorizontalAlignment="Left" Margin="111,44,0,0" VerticalAlignment="Top" Text="Class:" TextWrapping="Wrap" Visibility="Collapsed" Grid.Row="1"/>
+						<ComboBox x:Name="ClassCombo" Margin="111,60,108,0" VerticalAlignment="Top" Height="24" SelectionChanged="ClassCombo_SelectionChanged" Visibility="Collapsed" Grid.Row="2">
+							<ComboBoxItem Visibility="Collapsed"/>
+							<ComboBoxItem Content="Warrior"/>
+							<ComboBoxItem Content="Paladin"/>
+							<ComboBoxItem Content="Hunter"/>
+							<ComboBoxItem Content="Rogue"/>
+							<ComboBoxItem Content="Priest"/>
+							<ComboBoxItem Content="Death Knight"/>
+							<ComboBoxItem Content="Shaman"/>
+							<ComboBoxItem Content="Mage"/>
+							<ComboBoxItem Content="Warlock"/>
+							<ComboBoxItem Visibility="Collapsed"/>
+							<ComboBoxItem Content="Druid"/>		
+						</ComboBox>
+    					<TextBlock x:Name="LB_Race" Margin="1,2,2,2" Text="Race:" TextWrapping="Wrap" Grid.Row="3"/>
+    					<ComboBox x:Name="RaceCombo" Margin="1,0,2,2" SelectedIndex="{Binding Mode=TwoWay, Path=RaceIndex}" Grid.Row="4" Height="22">
     						<ComboBoxItem Visibility="Collapsed"/>
     						<ComboBoxItem Content="Human"/>
     						<ComboBoxItem Content="Orc"/>
@@ -227,27 +267,12 @@
     						<ComboBoxItem Content="Blood Elf"/>
     						<ComboBoxItem Content="Draenei"/>
     					</ComboBox>
-    					<TextBlock x:Name="LB_Class" HorizontalAlignment="Left" Margin="111,44,0,0" VerticalAlignment="Top" Text="Class:" TextWrapping="Wrap" Visibility="Collapsed"/>
-    					<ComboBox x:Name="ClassCombo" Margin="111,60,108,0" VerticalAlignment="Top" Height="24" SelectionChanged="ClassCombo_SelectionChanged" Visibility="Collapsed">
-    						<ComboBoxItem Visibility="Collapsed"/>
-    						<ComboBoxItem Content="Warrior"/>
-    						<ComboBoxItem Content="Paladin"/>
-    						<ComboBoxItem Content="Hunter"/>
-    						<ComboBoxItem Content="Rogue"/>
-    						<ComboBoxItem Content="Priest"/>
-    						<ComboBoxItem Content="Death Knight"/>
-    						<ComboBoxItem Content="Shaman"/>
-    						<ComboBoxItem Content="Mage"/>
-    						<ComboBoxItem Content="Warlock"/>
-    						<ComboBoxItem Visibility="Collapsed"/>
-    						<ComboBoxItem Content="Druid"/>		
-    					</ComboBox>
     					<TextBlock x:Name="LB_Model" HorizontalAlignment="Right" Margin="0,44,61,0" VerticalAlignment="Top" Text="Model:" TextWrapping="Wrap" Width="43" Visibility="Collapsed"/>
     					<ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" HorizontalAlignment="Right" Margin="0,60,0,0" VerticalAlignment="Top" Width="104" d:LayoutOverrides="HorizontalAlignment" Height="24" Visibility="Collapsed"/>
-    					<TextBlock x:Name="LB_ClassModel" HorizontalAlignment="Left" Margin="0,44,0,0" VerticalAlignment="Top" Text="Class/Model:" TextWrapping="Wrap" d:LayoutOverrides="HorizontalAlignment"/>
-    					<local:ClassModelPicker x:Name="CMP_ClassModel" Margin="-4,64,115,0" Height="321" VerticalAlignment="Top" />
-    					<TextBlock x:Name="LB_Prof1" HorizontalAlignment="Left" Text="First Profession:" TextWrapping="Wrap" Margin="157,44,0,0" VerticalAlignment="Top" Width="114"/>
-    					<ComboBox x:Name="CB_Prof1" Margin="156,64,1,0" VerticalAlignment="Top" SelectedIndex="{Binding Mode=TwoWay, Path=PriProfIndex}" d:LayoutOverrides="HorizontalAlignment" Height="24">
+    					<TextBlock x:Name="LB_ClassModel" Margin="1,2,2,2" Text="Class/Model:" TextWrapping="Wrap" Grid.Row="1"/>
+    					<local:ClassModelPicker x:Name="CMP_ClassModel" Margin="1,0,2,2" Grid.Row="2" />
+    					<TextBlock x:Name="LB_Prof1" Text="First Profession:" TextWrapping="Wrap" Margin="2,2,1,2" Grid.Row="1" Grid.Column="1"/>
+    					<ComboBox x:Name="CB_Prof1" Margin="2,0,1,2" SelectedIndex="{Binding Mode=TwoWay, Path=PriProfIndex}" d:LayoutOverrides="HorizontalAlignment" Grid.Row="2" Grid.Column="1">
     						<ComboBoxItem x:Name="Prof1_None" Content="None"/>
     						<ComboBoxItem x:Name="Prof1_AL" Content="Alchemy"/>
     						<ComboBoxItem x:Name="Prof1_BS" Content="Blacksmithing"/>
@@ -261,8 +286,8 @@
     						<ComboBoxItem x:Name="Prof1_SK" Content="Skinning"/>
     						<ComboBoxItem x:Name="Prof1_TL" Content="Tailoring"/>
     					</ComboBox>
-    					<TextBlock x:Name="LB_Prof2" VerticalAlignment="Top" Text="Second Profession:" TextWrapping="Wrap" Margin="157,92,27,0"/>
-    					<ComboBox x:Name="CB_Prof2" Margin="156,112,1,0" VerticalAlignment="Top" SelectedIndex="{Binding Mode=TwoWay, Path=SecProfIndex}" Height="24">
+    					<TextBlock x:Name="LB_Prof2" Text="Second Profession:" TextWrapping="Wrap" Margin="2,2,1,2" Grid.Row="3" Grid.Column="1"/>
+    					<ComboBox x:Name="CB_Prof2" Margin="2,0,1,2" SelectedIndex="{Binding Mode=TwoWay, Path=SecProfIndex}" Grid.Row="4" Grid.Column="1" Height="22">
     						<ComboBoxItem x:Name="Prof2_None" Content="None"/>
     						<ComboBoxItem x:Name="Prof2_AL" Content="Alchemy"/>
     						<ComboBoxItem x:Name="Prof2_BS" Content="Blacksmithing"/>
@@ -276,7 +301,7 @@
     						<ComboBoxItem x:Name="Prof2_SK" Content="Skinning"/>
     						<ComboBoxItem x:Name="Prof2_TL" Content="Tailoring"/>
     					</ComboBox>
-    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="0,140,0,0"/>
+    					<local:CalculationDisplay x:Name="CalculationDisplay" Margin="1,4,1,0" Grid.Row="5" Grid.ColumnSpan="2"/>
     				</Grid>
     			</controls:TabItem>
     			<controls:TabItem x:Name="TalentTreeTab" Header="Talents">

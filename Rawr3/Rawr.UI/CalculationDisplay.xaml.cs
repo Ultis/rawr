@@ -18,6 +18,7 @@ namespace Rawr.UI
 		{
 			InitializeComponent();
             BuildControls();
+            TheScrollViewer.SetIsMouseWheelScrollingEnabled(true);
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 

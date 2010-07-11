@@ -62,15 +62,15 @@
 			</Setter>
 		</Style>
 	</UserControl.Resources>
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-        <ToggleButton x:Name="Toggle" HorizontalAlignment="Left" Margin="4,0,4,0" IsChecked="{Binding IsOpen, ElementName=PopupClassModelPicker, Mode=TwoWay}" Height="24" Width="150">
+    <StackPanel Orientation="Vertical">
+        <ToggleButton x:Name="Toggle" Margin="0" IsChecked="{Binding IsOpen, ElementName=PopupClassModelPicker, Mode=TwoWay}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="TextBlockClassModelButtonPrimary" Margin="3,0,3,0" Text="Druid"/>
                 <Path Fill="#000066" Margin="3,0,3,0" Height="7" Width="7" VerticalAlignment="Center" Data="M0,0 7,3.5 0,7 z"/>
                 <TextBlock x:Name="TextBlockClassModelButtonSecondary" Margin="3,0,3,0" Text="Bear"/>
             </StackPanel>
         </ToggleButton>
-        <Popup x:Name="PopupClassModelPicker" Margin="4">
+        <Popup x:Name="PopupClassModelPicker" Margin="4,0">
             <Grid Background="#00000000" Margin="-10000,-10000,-10000,-10000" IsHitTestVisible="True" MouseLeftButtonDown="Background_MouseLeftButtonDown">
 	            <Border BorderThickness="1" Width="350" Height="270" Margin="10000,10000,10000,10000" CornerRadius="0,0,4,4" BorderBrush="#CC000066" Background="#F3F3F3FF">
 	                <Grid x:Name="LayoutRoot">

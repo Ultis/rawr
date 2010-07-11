@@ -22,7 +22,6 @@ namespace Rawr.UI
 {
     public partial class MainPage : UserControl
     {
-
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
 

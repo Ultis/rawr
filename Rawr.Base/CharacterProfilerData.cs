@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System;
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
 #if !RAWR3 && !SILVERLIGHT
 using System.Windows.Forms;
 #endif
+using System.IO;
+using System.Reflection;
 
 namespace Rawr
 {
-	/*
-	 * CharacterProfilerCharacter
+	/* CharacterProfilerCharacter
 	 * @author Charinna
 	 * This class is a container of Character classes that imports its data from a saved variables
-	 * file created by teh CharacterProfiler mod.
+	 * file created by the CharacterProfiler mod.
 	 * It automatically populates the character with the currently equipped gear as
 	 * well as make available for optimization all items in the character's inventory
 	 * with their current gemming & enchants.
@@ -223,7 +222,7 @@ namespace Rawr
 			}
 		}
 
-		/**
+		/*
 		 * This function is used to help populate the optimizer list.
 		 * Rather than add every item in every bag slot, this filter is used
 		 * to try to limit the items only to equippable ones.
@@ -587,15 +586,9 @@ namespace Rawr
 		List<CharacterProfilerRealm> m_realms = new List<CharacterProfilerRealm>();
 		List<CharacterProfilerFailedImport> m_errors = new List<CharacterProfilerFailedImport>();
 
-		public List<CharacterProfilerRealm> Realms
-		{
-			get { return m_realms; }
-		}
+		public List<CharacterProfilerRealm> Realms { get { return m_realms; } }
 
-		public List<CharacterProfilerFailedImport> Errors
-		{
-			get { return m_errors; }
-		}
+		public List<CharacterProfilerFailedImport> Errors { get { return m_errors; } }
 
 		public CharacterProfilerData(string sFileName)
 		{
@@ -621,23 +614,17 @@ namespace Rawr
 
 				foreach (string sCharacter in characters.Keys)
 				{
-					try
-					{
+					try {
 						SavedVariablesDictionary characterInfo = (SavedVariablesDictionary)characters[sCharacter];
 						CharacterProfilerCharacter character = new CharacterProfilerCharacter(sCharacter, sRealm, characterInfo);
 						realm.Characters.Add(character);
 						bHaveCharacters = true;
-					}
-					catch (Exception error)
-					{
+					} catch (Exception error) {
 						m_errors.Add(new CharacterProfilerFailedImport(sRealm, sCharacter, error.ToString()));
 					}
 				}
 
-				if (bHaveCharacters)
-				{
-					m_realms.Add(realm);
-				}
+				if (bHaveCharacters) { m_realms.Add(realm); }
 			}
 		}
 	}
