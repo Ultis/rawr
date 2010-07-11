@@ -216,26 +216,13 @@ namespace Rawr.UI
 
             ItemName.Text = actualItem != null ? actualItem.Name : "";
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem != null ? actualItem.Quality : ItemQuality.Common));
-            /*if (actualItem.ItemLevel > 0) {
-                string s = "";
-                if (Properties.GeneralSettings.Default.DisplayItemIds && Properties.GeneralSettings.Default.DisplayItemType) {
-                    s = string.Format("[{0}] ({1}) [{2}]", actualItem.ItemLevel, actualItem.Id, actualItem.SlotString);
-                } else if (Properties.GeneralSettings.Default.DisplayItemType) {
-                    s = string.Format("[{0}] [{1}]", actualItem.ItemLevel, actualItem.SlotString);
-                } else if (Properties.GeneralSettings.Default.DisplayItemIds) {
-                    s = string.Format("[{0}] ({1})", actualItem.ItemLevel, actualItem.Id);
-                } else {
-                    s = string.Format("[{0}]", actualItem.ItemLevel);
-                }
-                ItemLevel.Text = s;
-            } else { ItemLevel.Text = ""; }*/
 
 			#region Displaying Item Types
             //List<string> statsList = new List<string>();
  
 			var liTypes = new List<string>();
 
-            if (actualItem != null)
+            if (actualItem != null && actualItem.Type != ItemType.None)
             {
                 //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
                 if (actualItem.ItemLevel > 0)
