@@ -69,12 +69,12 @@ namespace Rawr.UI
                 {
                     // Basics
                     Name = "Dynamic",
-                    DamageType = (ItemDamageType)CB_DmgType.SelectedItem,
+                    DamageType = (ItemDamageType)CB_DmgType.SelectedIndex,
                     DamagePerHit = (float)NUD_DmgPerHit.Value,
                     DamageIsPerc = (bool)CK_DamageIsPerc.IsChecked,
                     MaxNumTargets = (float)NUD_MaxNumTargs.Value,
                     AttackSpeed = (float)NUD_AtkSpeed.Value,
-                    AttackType = (ATTACK_TYPES)CB_AtkType.SelectedItem,
+                    AttackType = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
                     UseParryHaste = (bool)CK_UseParryHaste.IsChecked,
                     Interruptable = (bool)CK_Interruptable.IsChecked,
                     // Player Avoidances

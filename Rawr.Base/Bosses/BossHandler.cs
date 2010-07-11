@@ -16,7 +16,7 @@ namespace Rawr {
     /// Enumerator for attack types, this mostly is for raid members that aren't
     /// being directly attacked to know when AoE damage is coming from the boss
     /// </summary>
-    public enum ATTACK_TYPES { AT_MELEE, AT_RANGED, AT_AOE, }
+    public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, }
     /// <summary>A single Attack of various types</summary>
     public partial class Attack {
         /// <summary>The Name of the Attack</summary>
@@ -70,11 +70,12 @@ namespace Rawr {
         public override string ToString()
         {
             if (AttackSpeed <= 0) { return "None"; }
-            return string.Format("Spd: {0}sec D: {1}{2} #T: {3} {4}",
+            return string.Format("Spd: {0}sec D: {1}{2} #T: {3} {4}{5}",
                 AttackSpeed,
                 DamagePerHit, DamageIsPerc ? "%" : "",
                 MaxNumTargets,
-                UseParryHaste ? ": PH" : "");
+                UseParryHaste ? ": PH" : "",
+                Name != "Dynamic" ? ": " + Name : "");
         }
     }
     public partial class DoT : Attack {
@@ -789,12 +790,14 @@ namespace Rawr {
                 // Find the averaged _____
                 int numTargs = 0;
                 float speeds = 0;
+                float dph = 0;
                 foreach(Attack a in Attacks){
-                    retVal.DamagePerHit += a.DamagePerHit / Attacks.Count;
+                    dph += a.DamagePerHit;
                     numTargs += (int)a.MaxNumTargets;
                     speeds += (int)a.AttackSpeed;
                 }
                 // Mark those into the retVal
+                retVal.DamagePerHit = dph / (float)Attacks.Count;
                 retVal.MaxNumTargets = (int)((float)numTargs / (float)Attacks.Count);
                 retVal.AttackSpeed = (int)(speeds / (float)Attacks.Count);
                 // Double-check we aren't sending a bad one

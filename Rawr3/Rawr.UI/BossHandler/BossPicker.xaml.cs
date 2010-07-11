@@ -65,29 +65,36 @@ namespace Rawr.UI
 
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // Target Armor/Level
-            //if (!isLoading && CB_Level.SelectedIndex == -1) { CB_Level.SelectedIndex = 0; }
-            //if (!isLoading && CB_Armor.SelectedIndex == -1) { CB_Armor.SelectedIndex = 0; }
-            // Fix the enables
-            CB_InBackPerc.IsEnabled = (bool)CK_InBack.IsChecked;
-            CB_MultiTargsMax.IsEnabled = (bool)CK_MultiTargs.IsChecked;
-            CB_MultiTargsPerc.IsEnabled = (bool)CK_MultiTargs.IsChecked;
-            BT_Moves.IsEnabled = (bool)CK_MovingTargs.IsChecked;
-            BT_Stuns.IsEnabled = (bool)CK_StunningTargs.IsChecked;
-            BT_Fears.IsEnabled = (bool)CK_FearingTargs.IsChecked;
-            BT_Roots.IsEnabled = (bool)CK_RootingTargs.IsChecked;
-            BT_Disarms.IsEnabled = (bool)CK_DisarmTargs.IsChecked;
-            BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;
+            if (isLoading) { return; }
+            // Basics
+            CB_Level.SelectedItem = BossOptions.Level;
+            CB_Armor.SelectedItem = BossOptions.Armor;
+            NUD_Duration.Value = BossOptions.BerserkTimer;
+            NUD_TargHP.Value = BossOptions.Health;
+            NUD_Under35Perc.Value = BossOptions.Under35Perc * 100;
+            NUD_Under20Perc.Value = BossOptions.Under20Perc * 100;
+            CB_InBackPerc.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
+            CB_InBackPerc.Value = BossOptions.InBackPerc_Melee;
+            // Offensive
+            CB_MultiTargsMax.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
+            CB_MultiTargsPerc.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
+            CB_MultiTargsMax.Value = BossOptions.MaxNumTargets;
+            CB_MultiTargsPerc.Value = BossOptions.MultiTargsPerc * 100;
+            BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
+            BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
+            // The Impedence Checks
+            BT_Moves.IsEnabled = (bool)(CK_MovingTargs.IsChecked = BossOptions.MovingTargs);
+            BT_Stuns.IsEnabled = (bool)(CK_StunningTargs.IsChecked = BossOptions.StunningTargs);
+            BT_Fears.IsEnabled = (bool)(CK_FearingTargs.IsChecked = BossOptions.FearingTargs);
+            BT_Roots.IsEnabled = (bool)(CK_RootingTargs.IsChecked = BossOptions.RootingTargs);
+            BT_Disarms.IsEnabled = (bool)(CK_DisarmTargs.IsChecked = BossOptions.DisarmingTargs);
             // The Impedence Buttons
-            //if (BossOptions != null) {
-                //BT_Stuns.Content = (BossOptions.Stuns.Count == 0 ? "None" : BossOptions.DynamicCompiler_Stun.ToString());
-                //BT_Moves.Content = (BossOptions.Moves.Count == 0 ? "None" : BossOptions.DynamicCompiler_Move.ToString());
-                //BT_Fears.Content = (BossOptions.Fears.Count == 0 ? "None" : BossOptions.DynamicCompiler_Fear.ToString());
-                //BT_Roots.Content = (BossOptions.Roots.Count == 0 ? "None" : BossOptions.DynamicCompiler_Root.ToString());
-                //BT_Attacks.Content = BossOptions.DynamicCompiler_Stun.ToString();
-            //}
+            BT_Stuns.Content = BossOptions.DynamicCompiler_Stun.ToString();
+            BT_Moves.Content = BossOptions.DynamicCompiler_Move.ToString();
+            BT_Fears.Content = BossOptions.DynamicCompiler_Fear.ToString();
+            BT_Roots.Content = BossOptions.DynamicCompiler_Root.ToString();
             //
-            CB_BossList.SelectedIndex = 0; // Sets it to Custom
+            if (CB_BossList.SelectedIndex == -1) { CB_BossList.SelectedIndex = 0; } // Sets it to Custom
             //
             Character.OnCalculationsInvalidated();
         }
@@ -290,19 +297,20 @@ namespace Rawr.UI
                         addInfo += "\r\nCB_BossList.SelectedIndex != 0";
                         isLoading = true;
                         // Get Values
-                        BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.SelectedItem.ToString()); // "T7 : Naxxramas : 10 man : Patchwerk"
+                        BossHandler boss = bosslist.GetBossFromBetterName(CB_BossList.SelectedItem.ToString()).Clone(); // "T7 : Naxxramas : 10 man : Patchwerk"
+                        //BossOptions = boss.Clone();
                         BossOptions.Level = boss.Level;
                         BossOptions.Armor = boss.Armor;
                         BossOptions.BerserkTimer = boss.BerserkTimer;
                         BossOptions.InBack = ((BossOptions.InBackPerc_Melee = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                         BossOptions.MultiTargs = ((BossOptions.MultiTargsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
-                        BossOptions.MaxNumTargets = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
-                        BossOptions.Stuns = boss.Stuns;
-                        BossOptions.Moves = boss.Moves;
-                        BossOptions.Fears = boss.Fears;
-                        BossOptions.Roots = boss.Roots;
-                        BossOptions.Disarms = boss.Disarms;
-                        BossOptions.Attacks = boss.Attacks;
+                        BossOptions.MaxNumTargets = Math.Min(25, boss.MaxNumTargets);
+                        BossOptions.Stuns = boss.Stuns; BossOptions.StunningTargs = BossOptions.Stuns.Count > 0;
+                        BossOptions.Moves = boss.Moves; BossOptions.MovingTargs = BossOptions.Moves.Count > 0;
+                        BossOptions.Fears = boss.Fears; BossOptions.FearingTargs = BossOptions.Fears.Count > 0;
+                        BossOptions.Roots = boss.Roots; BossOptions.RootingTargs = BossOptions.Roots.Count > 0;
+                        BossOptions.Disarms = boss.Disarms; BossOptions.DisarmingTargs = BossOptions.Disarms.Count > 0;
+                        BossOptions.Attacks = boss.Attacks; BossOptions.DamagingTargs = BossOptions.Attacks.Count > 0;
                         addInfo += "\r\nBoss Info Set";
 
                         // Set Controls to those Values
@@ -327,7 +335,6 @@ namespace Rawr.UI
                         TB_BossInfo.Text = boss.GenInfoString();
                         isLoading = false;
                     }
-                    Character.OnCalculationsInvalidated();
                 }
             } catch (Exception ex) {
                 new ErrorBox("Error in setting BossPicker Character settings from Boss",
@@ -335,6 +342,7 @@ namespace Rawr.UI
                     addInfo, ex.StackTrace);
             }
             isLoading = false;
+            bossOpts_PropertyChanged(null, null);
         }
 
         // Impedences
