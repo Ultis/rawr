@@ -11,24 +11,24 @@
 
 	<Grid x:Name="LayoutRoot">
 		<controls:TabControl Margin="0,24,0,0">
-			<controls:TabItem x:Name="TreeTab1" Header="Tree1">
+			<controls:TabItem x:Name="TreeTab1" Header="Tree1" Height="24" VerticalAlignment="Top">
 				<Grid>
-					<ScrollViewer x:Name="Scroll1" BorderThickness="0,0,0,0">
-						<local:TalentTree x:Name="Tree1" d:LayoutOverrides="Height" VerticalAlignment="Top" HorizontalAlignment="Center" Width="290" Margin="0,0,0,0"/>
+					<ScrollViewer x:Name="Scroll1" BorderThickness="0,0,0,0" Padding="0">
+						<local:TalentTree x:Name="Tree1" d:LayoutOverrides="Height" Margin="0,0,0,0" VerticalContentAlignment="Top" VerticalAlignment="Top"/>
 					</ScrollViewer>
 				</Grid>
 			</controls:TabItem>
 			<controls:TabItem x:Name="TreeTab2" Header="Tree2">
 				<Grid>
-					<ScrollViewer x:Name="Scroll2" BorderThickness="0,0,0,0">
-						<local:TalentTree x:Name="Tree2" d:LayoutOverrides="Height" VerticalAlignment="Top" HorizontalAlignment="Center" Width="290"/>
+					<ScrollViewer x:Name="Scroll2" BorderThickness="0,0,0,0" Padding="0">
+						<local:TalentTree x:Name="Tree2" d:LayoutOverrides="Height" VerticalAlignment="Top" VerticalContentAlignment="Top"/>
 					</ScrollViewer>
 				</Grid>
 			</controls:TabItem>
 			<controls:TabItem x:Name="TreeTab3" Header="Tree3">
 				<Grid>
-					<ScrollViewer x:Name="Scroll3" BorderThickness="0,0,0,0">
-						<local:TalentTree x:Name="Tree3" d:LayoutOverrides="Height" VerticalAlignment="Top" HorizontalAlignment="Center" Width="290"/>
+					<ScrollViewer x:Name="Scroll3" BorderThickness="0,0,0,0" Padding="0">
+						<local:TalentTree x:Name="Tree3" d:LayoutOverrides="Height" VerticalAlignment="Top" VerticalContentAlignment="Top"/>
 					</ScrollViewer>
 				</Grid>
 			</controls:TabItem>

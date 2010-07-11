@@ -78,6 +78,14 @@ namespace Rawr.UI
             BT_Roots.IsEnabled = (bool)CK_RootingTargs.IsChecked;
             BT_Disarms.IsEnabled = (bool)CK_DisarmTargs.IsChecked;
             BT_Attacks.IsEnabled = (bool)CK_Attacks.IsChecked;
+            // The Impedence Buttons
+            //if (BossOptions != null) {
+                //BT_Stuns.Content = (BossOptions.Stuns.Count == 0 ? "None" : BossOptions.DynamicCompiler_Stun.ToString());
+                //BT_Moves.Content = (BossOptions.Moves.Count == 0 ? "None" : BossOptions.DynamicCompiler_Move.ToString());
+                //BT_Fears.Content = (BossOptions.Fears.Count == 0 ? "None" : BossOptions.DynamicCompiler_Fear.ToString());
+                //BT_Roots.Content = (BossOptions.Roots.Count == 0 ? "None" : BossOptions.DynamicCompiler_Root.ToString());
+                //BT_Attacks.Content = BossOptions.DynamicCompiler_Stun.ToString();
+            //}
             //
             CB_BossList.SelectedIndex = 0; // Sets it to Custom
             //
@@ -114,6 +122,16 @@ namespace Rawr.UI
 
                 if (CB_BossList.Items.Count > 0) { CB_BossList.Items.Clear(); }
                 CB_BossList.Items.Add("Custom");
+
+                // The Impedence Buttons
+                //if (BossOptions != null) {
+                    //BT_Stuns.Content = BossOptions.DynamicCompiler_Stun.ToString();
+                    //BT_Moves.Content = BossOptions.DynamicCompiler_Move.ToString();
+                    //BT_Fears.Content = BossOptions.DynamicCompiler_Fear.ToString();
+                    //BT_Roots.Content = BossOptions.DynamicCompiler_Root.ToString();
+                    //BT_Attacks.Content = BossOptions.DynamicCompiler_Stun.ToString();
+                //}
+
                 foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
             } catch (Exception ex) {
                 new ErrorBox("Error in creating the BossTab Pane",
@@ -304,9 +322,8 @@ namespace Rawr.UI
                         BossHandler boss = new BossHandler();
                         //
                         boss.Name              = "Custom";
-                        boss.Level             = int.Parse((string)((ComboBoxItem)CB_Level.SelectedItem).Content) + 80;
-                        boss.Armor             = (float)int.Parse(((string)((ComboBoxItem)CB_Armor.SelectedItem).Content) == ""
-                                                       ? "10643" : (string)((ComboBoxItem)CB_Armor.SelectedItem).Content);
+                        boss.Level             = (int)CB_Level.SelectedItem + 80;
+                        boss.Armor             = (int)CB_Armor.SelectedItem;
                         boss.BerserkTimer      = (int)NUD_Duration.Value;
                         boss.InBackPerc_Melee  = ((float)CB_InBackPerc.Value / 100f);
                         boss.MaxNumTargets     = (float)CB_MultiTargsMax.Value;
@@ -325,16 +342,6 @@ namespace Rawr.UI
                     "No Additional Info", ex.StackTrace);
             }
             isLoading = false;
-        }
-
-        // Basics
-        private void CB_Level_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            BossOptions.Level = 80 + CB_Level.SelectedIndex;
-        }
-        private void CB_Armor_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            BossOptions.Armor = int.Parse((string)((ComboBoxItem)(CB_Armor.SelectedItem)).Content);
         }
 
         // Impedences
@@ -380,32 +387,27 @@ namespace Rawr.UI
                 switch (Box.Flag) {
                     case DG_BossSitChanges.Flags.Stun: {
                         Character.BossOptions.Stuns = Box.TheList;
-                        BT_Stuns.Content = Character.BossOptions.Stuns.Count == 0 ?
-                            "None" : Character.BossOptions.DynamicCompiler_Stun.ToString();
+                        //BT_Stuns.Content = Character.BossOptions.Stuns.Count == 0 ? "None" : Character.BossOptions.DynamicCompiler_Stun.ToString();
                         break;
                     }
                     case DG_BossSitChanges.Flags.Move: {
                         Character.BossOptions.Moves = Box.TheList;
-                        BT_Moves.Content = Character.BossOptions.Moves.Count == 0 ?
-                            "None" : Character.BossOptions.DynamicCompiler_Move.ToString();
+                        //BT_Moves.Content = Character.BossOptions.Moves.Count == 0 ? "None" : Character.BossOptions.DynamicCompiler_Move.ToString();
                         break;
                     }
                     case DG_BossSitChanges.Flags.Fear: {
                         Character.BossOptions.Fears = Box.TheList;
-                        BT_Fears.Content = Character.BossOptions.Fears.Count == 0 ?
-                            "None" : Character.BossOptions.DynamicCompiler_Fear.ToString();
+                        //BT_Fears.Content = Character.BossOptions.Fears.Count == 0 ? "None" : Character.BossOptions.DynamicCompiler_Fear.ToString();
                         break;
                     }
                     case DG_BossSitChanges.Flags.Root: {
                         Character.BossOptions.Roots = Box.TheList;
-                        BT_Roots.Content = Character.BossOptions.Roots.Count == 0 ?
-                            "None" : Character.BossOptions.DynamicCompiler_Root.ToString();
+                        //BT_Roots.Content = Character.BossOptions.Roots.Count == 0 ? "None" : Character.BossOptions.DynamicCompiler_Root.ToString();
                         break;
                     }
                     default: {
                         Character.BossOptions.Disarms = Box.TheList;
-                        BT_Disarms.Content = Character.BossOptions.Disarms.Count == 0 ?
-                            "None" : Character.BossOptions.DynamicCompiler_Disarm.ToString();
+                        //BT_Disarms.Content = Character.BossOptions.Disarms.Count == 0 ? "None" : Character.BossOptions.DynamicCompiler_Disarm.ToString();
                         break;
                     }
                 }

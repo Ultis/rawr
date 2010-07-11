@@ -5,8 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
 	xmlns:local="clr-namespace:Rawr.UI"
-	x:Class="Rawr.UI.TalentTree"
-	Height="731" Width="276">
+	x:Class="Rawr.UI.TalentTree" MinWidth="275" MinHeight="725">
 
 	<Grid x:Name="GridPanel" Height="Auto" Width="Auto">
 		<Grid.RowDefinitions>

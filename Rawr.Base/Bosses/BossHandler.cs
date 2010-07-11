@@ -109,6 +109,7 @@ namespace Rawr {
         #region Functions
         public override string ToString() {
             string retVal = "";
+            if (Frequency < 0) return "None";
             retVal += "F: " + Frequency.ToString("0") + "s";
             retVal += " D: " + Duration.ToString("0") + "ms";
             retVal += " C: " + Chance.ToString("0.0%");
@@ -137,8 +138,10 @@ namespace Rawr {
         #region Variables
         private bool INBACK = false;
         public bool InBack { get { return INBACK; } set { INBACK = value; OnPropertyChanged("InBack"); } }
+
         private bool MULTITARGS = false;
         public bool MultiTargs { get { return MULTITARGS; } set { MULTITARGS = value; OnPropertyChanged("MultiTargs"); } }
+
         private bool STUNNINGTARGS = false;
         public bool StunningTargs { get { return STUNNINGTARGS; } set { STUNNINGTARGS = value; OnPropertyChanged("StunningTargs"); } }
         private bool MOVINGTARGS = false;
@@ -173,22 +176,22 @@ namespace Rawr {
         public const int NormCharLevel = 80;
         public BossHandler() {
             // Basics
-            Name = "Generic";
-            Content = TierLevels.T7_0;
-            Instance = "None";
-            Version = Versions.V_10N;
-            Comment = "No comments have been written for this Boss.";
-            BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
-            SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
-            Level = (int)POSSIBLE_LEVELS.LVLP3;
-            Health = 1000000f;
-            Armor = (float)StatConversion.NPC_ARMOR[Level - NormCharLevel];
-            UseParryHaste = false;
+            //Name = "Generic";
+            //Content = TierLevels.T7_0;
+            //Instance = "None";
+            //Version = Versions.V_10N;
+            //Comment = "No comments have been written for this Boss.";
+            //BerserkTimer = 8 * 60; // The longest noted Enrage timer is 19 minutes, and seriously, if the fight is taking that long, then fail... just fail.
+            //SpeedKillTimer = 3 * 60; // Lots of Achievements run on this timer, so using it for generic
+            //Level = (int)POSSIBLE_LEVELS.LVLP3;
+            //Health = 1000000f;
+            //Armor = (int)StatConversion.NPC_ARMOR[Level - NormCharLevel];
+            //UseParryHaste = false;
             // Resistance
             ItemDamageType[] DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
             foreach (ItemDamageType t in DamageTypes) { Resistance(t, 0f); }
             // Attacks
-            Attacks = new List<Attack>();
+            //Attacks = new List<Attack>();
             // Situational Changes
             InBackPerc_Melee   = 0.00f; // Default to never in back
             InBackPerc_Ranged  = 0.00f; // Default to never in back
@@ -206,9 +209,9 @@ namespace Rawr {
             RootingTargsDur    = 5000f; // Default to root   durations of 5 seconds but since it's 0 roots over dur, this means nothing
             TimeBossIsInvuln   =    0f; // Default to never invulnerable (Invuln. like KT in Phase 1)
             // Fight Requirements
-            Max_Players = 10;
-            Min_Healers =  3;
-            Min_Tanks   =  2;
+            //Max_Players = 10;
+            //Min_Healers =  3;
+            //Min_Tanks   =  2;
         }
         public BossHandler Clone() {
             BossHandler clone = (BossHandler)this.MemberwiseClone();
@@ -257,17 +260,17 @@ namespace Rawr {
         };
         #endregion
         // Basics
-        private string NAME,INSTANCE,COMMENT;
-        private TierLevels CONTENT;
-        private Versions VERSION;
-        private float HEALTH,ARMOR;
-        private int SPEEDKILLTIMER,LEVEL;
-        private bool USERPARRYHASTE;
+        private string NAME = "Generic", INSTANCE = "None", COMMENT = "No comments have been written for this Boss.";
+        private TierLevels CONTENT = TierLevels.T7_0;
+        private Versions VERSION = Versions.V_10N;
+        private float HEALTH = 1000000f;
+        private int SPEEDKILLTIMER = 3 * 60, LEVEL = (int)POSSIBLE_LEVELS.LVLP3, ARMOR = (int)StatConversion.NPC_ARMOR[3];
+        private bool USERPARRYHASTE = false;
         // Resistance
         private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
         // Attacks
         private List<DoT> DOTS;// not actually used! Dont even try!
-        private List<Attack> ATTACKS;
+        private List<Attack> ATTACKS = new List<Attack>();
         // Situational Changes
         public List<Impedence> Stuns = new List<Impedence>();
         public List<Impedence> Fears = new List<Impedence>();
@@ -282,8 +285,9 @@ namespace Rawr {
                       FEARINGTARGS_FREQ, FEARINGTARGS_DUR, FEARINGTARGS_CHANCE,
                       ROOTINGTARGS_FREQ, ROOTINGTARGS_DUR, ROOTINGTARGS_CHANCE,
                       TIMEBOSSISINVULN;
+        private int BERSERKTIMER = 8*60;
         // Fight Requirements
-        private int MAX_PLAYERS, MIN_HEALERS, MIN_TANKS;
+        private int MAX_PLAYERS = 10, MIN_HEALERS = 3, MIN_TANKS = 2;
         #endregion
 
         #region Get/Set
@@ -299,8 +303,7 @@ namespace Rawr {
         public string Comment            { get { return COMMENT;            } set { COMMENT            = value; OnPropertyChanged("Comment"           ); } }
         public int    Level              { get { return LEVEL;              } set { LEVEL              = value; OnPropertyChanged("Level"             ); } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; OnPropertyChanged("Health"            ); } }
-        public float  Armor              { get { return ARMOR;              } set { ARMOR              = value; OnPropertyChanged("Armor"             ); } }
-        private int   BERSERKTIMER;
+        public int    Armor              { get { return ARMOR;              } set { ARMOR              = value; OnPropertyChanged("Armor"             ); } }
         public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; OnPropertyChanged("UseParryHaste"     ); } }
@@ -942,12 +945,11 @@ namespace Rawr {
         #endregion
 
         #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         public override string ToString()

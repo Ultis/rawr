@@ -1294,7 +1294,7 @@ CB_Version.Items.Add("All");
                         boss.Name               = "Custom";
                         boss.Health             = (float)NUD_TargHP.Value;
                         boss.Level              = int.Parse(CB_TargLvl.Text);
-                        boss.Armor              = (float)int.Parse(CB_TargArmor.Text == "" ? "10643" : CB_TargArmor.Text);
+                        boss.Armor              = int.Parse(CB_TargArmor.Text == "" ? "10643" : CB_TargArmor.Text);
                         boss.BerserkTimer       = (int)CB_Duration.Value;
                         boss.InBackPerc_Melee   = ((float)CB_InBackPerc.Value / 100f);
                         boss.MaxNumTargets      = (float)CB_MultiTargsMax.Value;
