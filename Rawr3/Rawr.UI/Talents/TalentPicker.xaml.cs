@@ -50,6 +50,10 @@ namespace Rawr.UI
             Tree2.Tree = 1;
             Tree3.Tree = 2;
 
+            Scroll1.SetIsMouseWheelScrollingEnabled(true);
+            Scroll2.SetIsMouseWheelScrollingEnabled(true);
+            Scroll3.SetIsMouseWheelScrollingEnabled(true);
+
             Tree1.TalentsChanged += new EventHandler(TalentsChanged);
             Tree2.TalentsChanged += new EventHandler(TalentsChanged);
             Tree3.TalentsChanged += new EventHandler(TalentsChanged);

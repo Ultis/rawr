@@ -65,6 +65,7 @@ namespace Rawr.UI
 		{
 			// Required to initialize variables
 			InitializeComponent();
+            TheScroll.SetIsMouseWheelScrollingEnabled(true);
 		}
 	}
 }

@@ -43,7 +43,7 @@
 				</ComboBox>
 			</Grid>
 		</local:GroupBox>
-		<ScrollViewer Margin="2" Grid.Row="3" VerticalContentAlignment="Top" HorizontalContentAlignment="Left">
+		<ScrollViewer x:Name="TheScroll" Margin="2" Grid.Row="3" VerticalContentAlignment="Top" HorizontalContentAlignment="Left">
 			<Grid ScrollViewer.VerticalScrollBarVisibility="Auto">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
@@ -116,6 +116,6 @@
 				<Button x:Name="BT_Attacks" FontSize="7" Margin="0,2" Content="F: 2.5sec D: 80000 C: 100% : PH" Grid.Column="1" Grid.Row="13" Grid.ColumnSpan="4" Height="20" VerticalAlignment="Center" Click="BT_Attacks_Click" />
 			</Grid>
 		</ScrollViewer>
-		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2" Text="Boss Information would normally be displayed here" Grid.Row="4" VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" MinHeight="100" MaxHeight="250"/>
+		<TextBox x:Name="TB_BossInfo" TextWrapping="Wrap" IsReadOnly="True" TabIndex="46" d:LayoutOverrides="Width" Margin="2" Text="Boss Information would normally be displayed here" Grid.Row="4" VerticalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" MinHeight="100" MaxHeight="250" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"/>
 	</Grid>
 </UserControl>

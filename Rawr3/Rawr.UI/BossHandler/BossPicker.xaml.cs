@@ -89,6 +89,7 @@ namespace Rawr.UI
             isLoading = true;
             try {
                 InitializeComponent();
+                TheScroll.SetIsMouseWheelScrollingEnabled(true);
 
                 // Create our local Boss List
                 if (bosslist == null) { bosslist = new BossList(); }

@@ -8,7 +8,7 @@
 	x:Class="Rawr.UI.GlyphControl"
 	d:DesignWidth="341" d:DesignHeight="570">
 
-	<ScrollViewer BorderThickness="0,0,0,0">
+	<ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0">
 		<StackPanel>
 			<local:GroupBox Header="Major Glyphs">
 				<StackPanel x:Name="MajorStack"/>

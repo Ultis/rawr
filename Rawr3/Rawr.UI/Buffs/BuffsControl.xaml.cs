@@ -219,6 +219,7 @@ namespace Rawr.UI
         public BuffsControl()
         {
             InitializeComponent();
+            TheScroll.SetIsMouseWheelScrollingEnabled(true);
 
             OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
             OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
