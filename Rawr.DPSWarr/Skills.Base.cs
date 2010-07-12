@@ -11,16 +11,22 @@ namespace Rawr.DPSWarr.Skills
     public class WhiteAttacks
     {
         // Constructors
-        public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr calcOpts)
+        public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts)
         {
             Char = character;
             StatS = stats;
             Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             combatFactors = cf;
             CalcOpts = calcOpts;
-            MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, true, false, false);
-            OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, false, false, false);
-            FightDuration = CalcOpts.Duration;
+            BossOpts = bossOpts;
+            MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false);
+            OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false);
+            FightDuration =
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.BerserkTimer;
+#else
+                    CalcOpts.Duration;
+#endif
             //
             HSOverridesOverDur = 0f;
             CLOverridesOverDur = 0f;
@@ -38,6 +44,7 @@ namespace Rawr.DPSWarr.Skills
         private readonly WarriorTalents Talents;
         private readonly CombatFactors combatFactors;
         private CalculationOptionsDPSWarr CalcOpts;
+        private BossOptions BossOpts;
         public AttackTable MHAtkTable { get; private set; }
         public AttackTable OHAtkTable { get; private set; }
         private float _uwProcValue_mh;
@@ -49,13 +56,11 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-                if (CalcOpts.MultipleTargets)
-                {
-                    //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                    return 1f +
-                        (Math.Min(CalcOpts.MultipleTargetsMax, 1f) - 1f) *
-                        CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
-                }
+#if RAWR3 || SILVERLIGHT
+                if (BossOpts.MultiTargs) { return 1f + (Math.Min(BossOpts.MaxNumTargets, 1f) - 1f) * BossOpts.MultiTargsPerc / 100f + StatS.BonusTargets; }
+#else
+                if (CalcOpts.MultipleTargets) { return 1f + (Math.Min(CalcOpts.MultipleTargetsMax, 1f) - 1f) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets; }
+#endif
                 else { return 1f; }
             }
         }
@@ -374,6 +379,7 @@ namespace Rawr.DPSWarr.Skills
             OHAtkTable = null;
             Whiteattacks = null;
             CalcOpts = null;
+            BossOpts = null;
             // Ability Related
             Name = "Invalid";
             Description = "Invalid";
@@ -428,12 +434,11 @@ namespace Rawr.DPSWarr.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-                    _AvgTargets = 1f +
-                       (CalcOpts.MultipleTargets ?
-                           StatS.BonusTargets +
-                           CalcOpts.MultipleTargetsPerc / 100f *
-                           (Math.Min(CalcOpts.MultipleTargetsMax, Targets) - 1f)
-                           : 0f);
+#if RAWR3 || SILVERLIGHT
+                    _AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + BossOpts.MultiTargsPerc / 100f * (Math.Min(BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
+#else
+                    _AvgTargets = 1f + (CalcOpts.MultipleTargets ? StatS.BonusTargets + CalcOpts.MultipleTargetsPerc / 100f * (Math.Min(CalcOpts.MultipleTargetsMax, Targets) - 1f) : 0f);
+#endif
                 }
                 return _AvgTargets;
             }
@@ -469,10 +474,20 @@ namespace Rawr.DPSWarr.Skills
         public virtual CombatTable OHAtkTable { get; protected set; }
         public WhiteAttacks Whiteattacks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
+        protected BossOptions BossOpts { get; set; }
         public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
         public bool SwingsOffHand { get; protected set; }
         public float SwingsPerActivate { get; protected set; }
-        protected float FightDuration { get { return CalcOpts.Duration; } }
+        protected float FightDuration {
+            get {
+                return
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.BerserkTimer;
+#else
+                    CalcOpts.Duration;
+#endif
+            }
+        }
         protected bool UseSpellHit { get; set; }
         protected bool UseHitTable { get; set; }
         public bool isMaint { get; protected set; }
@@ -496,7 +511,11 @@ namespace Rawr.DPSWarr.Skills
                     {
                         validatedSet = false;
                     }
+#if RAWR3 || SILVERLIGHT
+                    else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.MultiTargsPerc == 0))
+#else
                     else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
+#endif
                     {
                         validatedSet = false;
                     }
@@ -583,8 +602,8 @@ namespace Rawr.DPSWarr.Skills
             }
             else
             {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, this, true, UseSpellHit, !UseHitTable);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, this, false, UseSpellHit, !UseHitTable);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, true, UseSpellHit, !UseHitTable);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, false, UseSpellHit, !UseHitTable);
             }
         }
         public virtual float GetRageUseOverDur(float acts)

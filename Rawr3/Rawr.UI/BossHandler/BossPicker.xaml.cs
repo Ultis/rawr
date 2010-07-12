@@ -408,7 +408,7 @@ namespace Rawr.UI
                         break;
                     }
                 }
-                //CB_BossList_SelectedIndexChanged(null, null);
+                bossOpts_PropertyChanged(null, null);//CB_BossList_SelectedIndexChanged(null, null);
             }
         }
 
@@ -425,7 +425,7 @@ namespace Rawr.UI
             if ((bool)BoxA.DialogResult)
             {
                 Character.BossOptions.Attacks = BoxA.TheList;
-                //CB_BossList_SelectedIndexChanged(null, null);
+                bossOpts_PropertyChanged(null, null);
             }
         }
     }

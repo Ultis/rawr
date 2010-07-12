@@ -13,33 +13,16 @@ namespace Rawr.DPSWarr {
         #region Constructors
         public CalculationOptionsDPSWarr()
         {
-		    FilterType = "Content";
-		    Filter = "All";
-		    BossName = "Custom";
-		    TargetLevel = 83;
-            TargetArmor = StatConversion.NPC_ARMOR[TargetLevel - 80];
-            TargetHP = 1000000f;
-		    Duration = 300f;
-		    FuryStance = true;
-		    AllowFlooring = false;
+            FuryStance = true;
+            AllowFlooring = false;
             SE_UseDur = true;
             UseMarkov = false;
-		    PTRMode = false;
+            PTRMode = false;
             //HideBadItems = true;
             HideBadItems_Def = true;
             HideBadItems_Spl = true;
             HideBadItems_PvP = true;
             SurvScale = 1.0f;
-            Under20Perc = 0.17f;
-		    // Rotational Changes
-		    InBack           = true ; InBackPerc           = 100;
-		    MultipleTargets  = false; MultipleTargetsPerc  =  25; MultipleTargetsMax  =    3;
-		    MovingTargets    = false; 
-		    StunningTargets  = false; 
-            FearingTargets   = false; 
-            RootingTargets   = false; 
-		    DisarmingTargets = false; // nonfunctional
-            AoETargets       = false; AoETargetsFreq       =  20; AoETargetsDMG       = 5000;
             // Maintenance
             _Maintenance = new bool[] {
                 true,  // == Rage Gen ==
@@ -80,52 +63,30 @@ namespace Rawr.DPSWarr {
             // Latency
 		    Lag = 179f;
 		    React = 220f;
+            // Boss Options
+//#if !RAWR3 && !SILVERLIGHT
+		    FilterType = "Content";
+		    Filter = "All";
+		    BossName = "Custom";
+		    TargetLevel = 83;
+            TargetArmor = StatConversion.NPC_ARMOR[TargetLevel - 80];
+            TargetHP = 1000000f;
+		    Duration = 300f;
+            Under20Perc = 0.17f;
+		    // Rotational Changes
+		    InBack           = true ; InBackPerc           = 100;
+		    MultipleTargets  = false; MultipleTargetsPerc  =  25; MultipleTargetsMax  =    3;
+		    MovingTargets    = false; 
+		    StunningTargets  = false; 
+            FearingTargets   = false; 
+            RootingTargets   = false; 
+		    DisarmingTargets = false; // nonfunctional
+            AoETargets       = false; AoETargetsFreq       =  20; AoETargetsDMG       = 5000;
+//#endif
         }
         #endregion
         #region Variables
         #region Basics
-        private string _FilterType;
-        public string FilterType
-        {
-            get { return _FilterType; }
-            set { _FilterType = value; OnPropertyChanged("FilterType"); }
-        }
-        private string _Filter;
-        public string Filter
-        {
-            get { return _Filter; }
-            set { _Filter = value; OnPropertyChanged("Filter"); }
-        }
-        private string _BossName;
-        public string BossName
-        {
-            get { return _BossName; }
-            set { _BossName = value; OnPropertyChanged("BossName"); }
-        }
-        private int _TargetLevel;
-        public int TargetLevel
-        {
-            get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
-        }
-        private float _TargetArmor;
-        public float TargetArmor
-        {
-            get { return _TargetArmor; }
-            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
-        }
-        private float _TargetHP;
-        public float TargetHP
-        {
-            get { return _TargetHP; }
-            set { _TargetHP = value; OnPropertyChanged("TargetHP"); }
-        }
-        private float _Duration;
-        public float Duration
-        {
-            get { return _Duration; }
-            set { _Duration = value; OnPropertyChanged("Duration"); }
-        }
         private bool _FuryStance;
         public bool FuryStance
         {
@@ -180,12 +141,8 @@ namespace Rawr.DPSWarr {
             get { return _SurvScale; }
             set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
         }
-        private float _Under20Perc;
-        public float Under20Perc
-        {
-            get { return _Under20Perc; }
-            set { _Under20Perc = value; OnPropertyChanged("Under20Perc"); }
-        }
+        #endregion
+        #region Stat Graph
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
         public bool[] StatsList
         {
@@ -203,117 +160,6 @@ namespace Rawr.DPSWarr {
         {
             get { return _calculationToGraph; }
             set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
-        }
-        #endregion
-        #region Rotational Changes
-        private bool _InBack;
-        public bool InBack
-        {
-            get { return _InBack; }
-            set { _InBack = value; OnPropertyChanged("InBack"); }
-        }
-        private int _InBackPerc;
-        public int InBackPerc
-        {
-            get { return _InBackPerc; }
-            set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
-        }
-        private bool _MultipleTargets;
-        public bool MultipleTargets
-        {
-            get { return _MultipleTargets; }
-            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
-        }
-        private int _MultipleTargetsPerc;
-        public int MultipleTargetsPerc
-        {
-            get { return _MultipleTargetsPerc; }
-            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
-        }
-        private float _MultipleTargetsMax;
-        public float MultipleTargetsMax
-        {
-            get { return _MultipleTargetsMax; }
-            set { _MultipleTargetsMax = value; OnPropertyChanged("MultipleTargetsMax"); }
-        }
-        private bool _MovingTargets;
-        public bool MovingTargets
-        {
-            get { return _MovingTargets; }
-            set { _MovingTargets = value; OnPropertyChanged("MovingTargets"); }
-        }
-        private bool _StunningTargets;
-        public bool StunningTargets
-        {
-            get { return _StunningTargets; }
-            set { _StunningTargets = value; OnPropertyChanged("StunningTargets"); }
-        }
-        private bool _FearingTargets;
-        public bool FearingTargets
-        {
-            get { return _FearingTargets; }
-            set { _FearingTargets = value; OnPropertyChanged("FearingTargets"); }
-        }
-        private bool _RootingTargets;
-        public bool RootingTargets
-        {
-            get { return _RootingTargets; }
-            set { _RootingTargets = value; OnPropertyChanged("RootingTargets"); }
-        }
-        private bool _DisarmingTargets;
-        public bool DisarmingTargets
-        {
-            get { return _DisarmingTargets; }
-            set { _DisarmingTargets = value; OnPropertyChanged("DisarmingTargets"); }
-        }
-        private bool _AoETargets;
-        public bool AoETargets
-        {
-            get { return _AoETargets; }
-            set { _AoETargets = value; OnPropertyChanged("AoETargets"); }
-        }
-        private int _AoETargetsFreq;
-        public int AoETargetsFreq
-        {
-            get { return _AoETargetsFreq; }
-            set { _AoETargetsFreq = value; OnPropertyChanged("AoETargetsFreq"); }
-        }
-        private float _AoETargetsDMG;
-        public float AoETargetsDMG
-        {
-            get { return _AoETargetsDMG; }
-            set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
-        }
-        // =====================================
-        private List<Impedence> _stuns;
-        public List<Impedence> Stuns
-        {
-            get { return _stuns ?? (_stuns = new List<Impedence>()); }
-            set { _stuns = value; OnPropertyChanged("Stuns"); }
-        }
-        private List<Impedence> _moves;
-        public List<Impedence> Moves
-        {
-            get { return _moves ?? (_moves = new List<Impedence>()); }
-            set { _moves = value; OnPropertyChanged("Moves"); }
-        }
-        private List<Impedence> _fears;
-        public List<Impedence> Fears
-        {
-            get { return _fears ?? (_fears = new List<Impedence>()); }
-            set { _fears = value; OnPropertyChanged("Fears"); }
-        }
-        private List<Impedence> _roots;
-        public List<Impedence> Roots
-        {
-            get { return _roots ?? (_roots = new List<Impedence>()); }
-            set { _roots = value; OnPropertyChanged("Roots"); }
-        }
-        private List<Impedence> _disarms;
-        public List<Impedence> Disarms
-        {
-            get { return _disarms ?? (_disarms = new List<Impedence>()); }
-            set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
         #endregion
         #region Abilities to Maintain
@@ -572,7 +418,166 @@ namespace Rawr.DPSWarr {
         public float AllowedReact { get { return Math.Max(0f, (React - 200f) / 1000f); } }
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
-		public WarriorTalents talents = null;
+        #region Boss Options
+//#if !RAWR3 && !SILVERLIGHT
+        private string _FilterType;
+        public string FilterType
+        {
+            get { return _FilterType; }
+            set { _FilterType = value; OnPropertyChanged("FilterType"); }
+        }
+        private string _Filter;
+        public string Filter
+        {
+            get { return _Filter; }
+            set { _Filter = value; OnPropertyChanged("Filter"); }
+        }
+        private string _BossName;
+        public string BossName
+        {
+            get { return _BossName; }
+            set { _BossName = value; OnPropertyChanged("BossName"); }
+        }
+        private int _TargetLevel;
+        public int TargetLevel
+        {
+            get { return _TargetLevel; }
+            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
+        }
+        private float _TargetArmor;
+        public float TargetArmor
+        {
+            get { return _TargetArmor; }
+            set { _TargetArmor = value; OnPropertyChanged("TargetArmor"); }
+        }
+        private float _TargetHP;
+        public float TargetHP
+        {
+            get { return _TargetHP; }
+            set { _TargetHP = value; OnPropertyChanged("TargetHP"); }
+        }
+        private float _Duration;
+        public float Duration
+        {
+            get { return _Duration; }
+            set { _Duration = value; OnPropertyChanged("Duration"); }
+        }
+        private float _Under20Perc;
+        public float Under20Perc
+        {
+            get { return _Under20Perc; }
+            set { _Under20Perc = value; OnPropertyChanged("Under20Perc"); }
+        }
+        private bool _InBack;
+        public bool InBack
+        {
+            get { return _InBack; }
+            set { _InBack = value; OnPropertyChanged("InBack"); }
+        }
+        private int _InBackPerc;
+        public int InBackPerc
+        {
+            get { return _InBackPerc; }
+            set { _InBackPerc = value; OnPropertyChanged("InBackPerc"); }
+        }
+        private bool _MultipleTargets;
+        public bool MultipleTargets
+        {
+            get { return _MultipleTargets; }
+            set { _MultipleTargets = value; OnPropertyChanged("MultipleTargets"); }
+        }
+        private int _MultipleTargetsPerc;
+        public int MultipleTargetsPerc
+        {
+            get { return _MultipleTargetsPerc; }
+            set { _MultipleTargetsPerc = value; OnPropertyChanged("MultipleTargetsPerc"); }
+        }
+        private float _MultipleTargetsMax;
+        public float MultipleTargetsMax
+        {
+            get { return _MultipleTargetsMax; }
+            set { _MultipleTargetsMax = value; OnPropertyChanged("MultipleTargetsMax"); }
+        }
+        private bool _MovingTargets;
+        public bool MovingTargets
+        {
+            get { return _MovingTargets; }
+            set { _MovingTargets = value; OnPropertyChanged("MovingTargets"); }
+        }
+        private bool _StunningTargets;
+        public bool StunningTargets
+        {
+            get { return _StunningTargets; }
+            set { _StunningTargets = value; OnPropertyChanged("StunningTargets"); }
+        }
+        private bool _FearingTargets;
+        public bool FearingTargets
+        {
+            get { return _FearingTargets; }
+            set { _FearingTargets = value; OnPropertyChanged("FearingTargets"); }
+        }
+        private bool _RootingTargets;
+        public bool RootingTargets
+        {
+            get { return _RootingTargets; }
+            set { _RootingTargets = value; OnPropertyChanged("RootingTargets"); }
+        }
+        private bool _DisarmingTargets;
+        public bool DisarmingTargets
+        {
+            get { return _DisarmingTargets; }
+            set { _DisarmingTargets = value; OnPropertyChanged("DisarmingTargets"); }
+        }
+        private bool _AoETargets;
+        public bool AoETargets
+        {
+            get { return _AoETargets; }
+            set { _AoETargets = value; OnPropertyChanged("AoETargets"); }
+        }
+        private int _AoETargetsFreq;
+        public int AoETargetsFreq
+        {
+            get { return _AoETargetsFreq; }
+            set { _AoETargetsFreq = value; OnPropertyChanged("AoETargetsFreq"); }
+        }
+        private float _AoETargetsDMG;
+        public float AoETargetsDMG
+        {
+            get { return _AoETargetsDMG; }
+            set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
+        }
+        private List<Impedence> _stuns;
+        public List<Impedence> Stuns
+        {
+            get { return _stuns ?? (_stuns = new List<Impedence>()); }
+            set { _stuns = value; OnPropertyChanged("Stuns"); }
+        }
+        private List<Impedence> _moves;
+        public List<Impedence> Moves
+        {
+            get { return _moves ?? (_moves = new List<Impedence>()); }
+            set { _moves = value; OnPropertyChanged("Moves"); }
+        }
+        private List<Impedence> _fears;
+        public List<Impedence> Fears
+        {
+            get { return _fears ?? (_fears = new List<Impedence>()); }
+            set { _fears = value; OnPropertyChanged("Fears"); }
+        }
+        private List<Impedence> _roots;
+        public List<Impedence> Roots
+        {
+            get { return _roots ?? (_roots = new List<Impedence>()); }
+            set { _roots = value; OnPropertyChanged("Roots"); }
+        }
+        private List<Impedence> _disarms;
+        public List<Impedence> Disarms
+        {
+            get { return _disarms ?? (_disarms = new List<Impedence>()); }
+            set { _disarms = value; OnPropertyChanged("Disarms"); }
+        }
+//#endif
+        #endregion
         #endregion
         #region Functions
         public string GetXml() {

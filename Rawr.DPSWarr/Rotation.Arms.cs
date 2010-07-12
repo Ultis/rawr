@@ -8,15 +8,14 @@ using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
     public class ArmsRotation : Rotation {
-        public ArmsRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+        public ArmsRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CombatFactors = cf;
             CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
+            BossOpts = (bo == null ? new BossOptions() : bo);
             WhiteAtks = wa;
-
-            FightDuration = CalcOpts.Duration;
 
             // Initialize();
         }
@@ -159,8 +158,13 @@ namespace Rawr.DPSWarr {
             float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.numActivates = WhiteAtks.CLOverridesOverDur = 0f;
             float origAvailRage = preloopAvailRage * (1f - percTimeUnder20);
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
-            bool clok = CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
-                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+            bool clok =
+#if RAWR3 || SILVERLIGHT
+                BossOpts.MultiTargs && BossOpts.MultiTargsPerc > 0
+#else
+                CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
+#endif
+                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
             availRage += WhiteAtks.whiteRageGenOverDurNoHS * (1f - totalPercTimeLost) * (1f - percTimeUnder20);
             availRage -= SL.Rage;
             float repassAvailRage = 0f;
@@ -462,7 +466,11 @@ namespace Rawr.DPSWarr {
 
                     // Assign Rage to each ability
                     float RageForHSCL = availRage * (1f - percTimeUnder20);
+#if RAWR3 || SILVERLIGHT
+                    RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (BossOpts.MultiTargsPerc / 100f)) : 0f;
+#else
                     RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
+#endif
                     RageForHS = hsok ? RageForHSCL - RageForCL : 0f;
 
                     float val1 = (RageForHS / _HS.FullRageCost), val2 = (RageForCL / _CL.FullRageCost);

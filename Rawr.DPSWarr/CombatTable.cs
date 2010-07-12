@@ -8,6 +8,7 @@ namespace Rawr.DPSWarr
         public static CombatTable NULL = new NullCombatTable();
         protected Character Char;
         protected CalculationOptionsDPSWarr calcOpts;
+        protected BossOptions bossOpts;
         protected CombatFactors combatFactors;
         protected Stats StatS;
         protected Skills.Ability Abil;
@@ -15,6 +16,19 @@ namespace Rawr.DPSWarr
 
         public bool isWhite;
         public bool isMH;
+
+        public int levelDif
+        {
+            get {
+                return
+#if RAWR3 || SILVERLIGHT
+                    bossOpts.Level
+#else
+                    calcOpts.TargetLevel
+#endif
+                    - Char.Level;
+            }
+        }
         
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
@@ -43,10 +57,13 @@ namespace Rawr.DPSWarr
             _anyNotLand = 0f;
         }
 
-        protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
+        protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
+            Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit)
+        {
             Char = character;
             StatS = stats;
             calcOpts = co;
+            bossOpts = bo;
             combatFactors = cf;
             Abil = ability;
             isWhite = (Abil == null);
@@ -117,7 +134,7 @@ namespace Rawr.DPSWarr
             Crit = 0;
             if (isWhite) {
                 float critValueToUse = (isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit)
-                                            + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level];
+                                            + StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
                 foreach (WeightedStat ws in combatFactors.critProcs)
                 {
                     float modCritChance = Math.Min(1f - tableSize, critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class));
@@ -125,7 +142,7 @@ namespace Rawr.DPSWarr
                 }
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                float critValueToUse =  StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - Char.Level]
+                float critValueToUse = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif]
                     + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit)
                     + Abil.BonusCritChance;
                 foreach (WeightedStat ws in combatFactors.critProcs)
@@ -142,12 +159,12 @@ namespace Rawr.DPSWarr
 
         public AttackTable() { }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, bool ismh, bool useSpellHit, bool alwaysHit) {
-            Initialize(character, stats, cf, co, null, ismh, useSpellHit, alwaysHit);
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,bool ismh, bool useSpellHit, bool alwaysHit) {
+            Initialize(character, stats, cf, co, bo, null, ismh, useSpellHit, alwaysHit);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
-            Initialize(character, stats, cf, co, ability, ismh, useSpellHit, alwaysHit);
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
+            Initialize(character, stats, cf, co, bo, ability, ismh, useSpellHit, alwaysHit);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace Rawr.DPSWarr
 {
     public class FuryRotation : Rotation
     {
-        public FuryRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
+        public FuryRotation(Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CombatFactors = cf;
             CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
+            BossOpts = (bo == null ? new BossOptions() : bo);
             WhiteAtks = wa;
 
-            FightDuration = CalcOpts.Duration;
             // Initialize();
         }
 
@@ -38,13 +38,20 @@ namespace Rawr.DPSWarr
             initAbilities();
             // doIterations();
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
-            bool clok = CalcOpts.MultipleTargets
-                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#if RAWR3 || SILVERLIGHT
+            bool clok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#else
+            bool clok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#endif
 
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
+#if RAWR3 || SILVERLIGHT
+                percHS -= BossOpts.MultiTargsPerc / 100f;
+#else
                 percHS -= CalcOpts.MultipleTargetsPerc / 100f;
+#endif
             }
             percCL = (clok ? 1f - percHS : 0f);
         }
@@ -54,13 +61,16 @@ namespace Rawr.DPSWarr
             base.Initialize(calcs);
             
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
-            bool clok = CalcOpts.MultipleTargets
-                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#if RAWR3 || SILVERLIGHT
+            bool clok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#else
+            bool clok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#endif
             BloodSurge _BS = GetWrapper<BloodSurge>().ability as BloodSurge;
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-                percHS -= CalcOpts.MultipleTargetsPerc / 100f;
+                percHS -= BossOpts.MultiTargsPerc / 100f;
             }
             percCL = (clok ? 1f - percHS : 0f);
             if (_BS != null) _BS.maintainActs = MaintainCDs;
@@ -341,7 +351,11 @@ namespace Rawr.DPSWarr
             availRage += WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
 
             bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+#if RAWR3 || SILVERLIGHT
+            bool CLok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#else
             bool CLok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#endif
 
             WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
  

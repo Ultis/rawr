@@ -8,10 +8,10 @@ namespace Rawr.DPSWarr.Markov
 {
     public class ArmsGenerator : StateSpaceGenerator<Skills.Ability>
     {
-        public ArmsGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co) {
-            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co;
+        public ArmsGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
+            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Rot = new ArmsRotation(c, s, cf, wa, co);
+            Rot = new ArmsRotation(c, s, cf, wa, co, bo);
             Rot.Initialize();
             LatentGCD = 1.5 + co.FullLatency;
         }
@@ -25,6 +25,7 @@ namespace Rawr.DPSWarr.Markov
         CombatFactors combatFactors;
         Skills.WhiteAttacks WhiteAtks;
         CalculationOptionsDPSWarr CalcOpts;
+        BossOptions BossOpts;
         #endregion
 
         public class StateArms : State<Skills.Ability>
@@ -48,7 +49,11 @@ namespace Rawr.DPSWarr.Markov
             get {
                 return (Rot.WhiteAtks.whiteRageGenOverDur
                         * LatentGCD)
+#if RAWR3 || SILVERLIGHT
+                        / BossOpts.BerserkTimer;
+#else
                         / CalcOpts.Duration;
+#endif
             }
         }
 
@@ -288,9 +293,9 @@ namespace Rawr.DPSWarr.Markov
     }
 
     public class StateSpaceGeneratorArmsTest {
-        public void StateSpaceGeneratorArmsTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public void StateSpaceGeneratorArmsTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            ArmsGenerator gen = new ArmsGenerator(c, s, cf, wa, co);
+            ArmsGenerator gen = new ArmsGenerator(c, s, cf, wa, co, bo);
             var stateSpace = gen.GenerateStateSpace();
             string output = "";
             foreach (State<Rawr.DPSWarr.Skills.Ability> a in stateSpace) {

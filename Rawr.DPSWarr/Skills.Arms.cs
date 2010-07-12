@@ -17,9 +17,9 @@ namespace Rawr.DPSWarr.Skills
         /// Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% damage, -(1/3*Pts) sec cooldown]
         /// </TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Mortal Strike [+10% damage]</GlyphsAffecting>
-        public MortalStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public MortalStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Mortal Strike";
             Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
@@ -56,9 +56,9 @@ namespace Rawr.DPSWarr.Skills
         /// its effect instead of 1, reduce the global cooldown on Execute or Slam by 0.5 sec,
         /// and for the duration of the effect to be increased by 100%.]
         /// </SetsAffecting>
-        public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ex)
+        public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ex)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Sudden Death";
             Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
@@ -128,9 +128,9 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
         /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
-        public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ss)
+        public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ss)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Overpower";
             Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.";
@@ -193,9 +193,9 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
         /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public TasteForBlood(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public TasteForBlood(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Taste for Blood";
             Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.";
@@ -245,9 +245,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Bladestorm [Requires Talent]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Bladestorm [-15 sec Cd]</GlyphsAffecting>
-        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability ww)
+        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ww)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             WW = ww;
             Name = "Bladestorm";
@@ -291,9 +291,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Sword Specialization (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public Swordspec(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public Swordspec(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Sword Specialization";
             Description = "Gives a (1*Pts)% chance to get an extra attack on the same target after hitting your target with your Sword. This effect cannot occur more than once every 6 seconds.";
@@ -379,9 +379,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</GlyphsAffecting>
-        public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Execute";
             Description = "Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each extra point of rage into 38 additional damage. Only usable on enemies that have less than 20% health.";
@@ -435,9 +435,9 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>Slams the opponent, causing weapon damage plus 250.</summary>
         /// <TalentsAffecting>Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</TalentsAffecting>
         /// <SetsAffecting>T7 Deadnaught Battlegear 2 Pc [+10% Damage]</SetsAffecting>
-        public Slam(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public Slam(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Slam";
             Description = "Slams the opponent, causing weapon damage plus 250.";
@@ -466,9 +466,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Rending [+2 damage ticks]</GlyphsAffecting>
-        public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Rend";
             Description = "Wounds the target causing them to bleed for 380 damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.";
@@ -546,9 +546,9 @@ namespace Rawr.DPSWarr.Skills
 
     public class FakeWhite : Ability
     {
-        public FakeWhite(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public FakeWhite(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "MH White Swing";
             Description = "White Damage";

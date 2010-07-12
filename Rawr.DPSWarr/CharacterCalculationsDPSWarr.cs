@@ -181,7 +181,7 @@ namespace Rawr.DPSWarr {
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             string format = "";
-            int LevelDif = combatFactors.CalcOpts.TargetLevel - combatFactors.Char.Level;
+            int LevelDif = combatFactors.levelDif;
 
             // Base Stats
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*" +

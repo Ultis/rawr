@@ -809,6 +809,57 @@ namespace Rawr {
                 return retVal;
             }
         }
+        public Attack DynamicCompiler_FilteredAttacks(List<Attack> atks)
+        {
+            // Make one
+            Attack retVal = new Attack()
+            {
+                // Basics
+                Name = "DynamicFiltered",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 80f * 1000f,
+                DamageIsPerc = false,
+                MaxNumTargets = 1,
+                AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                UseParryHaste = true,
+                Interruptable = false,
+                // Player Avoidances
+                Missable = true,
+                Dodgable = true,
+                Parryable = true,
+                Blockable = true,
+                // Targetting Ignores
+                IgnoresMTank = false,
+                IgnoresOTank = false,
+                IgnoresTTank = false,
+                IgnoresHealers = false,
+                IgnoresMeleeDPS = false,
+                IgnoresRangedDPS = false,
+            };
+            if (atks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
+            // Find the averaged _____
+            int numTargs = 0;
+            float speeds = 0;
+            float dph = 0;
+            foreach (Attack a in atks)
+            {
+                dph += a.DamagePerHit;
+                numTargs += (int)a.MaxNumTargets;
+                speeds += (int)a.AttackSpeed;
+            }
+            // Mark those into the retVal
+            retVal.DamagePerHit = dph / (float)atks.Count;
+            retVal.MaxNumTargets = (int)((float)numTargs / (float)atks.Count);
+            retVal.AttackSpeed = (int)(speeds / (float)atks.Count);
+            // Double-check we aren't sending a bad one
+            if (retVal.AttackSpeed <= 0f)
+            {
+                retVal.AttackSpeed = -1f; // if we are, use this as a flag
+            }
+            // Return results
+            return retVal;
+        }
         // ==== Methods for Pulling Boss DPS ==========
         public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
             List<Attack> attacks = new List<Attack>();

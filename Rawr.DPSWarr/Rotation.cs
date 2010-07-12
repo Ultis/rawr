@@ -23,6 +23,7 @@ namespace Rawr.DPSWarr {
             Talents = null;
             CombatFactors = null;
             CalcOpts = null;
+            BossOpts = null;
 
             AbilityList = new Dictionary<Type,AbilWrapper>();
             InvalidateCache();
@@ -59,7 +60,7 @@ namespace Rawr.DPSWarr {
         
         public bool _needDisplayCalcs = true;
         
-        protected float FightDuration;
+        //protected float FightDuration;
         protected float TimeLostGDCs;
         protected float RageGainedWhileMoving;
         public float TimesStunned = 0f;
@@ -116,6 +117,7 @@ namespace Rawr.DPSWarr {
         protected CombatFactors CombatFactors { get; set; }
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
+        protected BossOptions BossOpts { get; set; }
         
         protected float LatentGCD { get { return 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
         
@@ -206,56 +208,56 @@ namespace Rawr.DPSWarr {
             // Whites
             //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
             // Anti-Debuff
-            AddAbility(new AbilWrapper(new Skills.HeroicFury(        Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            AddAbility(new AbilWrapper(new Skills.HeroicFury(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Intervene(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             // Rage Generators
-            AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Bloodrage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             // Maintenance
-            AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             // Periodics
-            AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
+            AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
 
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
-            Slam SL = new Skills.Slam(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Slam SL = new Skills.Slam(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(SL));
-            Skills.Ability WW = new Skills.WhirlWind(          Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Skills.Ability WW = new Skills.WhirlWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(WW));
-            
-            AddAbility(new AbilWrapper(new Skills.Cleave(             Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.HeroicStrike(       Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            Skills.Ability EX = new Skills.Execute(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+
+            AddAbility(new AbilWrapper(new Skills.Cleave(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.HeroicStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            Skills.Ability EX = new Skills.Execute(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(EX));
 
             // Arms abilities
-            AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW)));
-            AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, WW)));
+            AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(SS));
-            AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS)));
-            AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts)));
-            AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX)));
+            AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SS)));
+            AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, EX)));
             
             // Fury abilities
-            Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(BT));
-            AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SL, WW, BT)));
+            AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SL, WW, BT)));
 
-            DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
 
         }
 
@@ -309,39 +311,39 @@ namespace Rawr.DPSWarr {
             CombatTable table;
 
             if (at != AttackType.White) {
-                    foreach (AbilWrapper abil in GetDamagingAbilities())
+                foreach (AbilWrapper abil in GetDamagingAbilities())
+                {
+                    if (!abil.ability.Validated)
                     {
-                        if (!abil.ability.Validated)
-                        {
-                            continue;
-                        }
-                        if (h != Hand.OH)
-                        {
-                            table = abil.ability.MHAtkTable;
-                            mod = GetTableFromSwingResult(sr, table);
-                            count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
-                        }
-                        if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand)
-                        {
-                            table = abil.ability.OHAtkTable;
-                            mod = GetTableFromSwingResult(sr, table);
-                            count += abil.numActivates * abil.ability.AvgTargets * mod;
-                        }
+                        continue;
                     }
-            }
-            if (at != AttackType.Yellow) {
                     if (h != Hand.OH)
                     {
-                        table = WhiteAtks.MHAtkTable;
+                        table = abil.ability.MHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += WhiteAtks.MhActivates * mod;
+                        count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
                     }
-                    if (h != Hand.MH && CombatFactors.useOH)
+                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand)
                     {
-                        table = WhiteAtks.OHAtkTable;
+                        table = abil.ability.OHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += WhiteAtks.OhActivates * mod;
+                        count += abil.numActivates * abil.ability.AvgTargets * mod;
                     }
+                }
+            }
+            if (at != AttackType.Yellow) {
+                if (h != Hand.OH)
+                {
+                    table = WhiteAtks.MHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.MhActivates * mod;
+                }
+                if (h != Hand.MH && CombatFactors.useOH)
+                {
+                    table = WhiteAtks.OHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.OhActivates * mod;
+                }
             }
             
             _atkOverDurs[(int)sr, (int)h, (int)at] = count;
@@ -351,18 +353,12 @@ namespace Rawr.DPSWarr {
             if (table == null) return 0f;
             switch (sr)
             {
-                case SwingResult.Attempt:
-                    return 1f;
-                case SwingResult.Crit:
-                    return table.Crit;
-                case SwingResult.Dodge:
-                    return table.Dodge;
-                case SwingResult.Land:
-                    return table.AnyLand;
-                case SwingResult.Parry:
-                    return table.Parry;
-                default:
-                   return 0f;
+                case SwingResult.Attempt: return 1f;
+                case SwingResult.Crit:    return table.Crit;
+                case SwingResult.Dodge:   return table.Dodge;
+                case SwingResult.Land:    return table.AnyLand;
+                case SwingResult.Parry:   return table.Parry;
+                default:                  return 0f;
             }
         }
 
@@ -398,21 +394,40 @@ namespace Rawr.DPSWarr {
 
         #endregion
 
-        public float MaintainCDs { get {
-            float cds = 0f;
-            foreach (AbilWrapper aw in GetMaintenanceAbilities()) cds += aw.numActivates;
-            return cds;
-        } }
+        public float MaintainCDs {
+            get {
+                float cds = 0f;
+                foreach (AbilWrapper aw in GetMaintenanceAbilities()) cds += aw.numActivates;
+                return cds;
+            }
+        }
         #endregion
         #region Rage Calcs
         protected virtual float RageGenOverDur_IncDmg {
             get {
                 // Invalidate bad things
+#if RAWR3 || SILVERLIGHT
+                List<Attack> aoeAtks = BossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
+                Attack dynAoE = BossOpts.DynamicCompiler_FilteredAttacks(aoeAtks);
+                if (aoeAtks.Count > 0 || dynAoE.AttackSpeed <= 0 || dynAoE.DamagePerHit <= 0) { return 0f; }
+#else
                 if (!CalcOpts.AoETargets || CalcOpts.AoETargetsFreq < 1 || CalcOpts.AoETargetsDMG < 1) { return 0f; }
+#endif
                 float RageMod = 2.5f / 453.3f;
                 float damagePerSec = 0f;
-                float freq = CalcOpts.AoETargetsFreq;
-                float dmg = CalcOpts.AoETargetsDMG * (1f + StatS.DamageTakenMultiplier) + StatS.BossAttackPower / 14f;
+                float freq =
+#if RAWR3 || SILVERLIGHT
+                    dynAoE.AttackSpeed;
+#else
+                    CalcOpts.AoETargetsFreq;
+#endif
+                float dmg =
+#if RAWR3 || SILVERLIGHT
+                    dynAoE.DamagePerHit
+#else
+                    CalcOpts.AoETargetsDMG
+#endif
+                    * (1f + StatS.DamageTakenMultiplier) + StatS.BossAttackPower / 14f;
                 float acts = FightDuration / freq;
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
@@ -429,7 +444,11 @@ namespace Rawr.DPSWarr {
                 return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
             }
         }
-        protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
+        protected virtual float RageGenOverDur_Anger {
+            get {
+                return (Talents.AngerManagement / 3.0f) * FightDuration;
+            }
+        }
         
         protected virtual float RageGenOverDur_Other {
             get {
@@ -446,11 +465,21 @@ namespace Rawr.DPSWarr {
 
                     // 4pcT7
                     if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * CalcOpts.Duration;
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * CalcOpts.Duration;
+                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * FightDuration;
+                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
                     }
                     
                 return rage;
+            }
+        }
+        public int FightDuration {
+            get {
+                return
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.BerserkTimer;
+#else
+                    (int)CalcOpts.Duration;
+#endif
             }
         }
         protected float RageNeededOverDur {
@@ -531,7 +560,11 @@ namespace Rawr.DPSWarr {
         private float CalculateRoot()
         {
             float percTimeInRoot = 0f;
+#if RAWR3 || SILVERLIGHT
+            if (BossOpts.RootingTargs && BossOpts.Roots.Count > 0)
+#else
             if (CalcOpts.RootingTargets && CalcOpts.Roots.Count > 0)
+#endif
             {
                 float timelostwhilerooted = 0f;
                 float BaseRootDur = 0f, rootActs = 0f, reducedDur = 0f,
@@ -544,7 +577,13 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
                 float EMOldActs = EM.numActivates;
                 TimesRooted = 0f;
-                foreach (Impedence r in CalcOpts.Roots)
+                foreach (Impedence r in
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.Roots
+#else
+                    CalcOpts.Roots
+#endif
+)
                 {
                     BaseRootDur = Math.Max(0f, (r.Duration / 1000f * (1f - StatS.SnareRootDurReduc)));
                     rootActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / r.Frequency) : FightDuration / r.Frequency;
@@ -606,7 +645,11 @@ namespace Rawr.DPSWarr {
         private float CalculateStun()
         {
             float percTimeInStun = 0f;
+#if RAWR3 || SILVERLIGHT
+            if (BossOpts.StunningTargs && BossOpts.Stuns.Count > 0)
+#else
             if (CalcOpts.StunningTargets && CalcOpts.Stuns.Count > 0)
+#endif
             {
                 float timelostwhilestunned = 0f;
                 float BaseStunDur = 0f, stunActs = 0f, reducedDur = 0f,
@@ -616,7 +659,11 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
                 float EMOldActs = EM.numActivates;
                 TimesFeared = 0f;
+#if RAWR3 || SILVERLIGHT
+                foreach (Impedence s in BossOpts.Stuns)
+#else
                 foreach (Impedence s in CalcOpts.Stuns)
+#endif
                 {
                     BaseStunDur = Math.Max(0f, (s.Duration / 1000f * (1f - StatS.StunDurReduc)));
                     stunActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / s.Frequency) : FightDuration / s.Frequency;
@@ -663,7 +710,11 @@ namespace Rawr.DPSWarr {
         private float CalculateFear()
         {
             float percTimeInFear = 0f;
+#if RAWR3 || SILVERLIGHT
+            if (BossOpts.FearingTargs && BossOpts.Fears.Count > 0)
+#else
             if (CalcOpts.FearingTargets && CalcOpts.Fears.Count > 0)
+#endif
             {
                 float timelostwhilefeared = 0f;
                 float BaseFearDur = 0f, fearActs = 0f, reducedDur = 0f,
@@ -676,7 +727,11 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
                 float EMOldActs = EM.numActivates;
                 TimesFeared = 0f;
+#if RAWR3 || SILVERLIGHT
+                foreach (Impedence f in BossOpts.Fears)
+#else
                 foreach (Impedence f in CalcOpts.Fears)
+#endif
                 {
                     BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
                     fearActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / f.Frequency) : FightDuration / f.Frequency;
@@ -737,7 +792,11 @@ namespace Rawr.DPSWarr {
         private float CalculateMovement(Ability MS)
         {
             float percTimeInMovement = 0f;
+#if RAWR3 || SILVERLIGHT
+            if (BossOpts.MovingTargs && BossOpts.Moves.Count > 0)
+#else
             if (CalcOpts.MovingTargets && CalcOpts.Moves.Count > 0)
+#endif
             {
                 /* = Movement Speed =
                  * According to a post I found on WoWWiki, Standard (Run) Movement
@@ -785,7 +844,11 @@ namespace Rawr.DPSWarr {
                 float ChargeActualActs = 0f;
                 float timelostwhilemoving = 0f;
                 float moveGCDs = 0f;
+#if RAWR3 || SILVERLIGHT
+                foreach (Impedence m in BossOpts.Moves)
+#else
                 foreach (Impedence m in CalcOpts.Moves)
+#endif
                 {
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
                     moveGCDs += movedActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / m.Frequency) : FightDuration / m.Frequency;
@@ -907,7 +970,7 @@ namespace Rawr.DPSWarr {
                     SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5);
                 statsTotal.AddSpecialEffect(sn);
             }
-            float landedAtksInterval = LandedAtksOverDur / CalcOpts.Duration;
+            float landedAtksInterval = LandedAtksOverDur / FightDuration;
             float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
             if (SW.Validated)
             {

@@ -15,9 +15,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
-        public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Bloodthirst";
             Description = "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.";
@@ -48,9 +48,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
-        public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Whirlwind";
             Description = "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.";
@@ -59,8 +59,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             MaxRange = 8f; // In Yards
             Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
-            //Targets += StatS.BonusTargets;
+#if RAWR3 || SILVERLIGHT
+            Targets += (BossOpts.MultiTargs ? 3f : 0f);
+#else
             Targets += (CalcOpts.MultipleTargets ? 3f : 0f);
+#endif
             RageCost = 25f - (Talents.FocusedRage * 1f);
             StanceOkFury = true;
             DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
@@ -146,9 +149,10 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
-        public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, Ability slam, Ability whirlwind, Ability bloodthirst)
+        public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
+            Ability slam, Ability whirlwind, Ability bloodthirst)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Bloodsurge";
             Description = "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.";
@@ -241,9 +245,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
-        public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Heroic Strike";
             Description = "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.";
@@ -277,9 +281,9 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
-        public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Cleave";
             Description = "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.";
@@ -287,7 +291,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             RageCost = 20f - (Talents.FocusedRage * 1f);
+#if RAWR3 || SILVERLIGHT
+            Targets += (BossOpts.MultiTargs ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+#else
             Targets += (CalcOpts.MultipleTargets ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+#endif
             CastTime = 0f; // In Seconds // Replaces a white hit
             GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;

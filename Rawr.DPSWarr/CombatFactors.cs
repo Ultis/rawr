@@ -2,12 +2,13 @@ using System;
 
 namespace Rawr.DPSWarr {
     public class CombatFactors {
-        public CombatFactors(Character character, Stats stats, CalculationOptionsDPSWarr calcOpts) {
+        public CombatFactors(Character character, Stats stats, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts) {
             Char = character;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
+            BossOpts = (bossOpts == null ? new BossOptions() : bossOpts);
             StatS = stats;
             critProcs = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
             InvalidateCache();
@@ -54,8 +55,8 @@ namespace Rawr.DPSWarr {
                 _c_ohItemSpeed = 0f;
                 _c_ohRacialExpertise = 0f;
                 _c_ohexpertise = 0f;
-                _c_ohdodge = StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];
-                _c_ohparry = StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];
+                _c_ohdodge = StatConversion.WHITE_DODGE_CHANCE_CAP[levelDif];
+                _c_ohparry = StatConversion.WHITE_PARRY_CHANCE_CAP[levelDif];
                 _c_ohblock = 0.0f;
                 _c_ohwcrit = 0.0f;
                 _c_ohycrit = 0.0f;
@@ -65,6 +66,7 @@ namespace Rawr.DPSWarr {
         public Stats StatS { get; set; }
         private WarriorTalents Talents;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
+        public BossOptions BossOpts { get; private set; }
         public Character Char { get; private set; }
         public Item MH { get; private set; }
         public Item OH { get; private set; }
@@ -92,6 +94,18 @@ namespace Rawr.DPSWarr {
         public float _c_mhycrit { get; private set; }
         public float _c_ohycrit { get; private set; }
         public float _c_glance { get; private set; }
+
+        public int levelDif {
+            get {
+                return
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.Level
+#else
+                    CalcOpts.TargetLevel
+#endif
+                    - Char.Level;
+            }
+        }
         #endregion
 
         public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
@@ -128,7 +142,13 @@ namespace Rawr.DPSWarr {
                         ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
                         (!CalcOpts.FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
-                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
+                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
+#if RAWR3 || SILVERIGHT
+                        BossOpts.Armor,
+#else
+                        CalcOpts.TargetArmor,
+#endif
+                        StatS.ArmorPenetration, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
                 }
                 return _DamageReduction;
             }
@@ -211,7 +231,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicMH == null)
                 {
-                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, true, false, false);
+                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, true, false, false);
                 }
                 return _AttackTableBasicMH;
             }
@@ -222,7 +242,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicOH == null)
                 {
-                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, Skills.Ability.NULL, false, false, false);
+                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, false, false, false);
                 }
                 return _AttackTableBasicOH;
             }
@@ -267,7 +287,7 @@ namespace Rawr.DPSWarr {
                 return (useOH
                         && MH.Slot == ItemSlot.TwoHand
                         && OH.Slot == ItemSlot.TwoHand ?
-                       StatConversion.WHITE_MISS_CHANCE_CAP_DW[CalcOpts.TargetLevel - Char.Level] : StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]);
+                       StatConversion.WHITE_MISS_CHANCE_CAP_DW[levelDif] : StatConversion.WHITE_MISS_CHANCE_CAP[levelDif]);
             }
         }
         private float WhMissChance {
@@ -275,38 +295,62 @@ namespace Rawr.DPSWarr {
                 return Math.Max(0f, WhMissCap - MissPrevBonuses); 
             }
         }
-        private float YwMissCap {get {return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level];}}
+        private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[levelDif]; } }
         private float YwMissChance { get { return Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
-        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
+        private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[levelDif]; } }
         private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         #endregion
         #region Parry
-        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
+        private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[levelDif]; } }
         private float MhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
+#if RAWR3 || SILVERLIGHT
+                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - BossOpts.InBackPerc_Melee / 100f) : ParryChance);
+#else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+#endif
             }
         }
         private float OhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior);
+#if RAWR3 || SILVERLIGHT
+                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - BossOpts.InBackPerc_Melee / 100f) : ParryChance);
+#else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
+#endif
             }
         }
         #endregion
         #region Glance
-        private float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
+        private float GlanceChance { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDif]; } }
         #endregion
         #region Block
         // DPSWarr Dev Team has decided to remove Block from the Attack Table
         // until evidence can show specific bosses that do block
         private float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
-        private float MhBlockChance { get { return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
-        private float OhBlockChance { get { return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap); } }
+        private float MhBlockChance {
+            get {
+#if RAWR3 || SILVERLIGHT
+                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - BossOpts.InBackPerc_Melee / 100f) : BlockChanceCap);
+#else
+                return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
+#endif
+            }
+        }
+        private float OhBlockChance {
+            get {
+#if RAWR3 || SILVERLIGHT
+                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - BossOpts.InBackPerc_Melee / 100f) : BlockChanceCap);
+#else
+                return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
+#endif
+            }
+        }
         #endregion
         #region Crit
         private float MhWhCritChance {
@@ -352,14 +396,22 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Attackers Stats against you
-        private float LevelModifier { get { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; } }
+        private float LevelModifier {
+            get {
+                return (levelDif) * 0.002f;
+            }
+        }
         private float NPC_CritChance
         {
             get
             {
-                return Math.Max(0f, 0.05f + LevelModifier
-                                        - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel)
-                                );
+                return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit,
+#if RAWR3 || SILVERLIGHT
+                    BossOpts.Level
+#else
+                    CalcOpts.TargetLevel
+#endif
+                    ));
             }
         }
         #endregion

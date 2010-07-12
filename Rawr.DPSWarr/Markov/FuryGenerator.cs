@@ -1,5 +1,4 @@
 ﻿//#define TRANSTYPE
-
 using System;
 using System.Collections.Generic;
 using Rawr.Base.Algorithms;
@@ -7,19 +6,17 @@ using System.Text;
 using Rawr.Base;
 using System.IO;
 
-
-
 namespace Rawr.DPSWarr.Markov
 {
     class FuryGenerator : StateSpaceGenerator<Skills.Ability>
     {
         const int NUM_DEC = 3;
         const string FORMAT = "0.000";
-        public FuryGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co)
+        public FuryGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             WarriorTalents Talents = c.WarriorTalents; 
             //
-            Rot = new FuryRotation(c, s, cf, wa, co);
+            Rot = new FuryRotation(c, s, cf, wa, co, bo);
             Rot.Initialize();
             LatentGCD = Math.Round(1.5 + co.FullLatency, NUM_DEC);
             HastedGCD = Math.Round(1.0 + co.FullLatency, NUM_DEC);
@@ -500,9 +497,9 @@ namespace Rawr.DPSWarr.Markov
 
     public class StateSpaceGeneratorFuryTest
     {
-        public void StateSpaceGeneratorFuryTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, bool showOutput)
+        public void StateSpaceGeneratorFuryTest1(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, bool showOutput)
         {
-            FuryGenerator gen = new FuryGenerator(c, s, cf, wa, co);
+            FuryGenerator gen = new FuryGenerator(c, s, cf, wa, co, bo);
 #if !SILVERLIGHT
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 #endif
@@ -533,7 +530,11 @@ namespace Rawr.DPSWarr.Markov
 #endif
                         foreach (KeyValuePair<Skills.Ability, double> kvp in mp2.AbilityWeight)
                         {
+#if RAWR3 || SILVERLIGHT
+                            rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * bo.BerserkTimer / mp2.AverageTransitionDuration);
+#else
                             rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * co.Duration / mp2.AverageTransitionDuration);
+#endif
                             averageDamage += kvp.Key.DamageOnUse * kvp.Value;
                         }
 
@@ -547,15 +548,25 @@ namespace Rawr.DPSWarr.Markov
 
                         double rageNeeded = rageNeededNoHS;
                         Skills.HeroicStrike HS = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability as Skills.HeroicStrike;
+#if RAWR3 || SILVERLIGHT
+                        rageNeeded += HS.FullRageCost * (bo.BerserkTimer / wa.MhEffectiveSpeed * gen.HSPerc);
+                        double rageGenerated = wa.MHSwingRage * (bo.BerserkTimer / wa.MhEffectiveSpeed) +
+                                               wa.OHSwingRage * (bo.BerserkTimer / wa.OhEffectiveSpeed);
+#else
                         rageNeeded += HS.FullRageCost * (co.Duration / wa.MhEffectiveSpeed * gen.HSPerc);
                         double rageGenerated = wa.MHSwingRage * (co.Duration / wa.MhEffectiveSpeed) +
                                                wa.OHSwingRage * (co.Duration / wa.OhEffectiveSpeed);
+#endif
 
 
                         double HsRage = rageNeeded - rageNeededNoHS;
                         double hsRageNeeded = rageGenerated - rageNeededNoHS;
                         gen.HSPerc = Math.Min((hsRageNeeded / HS.FullRageCost) /
+#if RAWR3 || SILVERLIGHT
+                                     (bo.BerserkTimer / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates
+#else
                                      (co.Duration / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates
+#endif
 
                         oldDPS = dps;
                         numIterations++;
