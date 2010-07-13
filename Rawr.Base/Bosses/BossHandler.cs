@@ -23,6 +23,8 @@ namespace Rawr {
         public string Name;
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
         public ItemDamageType DamageType;
+        /// <summary>This is so you can pull the Default Melee Attack more easily</summary>
+        public bool IsTheDefaultMelee = false;
         /// <summary>The Unmitigated Damage per Hit for this attack, 5000f is 5,000 Raw Unmitigated Damage. When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
         public virtual float DamagePerHit { get; set; }
         /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
@@ -146,6 +148,50 @@ namespace Rawr {
         public BossOptions Clone() {
             BossOptions clone = (BossOptions)this.MemberwiseClone();
             return clone;
+        }
+        public BossOptions CloneThis(BossHandler toClone)
+        {
+            BossHandler clone = (BossHandler)toClone.Clone();
+            // info
+            this.Name = clone.Name;
+            this.Content = clone.Content;
+            this.Instance = clone.Instance;
+            this.Version = clone.Version;
+            this.Comment = clone.Comment;
+            // Basics
+            this.Level = clone.Level;
+            this.Health = clone.Health;
+            this.Armor = clone.Armor;
+            this.BerserkTimer = clone.BerserkTimer;
+            this.SpeedKillTimer = clone.SpeedKillTimer;
+            this.UseParryHaste = clone.UseParryHaste;
+            this.InBackPerc_Melee = clone.InBackPerc_Melee;
+            this.InBackPerc_Ranged = clone.InBackPerc_Ranged;
+            this.Max_Players = clone.Max_Players;
+            this.Min_Healers = clone.Min_Healers;
+            this.Min_Tanks = clone.Min_Tanks;
+            // Offensive
+            this.MultiTargsPerc = clone.MultiTargsPerc;
+            this.MaxNumTargets = clone.MaxNumTargets;
+            this.DoTs = clone.DoTs;
+            this.Attacks = clone.Attacks;
+            // Defensive
+            this.Resist_Physical = clone.Resist_Physical;
+            this.Resist_Frost = clone.Resist_Physical;
+            this.Resist_Fire = clone.Resist_Physical;
+            this.Resist_Nature = clone.Resist_Nature;
+            this.Resist_Arcane = clone.Resist_Arcane;
+            this.Resist_Shadow = clone.Resist_Shadow;
+            this.Resist_Holy = clone.Resist_Holy;
+            // Impedences
+            this.Stuns = clone.Stuns;
+            this.Moves = clone.Moves;
+            this.Fears = clone.Fears;
+            this.Roots = clone.Roots;
+            this.Disarms = clone.Disarms;
+            this.TimeBossIsInvuln = clone.TimeBossIsInvuln;
+            //
+            return this;
         }
         #region Variables
         private bool INBACK = false;
@@ -278,8 +324,8 @@ namespace Rawr {
         private float HEALTH = 1000000f;
         private int SPEEDKILLTIMER = 3 * 60, LEVEL = (int)POSSIBLE_LEVELS.LVLP3, ARMOR = (int)StatConversion.NPC_ARMOR[3];
         private bool USERPARRYHASTE = false;
-        // Resistance
-        private float RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
+        // Defensive
+        private double RESISTANCE_PHYSICAL,RESISTANCE_NATURE,RESISTANCE_ARCANE,RESISTANCE_FROST,RESISTANCE_FIRE,RESISTANCE_SHADOW,RESISTANCE_HOLY;
         // Attacks
         private List<DoT> DOTS;// not actually used! Dont even try!
         private List<Attack> ATTACKS = new List<Attack>();
@@ -303,7 +349,7 @@ namespace Rawr {
         #endregion
 
         #region Get/Set
-        // ==== Basics ====
+        #region ==== Info ====
         protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
         protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
         public string Name               { get { return NAME;               } set { NAME               = value; OnPropertyChanged("Name"              ); } }
@@ -313,20 +359,296 @@ namespace Rawr {
         public Versions Version          { get { return VERSION;            } set { VERSION            = value; OnPropertyChanged("Version"           ); } }
         public string VersionString      { get { return GetVersionString(VERSION); } }
         public string Comment            { get { return COMMENT;            } set { COMMENT            = value; OnPropertyChanged("Comment"           ); } }
+        #endregion
+        #region ==== Basics ====
         public int    Level              { get { return LEVEL;              } set { LEVEL              = value; OnPropertyChanged("Level"             ); } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; OnPropertyChanged("Health"            ); } }
         public int    Armor              { get { return ARMOR;              } set { ARMOR              = value; OnPropertyChanged("Armor"             ); } }
         public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; OnPropertyChanged("UseParryHaste"     ); } }
-        // ==== Situational Changes ====
-        // Standing in back
         public float  InBackPerc_Melee   { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; OnPropertyChanged("InBackPerc_Melee"  ); } }
         public float  InBackPerc_Ranged  { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; OnPropertyChanged("InBackPerc_Ranged" ); } }
-        // Multiple Targets
+        /// <summary>Example values: 5, 10, 25, 40</summary>
+        public int Max_Players { get { return MAX_PLAYERS; } set { MAX_PLAYERS = value; } }
+        public int Min_Healers { get { return MIN_HEALERS; } set { MIN_HEALERS = value; } }
+        public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; } }
+        #endregion
+        #region ==== Offensive ====
         public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; OnPropertyChanged("MultiTargsPerc"    ); } }
         public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; OnPropertyChanged("MaxNumTargs"       ); } }
-        // Impedences
+        // ==== Attacks ====
+        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
+        public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
+        public Attack DynamicCompiler_Attacks
+        {
+            get
+            {
+                // Make one
+                Attack retVal = new Attack()
+                {
+                    // Basics
+                    Name = "Dynamic",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = 80f * 1000f,
+                    DamageIsPerc = false,
+                    MaxNumTargets = 1,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    UseParryHaste = true,
+                    Interruptable = false,
+                    // Player Avoidances
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
+                    // Targetting Ignores
+                    IgnoresMTank = false,
+                    IgnoresOTank = false,
+                    IgnoresTTank = false,
+                    IgnoresHealers = false,
+                    IgnoresMeleeDPS = false,
+                    IgnoresRangedDPS = false,
+                };
+                if (Attacks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
+                // Find the averaged _____
+                int numTargs = 0;
+                float speeds = 0;
+                float dph = 0;
+                foreach(Attack a in Attacks){
+                    dph += a.DamagePerHit;
+                    numTargs += (int)a.MaxNumTargets;
+                    speeds += (int)a.AttackSpeed;
+                }
+                // Mark those into the retVal
+                retVal.DamagePerHit = dph / (float)Attacks.Count;
+                retVal.MaxNumTargets = (int)((float)numTargs / (float)Attacks.Count);
+                retVal.AttackSpeed = (int)(speeds / (float)Attacks.Count);
+                // Double-check we aren't sending a bad one
+                if (retVal.AttackSpeed <= 0f)
+                {
+                    retVal.AttackSpeed = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
+        public Attack DynamicCompiler_FilteredAttacks(List<Attack> atks)
+        {
+            // Make one
+            Attack retVal = new Attack()
+            {
+                // Basics
+                Name = "DynamicFiltered",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = 80f * 1000f,
+                DamageIsPerc = false,
+                MaxNumTargets = 1,
+                AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                UseParryHaste = true,
+                Interruptable = false,
+                // Player Avoidances
+                Missable = true,
+                Dodgable = true,
+                Parryable = true,
+                Blockable = true,
+                // Targetting Ignores
+                IgnoresMTank = false,
+                IgnoresOTank = false,
+                IgnoresTTank = false,
+                IgnoresHealers = false,
+                IgnoresMeleeDPS = false,
+                IgnoresRangedDPS = false,
+            };
+            if (atks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
+            // Find the averaged _____
+            int numTargs = 0;
+            float speeds = 0;
+            float dph = 0;
+            foreach (Attack a in atks)
+            {
+                dph += a.DamagePerHit;
+                numTargs += (int)a.MaxNumTargets;
+                speeds += (int)a.AttackSpeed;
+            }
+            // Mark those into the retVal
+            retVal.DamagePerHit = dph / (float)atks.Count;
+            retVal.MaxNumTargets = (int)((float)numTargs / (float)atks.Count);
+            retVal.AttackSpeed = (int)(speeds / (float)atks.Count);
+            // Double-check we aren't sending a bad one
+            if (retVal.AttackSpeed <= 0f)
+            {
+                retVal.AttackSpeed = -1f; // if we are, use this as a flag
+            }
+            // Return results
+            return retVal;
+        }
+        // ==== Methods for Pulling Boss DPS ==========
+        public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
+            List<Attack> attacks = new List<Attack>();
+            if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
+            foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
+            return attacks;
+        }
+        /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
+        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
+        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
+        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty,
+                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
+        {
+            List<Attack> attacks = GetFilteredAttackList(type);
+            if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
+
+            float retDPS = 0f;
+
+            foreach (Attack a in attacks) {
+                float damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty),
+                      damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc), // takes out the player's defend table
+                      swing = a.AttackSpeed;
+                      damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                float acts = BerserkTimer / swing,
+                      avgDmg = damageOnUse * acts,
+                      dps = avgDmg / BerserkTimer;
+                retDPS += dps;
+            }
+
+            return retDPS;
+        }
+        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty, float p_missPerc) {
+            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, p_missPerc, 0, 0, 0, 0);
+        }
+        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty) {
+            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, 0, 0, 0, 0, 0);
+        }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are Melee type. DPS and Healing characters should not normally see this damage.
+        /// Tanks will recieve this damage.
+        /// </summary>
+        public float DPS_SingleTarg_Melee { get { float dps = GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0); return dps; } }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are Ranged type. DPS and Healing characters will use this
+        /// to determine incoming damage to Raid, on specific targets. Tanks will recieve this damage in
+        /// addition to the Melee single-target under chance methods.
+        /// </summary>
+        public float DPS_SingleTarg_Ranged { get { float dps = GetDPSByType(ATTACK_TYPES.AT_RANGED, 0, 0, 0); return dps; } }
+        /// <summary>
+        /// Gets Raw DPS of all attacks that are AoE type. DPS and Healing characters will use this
+        /// to determine incoming damage to Raid. Tanks will recieve this damage in addition to the
+        /// Melee single-target.
+        /// </summary>
+        public float DPS_AoE { get { float dps = GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0); return dps; } }
+        /// <summary>
+        /// Iterates though the attack list to find the Default Melee Attack.
+        /// <para>If the Attack list is empty, this will return null</para>
+        /// <para>If the Attack list doesn't have an attack listed as the Default Melee Attack, this will return null.</para>
+        /// </summary>
+        public Attack DefaultMeleeAttack {
+            get
+            {
+                // There are no attacks
+                if (Attacks.Count <= 0) { return null; }
+                // Iterating the list to find it
+                foreach (Attack a in Attacks) {
+                    if (a.IsTheDefaultMelee) {
+                        return a;
+                    }
+                }
+                // We reached the end without finding it
+                return null;
+                
+            }
+        }
+        // AoE Targets
+        public float  AoETargsFreq  {
+            get {
+                List<Attack> attacks = GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
+                if (attacks.Count > 0) {
+                    // Adds up the total number of AoEs and evens them out over the Berserk Timer
+                    float numAoEsOverDur = 0;
+                    foreach (Attack s in attacks) {
+                        numAoEsOverDur += BerserkTimer / s.AttackSpeed;
+                    }
+                    float freq = BerserkTimer / numAoEsOverDur;
+                    return freq;
+                } else {
+                    return BerserkTimer;
+                }
+            }
+        }
+        public float  AoETargsDMG   {
+            get {
+                List<Attack> attacks = GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
+                if (attacks.Count > 0) {
+                    // Averages out the Root Durations
+                    float TotalaAoEDmg = 0;
+                    foreach (Attack s in attacks) { TotalaAoEDmg += s.DamagePerHit; }
+                    float dur = TotalaAoEDmg / attacks.Count;
+                    return dur;
+                } else {
+                    return 1500f;
+                }
+            }
+        }
+        #endregion
+        #region ==== Defensive ====
+        public double Resist_Physical { get { return RESISTANCE_PHYSICAL; } set { RESISTANCE_PHYSICAL = value; OnPropertyChanged("Resist_Physical"); } }
+        public double Resist_Frost { get { return RESISTANCE_FROST; } set { RESISTANCE_FROST = value; OnPropertyChanged("Resist_Frost"); } }
+        public double Resist_Fire { get { return RESISTANCE_FIRE; } set { RESISTANCE_FIRE = value; OnPropertyChanged("Resist_Fire"); } }
+        public double Resist_Nature { get { return RESISTANCE_NATURE; } set { RESISTANCE_NATURE = value; OnPropertyChanged("Resist_Nature"); } }
+        public double Resist_Arcane { get { return RESISTANCE_ARCANE; } set { RESISTANCE_ARCANE = value; OnPropertyChanged("Resist_Arcane"); } }
+        public double Resist_Shadow { get { return RESISTANCE_SHADOW; } set { RESISTANCE_SHADOW = value; OnPropertyChanged("Resist_Shadow"); } }
+        public double Resist_Holy { get { return RESISTANCE_HOLY; } set { RESISTANCE_HOLY = value; OnPropertyChanged("Resist_Holy"); } }
+        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). </summary>
+        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
+        public double Resistance(ItemDamageType type) {
+            switch (type) {
+                case ItemDamageType.Physical: return RESISTANCE_PHYSICAL;
+                case ItemDamageType.Nature:   return RESISTANCE_NATURE;
+                case ItemDamageType.Arcane:   return RESISTANCE_ARCANE;
+                case ItemDamageType.Frost:    return RESISTANCE_FROST;
+                case ItemDamageType.Fire:     return RESISTANCE_FIRE;
+                case ItemDamageType.Shadow:   return RESISTANCE_SHADOW;
+                case ItemDamageType.Holy:     return RESISTANCE_HOLY;
+                default: break;
+            }
+            return 0f;
+        }
+        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
+        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
+        public double Resistance(ItemDamageType type, float newValue) {
+            switch (type) {
+                case ItemDamageType.Physical: return RESISTANCE_PHYSICAL = newValue;
+                case ItemDamageType.Nature:   return RESISTANCE_NATURE   = newValue;
+                case ItemDamageType.Arcane:   return RESISTANCE_ARCANE   = newValue;
+                case ItemDamageType.Frost:    return RESISTANCE_FROST    = newValue;
+                case ItemDamageType.Fire:     return RESISTANCE_FIRE     = newValue;
+                case ItemDamageType.Shadow:   return RESISTANCE_SHADOW   = newValue;
+                case ItemDamageType.Holy:     return RESISTANCE_HOLY     = newValue;
+                default: break;
+            }
+            return 0f;
+        }
+        #endregion
+        #region ==== Impedences ====
         protected float Freq(List<Impedence> imps) {
             // Adds up the total number of impedences
             // and evens them out over the Berserk Timer
@@ -748,254 +1070,10 @@ namespace Rawr {
         }
         // Other
         public float  TimeBossIsInvuln   { get { return TIMEBOSSISINVULN;   } set { TIMEBOSSISINVULN   = value; } }
-        // ==== Fight Requirements ====
-        /// <summary>Example values: 5, 10, 25, 40</summary>
-        public int    Max_Players        { get { return MAX_PLAYERS;        } set { MAX_PLAYERS        = value; } }
-        public int    Min_Healers        { get { return MIN_HEALERS;        } set { MIN_HEALERS        = value; } }
-        public int    Min_Tanks          { get { return MIN_TANKS;          } set { MIN_TANKS          = value; } }
-        // ==== Attacks ====
-        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
-        public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
-        public Attack DynamicCompiler_Attacks
-        {
-            get
-            {
-                // Make one
-                Attack retVal = new Attack()
-                {
-                    // Basics
-                    Name = "Dynamic",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = 80f * 1000f,
-                    DamageIsPerc = false,
-                    MaxNumTargets = 1,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    UseParryHaste = true,
-                    Interruptable = false,
-                    // Player Avoidances
-                    Missable = true,
-                    Dodgable = true,
-                    Parryable = true,
-                    Blockable = true,
-                    // Targetting Ignores
-                    IgnoresMTank = false,
-                    IgnoresOTank = false,
-                    IgnoresTTank = false,
-                    IgnoresHealers = false,
-                    IgnoresMeleeDPS = false,
-                    IgnoresRangedDPS = false,
-                };
-                if (Attacks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
-                // Find the averaged _____
-                int numTargs = 0;
-                float speeds = 0;
-                float dph = 0;
-                foreach(Attack a in Attacks){
-                    dph += a.DamagePerHit;
-                    numTargs += (int)a.MaxNumTargets;
-                    speeds += (int)a.AttackSpeed;
-                }
-                // Mark those into the retVal
-                retVal.DamagePerHit = dph / (float)Attacks.Count;
-                retVal.MaxNumTargets = (int)((float)numTargs / (float)Attacks.Count);
-                retVal.AttackSpeed = (int)(speeds / (float)Attacks.Count);
-                // Double-check we aren't sending a bad one
-                if (retVal.AttackSpeed <= 0f)
-                {
-                    retVal.AttackSpeed = -1f; // if we are, use this as a flag
-                }
-                // Return results
-                return retVal;
-            }
-        }
-        public Attack DynamicCompiler_FilteredAttacks(List<Attack> atks)
-        {
-            // Make one
-            Attack retVal = new Attack()
-            {
-                // Basics
-                Name = "DynamicFiltered",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = 80f * 1000f,
-                DamageIsPerc = false,
-                MaxNumTargets = 1,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                UseParryHaste = true,
-                Interruptable = false,
-                // Player Avoidances
-                Missable = true,
-                Dodgable = true,
-                Parryable = true,
-                Blockable = true,
-                // Targetting Ignores
-                IgnoresMTank = false,
-                IgnoresOTank = false,
-                IgnoresTTank = false,
-                IgnoresHealers = false,
-                IgnoresMeleeDPS = false,
-                IgnoresRangedDPS = false,
-            };
-            if (atks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
-            // Find the averaged _____
-            int numTargs = 0;
-            float speeds = 0;
-            float dph = 0;
-            foreach (Attack a in atks)
-            {
-                dph += a.DamagePerHit;
-                numTargs += (int)a.MaxNumTargets;
-                speeds += (int)a.AttackSpeed;
-            }
-            // Mark those into the retVal
-            retVal.DamagePerHit = dph / (float)atks.Count;
-            retVal.MaxNumTargets = (int)((float)numTargs / (float)atks.Count);
-            retVal.AttackSpeed = (int)(speeds / (float)atks.Count);
-            // Double-check we aren't sending a bad one
-            if (retVal.AttackSpeed <= 0f)
-            {
-                retVal.AttackSpeed = -1f; // if we are, use this as a flag
-            }
-            // Return results
-            return retVal;
-        }
-        // ==== Methods for Pulling Boss DPS ==========
-        public List<Attack> GetFilteredAttackList(ATTACK_TYPES type) {
-            List<Attack> attacks = new List<Attack>();
-            if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
-            foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
-            return attacks;
-        }
-        /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
-        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
-        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
-        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
-        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
-        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
-        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
-        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
-        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
-        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
-        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty,
-                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
-        {
-            List<Attack> attacks = GetFilteredAttackList(type);
-            if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
-
-            float retDPS = 0f;
-
-            foreach (Attack a in attacks) {
-                float damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty),
-                      damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc), // takes out the player's defend table
-                      swing = a.AttackSpeed;
-                      damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
-                float acts = BerserkTimer / swing,
-                      avgDmg = damageOnUse * acts,
-                      dps = avgDmg / BerserkTimer;
-                retDPS += dps;
-            }
-
-            return retDPS;
-        }
-        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
-        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
-        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
-        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
-        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
-        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
-        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty, float p_missPerc) {
-            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, p_missPerc, 0, 0, 0, 0);
-        }
-        /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
-        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
-        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
-        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
-        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
-        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty) {
-            return GetDPSByType(type, BossDamageBonus, BossDamagePenalty, 0, 0, 0, 0, 0);
-        }
-        /// <summary>
-        /// Gets Raw DPS of all attacks that are Melee type. DPS and Healing characters should not normally see this damage.
-        /// Tanks will recieve this damage.
-        /// </summary>
-        public float DPS_SingleTarg_Melee { get { float dps = GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0); return dps; } }
-        /// <summary>
-        /// Gets Raw DPS of all attacks that are Ranged type. DPS and Healing characters will use this
-        /// to determine incoming damage to Raid, on specific targets. Tanks will recieve this damage in
-        /// addition to the Melee single-target under chance methods.
-        /// </summary>
-        public float DPS_SingleTarg_Ranged { get { float dps = GetDPSByType(ATTACK_TYPES.AT_RANGED, 0, 0, 0); return dps; } }
-        /// <summary>
-        /// Gets Raw DPS of all attacks that are AoE type. DPS and Healing characters will use this
-        /// to determine incoming damage to Raid. Tanks will recieve this damage in addition to the
-        /// Melee single-target.
-        /// </summary>
-        public float DPS_AoE { get { float dps = GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0); return dps; } }
-        // Rooting Targets
-        public float  AoETargsFreq  {
-            get {
-                List<Attack> attacks = GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
-                if (attacks.Count > 0) {
-                    // Adds up the total number of AoEs and evens them out over the Berserk Timer
-                    float numAoEsOverDur = 0;
-                    foreach (Attack s in attacks) {
-                        numAoEsOverDur += BerserkTimer / s.AttackSpeed;
-                    }
-                    float freq = BerserkTimer / numAoEsOverDur;
-                    return freq;
-                } else {
-                    return BerserkTimer;
-                }
-            }
-        }
-        public float  AoETargsDMG   {
-            get {
-                List<Attack> attacks = GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
-                if (attacks.Count > 0) {
-                    // Averages out the Root Durations
-                    float TotalaAoEDmg = 0;
-                    foreach (Attack s in attacks) { TotalaAoEDmg += s.DamagePerHit; }
-                    float dur = TotalaAoEDmg / attacks.Count;
-                    return dur;
-                } else {
-                    return 1500f;
-                }
-            }
-        }
+        #endregion
         #endregion
 
         #region Functions
-        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). </summary>
-        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
-        public float Resistance(ItemDamageType type) {
-            switch (type) {
-                case ItemDamageType.Physical: return RESISTANCE_PHYSICAL;
-                case ItemDamageType.Nature:   return RESISTANCE_NATURE;
-                case ItemDamageType.Arcane:   return RESISTANCE_ARCANE;
-                case ItemDamageType.Frost:    return RESISTANCE_FROST;
-                case ItemDamageType.Fire:     return RESISTANCE_FIRE;
-                case ItemDamageType.Shadow:   return RESISTANCE_SHADOW;
-                case ItemDamageType.Holy:     return RESISTANCE_HOLY;
-                default: break;
-            }
-            return 0f;
-        }
-        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
-        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
-        public float Resistance(ItemDamageType type, float newValue) {
-            switch (type) {
-                case ItemDamageType.Physical: return RESISTANCE_PHYSICAL = newValue;
-                case ItemDamageType.Nature:   return RESISTANCE_NATURE   = newValue;
-                case ItemDamageType.Arcane:   return RESISTANCE_ARCANE   = newValue;
-                case ItemDamageType.Frost:    return RESISTANCE_FROST    = newValue;
-                case ItemDamageType.Fire:     return RESISTANCE_FIRE     = newValue;
-                case ItemDamageType.Shadow:   return RESISTANCE_SHADOW   = newValue;
-                case ItemDamageType.Holy:     return RESISTANCE_HOLY     = newValue;
-                default: break;
-            }
-            return 0f;
-        }
         /// <summary>
         /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
         /// </summary>

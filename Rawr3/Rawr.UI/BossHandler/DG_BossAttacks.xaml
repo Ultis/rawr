@@ -12,11 +12,12 @@ mc:Ignorable="d"
 Width="519"
 xmlns:local="clr-namespace:Rawr.UI"
 x:Class="Rawr.UI.DG_BossAttacks"
-Title="Boss Attacks - Boss Handler" Height="517"
+Title="Boss Attacks - Boss Handler" Height="550"
 >
 
 <Grid x:Name="LayoutRoot" Background="White">
 	<Grid.RowDefinitions>
+		<RowDefinition Height="Auto" />
 		<RowDefinition Height="Auto" />
 		<RowDefinition Height="Auto" />
 		<RowDefinition Height="Auto" />
@@ -47,7 +48,7 @@ Title="Boss Attacks - Boss Handler" Height="517"
 		<ColumnDefinition Width="Auto"/>
 	</Grid.ColumnDefinitions>
     
-	<ListBox x:Name="LB_TheList" Margin="4" Grid.RowSpan="19" Grid.ColumnSpan="2"/>
+	<ListBox x:Name="LB_TheList" Margin="4" Grid.RowSpan="20" Grid.ColumnSpan="2"/>
 	
 	<!-- ===== BASICS ===== -->
 	<!-- Name -->
@@ -86,39 +87,40 @@ Title="Boss Attacks - Boss Handler" Height="517"
 	<!-- UseParryHaste -->
 	<CheckBox x:Name="CK_UseParryHaste" Margin="2" Content="Use Parry Haste" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="4" VerticalAlignment="Center"/>
 	<CheckBox x:Name="CK_Interruptable" Margin="2" Content="Interruptable" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="4" VerticalAlignment="Center"/>
+	<CheckBox x:Name="CK_IsDefaultMelee" Margin="2" Content="Is this the Defaule Melee Attack?" Grid.Column="2" Grid.Row="9" VerticalAlignment="Center" Grid.ColumnSpan="4"/>
 	<!-- ===== PLAYER AVOIDANCE ===== -->
-	<TextBlock x:Name="LB_Avoids" Text="Player Avoidances:" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="9" Margin="2" VerticalAlignment="Center" FontWeight="Bold" />
+	<TextBlock x:Name="LB_Avoids" Text="Player Avoidances:" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="10" Margin="2" VerticalAlignment="Center" FontWeight="Bold" />
 	<!-- Missable -->
-	<CheckBox x:Name="CK_Missable" Margin="2,2,0,2" Content="Missable" Grid.Row="10" Grid.Column="2" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_Missable" Margin="2,2,0,2" Content="Missable" Grid.Row="11" Grid.Column="2" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
 	<!-- Dodgable -->
-	<CheckBox x:Name="CK_Dodgable" Margin="2,2,0,2" Content="Dodgable" Grid.Row="10" Grid.Column="4" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_Dodgable" Margin="2,2,0,2" Content="Dodgable" Grid.Row="11" Grid.Column="4" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
 	<!-- Parryable -->
-	<CheckBox x:Name="CK_Parryable" Margin="2,2,0,2" Content="Parryable" Grid.Row="11" Grid.Column="2" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_Parryable" Margin="2,2,0,2" Content="Parryable" Grid.Row="12" Grid.Column="2" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
 	<!-- Blockable -->
-	<CheckBox x:Name="CK_Blockable" Margin="2,2,0,2" Content="Blockable" Grid.Row="11" Grid.Column="4" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_Blockable" Margin="2,2,0,2" Content="Blockable" Grid.Row="12" Grid.Column="4" VerticalAlignment="Center" IsChecked="True" Grid.ColumnSpan="2"/>
 	<!-- ===== PLAYER TARGETING ===== -->
-	<TextBlock x:Name="LB_Ignores" Text="Targeting Ignores:" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="12" Margin="2" VerticalAlignment="Center" FontWeight="Bold" />
+	<TextBlock x:Name="LB_Ignores" Text="Targeting Ignores:" Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="13" Margin="2" VerticalAlignment="Center" FontWeight="Bold" />
 	<!-- IgnoresMTank -->
-	<CheckBox x:Name="CK_IgnoresMTank" Margin="2" Content="Main Tank" Grid.Row="13" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresMTank" Margin="2" Content="Main Tank" Grid.Row="14" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	<!-- IgnoresOTank -->
-	<CheckBox x:Name="CK_IgnoresOTank" Margin="2" Content="Off Tank" Grid.Row="13" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresOTank" Margin="2" Content="Off Tank" Grid.Row="14" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	<!-- IgnoresTTank -->
-	<CheckBox x:Name="CK_IgnoresTTank" Margin="2" Content="Tertiary Tank" Grid.Row="14" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresTTank" Margin="2" Content="Tertiary Tank" Grid.Row="15" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	<!-- IgnoresHealers -->
-	<CheckBox x:Name="CK_IgnoresHealers" Margin="2" Content="Healers" Grid.Row="14" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresHealers" Margin="2" Content="Healers" Grid.Row="15" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	<!-- IgnoresMeleeDPS -->
-	<CheckBox x:Name="CK_IgnoresMeleeDPS" Margin="2" Content="Melee DPS" Grid.Row="15" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresMeleeDPS" Margin="2" Content="Melee DPS" Grid.Row="16" Grid.Column="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	<!-- IgnoresRangedDPS -->
-	<CheckBox x:Name="CK_IgnoresRangedDPS" Margin="2" Content="Ranged DPS" Grid.Row="15" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<CheckBox x:Name="CK_IgnoresRangedDPS" Margin="2" Content="Ranged DPS" Grid.Row="16" Grid.Column="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 	
-	<TextBlock x:Name="LB_Chance" Text="Chance:" TextWrapping="Wrap" Grid.Row="16" Grid.Column="2" Margin="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_Chance" Grid.Column="4" Grid.Row="16" Margin="2" Value="100" VerticalAlignment="Center"/>
-	<TextBlock x:Name="LB_Chance2" Text="%" TextWrapping="Wrap" Grid.Row="16" Grid.Column="5" Margin="2" VerticalAlignment="Center"/>
+	<TextBlock x:Name="LB_Chance" Text="Chance:" TextWrapping="Wrap" Grid.Row="17" Grid.Column="2" Margin="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+	<inputToolkit:NumericUpDown x:Name="NUD_Chance" Grid.Column="4" Grid.Row="17" Margin="2" Value="100" VerticalAlignment="Center"/>
+	<TextBlock x:Name="LB_Chance2" Text="%" TextWrapping="Wrap" Grid.Row="17" Grid.Column="5" Margin="2" VerticalAlignment="Center"/>
 	<!-- ===== PLAYER NEGATION ===== -->
 	<!-- Interruptable -->
 	
 	
-	<Button x:Name="BT_Add" Content="Add" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="17" Grid.ColumnSpan="4" Margin="8,2" Click="BT_Add_Click"/>
+	<Button x:Name="BT_Add" Content="Add" d:LayoutOverrides="Height" Grid.Column="2" Grid.Row="18" Grid.ColumnSpan="4" Margin="8,2" Click="BT_Add_Click"/>
 	
 	<Button x:Name="BT_Delete" Width="75" Content="Delete" d:LayoutOverrides="Height, GridBox" Grid.Row="38" Margin="8" Click="BT_Delete_Click"/>
 	<StackPanel Margin="4" Grid.Row="38" Grid.Column="3" Orientation="Horizontal" Grid.ColumnSpan="4" HorizontalAlignment="Right" d:LayoutOverrides="GridBox">

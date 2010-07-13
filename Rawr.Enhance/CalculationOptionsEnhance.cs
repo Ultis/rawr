@@ -97,8 +97,8 @@ namespace Rawr.Enhance
             _targetArmor = (int)boss.Armor;
             _fightLength = boss.BerserkTimer / 60f;
             _inBack = ((_inBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
-            _targetFireResistance = boss.Resistance(ItemDamageType.Fire);
-            _targetNatureResistance = boss.Resistance(ItemDamageType.Nature);
+            _targetFireResistance = (float)boss.Resistance(ItemDamageType.Fire);
+            _targetNatureResistance = (float)boss.Resistance(ItemDamageType.Nature);
             _multipleTargets = boss.MaxNumTargets > 1;
             _additionalTargets = (int)boss.MaxNumTargets - 1;
             _additionalTargetPercent = boss.MultiTargsPerc;

@@ -216,6 +216,7 @@ namespace Rawr.Bosses {
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
+                    IsTheDefaultMelee = true,
                 });
                 // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
                 this[i].Attacks.Add(new Attack {
@@ -376,6 +377,7 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                IsTheDefaultMelee = true,
             });
             // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
             Attacks.Add(new Attack
@@ -523,6 +525,7 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                IsTheDefaultMelee = true,
             });
             // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
             Attacks.Add(new Attack
@@ -630,6 +633,7 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                IsTheDefaultMelee = true,
             });
             // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
             Attacks.Add(new Attack
@@ -737,6 +741,7 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                IsTheDefaultMelee = true,
             });
             // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
             Attacks.Add(new Attack

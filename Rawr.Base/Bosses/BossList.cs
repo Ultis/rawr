@@ -416,9 +416,9 @@ namespace Rawr {
             retboss.UseParryHaste = false;
             // Resistance
             foreach (ItemDamageType t in DamageTypes) {
-                value = passedList[0].Resistance(t);
+                value = (float)passedList[0].Resistance(t);
                 foreach (BossHandler boss in passedList) {
-                    value = Math.Min(value, boss.Resistance(t));
+                    value = (float)Math.Min(value, boss.Resistance(t));
                 }
                 retboss.Resistance(t, value);
             }
@@ -561,7 +561,7 @@ namespace Rawr {
             foreach (ItemDamageType t in DamageTypes) {
                 value = 0f;
                 foreach (BossHandler boss in passedList) {
-                    value += boss.Resistance(t);
+                    value += (float)boss.Resistance(t);
                 }
                 value /= passedList.Length;
                 retboss.Resistance(t, value);
@@ -737,7 +737,7 @@ namespace Rawr {
             foreach (ItemDamageType t in DamageTypes) {
                 value = 0f;
                 foreach (BossHandler boss in passedList) {
-                    value = Math.Max(value, boss.Resistance(t));
+                    value = (float)Math.Max(value, boss.Resistance(t));
                 }
                 retboss.Resistance(t, value);
             }

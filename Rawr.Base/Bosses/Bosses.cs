@@ -32,6 +32,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* = Impale =
@@ -102,6 +103,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             /*Attacks.Add(new Attack {
                 Name = "Poison Bolt Volley",
@@ -170,6 +172,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* = Web Wrap =
@@ -274,6 +277,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -306,6 +310,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Decrepit Fever",
@@ -355,6 +360,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Deathbloom",
@@ -411,6 +417,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Disrupting Shout",
@@ -490,6 +497,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Korth'azz's Meteor",
@@ -563,6 +571,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Hateful Strike",
@@ -598,6 +607,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -647,6 +657,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -681,6 +692,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Chain Lightning",
@@ -729,6 +741,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Frost Aura",
@@ -786,6 +799,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Frostbolt (Single)",
@@ -846,6 +860,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -909,6 +924,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -978,6 +994,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -1033,6 +1050,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Fire Breath",
@@ -1080,6 +1098,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
@@ -1122,6 +1141,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1164,6 +1184,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* = Impale =
@@ -1235,6 +1256,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Poison Bolt Volley",
@@ -1292,6 +1314,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* = Web Wrap =
@@ -1396,6 +1419,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1428,6 +1452,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Decrepit Fever",
@@ -1474,6 +1499,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Deathbloom",
@@ -1530,6 +1556,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Disrupting Shout",
@@ -1608,6 +1636,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Korth'azz's Meteor",
@@ -1677,6 +1707,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Hateful Strike",
@@ -1715,6 +1746,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -1765,6 +1798,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -1798,6 +1832,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Chain Lightning",
@@ -1846,6 +1882,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Frost Aura",
@@ -1904,6 +1941,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Frostbolt (Single)",
@@ -1963,6 +2001,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -2023,6 +2063,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -2090,6 +2132,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Shadow Fissure",
@@ -2144,6 +2187,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             Attacks.Add(new Attack {
                 Name = "Fire Breath",
@@ -2189,6 +2234,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
@@ -2228,6 +2275,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -2269,6 +2318,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -2324,6 +2375,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* Flame Jets - Inflicts 5,655 to 6,345 (Heroic: 8,483 to 9,517)
@@ -2413,6 +2466,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.90f;
@@ -2462,6 +2517,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             {
                 /* Gravity Bomb - Causes the target to spawn a Gravity Bomb
@@ -2559,6 +2616,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f;
@@ -2641,6 +2700,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -2682,6 +2743,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
@@ -2726,6 +2789,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.50f;
@@ -2778,6 +2843,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -2834,6 +2901,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
@@ -2906,6 +2975,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
@@ -2956,6 +3027,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -2996,6 +3069,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -3049,6 +3124,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -3091,6 +3168,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 1.00f;
@@ -3150,6 +3229,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
@@ -3196,6 +3277,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
@@ -3238,6 +3321,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;
@@ -3269,6 +3354,8 @@ namespace Rawr.Bosses {
                 DamagePerHit = StandardMeleePerHit[(int)Content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+                IsTheDefaultMelee = true,
             });
             // Situational Changes
             InBackPerc_Melee = 0.95f;

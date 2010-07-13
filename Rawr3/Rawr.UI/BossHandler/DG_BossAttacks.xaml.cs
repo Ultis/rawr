@@ -77,6 +77,7 @@ namespace Rawr.UI
                     AttackType = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
                     UseParryHaste = (bool)CK_UseParryHaste.IsChecked,
                     Interruptable = (bool)CK_Interruptable.IsChecked,
+                    IsTheDefaultMelee = (bool)CK_IsDefaultMelee.IsChecked,
                     // Player Avoidances
                     Missable = (bool)CK_Missable.IsChecked,
                     Dodgable = (bool)CK_Dodgable.IsChecked,
