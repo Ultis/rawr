@@ -108,17 +108,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculationOptionsHolyPriest.cs" />
-    <Compile Include="CalculationOptionsPanelHolyPriest.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="CalculationOptionsHealPriest.cs" />
+    <Compile Include="CalculationOptionsPanelHealPriest.cs" />
+    <Compile Include="CalculationOptionsPanelHealPriest.Designer.cs">
+      <DependentUpon>CalculationOptionsPanelHealPriest.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationOptionsPanelHolyPriest.Designer.cs">
-      <DependentUpon>CalculationOptionsPanelHolyPriest.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CalculationsHolyPriest.cs" />
-    <Compile Include="CharacterCalculationsHolyPriest.cs" />
+    <Compile Include="CalculationsHealPriest.cs" />
+    <Compile Include="CharacterCalculationsHealPriest.cs" />
+    <Compile Include="ComparisonCalculationHealPriest.cs" />
     <Compile Include="Solver.cs" />
-    <Compile Include="ComparisonCalculationHolyPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spell.cs" />
   </ItemGroup>
@@ -129,9 +127,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CalculationOptionsPanelHolyPriest.resx">
-      <DependentUpon>CalculationOptionsPanelHolyPriest.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="CalculationOptionsPanelHealPriest.resx">
+      <DependentUpon>CalculationOptionsPanelHealPriest.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
