@@ -35,11 +35,13 @@ namespace Rawr.Rogue
         public Stats BasicStats { get; set; }
         public int TargetLevel { get; set; }
 
-        public float AvoidedWhiteAttacks { get; set; }
+        public float AvoidedWhiteMHAttacks { get; set; }
+        public float AvoidedWhiteOHAttacks { get; set; }
         public float AvoidedAttacks { get; set; }
         public float AvoidedFinisherAttacks { get; set; }
         public float AvoidedPoisonAttacks { get; set; }
-        public float DodgedAttacks { get; set; }
+        public float DodgedMHAttacks { get; set; }
+        public float DodgedOHAttacks { get; set; }
         public float ParriedAttacks { get; set; }
         public float MissedWhiteAttacks { get; set; }
         public float MissedAttacks { get; set; }
@@ -133,8 +135,8 @@ namespace Rawr.Rogue
             dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
             dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
 
-            dictValues.Add("Avoided White Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedWhiteAttacks, DodgedAttacks, MissedWhiteAttacks));
-            dictValues.Add("Avoided Yellow Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Avoided White Attacks", string.Format("{0}% / {1}%*Mainhand: {2}% Dodged, {3}% Missed\n   Offhand: {4}% Dodged, {3}% Missed", AvoidedWhiteMHAttacks, AvoidedWhiteOHAttacks, DodgedMHAttacks, MissedWhiteAttacks, DodgedOHAttacks));
+            dictValues.Add("Avoided Yellow Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedMHAttacks, MissedAttacks));
             dictValues.Add("Avoided Poison Attacks", string.Format("{0}%*{1}% Missed", AvoidedPoisonAttacks, MissedPoisonAttacks));
             dictValues.Add("Crit Chance", CritChance.ToString() + "%");
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
@@ -147,11 +149,12 @@ namespace Rawr.Rogue
             dictValues.Add("Custom Rotation DPS", CustomRotation.DPS.ToString());
 
 
-            float chanceWhiteNonAvoided = 1f - (AvoidedWhiteAttacks / 100f);
+            float chanceWhiteMHNonAvoided = 1f - (AvoidedWhiteMHAttacks / 100f);
+            float chanceWhiteOHNonAvoided = 1f - (AvoidedWhiteOHAttacks / 100f);
             float chanceNonAvoided = 1f - (AvoidedAttacks / 100f);
             float chancePoisonNonAvoided = 1f - (AvoidedPoisonAttacks / 100f);
-            dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteNonAvoided, Duration));
-            dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteNonAvoided, Duration));
+            dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteMHNonAvoided, Duration));
+            dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
             dictValues.Add("Backstab", BackstabStats.GetStatsTexts(HighestDPSRotation.BackstabCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Hemorrhage", HemoStats.GetStatsTexts(HighestDPSRotation.HemoCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));

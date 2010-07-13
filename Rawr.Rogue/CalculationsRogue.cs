@@ -465,21 +465,33 @@ namespace Rawr.Rogue
 
             float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Rogue);
             float spellHitBonus = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Rogue);
-            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise, CharacterClass.Rogue);
+            float expertiseMHBonus = ((character.Race == CharacterRace.Human && (mainHand.Type == ItemType.OneHandSword || mainHand.Type == ItemType.OneHandMace)) ? 3 : 0) +
+                                     ((character.Race == CharacterRace.Dwarf && (mainHand.Type == ItemType.OneHandMace)) ? 5 : 0) +
+                                     ((character.Race == CharacterRace.Orc && (mainHand.Type == ItemType.OneHandAxe || mainHand.Type == ItemType.FistWeapon)) ? 5 : 0);
+            float expertiseOHBonus = ((character.Race == CharacterRace.Human && (offHand.Type == ItemType.OneHandSword || offHand.Type == ItemType.OneHandMace)) ? 3 : 0) +
+                                     ((character.Race == CharacterRace.Dwarf && (offHand.Type == ItemType.OneHandMace)) ? 5 : 0) +
+                                     ((character.Race == CharacterRace.Orc && (offHand.Type == ItemType.OneHandAxe || offHand.Type == ItemType.FistWeapon)) ? 5 : 0);
+            expertiseMHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseMHBonus, CharacterClass.Rogue);
+            expertiseOHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseOHBonus, CharacterClass.Rogue);
 
-            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
+            float chanceMHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseMHBonus);
+            float chanceOHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseOHBonus);
             float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[targetLevel - 80] - hitBonus);
             float chanceMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
             float chancePoisonMiss = Math.Max(0f, StatConversion.GetSpellMiss(80 - targetLevel, false) - spellHitBonus);
 
             float glanceMultiplier = 0.7f;
-            float chanceWhiteAvoided = chanceWhiteMiss + chanceDodge + chanceParry;
-            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-            float chanceFinisherAvoided = chanceMiss + chanceDodge * (1f - character.RogueTalents.SurpriseAttacks)+ chanceParry;
+            float chanceWhiteMHAvoided = chanceWhiteMiss + chanceMHDodge + chanceParry;
+            float chanceWhiteOHAvoided = chanceWhiteMiss + chanceOHDodge + chanceParry;
+            float chanceMHAvoided = chanceMiss + chanceMHDodge + chanceParry;
+            float chanceOHAvoided = chanceMiss + chanceOHDodge + chanceParry;
+            float chanceFinisherAvoided = chanceMiss + chanceMHDodge * (1f - character.RogueTalents.SurpriseAttacks) + chanceParry;
             float chancePoisonAvoided = chancePoisonMiss;
-            float chanceWhiteNonAvoided = 1f - chanceWhiteAvoided;
-            float chanceNonAvoided = 1f - chanceAvoided;
+            float chanceWhiteMHNonAvoided = 1f - chanceWhiteMHAvoided;
+            float chanceWhiteOHNonAvoided = 1f - chanceWhiteOHAvoided;
+            float chanceMHNonAvoided = 1f - chanceMHAvoided;
+            float chanceOHNonAvoided = 1f - chanceOHAvoided;
             float chancePoisonNonAvoided = 1f - chancePoisonAvoided;
 
             ////Crit Chances
@@ -527,40 +539,35 @@ namespace Rawr.Rogue
                 //Backstab - Identical to Yellow, with higher crit chance
                 float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bonusBackstabCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitBackstabTemp = 1f - chanceCritBackstabTemp;
-                float cpPerBackstabTemp = (chanceHitBackstabTemp + chanceCritBackstabTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
+                float cpPerBackstabTemp = (chanceHitBackstabTemp + chanceCritBackstabTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceMHNonAvoided;
 
                 //Mutilate - Identical to Yellow, with higher crit chance
                 float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + bonusMutiCrit + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitMutiTemp = 1f - chanceCritMutiTemp;
-                float cpPerMutiTemp = (1 + chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
+                float cpPerMutiTemp = (1 + chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceMHNonAvoided;
 
                 //Sinister Strike - Identical to Yellow, with higher crit chance
                 float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
-                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + 0.2f * character.RogueTalents.SealFate + (character.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f))) / chanceNonAvoided;
+                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + 0.2f * character.RogueTalents.SealFate + (character.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f))) / chanceMHNonAvoided;
 
                 //Hemorrhage - Identical to Yellow, with higher crit chance
                 float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance + bonusCPGCrit);
                 float chanceHitHemoTemp = 1f - chanceCritHemoTemp;
-                float cpPerHemoTemp = (chanceHitHemoTemp + chanceCritHemoTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceNonAvoided;
+                float cpPerHemoTemp = (chanceHitHemoTemp + chanceCritHemoTemp * (1f + 0.2f * character.RogueTalents.SealFate)) / chanceMHNonAvoided;
 
                 //Eviscerate - Identical to Yellow, with higher crit chance
                 float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + bonusEvisCrit);
                 float chanceHitEvisTemp = 1f - chanceCritEvisTemp;
 
-                //Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
-                /*float chanceCritBleedTemp = character.DruidTalents.PrimalGore > 0 ? chanceCritYellowTemp : 0f;
-                float chanceCritRipTemp = Math.Min(1f, chanceCritBleedTemp > 0f ? chanceCritBleedTemp + stats.BonusRipCrit : 0f);
-                float chanceCritRakeTemp = stats.BonusRakeCrit > 0 ? chanceCritBleedTemp : 0;*/
-
                 //White
                 float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
                 //White Mainhand
-                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteAvoided);
-                float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteAvoided - chanceGlanceTemp;
+                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteMHAvoided);
+                float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteMHAvoided - chanceGlanceTemp;
                 //White Offhand
-                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteAvoided);
-                float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteAvoided - chanceGlanceTemp;
+                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteOHAvoided);
+                float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteOHAvoided - chanceGlanceTemp;
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
                 chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
@@ -587,13 +594,14 @@ namespace Rawr.Rogue
                 chanceHitPoison += iStat.Chance * chanceHitPoisonTemp;
             }
 
-            calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.DodgedMHAttacks = chanceMHDodge * 100f;
+            calculatedStats.DodgedOHAttacks = chanceOHDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
             calculatedStats.MissedWhiteAttacks = chanceWhiteMiss * 100f;
             calculatedStats.MissedAttacks = chanceMiss * 100f;
             calculatedStats.MissedPoisonAttacks = chancePoisonMiss * 100f;
 
-            float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
+            float timeToReapplyDebuffs = 1f / (1f - chanceMHAvoided) - 1f;
             float lagVariance = (float)calcOpts.LagVariance / 1000f;
             float ruptDurationUptime = 16f + bonusRuptDuration;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
@@ -670,8 +678,8 @@ namespace Rawr.Rogue
             float snDEnergyRaw = 25f;
 
             //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
-            float cpgEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * 0.2f;
-            float finisherEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * (1f - 0.4f * character.RogueTalents.QuickRecovery);
+            float cpgEnergyCostMultiplier = 1f + ((1f / chanceMHNonAvoided) - 1f) * 0.2f;
+            float finisherEnergyCostMultiplier = 1f + ((1f / chanceMHNonAvoided) - 1f) * (1f - 0.4f * character.RogueTalents.QuickRecovery);
             float backstabEnergyAverage = backstabEnergyRaw * cpgEnergyCostMultiplier;
             float hemoEnergyAverage = hemoEnergyRaw * cpgEnergyCostMultiplier;
             float sStrikeEnergyAverage = sStrikeEnergyRaw * cpgEnergyCostMultiplier;
@@ -788,7 +796,7 @@ namespace Rawr.Rogue
             #region Rotations
             RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, stats, calcOpts, 
                 maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
-                chanceWhiteAvoided, chanceAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * 0.2f * character.RogueTalents.SealFate, (1f - chanceHitMuti * chanceHitMuti) * 0.2f * character.RogueTalents.SealFate,
+                chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * 0.2f * character.RogueTalents.SealFate, (1f - chanceHitMuti * chanceHitMuti) * 0.2f * character.RogueTalents.SealFate,
                 mainHandStats, offHandStats, backstabStats, hemoStats, sStrikeStats, mutiStats,
                 ruptStats, evisStats, envenomStats, snDStats, iPStats, dPStats, wPStats, aPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
@@ -824,11 +832,12 @@ namespace Rawr.Rogue
             ruptStats.DamagePerSwing *= ruptStats.DurationUptime / 16f;
             #endregion
 
-            calculatedStats.AvoidedWhiteAttacks = chanceWhiteAvoided * 100f;
-            calculatedStats.AvoidedAttacks = chanceAvoided * 100f;
+            calculatedStats.AvoidedWhiteMHAttacks = chanceWhiteMHAvoided * 100f;
+            calculatedStats.AvoidedWhiteOHAttacks = chanceWhiteOHAvoided * 100f;
+            calculatedStats.AvoidedAttacks = chanceMHAvoided * 100f;
             calculatedStats.AvoidedFinisherAttacks = chanceFinisherAvoided * 100f;
             calculatedStats.AvoidedPoisonAttacks = chancePoisonAvoided * 100f;
-            calculatedStats.DodgedAttacks = chanceDodge * 100f;
+            calculatedStats.DodgedMHAttacks = chanceMHDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
             calculatedStats.MissedAttacks = chanceMiss * 100f;
             calculatedStats.CritChance = chanceCritYellow * 100f;
@@ -920,7 +929,7 @@ namespace Rawr.Rogue
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float spellHitBonus = statsTotal.SpellHit + StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.Rogue);
-            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
+            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Rogue) + statsTotal.Expertise, CharacterClass.Rogue);
             float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
@@ -1422,10 +1431,6 @@ namespace Rawr.Rogue
             if (character.PrimaryProfession == Profession.Alchemy ||
                 character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
-
-            //character.DruidTalents.GlyphOfSavageRoar = true;
-            //character.DruidTalents.GlyphOfShred = true;
-            //character.DruidTalents.GlyphOfRip = true;
         }
 
         private static List<string> _relevantGlyphs = null;

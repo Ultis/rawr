@@ -17,8 +17,10 @@ namespace Rawr.Rogue
         public float OffHandSpeedNorm { get; set; }
         public float ChanceExtraCPPerHit { get; set; }
         public float ChanceExtraCPPerMutiHit { get; set; }
-        public float AvoidedWhiteAttacks { get; set; }
-        public float AvoidedAttacks { get; set; }
+        public float AvoidedWhiteMHAttacks { get; set; }
+        public float AvoidedWhiteOHAttacks { get; set; }
+        public float AvoidedMHAttacks { get; set; }
+        public float AvoidedOHAttacks { get; set; }
         public float AvoidedFinisherAttacks { get; set; }
         public float AvoidedPoisonAttacks { get; set; }
 
@@ -63,7 +65,7 @@ namespace Rawr.Rogue
         private float[] _averageMutiCP = new float[6];
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, bool maintainBleed,
-            float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteAttacks, float avoidedAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
+            float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, 
@@ -78,8 +80,10 @@ namespace Rawr.Rogue
             OffHandSpeed = offHandSpeed;
             MainHandSpeedNorm = mainHandSpeedNorm;
             OffHandSpeedNorm = offHandSpeedNorm;
-            AvoidedWhiteAttacks = avoidedWhiteAttacks;
-            AvoidedAttacks = avoidedAttacks;
+            AvoidedWhiteMHAttacks = avoidedWhiteMHAttacks;
+            AvoidedWhiteOHAttacks = avoidedWhiteOHAttacks;
+            AvoidedMHAttacks = avoidedMHAttacks;
+            AvoidedOHAttacks = avoidedOHAttacks;
             AvoidedFinisherAttacks = avoidedFinisherAttacks;
             AvoidedPoisonAttacks = avoidedPoisonAttacks;
             ChanceExtraCPPerHit = chanceExtraCPPerHit;
@@ -157,7 +161,7 @@ namespace Rawr.Rogue
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          energyRegen * 2f * BonusEnergyRegen * (Duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * Duration / 120f : 0f);
-            float averageGCD = 1f / (1f - AvoidedAttacks);
+            float averageGCD = 1f / (1f - AvoidedMHAttacks);
             float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
             float[] _averageCP = CPG == 0 ? _averageMutiCP : CPG == 1 ? _averageSStrikeCP : _averageNormalCP;
@@ -166,7 +170,7 @@ namespace Rawr.Rogue
 			#region Melee
 			float mainHandCount = Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
             float offHandCount = Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
-            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack * AvoidedWhiteAttacks +
+            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack * AvoidedWhiteOHAttacks +
                                     ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
                                     ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
 			#endregion
