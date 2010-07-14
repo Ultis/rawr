@@ -57,7 +57,7 @@ namespace Rawr.DPSWarr.Skills
             get
             {
 #if RAWR3 || SILVERLIGHT
-                if (BossOpts.MultiTargs) { return 1f + (Math.Min(BossOpts.MaxNumTargets, 1f) - 1f) * BossOpts.MultiTargsPerc / 100f + StatS.BonusTargets; }
+                if (BossOpts.MultiTargs) { return 1f + (Math.Min(BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc/* / 100f*/ + StatS.BonusTargets; }
 #else
                 if (CalcOpts.MultipleTargets) { return 1f + (Math.Min(CalcOpts.MultipleTargetsMax, 1f) - 1f) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets; }
 #endif
@@ -435,7 +435,7 @@ namespace Rawr.DPSWarr.Skills
                 if (_AvgTargets == -1f)
                 {
 #if RAWR3 || SILVERLIGHT
-                    _AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + BossOpts.MultiTargsPerc / 100f * (Math.Min(BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
+                    _AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc/* / 100f*/ * (Math.Min(BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
 #else
                     _AvgTargets = 1f + (CalcOpts.MultipleTargets ? StatS.BonusTargets + CalcOpts.MultipleTargetsPerc / 100f * (Math.Min(CalcOpts.MultipleTargetsMax, Targets) - 1f) : 0f);
 #endif

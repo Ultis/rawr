@@ -316,7 +316,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             ReqMultiTargs = true;
 #if RAWR3 || SILVERLIGHT
-            Cd = BossOpts.MultiTargsPerc != 0 ? 30f / (BossOpts.MultiTargsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
+            Cd = BossOpts.MultiTargsPerc != 0 ? 30f / ((float)BossOpts.MultiTargsPerc/* / 100f*/) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #else
             Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #endif

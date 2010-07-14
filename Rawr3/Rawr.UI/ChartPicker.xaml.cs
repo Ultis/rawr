@@ -38,7 +38,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Gear", "Head", "Neck", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Waist", "Legs", "Feet", "Finger 1", "Finger 2", "Trinket 1", "Trinket 2", "Main Hand", "Off Hand", "Ranged", "Projectile", "Projectile Bag"));
             Items.Add(new ChartPickerItem("Enchants", "Head", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Legs", "Feet", "Finger 1", "Finger 2", "Main Hand", "Off Hand", "Ranged"));
             Items.Add(new ChartPickerItem("Gems", "All Normal", "Red", "Blue", "Yellow", "Meta"));
-            Items.Add(new ChartPickerItem("Buffs", "All", "Food", "Flasks and Elixirs", "Scrolls", "Potions", "Raid Buffs", "Set Bonuses"));
+            Items.Add(new ChartPickerItem("Buffs", "All", "Food", "Elixirs and Flasks", "Scrolls", "Potion", "Raid Buffs", "Set Bonuses"));
             Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Talent Specs", "Glyphs"));
             Items.Add(new ChartPickerItem("Equipped", "Gear", "Enchants", "Buff"));
             Items.Add(new ChartPickerItem("Available", "Gear", "Enchants"));

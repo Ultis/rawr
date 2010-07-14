@@ -72,7 +72,7 @@ namespace Rawr {
         public override string ToString()
         {
             if (AttackSpeed <= 0) { return "None"; }
-            return string.Format("Spd: {0}sec D: {1}{2} #T: {3} {4}{5}",
+            return string.Format("Spd: {0:0.0#}sec D: {1:0}{2} #T: {3:0} {4}{5}",
                 AttackSpeed,
                 DamagePerHit, DamageIsPerc ? "%" : "",
                 MaxNumTargets,
@@ -167,14 +167,17 @@ namespace Rawr {
             this.UseParryHaste = clone.UseParryHaste;
             this.InBackPerc_Melee = clone.InBackPerc_Melee;
             this.InBackPerc_Ranged = clone.InBackPerc_Ranged;
+            this.InBack = (this.InBackPerc_Melee + this.InBackPerc_Ranged) > 0f;
             this.Max_Players = clone.Max_Players;
             this.Min_Healers = clone.Min_Healers;
             this.Min_Tanks = clone.Min_Tanks;
             // Offensive
             this.MultiTargsPerc = clone.MultiTargsPerc;
             this.MaxNumTargets = clone.MaxNumTargets;
+            this.MultiTargs = (this.MultiTargsPerc > 0f && this.MaxNumTargets > 1f);
             this.DoTs = clone.DoTs;
             this.Attacks = clone.Attacks;
+            this.DamagingTargs = (Attacks != null && Attacks.Count > 0);
             // Defensive
             this.Resist_Physical = clone.Resist_Physical;
             this.Resist_Frost = clone.Resist_Physical;
@@ -183,12 +186,12 @@ namespace Rawr {
             this.Resist_Arcane = clone.Resist_Arcane;
             this.Resist_Shadow = clone.Resist_Shadow;
             this.Resist_Holy = clone.Resist_Holy;
-            // Impedences
-            this.Stuns = clone.Stuns;
-            this.Moves = clone.Moves;
-            this.Fears = clone.Fears;
-            this.Roots = clone.Roots;
-            this.Disarms = clone.Disarms;
+            // Impedances
+            this.Stuns = clone.Stuns; this.StunningTargs = this.Stuns != null && this.Stuns.Count > 0;
+            this.Moves = clone.Moves; this.MovingTargs = this.Moves != null && this.Moves.Count > 0;
+            this.Fears = clone.Fears; this.FearingTargs = this.Fears != null && this.Fears.Count > 0;
+            this.Roots = clone.Roots; this.RootingTargs = this.Roots != null && this.Roots.Count > 0;
+            this.Disarms = clone.Disarms; this.DisarmingTargs = this.Disarms != null && this.Disarms.Count > 0;
             this.TimeBossIsInvuln = clone.TimeBossIsInvuln;
             //
             return this;
@@ -335,8 +338,8 @@ namespace Rawr {
         public List<Impedence> Roots = new List<Impedence>();
         public List<Impedence> Moves = new List<Impedence>();
         public List<Impedence> Disarms = new List<Impedence>();
-        private float INBACKPERC_MELEE, INBACKPERC_RANGED,
-                      MULTITARGSPERC, MAXNUMTARGS,
+        private double INBACKPERC_MELEE, INBACKPERC_RANGED, MULTITARGSPERC;
+        private float MAXNUMTARGS,
                       STUNNINGTARGS_FREQ, STUNNINGTARGS_DUR, STUNNINGTARGS_CHANCE,
                       MOVINGTARGS_FREQ, MOVINGTARGS_DUR, MOVINGTARGS_CHANCE,
                       DISARMINGTARGS_FREQ, DISARMINGTARGS_DUR, DISARMINGTARGS_CHANCE,
@@ -367,15 +370,15 @@ namespace Rawr {
         public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
         public bool   UseParryHaste      { get { return USERPARRYHASTE;     } set { USERPARRYHASTE     = value; OnPropertyChanged("UseParryHaste"     ); } }
-        public float  InBackPerc_Melee   { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; OnPropertyChanged("InBackPerc_Melee"  ); } }
-        public float  InBackPerc_Ranged  { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; OnPropertyChanged("InBackPerc_Ranged" ); } }
+        public double  InBackPerc_Melee  { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; OnPropertyChanged("InBackPerc_Melee"  ); } }
+        public double  InBackPerc_Ranged { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; OnPropertyChanged("InBackPerc_Ranged" ); } }
         /// <summary>Example values: 5, 10, 25, 40</summary>
         public int Max_Players { get { return MAX_PLAYERS; } set { MAX_PLAYERS = value; } }
         public int Min_Healers { get { return MIN_HEALERS; } set { MIN_HEALERS = value; } }
         public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; } }
         #endregion
         #region ==== Offensive ====
-        public float  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; OnPropertyChanged("MultiTargsPerc"    ); } }
+        public double MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; OnPropertyChanged("MultiTargsPerc"    ); } }
         public float  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; OnPropertyChanged("MaxNumTargs"       ); } }
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!

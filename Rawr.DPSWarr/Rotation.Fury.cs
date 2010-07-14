@@ -48,7 +48,7 @@ namespace Rawr.DPSWarr
             if (clok)
             {
 #if RAWR3 || SILVERLIGHT
-                percHS -= BossOpts.MultiTargsPerc / 100f;
+                percHS -= (float)BossOpts.MultiTargsPerc/* / 100f*/;
 #else
                 percHS -= CalcOpts.MultipleTargetsPerc / 100f;
 #endif
@@ -70,7 +70,7 @@ namespace Rawr.DPSWarr
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-                percHS -= BossOpts.MultiTargsPerc / 100f;
+                percHS -= (float)BossOpts.MultiTargsPerc/* / 100f*/;
             }
             percCL = (clok ? 1f - percHS : 0f);
             if (_BS != null) _BS.maintainActs = MaintainCDs;

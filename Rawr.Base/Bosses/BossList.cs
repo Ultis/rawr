@@ -444,6 +444,7 @@ namespace Rawr {
                         DamagePerHit = perhit,
                         MaxNumTargets = numtrg,
                         AttackSpeed = atkspd,
+                        IsTheDefaultMelee = true,
                     });
                 }
                 {
@@ -502,11 +503,12 @@ namespace Rawr {
             #endregion
             // Situational Changes
             // In Back
-            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
+            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
+            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
             // Multi-targs
-            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
+            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
             value = 3;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
+            #region Impedances
             // Stun
             value = 0;      foreach (BossHandler boss in passedList) { if (boss.StunningTargsFreq  <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.StunningTargsFreq  ); } } retboss.StunningTargsFreq  = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
             value = 10*1000;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } retboss.StunningTargsDur   = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
@@ -542,6 +544,7 @@ namespace Rawr {
             } else {
                 //retboss.Disarms.Add(new Impedence() { Frequency = retboss.DisarmingTargsFreq, Duration = retboss.DisarmingTargsDur, Chance = 1f, Breakable = true, });
             }
+            #endregion
             //
             return retboss;
         }
@@ -596,6 +599,7 @@ namespace Rawr {
                             DamagePerHit = perhit,
                             MaxNumTargets = numtrg,
                             AttackSpeed = atkspd,
+                            IsTheDefaultMelee = true,
                         });
                     }
                 }
@@ -679,10 +683,10 @@ namespace Rawr {
             #endregion
             // Situational Changes
             // In Back
-            value = 0f; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
-            value = 0f; foreach (BossHandler boss in passedList) { value += boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
             // Multi-targs
-            value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
             // Stun
             value = 0f; foreach (BossHandler boss in passedList) { value += (boss.StunningTargsFreq > 0 && boss.StunningTargsFreq < boss.BerserkTimer) ? boss.StunningTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; retboss.StunningTargsFreq = value;
@@ -780,6 +784,7 @@ namespace Rawr {
                         DamagePerHit = perhit,
                         MaxNumTargets = numtrg,
                         AttackSpeed = atkspd,
+                        IsTheDefaultMelee = true,
                     });
                 }
                 {
@@ -838,10 +843,10 @@ namespace Rawr {
             #endregion
             // Situational Changes
             // In Back
-            value = 1.00f;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
-            value = 1.00f;      foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
             // Multi-targs
-            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
+            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
             value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MaxNumTargets      ); } retboss.MaxNumTargets     = (float)Math.Ceiling(value);
             // Stun
             value = 19 * 20;    foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsFreq  > 0 ? boss.StunningTargsFreq  : value); } retboss.StunningTargsFreq  = Math.Max(20,value);

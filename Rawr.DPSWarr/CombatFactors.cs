@@ -309,7 +309,7 @@ namespace Rawr.DPSWarr {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
 #if RAWR3 || SILVERLIGHT
-                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - BossOpts.InBackPerc_Melee / 100f) : ParryChance);
+                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
 #endif
@@ -319,7 +319,7 @@ namespace Rawr.DPSWarr {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior);
 #if RAWR3 || SILVERLIGHT
-                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - BossOpts.InBackPerc_Melee / 100f) : ParryChance);
+                return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
 #endif
@@ -336,7 +336,7 @@ namespace Rawr.DPSWarr {
         private float MhBlockChance {
             get {
 #if RAWR3 || SILVERLIGHT
-                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - BossOpts.InBackPerc_Melee / 100f) : BlockChanceCap);
+                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
 #endif
@@ -345,7 +345,7 @@ namespace Rawr.DPSWarr {
         private float OhBlockChance {
             get {
 #if RAWR3 || SILVERLIGHT
-                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - BossOpts.InBackPerc_Melee / 100f) : BlockChanceCap);
+                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
 #endif

@@ -27,6 +27,8 @@ namespace Rawr.Properties
 			_default.CombinationEffectMode = 0;
             _default.ItemNameWidthSetting = 0;
 
+            _default.WelcomeScreenSeen = false;
+
             _default.EnforceGemRequirements = true;
             _default.EnforceGemRequirements_Meta = true;
             _default.EnforceGemRequirements_JC = true;
@@ -50,5 +52,6 @@ namespace Rawr.Properties
         public bool EnforceGemRequirements_Unique { get; set; }
 		public int CombinationEffectMode { get; set; }
         public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
+        public bool WelcomeScreenSeen { get; set; }
 	}
 }

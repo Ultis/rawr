@@ -467,7 +467,7 @@ namespace Rawr.DPSWarr {
                     // Assign Rage to each ability
                     float RageForHSCL = availRage * (1f - percTimeUnder20);
 #if RAWR3 || SILVERLIGHT
-                    RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (BossOpts.MultiTargsPerc / 100f)) : 0f;
+                    RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * ((float)BossOpts.MultiTargsPerc/* / 100f*/)) : 0f;
 #else
                     RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
 #endif

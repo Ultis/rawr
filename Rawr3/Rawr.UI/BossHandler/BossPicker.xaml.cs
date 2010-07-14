@@ -61,12 +61,12 @@ namespace Rawr.UI
             NUD_Under35Perc.Value = BossOptions.Under35Perc * 100;
             NUD_Under20Perc.Value = BossOptions.Under20Perc * 100;
             CB_InBackPerc.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
-            CB_InBackPerc.Value = BossOptions.InBackPerc_Melee;
+            CB_InBackPerc.Value = BossOptions.InBackPerc_Melee * 100d;
             // Offensive
             CB_MultiTargsMax.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
             CB_MultiTargsPerc.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
             CB_MultiTargsMax.Value = BossOptions.MaxNumTargets;
-            CB_MultiTargsPerc.Value = BossOptions.MultiTargsPerc * 100;
+            CB_MultiTargsPerc.Value = BossOptions.MultiTargsPerc * 100d;
             BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
             BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
             // The Impedance Checks

@@ -32,6 +32,7 @@ This is the public beta for Rawr3. We ask you to keep the following in mind as y
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen = true;
             this.DialogResult = true;
         }
     }

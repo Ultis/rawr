@@ -36,7 +36,7 @@
         <ScrollViewer Margin="4,52,4,2" VerticalScrollBarVisibility="Auto">
         	<StackPanel>
         		<StackPanel x:Name="GroupStack">
-        			<TextBlock x:Name="ColLabels" Text="                         Red        Yellow       Blue        Prismatic     Meta" TextWrapping="Wrap"/>
+        			<TextBlock x:Name="ColLabels" Text="                         Red        Yellow       Blue      Prismatic     Meta" TextWrapping="Wrap"/>
         		</StackPanel>
         		<toolkit:Expander IsExpanded="true">
         			<toolkit:Expander.Header>

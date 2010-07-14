@@ -101,7 +101,7 @@ namespace Rawr.Enhance
             _targetNatureResistance = (float)boss.Resistance(ItemDamageType.Nature);
             _multipleTargets = boss.MaxNumTargets > 1;
             _additionalTargets = (int)boss.MaxNumTargets - 1;
-            _additionalTargetPercent = boss.MultiTargsPerc;
+            _additionalTargetPercent = (float)boss.MultiTargsPerc;
         }
 
         public bool PriorityInUse(EnhanceAbility abilityType)

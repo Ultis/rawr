@@ -25,6 +25,19 @@
 				</LinearGradientBrush>
 			</Rectangle.Stroke>
 		</Rectangle>
-		<StackPanel x:Name="LegendStack" Margin="4" Orientation="Horizontal"/>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<StackPanel x:Name="LegendStack" Margin="4,4,0,4" Orientation="Horizontal" Height="22" HorizontalAlignment="Left"/>
+			<StackPanel HorizontalAlignment="Left" Margin="12,4,0,4" Grid.Column="1" Orientation="Horizontal">
+				<Image x:Name="AvailableImage" Source="Images/Diamond.png" Margin="2" />
+				<TextBlock Text="= Available for Optimizer" TextWrapping="Wrap" VerticalAlignment="Center" Margin="2"/>
+			</StackPanel>
+		</Grid>
 	</Grid>
 </UserControl>
