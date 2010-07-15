@@ -1213,7 +1213,7 @@ CB_Version.Items.Add("All");
                         calcOpts.Duration = boss.BerserkTimer;
                         calcOpts.InBack = ((calcOpts.InBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
                         calcOpts.MultipleTargets = ((calcOpts.MultipleTargetsPerc = (int)(boss.MultiTargsPerc * 100f)) > 0);
-                        calcOpts.MultipleTargetsMax = Math.Min((float)CB_MultiTargsMax.Maximum, boss.MaxNumTargets);
+                        calcOpts.MultipleTargetsMax = Math.Min((float)CB_MultiTargsMax.Maximum, (float)boss.MaxNumTargets);
                         calcOpts.StunningTargets = boss.Stuns.Count > 0;
                         calcOpts.MovingTargets = boss.Moves.Count > 0;
                         calcOpts.FearingTargets = boss.Fears.Count > 0;

@@ -12,7 +12,7 @@ namespace Rawr.Bosses
     {
         #region Constructors
         public DG_BossSitChanges() { InitializeComponent(); }
-        public DG_BossSitChanges(List<Impedence> list, Flags f)
+        public DG_BossSitChanges(List<Impedance> list, Flags f)
         {
             InitializeComponent();
             Flag = f;
@@ -38,10 +38,10 @@ namespace Rawr.Bosses
             Disarm,
         }
         Flags Flag = Flags.Stun;
-        protected List<Impedence> _TheList = null;
-        public List<Impedence> TheList
+        protected List<Impedance> _TheList = null;
+        public List<Impedance> TheList
         {
-            get { return _TheList ?? (_TheList = new List<Impedence>()); }
+            get { return _TheList ?? (_TheList = new List<Impedance>()); }
             set { _TheList = value; }
         }
         #endregion
@@ -83,7 +83,7 @@ namespace Rawr.Bosses
                     break;
                 }*/
                 default: {
-                    foreach (Impedence s in TheList)
+                    foreach (Impedance s in TheList)
                     {
                         string str = s.ToString();
                         LB_TheList.Items.Add(str);
@@ -152,7 +152,7 @@ namespace Rawr.Bosses
                     break;
                 }*/
                 default: {
-                    Impedence s = new Impedence()
+                    Impedance s = new Impedance()
                     {
                         Frequency = (float)NUD_Freq.Value,
                         Duration = (float)NUD_Dur.Value,
