@@ -263,7 +263,7 @@ namespace Rawr.Bosses {
                     IgnoresOTank = true,
                     IgnoresTTank = true,
                 });
-                this[i].Stuns.Add(new Impedence() {
+                this[i].Stuns.Add(new Impedance() {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                     Duration = duration * 1000,
                     Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
@@ -281,7 +281,7 @@ namespace Rawr.Bosses {
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 45f + 22f,
                 });
-                this[i].Moves.Add(new Impedence() {
+                this[i].Moves.Add(new Impedance() {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
                     Duration = (18f + 2f + 2f) * 1000f,
                     Chance = 1f,
@@ -410,7 +410,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 6.0f,
             });
-            Stuns.Add(new Impedence() {
+            Stuns.Add(new Impedance() {
                 Frequency = Attacks[Attacks.Count-1].AttackSpeed,
                 Duration = 3000,
                 Chance = 1f / (Max_Players - Min_Tanks),
@@ -427,7 +427,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 45f + 22f,
             });
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 22f,
                 Duration = (18f + 2f + 2f) * 1000f,
@@ -558,7 +558,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 6.0f,
             });
-            Stuns.Add(new Impedence()
+            Stuns.Add(new Impedance()
             {
                 Frequency = Attacks[Attacks.Count - 1].AttackSpeed,
                 Duration = 3000,
@@ -576,7 +576,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 45f + 22f,
             });
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 22f,
                 Duration = (18f + 2f + 2f) * 1000f,
@@ -666,7 +666,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 6.0f,
             });
-            Stuns.Add(new Impedence()
+            Stuns.Add(new Impedance()
             {
                 Frequency = Attacks[Attacks.Count - 1].AttackSpeed,
                 Duration = 3000,
@@ -684,7 +684,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 45f + 22f,
             });
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 22f,
                 Duration = (18f + 2f + 2f) * 1000f,
@@ -774,7 +774,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 6.0f,
             });
-            Stuns.Add(new Impedence()
+            Stuns.Add(new Impedance()
             {
                 Frequency = Attacks[Attacks.Count - 1].AttackSpeed,
                 Duration = 3000,
@@ -792,7 +792,7 @@ namespace Rawr.Bosses {
                 MaxNumTargets = Max_Players,
                 AttackSpeed = 45f + 22f,
             });
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 22f,
                 Duration = (18f + 2f + 2f) * 1000f,

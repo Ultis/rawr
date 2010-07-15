@@ -546,34 +546,34 @@ namespace Rawr.DPSWarr {
             get { return _AoETargetsDMG; }
             set { _AoETargetsDMG = value; OnPropertyChanged("AoETargetsDMG"); }
         }
-        private List<Impedence> _stuns;
-        public List<Impedence> Stuns
+        private List<Impedance> _stuns;
+        public List<Impedance> Stuns
         {
-            get { return _stuns ?? (_stuns = new List<Impedence>()); }
+            get { return _stuns ?? (_stuns = new List<Impedance>()); }
             set { _stuns = value; OnPropertyChanged("Stuns"); }
         }
-        private List<Impedence> _moves;
-        public List<Impedence> Moves
+        private List<Impedance> _moves;
+        public List<Impedance> Moves
         {
-            get { return _moves ?? (_moves = new List<Impedence>()); }
+            get { return _moves ?? (_moves = new List<Impedance>()); }
             set { _moves = value; OnPropertyChanged("Moves"); }
         }
-        private List<Impedence> _fears;
-        public List<Impedence> Fears
+        private List<Impedance> _fears;
+        public List<Impedance> Fears
         {
-            get { return _fears ?? (_fears = new List<Impedence>()); }
+            get { return _fears ?? (_fears = new List<Impedance>()); }
             set { _fears = value; OnPropertyChanged("Fears"); }
         }
-        private List<Impedence> _roots;
-        public List<Impedence> Roots
+        private List<Impedance> _roots;
+        public List<Impedance> Roots
         {
-            get { return _roots ?? (_roots = new List<Impedence>()); }
+            get { return _roots ?? (_roots = new List<Impedance>()); }
             set { _roots = value; OnPropertyChanged("Roots"); }
         }
-        private List<Impedence> _disarms;
-        public List<Impedence> Disarms
+        private List<Impedance> _disarms;
+        public List<Impedance> Disarms
         {
-            get { return _disarms ?? (_disarms = new List<Impedence>()); }
+            get { return _disarms ?? (_disarms = new List<Impedance>()); }
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
 //#endif

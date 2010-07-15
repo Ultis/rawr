@@ -775,7 +775,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // Set the Fight Duration to no larger than the Berserk Timer
                 // Question: What is the units for Berserk & Speed Timer? MS/S/M?
                 fFightDuration = Math.Min(hCurrentBoss.BerserkTimer, fFightDuration);
-                bParryHaste = hCurrentBoss.UseParryHaste;
+                bParryHaste = hCurrentBoss.DefaultMeleeAttack != null ? hCurrentBoss.DefaultMeleeAttack.UseParryHaste : false;
                 #endregion 
             }
             #endregion

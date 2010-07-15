@@ -399,7 +399,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
 #if RAWR3 || SILVERLIGHT
-            Targets += (BossOpts.MultiTargs ? (BossOpts.MaxNumTargets - 1f) : 0f);
+            Targets += (BossOpts.MultiTargs ? ((float)BossOpts.MaxNumTargets - 1f) : 0f);
 #else
             Targets += (CalcOpts.MultipleTargets ? (CalcOpts.MultipleTargetsMax - 1f) : 0f);
 #endif

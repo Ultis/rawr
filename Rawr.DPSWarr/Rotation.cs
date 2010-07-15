@@ -577,7 +577,7 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
                 float EMOldActs = EM.numActivates;
                 TimesRooted = 0f;
-                foreach (Impedence r in
+                foreach (Impedance r in
 #if RAWR3 || SILVERLIGHT
                     BossOpts.Roots
 #else
@@ -660,9 +660,9 @@ namespace Rawr.DPSWarr {
                 float EMOldActs = EM.numActivates;
                 TimesFeared = 0f;
 #if RAWR3 || SILVERLIGHT
-                foreach (Impedence s in BossOpts.Stuns)
+                foreach (Impedance s in BossOpts.Stuns)
 #else
-                foreach (Impedence s in CalcOpts.Stuns)
+                foreach (Impedance s in CalcOpts.Stuns)
 #endif
                 {
                     BaseStunDur = Math.Max(0f, (s.Duration / 1000f * (1f - StatS.StunDurReduc)));
@@ -728,9 +728,9 @@ namespace Rawr.DPSWarr {
                 float EMOldActs = EM.numActivates;
                 TimesFeared = 0f;
 #if RAWR3 || SILVERLIGHT
-                foreach (Impedence f in BossOpts.Fears)
+                foreach (Impedance f in BossOpts.Fears)
 #else
-                foreach (Impedence f in CalcOpts.Fears)
+                foreach (Impedance f in CalcOpts.Fears)
 #endif
                 {
                     BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
@@ -845,9 +845,9 @@ namespace Rawr.DPSWarr {
                 float timelostwhilemoving = 0f;
                 float moveGCDs = 0f;
 #if RAWR3 || SILVERLIGHT
-                foreach (Impedence m in BossOpts.Moves)
+                foreach (Impedance m in BossOpts.Moves)
 #else
-                foreach (Impedence m in CalcOpts.Moves)
+                foreach (Impedance m in CalcOpts.Moves)
 #endif
                 {
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));

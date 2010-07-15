@@ -62,7 +62,7 @@ namespace Rawr.Bosses {
                  * Note: Adding 4 seconds to the Duration for moving out before it
                  * starts and then back in after
                 */
-                Moves.Add(new Impedence() {
+                Moves.Add(new Impedance() {
                     Frequency = (80f + 120f) / 2f,
                     Duration = (16f + 4f) * 1000f,
                     Chance = 1f,
@@ -136,7 +136,7 @@ namespace Rawr.Bosses {
                 };
                 Attacks.Add(a);
                 // For each Rain of Fire she has to be moved (assuming 3 seconds to move)
-                Moves.Add(new Impedence() {
+                Moves.Add(new Impedance() {
                     Frequency = a.AttackSpeed,
                     Duration = 3f * 1000f,
                     Chance = 1f,
@@ -195,7 +195,7 @@ namespace Rawr.Bosses {
                 float initial = 20f;
                 float freq = a.AttackSpeed;
                 float chance = 1f + a.MaxNumTargets / (Max_Players - Min_Tanks);
-                Stuns.Add(new Impedence()
+                Stuns.Add(new Impedance()
                 {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) * chance,
                     Duration = 5f * 1000f,
@@ -221,7 +221,7 @@ namespace Rawr.Bosses {
                 float initial = 0f;
                 float freq = a.AttackSpeed;
                 float chance = 1f + a.MaxNumTargets / Max_Players;
-                Stuns.Add(new Impedence()
+                Stuns.Add(new Impedance()
                 {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)),
                     Duration = 6f * 1000f,
@@ -327,7 +327,7 @@ namespace Rawr.Bosses {
             // Every 90 seconds for 45 seconds you must do the safety dance
             // If you are good you can stop 4 times for 5 seconds each and do
             // something to the boss
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 90f+45f,
                 Duration = (45f-4f*5f) * 1000f,
                 Chance = 1f,
@@ -382,7 +382,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 1.00f;
             // Initial 10 seconds to pop first Spore then every 3rd spore
             // after that (90 seconds respawn then 10 sec moving to/back)
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 90f,
                 Duration = 10f * 1000f,
                 Chance = 1f,
@@ -536,7 +536,7 @@ namespace Rawr.Bosses {
             // Swap 1st 2 mobs once: 15
             // Get to the back once: 10
             // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 30f,
                 Duration = 10f * 1000f,
                 Chance = 0.40f,
@@ -614,7 +614,7 @@ namespace Rawr.Bosses {
             // Every 8 seconds for 3 seconds Grob has to be kited to
             // avoid Poison Cloud Farts. This goes on the entire fight
             // Dropping the Dur to 1 sec for usability
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 8f,
                 Duration = 1f * 1000f,
                 Chance = 1f,
@@ -622,7 +622,7 @@ namespace Rawr.Bosses {
             });
             // Every 20 seconds 1/10 chance to get hit with Mutating Injection
             // You have to run off for 10 seconds then run back for 4-5
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 20f,
                 Duration = (10f+(4f+5f)/2f) * 1000f,
                 Chance = 1f / (Max_Players - 1f),
@@ -706,7 +706,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.50f;
             // Every 30 seconds, polarity shift, 3 sec move
             // 50% chance that your polarity will change
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 30f,
                 Duration = 3f * 1000f,
                 Chance = 0.50f,
@@ -763,7 +763,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every 45(+30) seconds for 30 seconds Sapph is in the air
             // He stops this at 10% hp
-            Moves.Add(new Impedence() {
+            Moves.Add(new Impedance() {
                 Frequency = 45f + 30f,
                 Duration = 30f * 1000f,
                 Chance = 0.90f,
@@ -825,7 +825,7 @@ namespace Rawr.Bosses {
             // We're assuming they pop every 30 seconds and you have to be
             // moved for 6 seconds and there's a 1/10 chance he will select
             // you over someone else
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 6f * 1000f,
@@ -881,7 +881,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 60f + 20f,
                 Duration = 20f * 1000f,
@@ -890,7 +890,7 @@ namespace Rawr.Bosses {
             });
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = Attacks[1].AttackSpeed,
                 Duration = (5f + 1f) * 1000f,
@@ -946,7 +946,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             {
                 // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = 30f + 20f,
                     Duration = 20f * 1000f,
@@ -959,7 +959,7 @@ namespace Rawr.Bosses {
             {
                 // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
                 // 1/10 chance he'll pick you
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = Attacks[1].AttackSpeed,
                     Duration = (5f + 1f) * 1000f,
@@ -1016,7 +1016,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = Attacks[1].AttackSpeed,
                 Duration = (5f + 1f) * 1000f,
@@ -1063,7 +1063,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45 seconds for 10 seconds you gotta move for Lava Waves
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f,
                 Duration = 10f * 1000f,
@@ -1103,7 +1103,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.75f;
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 5f * 1000f,
@@ -1147,7 +1147,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = (70f + 120f) / 2f,
                 Duration = (16f+4f) * 1000f,
@@ -1214,7 +1214,7 @@ namespace Rawr.Bosses {
                  * Note: Adding 4 seconds to the Duration for moving out before it
                  * starts and then back in after
                 */
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = (80f + 120f) / 2f,
                     Duration = (16f + 4f) * 1000f,
@@ -1277,7 +1277,7 @@ namespace Rawr.Bosses {
                 };
                 Attacks.Add(a);
                 // For each Rain of Fire she has to be moved (assuming 3 seconds to move)
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = a.AttackSpeed,
                     Duration = 3f * 1000f,
@@ -1337,7 +1337,7 @@ namespace Rawr.Bosses {
                 float initial = 20f;
                 float freq = a.AttackSpeed;
                 float chance = a.MaxNumTargets / (Max_Players - Min_Tanks);
-                Stuns.Add(new Impedence()
+                Stuns.Add(new Impedance()
                 {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
                     Duration = 5f * 1000f,
@@ -1363,7 +1363,7 @@ namespace Rawr.Bosses {
                 float initial = 0f;
                 float freq = a.AttackSpeed;
                 float chance = a.MaxNumTargets / Max_Players;
-                Stuns.Add(new Impedence()
+                Stuns.Add(new Impedance()
                 {
                     Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
                     Duration = 6f * 1000f,
@@ -1465,7 +1465,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.25f;
             // Every 90 seconds for 45 seconds you must do the safety dance
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 90f + 45f,
                 Duration = (45f-4f*5f) * 1000f,
@@ -1521,7 +1521,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 1.00f;
             // Initial 10 seconds to pop first Spore then every 3rd spore
             // after that (90 seconds respawn then 10 sec moving to/back)
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 90f,
                 Duration = 10f * 1000f,
@@ -1672,7 +1672,7 @@ namespace Rawr.Bosses {
             // Swap 1st 2 mobs once: 15
             // Get to the back once: 10
             // Bounce back and forth in the back: Every 30 sec for 10 sec but for only 40% of the fight
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 10f * 1000f,
@@ -1753,7 +1753,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every 8 seconds for 3 seconds Grob has to be kited to
             // avoid Poison Cloud Farts. This goes on the entire fight
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 8f,
                 Duration = 1f * 1000f,
@@ -1762,7 +1762,7 @@ namespace Rawr.Bosses {
             });
             // Every 20 seconds 1/10 chance to get hit with Mutating Injection
             // You have to run off for 10 seconds then run back for 4-5
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 20f,
                 Duration = (10f+(4f+5f)/2f) * 1000f,
@@ -1846,7 +1846,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.50f;
             // Every 30 seconds, polarity shift, 3 sec move
             // 50% chance that your polarity will change
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 3f * 1000f,
@@ -1904,7 +1904,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every 45(+30) seconds for 30 seconds Sapph is in the air
             // He stops this at 10% hp
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 30f,
                 Duration = 30f * 1000f,
@@ -1967,7 +1967,7 @@ namespace Rawr.Bosses {
             // We're assuming they pop every 30 seconds and you have to be
             // moved for 6 seconds and there's a 1/10 chance he will select
             // you over someone else
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 6f * 1000f,
@@ -2021,7 +2021,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 60 seconds for 20 seconds dps has to jump into the portal and kill the add
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 60f + 20f,
                 Duration = 20f * 1000f,
@@ -2030,7 +2030,7 @@ namespace Rawr.Bosses {
             });
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/10 chance he'll pick you
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = Attacks[1].AttackSpeed,
                 Duration = (5f + 1f) * 1000f,
@@ -2084,7 +2084,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             {
                 // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = 30f + 20f,
                     Duration = 20f * 1000f,
@@ -2097,7 +2097,7 @@ namespace Rawr.Bosses {
             {
                 // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
                 // 1/10 chance he'll pick you
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = Attacks[1].AttackSpeed,
                     Duration = (5f + 1f) * 1000f,
@@ -2154,7 +2154,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
             // 1/25 chance he'll pick you
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = Attacks[1].AttackSpeed,
                 Duration = (5f + 1f) * 1000f,
@@ -2200,7 +2200,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.95f;
             // Every 45 seconds for 10 seconds you gotta move for Lava Waves
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f,
                 Duration = 10f * 1000f,
@@ -2240,7 +2240,7 @@ namespace Rawr.Bosses {
             // Situational Changes
             InBackPerc_Melee = 0.75f;
             // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 30f,
                 Duration = 5f * 1000f,
@@ -2282,7 +2282,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 0.95f;
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = (70f + 120f) / 2f,
                 Duration = (16f+4f) * 1000f,
@@ -2325,7 +2325,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 1.00f;
             // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
             // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 18f,
                 Duration = (18f + 5f + 5f) * 1000f,
@@ -2334,7 +2334,7 @@ namespace Rawr.Bosses {
             });
             // Lightning Nova, usually happens a few seconds after the overcharged add dies
             // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 18f,
                 Duration = (4f + 4f) * 1000f,
@@ -2411,7 +2411,7 @@ namespace Rawr.Bosses {
                     MaxNumTargets = Max_Players,
                 };
                 Attacks.Add(a);
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = a.AttackSpeed,
                     Duration = 5f * 1000f,
@@ -2534,7 +2534,7 @@ namespace Rawr.Bosses {
                     AttackSpeed = 25,
                 };
                 Attacks.Add(a);
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = a.AttackSpeed,
                     Duration = (9f + 5f) * 1000f,
@@ -2554,7 +2554,7 @@ namespace Rawr.Bosses {
                     AttackSpeed = 25,
                 };
                 Attacks.Add(a);
-                Moves.Add(new Impedence()
+                Moves.Add(new Impedance()
                 {
                     Frequency = a.AttackSpeed,
                     Duration = (9f + 5f) * 1000f,
@@ -2755,7 +2755,7 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedence() {
+            Fears.Add(new Impedance() {
                 Frequency = 45f,
                 Duration = 5f * 1000f,
                 Chance = 1f,
@@ -2913,7 +2913,7 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedence()
+            Fears.Add(new Impedance()
             {
                 Frequency = 45f,
                 Duration = 5f * 1000f,
@@ -2983,7 +2983,7 @@ namespace Rawr.Bosses {
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
             // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
             // Going to assume the CD is 45 sec for now
-            Roots.Add(new Impedence()
+            Roots.Add(new Impedance()
             {
                 Frequency = 45f,
                 Duration = 10f * 1000f,
@@ -3175,7 +3175,7 @@ namespace Rawr.Bosses {
             InBackPerc_Melee = 1.00f;
             // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
             // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 18f,
                 Duration = (18f + 5f + 5f) * 1000f,
@@ -3184,7 +3184,7 @@ namespace Rawr.Bosses {
             });
             // Lightning Nova, usually happens a few seconds after the overcharged add dies
             // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            Moves.Add(new Impedence()
+            Moves.Add(new Impedance()
             {
                 Frequency = 45f + 18f,
                 Duration = (4f + 4f) * 1000f,
@@ -3241,7 +3241,7 @@ namespace Rawr.Bosses {
             MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
             // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
             // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedence() {
+            Fears.Add(new Impedance() {
                 Frequency = 45f,
                 Duration = 5f * 1000f,
                 Chance = 1f,
@@ -3285,7 +3285,7 @@ namespace Rawr.Bosses {
             // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
             // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
             // Going to assume the CD is 45 sec for now
-            Roots.Add(new Impedence()
+            Roots.Add(new Impedance()
             {
                 Frequency = 45f,
                 Duration = 10f * 1000f,
