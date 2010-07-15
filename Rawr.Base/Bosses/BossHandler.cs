@@ -1128,4 +1128,188 @@ namespace Rawr {
             return Content.ToString() + " : " + Instance + " : (" + Version.ToString() + ") : " + Name;
         }
     }
+
+    public class MultiDiffBoss : List<BossHandler>
+    {
+        public MultiDiffBoss()
+        {
+            // Initialize
+            //this = new List<BossHandler>() { };
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
+            this.Add(new BossHandler());
+            // Basic Setups we don't want to repeat over and over again
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T10_0, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_9 };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H };
+            // Fight Requirements
+            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Healers = new int[] { 2, 5, 2, 5 };
+        }
+        #region Variable Convenience Overrides
+        public string Name
+        {
+            get { return this[0].Name; }
+            set
+            {
+                this[0].Name = value;
+                this[1].Name = value;
+                this[2].Name = value;
+                this[3].Name = value;
+            }
+        }
+        public string Instance
+        {
+            get { return this[0].Instance; }
+            set
+            {
+                this[0].Instance = value;
+                this[1].Instance = value;
+                this[2].Instance = value;
+                this[3].Instance = value;
+            }
+        }
+        public BossHandler.TierLevels[] Content
+        {
+            get
+            {
+                return new BossHandler.TierLevels[] {
+                    this[0].Content,
+                    this[1].Content,
+                    this[2].Content,
+                    this[3].Content,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Content = value[i]; i++;
+                this[i].Content = value[i]; i++;
+                this[i].Content = value[i]; i++;
+                this[i].Content = value[i];
+            }
+        }
+        public BossHandler.Versions[] Version
+        {
+            get
+            {
+                return new BossHandler.Versions[] {
+                    this[0].Version,
+                    this[1].Version,
+                    this[2].Version,
+                    this[3].Version,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Version = value[i]; i++;
+                this[i].Version = value[i]; i++;
+                this[i].Version = value[i]; i++;
+                this[i].Version = value[i];
+            }
+        }
+        public float[] Health
+        {
+            get
+            {
+                return new float[] {
+                    this[0].Health,
+                    this[1].Health,
+                    this[2].Health,
+                    this[3].Health,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Health = value[i]; i++;
+                this[i].Health = value[i]; i++;
+                this[i].Health = value[i]; i++;
+                this[i].Health = value[i];
+            }
+        }
+        public int[] BerserkTimer
+        {
+            get
+            {
+                return new int[] {
+                    this[0].BerserkTimer,
+                    this[1].BerserkTimer,
+                    this[2].BerserkTimer,
+                    this[3].BerserkTimer,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].BerserkTimer = value[i]; i++;
+                this[i].BerserkTimer = value[i]; i++;
+                this[i].BerserkTimer = value[i]; i++;
+                this[i].BerserkTimer = value[i];
+            }
+        }
+        public int[] Max_Players
+        {
+            get
+            {
+                return new int[] {
+                    this[0].Max_Players,
+                    this[1].Max_Players,
+                    this[2].Max_Players,
+                    this[3].Max_Players,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Max_Players = value[i]; i++;
+                this[i].Max_Players = value[i]; i++;
+                this[i].Max_Players = value[i]; i++;
+                this[i].Max_Players = value[i];
+            }
+        }
+        public int[] Min_Tanks
+        {
+            get
+            {
+                return new int[] {
+                    this[0].Min_Tanks,
+                    this[1].Min_Tanks,
+                    this[2].Min_Tanks,
+                    this[3].Min_Tanks,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Min_Tanks = value[i]; i++;
+                this[i].Min_Tanks = value[i]; i++;
+                this[i].Min_Tanks = value[i]; i++;
+                this[i].Min_Tanks = value[i];
+            }
+        }
+        public int[] Min_Healers
+        {
+            get
+            {
+                return new int[] {
+                    this[0].Min_Healers,
+                    this[1].Min_Healers,
+                    this[2].Min_Healers,
+                    this[3].Min_Healers,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Min_Healers = value[i]; i++;
+                this[i].Min_Healers = value[i]; i++;
+                this[i].Min_Healers = value[i]; i++;
+                this[i].Min_Healers = value[i];
+            }
+        }
+        public BossHandler BossByVersion(BossHandler.Versions v) { return this[(int)v]; }
+        #endregion
+    }
 }
