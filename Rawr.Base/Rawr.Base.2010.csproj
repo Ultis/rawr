@@ -103,8 +103,10 @@
     <Compile Include="BatchCharacter.cs" />
     <Compile Include="BatchOptimizer.cs" />
     <Compile Include="BatchTools.cs" />
-    <Compile Include="Bosses\Bosses.cs" />
-    <Compile Include="Bosses\Bosses2.cs" />
+    <Compile Include="Bosses\BossesT7.cs" />
+    <Compile Include="Bosses\BossesT10.cs" />
+    <Compile Include="Bosses\BossesT8.cs" />
+    <Compile Include="Bosses\BossesT9.cs" />
     <Compile Include="Bosses\BossHandler.cs" />
     <Compile Include="Bosses\DG_BossAttacks.cs">
       <SubType>Form</SubType>
