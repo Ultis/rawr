@@ -168,9 +168,9 @@ namespace Rawr.Rogue
             float averageFinisherCP = _averageCP[5];
 			
 			#region Melee
-			float mainHandCount = Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
-            float offHandCount = Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
-            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack * AvoidedWhiteOHAttacks +
+			float mainHandCount = (Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration) * (1f - AvoidedWhiteMHAttacks);
+            float offHandCount = (Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration) * (1f - AvoidedWhiteOHAttacks);
+            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack +
                                     ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
                                     ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
 			#endregion
@@ -312,7 +312,7 @@ namespace Rawr.Rogue
                 float dPCountTemp = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 5 + 5;
-                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * MainHandSpeed;
+                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks)) * MainHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
                 if (oHPoison == 1)
@@ -336,7 +336,7 @@ namespace Rawr.Rogue
                 float dPCountTemp = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
                 dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 5 + 5;
-                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks)) * OffHandSpeed;
+                float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteOHAttacks)) * OffHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
                 if (mHPoison == 1)
