@@ -179,15 +179,15 @@ namespace Rawr {
             this.DamagingTargs = (Attacks != null && Attacks.Count > 0);
             // Defensive
             this.Resist_Physical = clone.Resist_Physical;
-            this.Resist_Frost = clone.Resist_Physical;
-            this.Resist_Fire = clone.Resist_Physical;
+            this.Resist_Frost = clone.Resist_Frost;
+            this.Resist_Fire = clone.Resist_Fire;
             this.Resist_Nature = clone.Resist_Nature;
             this.Resist_Arcane = clone.Resist_Arcane;
             this.Resist_Shadow = clone.Resist_Shadow;
             this.Resist_Holy = clone.Resist_Holy;
             // Impedances
-            this.Stuns = clone.Stuns; this.StunningTargs = this.Stuns != null && this.Stuns.Count > 0;
             this.Moves = clone.Moves; this.MovingTargs = this.Moves != null && this.Moves.Count > 0;
+            this.Stuns = clone.Stuns; this.StunningTargs = this.Stuns != null && this.Stuns.Count > 0;
             this.Fears = clone.Fears; this.FearingTargs = this.Fears != null && this.Fears.Count > 0;
             this.Roots = clone.Roots; this.RootingTargs = this.Roots != null && this.Roots.Count > 0;
             this.Disarms = clone.Disarms; this.DisarmingTargs = this.Disarms != null && this.Disarms.Count > 0;
@@ -344,15 +344,15 @@ namespace Rawr {
         public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
         public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
         public float  Health             { get { return HEALTH;             } set { HEALTH             = value; OnPropertyChanged("Health"            ); } }
-        public double  InBackPerc_Melee  { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = value; OnPropertyChanged("InBackPerc_Melee"  ); } }
-        public double  InBackPerc_Ranged { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = value; OnPropertyChanged("InBackPerc_Ranged" ); } }
+        public double  InBackPerc_Melee  { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = CPd(value); OnPropertyChanged("InBackPerc_Melee"  ); } }
+        public double  InBackPerc_Ranged { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = CPd(value); OnPropertyChanged("InBackPerc_Ranged" ); } }
         /// <summary>Example values: 5, 10, 25, 40</summary>
         public int Max_Players { get { return MAX_PLAYERS; } set { MAX_PLAYERS = value; OnPropertyChanged("Max_Players"); } }
         public int Min_Healers { get { return MIN_HEALERS; } set { MIN_HEALERS = value; OnPropertyChanged("Min_Healers"); } }
         public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; OnPropertyChanged("Min_Tanks"); } }
         #endregion
         #region ==== Offensive ====
-        public double MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = value; OnPropertyChanged("MultiTargsPerc"    ); } }
+        public double  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = CPd(value); OnPropertyChanged("MultiTargsPerc"    ); } }
         public double  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; OnPropertyChanged("MaxNumTargs"       ); } }
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
@@ -1051,6 +1051,15 @@ namespace Rawr {
         #endregion
 
         #region Functions
+        /// <summary>Constrain Percent (float)</summary>
+        /// <param name="value">Value to be constrained</param>
+        /// <returns>value if it is between 0% and 100% or those limits</returns>
+        public float CPf(float value) { return Math.Max(0f, Math.Min(1f, value)); }
+        /// <summary>Constrain Percent (double)</summary>
+        /// <param name="value">Value to be constrained</param>
+        /// <returns>value if it is between 0% and 100% or those limits</returns>
+        public double CPd(double value) { return Math.Max(0d, Math.Min(1d, value)); }
+
         /// <summary>
         /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss
         /// </summary>
@@ -1147,6 +1156,7 @@ namespace Rawr {
             Min_Healers = new int[] { 2, 5, 2, 5 };
         }
         #region Variable Convenience Overrides
+        // Info
         public string Name
         {
             get { return this[0].Name; }
@@ -1209,6 +1219,7 @@ namespace Rawr {
                 this[i].Version = value[i];
             }
         }
+        // Basics
         public float[] Health
         {
             get
@@ -1247,6 +1258,66 @@ namespace Rawr {
                 this[i].BerserkTimer = value[i]; i++;
                 this[i].BerserkTimer = value[i]; i++;
                 this[i].BerserkTimer = value[i];
+            }
+        }
+        public int[] SpeedKillTimer
+        {
+            get
+            {
+                return new int[] {
+                    this[0].SpeedKillTimer,
+                    this[1].SpeedKillTimer,
+                    this[2].SpeedKillTimer,
+                    this[3].SpeedKillTimer,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].SpeedKillTimer = value[i]; i++;
+                this[i].SpeedKillTimer = value[i]; i++;
+                this[i].SpeedKillTimer = value[i]; i++;
+                this[i].SpeedKillTimer = value[i];
+            }
+        }
+        public double[] InBackPerc_Melee
+        {
+            get
+            {
+                return new double[] {
+                    this[0].InBackPerc_Melee,
+                    this[1].InBackPerc_Melee,
+                    this[2].InBackPerc_Melee,
+                    this[3].InBackPerc_Melee,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].InBackPerc_Melee = value[i]; i++;
+                this[i].InBackPerc_Melee = value[i]; i++;
+                this[i].InBackPerc_Melee = value[i]; i++;
+                this[i].InBackPerc_Melee = value[i];
+            }
+        }
+        public double[] InBackPerc_Ranged
+        {
+            get
+            {
+                return new double[] {
+                    this[0].InBackPerc_Ranged,
+                    this[1].InBackPerc_Ranged,
+                    this[2].InBackPerc_Ranged,
+                    this[3].InBackPerc_Ranged,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].InBackPerc_Ranged = value[i]; i++;
+                this[i].InBackPerc_Ranged = value[i]; i++;
+                this[i].InBackPerc_Ranged = value[i]; i++;
+                this[i].InBackPerc_Ranged = value[i];
             }
         }
         public int[] Max_Players
@@ -1309,6 +1380,210 @@ namespace Rawr {
                 this[i].Min_Healers = value[i];
             }
         }
+        // Offensive
+        public double[] MaxNumTargets
+        {
+            get
+            {
+                return new double[] {
+                    this[0].MaxNumTargets,
+                    this[1].MaxNumTargets,
+                    this[2].MaxNumTargets,
+                    this[3].MaxNumTargets,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].MaxNumTargets = value[i]; i++;
+                this[i].MaxNumTargets = value[i]; i++;
+                this[i].MaxNumTargets = value[i]; i++;
+                this[i].MaxNumTargets = value[i];
+            }
+        }
+        public double[] MultiTargsPerc
+        {
+            get
+            {
+                return new double[] {
+                    this[0].MultiTargsPerc,
+                    this[1].MultiTargsPerc,
+                    this[2].MultiTargsPerc,
+                    this[3].MultiTargsPerc,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].MultiTargsPerc = value[i]; i++;
+                this[i].MultiTargsPerc = value[i]; i++;
+                this[i].MultiTargsPerc = value[i]; i++;
+                this[i].MultiTargsPerc = value[i];
+            }
+        }
+        // Defensive
+        public double[] Resist_Physical
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Physical,
+                    this[1].Resist_Physical,
+                    this[2].Resist_Physical,
+                    this[3].Resist_Physical,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Physical = value[i]; i++;
+                this[i].Resist_Physical = value[i]; i++;
+                this[i].Resist_Physical = value[i]; i++;
+                this[i].Resist_Physical = value[i];
+            }
+        }
+        public double[] Resist_Frost
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Frost,
+                    this[1].Resist_Frost,
+                    this[2].Resist_Frost,
+                    this[3].Resist_Frost,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Frost = value[i]; i++;
+                this[i].Resist_Frost = value[i]; i++;
+                this[i].Resist_Frost = value[i]; i++;
+                this[i].Resist_Frost = value[i];
+            }
+        }
+        public double[] Resist_Fire
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Fire,
+                    this[1].Resist_Fire,
+                    this[2].Resist_Fire,
+                    this[3].Resist_Fire,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Fire = value[i]; i++;
+                this[i].Resist_Fire = value[i]; i++;
+                this[i].Resist_Fire = value[i]; i++;
+                this[i].Resist_Fire = value[i];
+            }
+        }
+        public double[] Resist_Nature
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Nature,
+                    this[1].Resist_Nature,
+                    this[2].Resist_Nature,
+                    this[3].Resist_Nature,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Nature = value[i]; i++;
+                this[i].Resist_Nature = value[i]; i++;
+                this[i].Resist_Nature = value[i]; i++;
+                this[i].Resist_Nature = value[i];
+            }
+        }
+        public double[] Resist_Arcane
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Arcane,
+                    this[1].Resist_Arcane,
+                    this[2].Resist_Arcane,
+                    this[3].Resist_Arcane,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Arcane = value[i]; i++;
+                this[i].Resist_Arcane = value[i]; i++;
+                this[i].Resist_Arcane = value[i]; i++;
+                this[i].Resist_Arcane = value[i];
+            }
+        }
+        public double[] Resist_Shadow
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Shadow,
+                    this[1].Resist_Shadow,
+                    this[2].Resist_Shadow,
+                    this[3].Resist_Shadow,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Shadow = value[i]; i++;
+                this[i].Resist_Shadow = value[i]; i++;
+                this[i].Resist_Shadow = value[i]; i++;
+                this[i].Resist_Shadow = value[i];
+            }
+        }
+        public double[] Resist_Holy
+        {
+            get
+            {
+                return new double[] {
+                    this[0].Resist_Holy,
+                    this[1].Resist_Holy,
+                    this[2].Resist_Holy,
+                    this[3].Resist_Holy,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].Resist_Holy = value[i]; i++;
+                this[i].Resist_Holy = value[i]; i++;
+                this[i].Resist_Holy = value[i]; i++;
+                this[i].Resist_Holy = value[i];
+            }
+        }
+        // Impedances
+        public float[] TimeBossIsInvuln
+        {
+            get
+            {
+                return new float[] {
+                    this[0].TimeBossIsInvuln,
+                    this[1].TimeBossIsInvuln,
+                    this[2].TimeBossIsInvuln,
+                    this[3].TimeBossIsInvuln,
+                };
+            }
+            set
+            {
+                int i = 0;
+                this[i].TimeBossIsInvuln = value[i]; i++;
+                this[i].TimeBossIsInvuln = value[i]; i++;
+                this[i].TimeBossIsInvuln = value[i]; i++;
+                this[i].TimeBossIsInvuln = value[i];
+            }
+        }
+        // Methods
         public BossHandler BossByVersion(BossHandler.Versions v) { return this[(int)v]; }
         #endregion
     }

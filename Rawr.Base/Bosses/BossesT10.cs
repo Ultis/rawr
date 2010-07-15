@@ -7,7 +7,6 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Rawr.Bosses {
-    #region T10 (Array) Content
     // ===== Icecrown Citadel =========================
     // The Lower Spire
     public class LordMarrowgar : MultiDiffBoss
@@ -15,19 +14,25 @@ namespace Rawr.Bosses {
         public LordMarrowgar()
         {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Lord Marrowgar";
             Instance = "Icecrown Citadel";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T10_0, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_9, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            #endregion
+            #region Basics
             Health = new float[] { 6972500, 23706500, 10500000, 31400000 };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            // Fight Requirements
             Min_Tanks   = new int[] {  2,  3,  2,  3 };
             Min_Healers = new int[] {  2,  5,  3,  6 };
-            // Resistance
-            // Attacks
-            int[] temps, temps2;
-            float[] temps3;
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 1, 1 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            int[] temps, temps2; float[] temps3;
             for (int i = 0; i < 4; i++) {
+                // Melee
                 this[i].Attacks.Add(new Attack {
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
@@ -112,6 +117,25 @@ namespace Rawr.Bosses {
                 // Situational Changes
                 this[i].InBackPerc_Melee = 1.00f;
             }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            //Moves;
+            //Stuns;
+            //Fears;
+            //Roots;
+            //Disarms;
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            #endregion
             /* TODO:
              */
         }
@@ -172,5 +196,4 @@ namespace Rawr.Bosses {
     // - Sindragosa
     // The Frozen Throne
     // - The Lich King
-    #endregion
 }

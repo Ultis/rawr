@@ -10,112 +10,68 @@ using Rawr.Bosses;
 namespace Rawr {
     public class BossList {
         // Constructors
-        public BossList() {
-            DamageTypes = new ItemDamageType[] { ItemDamageType.Physical, ItemDamageType.Nature, ItemDamageType.Arcane, ItemDamageType.Frost, ItemDamageType.Fire, ItemDamageType.Shadow, ItemDamageType.Holy, };
+        public BossList()
+        {
+            #region Instance Declarations
+            AnubRekhan anubrekhan = new AnubRekhan();
+            GrandWidowFaerlina grandwidow = new GrandWidowFaerlina();
+            LordMarrowgar lordmarrowgar = new LordMarrowgar();
+            #endregion
             list = new BossHandler[] {
-                // ==== Tier 7 Content ====
+                #region ==== Tier 7 Content ====
                 // Naxxramas
-                new AnubRekhan_10(),
-                new GrandWidowFaerlina_10(),
-                new Maexxna_10(),
-                new NoththePlaguebringer_10(),
-                new HeigantheUnclean_10(),
-                new Loatheb_10(),
-                new InstructorRazuvious_10(),
-                new GothiktheHarvester_10(),
-                new FourHorsemen_10(),
-                new Patchwerk_10(),
-                new Grobbulus_10(),
-                new Gluth_10(),
-                new Thaddius_10(),
-                new Sapphiron_10(),
-                new KelThuzad_10(),
+                anubrekhan[0],anubrekhan[1],
+                grandwidow[0],grandwidow[1],
+                new Maexxna_10(),new Maexxna_25(),
+                new NoththePlaguebringer_10(),new NoththePlaguebringer_25(),
+                new HeigantheUnclean_10(),new HeigantheUnclean_25(),
+                new Loatheb_10(),new Loatheb_25(),
+                new InstructorRazuvious_10(),new InstructorRazuvious_25(),
+                new GothiktheHarvester_10(),new GothiktheHarvester_25(),
+                new FourHorsemen_10(),new FourHorsemen_25(),
+                new Patchwerk_10(),new Patchwerk_25(),
+                new Grobbulus_10(),new Grobbulus_25(),
+                new Gluth_10(),new Gluth_25(),
+                new Thaddius_10(),new Thaddius_25(),
+                new Sapphiron_10(),new Sapphiron_25(),
+                new KelThuzad_10(),new KelThuzad_25(),
                 // The Obsidian Sanctum
-                new Shadron_10(),
-                new Tenebron_10(),
-                new Vesperon_10(),
-                new Sartharion_10(),
+                new Shadron_10(),new Shadron_25(),
+                new Tenebron_10(),new Tenebron_25(),
+                new Vesperon_10(),new Vesperon_25(),
+                new Sartharion_10(),new Sartharion_25(),
                 // Vault of Archavon
-                new ArchavonTheStoneWatcher_10(),
+                new ArchavonTheStoneWatcher_10(),new ArchavonTheStoneWatcher_25(),
                 // The Eye of Eternity
-                new Malygos_10(),
-                // ==== Tier 7.5 Content ====
-                // Naxxramas
-                new AnubRekhan_25(),
-                new GrandWidowFaerlina_25(),
-                new Maexxna_25(),
-                new NoththePlaguebringer_25(),
-                new HeigantheUnclean_25(),
-                new Loatheb_25(),
-                new InstructorRazuvious_25(),
-                new GothiktheHarvester_25(),
-                new FourHorsemen_25(),
-                new Patchwerk_25(),
-                new Grobbulus_25(),
-                new Gluth_25(),
-                new Thaddius_25(),
-                new Sapphiron_25(),
-                new KelThuzad_25(),
-                // The Obsidian Sanctum
-                new Shadron_25(),
-                new Tenebron_25(),
-                new Vesperon_25(),
-                new Sartharion_25(),
+                new Malygos_10(),new Malygos_25(),
+                #endregion
+                #region ==== Tier 8 Content ====
                 // Vault of Archavon
-                new ArchavonTheStoneWatcher_25(),
-                // The Eye of Eternity
-                new Malygos_25(),
-                // ==== Tier 8 Content ====
-                // Vault of Archavon
-                new EmalonTheStormWatcher_10(),
+                new EmalonTheStormWatcher_10(),new EmalonTheStormWatcher_25(),
                 // Ulduar
                 new IgnistheFurnaceMaster_10(),
                 new Razorscale_10(),
                 new XT002Deconstructor_10(),
                 new AssemblyofIron_10(),
                 new Kologarn_10(),
-                new Auriaya_10(),
+                new Auriaya_10(),new Auriaya_25(),
                 new Mimiron_10(),
                 new Freya_10(),
                 new Thorim_10(),
-                new Hodir_10(),
+                new Hodir_10(),new Hodir_25(),
                 new GeneralVezax_10(),
                 new YoggSaron_10(),
                 new AlgalontheObserver_10(),
-                // ==== Tier 8.5 Content ====
+                #endregion
+                #region ==== Tier 9 Content ====
                 // Vault of Archavon
-                new EmalonTheStormWatcher_25(),
-                // Ulduar
-                new Auriaya_25(),
-                new Hodir_25(),
-                // ==== Tier 9 (10) Content ====
-                // Vault of Archavon
-                new KoralonTheFlameWatcher_10(),
+                new KoralonTheFlameWatcher_10(),new KoralonTheFlameWatcher_25(),
                 // Trial of the Crusader
-                // ==== Tier 9 (25) Content ====
-                // Vault of Archavon
-                new KoralonTheFlameWatcher_25(),
-                // Trial of the Crusader
-                // ==== Tier 9 (10) H Content ====
-                // Trial of the Grand Crusader
-                // ==== Tier 9 (25) H Content ====
-                // Trial of the Grand Crusader
-                // ==== Tier 10 (10) Content ====
+                #endregion
+                #region ==== Tier 10 Content ====
                 // Icecrown Citadel
-                //new LordMarrowgar_10(),
-                new LordMarrowgar()[0],
-                // ==== Tier 10 (25) Content ====
-                // Icecrown Citadel
-                //new LordMarrowgar_25(),
-                new LordMarrowgar()[1],
-                // ==== Tier 10 (10) H Content ====
-                // Icecrown Citadel
-                //new LordMarrowgar_10H(),
-                new LordMarrowgar()[2],
-                // ==== Tier 10 (25) H Content ====
-                // Icecrown Citadel
-                //new LordMarrowgar_25H(),
-                new LordMarrowgar()[3],
+                lordmarrowgar[0],lordmarrowgar[1],lordmarrowgar[2],lordmarrowgar[3],
+                #endregion
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
             TheAvgBoss     = GenTheAvgBoss(list);
@@ -131,7 +87,21 @@ namespace Rawr {
         /// <summary>This is what modules actually see and is based upon current filters</summary>
         public BossHandler[] calledList;
         /// <summary>Variable for storing Damage Type (Physical, Nature, Holy, etc)</summary>
-        private ItemDamageType[] DamageTypes;
+        private ItemDamageType[] dts = null;
+        private ItemDamageType[] DamageTypes {
+            get
+            {
+                return dts ?? (new ItemDamageType[] { 
+                    ItemDamageType.Physical,
+                    ItemDamageType.Frost,
+                    ItemDamageType.Fire,
+                    ItemDamageType.Nature,
+                    ItemDamageType.Arcane,
+                    ItemDamageType.Shadow,
+                    ItemDamageType.Holy,
+                });
+            }
+        }
         /// <summary>Checks all the bosses to find the easiest of each stat and combines them to a single boss. Does NOT pick the easiest boss in the list but MAKES a new one. This IS NOT affected by filters.</summary>
         public BossHandler TheEZModeBoss;
         /// <summary>Checks all the bosses to total up stats and average them out and combines them to a single boss, this is what most users should base their characters against. This IS NOT affected by filters.</summary>

@@ -108,11 +108,17 @@
     <Compile Include="..\..\Rawr.Base\BatchTools.cs">
       <Link>BatchTools.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses\Bosses.cs">
-      <Link>Bosses\Bosses.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossesT10.cs">
+      <Link>Bosses\BossesT10.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Bosses\Bosses2.cs">
-      <Link>Bosses\Bosses2.cs</Link>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossesT7.cs">
+      <Link>Bosses\BossesT7.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossesT8.cs">
+      <Link>Bosses\BossesT8.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr.Base\Bosses\BossesT9.cs">
+      <Link>Bosses\BossesT9.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\Bosses\BossHandler.cs">
       <Link>Bosses\BossHandler.cs</Link>
