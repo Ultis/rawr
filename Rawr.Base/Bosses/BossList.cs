@@ -13,12 +13,33 @@ namespace Rawr {
         public BossList()
         {
             #region Instance Declarations
+            #region ==== Tier 7 Content ====
+            // Naxxramas
             AnubRekhan anubrekhan = new AnubRekhan();
             GrandWidowFaerlina grandwidow = new GrandWidowFaerlina();
             Maexxna maexxna = new Maexxna();
             NoththePlaguebringer noth = new NoththePlaguebringer();
+            HeigantheUnclean heigantheUnclean = new HeigantheUnclean();
+            Loatheb loatheb = new Loatheb();
+            InstructorRazuvious instructorRazuvious = new InstructorRazuvious();
+            GothiktheHarvester gothiktheHarvester = new GothiktheHarvester();
+            FourHorsemen fourHorsemen = new FourHorsemen();
+            Patchwerk patchwerk = new Patchwerk();
+            Grobbulus grobbulus = new Grobbulus();
+            Gluth gluth = new Gluth();
+            Thaddius thaddius = new Thaddius();
+            Sapphiron sapphiron = new Sapphiron();
+            KelThuzad kelThuzad = new KelThuzad();
+            // The Obsidian Sanctum
+            Shadron shadron = new Shadron();
+            Tenebron tenebron = new Tenebron();
+            Vesperon vesperon = new Vesperon();
+            Sartharion sartharion = new Sartharion();
+            // The Vault of Archavon
             ArchavonTheStoneWatcher archavon = new ArchavonTheStoneWatcher();
+            // The Eye of Eternity
             Malygos malygos = new Malygos();
+            #endregion
             LordMarrowgar lordmarrowgar = new LordMarrowgar();
             #endregion
             list = new BossHandler[] {
@@ -28,22 +49,22 @@ namespace Rawr {
                 grandwidow[0],grandwidow[1],
                 maexxna[0],maexxna[1],
                 noth[0],noth[1],
-                new HeigantheUnclean_10(),new HeigantheUnclean_25(),
-                new Loatheb_10(),new Loatheb_25(),
-                new InstructorRazuvious_10(),new InstructorRazuvious_25(),
-                new GothiktheHarvester_10(),new GothiktheHarvester_25(),
-                new FourHorsemen_10(),new FourHorsemen_25(),
-                new Patchwerk_10(),new Patchwerk_25(),
-                new Grobbulus_10(),new Grobbulus_25(),
-                new Gluth_10(),new Gluth_25(),
-                new Thaddius_10(),new Thaddius_25(),
-                new Sapphiron_10(),new Sapphiron_25(),
-                new KelThuzad_10(),new KelThuzad_25(),
+                heigantheUnclean[0],heigantheUnclean[1],
+                loatheb[0],loatheb[1],
+                instructorRazuvious[0],instructorRazuvious[1],
+                gothiktheHarvester[0],gothiktheHarvester[1],
+                fourHorsemen[0],fourHorsemen[1],
+                patchwerk[0],patchwerk[1],
+                grobbulus[0],grobbulus[1],
+                gluth[0],gluth[1],
+                thaddius[0],thaddius[1],
+                sapphiron[0],sapphiron[1],
+                kelThuzad[0],kelThuzad[1],
                 // The Obsidian Sanctum
-                new Shadron_10(),new Shadron_25(),
-                new Tenebron_10(),new Tenebron_25(),
-                new Vesperon_10(),new Vesperon_25(),
-                new Sartharion_10(),new Sartharion_25(),
+                shadron[0],shadron[1],
+                tenebron[0],tenebron[1],
+                vesperon[0],vesperon[1],
+                sartharion[0],sartharion[1],
                 // Vault of Archavon
                 archavon[0],archavon[1],
                 // The Eye of Eternity
