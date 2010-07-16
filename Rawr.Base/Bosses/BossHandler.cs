@@ -1054,11 +1054,19 @@ namespace Rawr {
         /// <summary>Constrain Percent (float)</summary>
         /// <param name="value">Value to be constrained</param>
         /// <returns>value if it is between 0% and 100% or those limits</returns>
-        public float CPf(float value) { return Math.Max(0f, Math.Min(1f, value)); }
+        public static float CPf(float value) { return Math.Max(0f, Math.Min(1f, value)); }
         /// <summary>Constrain Percent (double)</summary>
         /// <param name="value">Value to be constrained</param>
         /// <returns>value if it is between 0% and 100% or those limits</returns>
-        public double CPd(double value) { return Math.Max(0d, Math.Min(1d, value)); }
+        public static double CPd(double value) { return Math.Max(0d, Math.Min(1d, value)); }
+
+        public static float CalcADotTick(float mindmg, float maxdmg, float time, float interval) {
+            return ((mindmg + maxdmg) / 2.0f) * time / interval;
+        }
+        public static float CalcADotTick(float mindmg, float maxdmg, float time)
+        {
+            return ((mindmg + maxdmg) / 2.0f) * time;
+        }
 
         /// <summary>
         /// Generates a Fight Info description listing the stats of the fight as well as any comments listed for the boss

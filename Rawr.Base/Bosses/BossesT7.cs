@@ -140,7 +140,8 @@ namespace Rawr.Bosses {
                     IsTheDefaultMelee = true,
                 });
                 temps3 = new float[] { (2625f + 3375f) / 2.0f, (3755f + 4125f) / 2.0f };
-                temps4 = new float[] { (1480f + 1720f) / 2.0f, ((1900f+2100f)/2.0f)*8f/2f };
+                temps4 = new float[] { BossHandler.CalcADotTick(1480f, 1720f, 8f, 2f),
+                                       BossHandler.CalcADotTick(1900f, 2100f, 8f, 2f) };
                 this[i].Attacks.Add(new DoT
                 {
                     Name = "Poison Bolt Volley",
@@ -154,7 +155,8 @@ namespace Rawr.Bosses {
                     AttackType = ATTACK_TYPES.AT_RANGED,
                 });
                 {
-                    temps3 = new float[] { ((1750f + 2750f) / 2.0f) * 6f / 2f, ((3700f + 4300f) / 2.0f) * 6f / 2f };
+                    temps3 = new float[] { BossHandler.CalcADotTick(1750f, 2750f, 6f, 2f),
+                                           BossHandler.CalcADotTick(3700f, 4300f, 6f, 2f) };
                     Attack a = new Attack
                     {
                         Name = "Rain of Fire",
@@ -200,206 +202,142 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class Maexxna_10 : BossHandler {
-        public Maexxna_10() {
+    public class Maexxna : MultiDiffBoss
+    {
+        public Maexxna() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Maexxna";
-            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10N;
-            Health = 2510000f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks = 1;
-            Min_Healers = 2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            {
-                /* = Web Wrap =
-                 * Cast 20 seconds after engaging, and every 40 seconds after that.
-                 * Sends 1 (Heroic: 2) player straight to the western web wall, encasing
-                 * them in a Web Wrap cocoon and incapacitating them. When encased, the
-                 * player takes 2,475 to 3,025 Nature damage every 2 seconds. The cocoon
-                 * can be destroyed from the outside, freeing the player and causing them
-                 * to take minimal falling damage when they land.
-                 */
-                Attack a = new Attack {
-                    Name = "Web Wrap",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (2925f + 3575f) / 2f,
-                    MaxNumTargets = 1,
-                    AttackSpeed = 40.0f,
-                    AttackType = ATTACK_TYPES.AT_RANGED,
-                };
-                Attacks.Add(a);
-                float initial = 20f;
-                float freq = a.AttackSpeed;
-                float chance = 1f + a.MaxNumTargets / (Max_Players - Min_Tanks);
-                Stuns.Add(new Impedance()
-                {
-                    Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) * chance,
-                    Duration = 5f * 1000f,
-                    Chance = 1f / (Max_Players - Min_Tanks),
-                    Breakable = false
-                });
-            }
-            {
-                /* = Web Spray =
-                 * Cast every 40 seconds, incapacitating everyone for 6 seconds, and
-                 * dealing 1,750 to 2,250 (Heroic: 5,225 to 5,775) Nature damage. This
-                 * ability cannot be resisted.
-                 */
-                Attack a = new Attack {
-                    Name = "Web Spray",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (2188f + 2812f) / 2f,
-                    MaxNumTargets = Max_Players,
-                    AttackSpeed = 40.0f,
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                };
-                Attacks.Add(a);
-                float initial = 0f;
-                float freq = a.AttackSpeed;
-                float chance = 1f + a.MaxNumTargets / Max_Players;
-                Stuns.Add(new Impedance()
-                {
-                    Frequency = freq * (BerserkTimer / (BerserkTimer - initial)),
-                    Duration = 6f * 1000f,
-                    Chance = 1f,
-                    Breakable = false
-                });
-            }
-            {
-                /* = Poison Shock =
-                 * Does 3500 to 4500 (Heroic: 4,550 to 5,850) Nature damage in a 15
-                 * yard frontal cone.
-                 */
-                Attack a = new Attack {
-                    Name = "Poison Shock",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (3500f + 4500f) / 2f,
-                    MaxNumTargets = 1,
-                    AttackSpeed = 40.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                };
-                Attacks.Add(a);
-            }
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2510000f, 7600000f, 0, 0 };
+            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 1, 1, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
             // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
-            MultiTargsPerc = ((BerserkTimer / 40f) * 8f) / BerserkTimer;
-            MaxNumTargets = 8;
-            /* TODO:
-             * Necrotic Poison
-             * Frenzy
-             */
-        }
-    }
-    public class Maexxna_25 : BossHandler {
-        public Maexxna_25() {
-            // If not listed here use values from 10 man version
-            // Basics
-            Name = "Maexxna";
-            Content = TierLevels.T7_5;
-            Instance = "Naxxramas";
-            Version = Versions.V_25N;
-            Health = 7600000f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 1;
-            Min_Healers = 4;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
+            MaxNumTargets = new double[] { 8, 8, 0, 0 };
+            #region Attacks
+            int[] temps, temps2; float[] temps3;
+            for (int i = 0; i < 2; i++)
             {
-                /* = Web Wrap =
-                 * Cast 20 seconds after engaging, and every 40 seconds after that.
-                 * Sends 1 (Heroic: 2) player straight to the western web wall, encasing
-                 * them in a Web Wrap cocoon and incapacitating them. When encased, the
-                 * player takes 2,475 to 3,025 Nature damage every 2 seconds. The cocoon
-                 * can be destroyed from the outside, freeing the player and causing them
-                 * to take minimal falling damage when they land.
-                 */
-                Attack a = new Attack {
-                    Name = "Web Wrap",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (2925f + 3575f) / 2f,
-                    MaxNumTargets = 2,
-                    AttackSpeed = 40.0f,
-                    AttackType = ATTACK_TYPES.AT_RANGED,
-                };
-                Attacks.Add(a);
-                float initial = 20f;
-                float freq = a.AttackSpeed;
-                float chance = a.MaxNumTargets / (Max_Players - Min_Tanks);
-                Stuns.Add(new Impedance()
+                this[i].MultiTargsPerc = ((this[i].BerserkTimer / 40d) * 8d) / this[i].BerserkTimer;
+
+                this[i].Attacks.Add(new Attack
                 {
-                    Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
-                    Duration = 5f * 1000f,
-                    Chance = 1f / (Max_Players - Min_Tanks),
-                    Breakable = false
-                });
-            }
-            {
-                /* = Web Spray =
-                 * Cast every 40 seconds, incapacitating everyone for 6 seconds, and
-                 * dealing 1,750 to 2,250 (Heroic: 5,225 to 5,775) Nature damage. This
-                 * ability cannot be resisted.
-                 */
-                Attack a = new Attack {
-                    Name = "Web Spray",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (5225f + 5775f) / 2f,
-                    MaxNumTargets = Max_Players,
-                    AttackSpeed = 40.0f,
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                };
-                Attacks.Add(a);
-                float initial = 0f;
-                float freq = a.AttackSpeed;
-                float chance = a.MaxNumTargets / Max_Players;
-                Stuns.Add(new Impedance()
-                {
-                    Frequency = freq * (BerserkTimer / (BerserkTimer - initial)) / chance,
-                    Duration = 6f * 1000f,
-                    Chance = 1f,
-                    Breakable = false
-                });
-            }
-            {
-                /* = Poison Shock =
-                 * Does 3500 to 4500 (Heroic: 4,550 to 5,850) Nature damage in a 15
-                 * yard frontal cone.
-                 */
-                Attack a = new Attack {
-                    Name = "Poison Shock",
-                    DamageType = ItemDamageType.Nature,
-                    DamagePerHit = (4550f + 5850f) / 2f,
-                    MaxNumTargets = 1,
-                    AttackSpeed = 40.0f,
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                };
-                Attacks.Add(a);
+                    IsTheDefaultMelee = true,
+                });
+                {
+                    /* = Web Wrap =
+                     * Cast 20 seconds after engaging, and every 40 seconds after that.
+                     * Sends 1 (Heroic: 2) player straight to the western web wall, encasing
+                     * them in a Web Wrap cocoon and incapacitating them. When encased, the
+                     * player takes 2,475 to 3,025 Nature damage every 2 seconds. The cocoon
+                     * can be destroyed from the outside, freeing the player and causing them
+                     * to take minimal falling damage when they land.
+                     */
+                    temps = new int[] { 1,2 };
+                    temps3 = new float[] { (2925f + 3575f) / 2f, (2925f + 3575f) / 2f };
+                    Attack a = new Attack
+                    {
+                        Name = "Web Wrap",
+                        DamageType = ItemDamageType.Nature,
+                        DamagePerHit = temps3[i],
+                        MaxNumTargets = temps[i],
+                        AttackSpeed = 40.0f,
+                        AttackType = ATTACK_TYPES.AT_RANGED,
+                    };
+                    this[i].Attacks.Add(a);
+                    float initial = 20f;
+                    float freq = a.AttackSpeed;
+                    float chance = 1f + a.MaxNumTargets / (this[i].Max_Players - this[i].Min_Tanks);
+                    this[i].Stuns.Add(new Impedance()
+                    {
+                        Frequency = freq * (this[i].BerserkTimer / (this[i].BerserkTimer - initial)) * chance,
+                        Duration = 5f * 1000f,
+                        Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
+                        Breakable = false
+                    });
+                }
+                {
+                    /* = Web Spray =
+                     * Cast every 40 seconds, incapacitating everyone for 6 seconds, and
+                     * dealing 1,750 to 2,250 (Heroic: 5,225 to 5,775) Nature damage. This
+                     * ability cannot be resisted.
+                     */
+                    temps3 = new float[] { (2188f + 2812f) / 2f, (5225f + 5775f) / 2f };
+                    Attack a = new Attack
+                    {
+                        Name = "Web Spray",
+                        DamageType = ItemDamageType.Nature,
+                        DamagePerHit = temps3[i],
+                        MaxNumTargets = this[i].Max_Players,
+                        AttackSpeed = 40.0f,
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                    };
+                    this[i].Attacks.Add(a);
+                    float initial = 0f;
+                    float freq = a.AttackSpeed;
+                    float chance = 1f + a.MaxNumTargets / this[i].Max_Players;
+                    this[i].Stuns.Add(new Impedance()
+                    {
+                        Frequency = freq * (this[i].BerserkTimer / (this[i].BerserkTimer - initial)),
+                        Duration = 6f * 1000f,
+                        Chance = 1f,
+                        Breakable = false
+                    });
+                }
+                {
+                    /* = Poison Shock =
+                     * Does 3500 to 4500 (Heroic: 4,550 to 5,850) Nature damage in a 15
+                     * yard frontal cone.
+                     */
+                    temps3 = new float[] { (3500f + 4500f) / 2f, (4550f + 5850f) / 2f };
+                    Attack a = new Attack
+                    {
+                        Name = "Poison Shock",
+                        DamageType = ItemDamageType.Nature,
+                        DamagePerHit = temps3[i],
+                        MaxNumTargets = 1,
+                        AttackSpeed = 40.0f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                    };
+                    this[i].Attacks.Add(a);
+                }
             }
-            // 8 Adds every 40 seconds for 10 seconds, starting at 30 sec in (only 14000 HP each)
-            MultiTargsPerc = ((BerserkTimer / 40f) * 10f) / BerserkTimer;
-            MaxNumTargets = 8;
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            //Moves;
+            //Stuns;
+            //Fears;
+            //Roots;
+            //Disarms;
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              * Necrotic Poison
              * Frenzy
@@ -407,69 +345,67 @@ namespace Rawr.Bosses {
         }
     }
     // Plague Quarter
-    public class NoththePlaguebringer_10 : BossHandler {
-        public NoththePlaguebringer_10() {
+    public class NoththePlaguebringer : MultiDiffBoss {
+        public NoththePlaguebringer() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Noth the Plaguebringer";
-            Content = TierLevels.T7_0;
             Instance = "Naxxramas";
-            Version = Versions.V_10N;
-            Health = 2500000f;
-            BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  1;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-            MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
-            /* TODO:
-             * Phase 2
-             */
-        }
-    }
-    public class NoththePlaguebringer_25 : BossHandler {
-        public NoththePlaguebringer_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Noth the Plaguebringer";
-            Content = TierLevels.T7_5;
-            Instance = "Naxxramas";
-            Version = Versions.V_25N;
-            Health = 2500000f;
-            BerserkTimer = (110 + 70) * 3; // He enrages after 3rd iteration of Phase 2
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks   =  2;
-            Min_Healers =  4;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-            MultiTargsPerc = (BerserkTimer / 30f) * (20f) / BerserkTimer;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2789000f, 8436725f, 0, 0 };
+            BerserkTimer = new int[] { (110 + 70) * 3, (110 + 70) * 3, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 1, 2, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 3, 3, 0, 0 };
+            #region Attacks
+            int[] temps, temps2; float[] temps3;
+            for (int i = 0; i < 2; i++)
+            {
+                // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
+                this[i].MultiTargsPerc = (this[i].BerserkTimer / 30f) * (20f) / this[i].BerserkTimer;
+
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    IsTheDefaultMelee = true,
+                });
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              * Phase 2
              */
@@ -2058,87 +1994,68 @@ namespace Rawr.Bosses {
         }
     }
     // ===== The Vault of Archavon ====================
-    public class ArchavonTheStoneWatcher_10 : BossHandler {
-        public ArchavonTheStoneWatcher_10() {
+    public class ArchavonTheStoneWatcher : MultiDiffBoss {
+        public ArchavonTheStoneWatcher() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Archavon The Stone Watcher";
-            Content = TierLevels.T7_0;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_10N;
-            Health = 2300925f;
-            BerserkTimer = 5 * 60;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            Moves.Add(new Impedance()
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2300925f, 9970675f, 0, 0 };
+            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.75f, 0.75f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            int[] temps, temps2; float[] temps3;
+            for (int i = 0; i < 2; i++)
             {
-                Frequency = 30f,
-                Duration = 5f * 1000f,
-                Chance = 1f,
-                Breakable = false
-            });
-            /* TODO:
-             * Rock Shards
-             * Crushing Leap
-             * Stomp (this also stuns)
-             * Impale (this also stuns)
-             */
-        }
-    }
-    public class ArchavonTheStoneWatcher_25 : BossHandler
-    {
-        public ArchavonTheStoneWatcher_25()
-        {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Archavon The Stone Watcher";
-            Content = TierLevels.T7_5;
-            Instance = "The Vault of Archavon";
-            Version = Versions.V_25N;
-            Health = 9970675f;
-            BerserkTimer = 5 * 60;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks = 2;
-            Min_Healers = 4;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    IsTheDefaultMelee = true,
+                });
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
             {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
-            // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
-            Moves.Add(new Impedance()
-            {
-                Frequency = 30f,
-                Duration = 5f * 1000f,
-                Chance = 3f / Max_Players,
-                Breakable = false
-            });
+                // Every 30 seconds for 5 seconds you gotta catch up to him as he jumps around
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 30f,
+                    Duration = 5f * 1000f,
+                    Chance = 3f / this[i].Max_Players,
+                    Breakable = false
+                });
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              * Rock Shards
              * Crushing Leap
@@ -2148,78 +2065,68 @@ namespace Rawr.Bosses {
         }
     }
     // ===== The Eye of Eternity ======================
-    public class Malygos_10 : BossHandler {
-        public Malygos_10() {
+    public class Malygos : MultiDiffBoss {
+        public Malygos() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Malygos";
-            Content = TierLevels.T7_0;
             Instance = "The Eye of Eternity";
-            Version = Versions.V_10N;
-            Health = 2230000f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2; // you really only need 1 but adding 2nd for the adds phase and sparks in 1st phase
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2230000f, 19523000f, 0, 0 };
+            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            int[] temps, temps2; float[] temps3;
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    IsTheDefaultMelee = true,
+                });
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
             // Every 70-120 seconds for 16 seconds you can't be on the target
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            Moves.Add(new Impedance()
-            {
-                Frequency = (70f + 120f) / 2f,
-                Duration = (16f+4f) * 1000f,
-                Chance = 1f,
-                Breakable = false
-            });
-            /* TODO:
-             */
-        }
-    }
-    public class Malygos_25 : Malygos_10 {
-        public Malygos_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Content = TierLevels.T7_5;
-            Version = Versions.V_25N;
-            Health = 2230000f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks   =  2; // you really only need 1 but adding 2nd for the adds phase and sparks in 1st phase
-            Min_Healers =  4;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.95f;
-            // Every 70-120 seconds for 16 seconds you can't be on the target
-            // Adding 4 seconds to the Duration for moving out before starts and then back in after
-            Moves.Add(new Impedance()
-            {
-                Frequency = (70f + 120f) / 2f,
-                Duration = (16f+4f) * 1000f,
-                Chance = 1f,
-                Breakable = false
-            });
+            for (int i = 0; i < 2; i++) {
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = (70f + 120f) / 2f,
+                    Duration = (16f + 4f) * 1000f,
+                    Chance = 1f,
+                    Breakable = false
+                });
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              */
         }

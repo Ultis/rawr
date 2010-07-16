@@ -15,6 +15,10 @@ namespace Rawr {
             #region Instance Declarations
             AnubRekhan anubrekhan = new AnubRekhan();
             GrandWidowFaerlina grandwidow = new GrandWidowFaerlina();
+            Maexxna maexxna = new Maexxna();
+            NoththePlaguebringer noth = new NoththePlaguebringer();
+            ArchavonTheStoneWatcher archavon = new ArchavonTheStoneWatcher();
+            Malygos malygos = new Malygos();
             LordMarrowgar lordmarrowgar = new LordMarrowgar();
             #endregion
             list = new BossHandler[] {
@@ -22,8 +26,8 @@ namespace Rawr {
                 // Naxxramas
                 anubrekhan[0],anubrekhan[1],
                 grandwidow[0],grandwidow[1],
-                new Maexxna_10(),new Maexxna_25(),
-                new NoththePlaguebringer_10(),new NoththePlaguebringer_25(),
+                maexxna[0],maexxna[1],
+                noth[0],noth[1],
                 new HeigantheUnclean_10(),new HeigantheUnclean_25(),
                 new Loatheb_10(),new Loatheb_25(),
                 new InstructorRazuvious_10(),new InstructorRazuvious_25(),
@@ -41,9 +45,9 @@ namespace Rawr {
                 new Vesperon_10(),new Vesperon_25(),
                 new Sartharion_10(),new Sartharion_25(),
                 // Vault of Archavon
-                new ArchavonTheStoneWatcher_10(),new ArchavonTheStoneWatcher_25(),
+                archavon[0],archavon[1],
                 // The Eye of Eternity
-                new Malygos_10(),new Malygos_25(),
+                malygos[0],malygos[1],
                 #endregion
                 #region ==== Tier 8 Content ====
                 // Vault of Archavon
