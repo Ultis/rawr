@@ -63,6 +63,7 @@ namespace Rawr {
             #endregion
             #region ==== Tier 10 Content ====
             LordMarrowgar LordMarrowgar = new LordMarrowgar();
+            LadyDeathwhisper LadyDeathwhisper = new LadyDeathwhisper();
             #endregion
             #endregion
             list = new BossHandler[] {
@@ -119,6 +120,7 @@ namespace Rawr {
                 #region ==== Tier 10 Content ====
                 // Icecrown Citadel
                 LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
+                LadyDeathwhisper[0],LadyDeathwhisper[1],LadyDeathwhisper[2],LadyDeathwhisper[3],
                 #endregion
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
