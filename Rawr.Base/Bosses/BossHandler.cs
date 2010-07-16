@@ -10,12 +10,11 @@ using Rawr.Bosses;
 
 namespace Rawr {
     #region Subclasses
+    /// <summary>The role of the player, will allow certain lists to return filtered to things that affect said role</summary>
+    public enum PLAYER_ROLES { ROLE_MainTank = 0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 80, LVLP1, LVLP2, LVLP3, }
-    /// <summary>
-    /// Enumerator for attack types, this mostly is for raid members that aren't
-    /// being directly attacked to know when AoE damage is coming from the boss
-    /// </summary>
+    /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, }
     /// <summary>A single Attack of various types</summary>
     public partial class Attack {
@@ -80,6 +79,7 @@ namespace Rawr {
                 Name != "Dynamic" ? ": " + Name : "");
         }
     }
+    /// <summary>A single Attack of type Damage over Time</summary>
     public partial class DoT : Attack {
         /// <summary>The initial damage of the dot, separate from the over time portion</summary>
         public override float DamagePerHit { get; set; }
@@ -132,11 +132,62 @@ namespace Rawr {
         }
         #endregion
     }
-    /// <summary>
-    /// The role of the player, will allow certain lists to return filtered to
-    /// things that affect said role
-    /// </summary>
-    public enum PLAYER_ROLES { ROLE_MainTank=0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
+    public partial class TargetGroup
+    {
+        #region Constructors
+        public TargetGroup() {
+            Frequency = -1;
+            Duration  = 20 * 1000f;
+            Chance    = 1.00f;
+            NumTargs  = 2;
+            NearBoss  = false;
+        }
+        public TargetGroup(float f, float d, float c, float t, bool n) {
+            Frequency = f;
+            Duration  = d;
+            Chance    = c;
+            NumTargs  = t;
+            NearBoss  = n;
+        }
+        public TargetGroup(TargetGroup i) {
+            TargetGroup clone = (TargetGroup)i.MemberwiseClone();
+            Frequency = clone.Frequency;
+            Duration  = clone.Duration;
+            Chance    = clone.Chance;
+            NumTargs  = clone.NumTargs;
+            NearBoss  = clone.NearBoss;
+        }
+        #endregion
+        #region Variables
+        /// <summary>In Seconds<para>Defaults to -1 as an 'invalid' flag</para></summary>
+        public float Frequency = -1;
+        /// <summary>In MilliSeconds (1/1000 of a second)<para>Defaults to 20 seconds</para></summary>
+        public float Duration = 20 * 1000;
+        /// <summary>Percentage, 0.50f = 50% Chance that this occurrs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
+        public float Chance = 1.00f;
+        /// <summary>The Number of Targets in this Target Group<para>Defaults to 2</para></summary>
+        public float NumTargs = 2;
+        /// <summary>
+        /// If the mobs are near boss then your MultiTargets calculations should also count the boss,
+        /// otherwise this is a group that must be DPS'd by itself.
+        /// <para>Defaults to false</para>
+        /// </summary>
+        public bool NearBoss = false;
+        #endregion
+        #region Functions
+        public override string ToString()
+        {
+            string retVal = "";
+            if (Frequency <= 0) return "None";
+            retVal += "T: " + NumTargs.ToString("0") + "s";
+            retVal += " F: " + Frequency.ToString("0") + "s";
+            retVal += " D: " + (Duration / 1000).ToString("0:0.00") + "s";
+            retVal += " C: " + Chance.ToString("0.0%");
+            retVal += NearBoss ? " : NB" : "";
+            return retVal;
+        }
+        #endregion
+    }
     #endregion
 
 #if !RAWR3 && !SILVERLIGHT
@@ -144,6 +195,77 @@ namespace Rawr {
 #endif
     public partial class BossOptions : BossHandler
     {
+        private static readonly Dictionary<string, bool> DefaultSupports = new Dictionary<string, bool>() {
+            // Basics
+            {"Level", true},
+            {"Armor", true},
+            {"Timers", true},
+            {"Health", true},
+            {"TimeSub35", true},
+            {"TimeSub20", true},
+            {"InBack_Melee", true},
+            {"InBack_Ranged", true},
+            {"RaidSize", true},
+            // Offensive
+            {"TargetGroups", true},
+            {"Attacks", true},
+            // Defensive
+            {"Defensive", true},
+            // Impedances
+            {"Moves", true},
+            {"Stuns", true},
+            {"Fears", true},
+            {"Roots", true},
+            {"Disarms", true},
+            {"Invulnerables", true},
+        };
+        protected static Dictionary<string, bool> DuplicateDefaultSupports() {
+            Dictionary<string, bool> retVal = new Dictionary<string, bool>();
+            foreach (string key in DefaultSupports.Keys)
+            {
+                retVal.Add(key, DefaultSupports[key]);
+            }
+            return retVal;
+        }
+        private static Dictionary<string, Dictionary<string, bool>> _MyModelSupportsThis = null;
+        public static Dictionary<string, Dictionary<string, bool>> MyModelSupportsThis {
+            get
+            {
+                if (_MyModelSupportsThis == null)
+                {
+                    _MyModelSupportsThis = new Dictionary<string, Dictionary<string, bool>>();
+                    _MyModelSupportsThis.Add("Bear", DefaultSupports);
+                    _MyModelSupportsThis.Add("Cat", DefaultSupports);
+                    _MyModelSupportsThis.Add("DPSDK", DefaultSupports);
+                    _MyModelSupportsThis.Add("Elemental", DefaultSupports);
+                    _MyModelSupportsThis.Add("Enhance", DefaultSupports);
+                    _MyModelSupportsThis.Add("Healadin", DefaultSupports);
+                    _MyModelSupportsThis.Add("HealPriest", DefaultSupports);
+                    _MyModelSupportsThis.Add("Mage", DefaultSupports);
+                    _MyModelSupportsThis.Add("Moonkin", DefaultSupports);
+                    _MyModelSupportsThis.Add("ProtPaladin", DefaultSupports);
+                    _MyModelSupportsThis.Add("ProtWarr", DefaultSupports);
+                    _MyModelSupportsThis.Add("RestoSham", DefaultSupports);
+                    _MyModelSupportsThis.Add("Rogue", DefaultSupports);
+                    _MyModelSupportsThis.Add("ShadowPriest", DefaultSupports);
+                    _MyModelSupportsThis.Add("TankDK", DefaultSupports);
+                    _MyModelSupportsThis.Add("Tree", DefaultSupports);
+                    _MyModelSupportsThis.Add("Warlock", DefaultSupports);
+                    // Custom
+                    {
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Ranged"] = false;
+                        _MyModelSupportsThis.Add("DPSWarr", custom);
+                    }{
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Melee"] = false;
+                        _MyModelSupportsThis.Add("Hunter", custom);
+                    }
+                }
+                return _MyModelSupportsThis;
+            }
+        }
+
         public BossOptions() { }
         public BossOptions Clone() {
             BossOptions clone = (BossOptions)this.MemberwiseClone();
@@ -233,18 +355,10 @@ namespace Rawr {
     [Serializable]
 #endif
     public partial class BossHandler {
-        public const int NormCharLevel = 80;
+        public const int NormCharLevel = (int)POSSIBLE_LEVELS.LVLP0;
         public BossHandler() { }
         public BossHandler Clone() {
             BossHandler clone = (BossHandler)this.MemberwiseClone();
-            //
-            //clone.Attacks.Clear(); clone.Attacks.AddRange((Attack[])clone.Attacks.ToArray().Clone());
-            //clone.Moves.Clear(); clone.Moves.AddRange((Impedence[])clone.Moves.ToArray().Clone());
-            //clone.Stuns.Clear(); clone.Stuns.AddRange((Impedence[])clone.Stuns.ToArray().Clone());
-            //clone.Fears.Clear(); clone.Fears.AddRange((Fear[])clone.Fears.ToArray().Clone());
-            //clone.Roots.Clear(); clone.Roots.AddRange((Root[])clone.Roots.ToArray().Clone());
-            //clone.Disarms.Clear(); clone.Disarms.AddRange((Disarm[])clone.Disarms.ToArray().Clone());
-            //
             return clone;
         }
 
@@ -303,6 +417,7 @@ namespace Rawr {
         #region ==== Offensive ====
         private double MAXNUMTARGS = 1d;
         private double MULTITARGSPERC = 0.00d;
+        public List<TargetGroup> Targets = new List<TargetGroup>();
         /// <summary>WARNING! This variable is not presently used!</summary>
         private List<DoT> DOTS = new List<DoT>();
         private List<Attack> ATTACKS = new List<Attack>();
@@ -352,8 +467,106 @@ namespace Rawr {
         public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; OnPropertyChanged("Min_Tanks"); } }
         #endregion
         #region ==== Offensive ====
-        public double  MultiTargsPerc     { get { return MULTITARGSPERC;     } set { MULTITARGSPERC     = CPd(value); OnPropertyChanged("MultiTargsPerc"    ); } }
-        public double  MaxNumTargets      { get { return MAXNUMTARGS;        } set { MAXNUMTARGS        = value; OnPropertyChanged("MaxNumTargs"       ); } }
+        // ==== Multiple Targets ====
+        public double  MultiTargsPerc { get { return MULTITARGSPERC; } set { MULTITARGSPERC = CPd(value); OnPropertyChanged("MultiTargsPerc"); } }
+        public double  MaxNumTargets  { get { return MAXNUMTARGS;    } set { MAXNUMTARGS    = value; OnPropertyChanged("MaxNumTargs"        ); } }
+        public TargetGroup DynamicCompiler_MultiTargs {
+            get {
+                // Make one
+                TargetGroup retVal = new TargetGroup();
+                // Find the averaged _____
+                float time = MultiTargsTime;
+                float dur = MultiTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = MultiTargsChance;
+                double num = MultiTargsNum;
+                bool near = MultiTargsNear;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                retVal.NearBoss = near;
+                retVal.NumTargs = (float)num;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
+        public float MultiTargsFreq {
+            get {
+                if (Targets.Count > 0) {
+                    // Adds up the total number of Moves and evens them out over the Berserk Timer
+                    float numMultiTargsOverDur = 0;
+                    foreach (TargetGroup s in Targets) {
+                        numMultiTargsOverDur += (BerserkTimer / s.Frequency) * s.Chance;
+                    }
+                    float freq = BerserkTimer / numMultiTargsOverDur;
+                    return freq;
+                } else { return 0; }
+            }
+        }
+        public float MultiTargsDur {
+            get {
+                if (Targets.Count > 0) {
+                    // Averages out the MultiTarg Durations
+                    float TotalMultiTargDur = 0;
+                    foreach (TargetGroup s in Targets) { TotalMultiTargDur += s.Duration; }
+                    float dur = TotalMultiTargDur / Targets.Count;
+                    return dur;
+                } else { return 0; }
+            }
+        }
+        public double MultiTargsNum {
+            get {
+                if (Targets.Count > 0) {
+                    // Averages out the MultiTarg Amounts
+                    float TotalMultiTargAmt = 0;
+                    foreach (TargetGroup s in Targets) { TotalMultiTargAmt += s.NumTargs; }
+                    float dur = TotalMultiTargAmt / Targets.Count;
+                    return dur;
+                } else { return MAXNUMTARGS; }
+            }
+            set { MAXNUMTARGS = value; }
+        }
+        public float MultiTargsChance {
+            get {
+                if (Targets.Count > 0) {
+                    // Averages out the MultiTarg Chances
+                    float TotalChance = 0f;
+                    foreach (TargetGroup s in Targets) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)Targets.Count;
+                    return chance;
+                } else { return 0; }
+            }
+        }
+        public float MultiTargsTime {
+            get {
+                float time = 0f;
+                float freq = MultiTargsFreq;
+                float dur = MultiTargsDur;
+                if (freq > 0f && freq < BerserkTimer) {
+                    time = (BerserkTimer / freq) * (dur / 1000f);
+                }
+                return time;
+            }
+        }
+        public bool MultiTargsNear {
+            get {
+                if (Targets.Count > 0) {
+                    // Averages out the Move Durations
+                    int countYes = 0;
+                    int countNo = 0;
+                    foreach (TargetGroup s in Targets) {
+                        if (s.NearBoss) { countYes++; } else { countNo++; };
+                    }
+                    return countYes >= countNo;
+                } else { return false; }
+            }
+        }
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }

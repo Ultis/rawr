@@ -39,12 +39,12 @@ namespace Rawr.UI
             get { return _char; }
             set {
                 if (_char != null) {
-                    //_char.ClassChanged -= new EventHandler(character_ClassChanged);
+                    _char.ClassChanged -= new EventHandler(character_ClassChanged);
                 }
                 _char = value;
                 if (_char != null) {
-                    //_char.ClassChanged += new EventHandler(character_ClassChanged);
-                    //character_ClassChanged(this, EventArgs.Empty);
+                    _char.ClassChanged += new EventHandler(character_ClassChanged);
+                    character_ClassChanged(this, EventArgs.Empty);
                     BossOptions = Character.BossOptions;
                 }
             }
@@ -61,8 +61,10 @@ namespace Rawr.UI
             NUD_TargHP.Value = BossOptions.Health;
             NUD_Under35Perc.Value = BossOptions.Under35Perc * 100;
             NUD_Under20Perc.Value = BossOptions.Under20Perc * 100;
-            CB_InBackPerc.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
-            CB_InBackPerc.Value = BossOptions.InBackPerc_Melee * 100d;
+            CB_InBackPerc_Melee.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
+            CB_InBackPerc_Melee.Value = BossOptions.InBackPerc_Ranged * 100d;
+            CB_InBackPerc_Ranged.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
+            CB_InBackPerc_Ranged.Value = BossOptions.InBackPerc_Ranged * 100d;
             CB_MaxPlayers.SelectedItem = BossOptions.Max_Players;
             CB_MinTanks.SelectedItem = BossOptions.Min_Tanks;
             CB_MinHealers.SelectedItem = BossOptions.Min_Healers;
@@ -217,12 +219,100 @@ namespace Rawr.UI
             UpdateSavedBosses();
             Character.OnCalculationsInvalidated();
         }
-        public void RefreshBoss() { character_ClassChanged(this, EventArgs.Empty); }
+        public void RefreshBoss() { character_ClassChanged(this, EventArgs.Empty); }*/
+
         private void character_ClassChanged(object sender, EventArgs e)
         {
-            UpdateSavedBosses();
+            //UpdateSavedBosses();
+
+            // The following code is a system by which we can hide UI for options that a model doesn't implement
+
+            LB_Level.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Level"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_Level.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Level"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_Armor.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Armor"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_Armor.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Armor"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_Duration.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Duration.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Duration2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_DurationSpeed.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_DurationSpeed.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Duration2Speed.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_TargHP.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Health"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_TargHP.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Health"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_Under35Perc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub35"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Under35Perc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub35"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Under35Perc2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub35"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_Under20Perc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub20"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Under20Perc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub20"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Under20Perc2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TimeSub20"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_InBack.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Melee"]
+                                || BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"]
+                    ? Visibility.Visible : Visibility.Collapsed;
+            CB_InBackPerc_Melee.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Melee"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_InBackPerc_Ranged.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_InBehindPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"]
+                                      || BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"]
+                    ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_MaxPlayers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MaxPlayers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_MinTanks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MinTanks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_MinHealers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MinHealers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Max.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MultiTargsMax.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MultiTargsPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_MultiTargsPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_Resist_Physical.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Physical.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Physical2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Frost.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Frost.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Frost2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Fire.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Fire.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Fire2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Nature.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Nature.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Nature2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Arcane.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Arcane.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Arcane2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Shadow.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Shadow.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Shadow2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Holy.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            NUD_Resist_Holy.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Resist_Holy2.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_MovingTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Moves"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Moves.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Moves"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_StunningTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Stuns"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Stuns.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Stuns"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_FearingTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Fears"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Fears.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Fears"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_RootingTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Roots"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Roots.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Roots"] ? Visibility.Visible : Visibility.Collapsed;
+
+            CK_DisarmTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Disarms"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Disarms.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Disarms"] ? Visibility.Visible : Visibility.Collapsed;
         }
-        */
 
         // Boss Selector
         private void CB_BL_FilterType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
