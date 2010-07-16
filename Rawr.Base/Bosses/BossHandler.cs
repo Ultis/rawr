@@ -251,13 +251,13 @@ namespace Rawr {
         #region Variables
         #region Enums/Convertors
         protected readonly static string[] BossTierStrings = new string[] {
-            "Tier 7",
-            "Tier 7.5",
-            "Tier 8",
-            "Tier 8.5",
-            "Tier 9",
-            "Tier 9.5",
-            "Tier 10",
+            "Tier  7.0",
+            "Tier  7.5",
+            "Tier  8.0",
+            "Tier  8.5",
+            "Tier  9.0",
+            "Tier  9.5",
+            "Tier 10.0",
             "Tier 10.5",
             "Tier 10.9",
         };
