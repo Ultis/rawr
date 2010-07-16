@@ -7,53 +7,74 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Rawr.Bosses {
-    #region T8 Content
     // ===== The Vault of Archavon ====================
-    public class EmalonTheStormWatcher_10 : BossHandler {
-        public EmalonTheStormWatcher_10() {
+    public class EmalonTheStormWatcher : MultiDiffBoss {
+        public EmalonTheStormWatcher() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Emalon the Storm Watcher";
-            Content = TierLevels.T8_0;
             Instance = "The Vault of Archavon";
-            Version = Versions.V_10N;
-            Health = 2789000f;
-            BerserkTimer = 6 * 60;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  3;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
-            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            Moves.Add(new Impedance()
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2789000f, 11156000f, 0, 0 };
+            BerserkTimer = new int[] { 6 * 6, 19 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                Frequency = 45f + 18f,
-                Duration = (18f + 5f + 5f) * 1000f,
-                Chance = 1f,
-                Breakable = false,
-            });
-            // Lightning Nova, usually happens a few seconds after the overcharged add dies
-            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            Moves.Add(new Impedance()
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
             {
-                Frequency = 45f + 18f,
-                Duration = (4f + 4f) * 1000f,
-                Chance = 1f,
-                Breakable = false,
-            });
+                //Moves;
+                // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
+                // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 45f + 18f,
+                    Duration = (18f + 5f + 5f) * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                });
+                // Lightning Nova, usually happens a few seconds after the overcharged add dies
+                // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 45f + 18f,
+                    Duration = (4f + 4f) * 1000f,
+                    Chance = 1f,
+                    Breakable = false,
+                });
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              * Adds Damage
              * Chain Lightning Damage
@@ -67,73 +88,98 @@ namespace Rawr.Bosses {
      * aren't supposed to. They need to be set up before I
      * make 25 Man versions.*/
     // The Siege
-    public class IgnistheFurnaceMaster_10 : BossHandler {
-        public IgnistheFurnaceMaster_10() {
+    public class IgnistheFurnaceMaster : MultiDiffBoss {
+        public IgnistheFurnaceMaster() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Ignis the Furnace Master";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            Health = 5578000f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 5578000f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.90f, 0.90f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                /* Flame Jets - Inflicts 5,655 to 6,345 (Heroic: 8,483 to 9,517)
-                 *      Fire damage and interrupts spellcasting for 6 seconds. Affected
-                 *      targets take additional 1,000 (Heroic: 2,000) Fire damage
-                 *      every 1 second, for 6 seconds.
-                 */
-                Attack a = new Attack() {
-                    Name = "Flame Jets",
-                    AttackSpeed = 25f,
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = (5655f - 6345f) / 2f,
-                    DamageType = ItemDamageType.Fire,
-                    MaxNumTargets = Max_Players,
-                };
-                Attacks.Add(a);
-            }
-            {
-                /* Scorch - Inflicts 2,357 to 2,643 (Heroic: 3,770 to 4,230)
-                 *  Fire damage every half-second to targets in front of the caster
-                 *  within 30 yards. In addition, the ground within 13 yards becomes
-                 *  scorched, inflicting 1,885 to 2,115 (Heroic: 3,016 to 3,384)
-                 *  Fire damage every 1 second. Iron Constructs gain Heat while
-                 *  standing on scorched ground.
-                 */
-                Attack a = new Attack() {
-                    Name = "Scorch",
-                    AttackSpeed = 25f,
-                    AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = (2357f - 2643f) / 2f,
-                    DamageType = ItemDamageType.Fire,
-                    MaxNumTargets = Max_Players,
-                };
-                Attacks.Add(a);
-                Moves.Add(new Impedance()
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 {
-                    Frequency = a.AttackSpeed,
-                    Duration = 5f * 1000f,
-                    Chance = 1f,
-                    Breakable = false,
-                });
+                    /* Flame Jets - Inflicts 5,655 to 6,345 (Heroic: 8,483 to 9,517)
+                     *      Fire damage and interrupts spellcasting for 6 seconds. Affected
+                     *      targets take additional 1,000 (Heroic: 2,000) Fire damage
+                     *      every 1 second, for 6 seconds.
+                     */
+                    Attack a = new Attack()
+                    {
+                        Name = "Flame Jets",
+                        AttackSpeed = 25f,
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamagePerHit = (5655f - 6345f) / 2f,
+                        DamageType = ItemDamageType.Fire,
+                        MaxNumTargets = this[i].Max_Players,
+                    };
+                   this[i].Attacks.Add(a);
+                }
+                {
+                    /* Scorch - Inflicts 2,357 to 2,643 (Heroic: 3,770 to 4,230)
+                     *  Fire damage every half-second to targets in front of the caster
+                     *  within 30 yards. In addition, the ground within 13 yards becomes
+                     *  scorched, inflicting 1,885 to 2,115 (Heroic: 3,016 to 3,384)
+                     *  Fire damage every 1 second. Iron Constructs gain Heat while
+                     *  standing on scorched ground.
+                     */
+                    Attack a = new Attack()
+                    {
+                        Name = "Scorch",
+                        AttackSpeed = 25f,
+                        AttackType = ATTACK_TYPES.AT_AOE,
+                        DamagePerHit = (2357f - 2643f) / 2f,
+                        DamageType = ItemDamageType.Fire,
+                        MaxNumTargets = this[i].Max_Players,
+                    };
+                    this[i].Attacks.Add(a);
+                    this[i].Moves.Add(new Impedance()
+                    {
+                        Frequency = a.AttackSpeed,
+                        Duration = 5f * 1000f,
+                        Chance = 1f,
+                        Breakable = false,
+                    });
+                }
             }
-            // Situational Changes
-            InBackPerc_Melee = 0.90f;
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             // TODO:
             /* Slag Pot - Charges and grabs a random target and incapacitates them,
              *   inflicting 4,500 (Heroic: 6,000) Fire damage every 1 second for 10
@@ -157,38 +203,55 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class Razorscale_10 : BossHandler {
-        public Razorscale_10() {
+    public class Razorscale : MultiDiffBoss {
+        public Razorscale() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Razorscale";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 15 * 60;
-            Health = 3555975f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  3;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.90f;
-            MultiTargsPerc = 0.50f; // need to sim this out
-            MaxNumTargets  = 5f; // need to drop this down to only when the swarm is up
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 3555975f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.90f, 0.90f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 3, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 5, 5, 0, 0 };// need to drop this down to only when the swarm is up
+            MultiTargsPerc = new double[] { 0.50d, 0.50d, 0.00d, 0.00d };// need to sim this out
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             // TODO:
             /* Phase 1: Air Phase
              * 1. (Spell #63014) - Inflicts 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage to a player, and additional 5,088 to 5,912 (Heroic: 7,863 to 9,137) Fire damage every 1 second to anyone within 6 yards of the initial impact, for 25 seconds.
@@ -208,91 +271,117 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class XT002Deconstructor_10 : BossHandler {
-        public XT002Deconstructor_10() {
+    public class XT002Deconstructor : MultiDiffBoss {
+        public XT002Deconstructor() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "XT-002 Deconstructor";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 10 * 60;
-            Health = 5000008f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 5000008f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                /* Gravity Bomb - Causes the target to spawn a Gravity Bomb
-                 * after 9 seconds, which damages the target for 12,000
-                 * (Heroic: 15,000) and pulls other players within 12 yards
-                 * and inflicts them with 11,700 to 12,300 (Heroic: 14,625
-                 * to 15,375) Shadow damage.*/
-                Attack a = new Attack {
-                    Name = "Gravity Bomb",
-                    DamageType = ItemDamageType.Shadow,
-                    DamagePerHit = 12000f,
-                    MaxNumTargets = Max_Players,
-                    AttackSpeed = 25,
-                };
-                Attacks.Add(a);
-                Moves.Add(new Impedance()
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 {
-                    Frequency = a.AttackSpeed,
-                    Duration = (9f + 5f) * 1000f,
-                    Chance = 1f / Max_Players,
-                    Breakable = false,
-                });
-            }
-            {
-                /* Searing Light - Causes the target to inflict 3,000
-                 * (Heroic: 3,500) damage to the target and other players
-                 * within 10 yards every 1 second, for 9 seconds.*/
-                Attack a = new Attack {
-                    Name = "Searing Light",
-                    DamageType = ItemDamageType.Holy,
-                    DamagePerHit = 3000f,
-                    MaxNumTargets = Max_Players,
-                    AttackSpeed = 25,
-                };
-                Attacks.Add(a);
-                Moves.Add(new Impedance()
+                    /* Gravity Bomb - Causes the target to spawn a Gravity Bomb
+                     * after 9 seconds, which damages the target for 12,000
+                     * (Heroic: 15,000) and pulls other players within 12 yards
+                     * and inflicts them with 11,700 to 12,300 (Heroic: 14,625
+                     * to 15,375) Shadow damage.*/
+                    Attack a = new Attack
+                    {
+                        Name = "Gravity Bomb",
+                        DamageType = ItemDamageType.Shadow,
+                        DamagePerHit = 12000f,
+                        MaxNumTargets = this[i].Max_Players,
+                        AttackSpeed = 25,
+                    };
+                    this[i].Attacks.Add(a);
+                    this[i].Moves.Add(new Impedance()
+                    {
+                        Frequency = a.AttackSpeed,
+                        Duration = (9f + 5f) * 1000f,
+                        Chance = 1f / this[i].Max_Players,
+                        Breakable = false,
+                    });
+                }
                 {
-                    Frequency = a.AttackSpeed,
-                    Duration = (9f + 5f) * 1000f,
-                    Chance = 1f / Max_Players,
-                    Breakable = false,
-                });
+                    /* Searing Light - Causes the target to inflict 3,000
+                     * (Heroic: 3,500) damage to the target and other players
+                     * within 10 yards every 1 second, for 9 seconds.*/
+                    Attack a = new Attack
+                    {
+                        Name = "Searing Light",
+                        DamageType = ItemDamageType.Holy,
+                        DamagePerHit = 3000f,
+                        MaxNumTargets = this[i].Max_Players,
+                        AttackSpeed = 25,
+                    };
+                    this[i].Attacks.Add(a);
+                    this[i].Moves.Add(new Impedance()
+                    {
+                        Frequency = a.AttackSpeed,
+                        Duration = (9f + 5f) * 1000f,
+                        Chance = 1f / this[i].Max_Players,
+                        Breakable = false,
+                    });
+                }
+                {
+                    /* Tympanic Tantrum - Damages everybody for 10% of their
+                     * maximum hit points every 1 second, for 8 seconds. This
+                     * is a channeled spell, which also dazes the affected
+                     * targets for 2 seconds.*/
+                    Attack a = new Attack
+                    {
+                        Name = "Tympanic Tantrum",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = 22000f * 0.10f * 8f,
+                        MaxNumTargets = this[i].Max_Players,
+                        AttackSpeed = 25,
+                    };
+                    this[i].Attacks.Add(a);
+                }
             }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
             {
-                /* Tympanic Tantrum - Damages everybody for 10% of their
-                 * maximum hit points every 1 second, for 8 seconds. This
-                 * is a channeled spell, which also dazes the affected
-                 * targets for 2 seconds.*/
-                Attack a = new Attack {
-                    Name = "Tympanic Tantrum",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = 22000f * 0.10f * 8f,
-                    MaxNumTargets = Max_Players,
-                    AttackSpeed = 25,
-                };
-                Attacks.Add(a);
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
             }
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // TODO:
-            /* Heart Phase: At 75%, 50%, and 25% XT's Heart of the
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
+             * 
+             * Heart Phase: At 75%, 50%, and 25% XT's Heart of the
              * Deconstructor will become exposed and attackable. It
              * will leak energy, which summons adds - Pummellers,
              * Scrapbots and Boombots. During this 30-second Phase XT
@@ -307,33 +396,55 @@ namespace Rawr.Bosses {
         }
     }
     // The Antechamber
-    public class AssemblyofIron_10 : BossHandler {
-        public AssemblyofIron_10() {
+    public class AssemblyofIron : MultiDiffBoss {
+        public AssemblyofIron() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Assembly of Iron";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 15 * 60;
-            Health = 2998175f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 2998175f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.75f, 0.75f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             // TODO:
             /* Steelbreaker
              * - High Voltage - An aura that inflicts 1,500 (Heroic: 3,000)
@@ -392,32 +503,55 @@ namespace Rawr.Bosses {
              *   while casting Lightning Tendrils.*/
         }
     }
-    public class Kologarn_10 : BossHandler {
-        public Kologarn_10() {
+    public class Kologarn : MultiDiffBoss {
+        public Kologarn() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Kologarn";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            Health = 3625700f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 3625700f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Kologarn
                  1. Focused Eyebeam - Inflicts 2,313 to 2,687 (Heroic: 3,238 to 3,762) Nature damage every 1 second. Two beams will spawn around a player, following by a raid warning. The beams will converge onto the player and start inflicting damage after a few seconds. They will follow their target.
@@ -434,79 +568,121 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class Auriaya_10 : BossHandler {
-        public Auriaya_10() {
+    public class Auriaya : MultiDiffBoss {
+        public Auriaya() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Auriaya";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 10 * 60;
-            Health = 3137625f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
-            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
-            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
-            // Feral Defender: If you leave him alone, he's up about 90% of the fight
-            MultiTargsPerc = 0.90f; // need to sim this out
-            MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
-            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
-            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedance() {
-                Frequency = 45f,
-                Duration = 5f * 1000f,
-                Chance = 1f,
-                Breakable = true,
-            });
-            // Fight Requirements
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 3137625f, 16734000f, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.00f, 0.00f, 0, 0 };// This is a boss where you CANNOT be behind her or she Fubar's the raid
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
+                // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
+                // Feral Defender: If you leave him alone, he's up about 90% of the fight
+                this[i].MultiTargsPerc = 0.90f; // need to sim this out
+                this[i].MaxNumTargets = 10f; // need to drop this down to only when the swarm is up
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
+                // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
+                this[i].Fears.Add(new Impedance()
+                {
+                    Frequency = 45f,
+                    Duration = 5f * 1000f,
+                    Chance = 1f,
+                    Breakable = true,
+                });
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
              */
         }
     }
     // The Keepers
-    public class Mimiron_10 : BossHandler {
-        public Mimiron_10() {
+    public class Mimiron : MultiDiffBoss {
+        public Mimiron() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Mimiron";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 15 * 60;
-            Health = 1742400f*3f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.50f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 1742400f*3f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.50f, 0.50f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Phase 1: Leviathan MK II
                  1. Proximity Mines - Drops 8-10 Proximity Mines around MK II. After a small arming time, the mines will use Explosion, inflicting 9,000 (Heroic: 12,000) Fire damage to anyone who walks over them.
@@ -534,33 +710,55 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class Freya_10 : BossHandler {
-        public Freya_10() {
+    public class Freya : MultiDiffBoss {
+        public Freya() {
             // If not listed here use values from defaults
-            // Basics
-            Name = "Auriaya";
-            Content = TierLevels.T8_0;
+            #region Info
+            Name = "Freya";
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 10 * 60;
-            Health = 1394500f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 1394500f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             Elders
                 * Elder Brightleaf
@@ -592,47 +790,55 @@ namespace Rawr.Bosses {
                 * Nature Bomb - Summons immobile Nature Bombs around the feet of random raid members. The bombs use Nature Bomb after a few seconds, inflicting 5,850 to 6,150 (Heroic: 8,775 to 9,225) Nature damage to enemies within 10 yards and knocking them back. Used frequently 6 minutes into the fight.             */
         }
     }
-    public class Thorim_10 : BossHandler {
-        public Thorim_10() {
+    public class Thorim : MultiDiffBoss {
+        public Thorim() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Thorim";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 5 * 60 * 2;
-            Health = 1742400f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
-            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
-            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
-            // Feral Defender: If you leave him alone, he's up about 90% of the fight
-            MultiTargsPerc = 0.90f; // need to sim this out
-            MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
-            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
-            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedance()
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 1742400f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 5 * 60 * 2, 5 * 60 * 2, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                Frequency = 45f,
-                Duration = 5f * 1000f,
-                Chance = 1f,
-                Breakable = true,
-            });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Pre-Phase Adds
                  1. Jormungar Behemoth - Attacks with Acid Breath (Heroic) and Sweep (Heroic)
@@ -666,43 +872,65 @@ namespace Rawr.Bosses {
                  4. Unbalancing Strike - Inflicts 200% weapon damage on the main target and reduces its defense skill by 200 for 15 seconds.             */
         }
     }
-    public class Hodir_10 : BossHandler {
-        public Hodir_10() {
+    public class Hodir : MultiDiffBoss {
+        public Hodir() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Hodir";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 8 * 60;
-            Health = 8115990f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  1;
-            Min_Healers =  3;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
-            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
-            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
-            // Going to assume the CD is 45 sec for now
-            Roots.Add(new Impedance()
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 8115990f, 32477904f, 0, 0 };
+            BerserkTimer = new int[] { 8 * 60, 8 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 0.75f, 0.75f, 0, 0 };// he moves A LOT so it's hard to stay behind him at all times
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 1, 1, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
             {
-                Frequency = 45f,
-                Duration = 10f * 1000f,
-                Chance = 1.00f,
-                Breakable = true,
-            });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
+                // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
+                // Going to assume the CD is 45 sec for now
+                this[i].Roots.Add(new Impedance()
+                {
+                    Frequency = 45f,
+                    Duration = 10f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                });
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Biting Cold - Applies exponentially increasing damage-over-time Frost damage effect every 1 second to stationary targets. 1 second of moving or a jump will reduce the stack by 1.
             * Freeze - Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
@@ -718,33 +946,55 @@ namespace Rawr.Bosses {
         }
     }
     // The Descent into Madness
-    public class GeneralVezax_10 : BossHandler {
-        public GeneralVezax_10() {
+    public class GeneralVezax : MultiDiffBoss {
+        public GeneralVezax() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "General Vezax";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 10 * 60;
-            Health = 6275250f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 6275250f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 1 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Aura of Despair - Prevents most mana regeneration methods. Melee attack speed is reduced by 20% for all raid members as well.
               Mana Regeneration
@@ -760,33 +1010,55 @@ namespace Rawr.Bosses {
              */
         }
     }
-    public class YoggSaron_10 : BossHandler {
-        public YoggSaron_10() {
+    public class YoggSaron : MultiDiffBoss {
+        public YoggSaron() {
             // If not listed here use values from defaults
-            // Basics
-            Name = "Yogg-Saron";
-            Content = TierLevels.T8_0;
+            #region Info
+            Name = "Yogg Saron";
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 15 * 60;
-            Health = 10999997f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 10999997f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * The Keepers of Ulduar
                  1. Freya - Buffs the raid with Resilience of Nature, which increases damage done by 10% and healing by 20%. Also provides Sanity Wells, which regenerate 10% Sanity every 2 seconds and reduce all damage taken by 50% to players standing in them, through Sanity Well.
@@ -815,33 +1087,55 @@ namespace Rawr.Bosses {
         }
     }
     // Celestial Planetarium
-    public class AlgalontheObserver_10 : BossHandler {
-        public AlgalontheObserver_10() {
+    public class AlgalontheObserver : MultiDiffBoss {
+        public AlgalontheObserver() {
             // If not listed here use values from defaults
-            // Basics
+            #region Info
             Name = "Algalon the Observer";
-            Content = TierLevels.T8_0;
             Instance = "Ulduar";
-            Version = Versions.V_10N;
-            BerserkTimer = 6 * 60;
-            Health = 8367000f;
-            // Fight Requirements
-            Max_Players = 10;
-            Min_Tanks   =  2;
-            Min_Healers =  2;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, BossHandler.TierLevels.T8_0, BossHandler.TierLevels.T8_5, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            #endregion
+            #region Basics
+            Health = new float[] { 8367000f, 6763325f, 0, 0 };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 3, 0, 0 };
+            Min_Healers = new int[] { 2, 4, 0, 0 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
             /* TODO:
             * Quantum Strike - Inflicts 15,675 to 17,325 (Heroic: 34,125 to 35,875) Physical damage.
             * Phase Punch - Inflicts 8,788 to 10,212 an applies a stacking debuff on the target. When the debuff reaches 5 stacks the target is affected by Phase Punch.
@@ -856,163 +1150,4 @@ namespace Rawr.Bosses {
              */
         }
     }
-    #endregion
-    #region T8.5 Content
-    // ===== The Vault of Archavon ====================
-    public class EmalonTheStormWatcher_25 : BossHandler {
-        public EmalonTheStormWatcher_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Emalon the Storm Watcher";
-            Content = TierLevels.T8_5;
-            Instance = "The Vault of Archavon";
-            Version = Versions.V_25N;
-            Health = 11156000f;
-            BerserkTimer = 6 * 60;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks   =  2;
-            Min_Healers =  5;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 1.00f;
-            // Every 45 seconds for 18 seconds dps has to be on the overcharged add (it wipes the raid at 20 sec)
-            // Adding 5 seconds to the Duration for moving out before starts and then 5 for back in after
-            Moves.Add(new Impedance()
-            {
-                Frequency = 45f + 18f,
-                Duration = (18f + 5f + 5f) * 1000f,
-                Chance = 1f,
-                Breakable = false,
-            });
-            // Lightning Nova, usually happens a few seconds after the overcharged add dies
-            // (right when most melee reaches the boss again) Simming 4 to run out and 4 to get back
-            Moves.Add(new Impedance()
-            {
-                Frequency = 45f + 18f,
-                Duration = (4f + 4f) * 1000f,
-                Chance = 1f,
-                Breakable = false,
-            });
-            /* TODO:
-             * Adds Damage
-             * Chain Lightning Damage
-             * Lightning Nova Damage
-             */
-        }
-    }
-    // ===== Ulduar ===================================
-    // The Siege
-        // TODO: Flame Leviathan
-        // TODO: Ignis the Furnace Master
-        // TODO: Razorscale
-        // TODO: XT-002 Deconstructor
-    // The Antechamber
-        // TODO: Assembly of Iron
-        // TODO: Kologarn
-    public class Auriaya_25 : BossHandler {
-        public Auriaya_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Auriaya";
-            Content = TierLevels.T8_5;
-            Instance = "Ulduar";
-            Version = Versions.V_25N;
-            BerserkTimer = 10 * 60;
-            Health = 16734000f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks   =  2;
-            Min_Healers =  4;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.00f; // This is a boss where you CANNOT be behind her or she Fubar's the raid
-            // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
-            // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
-            // Feral Defender: If you leave him alone, he's up about 90% of the fight
-            MultiTargsPerc = 0.90f; // need to sim this out
-            MaxNumTargets  = 10f; // need to drop this down to only when the swarm is up
-            // Terrifying Screech: Raid-wide fear for 5 seconds. Magic effect.
-            // Going to assume the CD is 45 sec for now (cuz I know she doesnt do it every 8 sec)
-            Fears.Add(new Impedance() {
-                Frequency = 45f,
-                Duration = 5f * 1000f,
-                Chance = 1f,
-                Breakable = true,
-            });
-            /* TODO:
-             */
-        }
-    }
-    // The Keepers
-        // TODO: Mimiron
-        // TODO: Freya
-        // TODO: Thorim
-    public class Hodir_25 : BossHandler {
-        public Hodir_25() {
-            // If not listed here use values from defaults
-            // Basics
-            Name = "Hodir";
-            Content = TierLevels.T8_5;
-            Instance = "Ulduar";
-            Version = Versions.V_25N;
-            BerserkTimer = 8 * 60;
-            Health = 32477904f;
-            // Fight Requirements
-            Max_Players = 25;
-            Min_Tanks   =  1;
-            Min_Healers =  5;
-            // Resistance
-            // Attacks
-            Attacks.Add(new Attack {
-                Name = "Melee",
-                DamageType = ItemDamageType.Physical,
-                DamagePerHit = StandardMeleePerHit[(int)Content],
-                MaxNumTargets = 1f,
-                AttackSpeed = 2.0f,
-                AttackType = ATTACK_TYPES.AT_MELEE,
-                IsTheDefaultMelee = true,
-            });
-            // Situational Changes
-            InBackPerc_Melee = 0.75f; // he moves A LOT so it's hard to stay behind him at all times
-            // Freeze: Inflicts 5,550 to 6,450 Frost damage to players within 10 yards. Also roots
-            // the targets in place for 10 seconds. The rooting component of the spell is a magic debuff.
-            // Going to assume the CD is 45 sec for now
-            Roots.Add(new Impedance()
-            {
-                Frequency = 45f,
-                Duration = 10f * 1000f,
-                Chance = 1.00f,
-                Breakable = true,
-            });
-            /* TODO:
-             */
-        }
-    }
-    // The Descent into Madness
-        // TODO: General Vezax
-        // TODO: Yogg-Saron
-    // Supermassive
-    // TODO: Algalon the Observer
-    #endregion
 }

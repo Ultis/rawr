@@ -40,7 +40,30 @@ namespace Rawr {
             // The Eye of Eternity
             Malygos malygos = new Malygos();
             #endregion
-            LordMarrowgar lordmarrowgar = new LordMarrowgar();
+            #region ==== Tier 8 Content ====
+            // Ulduar
+            IgnistheFurnaceMaster IgnistheFurnaceMaster = new IgnistheFurnaceMaster();
+            Razorscale Razorscale = new Razorscale();
+            XT002Deconstructor XT002Deconstructor = new XT002Deconstructor();
+            AssemblyofIron AssemblyofIron = new AssemblyofIron();
+            Kologarn Kologarn = new Kologarn();
+            Auriaya Auriaya = new Auriaya();
+            Mimiron Mimiron = new Mimiron();
+            Freya Freya = new Freya();
+            Thorim Thorim = new Thorim();
+            Hodir Hodir = new Hodir();
+            GeneralVezax GeneralVezax = new GeneralVezax();
+            YoggSaron YoggSaron = new YoggSaron();
+            AlgalontheObserver AlgalontheObserver = new AlgalontheObserver();
+            // Vault of Archavon
+            EmalonTheStormWatcher EmalonTheStormWatcher = new EmalonTheStormWatcher();
+            #endregion
+            #region ==== Tier 9 Content ====
+            KoralonTheFlameWatcher KoralonTheFlameWatcher = new KoralonTheFlameWatcher();
+            #endregion
+            #region ==== Tier 10 Content ====
+            LordMarrowgar LordMarrowgar = new LordMarrowgar();
+            #endregion
             #endregion
             list = new BossHandler[] {
                 #region ==== Tier 7 Content ====
@@ -71,31 +94,31 @@ namespace Rawr {
                 malygos[0],malygos[1],
                 #endregion
                 #region ==== Tier 8 Content ====
-                // Vault of Archavon
-                new EmalonTheStormWatcher_10(),new EmalonTheStormWatcher_25(),
                 // Ulduar
-                new IgnistheFurnaceMaster_10(),
-                new Razorscale_10(),
-                new XT002Deconstructor_10(),
-                new AssemblyofIron_10(),
-                new Kologarn_10(),
-                new Auriaya_10(),new Auriaya_25(),
-                new Mimiron_10(),
-                new Freya_10(),
-                new Thorim_10(),
-                new Hodir_10(),new Hodir_25(),
-                new GeneralVezax_10(),
-                new YoggSaron_10(),
-                new AlgalontheObserver_10(),
+                IgnistheFurnaceMaster[0],IgnistheFurnaceMaster[1],
+                Razorscale[0],Razorscale[1],
+                XT002Deconstructor[0],XT002Deconstructor[1],
+                AssemblyofIron[0],AssemblyofIron[1],
+                Kologarn[0],Kologarn[1],
+                Auriaya[0],Auriaya[1],
+                Mimiron[0],Mimiron[1],
+                Freya[0],Freya[1],
+                Thorim[0],Thorim[1],
+                Hodir[0],Hodir[1],
+                GeneralVezax[0],GeneralVezax[1],
+                YoggSaron[0],YoggSaron[1],
+                AlgalontheObserver[0],AlgalontheObserver[1],
+                // Vault of Archavon
+                EmalonTheStormWatcher[0], EmalonTheStormWatcher[1],
                 #endregion
                 #region ==== Tier 9 Content ====
                 // Vault of Archavon
-                new KoralonTheFlameWatcher_10(),new KoralonTheFlameWatcher_25(),
+                KoralonTheFlameWatcher[0],KoralonTheFlameWatcher[1],
                 // Trial of the Crusader
                 #endregion
                 #region ==== Tier 10 Content ====
                 // Icecrown Citadel
-                lordmarrowgar[0],lordmarrowgar[1],lordmarrowgar[2],lordmarrowgar[3],
+                LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
                 #endregion
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);
