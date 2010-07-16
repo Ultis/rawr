@@ -20,7 +20,7 @@ namespace Rawr.Bosses {
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
             #endregion
             #region Basics
-            Health = new float[] { 2230000f, 6763325f, 0, 0 };
+            Health = new float[] { 2231200, 6763325f, 0, 0 };
             Max_Players = new int[] { 10, 25,  0,  0 };
             Min_Tanks   = new int[] {  2,  3,  0,  0 };
             Min_Healers = new int[] {  2,  4,  0,  0 };
@@ -31,19 +31,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 {
                     /* = Impale =
                      * Anub'Rekhan will target a random player and send a line of spikes out towards the
@@ -126,16 +114,7 @@ namespace Rawr.Bosses {
             MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++) {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new DoT
                 {
                     Name = "Poison Bolt Volley",
@@ -222,16 +201,7 @@ namespace Rawr.Bosses {
             {
                 this[i].MultiTargsPerc = ((this[i].BerserkTimer / 40d) * 8d) / this[i].BerserkTimer;
 
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 {
                     /* = Web Wrap =
                      * Cast 20 seconds after engaging, and every 40 seconds after that.
@@ -359,16 +329,7 @@ namespace Rawr.Bosses {
                 // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
                 this[i].MultiTargsPerc = (this[i].BerserkTimer / 30f) * (20f) / this[i].BerserkTimer;
 
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
             #endregion
             #endregion
@@ -422,16 +383,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Decrepit Fever",
@@ -505,16 +457,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Deathbloom",
@@ -597,16 +540,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Disrupting Shout",
@@ -742,16 +676,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Korth'azz's Meteor",
@@ -852,15 +777,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack {
                     Name = "Hateful Strike",
                     DamageType = ItemDamageType.Physical,
@@ -922,16 +839,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
             #endregion
             #endregion
@@ -1005,16 +913,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
             #endregion
             #endregion
@@ -1071,16 +970,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Chain Lightning",
@@ -1153,16 +1043,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Frost Aura",
@@ -1244,16 +1125,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Frostbolt (Single)",
@@ -1339,16 +1211,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Shadow Fissure",
@@ -1437,16 +1300,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Shadow Fissure",
@@ -1541,16 +1395,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Shadow Fissure",
@@ -1631,16 +1476,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Fire Breath",
@@ -1711,16 +1547,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
             #endregion
             #endregion
@@ -1781,16 +1608,7 @@ namespace Rawr.Bosses {
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Melee",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
-                    MaxNumTargets = 1f,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    IsTheDefaultMelee = true,
-                });
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
             #endregion
             #endregion

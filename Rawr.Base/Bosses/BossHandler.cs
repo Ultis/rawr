@@ -1593,6 +1593,22 @@ namespace Rawr {
         }
         // Methods
         public BossHandler BossByVersion(BossHandler.Versions v) { return this[(int)v]; }
+        public Attack GenAStandardMelee(BossHandler.TierLevels content) {
+            return new Attack {
+                Name = "Melee",
+                DamageType = ItemDamageType.Physical,
+                DamagePerHit = BossHandler.StandardMeleePerHit[(int)content],
+                MaxNumTargets = 1f,
+                AttackSpeed = 2.0f,
+                AttackType = ATTACK_TYPES.AT_MELEE,
+
+                IgnoresMeleeDPS = true,
+                IgnoresRangedDPS = true,
+                IgnoresHealers = true,
+
+                IsTheDefaultMelee = true,
+            };
+        }
         #endregion
     }
 }
