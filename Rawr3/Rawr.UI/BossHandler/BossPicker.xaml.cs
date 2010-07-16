@@ -73,6 +73,7 @@ namespace Rawr.UI
             CB_MultiTargsPerc.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
             CB_MultiTargsMax.Value = BossOptions.MaxNumTargets;
             CB_MultiTargsPerc.Value = BossOptions.MultiTargsPerc * 100d;
+            BT_MultiTargs.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
             BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
             BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
             // Defensive
@@ -268,10 +269,11 @@ namespace Rawr.UI
             CB_MinHealers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
 
             CK_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
-            LB_Max.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
-            CB_MultiTargsMax.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
-            CB_MultiTargsPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
-            LB_MultiTargsPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
+            LB_Max.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
+            CB_MultiTargsMax.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
+            CB_MultiTargsPerc.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
+            LB_MultiTargsPerc.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
+            BT_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
 
             CK_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
             BT_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
@@ -482,6 +484,21 @@ namespace Rawr.UI
             if ((bool)BoxA.DialogResult)
             {
                 Character.BossOptions.Attacks = BoxA.TheList;
+                bossOpts_PropertyChanged(null, null);
+            }
+        }
+        DG_BossTargetGroups BoxB = null;
+        private void BT_MultiTargs_Click(object sender, RoutedEventArgs e)
+        {
+            BoxB = new DG_BossTargetGroups(Character.BossOptions.Targets);
+            BoxB.Closed += new EventHandler(DG_MultiTargs_Closed);
+            BoxB.Show();
+        }
+        private void DG_MultiTargs_Closed(object sender, EventArgs e)
+        {
+            if ((bool)BoxB.DialogResult)
+            {
+                Character.BossOptions.Targets = BoxB.TheList;
                 bossOpts_PropertyChanged(null, null);
             }
         }

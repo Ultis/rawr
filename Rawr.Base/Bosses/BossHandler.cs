@@ -179,9 +179,9 @@ namespace Rawr {
         {
             string retVal = "";
             if (Frequency <= 0) return "None";
-            retVal += "T: " + NumTargs.ToString("0") + "s";
+            retVal += "T: " + NumTargs.ToString("0") + "";
             retVal += " F: " + Frequency.ToString("0") + "s";
-            retVal += " D: " + (Duration / 1000).ToString("0:0.00") + "s";
+            retVal += " D: " + (Duration / 1000).ToString("0.00") + "s";
             retVal += " C: " + Chance.ToString("0.0%");
             retVal += NearBoss ? " : NB" : "";
             return retVal;
@@ -255,6 +255,7 @@ namespace Rawr {
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Ranged"] = false;
+                        custom["TimeSub35"] = false;
                         _MyModelSupportsThis.Add("DPSWarr", custom);
                     }{
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
