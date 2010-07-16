@@ -217,7 +217,7 @@ namespace Rawr {
             {"Fears", true},
             {"Roots", true},
             {"Disarms", true},
-            {"Invulnerables", true},
+            {"Invulnerables", true}, // Not UI'd yet
         };
         protected static Dictionary<string, bool> DuplicateDefaultSupports() {
             Dictionary<string, bool> retVal = new Dictionary<string, bool>();
@@ -257,7 +257,8 @@ namespace Rawr {
                         custom["InBack_Ranged"] = false;
                         custom["TimeSub35"] = false;
                         _MyModelSupportsThis.Add("DPSWarr", custom);
-                    }{
+                    }
+                    {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = false;
                         _MyModelSupportsThis.Add("Hunter", custom);
