@@ -65,7 +65,7 @@ namespace Rawr.Bosses {
                     Name = "Bone Spike Graveyard",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_RANGED,
-                    DamagePerHit = new int[] { 9000, 10000, 11000, 12000 }[i],
+                    DamagePerHit = 9000f,
                     DamagePerTick = (new float[] { 0.10f, 0.10f, 0.10f, 0.10f }[i] * 0.10f * duration),
                     DamageIsPerc = true,
                     MaxNumTargets = new int[] { 1, 3, 1, 3 }[i],
@@ -84,10 +84,10 @@ namespace Rawr.Bosses {
                 //   Inflicts 6,000 Physical damage every 2 seconds to players caught in the Bone Storm.
                 //   The entire storm lasts ~20 seconds.
                 this[i].Attacks.Add(new Attack {
-                    Name = "Bone Spike Graveyard",
+                    Name = "Bone Storm",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new int[] { 6000, 8000, 10000, 12000 }[i] * 20 / 2 * 0.25f, // 6k per tick for 2 sec. 25% mod as people will be running away to take less damage
+                    DamagePerHit = new int[] { 6000, 12000, 12000, 14000 }[i] * new int[] { 20, 30, 20, 30 }[i] / 2 * 0.25f, // 6k per tick for 2 sec. 25% mod as people will be running away to take less damage
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 45f + 22f,
                 });
@@ -148,6 +148,7 @@ namespace Rawr.Bosses {
                 // They will also randomly respawn as Reanimated or Mutated (? forgot word used)
                 this[i].MultiTargsPerc = 0.00f;
                 this[i].MultiTargsPerc -= 0.30f; // Phase 2 has no adds, assuming 30% of fight in Phase 2
+                // Heroic version spawns adds (1 add on 10 man, 3 adds on 25 man); 50-60% of fight in Phase 2
                 float uptime = (this[i].BerserkTimer / 60f) * 35f; // Every 60 seconds and up for 35 sec before back on boss
                 this[i].MultiTargsPerc -= (1f - uptime) * 0.70f; // Phase 1 has adds, marking the downtime instead of uptime
 
@@ -155,17 +156,49 @@ namespace Rawr.Bosses {
                 this[i].Attacks.Add(new Attack() {
                     Name = "Shadow Bolt",
                     DamageType = ItemDamageType.Shadow,
-                    DamagePerHit = (7438 + 9562) / 2f,
-                    MaxNumTargets = this[i].Max_Players,
-                    AttackSpeed = 2.0f,
+                    DamagePerHit = new int[] { (7438 + 9562), (9188 + 11812), (9188 + 11812), (11375 + 14625) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2f + 2.0f,
                 });
-                // TODO: Death and Decay - Inflicts 4,500 Shadow damage every 1 second to enemies within the area of the spell. The entire spell lasts 10 seconds.
+                // Frostbolt - Inflicts 40,950/44,850/50,700/58,500 to 43,050/47,150/53,330/61,500 Frost damage
+                //           to the current target. Can be interrupted. 4 second Cast
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Frostbolt",
+                    DamageType = ItemDamageType.Frost,
+                    DamagePerHit = new int[] { (40950 + 43050), (50700 + 53330), (44850 + 47150), (58500 + 61500) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 4.0f,
+                    Interruptable = true,
+                });
+                // Death and Decay - Inflicts 4,500 Shadow damage every 1 second to enemies within the area of the spell. 
+                //          The entire spell lasts 10 seconds.
+                this[i].Attacks.Add(new DoT()
+                {
+                    Name = "Death and Decay",
+                    DamageType = ItemDamageType.Shadow,
+                    NumTicks = 10f,
+                    TickInterval = 1f,
+                    DamagePerTick = new int[] { 4500, 4500, 6000, 6000 }[i]  * 0.25f, // 4.5k/6k per tick for 1 sec. 25% mod as people will be running away to take less damage
+                    MaxNumTargets = this[i].Max_Players,
+                    AttackSpeed = 45f,
+                });
                 // TODO: Dark Empowerment - Empowers a random Adherent or Fanatic, causing them to deal area damage with spells. Also makes the target immune to interrupts.
             }
             #endregion
             #endregion
             #region Impedances
             //Moves;
+            // Dominate Mind - 1 target in 10 man heroic, and 25 normal; 3 targets in 25 heroic. Lasts 12 seconds; 40 second Cooldown
+            for (int i = 0; i < 4; i++) {
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 40f,
+                    Duration = 12f,
+                    Chance = new int[] { 0, ( 1 / (this[i].Max_Players - this[i].Min_Tanks) ), (1 / (this[i].Max_Players - this[i].Min_Tanks) ), (3 / (this[i].Max_Players - this[i].Min_Tanks) ) }[i],
+                    Breakable = false,
+                });
+            }
             //Stuns;
             //Fears;
             //Roots;
@@ -177,7 +210,96 @@ namespace Rawr.Bosses {
         }
     }
     // - Gunship Event
-    // - Deathbringer Saurfang
+    public class DeathbringerSaurfang : MultiDiffBoss
+    {
+        public DeathbringerSaurfang()
+        {
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Deathbringer Saurfang";
+            Instance = "Icecrown Citadel";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T10_0, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_5, BossHandler.TierLevels.T10_9, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            #endregion
+            #region Basics
+            Health = new float[] { 8785000f, 31860000f, 12300000f, 43930000f };
+            BerserkTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, };
+            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Healers = new int[] { 2, 5, 3, 6 };
+            #endregion
+            #region Offensive
+            MaxNumTargets = new double[] { 1, 1, 1, 1 };
+            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 4; i++) {
+                // Melee
+                Attack a = new Attack
+                {
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 1f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    UseParryHaste = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+
+                    IsTheDefaultMelee = true,
+                };
+            // TO DO: Blood Power - Increases damage and size by 1%; Stacks up to 100%
+            // TO DO: Frenzy  - Increases Saurfang's attack speed by 30% and size by 20%.
+            //       Used when Saurfang's health reaches 30%.
+            // Boiling Blood - Inflicts 5,000 Physical damage every 3 seconds for 24 seconds. 
+            //       Used on a random target. (Same amount in all three versions)
+                this[i].Attacks.Add(new DoT() {
+                   Name = "Boiling Blood",
+                   DamageType = ItemDamageType.Physical,
+                   AttackType = ATTACK_TYPES.AT_RANGED,
+                   TickInterval = 3f,
+                   NumTicks = 8f,
+                   DamagePerTick = 5000f,
+                   MaxNumTargets = new int[] { 1, 3, 1, 3 }[i],
+                   AttackSpeed = 15.5f,
+                });
+            // Blood Nova - Inflicts 7,600/9,500 to 8,400/10,500 Physical damage 
+            //       to a random target and all players within 12 yards.
+                this[i].Attacks.Add(new Attack {
+                    Name = "Blood Nova",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamagePerHit =  new int[] { (7600 + 8400), (9500 + 10500), (7600 + 8400), (9500 + 10500) }[i] / 2f, // 1 person only assuming everyone is more than 12 yards apart
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 20f,
+                });
+            // TO DO: Rune of Blood - Marks a target with Rune of Blood, causing Saurfang's melee attacks
+            //       against that target to leech 5,100/5,950 to 6,900/8,050 health from them, and heal the 
+            //       Deathbringer for 10 times that amount. Lasts 20 seconds.
+            }
+           #endregion
+            #endregion
+            #region Impedances
+            //Moves;
+            //Stuns;
+            //Fears;
+            //Roots;
+            //Disarms;
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            #endregion
+            #region BossAdds
+            /*
+             * Name = Blood Beast (Summoned 2/5 mobs every 30 seconds)
+             * Health = new float[] { 100000f, 120000f, 90997f, 140134f };
+             * Resistant Skin - The skin of this creature is highly resistant. Damage from area of effect attacks is 
+             *          reduced by 95% and damage from Diseases is reduced by 70%. (Heroic Only)
+             */
+            #endregion
+            /* TODO:
+             */
+        }
+    }
     // The Plagueworks
     // - Festergut
     // - Rotface
