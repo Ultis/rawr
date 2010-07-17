@@ -62,8 +62,23 @@ namespace Rawr {
             KoralonTheFlameWatcher KoralonTheFlameWatcher = new KoralonTheFlameWatcher();
             #endregion
             #region ==== Tier 10 Content ====
+            // Icecrown Citadel
             LordMarrowgar LordMarrowgar = new LordMarrowgar();
             LadyDeathwhisper LadyDeathwhisper = new LadyDeathwhisper();
+            DeathbringerSaurfang DeathbringerSaurfang = new DeathbringerSaurfang();
+            Festergut Festergut = new Festergut();
+            Rotface Rotface = new Rotface();
+            ProfessorPutricide ProfessorPutricide = new ProfessorPutricide();
+            BloodPrinceCouncil BloodPrinceCouncil = new BloodPrinceCouncil();
+            BloodQueenLanathel BloodQueenLanathel = new BloodQueenLanathel();
+            ValathriaDreamwalker ValathriaDreamwalker = new ValathriaDreamwalker();
+            Sindragosa Sindragosa = new Sindragosa();
+            TheLichKing TheLichKing = new TheLichKing();
+            // Ruby Sanctum
+            Baltharus Baltharus = new Baltharus();
+            SavianaRagefire SavianaRagefire = new SavianaRagefire();
+            GeneralZarithrian GeneralZarithrian = new GeneralZarithrian();
+            Halion Halion = new Halion();
             #endregion
             #endregion
             list = new BossHandler[] {
@@ -121,6 +136,20 @@ namespace Rawr {
                 // Icecrown Citadel
                 LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
                 LadyDeathwhisper[0],LadyDeathwhisper[1],LadyDeathwhisper[2],LadyDeathwhisper[3],
+                DeathbringerSaurfang[0], DeathbringerSaurfang[1], DeathbringerSaurfang[2], DeathbringerSaurfang[3],
+                Festergut[0], Festergut[1], Festergut[2], Festergut[3],
+                Rotface[0], Rotface[1], Rotface[2], Rotface[3],
+                ProfessorPutricide[0], ProfessorPutricide[1], ProfessorPutricide[2], ProfessorPutricide[3],
+                BloodPrinceCouncil[0], BloodPrinceCouncil[1], BloodPrinceCouncil[2], BloodPrinceCouncil[3],
+                BloodQueenLanathel[0], BloodQueenLanathel[1], BloodQueenLanathel[2], BloodQueenLanathel[3],
+                ValathriaDreamwalker[0], ValathriaDreamwalker[1], ValathriaDreamwalker[2], ValathriaDreamwalker[3],
+                Sindragosa[0], Sindragosa[1], Sindragosa[2], Sindragosa[3],
+                TheLichKing[0], TheLichKing[1], TheLichKing[2], TheLichKing[3],
+                // Ruby Sanctum
+                Baltharus[0],Baltharus[1],Baltharus[2],Baltharus[3],
+                SavianaRagefire[0],SavianaRagefire[1],SavianaRagefire[2],SavianaRagefire[3],
+                GeneralZarithrian[0],GeneralZarithrian[1],GeneralZarithrian[2],GeneralZarithrian[3],
+                Halion[0],Halion[1],Halion[2],Halion[3],
                 #endregion
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);

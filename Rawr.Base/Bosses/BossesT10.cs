@@ -1011,7 +1011,7 @@ namespace Rawr.Bosses
     #endregion
 
     #region Ruby Sanctum
-    // =====Ruby Sanctum =========================
+    // ===== Ruby Sanctum =========================
     public class Baltharus : MultiDiffBoss
     {
         public Baltharus()
