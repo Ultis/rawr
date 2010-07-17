@@ -290,7 +290,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 1f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -411,7 +411,7 @@ namespace Rawr.Bosses
                     // hits for about 14k in 25 man
                     DamagePerHit = ( BossHandler.StandardMeleePerHit[ (int)this[i].Content ] / 1.3f ),
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.4f ) ), // hits every 1.45 seconds for 30 seconds
+                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.4f ) ) ), // hits every 1.45 seconds for 30 seconds
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     Dodgable = true,
                     Missable = true,
@@ -430,7 +430,7 @@ namespace Rawr.Bosses
                     // hits for about 19k in 25 man
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content  ],
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.7f ) ),  // hits 1.17 seconds for 30 seconds
+                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.7f ) ) ),  // hits 1.17 seconds for 30 seconds
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     Dodgable = true,
                     Missable = true,
@@ -658,7 +658,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -712,7 +712,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -770,7 +770,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -825,7 +825,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -923,7 +923,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -981,7 +981,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1041,7 +1041,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1096,7 +1096,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1151,7 +1151,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1206,7 +1206,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
