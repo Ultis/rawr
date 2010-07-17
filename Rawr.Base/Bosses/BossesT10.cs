@@ -246,7 +246,7 @@ namespace Rawr.Bosses
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = 40f,
-                    Duration = 12f,
+                    Duration = 12f * 1000f,
                     Chance = new int[] { 0, (1 / (this[i].Max_Players - this[i].Min_Tanks)), (1 / (this[i].Max_Players - this[i].Min_Tanks)), (3 / (this[i].Max_Players - this[i].Min_Tanks)) }[i],
                     Breakable = false,
                 });
@@ -525,7 +525,7 @@ namespace Rawr.Bosses
                 this[i].Stuns.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = 6f,
+                    Duration = 6f * 1000f,
                     Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
                 });
@@ -547,7 +547,7 @@ namespace Rawr.Bosses
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = 3f,
+                    Duration = 3f * 1000f,
                     Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = true,
                 });
@@ -610,7 +610,7 @@ namespace Rawr.Bosses
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = 2f,
+                    Duration = 2f * 1000f,
                     Chance = 1f / this[i].Max_Players,
                     Breakable = false,
                 });

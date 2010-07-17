@@ -53,6 +53,8 @@ namespace Rawr.UI
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (isLoading) { return; }
+            isLoading = true;
+            //DataContext = BossOptions;
             // Basics
             CB_Level.SelectedItem = BossOptions.Level;
             CB_Armor.SelectedItem = BossOptions.Armor;
@@ -62,17 +64,13 @@ namespace Rawr.UI
             NUD_Under35Perc.Value = BossOptions.Under35Perc * 100;
             NUD_Under20Perc.Value = BossOptions.Under20Perc * 100;
             CB_InBackPerc_Melee.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
-            CB_InBackPerc_Melee.Value = BossOptions.InBackPerc_Ranged * 100d;
+            CB_InBackPerc_Melee.Value = BossOptions.InBackPerc_Melee * 100d;
             CB_InBackPerc_Ranged.IsEnabled = (bool)(CK_InBack.IsChecked = BossOptions.InBack);
             CB_InBackPerc_Ranged.Value = BossOptions.InBackPerc_Ranged * 100d;
             CB_MaxPlayers.SelectedItem = BossOptions.Max_Players;
             CB_MinTanks.SelectedItem = BossOptions.Min_Tanks;
             CB_MinHealers.SelectedItem = BossOptions.Min_Healers;
             // Offensive
-            CB_MultiTargsMax.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
-            CB_MultiTargsPerc.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
-            CB_MultiTargsMax.Value = BossOptions.MaxNumTargets;
-            CB_MultiTargsPerc.Value = BossOptions.MultiTargsPerc * 100d;
             BT_MultiTargs.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
             BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
             BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
@@ -100,6 +98,7 @@ namespace Rawr.UI
             TB_BossInfo.Text = BossOptions.GenInfoString();
             //
             if (CB_BossList.SelectedIndex == -1) { CB_BossList.SelectedIndex = 0; } // Sets it to Custom
+            isLoading = false;
             //
             Character.OnCalculationsInvalidated();
         }
@@ -257,7 +256,7 @@ namespace Rawr.UI
                     ? Visibility.Visible : Visibility.Collapsed;
             CB_InBackPerc_Melee.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Melee"] ? Visibility.Visible : Visibility.Collapsed;
             CB_InBackPerc_Ranged.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"] ? Visibility.Visible : Visibility.Collapsed;
-            LB_InBehindPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"]
+            LB_InBehindPerc.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Melee"]
                                       || BossOptions.MyModelSupportsThis[Character.CurrentModel]["InBack_Ranged"]
                     ? Visibility.Visible : Visibility.Collapsed;
 
@@ -269,10 +268,6 @@ namespace Rawr.UI
             CB_MinHealers.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["RaidSize"] ? Visibility.Visible : Visibility.Collapsed;
 
             CK_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
-            LB_Max.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
-            CB_MultiTargsMax.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
-            CB_MultiTargsPerc.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
-            LB_MultiTargsPerc.Visibility = /*BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : */Visibility.Collapsed;
             BT_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
 
             CK_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
@@ -348,6 +343,7 @@ namespace Rawr.UI
                 new ErrorBox("Error in the Boss Options",
                     ex.Message, "CB_BL_FilterType_SelectedIndexChanged()",
                     "No Additional Info", ex.StackTrace);
+                isLoading = false;
             }
         }
         private void CB_BL_Filter_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
@@ -365,7 +361,7 @@ namespace Rawr.UI
                     CB_BossList.SelectedItem = "Custom";
                     // Save the new names
                     if (!firstload) {
-                        BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedItem;
+                        BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedIndex;
                         BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
                         BossOptions.BossName = CB_BossList.SelectedItem.ToString();
                     }
@@ -377,6 +373,7 @@ namespace Rawr.UI
                 new ErrorBox("Error in the Boss Options",
                     ex.Message, "CB_BL_Filter_SelectedIndexChanged()",
                     "No Additional Info", ex.StackTrace);
+                isLoading = false;
             }
         }
         private void CB_BossList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
@@ -398,7 +395,7 @@ namespace Rawr.UI
                         // Save the new names
                         if (!firstload) {
                             addInfo += "\r\n!firstlost";
-                            BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedItem;
+                            BossOptions.FilterType = (BossList.FilterType)CB_BL_FilterType.SelectedIndex;
                             BossOptions.Filter = CB_BL_Filter.SelectedItem.ToString();
                             BossOptions.BossName = CB_BossList.SelectedItem.ToString();
                         }
@@ -414,14 +411,14 @@ namespace Rawr.UI
                         TB_BossInfo.Text = boss.GenInfoString();
                         isLoading = false;
                     }
+                    bossOpts_PropertyChanged(null, null);
                 }
             } catch (Exception ex) {
                 new ErrorBox("Error in setting BossPicker Character settings from Boss",
                     ex.Message, "CB_BossList_SelectedIndexChanged()",
                     addInfo, ex.StackTrace);
+                isLoading = false;
             }
-            isLoading = false;
-            bossOpts_PropertyChanged(null, null);
         }
 
         // Impedences

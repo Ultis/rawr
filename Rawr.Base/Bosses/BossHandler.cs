@@ -122,13 +122,9 @@ namespace Rawr {
         #endregion
         #region Functions
         public override string ToString() {
-            string retVal = "";
             if (Frequency < 0) return "None";
-            retVal += "F: " + Frequency.ToString("0") + "s";
-            retVal += " D: " + Duration.ToString("0") + "ms";
-            retVal += " C: " + Chance.ToString("0.0%");
-            retVal += Breakable ? " : B" : "";
-            return retVal;
+            return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}%{3}",
+                Frequency, Duration, Chance, Breakable ? " : B" : "");
         }
         #endregion
     }
@@ -297,9 +293,10 @@ namespace Rawr {
             this.Min_Healers = clone.Min_Healers;
             this.Min_Tanks = clone.Min_Tanks;
             // Offensive
-            this.MaxNumTargets = clone.MaxNumTargets;
-            this.MultiTargsPerc = clone.MultiTargsPerc;
-            this.MultiTargs = (this.MultiTargsPerc > 0f && this.MaxNumTargets > 1f);
+            //this.MaxNumTargets = clone.MaxNumTargets;
+            //this.MultiTargsPerc = clone.MultiTargsPerc;
+            //this.MultiTargs = (this.MultiTargsPerc > 0f && this.MaxNumTargets > 1f);
+            this.Targets = clone.Targets; this.MultiTargs = this.Targets != null && this.Targets.Count > 0;
             this.DoTs = clone.DoTs;
             this.Attacks = clone.Attacks;
             this.DamagingTargs = (Attacks != null && Attacks.Count > 0);
@@ -363,6 +360,15 @@ namespace Rawr {
         public BossHandler() { }
         public BossHandler Clone() {
             BossHandler clone = (BossHandler)this.MemberwiseClone();
+            //
+            clone.Targets = new List<TargetGroup>(this.Targets);
+            clone.Attacks = new List<Attack>(this.Attacks);
+            clone.Moves = new List<Impedance>(this.Moves);
+            clone.Stuns = new List<Impedance>(this.Stuns);
+            clone.Fears = new List<Impedance>(this.Fears);
+            clone.Roots = new List<Impedance>(this.Roots);
+            clone.Disarms = new List<Impedance>(this.Disarms);
+            //
             return clone;
         }
 
@@ -843,15 +849,68 @@ namespace Rawr {
         }
         #endregion
         #region ==== Impedances ====
+        protected Impedance DynamicCompiler(List<Impedance> imps) {
+            //if (imps == null || imps.Count <= 0) return null;
+            // Make one
+            Impedance retVal = new Impedance() {
+                Frequency = 20f,
+                Duration = 1f * 1000f,
+                Chance = 1.00f,
+                Breakable = true,
+            };
+            // Find the averaged _____
+            float time = Time(imps);
+            float dur = Dur(imps);
+            float acts = time / (dur / 1000f);
+            float freq = BerserkTimer / acts;
+            float chance = Chance(imps);
+            // Mark those into the retVal
+            retVal.Frequency = freq;
+            retVal.Duration = dur;
+            retVal.Chance = chance;
+            // Double-check we aren't sending a bad one
+            if (retVal.Frequency <= 0f || retVal.Chance <= 0f)
+            {
+                retVal.Frequency = -1f; // if we are, use this as a flag
+            }
+            // Return results
+            return retVal;
+        }
         protected float Freq(List<Impedance> imps) {
+            if (imps == null || imps.Count < 1) return -1;
             // Adds up the total number of impedences
             // and evens them out over the Berserk Timer
             float numImpsOverDur = 0f;
             foreach (Impedance imp in imps) {
                 numImpsOverDur += (BerserkTimer / imp.Frequency) * imp.Chance;
             }
-            float freq = BerserkTimer / numImpsOverDur;
-            return freq;
+            return BerserkTimer / numImpsOverDur;
+        }
+        protected float Time(List<Impedance> imps) {
+            if (imps == null || imps.Count < 1) return 0;
+            float time = 0f;
+            float freq = Freq(imps);
+            float dur = Dur(imps) / 1000f;
+            if (freq > 0f && freq < BerserkTimer) {
+                time = (BerserkTimer / freq) * dur;
+            } else if (freq >= BerserkTimer) {
+                time = dur;
+            }
+            return time;
+        }
+        protected float Dur(List<Impedance> imps) {
+            if (imps == null || imps.Count < 1) return 0;
+            // Averages out the Move Durations
+            float TotalDur = 0;
+            foreach (Impedance s in imps) { TotalDur += s.Duration; }
+            return TotalDur / (float)imps.Count;
+        }
+        protected float Chance(List<Impedance> imps) {
+            if (imps == null || imps.Count < 1) return 0;
+            // Averages out the Chances
+            float TotalChance = 0f;
+            foreach (Impedance s in imps) { TotalChance += s.Chance; }
+            return TotalChance / (float)imps.Count;
         }
         // Moving Targets
         public Impedance DynamicCompiler_Move
@@ -882,61 +941,12 @@ namespace Rawr {
                 return retVal;
             }
         }
-        public float  MovingTargsFreq   {
-            get {
-                if (Moves.Count > 0) {
-                    // Adds up the total number of Moves and evens them out over the Berserk Timer
-                    float numMovesOverDur = 0;
-                    foreach (Impedance s in Moves) {
-                        numMovesOverDur += (BerserkTimer / s.Frequency) * s.Chance;
-                    }
-                    float freq = BerserkTimer / numMovesOverDur;
-                    return freq;
-                } else {
-                    return 0; // MOVINGTARGS_FREQ;
-                }
-            }
-            //set { MOVINGTARGS_FREQ = value; }
-        }
-        public float  MovingTargsDur    {
-            get {
-                if (Moves.Count > 0) {
-                    // Averages out the Move Durations
-                    float TotalMoveDur = 0;
-                    foreach (Impedance s in Moves) { TotalMoveDur += s.Duration; }
-                    float dur = TotalMoveDur / Moves.Count;
-                    return dur;
-                } else {
-                    return 0; // MOVINGTARGS_DUR;
-                }
-            }
-            //set { MOVINGTARGS_DUR = value; }
-        }
-        public float  MovingTargsChance {
-            get {
-                if (Moves.Count > 0) {
-                    // Averages out the Move Chances
-                    float TotalChance = 0f;
-                    foreach (Impedance s in Moves) { TotalChance += s.Chance; }
-                    float chance = TotalChance / (float)Moves.Count;
-                    return chance;
-                } else {
-                    return 0;// MOVINGTARGS_CHANCE;
-                }
-            }
-            //set { MOVINGTARGS_CHANCE = value; }
-        }
-        public float  MovingTargsTime {
-            get {
-                float time = 0f;
-                if(MovingTargsFreq != 0f && MovingTargsFreq < BerserkTimer) {
-                    time = (BerserkTimer / MovingTargsFreq) * (MovingTargsDur / 1000f);
-                }
-                return time;
-            }
-        }
+        public float MovingTargsFreq      { get { return Moves.Count > 0 ? Freq(Moves) : -1; } }
+        public float MovingTargsDur       { get { return Moves.Count > 0 ? Dur(Moves) : 0; } }
+        public float MovingTargsChance    { get { return Moves.Count > 0 ? Chance(Moves) : 0; } }
+        public float MovingTargsTime      { get { return Moves.Count > 0 ? Time(Moves) : 0; } }
         // Stunning Targets
-        public Impedance   DynamicCompiler_Stun {
+        public Impedance DynamicCompiler_Stun {
             get {
                 // Make one
                 Impedance retVal = new Impedance() {
@@ -963,54 +973,10 @@ namespace Rawr {
                 return retVal;
             }
         }
-        public float  StunningTargsFreq  {
-            get {
-                if (Stuns.Count > 0) {
-                    return Freq(Stuns);
-                } else {
-                    return 0;// STUNNINGTARGS_FREQ;
-                }
-            }
-            //set { STUNNINGTARGS_FREQ = value; }
-        }
-        public float  StunningTargsDur   {
-            get {
-                if (Stuns.Count > 0) {
-                    // Averages out the Impedence Durations
-                    float TotalStunDur = 0f;
-                    foreach (Impedance s in Stuns) { TotalStunDur += s.Duration; }
-                    float dur = TotalStunDur / (float)Stuns.Count;
-                    return dur;
-                } else {
-                    return 0;// STUNNINGTARGS_DUR;
-                }
-            }
-            //set { STUNNINGTARGS_DUR  = value; }
-        }
-        public float  StunningTargsChance {
-            get {
-                if (Stuns.Count > 0) {
-                    // Averages out the Impedence Chances
-                    float TotalStunChance = 0f;
-                    foreach (Impedance s in Stuns) { TotalStunChance += s.Chance; }
-                    float chance = TotalStunChance / (float)Stuns.Count;
-                    return chance;
-                } else {
-                    return 0;// STUNNINGTARGS_CHANCE;
-                }
-            }
-            //set { STUNNINGTARGS_CHANCE = value; }
-        }
-        public float  StunningTargsTime {
-            get {
-                float time = 0f;
-                if (StunningTargsFreq != 0f && StunningTargsFreq < BerserkTimer)
-                {
-                    time = (BerserkTimer / StunningTargsFreq) * (StunningTargsDur / 1000f);
-                }
-                return time;
-            }
-        }
+        public float StunningTargsFreq    { get { return Stuns.Count > 0 ? Freq(Stuns) : -1; } }
+        public float StunningTargsDur     { get { return Stuns.Count > 0 ? Dur(Stuns) : 0; } }
+        public float StunningTargsChance  { get { return Stuns.Count > 0 ? Chance(Stuns) : 0; } }
+        public float StunningTargsTime    { get { return Stuns.Count > 0 ? Time(Stuns) : 0; } }
         // Fearing Targets
         public Impedance DynamicCompiler_Fear
         {
@@ -1040,60 +1006,10 @@ namespace Rawr {
                 return retVal;
             }
         }
-        public float  FearingTargsFreq  {
-            get {
-                if (Fears.Count > 0) {
-                    // Adds up the total number of stuns and evens them out over the Berserk Timer
-                    float numFearsOverDur = 0;
-                    foreach (Impedance s in Fears) {
-                        numFearsOverDur += BerserkTimer / s.Frequency;
-                    }
-                    float freq = BerserkTimer / numFearsOverDur;
-                    return freq;
-                } else {
-                    return 0; // FEARINGTARGS_FREQ;
-                }
-            }
-            //set { FEARINGTARGS_FREQ = value; }
-        }
-        public float  FearingTargsDur   {
-            get {
-                if (Fears.Count > 0) {
-                    // Averages out the Fear Durations
-                    float TotalFearDur = 0;
-                    foreach (Impedance s in Fears) { TotalFearDur += s.Duration; }
-                    float dur = TotalFearDur / Fears.Count;
-                    return dur;
-                } else {
-                    return 0; // FEARINGTARGS_DUR;
-                }
-            }
-            //set { FEARINGTARGS_DUR = value; }
-        }
-        public float  FearingTargsChance {
-            get {
-                if (Fears.Count > 0) {
-                    // Averages out the Fear Chances
-                    float TotalChance = 0f;
-                    foreach (Impedance s in Fears) { TotalChance += s.Chance; }
-                    float chance = TotalChance / (float)Fears.Count;
-                    return chance;
-                } else {
-                    return 0; // FEARINGTARGS_CHANCE;
-                }
-            }
-            //set { FEARINGTARGS_CHANCE = value; }
-        }
-        public float  FearingTargsTime {
-            get {
-                float time = 0f;
-                if (FearingTargsFreq != 0f && FearingTargsFreq < BerserkTimer)
-                {
-                    time = (BerserkTimer / FearingTargsFreq) * (FearingTargsDur / 1000f);
-                }
-                return time;
-            }
-        }
+        public float FearingTargsFreq     { get { return Fears.Count > 0 ? Freq(Fears) : -1; } }
+        public float FearingTargsDur      { get { return Fears.Count > 0 ? Dur(Fears) : 0; } }
+        public float FearingTargsChance   { get { return Fears.Count > 0 ? Chance(Fears) : 0; } }
+        public float FearingTargsTime     { get { return Fears.Count > 0 ? Time(Fears) : 0; } }
         // Rooting Targets
         public Impedance DynamicCompiler_Root
         {
@@ -1124,61 +1040,10 @@ namespace Rawr {
                 return retVal;
             }
         }
-        public float  RootingTargsFreq  {
-            get {
-                if (Roots.Count > 0) {
-                    // Adds up the total number of Roots and evens them out over the Berserk Timer
-                    float numRootsOverDur = 0;
-                    foreach (Impedance s in Roots)
-                    {
-                        numRootsOverDur += BerserkTimer / s.Frequency;
-                    }
-                    float freq = BerserkTimer / numRootsOverDur;
-                    return freq;
-                } else {
-                    return 0; // ROOTINGTARGS_FREQ;
-                }
-            }
-            //set { ROOTINGTARGS_FREQ = value; }
-        }
-        public float  RootingTargsDur   {
-            get {
-                if (Roots.Count > 0) {
-                    // Averages out the Root Durations
-                    float TotalRootDur = 0;
-                    foreach (Impedance s in Roots) { TotalRootDur += s.Duration; }
-                    float dur = TotalRootDur / Roots.Count;
-                    return dur;
-                } else {
-                    return 0; // ROOTINGTARGS_DUR;
-                }
-            }
-            //set { ROOTINGTARGS_DUR = value; }
-        }
-        public float  RootingTargsChance {
-            get {
-                if (Roots.Count > 0) {
-                    // Averages out the Impedence Chances
-                    float TotalChance = 0f;
-                    foreach (Impedance s in Roots) { TotalChance += s.Chance; }
-                    float chance = TotalChance / (float)Roots.Count;
-                    return chance;
-                } else {
-                    return 0; // ROOTINGTARGS_CHANCE;
-                }
-            }
-            //set { ROOTINGTARGS_CHANCE = value; }
-        }
-        public float  RootingTargsTime {
-            get {
-                float time = 0f;
-                if (RootingTargsFreq != 0f && RootingTargsFreq < BerserkTimer)
-                {
-                    time = (BerserkTimer / RootingTargsFreq) * (RootingTargsDur / 1000f);
-                }
-                return time;
-            }
-        }
+        public float RootingTargsFreq     { get { return Roots.Count > 0 ? Freq(Roots) : -1; } }
+        public float RootingTargsDur      { get { return Roots.Count > 0 ? Dur(Roots) : 0; } }
+        public float RootingTargsChance   { get { return Roots.Count > 0 ? Chance(Roots) : 0; } }
+        public float RootingTargsTime     { get { return Roots.Count > 0 ? Time(Roots) : 0; } }
         // Disarming Targets
         public Impedance DynamicCompiler_Disarm
         {
@@ -1208,60 +1073,10 @@ namespace Rawr {
                 return retVal;
             }
         }
-        public float  DisarmingTargsFreq   {
-            get {
-                if (Disarms.Count > 0) {
-                    // Adds up the total number of Disarmes and evens them out over the Berserk Timer
-                    float numDisarmsOverDur = 0;
-                    foreach (Impedance s in Disarms) {
-                        numDisarmsOverDur += BerserkTimer / s.Frequency;
-                    }
-                    float freq = BerserkTimer / numDisarmsOverDur;
-                    return freq;
-                } else {
-                    return 0; // DISARMINGTARGS_FREQ;
-                }
-            }
-            //set { DISARMINGTARGS_FREQ = value; }
-        }
-        public float  DisarmingTargsDur    {
-            get {
-                if (Disarms.Count > 0) {
-                    // Averages out the Disarme Durations
-                    float TotalDisarmeDur = 0;
-                    foreach (Impedance s in Disarms) { TotalDisarmeDur += s.Duration; }
-                    float dur = TotalDisarmeDur / Disarms.Count;
-                    return dur;
-                } else {
-                    return 0; // DISARMINGTARGS_DUR;
-                }
-            }
-            //set { DISARMINGTARGS_DUR = value; }
-        }
-        public float  DisarmingTargsChance {
-            get {
-                if (Disarms.Count > 0) {
-                    // Averages out the Disarm Chances
-                    float TotalChance = 0f;
-                    foreach (Impedance s in Disarms) { TotalChance += s.Chance; }
-                    float chance = TotalChance / (float)Disarms.Count;
-                    return chance;
-                } else {
-                    return 0; // DISARMINGTARGS_CHANCE;
-                }
-            }
-            //set { DISARMINGTARGS_CHANCE = value; }
-        }
-        public float  DisarmingTargsTime {
-            get {
-                float time = 0f;
-                if (DisarmingTargsFreq != 0f && DisarmingTargsFreq < BerserkTimer)
-                {
-                    time = (BerserkTimer / DisarmingTargsFreq) * (DisarmingTargsDur / 1000f);
-                }
-                return time;
-            }
-        }
+        public float DisarmingTargsFreq   { get { return Disarms.Count > 0 ? Freq(Disarms) : -1; } }
+        public float DisarmingTargsDur    { get { return Disarms.Count > 0 ? Dur(Disarms) : 0; } }
+        public float DisarmingTargsChance { get { return Disarms.Count > 0 ? Chance(Disarms) : 0; } }
+        public float DisarmingTargsTime   { get { return Disarms.Count > 0 ? Time(Disarms) : 0; } }
         // Other
         public float TimeBossIsInvuln { get { return TIMEBOSSISINVULN; } set { TIMEBOSSISINVULN = value; OnPropertyChanged("TimeBossIsInvuln"); } }
         #endregion
