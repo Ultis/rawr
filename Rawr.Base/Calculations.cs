@@ -36,34 +36,34 @@ namespace Rawr
 			}
 		}
 
-        public static void RegisterModel(Type type)
-        {
-            if (type.IsSubclassOf(typeof(CalculationsBase)))
-            {
-                RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
-                string[] displayName = type.Name.Split('|');
-                Models[modelInfos[0].Name] = type;
-                _modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
-                _modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
-            }
-        }
+		public static void RegisterModel(Type type)
+		{
+			if (type.IsSubclassOf(typeof(CalculationsBase)))
+			{
+				RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
+				string[] displayName = type.Name.Split('|');
+				Models[modelInfos[0].Name] = type;
+				_modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
+				_modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
+			}
+		}
 
 		private static Dictionary<string, Type> _models = null;
-        public static Dictionary<string, Type> Models
+		public static Dictionary<string, Type> Models
 		{
 			get
 			{
 				if (_models == null)
 				{
-                    _models = new Dictionary<string, Type>();
+					_models = new Dictionary<string, Type>();
 					_modelIcons = new Dictionary<string, string>();
 					_modelClasses = new Dictionary<string, CharacterClass>();
 
 #if !RAWR3
-                    string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-                    // when running in service the dlls are in relative search path
-                    if (AppDomain.CurrentDomain.RelativeSearchPath != null) 
-                        dir = AppDomain.CurrentDomain.RelativeSearchPath;
+					string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
+					// when running in service the dlls are in relative search path
+					if (AppDomain.CurrentDomain.RelativeSearchPath != null) 
+						dir = AppDomain.CurrentDomain.RelativeSearchPath;
 					DirectoryInfo info = new DirectoryInfo(dir);
 					foreach (FileInfo file in info.GetFiles("*.dll"))
 					{
@@ -106,30 +106,30 @@ namespace Rawr
 				ModelChanged(null, EventArgs.Empty);
 		}
 
-        public static event EventHandler ModelChanging;
-        protected static void OnModelChanging()
-        {
-            if (ModelChanging != null)
-                ModelChanging(null, EventArgs.Empty);
-        }
+		public static event EventHandler ModelChanging;
+		protected static void OnModelChanging()
+		{
+			if (ModelChanging != null)
+				ModelChanging(null, EventArgs.Empty);
+		}
 
-        private static Dictionary<Type, CalculationsBase> ModelCache = new Dictionary<Type, CalculationsBase>();
+		private static Dictionary<Type, CalculationsBase> ModelCache = new Dictionary<Type, CalculationsBase>();
 
-        public static CalculationsBase GetModel(string model) { return GetModel(Models[model]); }
+		public static CalculationsBase GetModel(string model) { return GetModel(Models[model]); }
 		public static CalculationsBase GetModel(Type type)
-        {
-            CalculationsBase model;
-            if (!ModelCache.TryGetValue(type, out model))
-            {
-                model = (CalculationsBase)Activator.CreateInstance(type);
-                // extract name
-                RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
-                model.Name = modelInfos[0].Name;
-                ModelCache[type] = model;
-            }
-            return model;
-        }
-        
+		{
+			CalculationsBase model;
+			if (!ModelCache.TryGetValue(type, out model))
+			{
+				model = (CalculationsBase)Activator.CreateInstance(type);
+				// extract name
+				RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
+				model.Name = modelInfos[0].Name;
+				ModelCache[type] = model;
+			}
+			return model;
+		}
+		
 		public static void LoadModel(Type type) { LoadModel(GetModel(type)); }
 		public static void LoadModel(CalculationsBase model)
 		{
@@ -176,9 +176,9 @@ namespace Rawr
 			get { return Instance.SupportsMultithreading; }
 		}
 		public static bool CanUseAmmo
-        {
-            get { return Instance.CanUseAmmo; }
-        }
+		{
+			get { return Instance.CanUseAmmo; }
+		}
 		public static string[] CharacterDisplayCalculationLabels
 		{
 			get { return Instance.CharacterDisplayCalculationLabels; }
@@ -192,23 +192,23 @@ namespace Rawr
 			get { return Instance.CustomChartNames; }
 		}
 #if !RAWR3
-        public static string[] CustomRenderedChartNames
-        {
-            get { return Instance.CustomRenderedChartNames; }
-        }
+		public static string[] CustomRenderedChartNames
+		{
+			get { return Instance.CustomRenderedChartNames; }
+		}
 #endif
 #if RAWR3
-        public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+		public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
 #else
-        public static Dictionary<string, System.Drawing.Color> SubPointNameColors
+		public static Dictionary<string, System.Drawing.Color> SubPointNameColors
 #endif
 		{
 			get { return Instance.SubPointNameColors; }
 		}
 #if RAWR3
-        public static ICalculationOptionsPanel CalculationOptionsPanel
+		public static ICalculationOptionsPanel CalculationOptionsPanel
 #else
-        public static CalculationOptionsPanelBase CalculationOptionsPanel
+		public static CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
 		{
 			get { return Instance.CalculationOptionsPanel; }
@@ -240,11 +240,11 @@ namespace Rawr
 		{
 			return Instance.GetItemCalculations(item, character, slot);
 		}
-        public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, CharacterSlot slot)
-        {
-            return Instance.GetItemCalculations(item, character, slot);
-        }
-        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+		public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, CharacterSlot slot)
+		{
+			return Instance.GetItemCalculations(item, character, slot);
+		}
+		public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
 		{
 			return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly);
 		}
@@ -256,18 +256,18 @@ namespace Rawr
 		{
 			return Instance.GetCharacterCalculations(character);
 		}
-        public static CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
-            return Instance.GetCharacterCalculations(character, additionalItem, referenceCalculation, significantChange, needsDisplayCalculations);
-        }
-        public static Stats GetCharacterStats(Character character)
+		public static CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+		{
+			return Instance.GetCharacterCalculations(character, additionalItem, referenceCalculation, significantChange, needsDisplayCalculations);
+		}
+		public static Stats GetCharacterStats(Character character)
 		{
 			return Instance.GetCharacterStats(character);
 		}
-        public static Stats GetItemStats(Character character, Item additionalItem)
-        {
-            return Instance.GetItemStats(character, additionalItem);
-        }
+		public static Stats GetItemStats(Character character, Item additionalItem)
+		{
+			return Instance.GetItemStats(character, additionalItem);
+		}
 		public static Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			return Instance.GetCharacterStats(character, additionalItem);
@@ -285,42 +285,42 @@ namespace Rawr
 		{
 			return Instance.GetCharacterComparisonCalculations(baseCalculations, character, name, equipped);
 		}
-        public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase calculations, string name, bool equipped)
-        {
-            return Instance.GetCharacterComparisonCalculations(calculations, name, equipped);
-        }
-        public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations,
-            CharacterCalculationsBase newCalculation, string name, bool equipped)
-        {
-            return Instance.GetCharacterComparisonCalculations(baseCalculations, newCalculation, name, equipped);
-        }
-        public static ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+		public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase calculations, string name, bool equipped)
+		{
+			return Instance.GetCharacterComparisonCalculations(calculations, name, equipped);
+		}
+		public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations,
+			CharacterCalculationsBase newCalculation, string name, bool equipped)
+		{
+			return Instance.GetCharacterComparisonCalculations(baseCalculations, newCalculation, name, equipped);
+		}
+		public static ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
 			return Instance.GetCustomChartData(character, chartName);
 		}
 #if RAWR3
-        public static System.Windows.Controls.Control GetCustomChartControl(string chartName)
-        {
-            return Instance.GetCustomChartControl(chartName);
-        }
+		public static System.Windows.Controls.Control GetCustomChartControl(string chartName)
+		{
+			return Instance.GetCustomChartControl(chartName);
+		}
 
-        public static void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
-        {
-            Instance.UpdateCustomChartData(character, chartName, control);
-        }
+		public static void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+		{
+			Instance.UpdateCustomChartData(character, chartName, control);
+		}
 #endif
 #if !RAWR3
-        public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
-        {
-            Instance.RenderChart(character, chartName, g, width, height);
-        }
+		public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
+		{
+			Instance.RenderChart(character, chartName, g, width, height);
+		}
 #endif
-        public static void UpdateProfessions(Character character)
-        {
-            if (Instance != null)
-                Instance.UpdateProfessions(character);
-        }
-        public static Stats GetRelevantStats(Stats stats)
+		public static void UpdateProfessions(Character character)
+		{
+			if (Instance != null)
+				Instance.UpdateProfessions(character);
+		}
+		public static Stats GetRelevantStats(Stats stats)
 		{
 			return Instance.GetRelevantStats(stats);
 		}
@@ -342,13 +342,13 @@ namespace Rawr
 				return Instance.IsBuffRelevant(buff, character);
 			return false;
 		}
-        public static bool IsProfEnchantRelevant(Enchant enchant, Character character)
-        {
-            if (Instance != null)
-                return Instance.IsProfEnchantRelevant(enchant, character);
-            return false;
-        }
-        public static bool IsEnchantRelevant(Enchant enchant, Character character)
+		public static bool IsProfEnchantRelevant(Enchant enchant, Character character)
+		{
+			if (Instance != null)
+				return Instance.IsProfEnchantRelevant(enchant, character);
+			return false;
+		}
+		public static bool IsEnchantRelevant(Enchant enchant, Character character)
 		{
 			if (Instance != null)
 				return Instance.IsEnchantRelevant(enchant, character);
@@ -378,45 +378,45 @@ namespace Rawr
 				return Instance.DeserializeDataObject(xml);
 			return null;
 		}
-      
+	  
 		public static string GetCharacterStatsString(Character character)
 		{
 			return Instance.GetCharacterStatsString(character);
 		}
 
-        public static string ValidModel(string model)
-        {
-            if (Models.ContainsKey(model))
-            {
-                return model;
-            }
-            if(Models.Keys.Count > 0)
-            {
-                return new List<string>(Models.Keys)[0];
-            }
-            return null;
-        }
-    }
+		public static string ValidModel(string model)
+		{
+			if (Models.ContainsKey(model))
+			{
+				return model;
+			}
+			if(Models.Keys.Count > 0)
+			{
+				return new List<string>(Models.Keys)[0];
+			}
+			return null;
+		}
+	}
 
 	/// <summary>
 	/// CalculationsBase is the base class which each model's main Calculations class will inherit from.
 	/// </summary>
 	public abstract class CalculationsBase
 	{
-        /// <summary>
-        /// Name of the model. When loaded in model cache, it's assigned the value of its corresponding key
-        /// </summary>
-        public string Name;
+		/// <summary>
+		/// Name of the model. When loaded in model cache, it's assigned the value of its corresponding key
+		/// </summary>
+		public string Name;
 
 		/// <summary>
 		/// If true, the ThreadPool will be used to more quickly run calculations on different items
 		/// </summary>
 		public virtual bool SupportsMultithreading { get { return true; } }
 
-        /// <summary>
-        /// Maximum parallel threads of execution supported. Return -1 to indicate that there is no limit imposed.
-        /// </summary>
-        public virtual int MaxDegreeOfParallelism { get { return -1; } }
+		/// <summary>
+		/// Maximum parallel threads of execution supported. Return -1 to indicate that there is no limit imposed.
+		/// </summary>
+		public virtual int MaxDegreeOfParallelism { get { return -1; } }
 
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
 		protected CharacterSlot _cachedSlot = CharacterSlot.Shirt;
@@ -441,7 +441,7 @@ namespace Rawr
 		/// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
 		/// </summary>
 #if RAWR3
-        public abstract Dictionary<string, System.Windows.Media.Color> SubPointNameColors { get; }
+		public abstract Dictionary<string, System.Windows.Media.Color> SubPointNameColors { get; }
 #else
 		public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
 #endif
@@ -471,10 +471,10 @@ namespace Rawr
 		public abstract string[] CustomChartNames { get; }
 
 #if !RAWR3
-        /// <summary>
-        /// The names of charts for which the model provides custom rendering.
-        /// </summary>
-        public virtual string[] CustomRenderedChartNames { get { return new string[] { }; } }
+		/// <summary>
+		/// The names of charts for which the model provides custom rendering.
+		/// </summary>
+		public virtual string[] CustomRenderedChartNames { get { return new string[] { }; } }
 #endif
 
 		/// <summary>
@@ -483,20 +483,20 @@ namespace Rawr
 		/// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
 		/// </summary>
 #if RAWR3
-        public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
+		public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
 #else
-        public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
+		public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
 #endif
 
 		/// <summary>
-        /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
+		/// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
 		/// means all types of armor/weapons that the intended class is able to use, but may also
 		/// be trimmed down further if some aren't typically used. ItemType.None should almost
 		/// always be included, because that type includes items with no proficiancy requirement, such
 		/// as rings, necklaces, cloaks, held in off hand items, etc.
 		/// </summary>
 		/// <example>
-        /// <![CDATA[
+		/// <![CDATA[
 		/// relevantItemTypes = new List<ItemType>(new ItemType[]
 		/// {
 		///     ItemType.None,
@@ -505,8 +505,8 @@ namespace Rawr
 		///     ItemType.Staff,
 		///     ItemType.TwoHandMace
 		/// });
-        /// ]]>
-        /// </example>
+		/// ]]>
+		/// </example>
 		public abstract List<ItemType> RelevantItemTypes { get; }
 
 		/// <summary>
@@ -535,8 +535,8 @@ namespace Rawr
 		public virtual string[] OptimizableCalculationLabels { get { return new string[0]; } }
 
 		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character) { return GetCharacterCalculations(character, null, false, false, false); }
-        public virtual CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem) { return GetCharacterCalculations(character, additionalItem, false, false, false); }
-        /// <summary>
+		public virtual CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem) { return GetCharacterCalculations(character, additionalItem, false, false, false); }
+		/// <summary>
 		/// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
 		/// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
 		/// those total stats for the character, and any calculationoptions on the character, perform all the 
@@ -548,11 +548,11 @@ namespace Rawr
 		/// <param name="additionalItem">An additional item to treat the character as wearing.
 		/// This is used for gems, which don't have a slot on the character to fit in, so are just
 		/// added onto the character, in order to get gem calculations.</param>
-        /// <param name="referenceCalculation">True if the subsequent calculations should treat this calculation as a reference, for example when called for 
-        /// the character displayed in main window; False for comparison calculations in comparison charts.</param>
-        /// <param name="significantChange">True if the difference from reference calculation can potentially result in significantly
-        /// different result, for example when changing talents or glyphs.</param>
-        /// <param name="needsDisplayCalculations">When False the model can ignore any calculations that are not used for rating directly (such as GetCharacterDisplayCalculationValues).</param>
+		/// <param name="referenceCalculation">True if the subsequent calculations should treat this calculation as a reference, for example when called for 
+		/// the character displayed in main window; False for comparison calculations in comparison charts.</param>
+		/// <param name="significantChange">True if the difference from reference calculation can potentially result in significantly
+		/// different result, for example when changing talents or glyphs.</param>
+		/// <param name="needsDisplayCalculations">When False the model can ignore any calculations that are not used for rating directly (such as GetCharacterDisplayCalculationValues).</param>
 		/// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
 		/// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
 		/// CharacterCalculationsBase comments for more details.</returns>
@@ -582,27 +582,27 @@ namespace Rawr
 		public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 
 #if RAWR3
-        /// <summary>
-        /// Gets control to use for display of chart data, based on the chart name, as defined in CustomChartNames.
-        /// If you return null a default comparison graph will be used and GetCustomChartData will be called to
-        /// populate its data. When a custom control is used UpdateCustomChartData will be called instead.
-        /// </summary>
-        /// <param name="chartName">The name of the custom chart to get data for.</param>
-        /// <returns>Custom control or null for default comparison graph.</returns>
-        public virtual System.Windows.Controls.Control GetCustomChartControl(string chartName)
-        {
-            return null;
-        }
+		/// <summary>
+		/// Gets control to use for display of chart data, based on the chart name, as defined in CustomChartNames.
+		/// If you return null a default comparison graph will be used and GetCustomChartData will be called to
+		/// populate its data. When a custom control is used UpdateCustomChartData will be called instead.
+		/// </summary>
+		/// <param name="chartName">The name of the custom chart to get data for.</param>
+		/// <returns>Custom control or null for default comparison graph.</returns>
+		public virtual System.Windows.Controls.Control GetCustomChartControl(string chartName)
+		{
+			return null;
+		}
 
-        /// <summary>
-        /// Update the provided control with custom chart data, based on the chart name, as defined in CustomChartNames.
-        /// </summary>
-        /// <param name="character">The character to build the chart for.</param>
-        /// <param name="chartName">The name of the custom chart to get data for.</param>
-        /// <param name="control">Custom control used to display chart data.</param>
-        public virtual void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
-        {
-        }
+		/// <summary>
+		/// Update the provided control with custom chart data, based on the chart name, as defined in CustomChartNames.
+		/// </summary>
+		/// <param name="character">The character to build the chart for.</param>
+		/// <param name="chartName">The name of the custom chart to get data for.</param>
+		/// <param name="control">Custom control used to display chart data.</param>
+		public virtual void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
+		{
+		}
 #endif
 
 #if !RAWR3
@@ -617,13 +617,13 @@ namespace Rawr
 		public void RenderChart(Character character, string chartName,
 			System.Drawing.Graphics g, int width, int height)
 		{
-            if (chartName == "Stat Graph")
+			if (chartName == "Stat Graph")
 				StatGraphRenderer.Render(character, g, width, height);
 			else
 				RenderCustomChart(character, chartName, g, width, height);
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
 		/// </summary>
 		/// <param name="character">The character to build the chart for.</param>
@@ -638,72 +638,72 @@ namespace Rawr
 		}
 #endif
 
-        /// <summary>
-        /// List of default gemming templates recommended by the model
-        /// </summary>
-        public abstract List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get;
-        }
+		/// <summary>
+		/// List of default gemming templates recommended by the model
+		/// </summary>
+		public abstract List<GemmingTemplate> DefaultGemmingTemplates
+		{
+			get;
+		}
 
-        /// <summary>
-        /// Set the defaults (like Glyphs/Buffs) for newly imported Armory characters
-        /// <param name="character">The character who the defaults are for.</param>
-        /// </summary>
-        public virtual void SetDefaults(Character character)
-        {
-            ;
-        }
+		/// <summary>
+		/// Set the defaults (like Glyphs/Buffs) for newly imported Armory characters
+		/// <param name="character">The character who the defaults are for.</param>
+		/// </summary>
+		public virtual void SetDefaults(Character character)
+		{
+			;
+		}
 
-        /// <summary>
-        /// Allow the model to update any model specific things about changing professions
-        /// <param name="character">The character who the defaults are for.</param>
-        /// </summary>
-        public virtual void UpdateProfessions(Character character)
-        {
-            #region Buffs related to Professions to Force Enable
-            // Miners should always have this buff activated
-            if (character.HasProfession(Profession.Mining)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
-            {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
-            }
-            // Skinners should always have this buff activated
-            if (character.HasProfession(Profession.Skinning)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
-            {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
-            }
-            // Engineers should always have this buff activated IF the Primary is
-            if (character.HasProfession(Profession.Engineering))
-            {
-                List<String> list = new List<string>() {
-                    "Runic Mana Injector",
-                    "Runic Healing Injector",
-                };
-                foreach (String name in list)
-                {
-                    if (character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
-                        !character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
-                    {
-                        character.ActiveBuffs.Add(Buff.GetBuffByName(name + " (Engineer Bonus)"));
-                    }
-                }
-            }
-            // NOTE: Might do this again for Alchemy and Mixology but
-            // there could be conflicts for different specialties,
-            // need to investigate first
-            #endregion
-        }
+		/// <summary>
+		/// Allow the model to update any model specific things about changing professions
+		/// <param name="character">The character who the defaults are for.</param>
+		/// </summary>
+		public virtual void UpdateProfessions(Character character)
+		{
+			#region Buffs related to Professions to Force Enable
+			// Miners should always have this buff activated
+			if (character.HasProfession(Profession.Mining)
+				&& !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
+			{
+				character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+			}
+			// Skinners should always have this buff activated
+			if (character.HasProfession(Profession.Skinning)
+				&& !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
+			{
+				character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+			}
+			// Engineers should always have this buff activated IF the Primary is
+			if (character.HasProfession(Profession.Engineering))
+			{
+				List<String> list = new List<string>() {
+					"Runic Mana Injector",
+					"Runic Healing Injector",
+				};
+				foreach (String name in list)
+				{
+					if (character.ActiveBuffs.Contains(Buff.GetBuffByName(name)) &&
+						!character.ActiveBuffs.Contains(Buff.GetBuffByName(name + " (Engineer Bonus)")))
+					{
+						character.ActiveBuffs.Add(Buff.GetBuffByName(name + " (Engineer Bonus)"));
+					}
+				}
+			}
+			// NOTE: Might do this again for Alchemy and Mixology but
+			// there could be conflicts for different specialties,
+			// need to investigate first
+			#endregion
+		}
 
-        /// <summary>
-        /// Which glyphs are relevant to this model.
-        /// <return>Name of the relevant Glyphs.</return>
-        /// </summary>
-        public virtual List<string> GetRelevantGlyphs()
-        {
-            return null;
-        }
+		/// <summary>
+		/// Which glyphs are relevant to this model.
+		/// <return>Name of the relevant Glyphs.</return>
+		/// </summary>
+		public virtual List<string> GetRelevantGlyphs()
+		{
+			return null;
+		}
 
 		/// <summary>
 		/// Filters a Stats object to just the stats relevant to the model.
@@ -749,7 +749,7 @@ namespace Rawr
 			}
 
 			CharacterCalculationsBase characterStatsWithSlotEmpty;
-            if (useCache && _cachedCharacterStatsWithSlotEmpty != null)
+			if (useCache && _cachedCharacterStatsWithSlotEmpty != null)
 				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
 			else
 			{
@@ -763,7 +763,7 @@ namespace Rawr
 
 			ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
 			itemCalc.ItemInstance = item;
-            itemCalc.Item = item.Item;
+			itemCalc.Item = item.Item;
 			itemCalc.Name = item.Item.Name;
 			itemCalc.Equipped = character[slot] == item;
 			itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
@@ -779,88 +779,88 @@ namespace Rawr
 			return itemCalc;
 		}
 
-        public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, CharacterSlot slot)
-        {
-            bool useCache = character == _cachedCharacter && slot == _cachedSlot;
-            Character characterWithSlotEmpty = null;
+		public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, CharacterSlot slot)
+		{
+			bool useCache = character == _cachedCharacter && slot == _cachedSlot;
+			Character characterWithSlotEmpty = null;
 
-            if (!useCache)
-                characterWithSlotEmpty = character.Clone();
-            Character characterWithNewItem = character.Clone();
+			if (!useCache)
+				characterWithSlotEmpty = character.Clone();
+			Character characterWithNewItem = character.Clone();
 
-            CharacterCalculationsBase characterStatsWithSlotEmpty;
-            if (useCache)
-                characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
-            else
-            {
-                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false, false);
-                _cachedCharacter = character;
-                _cachedSlot = slot;
-                _cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
-            }
+			CharacterCalculationsBase characterStatsWithSlotEmpty;
+			if (useCache)
+				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
+			else
+			{
+				characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false, false);
+				_cachedCharacter = character;
+				_cachedSlot = slot;
+				_cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
+			}
 
-            CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem, false, false, false);
+			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem, false, false, false);
 
-            ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
-            itemCalc.Item = additionalItem;
-            itemCalc.Name = additionalItem.Name;
-            itemCalc.Equipped = false;
-            itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
-            float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
-            for (int i = 0; i < characterStatsWithNewItem.SubPoints.Length; i++)
-            {
-                subPoints[i] = characterStatsWithNewItem.SubPoints[i] - characterStatsWithSlotEmpty.SubPoints[i];
-            }
-            itemCalc.SubPoints = subPoints;
+			ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
+			itemCalc.Item = additionalItem;
+			itemCalc.Name = additionalItem.Name;
+			itemCalc.Equipped = false;
+			itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
+			float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
+			for (int i = 0; i < characterStatsWithNewItem.SubPoints.Length; i++)
+			{
+				subPoints[i] = characterStatsWithNewItem.SubPoints[i] - characterStatsWithSlotEmpty.SubPoints[i];
+			}
+			itemCalc.SubPoints = subPoints;
 
-            characterStatsWithNewItem.ToString();
+			characterStatsWithNewItem.ToString();
 
-            return itemCalc;
-        }
+			return itemCalc;
+		}
 
 		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
-            if (!equippedOnly)
-            {
-                CharacterCalculationsBase calcsEquipped = null;
-                CharacterCalculationsBase calcsUnequipped = null;
-                // only need to get unequipped value once not every time around the loop
-                Character charUnequipped = character.Clone();
-                charUnequipped.SetEnchantBySlot(slot, null);
-                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-                foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
-                {
-                    bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
-                    Character charEquipped = character.Clone();
-                    charEquipped.SetEnchantBySlot(slot, enchant);
-                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
-                    enchantCalc.Name = enchant.Name;
-                    enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
-                        false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                        0, 0, ItemDamageType.Physical, 0, null);
-                    enchantCalc.Item.Name = enchant.Name;
-                    enchantCalc.Item.Stats = enchant.Stats;
-                    enchantCalc.Equipped = isEquipped;
-                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-                    }
-                    enchantCalc.SubPoints = subPoints;
-                    enchantCalcs.Add(enchantCalc);
-                }
-            }
+			if (!equippedOnly)
+			{
+				CharacterCalculationsBase calcsEquipped = null;
+				CharacterCalculationsBase calcsUnequipped = null;
+				// only need to get unequipped value once not every time around the loop
+				Character charUnequipped = character.Clone();
+				charUnequipped.SetEnchantBySlot(slot, null);
+				calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+				foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
+				{
+					bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
+					Character charEquipped = character.Clone();
+					charEquipped.SetEnchantBySlot(slot, enchant);
+					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+					ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+					enchantCalc.Name = enchant.Name;
+					enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
+						-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
+						false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+						0, 0, ItemDamageType.Physical, 0, null);
+					enchantCalc.Item.Name = enchant.Name;
+					enchantCalc.Item.Stats = enchant.Stats;
+					enchantCalc.Equipped = isEquipped;
+					enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+					for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+					{
+						subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+					}
+					enchantCalc.SubPoints = subPoints;
+					enchantCalcs.Add(enchantCalc);
+				}
+			}
 			return enchantCalcs;
 		}
 
-        public static void RemoveConflictingBuffs(List<Buff> activeBuffs, Buff buff)
-        {
-            //Buff b = Buff.GetBuffByName(buff);
+		public static void RemoveConflictingBuffs(List<Buff> activeBuffs, Buff buff)
+		{
+			//Buff b = Buff.GetBuffByName(buff);
 
 			if (buff != null)
 			{
@@ -869,30 +869,30 @@ namespace Rawr
 					if (activeBuffs[i] != buff)
 					{
 						//Buff b2 = Buff.GetBuffByName(activeBuffs[i]);
-                        Buff b2 = activeBuffs[i];
-                        foreach (string buffName in b2.ConflictingBuffs)
+						Buff b2 = activeBuffs[i];
+						foreach (string buffName in b2.ConflictingBuffs)
 						{
 							if (buff.ConflictingBuffs.Contains(buffName))
 							{
 								activeBuffs.RemoveAt(i);
 								i--;
-                                // have to also remove any child buffs if they are present
-                                foreach (Buff improvement in b2.Improvements)
-                                {
-                                    int j = activeBuffs.IndexOf(improvement);
-                                    if (j >= 0)
-                                    {
-                                        activeBuffs.RemoveAt(j);
-                                        if (j <= i) i--;
-                                    }
-                                }
+								// have to also remove any child buffs if they are present
+								foreach (Buff improvement in b2.Improvements)
+								{
+									int j = activeBuffs.IndexOf(improvement);
+									if (j >= 0)
+									{
+										activeBuffs.RemoveAt(j);
+										if (j <= i) i--;
+									}
+								}
 								break;
 							}
 						}
 					}
 				}
 			}
-        }
+		}
 
 		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, string filter)
 		{
@@ -900,48 +900,48 @@ namespace Rawr
 			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
-            Character charAutoActivated = character.Clone();
-            foreach (Buff autoBuff in currentCalcs.AutoActivatedBuffs)
-            {
-                if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
-                {
-                    charAutoActivated.ActiveBuffsAdd(autoBuff);
-                    RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
-                }
-            }
-            charAutoActivated.DisableBuffAutoActivation = true;
+			Character charAutoActivated = character.Clone();
+			foreach (Buff autoBuff in currentCalcs.AutoActivatedBuffs)
+			{
+				if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
+				{
+					charAutoActivated.ActiveBuffsAdd(autoBuff);
+					RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
+				}
+			}
+			charAutoActivated.DisableBuffAutoActivation = true;
 
-            string[] multiFilter = filter.Split('|');
+			string[] multiFilter = filter.Split('|');
 
 			List<Buff> relevantBuffs = new List<Buff>();
 			foreach (Buff buff in Buff.RelevantBuffs)
 			{
-                bool isinMultiFilter = false;
-                if (multiFilter.Length > 0) {
-                    foreach (string mFilter in multiFilter) {
-                        if (buff.Group.Equals(mFilter, StringComparison.CurrentCultureIgnoreCase)) {
-                            isinMultiFilter = true;
-                            break;
-                        }
-                    }
-                }
-                if (filter == null || filter == "All" || filter == "Current"
-                    || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase)
-                    || isinMultiFilter)
-                {
-                    relevantBuffs.Add(buff);
-                    relevantBuffs.AddRange(buff.Improvements);
-                }
+				bool isinMultiFilter = false;
+				if (multiFilter.Length > 0) {
+					foreach (string mFilter in multiFilter) {
+						if (buff.Group.Equals(mFilter, StringComparison.CurrentCultureIgnoreCase)) {
+							isinMultiFilter = true;
+							break;
+						}
+					}
+				}
+				if (filter == null || filter == "All" || filter == "Current"
+					|| buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase)
+					|| isinMultiFilter)
+				{
+					relevantBuffs.Add(buff);
+					relevantBuffs.AddRange(buff.Improvements);
+				}
 			}
 
 			foreach (Buff buff in relevantBuffs)
 			{
-                if (!"Current".Equals(filter,StringComparison.CurrentCultureIgnoreCase) || charAutoActivated.ActiveBuffs.Contains(buff))
+				if (!"Current".Equals(filter,StringComparison.CurrentCultureIgnoreCase) || charAutoActivated.ActiveBuffs.Contains(buff))
 				{
-                    Character charUnequipped = charAutoActivated.Clone();
-                    Character charEquipped = charAutoActivated.Clone();
-                    charUnequipped.DisableBuffAutoActivation = true;
-                    charEquipped.DisableBuffAutoActivation = true;
+					Character charUnequipped = charAutoActivated.Clone();
+					Character charEquipped = charAutoActivated.Clone();
+					charUnequipped.DisableBuffAutoActivation = true;
+					charEquipped.DisableBuffAutoActivation = true;
 					if (charUnequipped.ActiveBuffs.Contains(buff))
 						charUnequipped.ActiveBuffs.Remove(buff);
 					if (!charEquipped.ActiveBuffs.Contains(buff))
@@ -966,16 +966,16 @@ namespace Rawr
 					//        charEquipped.ActiveBuffsAdd(requiredBuff);
 					//}
 
-                    RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
-                    RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);
+					RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
+					RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);
 
 					calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
 					calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
 
 					ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
 					buffCalc.Name = buff.Name;
-                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
-                    buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
+					buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
+					buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
 					buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
 					float[] subPoints = new float[calcsEquipped.SubPoints.Length];
 					for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
@@ -1007,101 +1007,101 @@ namespace Rawr
 			return comparisonCalculations;
 		}
 
-        public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase calculations,
-            string name, bool equipped)
-        {
-            ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
-            comparisonCalculations.Name = name;
-            comparisonCalculations.Item = new Item() { Name = name };
-            comparisonCalculations.Equipped = equipped;
-            comparisonCalculations.OverallPoints = calculations.OverallPoints;
-            float[] subPoints = new float[calculations.SubPoints.Length];
-            for (int i = 0; i < calculations.SubPoints.Length; i++)
-            {
-                subPoints[i] = calculations.SubPoints[i];
-            }
-            comparisonCalculations.SubPoints = subPoints;
-            return comparisonCalculations;
-        }
+		public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase calculations,
+			string name, bool equipped)
+		{
+			ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
+			comparisonCalculations.Name = name;
+			comparisonCalculations.Item = new Item() { Name = name };
+			comparisonCalculations.Equipped = equipped;
+			comparisonCalculations.OverallPoints = calculations.OverallPoints;
+			float[] subPoints = new float[calculations.SubPoints.Length];
+			for (int i = 0; i < calculations.SubPoints.Length; i++)
+			{
+				subPoints[i] = calculations.SubPoints[i];
+			}
+			comparisonCalculations.SubPoints = subPoints;
+			return comparisonCalculations;
+		}
 
-        public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculation,
-            CharacterCalculationsBase newCalculation, string name, bool equipped)
-        {
-            ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
-            comparisonCalculations.Name = name;
-            comparisonCalculations.Item = new Item() { Name = name };
-            comparisonCalculations.Equipped = equipped;
-            comparisonCalculations.OverallPoints = newCalculation.OverallPoints - baseCalculation.OverallPoints;
-            float[] subPoints = new float[newCalculation.SubPoints.Length];
-            for (int i = 0; i < newCalculation.SubPoints.Length; i++)
-            {
-                subPoints[i] = newCalculation.SubPoints[i] - baseCalculation.SubPoints[i];
-            }
-            comparisonCalculations.SubPoints = subPoints;
-            return comparisonCalculations;
-        }
+		public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculation,
+			CharacterCalculationsBase newCalculation, string name, bool equipped)
+		{
+			ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
+			comparisonCalculations.Name = name;
+			comparisonCalculations.Item = new Item() { Name = name };
+			comparisonCalculations.Equipped = equipped;
+			comparisonCalculations.OverallPoints = newCalculation.OverallPoints - baseCalculation.OverallPoints;
+			float[] subPoints = new float[newCalculation.SubPoints.Length];
+			for (int i = 0; i < newCalculation.SubPoints.Length; i++)
+			{
+				subPoints[i] = newCalculation.SubPoints[i] - baseCalculation.SubPoints[i];
+			}
+			comparisonCalculations.SubPoints = subPoints;
+			return comparisonCalculations;
+		}
 
 #if SILVERLIGHT
-        public virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
+		public virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 #else
-        public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
+		public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 #endif
 		{
 #if !SILVERLIGHT
-            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
-            {
-                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+			fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+			{
+				stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
 #endif
-                for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
-                {
-                    if (slot != (int)CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
-                    {
-                        ItemInstance item = character._item[slot];
-                        if ((object)item != null)
-                        {
-                            item.AccumulateTotalStats(character, stats);
-                        }
-                    }
-                }
-                if (additionalItem != null)
-                    stats.AccumulateUnsafe(additionalItem.Stats);
+				for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+				{
+					if (slot != (int)CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
+					{
+						ItemInstance item = character._item[slot];
+						if ((object)item != null)
+						{
+							item.AccumulateTotalStats(character, stats);
+						}
+					}
+				}
+				if (additionalItem != null)
+					stats.AccumulateUnsafe(additionalItem.Stats);
 #if !SILVERLIGHT
-                stats.EndUnsafe();
-            }
+				stats.EndUnsafe();
+			}
 #endif
-        }
+		}
 
-        public virtual Stats GetItemStats(Character character, Item additionalItem)
-        {
-            Stats stats = new Stats();
-            AccumulateItemStats(stats, character, additionalItem);
-            return stats;
-        }
+		public virtual Stats GetItemStats(Character character, Item additionalItem)
+		{
+			Stats stats = new Stats();
+			AccumulateItemStats(stats, character, additionalItem);
+			return stats;
+		}
 
-        // this is now included in accumulating item stats
-        /*public unsafe virtual void AccumulateEnchantsStats(Stats stats, Character character)
-        {
-            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
-            {
-                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-                stats.AccumulateUnsafe(character.BackEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.ChestEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.FeetEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.Finger1Enchant.Stats, true);
-                stats.AccumulateUnsafe(character.Finger2Enchant.Stats, true);
-                stats.AccumulateUnsafe(character.HandsEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.HeadEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.LegsEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.ShouldersEnchant.Stats, true);
-                if (character.MainHand != null &&
-                    (character.MainHandEnchant.Slot == ItemSlot.OneHand ||
-                    (character.MainHandEnchant.Slot == ItemSlot.TwoHand &&
-                    character.MainHand.Slot == ItemSlot.TwoHand)))
-                {
-                    stats.AccumulateUnsafe(character.MainHandEnchant.Stats, true);
-                }
-                if (character.OffHand != null && IncludeOffHandInCalculations(character) &&
-                    (
+		// this is now included in accumulating item stats
+		/*public unsafe virtual void AccumulateEnchantsStats(Stats stats, Character character)
+		{
+			fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+			{
+				stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+				stats.AccumulateUnsafe(character.BackEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.ChestEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.FeetEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.Finger1Enchant.Stats, true);
+				stats.AccumulateUnsafe(character.Finger2Enchant.Stats, true);
+				stats.AccumulateUnsafe(character.HandsEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.HeadEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.LegsEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.ShouldersEnchant.Stats, true);
+				if (character.MainHand != null &&
+					(character.MainHandEnchant.Slot == ItemSlot.OneHand ||
+					(character.MainHandEnchant.Slot == ItemSlot.TwoHand &&
+					character.MainHand.Slot == ItemSlot.TwoHand)))
+				{
+					stats.AccumulateUnsafe(character.MainHandEnchant.Stats, true);
+				}
+				if (character.OffHand != null && IncludeOffHandInCalculations(character) &&
+					(
 						(
 							character.OffHandEnchant.Slot == ItemSlot.OneHand &&
 							(character.OffHand.Slot == ItemSlot.OneHand ||
@@ -1116,76 +1116,76 @@ namespace Rawr
 						)
 						||
 						(
-                            character.OffHandEnchant.Slot == ItemSlot.OffHand &&
-                            character.OffHand.Slot == ItemSlot.OffHand &&
-                            character.OffHand.Type == ItemType.Shield
-                        )
-                    )
-                   )
-                {
-                    stats.AccumulateUnsafe(character.OffHandEnchant.Stats, true);
-                }
-                stats.AccumulateUnsafe(character.RangedEnchant.Stats, true);
-                stats.AccumulateUnsafe(character.WristEnchant.Stats, true);
-                stats.EndUnsafe();
-            }
-        }*/
+							character.OffHandEnchant.Slot == ItemSlot.OffHand &&
+							character.OffHand.Slot == ItemSlot.OffHand &&
+							character.OffHand.Type == ItemType.Shield
+						)
+					)
+				   )
+				{
+					stats.AccumulateUnsafe(character.OffHandEnchant.Stats, true);
+				}
+				stats.AccumulateUnsafe(character.RangedEnchant.Stats, true);
+				stats.AccumulateUnsafe(character.WristEnchant.Stats, true);
+				stats.EndUnsafe();
+			}
+		}*/
 
-        /*public virtual Stats GetEnchantsStats(Character character)
+		/*public virtual Stats GetEnchantsStats(Character character)
 		{
-            Stats stats = new Stats();
-            AccumulateEnchantsStats(stats, character);
-            return stats;
-        }*/
+			Stats stats = new Stats();
+			AccumulateEnchantsStats(stats, character);
+			return stats;
+		}*/
 
-        public virtual void AccumulateBuffsStats(Stats stats, List<string> buffs)
-        {
-            foreach (string buffName in buffs)
-                if (!string.IsNullOrEmpty(buffName))
-                {
-                    Buff buff = Buff.GetBuffByName(buffName);
-                    if (buff != null)
-                    {
-                        stats.Accumulate(buff.Stats);
-                    }
-                }
-        }
-
-#if SILVERLIGHT
-        public virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
-#else
-        public unsafe virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
-#endif
-        {
-#if !SILVERLIGHT
-            fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
-            {
-                stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-#endif
-                foreach (Buff buff in buffs)
-                    if (buff != null)
-                    {
-                        stats.AccumulateUnsafe(buff.Stats, true);
-                    }
-#if !SILVERLIGHT
-                stats.EndUnsafe();
-            }
-#endif
-        }
-
-        public virtual Stats GetBuffsStats(List<string> buffs)
+		public virtual void AccumulateBuffsStats(Stats stats, List<string> buffs)
 		{
-            Stats stats = new Stats();
-            AccumulateBuffsStats(stats, buffs);
-            return stats;
+			foreach (string buffName in buffs)
+				if (!string.IsNullOrEmpty(buffName))
+				{
+					Buff buff = Buff.GetBuffByName(buffName);
+					if (buff != null)
+					{
+						stats.Accumulate(buff.Stats);
+					}
+				}
 		}
 
-        public virtual Stats GetBuffsStats(List<Buff> buffs)
-        {
-            Stats stats = new Stats();
-            AccumulateBuffsStats(stats, buffs);
-            return stats;
-        }
+#if SILVERLIGHT
+		public virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
+#else
+		public unsafe virtual void AccumulateBuffsStats(Stats stats, List<Buff> buffs)
+#endif
+		{
+#if !SILVERLIGHT
+			fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
+			{
+				stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+#endif
+				foreach (Buff buff in buffs)
+					if (buff != null)
+					{
+						stats.AccumulateUnsafe(buff.Stats, true);
+					}
+#if !SILVERLIGHT
+				stats.EndUnsafe();
+			}
+#endif
+		}
+
+		public virtual Stats GetBuffsStats(List<string> buffs)
+		{
+			Stats stats = new Stats();
+			AccumulateBuffsStats(stats, buffs);
+			return stats;
+		}
+
+		public virtual Stats GetBuffsStats(List<Buff> buffs)
+		{
+			Stats stats = new Stats();
+			AccumulateBuffsStats(stats, buffs);
+			return stats;
+		}
 
 		public virtual string GetCharacterStatsString(Character character)
 		{
@@ -1205,22 +1205,22 @@ namespace Rawr
 		{
 			try
 			{
-                bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
+				bool b = (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ", "").Contains(TargetClass.ToString()));
 				b &= (RelevantItemTypes.Contains(item.Type));
-                if (b)
-                {
-                    if (HasRelevantStats(item.Stats))
-                    {
-                        return true;
-                    }
-                    // check if maybe it is a part of set bonus that has relevant stats
-                    if (!string.IsNullOrEmpty(item.SetName))
-                    {
-                        return Buff.RelevantSetBonuses.Exists(buff => buff.SetName == item.SetName);
-                    }
-                }
-                return false;
-            }
+				if (b)
+				{
+					if (HasRelevantStats(item.Stats))
+					{
+						return true;
+					}
+					// check if maybe it is a part of set bonus that has relevant stats
+					if (!string.IsNullOrEmpty(item.SetName))
+					{
+						return Buff.RelevantSetBonuses.Exists(buff => buff.SetName == item.SetName);
+					}
+				}
+				return false;
+			}
 			catch (Exception )
 			{
 				return false;
@@ -1231,8 +1231,8 @@ namespace Rawr
 		{
 			try
 			{
-                if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
-                    return false;
+				if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+					return false;
 				return HasRelevantStats(buff.GetTotalStats());
 			}
 			catch (Exception)
@@ -1241,134 +1241,134 @@ namespace Rawr
 			}
 		}
 
-        public bool IsEnchantAllowedForClass(Enchant enchant, CharacterClass characterClass)
-        {
-            if (enchant.Name.StartsWith("Rune of ", StringComparison.Ordinal) && (characterClass != CharacterClass.DeathKnight))
-                return false;
+		public bool IsEnchantAllowedForClass(Enchant enchant, CharacterClass characterClass)
+		{
+			if (enchant.Name.StartsWith("Rune of ", StringComparison.Ordinal) && (characterClass != CharacterClass.DeathKnight))
+				return false;
 
-            return true;    
-        }
+			return true;    
+		}
 
-        /// <summary>
-        /// Hide an enchant that is tie to a profession when:
-        /// <para>- You have the Option active in the General Settings</para>
-        /// <para>- You do not have the profession</para>
-        /// <para>Otherwise, this function returns true so that non-profession enchants are not affected.</para>
-        /// <para>NOTE: There is no reason to override this function</para>
-        /// </summary>
-        /// <param name="enchant">The Enchant to check</param>
-        /// <returns>Whether the Enchant should be hidden, defaults to true unless specific conditions are met.</returns>
-        public virtual bool IsProfEnchantRelevant(Enchant enchant, Character character) {
-            try {
-                #region Enchants related to Professions to Hide/Show
-                string name = enchant.Name;
-                if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants) {
-                    if (!character.HasProfession(Profession.Enchanting)) 
-                    {
-                        if (enchant.Slot == ItemSlot.Finger)
-                        {
-                            return false;
-                        }
-                    }
-                    if (!character.HasProfession(Profession.Engineering))
-                    {
-                        if (name.Contains("Mind Amplification Dish")   ||
-                            name.Contains("Flexweave Underlay")        ||
-                            name.Contains("Hyperspeed Accelerators")   ||
-                            name.Contains("Reticulated Armor Webbing") ||
-                            name.Contains("Nitro Boosts") ||
-                            name.Contains("Springy Arachnoweave") ||
-                            name.Contains("Hand-Mounted"))
-                        {
-                            return false;
-                        }
-                    }
-                    if (!character.HasProfession(Profession.Inscription))
-                    {
-                        if (name.Contains("Master's")
-                            && !name.Contains("Spellthread"))
-                        {
-                            return false;
-                        }
-                    }
-                    if (!character.HasProfession(Profession.Leatherworking))
-                    {
-                        if (name.Contains("Fur Lining") ||
-                            name.Contains("Nerubian Leg Reinforcements"))
-                        {
-                            return false;
-                        }
-                    }
-                    if (!character.HasProfession(Profession.Tailoring))
-                    {
-                        if (name.Contains("Embroidery")
-                            || name.Contains("Sanctified Spellthread")
-                            || name.Contains("Master's Spellthread"))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                #endregion
-                return true;
-            } catch (Exception) { return true; }
-        }
+		/// <summary>
+		/// Hide an enchant that is tie to a profession when:
+		/// <para>- You have the Option active in the General Settings</para>
+		/// <para>- You do not have the profession</para>
+		/// <para>Otherwise, this function returns true so that non-profession enchants are not affected.</para>
+		/// <para>NOTE: There is no reason to override this function</para>
+		/// </summary>
+		/// <param name="enchant">The Enchant to check</param>
+		/// <returns>Whether the Enchant should be hidden, defaults to true unless specific conditions are met.</returns>
+		public virtual bool IsProfEnchantRelevant(Enchant enchant, Character character) {
+			try {
+				#region Enchants related to Professions to Hide/Show
+				string name = enchant.Name;
+				if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants) {
+					if (!character.HasProfession(Profession.Enchanting)) 
+					{
+						if (enchant.Slot == ItemSlot.Finger)
+						{
+							return false;
+						}
+					}
+					if (!character.HasProfession(Profession.Engineering))
+					{
+						if (name.Contains("Mind Amplification Dish")   ||
+							name.Contains("Flexweave Underlay")        ||
+							name.Contains("Hyperspeed Accelerators")   ||
+							name.Contains("Reticulated Armor Webbing") ||
+							name.Contains("Nitro Boosts") ||
+							name.Contains("Springy Arachnoweave") ||
+							name.Contains("Hand-Mounted"))
+						{
+							return false;
+						}
+					}
+					if (!character.HasProfession(Profession.Inscription))
+					{
+						if (name.Contains("Master's")
+							&& !name.Contains("Spellthread"))
+						{
+							return false;
+						}
+					}
+					if (!character.HasProfession(Profession.Leatherworking))
+					{
+						if (name.Contains("Fur Lining") ||
+							name.Contains("Nerubian Leg Reinforcements"))
+						{
+							return false;
+						}
+					}
+					if (!character.HasProfession(Profession.Tailoring))
+					{
+						if (name.Contains("Embroidery")
+							|| name.Contains("Sanctified Spellthread")
+							|| name.Contains("Master's Spellthread"))
+						{
+							return false;
+						}
+					}
+				}
+				#endregion
+				return true;
+			} catch (Exception) { return true; }
+		}
 
-        /// <summary>
-        /// Checks if the enchant has relevant stats as defined by the model. If not, it will hide the enchant as unnecessary.
-        /// <para>If you have the option set to Hide Enchants based on Professions, it will also make that check.</para>
-        /// </summary>
-        /// <param name="enchant">The Enchant to check</param>
-        /// <returns>Whether the Enchant should be hidden, based on Stats. If the option is set, also Professions.</returns>
-        public virtual bool IsEnchantRelevant(Enchant enchant, Character character)
+		/// <summary>
+		/// Checks if the enchant has relevant stats as defined by the model. If not, it will hide the enchant as unnecessary.
+		/// <para>If you have the option set to Hide Enchants based on Professions, it will also make that check.</para>
+		/// </summary>
+		/// <param name="enchant">The Enchant to check</param>
+		/// <returns>Whether the Enchant should be hidden, based on Stats. If the option is set, also Professions.</returns>
+		public virtual bool IsEnchantRelevant(Enchant enchant, Character character)
 		{
 			try 
-            {
-                return 
-                    IsEnchantAllowedForClass(enchant, character.Class) && 
-                    IsProfEnchantRelevant(enchant, character) && 
-                    HasRelevantStats(enchant.Stats);
+			{
+				return 
+					IsEnchantAllowedForClass(enchant, character.Class) && 
+					IsProfEnchantRelevant(enchant, character) && 
+					HasRelevantStats(enchant.Stats);
 			} 
-            catch
-            {
+			catch
+			{
 				return false;
 			}
 		}
 
 		public virtual bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
 		{
-            if (item != null && item.Unique && !ignoreUnique)
-            {
-                CharacterSlot otherSlot;
-                switch (slot)
-                {
-                    case CharacterSlot.Finger1:
-                        otherSlot = CharacterSlot.Finger2;
-                        break;
-                    case CharacterSlot.Finger2:
-                        otherSlot = CharacterSlot.Finger1;
-                        break;
-                    case CharacterSlot.Trinket1:
-                        otherSlot = CharacterSlot.Trinket2;
-                        break;
-                    case CharacterSlot.Trinket2:
-                        otherSlot = CharacterSlot.Trinket1;
-                        break;
-                    case CharacterSlot.MainHand:
-                        otherSlot = CharacterSlot.OffHand;
-                        break;
-                    case CharacterSlot.OffHand:
-                        otherSlot = CharacterSlot.MainHand;
-                        break;
-                    default:
-                        otherSlot = CharacterSlot.None;
-                        break;
-                }
-                if (otherSlot != CharacterSlot.None)
-                {
-                    if (character[otherSlot] != null && (item.Id == character[otherSlot].Item.Id || (item.UniqueId != null && item.UniqueId.Contains(character[otherSlot].Id)))) return false;
-                }
-            }
+			if (item != null && item.Unique && !ignoreUnique)
+			{
+				CharacterSlot otherSlot;
+				switch (slot)
+				{
+					case CharacterSlot.Finger1:
+						otherSlot = CharacterSlot.Finger2;
+						break;
+					case CharacterSlot.Finger2:
+						otherSlot = CharacterSlot.Finger1;
+						break;
+					case CharacterSlot.Trinket1:
+						otherSlot = CharacterSlot.Trinket2;
+						break;
+					case CharacterSlot.Trinket2:
+						otherSlot = CharacterSlot.Trinket1;
+						break;
+					case CharacterSlot.MainHand:
+						otherSlot = CharacterSlot.OffHand;
+						break;
+					case CharacterSlot.OffHand:
+						otherSlot = CharacterSlot.MainHand;
+						break;
+					default:
+						otherSlot = CharacterSlot.None;
+						break;
+				}
+				if (otherSlot != CharacterSlot.None)
+				{
+					if (character[otherSlot] != null && (item.Id == character[otherSlot].Item.Id || (item.UniqueId != null && item.UniqueId.Contains(character[otherSlot].Id)))) return false;
+				}
+			}
 			return item.FitsInSlot(slot);
 		}
 
@@ -1382,201 +1382,201 @@ namespace Rawr
 			return (object)character.MainHand == null || character.MainHand.Slot != ItemSlot.TwoHand;
 		}
 
-        public virtual bool CanUseAmmo
-        {
-            get { return false; }
-        }
+		public virtual bool CanUseAmmo
+		{
+			get { return false; }
+		}
 
-        /// <summary>
-        /// Get the relative stat values for all relevant Stats of the given Character and it's current Model.
-        /// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
-        /// Note that these are volatile and should be updated whenever any aspect of the character is changed.
-        /// </summary>
-        /// <param name="character">The character for which to calculate the relative stat values.</param>
-        /// <returns>An array of the comparitive calculations for each of the relative stat values.</returns>
-        public static ComparisonCalculationBase[] GetRelativeStatValues(Character character)
-        {
-            List<ComparisonCalculationBase> retComparisonCalcutions = new List<ComparisonCalculationBase>();
-            //
+		/// <summary>
+		/// Get the relative stat values for all relevant Stats of the given Character and it's current Model.
+		/// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
+		/// Note that these are volatile and should be updated whenever any aspect of the character is changed.
+		/// </summary>
+		/// <param name="character">The character for which to calculate the relative stat values.</param>
+		/// <returns>An array of the comparitive calculations for each of the relative stat values.</returns>
+		public static ComparisonCalculationBase[] GetRelativeStatValues(Character character)
+		{
+			List<ComparisonCalculationBase> retComparisonCalcutions = new List<ComparisonCalculationBase>();
+			//
 			Stats allStats = new Stats();
 			for (int i = 0; i < allStats._rawAdditiveData.Length; i++) allStats._rawAdditiveData[i] = 1f;
 			
-            float divisor = 1.0f;
-            IDictionary<PropertyInfo, float> relevantStats = Calculations.GetRelevantStats(allStats).Values(x => x > 0);
-            foreach (KeyValuePair<PropertyInfo, float> pair in relevantStats)
-            {
-                ComparisonCalculationBase ccb = GetRelativeStatValue(character, pair.Key);
-                if (ccb != null && ccb.OverallPoints != 0f) { 
-                    retComparisonCalcutions.Add(ccb); 
-                    if(ccb.getBaseStatOption(character) && ccb.Name.Equals(ccb.BaseStat))
-                        divisor = ccb.OverallPoints;
-                }
-            }
-            // apply Relative stats divisor to adjust scaling to 1.00 for Base Stat
-            if (divisor != 1.0f && divisor != 0.0f)
-                foreach (ComparisonCalculationBase ccb in retComparisonCalcutions)
-                {
-                    for (int i = 0; i < ccb.SubPoints.Length; i++)
-                        ccb.SubPoints[i] /= divisor;
-                    ccb.OverallPoints /= divisor;
-                }
+			float divisor = 1.0f;
+			IDictionary<PropertyInfo, float> relevantStats = Calculations.GetRelevantStats(allStats).Values(x => x > 0);
+			foreach (KeyValuePair<PropertyInfo, float> pair in relevantStats)
+			{
+				ComparisonCalculationBase ccb = GetRelativeStatValue(character, pair.Key);
+				if (ccb != null && ccb.OverallPoints != 0f) { 
+					retComparisonCalcutions.Add(ccb); 
+					if(ccb.getBaseStatOption(character) && ccb.Name.Equals(ccb.BaseStat))
+						divisor = ccb.OverallPoints;
+				}
+			}
+			// apply Relative stats divisor to adjust scaling to 1.00 for Base Stat
+			if (divisor != 1.0f && divisor != 0.0f)
+				foreach (ComparisonCalculationBase ccb in retComparisonCalcutions)
+				{
+					for (int i = 0; i < ccb.SubPoints.Length; i++)
+						ccb.SubPoints[i] /= divisor;
+					ccb.OverallPoints /= divisor;
+				}
 
-            // Return results
-            return retComparisonCalcutions.ToArray();
-        }
+			// Return results
+			return retComparisonCalcutions.ToArray();
+		}
 
-        /// <summary>
-        /// Get the relative stat value for the given property (of a Stats object) of the given Character.
-        /// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
-        /// Note that these values are volatile and should be updated whenever any aspect of the 
-        /// character is changed.
-        /// </summary>
-        /// <param name="character">The character for which to calculate the relative stat values.</param>
-        /// <param name="property">The property of a Stats object for which to get the relative stat value.</param>
-        /// <returns>The comparitive calculations of the relative stat value of the given Property (of a 
-        /// Stats object) for the given Character.</returns>
-        public static ComparisonCalculationBase GetRelativeStatValue(Character character, PropertyInfo property)
-        {
-            Item item = new Item() { Stats = new Stats() };
-            return GetRelativeStatValue(character, property, item, 1.0f);
-        }
+		/// <summary>
+		/// Get the relative stat value for the given property (of a Stats object) of the given Character.
+		/// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
+		/// Note that these values are volatile and should be updated whenever any aspect of the 
+		/// character is changed.
+		/// </summary>
+		/// <param name="character">The character for which to calculate the relative stat values.</param>
+		/// <param name="property">The property of a Stats object for which to get the relative stat value.</param>
+		/// <returns>The comparitive calculations of the relative stat value of the given Property (of a 
+		/// Stats object) for the given Character.</returns>
+		public static ComparisonCalculationBase GetRelativeStatValue(Character character, PropertyInfo property)
+		{
+			Item item = new Item() { Stats = new Stats() };
+			return GetRelativeStatValue(character, property, item, 1.0f);
+		}
 
-        /// <summary>
-        /// Get the relative stat value for the given property (of a Stats object) of the given Character.
-        /// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
-        /// Note that these values are volatile and should be updated whenever any aspect of the 
-        /// character is changed.
-        /// </summary>
-        /// <param name="character">The character for which to calculate the relative stat values.</param>
-        /// <param name="property">The property of a Stats object for which to get the relative stat value.</param>
-        /// <param name="item">Offset from character at which to compute the relative stat value.</param>
-        /// <param name="scale">Value of how much of the property we want to evaluate.</param>
-        /// <returns>The comparitive calculations of the relative stat value of the given Property (of a 
-        /// Stats object) for the given Character.</returns>
-        public static ComparisonCalculationBase GetRelativeStatValue(Character character, PropertyInfo property, Item item, float scale)
-        {
-            const float resolution = 0.005f; // the minimum resolution of change for the purpose of testing continuity and determining step locations
-            ComparisonCalculationBase ccb = null;
-            float minRange = CommonStat.GetCommonStatMinimumRange(property);
-            if (minRange >= 0)
-            {
-                // Get change bounds
-                CharacterCalculationsBase charCalcsBase = Calculations.GetCharacterCalculations(character, item, false, false, false);
-                float basePoints = charCalcsBase.OverallPoints;
-                float baseOffset = (float)property.GetValue(item.Stats, null);
-                float upperChangePoint = baseOffset + 1.0f;
-                float lowerChangePoint = baseOffset + 0.0f;
-                if (!PropertyValueIsContinuous(character, baseOffset, basePoints, property, item, resolution))
-                {
-                    upperChangePoint = GetStatValueUpperChangePoint(character, basePoints, property, item, baseOffset + minRange + resolution, baseOffset + minRange + 10.0f, resolution);
-                    lowerChangePoint = GetStatValueLowerChangePoint(character, basePoints, property, item, baseOffset - minRange - 10.0f, baseOffset - minRange, resolution);
-                }
-                float changePointDifference = upperChangePoint - lowerChangePoint;
-                // Get new overall points with the [upperChangePoint] improvement
-                property.SetValue(item.Stats, upperChangePoint, null);
-                item.InvalidateCachedData();
+		/// <summary>
+		/// Get the relative stat value for the given property (of a Stats object) of the given Character.
+		/// See http://www.wowhead.com/?help=stat-weighting for more info of stat values.
+		/// Note that these values are volatile and should be updated whenever any aspect of the 
+		/// character is changed.
+		/// </summary>
+		/// <param name="character">The character for which to calculate the relative stat values.</param>
+		/// <param name="property">The property of a Stats object for which to get the relative stat value.</param>
+		/// <param name="item">Offset from character at which to compute the relative stat value.</param>
+		/// <param name="scale">Value of how much of the property we want to evaluate.</param>
+		/// <returns>The comparitive calculations of the relative stat value of the given Property (of a 
+		/// Stats object) for the given Character.</returns>
+		public static ComparisonCalculationBase GetRelativeStatValue(Character character, PropertyInfo property, Item item, float scale)
+		{
+			const float resolution = 0.005f; // the minimum resolution of change for the purpose of testing continuity and determining step locations
+			ComparisonCalculationBase ccb = null;
+			float minRange = CommonStat.GetCommonStatMinimumRange(property);
+			if (minRange >= 0)
+			{
+				// Get change bounds
+				CharacterCalculationsBase charCalcsBase = Calculations.GetCharacterCalculations(character, item, false, false, false);
+				float basePoints = charCalcsBase.OverallPoints;
+				float baseOffset = (float)property.GetValue(item.Stats, null);
+				float upperChangePoint = baseOffset + 1.0f;
+				float lowerChangePoint = baseOffset + 0.0f;
+				if (!PropertyValueIsContinuous(character, baseOffset, basePoints, property, item, resolution))
+				{
+					upperChangePoint = GetStatValueUpperChangePoint(character, basePoints, property, item, baseOffset + minRange + resolution, baseOffset + minRange + 10.0f, resolution);
+					lowerChangePoint = GetStatValueLowerChangePoint(character, basePoints, property, item, baseOffset - minRange - 10.0f, baseOffset - minRange, resolution);
+				}
+				float changePointDifference = upperChangePoint - lowerChangePoint;
+				// Get new overall points with the [upperChangePoint] improvement
+				property.SetValue(item.Stats, upperChangePoint, null);
+				item.InvalidateCachedData();
 				CharacterCalculationsBase charCalcsUpper = Calculations.Instance.GetCharacterCalculations(character, item, false, false, false);
 				// Get new overall points with the [lowerChangePoint] improvement
 				property.SetValue(item.Stats, lowerChangePoint, null);
 				item.InvalidateCachedData();
 				CharacterCalculationsBase charCalcsLower = Calculations.Instance.GetCharacterCalculations(character, item, false, false, false);
 				// Create new CCB, populate, and return it.
-                ccb = Calculations.CreateNewComparisonCalculation();
+				ccb = Calculations.CreateNewComparisonCalculation();
 				ccb.Name = Extensions.DisplayName(property);
-                // Populate SubPoints and OverallPoints
-                ccb.SubPoints = new float[charCalcsUpper.SubPoints.Length];
-                for (int i = 0; i < charCalcsUpper.SubPoints.Length; i++)
-                {
-                    ccb.SubPoints[i] = scale * (charCalcsUpper.SubPoints[i] - charCalcsLower.SubPoints[i]) / changePointDifference;
-                    ccb.OverallPoints += ccb.SubPoints[i];
-                }
-                ccb.Description = string.Format("If you had {0} more{1}", scale, ccb.Name);
-            }
-            return ccb;
-        }
+				// Populate SubPoints and OverallPoints
+				ccb.SubPoints = new float[charCalcsUpper.SubPoints.Length];
+				for (int i = 0; i < charCalcsUpper.SubPoints.Length; i++)
+				{
+					ccb.SubPoints[i] = scale * (charCalcsUpper.SubPoints[i] - charCalcsLower.SubPoints[i]) / changePointDifference;
+					ccb.OverallPoints += ccb.SubPoints[i];
+				}
+				ccb.Description = string.Format("If you had {0} more{1}", scale, ccb.Name);
+			}
+			return ccb;
+		}
 
-        /// <summary>
-        /// Determine whether the property in question is continuous or follows a "step" progression (at which point change points 
-        /// must be determined).  The simplest way to do this is check whether adding or subtracting 0.01 from the stat produces a 
-        /// different value in both the addition and subtraction case.  If it does, then the property is continuous (at least to 
-        /// the resolution of the given resolution).
-        /// </summary>
-        /// <param name="character">The character whose property is being evaluated for continuity.</param>
-        /// <param name="baseOffset">Base offset of the property.</param>
-        /// <param name="basePoints">The base number of points that the character has.</param>
-        /// <param name="property">The property to evaluate for continuity.</param>
-        /// <param name="tagItem">A "tag" item to reduce memory allocation.</param>
-        /// <param name="resolution">The resolution at which continuity is being checked.</param>
-        /// <returns>Whether the property was deemed continuous.</returns>
-        private static bool PropertyValueIsContinuous(Character character, float baseOffset, float basePoints, PropertyInfo property, Item tagItem, float resolution)
-        {
-            bool continuous;
-            property.SetValue(tagItem.Stats, baseOffset + resolution, null);
-            tagItem.InvalidateCachedData();
-            continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
-            // if continuity was detected in the first alteration, then test the second direction (to guard against cases 
-            // where we just happen to be on the threshold)
-            if (continuous)
-            {
-                property.SetValue(tagItem.Stats, baseOffset - resolution, null);
-                tagItem.InvalidateCachedData();
-                // Since we've already determined that the first alteration was continuous, whether this one is 
-                // determines whether both are continuous.
-                continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
-            }
-            return continuous;
-        }
+		/// <summary>
+		/// Determine whether the property in question is continuous or follows a "step" progression (at which point change points 
+		/// must be determined).  The simplest way to do this is check whether adding or subtracting 0.01 from the stat produces a 
+		/// different value in both the addition and subtraction case.  If it does, then the property is continuous (at least to 
+		/// the resolution of the given resolution).
+		/// </summary>
+		/// <param name="character">The character whose property is being evaluated for continuity.</param>
+		/// <param name="baseOffset">Base offset of the property.</param>
+		/// <param name="basePoints">The base number of points that the character has.</param>
+		/// <param name="property">The property to evaluate for continuity.</param>
+		/// <param name="tagItem">A "tag" item to reduce memory allocation.</param>
+		/// <param name="resolution">The resolution at which continuity is being checked.</param>
+		/// <returns>Whether the property was deemed continuous.</returns>
+		private static bool PropertyValueIsContinuous(Character character, float baseOffset, float basePoints, PropertyInfo property, Item tagItem, float resolution)
+		{
+			bool continuous;
+			property.SetValue(tagItem.Stats, baseOffset + resolution, null);
+			tagItem.InvalidateCachedData();
+			continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
+			// if continuity was detected in the first alteration, then test the second direction (to guard against cases 
+			// where we just happen to be on the threshold)
+			if (continuous)
+			{
+				property.SetValue(tagItem.Stats, baseOffset - resolution, null);
+				tagItem.InvalidateCachedData();
+				// Since we've already determined that the first alteration was continuous, whether this one is 
+				// determines whether both are continuous.
+				continuous = basePoints != Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
+			}
+			return continuous;
+		}
 
-        /// <summary>
-        /// Do a "binary search" to ascertain the value between the given bounds whose absolute value 
-        /// is greatest but at which no change in the OverallPoints value of the given Character occurs.
-        /// </summary>
-        /// <param name="character">The character for which the change point is to be determined.</param>
-        /// <param name="basePoints">The base OverallPoints value of the character, the value from 
-        /// which we are ascertaining the change point as a consequence of changing the given 
-        /// Property's value.</param>
-        /// <param name="property">The property whose ability to change the given Character's 
-        /// OverallPoints value we are evaluating.</param>
-        /// <param name="tagItem">A tag item (used for the purposes of avoiding repeated memory 
-        /// allocations) that will be used to reflect the changes in doing the OverallPoints 
-        /// calcualation.</param>
-        /// <param name="upperBound">The upper bound of the binary search space.  This must initially reflect a value at which OverallPoints always changes.</param>
-        /// <param name="lowerBound">The lower bound of the binary search space.  This must initially reflect a value at which no change in OverallPoints occurs.</param>
-        /// <returns>The value at which the OverallPoints of the given character is not changed but 
-        /// at which the OverallPoints of the given Character *would* change if 
-        /// Math.Sign(upperBound) * 0.01
-        /// were added to it.</returns>
-        private static float GetStatValueUpperChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float lowerBound, float upperBound, float resolution)
-        {
-            // Exit condition: If we've reached a change point at the smallest desired 
-            // resolution, return the "no change" value.
-            if ((upperBound - lowerBound) <= resolution)
-            {
-                return upperBound;
-            }
-            // Recusive condition: We still need to reduce the difference between the 
-            // upper and lower bounds of the range we are searching.
-            else
-            {
-                // Set the stat of the item to the mid point of the range to test which 
-                // half contains the change point.
-                float midPoint = (upperBound + lowerBound) / 2f;
-                property.SetValue(tagItem.Stats, midPoint, null);
-                tagItem.InvalidateCachedData();
-                // If the midpoint leaves the OverallPoints unchanged, the change point 
-                // is in the upper half of the given range.
-                float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
-                if (basePoints == newOverall)
-                {
+		/// <summary>
+		/// Do a "binary search" to ascertain the value between the given bounds whose absolute value 
+		/// is greatest but at which no change in the OverallPoints value of the given Character occurs.
+		/// </summary>
+		/// <param name="character">The character for which the change point is to be determined.</param>
+		/// <param name="basePoints">The base OverallPoints value of the character, the value from 
+		/// which we are ascertaining the change point as a consequence of changing the given 
+		/// Property's value.</param>
+		/// <param name="property">The property whose ability to change the given Character's 
+		/// OverallPoints value we are evaluating.</param>
+		/// <param name="tagItem">A tag item (used for the purposes of avoiding repeated memory 
+		/// allocations) that will be used to reflect the changes in doing the OverallPoints 
+		/// calcualation.</param>
+		/// <param name="upperBound">The upper bound of the binary search space.  This must initially reflect a value at which OverallPoints always changes.</param>
+		/// <param name="lowerBound">The lower bound of the binary search space.  This must initially reflect a value at which no change in OverallPoints occurs.</param>
+		/// <returns>The value at which the OverallPoints of the given character is not changed but 
+		/// at which the OverallPoints of the given Character *would* change if 
+		/// Math.Sign(upperBound) * 0.01
+		/// were added to it.</returns>
+		private static float GetStatValueUpperChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float lowerBound, float upperBound, float resolution)
+		{
+			// Exit condition: If we've reached a change point at the smallest desired 
+			// resolution, return the "no change" value.
+			if ((upperBound - lowerBound) <= resolution)
+			{
+				return upperBound;
+			}
+			// Recusive condition: We still need to reduce the difference between the 
+			// upper and lower bounds of the range we are searching.
+			else
+			{
+				// Set the stat of the item to the mid point of the range to test which 
+				// half contains the change point.
+				float midPoint = (upperBound + lowerBound) / 2f;
+				property.SetValue(tagItem.Stats, midPoint, null);
+				tagItem.InvalidateCachedData();
+				// If the midpoint leaves the OverallPoints unchanged, the change point 
+				// is in the upper half of the given range.
+				float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem, false, false, false).OverallPoints;
+				if (basePoints == newOverall)
+				{
 					return GetStatValueUpperChangePoint(character, basePoints, property, tagItem, midPoint, upperBound, resolution);
-                }
-                // Otherwise, the change point is in the lower half of the given range.
-                else
-                {
+				}
+				// Otherwise, the change point is in the lower half of the given range.
+				else
+				{
 					return GetStatValueUpperChangePoint(character, basePoints, property, tagItem, lowerBound, midPoint, resolution);
-                }
-            }
-        }
+				}
+			}
+		}
 
 		private static float GetStatValueLowerChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float lowerBound, float upperBound, float resolution)
 		{
@@ -1609,7 +1609,7 @@ namespace Rawr
 				}
 			}
 		}
-    }
+	}
 
 	/// <summary>
 	/// Base CharacterCalculations class, which will hold the final result data of the calculations from
@@ -1642,48 +1642,48 @@ namespace Rawr
 		/// calculations defined in CharacterDisplayCalculationLabels.</returns>
 		public abstract Dictionary<string, string> GetCharacterDisplayCalculationValues();
 
-        /// <summary>
-        /// When true the application will first call GetCharacterDisplayCalculationValues to populate
-        /// the display with temporary values and start asynchronous call to GetAsynchronousCharacterDisplayCalculationValues.
-        /// When the call is complete it will refresh the display with updated values. If character is invalidated
-        /// before calculations are complete the old call will be aborted.
-        /// </summary>
-        public virtual bool RequiresAsynchronousDisplayCalculation
-        {
-            get
-            {
-                return false;
-            }
-        }
+		/// <summary>
+		/// When true the application will first call GetCharacterDisplayCalculationValues to populate
+		/// the display with temporary values and start asynchronous call to GetAsynchronousCharacterDisplayCalculationValues.
+		/// When the call is complete it will refresh the display with updated values. If character is invalidated
+		/// before calculations are complete the old call will be aborted.
+		/// </summary>
+		public virtual bool RequiresAsynchronousDisplayCalculation
+		{
+			get
+			{
+				return false;
+			}
+		}
 
-        /// <summary>
-        /// Same as GetCharacterDisplayCalculationValues, but used for long calculations.
-        /// </summary>
-        public virtual Dictionary<string, string> GetAsynchronousCharacterDisplayCalculationValues()
-        {
-            return GetCharacterDisplayCalculationValues();
-        }
+		/// <summary>
+		/// Same as GetCharacterDisplayCalculationValues, but used for long calculations.
+		/// </summary>
+		public virtual Dictionary<string, string> GetAsynchronousCharacterDisplayCalculationValues()
+		{
+			return GetCharacterDisplayCalculationValues();
+		}
 
-        /// <summary>
-        /// Called if character is invalidated before calculations are complete. Calling this should
-        /// terminate call to GetAsynchronousCharacterDisplayCalculationValues as soon as possible.
-        /// It is ok if GetAsynchronousCharacterDisplayCalculationValues returns null in this case.
-        /// </summary>
-        public virtual void CancelAsynchronousCharacterDisplayCalculation()
-        {
-        }
+		/// <summary>
+		/// Called if character is invalidated before calculations are complete. Calling this should
+		/// terminate call to GetAsynchronousCharacterDisplayCalculationValues as soon as possible.
+		/// It is ok if GetAsynchronousCharacterDisplayCalculationValues returns null in this case.
+		/// </summary>
+		public virtual void CancelAsynchronousCharacterDisplayCalculation()
+		{
+		}
 
-        /// <summary>
-        /// List of buffs that were automatically activated by the model during GetCharacterCalculations().
-        /// </summary>
-        private List<Buff> _autoActivatedBuffs = new List<Buff>();
-        public List<Buff> AutoActivatedBuffs
-        {
-            get
-            {
-                return _autoActivatedBuffs;
-            }
-        }
+		/// <summary>
+		/// List of buffs that were automatically activated by the model during GetCharacterCalculations().
+		/// </summary>
+		private List<Buff> _autoActivatedBuffs = new List<Buff>();
+		public List<Buff> AutoActivatedBuffs
+		{
+			get
+			{
+				return _autoActivatedBuffs;
+			}
+		}
 
 		public virtual float GetOptimizableCalculationValue(string calculation) { return 0f; }
 	}
@@ -1718,66 +1718,66 @@ namespace Rawr
 		/// </summary>
 		public abstract ItemInstance ItemInstance { get; set; }
 
-        /// <summary>
-        /// The Item, or other object, being rated. This property is used to build the tooltip for this
-        /// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
-        /// Item, a new blank item may be created for this field, containing just a Name and Stats.
-        /// </summary>
-        [XmlIgnore]
-        public abstract Item Item { get; set; }
+		/// <summary>
+		/// The Item, or other object, being rated. This property is used to build the tooltip for this
+		/// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
+		/// Item, a new blank item may be created for this field, containing just a Name and Stats.
+		/// </summary>
+		[XmlIgnore]
+		public abstract Item Item { get; set; }
 
-        /// <summary>
-        /// For Non-Item Tooltips, to show a descriptive statement where we might otherwise get nothing.
-        /// Implementing this for the Glyph Comparison charts first, then Talents, etc.
-        /// </summary>
-        public abstract string Description { get; set; }
+		/// <summary>
+		/// For Non-Item Tooltips, to show a descriptive statement where we might otherwise get nothing.
+		/// Implementing this for the Glyph Comparison charts first, then Talents, etc.
+		/// </summary>
+		public abstract string Description { get; set; }
 
-        /// <summary>
+		/// <summary>
 		/// Whether the object being rated is currently equipped by the character. This controls whether
 		/// the item's label is highlighted in light blue on the charts.
 		/// </summary>
 		public abstract bool Equipped { get; set; }
 
-        /// <summary>
-        /// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints
-        /// are based. Used by optimizer upgrade calculations.
-        /// </summary>
-        public ItemInstance[] CharacterItems { get; set; }
+		/// <summary>
+		/// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints
+		/// are based. Used by optimizer upgrade calculations.
+		/// </summary>
+		public ItemInstance[] CharacterItems { get; set; }
  
-        /// <summary>
-        /// Name of the Stat to set to 1.00 for relative stats calcs
-        /// </summary>
-        public virtual String BaseStat { get; set; }
-        
-        /// <summary>
-        /// User Option whether to use the Base Stat feature for relative stats calcs
-        /// </summary>
-        public virtual bool getBaseStatOption(Character character) { return false; }
-    }
+		/// <summary>
+		/// Name of the Stat to set to 1.00 for relative stats calcs
+		/// </summary>
+		public virtual String BaseStat { get; set; }
+		
+		/// <summary>
+		/// User Option whether to use the Base Stat feature for relative stats calcs
+		/// </summary>
+		public virtual bool getBaseStatOption(Character character) { return false; }
+	}
 
 #if RAWR3
-    /// <summary>
-    /// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
-    /// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
-    /// tab on the main form when the model is active. Should contain controls to edit the CalculationOptions
-    /// on the character.
-    /// </summary>
-    public interface ICalculationOptionsPanel
-    {
-        /// <summary>
-        /// The current character. Will be set whenever the model loads or a character is loaded.
-        /// 
-        /// IMPORTANT: Call Character.OnItemsChanged() after changing the value of any CalculationOptions,
-        /// other than in LoadCalculationOptions().
-        /// </summary>
-        Character Character
-        {
-            get;
-            set;
-        }
+	/// <summary>
+	/// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
+	/// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
+	/// tab on the main form when the model is active. Should contain controls to edit the CalculationOptions
+	/// on the character.
+	/// </summary>
+	public interface ICalculationOptionsPanel
+	{
+		/// <summary>
+		/// The current character. Will be set whenever the model loads or a character is loaded.
+		/// 
+		/// IMPORTANT: Call Character.OnItemsChanged() after changing the value of any CalculationOptions,
+		/// other than in LoadCalculationOptions().
+		/// </summary>
+		Character Character
+		{
+			get;
+			set;
+		}
 
-        System.Windows.Controls.UserControl PanelControl { get; }
-    }
+		System.Windows.Controls.UserControl PanelControl { get; }
+	}
 #else
 	/// <summary>
 	/// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.

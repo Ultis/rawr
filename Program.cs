@@ -4,43 +4,43 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-    public static class Program
-    {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+	public static class Program
+	{
+		/// <summary>
+		/// The main entry point for the application.
+		/// </summary>
 		[STAThread]
 		static void Main()
 		{
 #if !DEBUG
-            try
-            {
+			try
+			{
 #endif
-                bool bAppFirstInstance;
-                //use the app domain base directory to allow a second copy running in a different folder.
+				bool bAppFirstInstance;
+				//use the app domain base directory to allow a second copy running in a different folder.
 				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr-" + AppDomain.CurrentDomain.BaseDirectory.Replace('\\','|'), out bAppFirstInstance);
-                if (bAppFirstInstance)
-                {
-                    //RawrCatIntro();
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new FormMain());
-                }
-                else
-                {
-                    MessageBox.Show("Rawr is already running and cannot be opened a second time.");
-                }
-                //In release mode, the GC will collect oMutex right after it is created since it is not referenced anywhere else.
-                //This line prevents the GC from collecting the object until the App closes.
-                GC.KeepAlive(oMutex);
+				if (bAppFirstInstance)
+				{
+					//RawrCatIntro();
+					Application.EnableVisualStyles();
+					Application.SetCompatibleTextRenderingDefault(false);
+					Application.Run(new FormMain());
+				}
+				else
+				{
+					MessageBox.Show("Rawr is already running and cannot be opened a second time.");
+				}
+				//In release mode, the GC will collect oMutex right after it is created since it is not referenced anywhere else.
+				//This line prevents the GC from collecting the object until the App closes.
+				GC.KeepAlive(oMutex);
 #if !DEBUG
-            }
-            catch (Exception ex)
-            {
-               MessageBox.Show(GetErrorMessage(ex), "Rawr Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+			}
+			catch (Exception ex)
+			{
+			   MessageBox.Show(GetErrorMessage(ex), "Rawr Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+			}
 #endif
-        }
+		}
 
 		private static string GetErrorMessage(Exception ex)
 		{
@@ -73,7 +73,7 @@ namespace Rawr
 			}
 			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
 		}
-    }
+	}
 }
 
 //cold ground below...
