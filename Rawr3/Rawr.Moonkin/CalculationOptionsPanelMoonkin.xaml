@@ -1,9 +1,8 @@
-﻿<UserControl
+﻿<UserControl xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
 xmlns:System="clr-namespace:System;assembly=mscorlib"
 mc:Ignorable="d"
 d:DesignWidth="330" d:DesignHeight="600"
@@ -12,7 +11,7 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 >
 
 <UserControl.Resources>
-    <local:CalculationOptionsMoonkin x:Key="CalculationOptionsMoonkinDataSource" d:IsDataSource="True"/>
+	<local:CalculationOptionsMoonkin x:Key="CalculationOptionsMoonkinDataSource" d:IsDataSource="True"/>
 </UserControl.Resources>
 
 <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsMoonkinDataSource}}">
@@ -36,27 +35,26 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 		<ColumnDefinition Width="*"/>
 		<ColumnDefinition Width="*"/>
 	</Grid.ColumnDefinitions>
-    
 	<TextBlock x:Name="LB_Level" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Target Level:" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_Level" Grid.Column="1" d:LayoutOverrides="Height" Margin="2" Maximum="83" Minimum="80" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Center" />
+	<toolkit:NumericUpDown x:Name="NUD_Level" Grid.Column="1" d:LayoutOverrides="Height" Margin="2" Maximum="83" Minimum="80" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" VerticalAlignment="Center" />
 	<TextBlock x:Name="LB_Latency" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Latency:" Grid.Row="1" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_Latency" Margin="2" Increment="10" Maximum="500" Minimum="50" Value="{Binding ExternalLatency, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
+	<toolkit:NumericUpDown x:Name="NUD_Latency" Margin="2" Increment="10" Maximum="500" Minimum="50" Value="{Binding ExternalLatency, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_Latency2" Margin="2" Text="ms" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_Duration" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Fight Length:" Grid.Row="2" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Value="{Binding FightLength, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" DecimalPlaces="1" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
+	<toolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Value="{Binding FightLength, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" DecimalPlaces="1" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_Duration2" Margin="2" Text="mins" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center"/>
 	<CheckBox x:Name="CK_InnervateDelay" Margin="4,2,2,2" Grid.Row="3" IsChecked="{Binding Mode=TwoWay, Path=Innervate, UpdateSourceTrigger=Default}" Content="Innervate Delay" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_InnervateDelay" Margin="2" Value="{Binding InnervateDelay, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" DecimalPlaces="1" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding Innervate, Mode=OneWay}"/>
+	<toolkit:NumericUpDown x:Name="NUD_InnervateDelay" Margin="2" Value="{Binding InnervateDelay, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="15" Minimum="1" DecimalPlaces="1" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding Innervate, Mode=OneWay}"/>
 	<TextBlock x:Name="LB_InnervateDelay2" Margin="2" Text="mins" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center"/>
 	<CheckBox x:Name="CK_UseManaPots" Margin="4,2,2,2" Content="Mana Potion Type:" Grid.Row="4" IsChecked="{Binding Mode=TwoWay, Path=ManaPots, UpdateSourceTrigger=Default}" VerticalAlignment="Center"/>
 	<ComboBox x:Name="CB_UseManaPots" Margin="2" Grid.Column="1" Grid.Row="4" SelectedIndex="0" SelectedItem="{Binding ManaPotType, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" VerticalAlignment="Center" IsEnabled="{Binding ManaPots, Mode=OneWay}">
 		<System:String>Runic Mana Potion</System:String>
 	</ComboBox>
 	<TextBlock x:Name="LB_ReplenUptime" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Replenishment Uptime:" Grid.Row="5" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_ReplenUptime" Margin="2" Value="{Binding ReplenishmentUptime, Converter={StaticResource PercentConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" DecimalPlaces="1" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center"/>
+	<toolkit:NumericUpDown x:Name="NUD_ReplenUptime" Margin="2" Value="{Binding ReplenishmentUptime, Converter={StaticResource PercentConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" DecimalPlaces="1" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_ReplenUptime2" Margin="2" Text="%" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_TreantLifeSpan" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Treant Lifespan:" Grid.Row="6" VerticalAlignment="Center"/>
-	<inputToolkit:NumericUpDown x:Name="NUD_TreantLifeSpan" Margin="2" Value="{Binding TreantLifespan, Converter={StaticResource PercentConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" DecimalPlaces="1" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center"/>
+	<toolkit:NumericUpDown x:Name="NUD_TreantLifeSpan" Margin="2" Value="{Binding TreantLifespan, Converter={StaticResource PercentConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" DecimalPlaces="1" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_TreantLifeSpan2" Margin="2" Text="%" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_UserRotation" Margin="4,2,2,2" TextWrapping="NoWrap" Text="User Rotation:" Grid.Row="7" VerticalAlignment="Center"/>
 	<ComboBox x:Name="CB_UserRotation" Margin="2" Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Mode=TwoWay, Path=UserRotation, UpdateSourceTrigger=Default}" Grid.ColumnSpan="2" VerticalAlignment="Center">

@@ -330,7 +330,7 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <visualizationToolkit:Legend x:Name="Legend" Title="{TemplateBinding LegendTitle}" Style="{TemplateBinding LegendStyle}" Grid.Row="0" Grid.Column="0" />
+                                <visualizationToolkit:Legend x:Name="Legend" Header="{TemplateBinding LegendTitle}" Style="{TemplateBinding LegendStyle}" Grid.Row="0" Grid.Column="0" />
                                 <TextBlock TextWrapping="Wrap" x:Name="Warning" Text="{TemplateBinding Text}" Grid.Row="0" Grid.Column="1" />
                                 <chartingprimitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}" Grid.Row="1" Grid.ColumnSpan="2">
                                     <Grid Canvas.ZIndex="-1" Style="{TemplateBinding PlotAreaStyle}" />
