@@ -290,7 +290,7 @@ namespace Rawr.Bosses
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = ( BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ] / 1.3f ),
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ ( (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 1f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
