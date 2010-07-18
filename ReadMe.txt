@@ -34,8 +34,6 @@ Once you've got it running, you should see a basic character-screen-like layout 
 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 
-~Astrylian on US-Suramar, cnervig@hotmail.com
-
 FAQ
 ---
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
@@ -103,7 +101,7 @@ Rawr's source code is freely available at its website, http://www.codeplex.com/R
 
 Rawr on Mac OS X / Linux
 ------------------------
-NOTE: Rawr v3 is currently in development, and will run natively on OSX Intel. Contact me (cnervig@hotmail.com) if you're interested in beta testing it. Until then, I can't offer any support for running it as describe here, (though it does work for many people):
+NOTE: Rawr v3 is currently in development, and will run natively on OSX Intel. Contact me (WarcraftRawr@gmail.com) if you're interested in beta testing it. Until then, I can't offer any support for running it as describe here, (though it does work for many people):
 
 You can run Rawr using Mono. Mono is a set of libraries that mimic the .NET Framework, which Rawr is built on, allowing it to run on OSX (and Linux). However, unfortunately, it's extremely buggy. If you want to give it a try, please do, it very well may work just fine for you. For most users, running Rawr via some form of emulation (Boot Camp, VMWare Fusion, Parallels, etc) will give you the best results, though. 
 
@@ -111,7 +109,7 @@ That said, I'm doing what I can to make Rawr available to Mac users, and that me
 
 How to Run Rawr on OSX:
  1) Install Mono (http://www.go-mono.com/mono-downloads/download.html) for Mac OS X. 
-	1a) NOTE: At time of writing, Mono v2.4 is the latest, however, it's broken; use Mono v2.2 if you have issues with the latest version.
+    1a) NOTE: At time of writing, Mono v2.4 is the latest, however, it's broken; use Mono v2.2 if you have issues with the latest version.
  2) Unzip Rawr. 
  3) Open the Terminal, navigate to where you unzipped Rawr (look for basic guides to the Terminal, if you need help with that), and type 'mono Rawr.exe', and hit enter. That should launch Rawr for you. 
  
@@ -958,86 +956,86 @@ Here's a quick rundown of the status of each model:
    •Rawr.Warlock: Partially functional for 3.0 & level 80.
     
     
- As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!
+ As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at WarcraftRawr@gmail.com. Thanks, and look forward to frequent updates!
 
 v2.1.9:
-	Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
-	Updated parsing for a large number of trinkets/gems whose wording changed in WoW 3.0.8.
-	Support for (or more accurate support for) a variety of additional trinkets, in many models.
-	Fixed the data for a few profession bonuses which changed.
-	Updated the tooltips on all talents.
-	Tweaked the Relative Stat Values chart a bit to avoid some anomalies with rounding and stats which provide multiple benefits (ie, both Crit and AP from Agi for Cats).
-	Rawr.Cat/Bear: Fix for crit chance reduction against bosses, and fix for display of crit chance debuffs.
-	Rawr.Tree: Fixes for haste calculations
-	Rawr.Mage: Updates for WoW 3.0.8/hotfix changes. Added Scaling vs Spirit chart.
-	Rawr.RestoSham: Support for some glyphs, and more customizable healing rotations. Also enabled cloth/leather.
-	Rawr.ProtWarr: Major updates. Threat should be accurate, and a variety of minor fixes and additional options
-	Rawr.TankDK/DPSDK: Updated for 3.0.8 changes. A wide variety of major fixes and improvements.
-	Rawr.HealPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
-	Rawr.Elemental: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Elemental in conjunction with other theorycrafting tools.
+    Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
+    Updated parsing for a large number of trinkets/gems whose wording changed in WoW 3.0.8.
+    Support for (or more accurate support for) a variety of additional trinkets, in many models.
+    Fixed the data for a few profession bonuses which changed.
+    Updated the tooltips on all talents.
+    Tweaked the Relative Stat Values chart a bit to avoid some anomalies with rounding and stats which provide multiple benefits (ie, both Crit and AP from Agi for Cats).
+    Rawr.Cat/Bear: Fix for crit chance reduction against bosses, and fix for display of crit chance debuffs.
+    Rawr.Tree: Fixes for haste calculations
+    Rawr.Mage: Updates for WoW 3.0.8/hotfix changes. Added Scaling vs Spirit chart.
+    Rawr.RestoSham: Support for some glyphs, and more customizable healing rotations. Also enabled cloth/leather.
+    Rawr.ProtWarr: Major updates. Threat should be accurate, and a variety of minor fixes and additional options
+    Rawr.TankDK/DPSDK: Updated for 3.0.8 changes. A wide variety of major fixes and improvements.
+    Rawr.HealPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
+    Rawr.Elemental: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Elemental in conjunction with other theorycrafting tools.
 
 v2.1.8:
-	Fixed a bug in the Optimizer that would stop it from equipping the optimized gearset when any item gemmings to be equipped weren't in the itemcache already.
-	Fixed several bugs with Wowhead parsing, and updated the default itemcache with the new 3.0.8 data from Wowhead.
-	Added the two new enchants from 3.0.8.
-	Rawr.Healadin: Removed profession benefits from Options since they are now all correctly modelled in there respective places. Support for Judgements missing, and effect of Hit rating. Fixed bug that capped HL too high incorrectly. Added support for FoL Glyph. Updated 2T6 and 4T6 bonuses.
-	Rawr.HealPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
-	Rawr.Tankadin: Adjusted calculations for new Sacred Duty.
-	Rawr.Retribution: Fix for loading the saved glyphs.
-	Rawr.Tree: New custom chart for Spell Rotations. New feature to choose the ratio of burst vs sustained healing used in Overall ratings. 
-	Rawr.Mage: Added Arcane Scorch cycles.
-	Rawr.Cat: Added 4T7 calculations.
-	Rawr.ProtWarr: Tweak to the Vitality calculations to match WoW's rounding.
-	
+    Fixed a bug in the Optimizer that would stop it from equipping the optimized gearset when any item gemmings to be equipped weren't in the itemcache already.
+    Fixed several bugs with Wowhead parsing, and updated the default itemcache with the new 3.0.8 data from Wowhead.
+    Added the two new enchants from 3.0.8.
+    Rawr.Healadin: Removed profession benefits from Options since they are now all correctly modelled in there respective places. Support for Judgements missing, and effect of Hit rating. Fixed bug that capped HL too high incorrectly. Added support for FoL Glyph. Updated 2T6 and 4T6 bonuses.
+    Rawr.HealPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
+    Rawr.Tankadin: Adjusted calculations for new Sacred Duty.
+    Rawr.Retribution: Fix for loading the saved glyphs.
+    Rawr.Tree: New custom chart for Spell Rotations. New feature to choose the ratio of burst vs sustained healing used in Overall ratings. 
+    Rawr.Mage: Added Arcane Scorch cycles.
+    Rawr.Cat: Added 4T7 calculations.
+    Rawr.ProtWarr: Tweak to the Vitality calculations to match WoW's rounding.
+    
 v2.1.7:
-	All models now contain a Relative Stat Values chart, which dynamically shows the value of various common stats to your current character. Some models had charts similar to this, and most of those still remain, in case they show any additional stats that this universal chart doesn't, but they will be removed in the next major version. As before, remember that these are only outputs from Rawr's calculations, not used internally by Rawr. Also, still remember that they will never be 100% accurate, and to always update whatever you use them for, whenver your gear/enchant/buffs change, in order to maintain as close to accurate as you can.
-	Fixed a couple more bugs with Wowhead parsing, and made it more resilient to errors (won't break your whole item cache update if it does hit an error).
-	Fixed a bug that would clear your available items on reload character from Armory.
-	You can now create filters that apply only to gems, or only to gear. (Not used by default filters yet, though)
-	Added support for several more trinket proc/effects.
-	Equipped items will always be shown in item listings, even if they would otherwise be filtered out.
-	Equipped items will now be marked as available, when re/loading from the Armory
-	Rawr.Cat/Bear: Adjusted calculations for the new FeralAP system. Weapon DPS is now counted as attack power, and items no longer show innate feral attack power. I've manually updated all feral weapons to have their new DPS values, but the actual stats on the items are still from 3.0.3 (ie, there's still Str on them, instead of plain AP). Please refresh the data on these items, once Wowhead/Armory update to 3.0.8.
-	Rawr.Tree: Major improvements all around. Still not fully complete.
-	Rawr.RestoSham: Major improvements all around. Still not fully complete.
-	Rawr.Retribution: Base miss chance lowered to 8%.
-	Rawr.Tankadin: Base miss chance lowered to 8%.
-	Rawr.ProtWarr: Block Value formula changed. Updates to armor calculations to account for Base vs Bonus Armor. Base racial stats updated. Support for the Armored to the Teeth talent.
-	Rawr.HealPriest/ShadowPriest: Initial Glyph support.
-	Rawr.Mage: Significant updates to 3.0.8 support and to Arcane cycles. Added Rune of Razorice and Lightweave Embroidery. Enhanced hit rating tooltip. Fix for FBScPyro never being chosen when Global Optimizations were on. Added shatter combo cycles for Frost.
-	Rawr.DPSWarr: Initial draft of 3.0 version. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.DPSWarr in conjunction with other theorycrafting tools.
-	Rawr.TankDK: Fixed expertise calculations.
-	Rawr.Rogue/Warlock: Nothing new, yet, but wanted to mention that we have a ton of active development on these models lately, and new versions are coming soon.
+    All models now contain a Relative Stat Values chart, which dynamically shows the value of various common stats to your current character. Some models had charts similar to this, and most of those still remain, in case they show any additional stats that this universal chart doesn't, but they will be removed in the next major version. As before, remember that these are only outputs from Rawr's calculations, not used internally by Rawr. Also, still remember that they will never be 100% accurate, and to always update whatever you use them for, whenver your gear/enchant/buffs change, in order to maintain as close to accurate as you can.
+    Fixed a couple more bugs with Wowhead parsing, and made it more resilient to errors (won't break your whole item cache update if it does hit an error).
+    Fixed a bug that would clear your available items on reload character from Armory.
+    You can now create filters that apply only to gems, or only to gear. (Not used by default filters yet, though)
+    Added support for several more trinket proc/effects.
+    Equipped items will always be shown in item listings, even if they would otherwise be filtered out.
+    Equipped items will now be marked as available, when re/loading from the Armory
+    Rawr.Cat/Bear: Adjusted calculations for the new FeralAP system. Weapon DPS is now counted as attack power, and items no longer show innate feral attack power. I've manually updated all feral weapons to have their new DPS values, but the actual stats on the items are still from 3.0.3 (ie, there's still Str on them, instead of plain AP). Please refresh the data on these items, once Wowhead/Armory update to 3.0.8.
+    Rawr.Tree: Major improvements all around. Still not fully complete.
+    Rawr.RestoSham: Major improvements all around. Still not fully complete.
+    Rawr.Retribution: Base miss chance lowered to 8%.
+    Rawr.Tankadin: Base miss chance lowered to 8%.
+    Rawr.ProtWarr: Block Value formula changed. Updates to armor calculations to account for Base vs Bonus Armor. Base racial stats updated. Support for the Armored to the Teeth talent.
+    Rawr.HealPriest/ShadowPriest: Initial Glyph support.
+    Rawr.Mage: Significant updates to 3.0.8 support and to Arcane cycles. Added Rune of Razorice and Lightweave Embroidery. Enhanced hit rating tooltip. Fix for FBScPyro never being chosen when Global Optimizations were on. Added shatter combo cycles for Frost.
+    Rawr.DPSWarr: Initial draft of 3.0 version. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.DPSWarr in conjunction with other theorycrafting tools.
+    Rawr.TankDK: Fixed expertise calculations.
+    Rawr.Rogue/Warlock: Nothing new, yet, but wanted to mention that we have a ton of active development on these models lately, and new versions are coming soon.
 
 v2.1.6:
-	Fixes for several Armory/Wowhead parsing errors.
-	Fixes for stats on a couple buffs.
-	Fix for a crash when choosing No Enchant from the enchant dropdowns.
-	Rawr.Hunter/Bear/Cat: Adjusted miss chance to 8%.
-	Rawr.TankDK: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.TankDK in conjunction with other theorycrafting tools.
+    Fixes for several Armory/Wowhead parsing errors.
+    Fixes for stats on a couple buffs.
+    Fix for a crash when choosing No Enchant from the enchant dropdowns.
+    Rawr.Hunter/Bear/Cat: Adjusted miss chance to 8%.
+    Rawr.TankDK: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.TankDK in conjunction with other theorycrafting tools.
 
 v2.1.5: 
-	Items now show their item level in their tooltips. 
-	Armor and Bonus Armor are now handled separately. 
-	Performance and crash fixes to the Optimizer. 
-	Added mousewheel support for the charts. 
-	Added buffs for Mixology. 
-	Added support for Blacksmithing sockets (reload character from armory, or load character from 2.1.4 and remove extra gem from items). 
-	Added a context menu item to quickly evaluate the upgrade value of the clicked item.
-	Added support for updating the entire item cache from Wowhead.
-	Added parsing for Greatness cards.
-	Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror. Added support for soft-capping Survivability.
-	Rawr.Cat: Fix for damage reduction calculations for different level targets. Added support for Mongoose, Berserking, Trauma, and Mangle from another feral. Fixed calculations for Idol of Terror.
-	Rawr.HealPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
-	Rawr.Mage: Added custom graphs for stats scaling. Supports extra crit rate from encounter effects (ie, Loatheb). Fix for new cycles ignoring flame caps. Support for reconjuring mana gems.
-	Rawr.ProtWarr: Adjusted miss rate from 9% to 8%, and dodge rate from 6.5% to 6.4%.
-	Rawr.ShadowPriest Added Arcane Torrent for blood elves. Fixed display issue with Misery/Faerie Fire hit. Support for more trinket effects. Support for more set bonuses.
-	Rawr.Tankadin: Fix for block rating conversion.
-	Rawr.DPSDK: Fixes for a few calculations. Fixes for item relevancy to show DK set items, not paladin ones.
-	Rawr.RestoSham: Updated a variety of calculations. Not fully updated yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.RestoSham in conjunction with other theorycrafting tools.
-	Rawr.Enhance: Updated the default and available target levels from 70-73 to 80-83, and raised the maximum target armor.
-		
-		
+    Items now show their item level in their tooltips. 
+    Armor and Bonus Armor are now handled separately. 
+    Performance and crash fixes to the Optimizer. 
+    Added mousewheel support for the charts. 
+    Added buffs for Mixology. 
+    Added support for Blacksmithing sockets (reload character from armory, or load character from 2.1.4 and remove extra gem from items). 
+    Added a context menu item to quickly evaluate the upgrade value of the clicked item.
+    Added support for updating the entire item cache from Wowhead.
+    Added parsing for Greatness cards.
+    Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror. Added support for soft-capping Survivability.
+    Rawr.Cat: Fix for damage reduction calculations for different level targets. Added support for Mongoose, Berserking, Trauma, and Mangle from another feral. Fixed calculations for Idol of Terror.
+    Rawr.HealPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
+    Rawr.Mage: Added custom graphs for stats scaling. Supports extra crit rate from encounter effects (ie, Loatheb). Fix for new cycles ignoring flame caps. Support for reconjuring mana gems.
+    Rawr.ProtWarr: Adjusted miss rate from 9% to 8%, and dodge rate from 6.5% to 6.4%.
+    Rawr.ShadowPriest Added Arcane Torrent for blood elves. Fixed display issue with Misery/Faerie Fire hit. Support for more trinket effects. Support for more set bonuses.
+    Rawr.Tankadin: Fix for block rating conversion.
+    Rawr.DPSDK: Fixes for a few calculations. Fixes for item relevancy to show DK set items, not paladin ones.
+    Rawr.RestoSham: Updated a variety of calculations. Not fully updated yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.RestoSham in conjunction with other theorycrafting tools.
+    Rawr.Enhance: Updated the default and available target levels from 70-73 to 80-83, and raised the maximum target armor.
+        
+        
 v2.1.4: Added tracking of item levels, and filtering by item level and a few other item properties. Added support for several additional buffs and enchants. Fixed Wowhead and Armory parsing for a few stats. Fixed CharacterProfiler support. ShadowPriest: Fixes for Optimization, and support for a few more buffs. HealPriest: Fixes for Optimization and Haste calculations. Moonkin: Added support for a couple trinkets, allowed fist weapons, fixes to Starfire glyph calculations, fix for double application of Kings, and added support for user-defined rotations. Healadin: Added Burst Healing rating, support for Divine Favor and Divine Illumination. ProtWarr: Updated with correct base stats for all races at 80. Mage: Added a 3.0.8 calculation mode. Tree: Fixed haste and crit calculations. Cat: Adjusted base miss rate to 8%, added support for total % damage increases. Bear: Fixed a minor bug in DR calculations.
 
 v2.1.3: Improvements to CharacterProfiler support. Can now load items by exact name, as well as load from Armory and fail over to Wowhead if not found. Support for several new set bonuses and proc/use effects. Fixed base stat calculations in Retribution and Tankadin, and a few more calculation fixes in Retribution. Fixes for a few buff/enchant stats.
@@ -1258,7 +1256,7 @@ Beta 14:
     - Calculation model overhauled. Should give much more accurate results now.   
 
 Beta 13.1:
- - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (cnervig@hotmail.com).
+ - Fix for several Optimizer crashes. If you can get the Optimizer to crash still, please e-mail me your character file (WarcraftRawr@gmail.com).
  - Fix for Rawr.Mage requiring .NET 3.5.
 
 Beta 13:
@@ -1356,11 +1354,11 @@ Beta 8:
 
 Beta 7:
  -Added Contextual Menus for items. You can now right click on an item on the main screen, in the popup item selector, to get a menu of things to do on that item:
-	-Edit: Opens the item editor to that item.
-	-Open in Wowhead: Opens a new web browser window and navigates to the item in wowhead.
-	-Refresh Item Data: Refreshes the data about the item from the armory.
-	-Equip: Equips the item.
-	-Delete: Deletes the item from Rawr's database.
+    -Edit: Opens the item editor to that item.
+    -Open in Wowhead: Opens a new web browser window and navigates to the item in wowhead.
+    -Refresh Item Data: Refreshes the data about the item from the armory.
+    -Equip: Equips the item.
+    -Delete: Deletes the item from Rawr's database.
  -Implemented a ton of new temporary buffs. These buffs are typically from trinkets, or other procs, and most can't really be relied upon to base your gear selections around, but it is interesting to see your stats with these activated.
  -There are now 3 different buff comparison graphs, which let you choose which subset of all the buffs to show: All Buffs, All Long-Duration Buffs (No Dual Wield), and Current Buffs.
  -Made the buff selection tab less cramped, by splitting it into categories, and making it scroll.

@@ -49,29 +49,29 @@ namespace Rawr
 				error.Contains("Rawr.FormMain.LoadModel(String"))
 			{
 				return "Rawr was unable to find its required data files. Please make sure that you have fully unzipped Rawr to a location that you have full permissions to (such as My Documents). " +
-					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 			}
 			if (error.Contains("Error creating window handle."))
 			{
 				return "Rawr encounted a serious error caused by an old version of the .NET Framework. Please download and install the latest version of the .NET Framework from Microsoft (http://www.microsoft.com/Net/Download.aspx)." +
-					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 			}
 			if (error.Contains("Verdana"))
 			{
 				return "Rawr encountered a serious error caused by a corrupted copy of the 'Verdana' font. Try reinstalling .NET Framework 3.5SP1 (http://www.microsoft.com/Net/Download.aspx), or getting a copy from a friend. " +
-					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 			}
 			if (error.Contains("Segou UI"))
 			{
 				return "Rawr encountered a serious error caused by a corrupted copy of the 'Segou UI' font. Try reinstalling .NET Framework 3.5SP1 (http://www.microsoft.com/Net/Download.aspx), or getting a copy from a friend. " +
-					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 			}
 			if (error.Contains("Configuration system failed"))
 			{
 				return "Rawr encountered a serious error caused by a corrupted user settings file. Please try clearing your local settings by closing Rawr, and then deleting any folders whose name starts with 'Rawr' at C:\\Documents and Settings\\[User]\\AppData\\Local\\ or C:\\Users\\[User]\\AppData\\Local\\. You will need to display hidden folders to find those folders. " +
-					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 			}
-			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to WarcraftRawr@gmail.com. Thanks!" + error;
 		}
 	}
 }

@@ -11,74 +11,74 @@ namespace Rawr
 {
 	public static class Armory
 	{
-        public static Character GetCharacter(CharacterRegion region, string realm, string name)
-        {
-            string[] ignore;
-            return GetCharacter(region, realm, name, out ignore);
-        }
+		public static Character GetCharacter(CharacterRegion region, string realm, string name)
+		{
+			string[] ignore;
+			return GetCharacter(region, realm, name, out ignore);
+		}
 
 		public static Character GetCharacter(CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
 		{
-            string AddInfoMsg = "No Additional Info";
+			string AddInfoMsg = "No Additional Info";
 			XmlDocument docCharacter = null;
-            //XmlDocument docTalents = null;
-            try
+			//XmlDocument docTalents = null;
+			try
 			{
-                XmlNode node = null;
-                XmlAttribute attr = null;
+				XmlNode node = null;
+				XmlAttribute attr = null;
 				WebRequestWrapper wrw = new WebRequestWrapper();
 				docCharacter = wrw.DownloadCharacterSheet(name, region, realm);
-                if (docCharacter == null)
-                {
-                    StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory. The Armory may be down.");
-                    itemsOnCharacter = null;
-                    return null;
-                }
-                else if (((node = docCharacter.SelectSingleNode("page/errorhtml")) != null) && node.Attributes["type"].Value == "maintenance")
-                {
-                    StatusMessaging.ReportError("Get Character", null, "The Armory returned a message that it is down for maintenance.");
-                    itemsOnCharacter = null;
-                    return null;
-                }
-                else if (((node = docCharacter.SelectSingleNode("page/characterInfo")) != null) && (attr = node.Attributes["errCode"]) != null && attr.Value == "noCharacter")
-                {
-                    StatusMessaging.ReportError("Get Character", null, "The character " + name + "@" + region + "-" + realm + " does not exist.");
-                    itemsOnCharacter = null;
-                    return null;
-                }
-                AddInfoMsg = "Character found and XML Downloaded. Processing Race and Class";
-                CharacterRace race = (CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
-                CharacterClass charClass = (CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
+				if (docCharacter == null)
+				{
+					StatusMessaging.ReportError("Get Character", null, "No character returned from the Armory. The Armory may be down.");
+					itemsOnCharacter = null;
+					return null;
+				}
+				else if (((node = docCharacter.SelectSingleNode("page/errorhtml")) != null) && node.Attributes["type"].Value == "maintenance")
+				{
+					StatusMessaging.ReportError("Get Character", null, "The Armory returned a message that it is down for maintenance.");
+					itemsOnCharacter = null;
+					return null;
+				}
+				else if (((node = docCharacter.SelectSingleNode("page/characterInfo")) != null) && (attr = node.Attributes["errCode"]) != null && attr.Value == "noCharacter")
+				{
+					StatusMessaging.ReportError("Get Character", null, "The character " + name + "@" + region + "-" + realm + " does not exist.");
+					itemsOnCharacter = null;
+					return null;
+				}
+				AddInfoMsg = "Character found and XML Downloaded. Processing Race and Class";
+				CharacterRace race = (CharacterRace)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["raceId"].Value);
+				CharacterClass charClass = (CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
-                #region Process Professions
-                AddInfoMsg = "Processing Professions";
-                XmlNodeList nodes = docCharacter.SelectNodes("page/characterInfo/characterTab/professions/skill");
-                Profession prof1 = Profession.None, prof2 = Profession.None;
-                if(nodes.Count > 0){
-                    prof1 = (Profession)Int32.Parse(nodes[0].Attributes["id"].Value);
-                    if (nodes.Count > 1) { // If there's only one profession, it doesn't have a second node so we don't have to worry about setting a NONE enum
-                        prof2 = (Profession)Int32.Parse(nodes[1].Attributes["id"].Value);
-                    }
-                }
-                #endregion
+				#region Process Professions
+				AddInfoMsg = "Processing Professions";
+				XmlNodeList nodes = docCharacter.SelectNodes("page/characterInfo/characterTab/professions/skill");
+				Profession prof1 = Profession.None, prof2 = Profession.None;
+				if(nodes.Count > 0){
+					prof1 = (Profession)Int32.Parse(nodes[0].Attributes["id"].Value);
+					if (nodes.Count > 1) { // If there's only one profession, it doesn't have a second node so we don't have to worry about setting a NONE enum
+						prof2 = (Profession)Int32.Parse(nodes[1].Attributes["id"].Value);
+					}
+				}
+				#endregion
 
-                #region Process Equipped Items
-                AddInfoMsg = "Processing Equipped Items";
+				#region Process Equipped Items
+				AddInfoMsg = "Processing Equipped Items";
 				Dictionary<CharacterSlot, string> items = new Dictionary<CharacterSlot, string>();
 				//Dictionary<CharacterSlot, int> enchants = new Dictionary<CharacterSlot, int>();
 
 				foreach (XmlNode itemNode in docCharacter.SelectNodes("page/characterInfo/characterTab/items/item"))
 				{
 					int slot = int.Parse(itemNode.Attributes["slot"].Value) + 1;
-                    CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
+					CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
 					items[cslot] = string.Format("{0}.{1}.{2}.{3}.{4}", itemNode.Attributes["id"].Value,
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value, itemNode.Attributes["permanentenchant"].Value);
 					//enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
-                }
-                #endregion
+				}
+				#endregion
 
-                #region Some slot fixes (currently unused)
-                /*if (items.ContainsKey(CharacterSlot.Wrist))
+				#region Some slot fixes (currently unused)
+				/*if (items.ContainsKey(CharacterSlot.Wrist))
 				{
 					string[] wristIds = items[CharacterSlot.Wrist].Split('.');
 					Item wristItemRaw = ItemCache.FindItemById(int.Parse(wristIds[0]));
@@ -155,12 +155,12 @@ namespace Rawr
 						items[CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
 					}
 				}*/
-                #endregion
+				#endregion
 
-                #region Create a Rawr.Character
-                AddInfoMsg = "Generating a Rawr Character";
-                itemsOnCharacter = new string[items.Values.Count];
-                items.Values.CopyTo(itemsOnCharacter, 0);
+				#region Create a Rawr.Character
+				AddInfoMsg = "Generating a Rawr Character";
+				itemsOnCharacter = new string[items.Values.Count];
+				items.Values.CopyTo(itemsOnCharacter, 0);
 				Character character = new Character(name, realm, region, race, new BossOptions(),
 					items.ContainsKey(CharacterSlot.Head) ? items[CharacterSlot.Head] : null,
 					items.ContainsKey(CharacterSlot.Neck) ? items[CharacterSlot.Neck] : null,
@@ -184,24 +184,24 @@ namespace Rawr
 					items.ContainsKey(CharacterSlot.Projectile) ? items[CharacterSlot.Projectile] : null,
 					null
 					);
-                
-                character.Class = charClass;
+				
+				character.Class = charClass;
 
-                character.PrimaryProfession = prof1;
-                character.SecondaryProfession = prof2;
-                #endregion
+				character.PrimaryProfession = prof1;
+				character.SecondaryProfession = prof2;
+				#endregion
 
-                #region Process Talents and Glyphs
-                AddInfoMsg = "Processing Talents & Glyphs";
+				#region Process Talents and Glyphs
+				AddInfoMsg = "Processing Talents & Glyphs";
 				XmlNode activeTalentGroup = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm)
 					.SelectSingleNode("page/characterInfo/talents/talentGroup[@active='1']");
-                if (activeTalentGroup == null)
-                {
-                    StatusMessaging.ReportError("Get Character", null, "Your Character's Talent Sheet could not be downloaded. Is the Armory down?");
-                    itemsOnCharacter = null;
-                    return null;
-                }
-                string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
+				if (activeTalentGroup == null)
+				{
+					StatusMessaging.ReportError("Get Character", null, "Your Character's Talent Sheet could not be downloaded. Is the Armory down?");
+					itemsOnCharacter = null;
+					return null;
+				}
+				string talentCode = activeTalentGroup.SelectSingleNode("talentSpec").Attributes["value"].Value;
 				switch (charClass)
 				{
 					case CharacterClass.Warrior:
@@ -221,7 +221,7 @@ namespace Rawr
 						break;
 					case CharacterClass.Rogue:
 						character.RogueTalents = new RogueTalents(talentCode);
-				        character.CurrentModel = "Rogue";
+						character.CurrentModel = "Rogue";
 						break;
 					case CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talentCode);
@@ -257,100 +257,100 @@ namespace Rawr
 					default:
 						break;
 				}
-                TalentsBase talents = character.CurrentTalents;
-                Dictionary<string, PropertyInfo> glyphProperty = new Dictionary<string, PropertyInfo>();
-                foreach (PropertyInfo pi in talents.GetType().GetProperties())
-                {
-                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
-                    if (glyphDatas.Length > 0)
-                    {
-                        GlyphDataAttribute glyphData = glyphDatas[0];
-                        glyphProperty[glyphData.Name] = pi;
-                    }
-                }
+				TalentsBase talents = character.CurrentTalents;
+				Dictionary<string, PropertyInfo> glyphProperty = new Dictionary<string, PropertyInfo>();
+				foreach (PropertyInfo pi in talents.GetType().GetProperties())
+				{
+					GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+					if (glyphDatas.Length > 0)
+					{
+						GlyphDataAttribute glyphData = glyphDatas[0];
+						glyphProperty[glyphData.Name] = pi;
+					}
+				}
 
-                foreach (XmlNode glyph in activeTalentGroup.SelectNodes("glyphs/glyph/@name"))
-                {
-                    PropertyInfo pi;
-                    if (glyphProperty.TryGetValue(glyph.Value, out pi))
-                    {
-                        pi.SetValue(talents, true, null);
-                    }
-                }
-                #endregion
+				foreach (XmlNode glyph in activeTalentGroup.SelectNodes("glyphs/glyph/@name"))
+				{
+					PropertyInfo pi;
+					if (glyphProperty.TryGetValue(glyph.Value, out pi))
+					{
+						pi.SetValue(talents, true, null);
+					}
+				}
+				#endregion
 
-                #region Set the Avilable Items
-                AddInfoMsg = "Processing Available Items List for the Optimizer";
+				#region Set the Avilable Items
+				AddInfoMsg = "Processing Available Items List for the Optimizer";
 				InitializeAvailableItemList(character);
-                #endregion
+				#endregion
 
-                #region Apply Forced Buffs
-                AddInfoMsg = "Processing Forced Buffs (from Racials and Professions)";
-                ApplyRacialandProfessionBuffs(docCharacter, character);
-                #endregion
+				#region Apply Forced Buffs
+				AddInfoMsg = "Processing Forced Buffs (from Racials and Professions)";
+				ApplyRacialandProfessionBuffs(docCharacter, character);
+				#endregion
 
-                #region Hunter Pets if a Hunter
-                if (character.Class == CharacterClass.Hunter) {
-                    AddInfoMsg = "Processing Hunter Pets";
-                    // Pull Pet(s) Info if you are a Hunter
-                    List<ArmoryPet> pets = GetPet(region, realm, name);
-                    if (pets != null) { character.ArmoryPets = pets; }
-                }
-                #endregion
+				#region Hunter Pets if a Hunter
+				if (character.Class == CharacterClass.Hunter) {
+					AddInfoMsg = "Processing Hunter Pets";
+					// Pull Pet(s) Info if you are a Hunter
+					List<ArmoryPet> pets = GetPet(region, realm, name);
+					if (pets != null) { character.ArmoryPets = pets; }
+				}
+				#endregion
 
-                AddInfoMsg = "Get Armory Completed, Returning Results to the main screen";
-                //I will tell you how he lived.
+				AddInfoMsg = "Get Armory Completed, Returning Results to the main screen";
+				//I will tell you how he lived.
 				return character;
 			}
 			catch (Exception ex)
 			{
-                StatusMessaging.ReportError("Get Character", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory" + (AddInfoMsg != "" && AddInfoMsg != "No Additional Info" ? ".\r\nAdd'l Info: " + AddInfoMsg : ""));
-                itemsOnCharacter = null;
+				StatusMessaging.ReportError("Get Character", ex, "Rawr encountered an error retrieving the Character - " + name + "@" + region.ToString() + "-" + realm + " from the armory" + (AddInfoMsg != "" && AddInfoMsg != "No Additional Info" ? ".\r\nAdd'l Info: " + AddInfoMsg : ""));
+				itemsOnCharacter = null;
 				return null;
 			}
 		}
 
-        /// <summary>
-        /// Get the Hunter Pet off the Armory, if possible
-        /// </summary>
-        /// <param name="region">The character's Region</param>
-        /// <param name="realm">The character's Realm</param>
-        /// <param name="name">The character's Name</param>
-        /// <returns>The list of Hunter Pets in form of List(ArmoryPet)</returns>
-        public static List<ArmoryPet> GetPet(CharacterRegion region, string realm, string name) {
-            XmlDocument docTalents = null;
-            List<ArmoryPet> ArmoryPets = new List<ArmoryPet>() { };
-            try {
-                WebRequestWrapper wrw = new WebRequestWrapper();
-                docTalents = wrw.DownloadCharacterTalentTree(name, region, realm);
-                if (docTalents == null) {
-                    StatusMessaging.ReportError("Get Pet", null, "No character returned from the Armory. Is the Armory down?");
-                    return null;
-                }
+		/// <summary>
+		/// Get the Hunter Pet off the Armory, if possible
+		/// </summary>
+		/// <param name="region">The character's Region</param>
+		/// <param name="realm">The character's Realm</param>
+		/// <param name="name">The character's Name</param>
+		/// <returns>The list of Hunter Pets in form of List(ArmoryPet)</returns>
+		public static List<ArmoryPet> GetPet(CharacterRegion region, string realm, string name) {
+			XmlDocument docTalents = null;
+			List<ArmoryPet> ArmoryPets = new List<ArmoryPet>() { };
+			try {
+				WebRequestWrapper wrw = new WebRequestWrapper();
+				docTalents = wrw.DownloadCharacterTalentTree(name, region, realm);
+				if (docTalents == null) {
+					StatusMessaging.ReportError("Get Pet", null, "No character returned from the Armory. Is the Armory down?");
+					return null;
+				}
 
-                foreach (XmlNode itemNode in docTalents.SelectNodes("page/characterInfo/talents/pet"))
-                {
-                    // pet found
-                    string petname = itemNode.Attributes["name"].Value;
-                    string fam = itemNode.Attributes["family"].Value;
-                    string SpecKey = itemNode.FirstChild.Attributes["key"].Value;
-                    string spec = itemNode.FirstChild.FirstChild.Attributes["value"].Value;
-                    ArmoryPets.Add(new ArmoryPet(fam, petname, SpecKey, spec));
-                }
+				foreach (XmlNode itemNode in docTalents.SelectNodes("page/characterInfo/talents/pet"))
+				{
+					// pet found
+					string petname = itemNode.Attributes["name"].Value;
+					string fam = itemNode.Attributes["family"].Value;
+					string SpecKey = itemNode.FirstChild.Attributes["key"].Value;
+					string spec = itemNode.FirstChild.FirstChild.Attributes["value"].Value;
+					ArmoryPets.Add(new ArmoryPet(fam, petname, SpecKey, spec));
+				}
 
-                return ArmoryPets;
-            } catch (Exception ex) {
-                //StatusMessaging.ReportError("Get Character", ex,
-                // "Rawr encountered an error retrieving the Hunter Character - " + name + "@" + region.ToString() + "-" + realm + " 's Pet(s) from the armory");
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
-                    "Error getting Hunter Pet from Armory",
-                    ex.Message,
-                    "GetPet(...)",
-                    "No Additional Info",
-                    ex.StackTrace);
-            }
-            return null;
-        }
+				return ArmoryPets;
+			} catch (Exception ex) {
+				//StatusMessaging.ReportError("Get Character", ex,
+				// "Rawr encountered an error retrieving the Hunter Character - " + name + "@" + region.ToString() + "-" + realm + " 's Pet(s) from the armory");
+				Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+					"Error getting Hunter Pet from Armory",
+					ex.Message,
+					"GetPet(...)",
+					"No Additional Info",
+					ex.StackTrace);
+			}
+			return null;
+		}
 
 		/// <summary>
 		/// 09.01.01 - TankConcrete
@@ -386,93 +386,93 @@ namespace Rawr
 					currentChar.AvailableItems.Add(itemId);
 				}
 			}*/
-            for (CharacterSlot slot = 0; slot < (CharacterSlot)19; slot++)
-            {
-                ItemInstance item = currentChar[slot];
-                if ((object)item != null && item.Id != 0)
-                {
-                    // add item as available
-                    if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
-                    // add used enchant as available
-                    Enchant enchant = item.Enchant;
-                    if (enchant != null && enchant.Id != 0)
-                    {
-                        string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
-                        if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
-                    }
-                    // add used gems as available
-                    for (int i = 1; i <= 3; i++)
-                    {
-                        Item gem = item.GetGem(i);
-                        if ((object)gem != null)
-                        {
-                            if (!currentChar.AvailableItems.Contains(gem.Id.ToString())) currentChar.AvailableItems.Add(gem.Id.ToString());
-                        }
-                    }
-                }
-            }
+			for (CharacterSlot slot = 0; slot < (CharacterSlot)19; slot++)
+			{
+				ItemInstance item = currentChar[slot];
+				if ((object)item != null && item.Id != 0)
+				{
+					// add item as available
+					if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
+					// add used enchant as available
+					Enchant enchant = item.Enchant;
+					if (enchant != null && enchant.Id != 0)
+					{
+						string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+						if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
+					}
+					// add used gems as available
+					for (int i = 1; i <= 3; i++)
+					{
+						Item gem = item.GetGem(i);
+						if ((object)gem != null)
+						{
+							if (!currentChar.AvailableItems.Contains(gem.Id.ToString())) currentChar.AvailableItems.Add(gem.Id.ToString());
+						}
+					}
+				}
+			}
 		}
 
-        private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
-        {
-            if (character.Race == CharacterRace.Draenei && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-                character.ActiveBuffsAdd(("Heroic Presence"));
+		private static void ApplyRacialandProfessionBuffs(XmlDocument doc, Character character)
+		{
+			if (character.Race == CharacterRace.Draenei && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+				character.ActiveBuffsAdd(("Heroic Presence"));
 
-            foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
-            {   // apply profession buffs if max skill
-                if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
-                    character.ActiveBuffsAdd(("Toughness"));
-                if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
-                    character.ActiveBuffsAdd(("Master of Anatomy"));
-                if (profession.Attributes["name"].Value == "Blacksmithing" && int.Parse(profession.Attributes["value"].Value) >= 400)
-                {
-                    character.WristBlacksmithingSocketEnabled = true;
-                    character.HandsBlacksmithingSocketEnabled = true;
-                }
-            }
+			foreach (XmlNode profession in doc.SelectNodes("page/characterInfo/characterTab/professions/skill"))
+			{   // apply profession buffs if max skill
+				if (profession.Attributes["name"].Value == "Mining" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
+					character.ActiveBuffsAdd(("Toughness"));
+				if (profession.Attributes["name"].Value == "Skinning" && profession.Attributes["value"].Value == "450" && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
+					character.ActiveBuffsAdd(("Master of Anatomy"));
+				if (profession.Attributes["name"].Value == "Blacksmithing" && int.Parse(profession.Attributes["value"].Value) >= 400)
+				{
+					character.WristBlacksmithingSocketEnabled = true;
+					character.HandsBlacksmithingSocketEnabled = true;
+				}
+			}
 
-            Calculations.GetModel(character.CurrentModel).SetDefaults(character);
+			Calculations.GetModel(character.CurrentModel).SetDefaults(character);
 
-        }
+		}
 
-        public static int GetItemIdByName(string item_name)
-        {
-            try
-            {
-                WebRequestWrapper wrw = new WebRequestWrapper();
-                XmlDocument docItem = wrw.DownloadItemSearch(item_name);
-                if (docItem != null)
-                {
-                    XmlNodeList items_nodes = docItem.SelectNodes("/page/armorySearch/searchResults/items/item");
-                    // we only want a single match, even if its not exact
-                    if (items_nodes.Count == 1)
-                    {
+		public static int GetItemIdByName(string item_name)
+		{
+			try
+			{
+				WebRequestWrapper wrw = new WebRequestWrapper();
+				XmlDocument docItem = wrw.DownloadItemSearch(item_name);
+				if (docItem != null)
+				{
+					XmlNodeList items_nodes = docItem.SelectNodes("/page/armorySearch/searchResults/items/item");
+					// we only want a single match, even if its not exact
+					if (items_nodes.Count == 1)
+					{
 						int id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
-                        return id;
-                    }
-                    else
-                    {
-                        // choose an exact match if it exists
-                        foreach (XmlNode node in items_nodes)
-                        {
-                            if (node.Attributes["name"].InnerText == item_name)
-                            {
-                                int id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
-                                return id;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error searching the Armory for item: " + item_name);
-            }
+						return id;
+					}
+					else
+					{
+						// choose an exact match if it exists
+						foreach (XmlNode node in items_nodes)
+						{
+							if (node.Attributes["name"].InnerText == item_name)
+							{
+								int id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
+								return id;
+							}
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error searching the Armory for item: " + item_name);
+			}
 
-            return -1;
-        }
+			return -1;
+		}
 
-        public static Item GetItem(int id) { return GetItem(id, "Unknown reason"); }
+		public static Item GetItem(int id) { return GetItem(id, "Unknown reason"); }
 		public static Item GetItem(int id, string logReason)
 		{
 			//Just close your eyes
@@ -480,26 +480,26 @@ namespace Rawr
 			try
 			{
 				WebRequestWrapper wrw = new WebRequestWrapper();
-                docItem = wrw.DownloadItemToolTipSheet(id.ToString());
-                XmlDocument docItemInfo = wrw.DownloadItemInformation(id);
-                ItemLocation location = LocationFactory.Create(docItem, id.ToString());
-                if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
-                {
-                    Item wowhead = null;
-                    wowhead = Wowhead.GetItem(id);
-                    if (wowhead != null) { return wowhead; }// else we throw the error as we didn't get it from Wowhead either
-                    StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
-                    return null;
-                }
+				docItem = wrw.DownloadItemToolTipSheet(id.ToString());
+				XmlDocument docItemInfo = wrw.DownloadItemInformation(id);
+				ItemLocation location = LocationFactory.Create(docItem, id.ToString());
+				if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
+				{
+					Item wowhead = null;
+					wowhead = Wowhead.GetItem(id);
+					if (wowhead != null) { return wowhead; }// else we throw the error as we didn't get it from Wowhead either
+					StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
+					return null;
+				}
 				ItemQuality quality = ItemQuality.Common;
 				ItemType type = ItemType.None;
 				ItemFaction faction = ItemFaction.Neutral;
-                ItemSlot socketColor1 = ItemSlot.None;
-                ItemSlot socketColor2 = ItemSlot.None;
-                ItemSlot socketColor3 = ItemSlot.None;
-                Stats socketStats = new Stats();
-                string name = string.Empty;
-                BindsOn bind = BindsOn.None;
+				ItemSlot socketColor1 = ItemSlot.None;
+				ItemSlot socketColor2 = ItemSlot.None;
+				ItemSlot socketColor3 = ItemSlot.None;
+				Stats socketStats = new Stats();
+				string name = string.Empty;
+				BindsOn bind = BindsOn.None;
 				string iconPath = string.Empty;
 				string setName = string.Empty;
 				ItemSlot slot = ItemSlot.None;
@@ -509,36 +509,36 @@ namespace Rawr
 				string subclassName = string.Empty;
 				int minDamage = 0;
 				int maxDamage = 0;
-                ItemDamageType damageType = ItemDamageType.Physical;
+				ItemDamageType damageType = ItemDamageType.Physical;
 				float speed = 0f;
 				List<string> requiredClasses = new List<string>();
-                bool unique = false;
-                int itemLevel = 0;
+				bool unique = false;
+				int itemLevel = 0;
 
-                #region Basics
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonding")) { try {bind = (BindsOn)int.Parse(node.InnerText);} catch {} }
+				#region Basics
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/name")) { name = node.InnerText; }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonding")) { try {bind = (BindsOn)int.Parse(node.InnerText);} catch {} }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/icon")) { iconPath = node.InnerText; }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/maxCount")) { unique = node.InnerText == "1"; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/overallQualityId")) { quality = (ItemQuality)Enum.Parse(typeof(ItemQuality), node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/classId")) { classId = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/inventoryType")) { inventoryType = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/equipData/subclassName")) { subclassName = node.InnerText; }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/min")) { minDamage = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.InnerText.Trim(); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/allowableClasses/class")) { requiredClasses.Add(node.InnerText); }
 
 				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/@level")) { itemLevel = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItemInfo.SelectNodes("page/itemInfo/item/translationFor")) { faction = node.Attributes["factionEquiv"].Value == "1" ? ItemFaction.Alliance : ItemFaction.Horde; }
-                if (inventoryType >= 0) { slot = GetItemSlot(inventoryType, classId); }
-                if (!string.IsNullOrEmpty(subclassName)) { type = GetItemType(subclassName, inventoryType, classId); }
-                #endregion
+				if (inventoryType >= 0) { slot = GetItemSlot(inventoryType, classId); }
+				if (!string.IsNullOrEmpty(subclassName)) { type = GetItemType(subclassName, inventoryType, classId); }
+				#endregion
 
-                #region Fix class restrictions on BOP items that can only be made by certain classes
-                switch (id)
+				#region Fix class restrictions on BOP items that can only be made by certain classes
+				switch (id)
 				{
 					case 35181:
 					case 32495:
@@ -565,43 +565,43 @@ namespace Rawr
 						requiredClasses.Add("Druid");
 						requiredClasses.Add("Rogue");
 						break;
-                }
-                #endregion
+				}
+				#endregion
 
-                #region Stats
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
+				#region Stats
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAgility")) { stats.Agility = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusAttackPower")) { stats.AttackPower = int.Parse(node.InnerText); }
 				// NOTE: for items w/ bonus armor, while they don't give us the value of that bonus armor,
-                // they do note that it IS bonus armor w/ the attribute armorBonus="1" (vs. armorBonus="0")
-                // this help out to determine if we even need to do the bonus armor work below.
-                // flag for if the armor value contains Bonus Armor.
-                bool bBonusArmor = false;
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) 
-                { 
-                    stats.Armor = int.Parse(node.InnerText);
-                    XmlNode nodeAttribute = node.Attributes.GetNamedItem("armorBonus");
-                    bBonusArmor = (int.Parse(nodeAttribute.Value) > 0);
-                }
-                // for the following slots there is normally no armor, so we know it has to be bonus armor
-                if (slot == ItemSlot.Finger ||
-                    slot == ItemSlot.MainHand ||
-                    slot == ItemSlot.Neck ||
-                    (slot == ItemSlot.OffHand && type != ItemType.Shield) ||
-                    slot == ItemSlot.OneHand ||
-                    slot == ItemSlot.Trinket ||
-                    slot == ItemSlot.TwoHand)
-                {
-                    bBonusArmor = true;
-                }
+				// they do note that it IS bonus armor w/ the attribute armorBonus="1" (vs. armorBonus="0")
+				// this help out to determine if we even need to do the bonus armor work below.
+				// flag for if the armor value contains Bonus Armor.
+				bool bBonusArmor = false;
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/armor")) 
+				{ 
+					stats.Armor = int.Parse(node.InnerText);
+					XmlNode nodeAttribute = node.Attributes.GetNamedItem("armorBonus");
+					bBonusArmor = (int.Parse(nodeAttribute.Value) > 0);
+				}
+				// for the following slots there is normally no armor, so we know it has to be bonus armor
+				if (slot == ItemSlot.Finger ||
+					slot == ItemSlot.MainHand ||
+					slot == ItemSlot.Neck ||
+					(slot == ItemSlot.OffHand && type != ItemType.Shield) ||
+					slot == ItemSlot.OneHand ||
+					slot == ItemSlot.Trinket ||
+					slot == ItemSlot.TwoHand)
+				{
+					bBonusArmor = true;
+				}
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusParryRating")) { stats.ParryRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockRating")) { stats.BlockRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/blockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusParryRating")) { stats.ParryRating = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockRating")) { stats.BlockRating = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusBlockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/blockValue")) { stats.BlockValue = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusResilienceRating")) { stats.Resilience = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStamina")) { stats.Stamina = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusIntellect")) { stats.Intellect = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusIntellect")) { stats.Intellect = int.Parse(node.InnerText); }
 
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusStrength")) { stats.Strength = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitRating")) { stats.HitRating = int.Parse(node.InnerText); }
@@ -610,33 +610,33 @@ namespace Rawr
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusExpertiseRating")) { stats.ExpertiseRating = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusArmorPenetration")) { stats.ArmorPenetrationRating = int.Parse(node.InnerText); }
 				
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/arcaneResist")) { stats.ArcaneResistance = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/arcaneResist")) { stats.ArcaneResistance = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/fireResist")) { stats.FireResistance = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/frostResist")) { stats.FrostResistance = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/natureResist")) { stats.NatureResistance = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/shadowResist")) { stats.ShadowResistance = int.Parse(node.InnerText); }
 
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.CritRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.HitRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.HasteRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPower")) { stats.SpellPower = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPenetration")) { stats.SpellPenetration = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.CritRating = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.HitRating = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.HasteRating = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPower")) { stats.SpellPower = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpellPenetration")) { stats.SpellPenetration = int.Parse(node.InnerText); }
 
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHealthRegen")) { stats.Hp5 = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHealthRegen")) { stats.Hp5 = int.Parse(node.InnerText); }
 
-                // With WoWArmory providing the armorBonus bit in the XML, we only need to call this function
-                // when that bit is set to true.
-                // Unfortunately, it still only tells us that we need to do this work,
-                // not what the value of BonusArmor vs. Armor actually is.
-                if (bBonusArmor)
-    				DetermineBaseBonusArmor(stats, slot, type, id);
-                #endregion
+				// With WoWArmory providing the armorBonus bit in the XML, we only need to call this function
+				// when that bit is set to true.
+				// Unfortunately, it still only tells us that we need to do this work,
+				// not what the value of BonusArmor vs. Armor actually is.
+				if (bBonusArmor)
+					DetermineBaseBonusArmor(stats, slot, type, id);
+				#endregion
 
-                #region Special Equip Lines
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
+				#region Special Equip Lines
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/spellData/spell"))
 				{
 					bool isEquip = false;
 					bool isUse = false;
@@ -655,14 +655,14 @@ namespace Rawr
 					//parse Use/Equip lines
 					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
 					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel, id);
-                }
-                #endregion
+				}
+				#endregion
 
-                #region Sockets
-                XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
-                if (socketNodes.Count > 0) socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[0].Attributes["color"].Value);
-                if (socketNodes.Count > 1) socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[1].Attributes["color"].Value);
-                if (socketNodes.Count > 2) socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[2].Attributes["color"].Value);
+				#region Sockets
+				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
+				if (socketNodes.Count > 0) socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[0].Attributes["color"].Value);
+				if (socketNodes.Count > 1) socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[1].Attributes["color"].Value);
+				if (socketNodes.Count > 2) socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), socketNodes[2].Attributes["color"].Value);
 				string socketBonusesString = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonusesString = node.InnerText.Trim('+'); }
 				if (!string.IsNullOrEmpty(socketBonusesString))
@@ -737,16 +737,16 @@ namespace Rawr
 									else
 										socketStats.SpellPower = (float)Math.Round(socketBonusValue / 1.88f);
 									break;
-                                case "Spell Damage":
-                                    // Only update Spell Damage if its not already set (Incase its an old heal bonus)
-                                    if (socketStats.SpellPower == 0)
-                                        socketStats.SpellPower = socketBonusValue;
-                                    //sockets.Stats.Healing = socketBonusValue;
-                                    break;
-                                case "Spell Power":
-                                    socketStats.SpellPower = socketBonusValue;
-                                    break;
-                                case "Crit Rating":
+								case "Spell Damage":
+									// Only update Spell Damage if its not already set (Incase its an old heal bonus)
+									if (socketStats.SpellPower == 0)
+										socketStats.SpellPower = socketBonusValue;
+									//sockets.Stats.Healing = socketBonusValue;
+									break;
+								case "Spell Power":
+									socketStats.SpellPower = socketBonusValue;
+									break;
+								case "Crit Rating":
 								case "Crit Strike Rating":
 								case "Critical Rating":
 								case "Critical Strike Rating":
@@ -814,28 +814,28 @@ namespace Rawr
 					}
 					foreach (string gemBonus in gemBonuses)
 					{
-                        if (gemBonus == "Spell Damage +6")
-                        {
-                            stats.SpellPower = 6.0f;
-                        }
+						if (gemBonus == "Spell Damage +6")
+						{
+							stats.SpellPower = 6.0f;
+						}
 						else if (gemBonus == "2% Increased Armor Value from Items")
 						{
 							stats.BaseArmorMultiplier = 0.02f;
 						}
-                        else if (gemBonus == "Stamina +6")
-                        {
-                            stats.Stamina = 6.0f;
-                        }
-                        else if (gemBonus == "Chance to restore mana on spellcast")
-                        {
+						else if (gemBonus == "Stamina +6")
+						{
+							stats.Stamina = 6.0f;
+						}
+						else if (gemBonus == "Chance to restore mana on spellcast")
+						{
 							stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 0f, 15f, .05f));
 							stats.ManaRestoreOnCast_5_15 = 600; // IED
 						}
-                        else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
-                        {
-                            //stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
-                            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
-                        }
+						else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
+						{
+							//stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
+						}
 						else if (gemBonus == "+10% Shield Block Value")
 						{
 							stats.BonusBlockValueMultiplier = 0.1f;
@@ -844,69 +844,69 @@ namespace Rawr
 						{
 							stats.BonusBlockValueMultiplier = 0.05f;
 						}
-                        else if (gemBonus == "Minor Run Speed Increase")
-                        {
-                            stats.MovementSpeed = 0.08f;
-                        }
-                        else if (gemBonus.Contains("Stun Duration Reduced by "))
-                        {
-                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
-                            stats.StunDurReduc = (float)bonus / 100f;
-                        }
-                        else if (gemBonus.Contains("Reduces Snare/Root Duration by "))
-                        {
-                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
-                            stats.SnareRootDurReduc = (float)bonus / 100f;
-                        }
-                        else if (gemBonus.Contains("Fear Duration Reduced by "))
-                        {
-                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
-                            stats.FearDurReduc = (float)bonus / 100f;
-                        }
-                        else if (gemBonus.Contains("Chance to Increase Melee/Ranged Attack Speed"))
-                        {
-                            // 480 Haste Rating on 100% Chance to proc every 60 seconds for 6 seconds
-                            stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HasteRating = 480f, }, 6f, 60f));
-                        }
-                        else if (gemBonus.Contains("% Spell Reflect"))
-                        {
-                            int bonus = int.Parse(gemBonus.Substring(0, 2).Trim('%'));
-                            stats.SpellReflectChance = (float)bonus / 100f;
-                        }
-                        else if (gemBonus == "Sometimes Heal on Your Crits")
-                        {
-                            // this is supposed to be 2% of your total health healed when it procs, 50% chance to proc on crit
-                            stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
-                            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit   , new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
-                        }
-                        else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
-                        {
-                            int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
-                            stats.SpellDamageTakenMultiplier = (float)bonus / -100f;
-                        }
-                        else if (gemBonus == "+2% Intellect")
-                        {
-                            stats.BonusIntellectMultiplier = 0.02f;
-                        }
+						else if (gemBonus == "Minor Run Speed Increase")
+						{
+							stats.MovementSpeed = 0.08f;
+						}
+						else if (gemBonus.Contains("Stun Duration Reduced by "))
+						{
+							int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+							stats.StunDurReduc = (float)bonus / 100f;
+						}
+						else if (gemBonus.Contains("Reduces Snare/Root Duration by "))
+						{
+							int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+							stats.SnareRootDurReduc = (float)bonus / 100f;
+						}
+						else if (gemBonus.Contains("Fear Duration Reduced by "))
+						{
+							int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+							stats.FearDurReduc = (float)bonus / 100f;
+						}
+						else if (gemBonus.Contains("Chance to Increase Melee/Ranged Attack Speed"))
+						{
+							// 480 Haste Rating on 100% Chance to proc every 60 seconds for 6 seconds
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HasteRating = 480f, }, 6f, 60f));
+						}
+						else if (gemBonus.Contains("% Spell Reflect"))
+						{
+							int bonus = int.Parse(gemBonus.Substring(0, 2).Trim('%'));
+							stats.SpellReflectChance = (float)bonus / 100f;
+						}
+						else if (gemBonus == "Sometimes Heal on Your Crits")
+						{
+							// this is supposed to be 2% of your total health healed when it procs, 50% chance to proc on crit
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit, new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
+							stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCrit   , new Stats() { HealthRestoreFromMaxHealth = 0.02f }, 0f, 0f, 0.50f));
+						}
+						else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
+						{
+							int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+							stats.SpellDamageTakenMultiplier = (float)bonus / -100f;
+						}
+						else if (gemBonus == "+2% Intellect")
+						{
+							stats.BonusIntellectMultiplier = 0.02f;
+						}
 						else if (gemBonus == "+2% Mana")
-                        {
-                            stats.BonusManaMultiplier = 0.02f;
-                        }
-                        else if (gemBonus == "2% Reduced Threat")
-                        {
-                            stats.ThreatReductionMultiplier = 0.02f;
-                        }
-                        else if (gemBonus == "3% Increased Critical Healing Effect")
-                        {
-                            stats.BonusCritHealMultiplier = 0.03f;
-                        }
-                        else
-                        {
-                            try
-                            {
-                                int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
-                                switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
-                                {
+						{
+							stats.BonusManaMultiplier = 0.02f;
+						}
+						else if (gemBonus == "2% Reduced Threat")
+						{
+							stats.ThreatReductionMultiplier = 0.02f;
+						}
+						else if (gemBonus == "3% Increased Critical Healing Effect")
+						{
+							stats.BonusCritHealMultiplier = 0.03f;
+						}
+						else
+						{
+							try
+							{
+								int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
+								switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
+								{
 									case "to All Stats":
 									case "All Stats":
 										stats.Agility = gemBonusValue;
@@ -915,121 +915,121 @@ namespace Rawr
 										stats.Intellect = gemBonusValue;
 										stats.Spirit = gemBonusValue;
 										break;
-                                    case "Resist All":
-                                        stats.ArcaneResistance = gemBonusValue;
-                                        stats.FireResistance = gemBonusValue;
-                                        stats.FrostResistance = gemBonusValue;
-                                        stats.NatureResistance = gemBonusValue;
-                                        stats.ShadowResistance = gemBonusValue;
-                                        break;
-                                    case "Increased Critical Damage":
-                                        stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
-                                        stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
-                                        break;
-                                    case "Agility":
-                                        stats.Agility = gemBonusValue;
-                                        break;
-                                    case "Stamina":
-                                        stats.Stamina = gemBonusValue;
-                                        break;
-                                    case "Dodge Rating":
-                                        stats.DodgeRating = gemBonusValue;
-                                        break;
-                                    case "Parry Rating":
-                                        stats.ParryRating = gemBonusValue;
-                                        break;
-                                    case "Block Rating":
-                                        stats.BlockRating = gemBonusValue;
-                                        break;
-                                    case "Defense Rating":
-                                        stats.DefenseRating = gemBonusValue;
-                                        break;
-                                    case "Hit Rating":
-                                        stats.HitRating = gemBonusValue;
-                                        break;
-                                    case "Haste Rating":
-                                        stats.HasteRating = gemBonusValue;
-                                        break;
-                                    case "Expertise Rating":
-                                        stats.ExpertiseRating = gemBonusValue;
-                                        break;
-                                    case "Armor Penetration Rating":
-                                        stats.ArmorPenetrationRating = gemBonusValue;
-                                        break;
-                                    case "Strength":
-                                        stats.Strength = gemBonusValue;
-                                        break;
-                                    case "Crit Rating":
-                                    case "Crit Strike Rating":
-                                    case "Critical Rating":
-                                    case "Critical Strike Rating":
-                                        stats.CritRating = gemBonusValue;
-                                        break;
-                                    case "Attack Power":
-                                        stats.AttackPower = gemBonusValue;
-                                        break;
-                                    case "Weapon Damage":
-                                        stats.WeaponDamage = gemBonusValue;
-                                        break;
-                                    case "Resilience":
-                                    case "Resilience Rating":
-                                        stats.Resilience = gemBonusValue;
-                                        break;
-                                    case "Spell Hit Rating":
-                                        stats.HitRating = gemBonusValue;
+									case "Resist All":
+										stats.ArcaneResistance = gemBonusValue;
+										stats.FireResistance = gemBonusValue;
+										stats.FrostResistance = gemBonusValue;
+										stats.NatureResistance = gemBonusValue;
+										stats.ShadowResistance = gemBonusValue;
+										break;
+									case "Increased Critical Damage":
+										stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
+										stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+										break;
+									case "Agility":
+										stats.Agility = gemBonusValue;
+										break;
+									case "Stamina":
+										stats.Stamina = gemBonusValue;
+										break;
+									case "Dodge Rating":
+										stats.DodgeRating = gemBonusValue;
+										break;
+									case "Parry Rating":
+										stats.ParryRating = gemBonusValue;
+										break;
+									case "Block Rating":
+										stats.BlockRating = gemBonusValue;
+										break;
+									case "Defense Rating":
+										stats.DefenseRating = gemBonusValue;
+										break;
+									case "Hit Rating":
+										stats.HitRating = gemBonusValue;
+										break;
+									case "Haste Rating":
+										stats.HasteRating = gemBonusValue;
+										break;
+									case "Expertise Rating":
+										stats.ExpertiseRating = gemBonusValue;
+										break;
+									case "Armor Penetration Rating":
+										stats.ArmorPenetrationRating = gemBonusValue;
+										break;
+									case "Strength":
+										stats.Strength = gemBonusValue;
+										break;
+									case "Crit Rating":
+									case "Crit Strike Rating":
+									case "Critical Rating":
+									case "Critical Strike Rating":
+										stats.CritRating = gemBonusValue;
+										break;
+									case "Attack Power":
+										stats.AttackPower = gemBonusValue;
+										break;
+									case "Weapon Damage":
+										stats.WeaponDamage = gemBonusValue;
+										break;
+									case "Resilience":
+									case "Resilience Rating":
+										stats.Resilience = gemBonusValue;
+										break;
+									case "Spell Hit Rating":
+										stats.HitRating = gemBonusValue;
 										break;
 									case "Spell Penetration":
 										stats.SpellPenetration = gemBonusValue;
 										break;
-                                    case "Spell Haste Rating":
-                                        stats.HasteRating = gemBonusValue;
-                                        break;
-                                    case "Spell Damage":
-                                        // Ignore spell damage from gem if Healing has already been applied, as it might be a "9 Healing 3 Spell" gem. 
-                                        if (stats.SpellPower == 0)
-                                            stats.SpellPower = gemBonusValue;
-                                        break;
-                                    case "Spell Damage and Healing":
-                                        stats.SpellPower = gemBonusValue;
-                                        break;
-                                    case "Healing":
-                                        stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
-                                        break;
-                                    case "Spell Power":
-                                        stats.SpellPower = gemBonusValue;
-                                        break;
-                                    case "Spell Crit":
-                                    case "Spell Crit Rating":
-                                    case "Spell Critical":
-                                    case "Spell Critical Rating":
-                                        stats.CritRating = gemBonusValue;
-                                        break;
-                                    case "Mana every 5 seconds":
-                                    case "Mana ever 5 Sec":
-                                    case "mana per 5 sec":
-                                    case "mana per 5 sec.":
-                                    case "Mana per 5 Seconds":
-                                        stats.Mp5 = gemBonusValue;
-                                        break;
-                                    case "Intellect":
-                                        stats.Intellect = gemBonusValue;
-                                        break;
-                                    case "Spirit":
-                                        stats.Spirit = gemBonusValue;
-                                        break;
-                                }
-                            }
-                            catch { }
-                        }
+									case "Spell Haste Rating":
+										stats.HasteRating = gemBonusValue;
+										break;
+									case "Spell Damage":
+										// Ignore spell damage from gem if Healing has already been applied, as it might be a "9 Healing 3 Spell" gem. 
+										if (stats.SpellPower == 0)
+											stats.SpellPower = gemBonusValue;
+										break;
+									case "Spell Damage and Healing":
+										stats.SpellPower = gemBonusValue;
+										break;
+									case "Healing":
+										stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
+										break;
+									case "Spell Power":
+										stats.SpellPower = gemBonusValue;
+										break;
+									case "Spell Crit":
+									case "Spell Crit Rating":
+									case "Spell Critical":
+									case "Spell Critical Rating":
+										stats.CritRating = gemBonusValue;
+										break;
+									case "Mana every 5 seconds":
+									case "Mana ever 5 Sec":
+									case "mana per 5 sec":
+									case "mana per 5 sec.":
+									case "Mana per 5 Seconds":
+										stats.Mp5 = gemBonusValue;
+										break;
+									case "Intellect":
+										stats.Intellect = gemBonusValue;
+										break;
+									case "Spirit":
+										stats.Spirit = gemBonusValue;
+										break;
+								}
+							}
+							catch { }
+						}
 					}
-                }
-                string desc = string.Empty;
+				}
+				string desc = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText.ToLower(); }
-                if (desc.Contains("matches any socket"))
-                {
-                    slot = ItemSlot.Prismatic;
-                }
-                else if (desc.Contains("matches a "))
+				if (desc.Contains("matches any socket"))
+				{
+					slot = ItemSlot.Prismatic;
+				}
+				else if (desc.Contains("matches a "))
 				{
 					bool red = desc.Contains("red");
 					bool blue = desc.Contains("blue");
@@ -1045,10 +1045,10 @@ namespace Rawr
 				}
 				else if (desc.Contains("meta gem slot"))
 					slot = ItemSlot.Meta;
-                #endregion
+				#endregion
 
-                #region Normalize alliance/horde set names
-                setName = setName.Replace("Sunstrider's", "Khadgar's")   // Mage T9
+				#region Normalize alliance/horde set names
+				setName = setName.Replace("Sunstrider's", "Khadgar's")   // Mage T9
 								 .Replace("Zabra's", "Velen's") // Priest T9
 								 .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
 								 .Replace("Garona's", "VanCleef's") // Rogue T9
@@ -1057,70 +1057,54 @@ namespace Rawr
 								 .Replace("Thrall's", "Nobundo's") // Shaman T9
 								 .Replace("Liadrin's", "Turalyon's") // Paladin T9
 								 .Replace("Hellscream's", "Wrynn's") // Warrior T9
-                                 .Replace("Kolitra's", "Koltira's") // Fix for Death Knight T9 set name being misspelled
-                                 .Replace("Koltira's", "Thassarian's") // Death Knight T9
+								 .Replace("Kolitra's", "Koltira's") // Fix for Death Knight T9 set name being misspelled
+								 .Replace("Koltira's", "Thassarian's") // Death Knight T9
 								 .Replace("Regaila", "Regalia"); // Fix for Moonkin set name being misspelled
-                #endregion
+				#endregion
 
-                Item item = new Item()
-                {
+				Item item = new Item()
+				{
 					Id = id,
-                    Name = name,
-                    Bind = bind,
-                    Quality = quality,
-                    Type = type,
+					Name = name,
+					Bind = bind,
+					Quality = quality,
+					Type = type,
 					Faction = faction,
-                    IconPath = iconPath,
-                    Slot = slot,
-                    SetName = setName,
-                    Stats = stats,
-                    SocketColor1 = socketColor1,
-                    SocketColor2 = socketColor2,
-                    SocketColor3 = socketColor3,
-                    SocketBonus = socketStats,
-                    MinDamage = minDamage,
-                    MaxDamage = maxDamage,
-                    DamageType = damageType,
-                    Speed = speed,
-                    RequiredClasses = string.Join("|", requiredClasses.ToArray()),
-                    Unique = unique,
-                    ItemLevel = itemLevel,
-                };
+					IconPath = iconPath,
+					Slot = slot,
+					SetName = setName,
+					Stats = stats,
+					SocketColor1 = socketColor1,
+					SocketColor2 = socketColor2,
+					SocketColor3 = socketColor3,
+					SocketBonus = socketStats,
+					MinDamage = minDamage,
+					MaxDamage = maxDamage,
+					DamageType = damageType,
+					Speed = speed,
+					RequiredClasses = string.Join("|", requiredClasses.ToArray()),
+					Unique = unique,
+					ItemLevel = itemLevel,
+				};
 
 				//item.Stats.ConvertStatsToWotLKEquivalents();
 
-                return item;
+				return item;
 			} catch (Exception ex) {
-                //This condition is now accounted for elsewhere since this function is usually called in a loop and would display
-                //the armory not accessable error many many times.
-                //if (docItem == null || docItem.InnerXml.Length == 0)
-                //{
-                //    System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
-                //    "from Armory: {0}. Rawr recieved no response to its query for item" +
-                //    " data, so please check to make sure that no firewall " +
-                //    "or proxy software is blocking Rawr. If you still encounter this error, please copy and" +
-                //    " paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
-                //    gemmedId, "null", ex.Message, ex.StackTrace));
-                //}
-                //else
-                //{
-                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + id);
-                    //System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
-                    //"from Armory: {0}. If you still encounter this error, please copy and" +
-                    //" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
-                    //gemmedId, docItem.OuterXml, ex.Message, ex.StackTrace));
-				//}
+				//This condition is now accounted for elsewhere since this function is usually called in a loop and would display
+				//the armory not accessable error many many times.
+				StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + id);
 				return null;
 			}
 		}
 
-        /// <summary>
-        /// Call this when the armory has set armorBonus="1"
-        /// </summary>
-        /// <param name="stats">in/out stats object that contains the armor values.</param>
-        /// <param name="slot"></param>
-        /// <param name="type"></param>
-        /// <param name="id"></param>
+		/// <summary>
+		/// Call this when the armory has set armorBonus="1"
+		/// </summary>
+		/// <param name="stats">in/out stats object that contains the armor values.</param>
+		/// <param name="slot"></param>
+		/// <param name="type"></param>
+		/// <param name="id"></param>
 		private static void DetermineBaseBonusArmor(Stats stats, ItemSlot slot, ItemType type, int id)
 		{
 			float totalArmor = stats.Armor;
@@ -1131,68 +1115,68 @@ namespace Rawr
 				slot == ItemSlot.Trinket || slot == ItemSlot.TwoHand)
 				bonusArmor = totalArmor;
 			else 
-                // Specific Items.
-                // Changed this to a switch statement since this list is going to get LOONNNGGG
-                switch (id)
-                {
-                    case (41190):  //Legplates of Conquest
-                        bonusArmor = 138; break;
-                    case (45267):  //Saronite Plated Legguards
-                        bonusArmor = 826; break;
-                    case (50968):  //Cataclysmic Chestguard
-                        bonusArmor = 1176; break;
-                    case (50802):  // Gargoyle Spit Bracers
-                        bonusArmor = 630; break;
-                    case (51901):  // Gargoyle Spit Bracers heroic
-                        bonusArmor = 714; break;
-                    case (49904):  // Pillars of Might
-                        bonusArmor = 1190; break;
-                    case (50991):  // Verdigris Chain Belt
-                        bonusArmor = 658; break;
-                    case (50978):  // Gauntlets of the Kraken
-                        bonusArmor = 1008; break;
+				// Specific Items.
+				// Changed this to a switch statement since this list is going to get LOONNNGGG
+				switch (id)
+				{
+					case (41190):  //Legplates of Conquest
+						bonusArmor = 138; break;
+					case (45267):  //Saronite Plated Legguards
+						bonusArmor = 826; break;
+					case (50968):  //Cataclysmic Chestguard
+						bonusArmor = 1176; break;
+					case (50802):  // Gargoyle Spit Bracers
+						bonusArmor = 630; break;
+					case (51901):  // Gargoyle Spit Bracers heroic
+						bonusArmor = 714; break;
+					case (49904):  // Pillars of Might
+						bonusArmor = 1190; break;
+					case (50991):  // Verdigris Chain Belt
+						bonusArmor = 658; break;
+					case (50978):  // Gauntlets of the Kraken
+						bonusArmor = 1008; break;
 
-                    #region cloaks
-                    case (41238): // Cloak of Tormented Skies
-                        bonusArmor = 210; break;
-                    case (37084): // Flowing Cloak of Command
-                        bonusArmor = 364; break;
-                    case (39225):  //Cloak of Armed Strife
-                        bonusArmor = 336; break;
-                    case (40252):  //Cloak of Shadowed Sun
-                        bonusArmor = 336; break;
-                    case (50466):  //Sentinel's Winter Cloaks
-                        bonusArmor = 560; break;
-                    #endregion 
-                    #region Set Chest
-                    case (50864):  //Lightsworn Chestguard
-                    case (50857):  //Scourgelord Chestguard
-                    case (50850):  //Ymirjar Lord's Breastplate
-                        bonusArmor = 1064; break;
-                    case (51174):  // Sanctified Lightsworn Chestguard (pally)
-                    case (51134):  // Sanctified Scourgelord Chestguard (DK)
-                    case (51219):  // Sanctified Ymirjar Lord's Breastplate (Warrior)
-                        bonusArmor = 1190; break;
-                    case (51265):  // Sanctified Lightsworn Chestguard Heroic
-                    case (51305):  // Sanctified Scourgelord Chestguard Heroic
-                    case (51220):  // Sanctified Ymirjar Lord's Breastplate Heroic
-                        bonusArmor = 1344; break;
-                    #endregion
-                    #region Set Hands
-                    case (50863):  //Lightsworn Handguards
-                    case (50856):  //Scourgelord Handguards
-                    case (50849):  //Ymirjar Lord's Handguards
-                        bonusArmor = 882; break;
-                    case (51132):  // Sanctified Scourgelord Handguards
-                    case (51172):  // Sanctified Lightsworn Handguards
-                    case (51217):  // Sanctified Ymirjar Lord's Handguards
-                        bonusArmor = 1008; break;
-                    case (51267):  //Sanctified Lightsworn Handguards Heroic
-                    case (51307):  // Sanctified Scourgelord Handguards Heroic
-                    case (51222):  // Sanctified Ymirjar Lord's Handguards Heroic
-                        bonusArmor = 1148; break;
-                    #endregion
-                }
+					#region cloaks
+					case (41238): // Cloak of Tormented Skies
+						bonusArmor = 210; break;
+					case (37084): // Flowing Cloak of Command
+						bonusArmor = 364; break;
+					case (39225):  //Cloak of Armed Strife
+						bonusArmor = 336; break;
+					case (40252):  //Cloak of Shadowed Sun
+						bonusArmor = 336; break;
+					case (50466):  //Sentinel's Winter Cloaks
+						bonusArmor = 560; break;
+					#endregion 
+					#region Set Chest
+					case (50864):  //Lightsworn Chestguard
+					case (50857):  //Scourgelord Chestguard
+					case (50850):  //Ymirjar Lord's Breastplate
+						bonusArmor = 1064; break;
+					case (51174):  // Sanctified Lightsworn Chestguard (pally)
+					case (51134):  // Sanctified Scourgelord Chestguard (DK)
+					case (51219):  // Sanctified Ymirjar Lord's Breastplate (Warrior)
+						bonusArmor = 1190; break;
+					case (51265):  // Sanctified Lightsworn Chestguard Heroic
+					case (51305):  // Sanctified Scourgelord Chestguard Heroic
+					case (51220):  // Sanctified Ymirjar Lord's Breastplate Heroic
+						bonusArmor = 1344; break;
+					#endregion
+					#region Set Hands
+					case (50863):  //Lightsworn Handguards
+					case (50856):  //Scourgelord Handguards
+					case (50849):  //Ymirjar Lord's Handguards
+						bonusArmor = 882; break;
+					case (51132):  // Sanctified Scourgelord Handguards
+					case (51172):  // Sanctified Lightsworn Handguards
+					case (51217):  // Sanctified Ymirjar Lord's Handguards
+						bonusArmor = 1008; break;
+					case (51267):  //Sanctified Lightsworn Handguards Heroic
+					case (51307):  // Sanctified Scourgelord Handguards Heroic
+					case (51222):  // Sanctified Ymirjar Lord's Handguards Heroic
+						bonusArmor = 1148; break;
+					#endregion
+				}
 
 			stats.BonusArmor = bonusArmor;
 			stats.Armor = totalArmor - bonusArmor;
@@ -1414,57 +1398,57 @@ namespace Rawr
 				idealGems.Add(ItemSlot.None, 0);
 
 				#region status queuing
-                if (slot != CharacterSlot.None)
-                {
-                    StatusMessaging.UpdateStatus(slot.ToString(), "Queued");
-                }
-                else
-                {
-                    StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Back.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Chest.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Wrist.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Hands.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Waist.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Legs.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Feet.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Finger1.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Finger2.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Trinket1.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Trinket2.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
-                    StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
-                }
+				if (slot != CharacterSlot.None)
+				{
+					StatusMessaging.UpdateStatus(slot.ToString(), "Queued");
+				}
+				else
+				{
+					StatusMessaging.UpdateStatus(CharacterSlot.Head.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Neck.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Shoulders.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Back.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Chest.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Wrist.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Hands.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Waist.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Legs.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Feet.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Finger1.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Finger2.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Trinket1.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Trinket2.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.MainHand.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.OffHand.ToString(), "Queued");
+					StatusMessaging.UpdateStatus(CharacterSlot.Ranged.ToString(), "Queued");
+				}
 
 				#endregion
 				
-                if (slot != CharacterSlot.None)
-                {
-                    LoadUpgradesForSlot(character, slot, idealGems, cancel);
-                }
-                else
-                {
-                    LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems, cancel);
-                    LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems, cancel);
-                }
+				if (slot != CharacterSlot.None)
+				{
+					LoadUpgradesForSlot(character, slot, idealGems, cancel);
+				}
+				else
+				{
+					LoadUpgradesForSlot(character, CharacterSlot.Head, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Neck, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Shoulders, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Back, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Chest, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Wrist, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Hands, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Waist, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Legs, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Feet, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Finger1, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Finger2, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Trinket1, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Trinket2, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.MainHand, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.OffHand, idealGems, cancel);
+					LoadUpgradesForSlot(character, CharacterSlot.Ranged, idealGems, cancel);
+				}
 			}
 			else
 			{
@@ -1472,17 +1456,17 @@ namespace Rawr
 			}
 		}
 
-        private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems, Wowhead.UpgradeCancelCheck cancel)
+		private static void LoadUpgradesForSlot(Character character, CharacterSlot slot, Dictionary<ItemSlot, int> idealGems, Wowhead.UpgradeCancelCheck cancel)
 		{
-            if( cancel != null && cancel() )
-                return;
+			if( cancel != null && cancel() )
+				return;
 
 			XmlDocument docUpgradeSearch = null;
 			try
 			{
 				StatusMessaging.UpdateStatus(slot.ToString(), "Downloading Upgrade List");
 				ItemInstance itemToUpgrade = character[slot];
-                if ((object)itemToUpgrade != null)
+				if ((object)itemToUpgrade != null)
 				{
 					WebRequestWrapper wrw = new WebRequestWrapper();
 					docUpgradeSearch = wrw.DownloadUpgrades(character.Name, character.Region,character.Realm,itemToUpgrade.Id);
@@ -1493,23 +1477,23 @@ namespace Rawr
 						XmlNodeList nodeList = docUpgradeSearch.SelectNodes("page/armorySearch/searchResults/items/item");
 						for (int i = 0; i < nodeList.Count; i++)
 						{
-                            if (cancel != null && cancel())
-                                break;
+							if (cancel != null && cancel())
+								break;
 
 							StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
 							string id = nodeList[i].Attributes["id"].Value;
-                            if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
+							if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
 							{
 								Item idealItem = GetItem(int.Parse(id), "Loading Upgrades");
 								if (idealItem != null)
 								{
-                                    ItemInstance idealGemmedItem = new ItemInstance(int.Parse(id), idealGems[idealItem.SocketColor1], idealGems[idealItem.SocketColor2], idealGems[idealItem.SocketColor3], itemToUpgrade.EnchantId);
+									ItemInstance idealGemmedItem = new ItemInstance(int.Parse(id), idealGems[idealItem.SocketColor1], idealGems[idealItem.SocketColor2], idealGems[idealItem.SocketColor3], itemToUpgrade.EnchantId);
 
 									Item newItem = ItemCache.AddItem(idealItem, false);
 
 									//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
 									// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
-                                    ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealGemmedItem, character, slot);
+									ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealGemmedItem, character, slot);
 
 									if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
 									{
@@ -1521,14 +1505,14 @@ namespace Rawr
 					}
 					else
 					{
-                        StatusMessaging.ReportError(slot.ToString(), null, "No response returned from Armory");
+						StatusMessaging.ReportError(slot.ToString(), null, "No response returned from Armory");
 					}
 				}
 				StatusMessaging.UpdateStatusFinished(slot.ToString());
 			}
 			catch (Exception ex)
 			{
-                StatusMessaging.ReportError(slot.ToString(), ex, "Error interpreting the data returned from the Armory");
+				StatusMessaging.ReportError(slot.ToString(), ex, "Error interpreting the data returned from the Armory");
 			}
 		}
 	}
