@@ -30,20 +30,20 @@ x:Class="Rawr.UI.BossPicker"
 		<RowDefinition Height="*" />
 	</Grid.RowDefinitions>
         <TextBlock x:Name="LB_Notice" FontWeight="SemiBold" Foreground="#FFB4B524" Text="NOTICE: Many models do not yet support the Boss Handler so changes here will not have any effect on your character in those models." TextAlignment="Center" TextWrapping="Wrap" Margin="2" Grid.Row="1" Visibility="Collapsed"/>
-	<local:GroupBox x:Name="GB_Preset" Header="Select a Preset" Margin="2" d:LayoutOverrides="Width" Grid.Row="2">
-		<Grid Margin="0">
-			<dataInput:Label x:Name="LB_where" Height="15" HorizontalAlignment="Left" Margin="3,6,0,0" VerticalAlignment="Top" Content="Where"/>
-			<dataInput:Label x:Name="LB_Is" Height="15" HorizontalAlignment="Left" Margin="127,6,0,0" VerticalAlignment="Top" Content="is"/>
-			<ComboBox x:Name="CB_BL_FilterType" Height="21" HorizontalAlignment="Left" Margin="44,3,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
+	<local:GroupBox x:Name="GB_Preset" Header="Select a Preset" Margin="0,2" d:LayoutOverrides="Width" Grid.Row="2">
+		<Grid>
+			<dataInput:Label x:Name="LB_where" Height="15" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" Content="Where"/>
+			<dataInput:Label x:Name="LB_Is" Height="15" HorizontalAlignment="Left" Margin="125,3,0,0" VerticalAlignment="Top" Content="is"/>
+			<ComboBox x:Name="CB_BL_FilterType" Height="21" HorizontalAlignment="Left" Margin="41,0,0,0" VerticalAlignment="Top" Width="80" SelectionChanged="CB_BL_FilterType_SelectedIndexChanged">
 				<ComboBoxItem x:Name="CBI_Content" Content="Content"/>
 				<ComboBoxItem x:Name="CBI_Instance" Content="Instance"/>
 				<ComboBoxItem x:Name="CBI_Version" Content="Version"/>
 				<ComboBoxItem x:Name="CBI_Name" Content="Name"/>
 			</ComboBox>
-			<ComboBox x:Name="CB_BL_Filter" Height="21" Margin="139,3,3,0" VerticalAlignment="Top" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
+			<ComboBox x:Name="CB_BL_Filter" Height="21" Margin="138,0,0,0" VerticalAlignment="Top" SelectionChanged="CB_BL_Filter_SelectedIndexChanged">
 				<ComboBoxItem x:Name="CBI_All" Content="All"/>
 			</ComboBox>
-			<ComboBox x:Name="CB_BossList" Height="21" Margin="3,28,3,0" VerticalAlignment="Top" SelectionChanged="CB_BossList_SelectedIndexChanged">
+			<ComboBox x:Name="CB_BossList" Height="21" Margin="0,25,0,0" VerticalAlignment="Top" SelectionChanged="CB_BossList_SelectedIndexChanged">
 				<ComboBoxItem x:Name="CBI_Custom" Content="Custom"/>
 			</ComboBox>
 		</Grid>
@@ -105,11 +105,11 @@ x:Class="Rawr.UI.BossPicker"
 				<TextBlock x:Name="LB_Under20Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" Margin="2" Text="% Time Spent Sub 20% HP:" Grid.Row="5" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 				<inputToolkit:NumericUpDown x:Name="NUD_Under20Perc" Maximum="25" Minimum="15" Margin="2" Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" Value="{Binding Under20Perc, Converter={StaticResource PercentConverter}, Mode=TwoWay}"/>
 				<TextBlock x:Name="LB_Under20Perc2" Text="%" Margin="2" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
-				<CheckBox x:Name="CK_InBack" Content="You stand behind boss *" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" d:LayoutOverrides="Width" VerticalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="2"/>
+				<CheckBox x:Name="CK_InBack" Content="You stand behind boss: *" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" d:LayoutOverrides="Width" VerticalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="2"/>
 				<inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Melee" Margin="2" Value="{Binding InBackPerc_Melee, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="6" IsEnabled="False"/>
 				<inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Ranged" Margin="2" Value="{Binding InBackPerc_Ranged, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="6" IsEnabled="False" Visibility="Collapsed"/>
 				<TextBlock x:Name="LB_InBehindPerc" Text="%" Margin="2" Grid.Column="3" VerticalAlignment="Center" Grid.Row="6"/>
-				<TextBlock x:Name="LB_MaxPlayers" Text="Raid Size" Margin="2" Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+				<TextBlock x:Name="LB_MaxPlayers" Text="Raid Size:" Margin="2" Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 				<ComboBox x:Name="CB_MaxPlayers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="7" d:LayoutOverrides="Height" SelectedItem="{Binding Max_Players, Mode=TwoWay}">
 					<System:Int32>1</System:Int32>
 					<System:Int32>5</System:Int32>
@@ -117,7 +117,7 @@ x:Class="Rawr.UI.BossPicker"
 					<System:Int32>25</System:Int32>
 					<System:Int32>40</System:Int32>
 				</ComboBox>
-				<TextBlock x:Name="LB_MinTanks" Text="Minimum Tanks" Margin="2" Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+				<TextBlock x:Name="LB_MinTanks" Text="Minimum Tanks:" Margin="2" Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 				<ComboBox x:Name="CB_MinTanks" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="8" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Tanks, Mode=TwoWay}">
 					<System:Int32>1</System:Int32>
 					<System:Int32>2</System:Int32>
@@ -125,7 +125,7 @@ x:Class="Rawr.UI.BossPicker"
 					<System:Int32>4</System:Int32>
 					<System:Int32>5</System:Int32>
 				</ComboBox>
-				<TextBlock x:Name="LB_MinHealers" Text="Minimum Healers" Margin="2" Grid.Column="0" Grid.Row="9" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+				<TextBlock x:Name="LB_MinHealers" Text="Minimum Healers:" Margin="2" Grid.Column="0" Grid.Row="9" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
 				<ComboBox x:Name="CB_MinHealers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="9" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Healers, Mode=TwoWay}">
 					<System:Int32>1</System:Int32>
 					<System:Int32>2</System:Int32>
@@ -149,16 +149,17 @@ x:Class="Rawr.UI.BossPicker"
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<CheckBox x:Name="CK_MultiTargs" Content="Multiple Targets *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" IsChecked="{Binding MultiTargs, Mode=TwoWay}" Margin="2" Height="18" VerticalAlignment="Center"/>
+				<CheckBox x:Name="CK_MultiTargs" Content="Multiple Targets: *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" IsChecked="{Binding MultiTargs, Mode=TwoWay}" Margin="2" Height="18" VerticalAlignment="Center"/>
 				<Button x:Name="BT_MultiTargs" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_MultiTargs, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_MultiTargs_Click" IsEnabled="False" Grid.Column="1" Grid.ColumnSpan="4" Visibility="Collapsed" />
-				<CheckBox x:Name="CK_Attacks" Content="Boss Does Damage *" ToolTipService.ToolTip="" IsChecked="{Binding DamagingTargs, Mode=TwoWay}" Margin="2" VerticalAlignment="Center" Grid.Row="1"/>
+				<CheckBox x:Name="CK_Attacks" Content="Boss Does Damage: *" ToolTipService.ToolTip="" IsChecked="{Binding DamagingTargs, Mode=TwoWay}" Margin="2" VerticalAlignment="Center" Grid.Row="1"/>
 				<Button x:Name="BT_Attacks" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_Attacks, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_Attacks_Click" IsEnabled="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" />
 			</Grid>
 		</layoutToolkit:AccordionItem>
 		<layoutToolkit:AccordionItem x:Name="AI_Defensive" Header="Defensive" HorizontalContentAlignment="Stretch" VerticalAlignment="Top">
 			<Grid Margin="2,2,2,8">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -171,29 +172,30 @@ x:Class="Rawr.UI.BossPicker"
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				
-				<TextBlock x:Name="LB_Resist_Physical" Text="Resist Physical" Grid.Row="0" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Physical" Value="{Binding Resist_Physical, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Physical2" Text="%" Grid.Column="2" Grid.Row="0" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Frost" Text="Resist Frost" Grid.Row="1" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Frost" Value="{Binding Resist_Frost, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Frost2" Text="%" Grid.Column="2" Grid.Row="1" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Fire" Text="Resist Fire" Grid.Row="2" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Fire" Value="{Binding Resist_Fire, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Fire2" Text="%" Grid.Column="2" Grid.Row="2" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Nature" Text="Resist Nature" Grid.Row="3" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Nature" Value="{Binding Resist_Nature, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Nature2" Text="%" Grid.Column="2" Grid.Row="3" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Arcane" Text="Resist Arcane" Grid.Row="4" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Arcane" Value="{Binding Resist_Arcane, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Arcane2" Text="%" Grid.Column="2" Grid.Row="4" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Shadow" Text="Resist Shadow" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Shadow" Value="{Binding Resist_Shadow, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Shadow2" Text="%" Grid.Column="2" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
-				<TextBlock x:Name="LB_Resist_Holy" Text="Resist Holy" Grid.Row="6" Margin="2" VerticalAlignment="Center" />
-				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Holy" Value="{Binding Resist_Holy, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
-				<TextBlock x:Name="LB_Resist_Holy2" Text="%" Grid.Column="2" Grid.Row="6" Margin="2" VerticalAlignment="Center" />
-			</Grid>
+
+                <TextBlock HorizontalAlignment="Left" Margin="2" Name="LB_Resistances" Text="Resistances" VerticalAlignment="Center" Grid.ColumnSpan="3" FontWeight="Bold" />
+                <TextBlock x:Name="LB_Resist_Physical" Text="Physical:" Grid.Row="1" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Physical" Value="{Binding Resist_Physical, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="1" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Physical2" Text="%" Grid.Column="2" Grid.Row="1" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Frost" Text="Frost:" Grid.Row="2" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Frost" Value="{Binding Resist_Frost, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Frost2" Text="%" Grid.Column="2" Grid.Row="2" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Fire" Text="Fire:" Grid.Row="3" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Fire" Value="{Binding Resist_Fire, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Fire2" Text="%" Grid.Column="2" Grid.Row="3" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Nature" Text="Nature:" Grid.Row="4" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Nature" Value="{Binding Resist_Nature, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Nature2" Text="%" Grid.Column="2" Grid.Row="4" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Arcane" Text="Arcane:" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Arcane" Value="{Binding Resist_Arcane, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Arcane2" Text="%" Grid.Column="2" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Shadow" Text="Shadow:" Grid.Row="6" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Shadow" Value="{Binding Resist_Shadow, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Shadow2" Text="%" Grid.Column="2" Grid.Row="6" Margin="2" VerticalAlignment="Center" />
+				<TextBlock x:Name="LB_Resist_Holy" Text="Holy:" Grid.Row="7" Margin="2" VerticalAlignment="Center" />
+				<inputToolkit:NumericUpDown x:Name="NUD_Resist_Holy" Value="{Binding Resist_Holy, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="1" Grid.Row="7" Margin="2" VerticalAlignment="Center"/>
+				<TextBlock x:Name="LB_Resist_Holy2" Text="%" Grid.Column="2" Grid.Row="7" Margin="2" VerticalAlignment="Center" />
+            </Grid>
 		</layoutToolkit:AccordionItem>
 		<layoutToolkit:AccordionItem x:Name="AI_Impedances" Header="Impedances" HorizontalContentAlignment="Stretch" VerticalAlignment="Top">
 			<Grid Margin="2,2,2,8">

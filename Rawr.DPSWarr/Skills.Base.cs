@@ -57,7 +57,19 @@ namespace Rawr.DPSWarr.Skills
             get
             {
 #if RAWR3 || SILVERLIGHT
-                if (BossOpts.MultiTargs) { return 1f + (Math.Min((float)BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc/* / 100f*/ + StatS.BonusTargets; }
+                /*if (BossOpts.MultiTargs) {
+                    return 1f + (Math.Min((float)BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc + StatS.BonusTargets;
+                }*/
+                if (BossOpts.MultiTargs)
+                {
+                    float value = 0;
+                    foreach (TargetGroup tg in BossOpts.Targets) {
+                        if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
+                        float upTime = tg.Frequency / BossOpts.BerserkTimer * tg.Duration * tg.Chance;
+                        value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + StatS.BonusTargets)) * upTime;
+                    }
+                    return value;
+                }
 #else
                 if (CalcOpts.MultipleTargets) { return 1f + (Math.Min(CalcOpts.MultipleTargetsMax, 1f) - 1f) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets; }
 #endif
@@ -435,7 +447,18 @@ namespace Rawr.DPSWarr.Skills
                 if (_AvgTargets == -1f)
                 {
 #if RAWR3 || SILVERLIGHT
-                    _AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc/* / 100f*/ * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
+                    //_AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
+                    if (BossOpts.MultiTargs)
+                    {
+                        float value = 1;
+                        foreach (TargetGroup tg in BossOpts.Targets)
+                        {
+                            if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
+                            float upTime = tg.Frequency / BossOpts.BerserkTimer * tg.Duration * tg.Chance;
+                            value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + StatS.BonusTargets)) * upTime;
+                        }
+                        _AvgTargets = value;
+                    }
 #else
                     _AvgTargets = 1f + (CalcOpts.MultipleTargets ? StatS.BonusTargets + CalcOpts.MultipleTargetsPerc / 100f * (Math.Min(CalcOpts.MultipleTargetsMax, Targets) - 1f) : 0f);
 #endif
@@ -512,7 +535,7 @@ namespace Rawr.DPSWarr.Skills
                         validatedSet = false;
                     }
 #if RAWR3 || SILVERLIGHT
-                    else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.MultiTargsPerc == 0))
+                    else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
 #else
                     else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
 #endif

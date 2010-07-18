@@ -48,7 +48,16 @@ namespace Rawr.DPSWarr
             if (clok)
             {
 #if RAWR3 || SILVERLIGHT
-                percHS -= (float)BossOpts.MultiTargsPerc/* / 100f*/;
+                //percHS -= (float)BossOpts.MultiTargsPerc;
+                {
+                    float time = 0;
+                    foreach(TargetGroup tg in BossOpts.Targets) {
+                        if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
+                        time += tg.Frequency / BossOpts.BerserkTimer * tg.Duration / 1000f;
+                    }
+                    float perc = time / BossOpts.BerserkTimer;
+                    percHS -= Math.Max(0f, Math.Min(1f, perc)); 
+                }
 #else
                 percHS -= CalcOpts.MultipleTargetsPerc / 100f;
 #endif
@@ -70,7 +79,21 @@ namespace Rawr.DPSWarr
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-                percHS -= (float)BossOpts.MultiTargsPerc/* / 100f*/;
+#if RAWR3 || SILVERLIGHT
+                //percHS -= (float)BossOpts.MultiTargsPerc;
+                {
+                    float time = 0;
+                    foreach (TargetGroup tg in BossOpts.Targets)
+                    {
+                        if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
+                        time += tg.Frequency / BossOpts.BerserkTimer * tg.Duration / 1000f;
+                    }
+                    float perc = time / BossOpts.BerserkTimer;
+                    percHS -= Math.Max(0f, Math.Min(1f, perc));
+                }
+#else
+                percHS -= (float)CalcOpts.MultipleTargetsPerc / 100f;
+#endif
             }
             percCL = (clok ? 1f - percHS : 0f);
             if (_BS != null) _BS.maintainActs = MaintainCDs;

@@ -554,8 +554,16 @@ namespace Rawr {
             value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
             value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
             // Multi-targs
-            value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsPerc    ); } retboss.MultiTargsPerc     = value;
-            value = 3;      foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MaxNumTargets     ); } retboss.MaxNumTargets      = value;
+            {
+                float f = -1, d = -1, n = 1;
+                value = 0;      foreach (BossHandler boss in passedList) { if (boss.MultiTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MultiTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
+                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
+                value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsNum); } n = value;
+                if (f <= 0 || d <= 0 || n <= 0) {
+                } else {
+                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
+                }
+            }
             #region Impedances
             {   // Move
                 float f = -1, d = -1;
@@ -742,8 +750,16 @@ namespace Rawr {
             value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
             value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
             // Multi-targs
-            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsPerc; } value /= passedList.Length; retboss.MultiTargsPerc = value;
-            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MaxNumTargets; } value /= passedList.Length; retboss.MaxNumTargets = (float)Math.Ceiling(value);
+            {
+                float f = -1, d = -1, n = 1;
+                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MultiTargsFreq > 0 && boss.MultiTargsFreq < boss.BerserkTimer) ? boss.MultiTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
+                value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsDur; } value /= passedList.Length; d = value;
+                value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsNum; } value /= passedList.Length; n = value;
+                if (f <= 0 || d == 0) {
+                } else {
+                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
+                }
+            }
             #region Impedances
             {
                 // Move
@@ -918,8 +934,18 @@ namespace Rawr {
             value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
             value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
             // Multi-targs
-            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
-            value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MaxNumTargets      ); } retboss.MaxNumTargets     = (float)Math.Ceiling(value);
+            {
+                float f = -1, d = -1, n = 1;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsFreq > 0 ? boss.MultiTargsFreq : value); } f = value;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsDur); } d = value;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsNum); } n = value;
+                if (f == 0 || d == 0) {
+                } else {
+                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = false, });
+                }
+            }
+            //value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
+            //value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MaxNumTargets      ); } retboss.MaxNumTargets     = (float)Math.Ceiling(value);
             #region Impedances
             {
                 // Move

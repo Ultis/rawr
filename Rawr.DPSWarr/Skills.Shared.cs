@@ -316,7 +316,8 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             ReqMultiTargs = true;
 #if RAWR3 || SILVERLIGHT
-            Cd = BossOpts.MultiTargsPerc != 0 ? 30f / ((float)BossOpts.MultiTargsPerc/* / 100f*/) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
+            Cd = FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact));
+                //BossOpts.MultiTargsPerc != 0 ? 30f / ((float)BossOpts.MultiTargsPerc/* / 100f*/) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #else
             Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #endif
@@ -399,7 +400,15 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
 #if RAWR3 || SILVERLIGHT
-            Targets += (BossOpts.MultiTargs ? ((float)BossOpts.MaxNumTargets - 1f) : 0f);
+            {
+                float value = 0;
+                foreach (TargetGroup tg in BossOpts.Targets) {
+                    if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
+                    float upTime = tg.Frequency / BossOpts.BerserkTimer * tg.Duration * tg.Chance;
+                    value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1))) * upTime;
+                }
+                Targets += value;
+            }
 #else
             Targets += (CalcOpts.MultipleTargets ? (CalcOpts.MultipleTargetsMax - 1f) : 0f);
 #endif

@@ -99,9 +99,29 @@ namespace Rawr.Enhance
             _inBack = ((_inBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
             _targetFireResistance = (float)boss.Resistance(ItemDamageType.Fire);
             _targetNatureResistance = (float)boss.Resistance(ItemDamageType.Nature);
-            _multipleTargets = boss.MaxNumTargets > 1;
-            _additionalTargets = (int)boss.MaxNumTargets - 1;
-            _additionalTargetPercent = (float)boss.MultiTargsPerc;
+            //_additionalTargets = (int)boss.MaxNumTargets - 1;
+            {
+                float value = 0;
+                foreach (TargetGroup tg in boss.Targets)
+                {
+                    if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
+                    value += tg.Frequency / boss.BerserkTimer * tg.Duration / 1000f;
+                }
+                float num = value / boss.Targets.Count;
+                _additionalTargets = (int)num - 1;
+            }
+            //_additionalTargetPercent = (float)boss.MultiTargsPerc;
+            {
+                float time = 0;
+                foreach (TargetGroup tg in boss.Targets)
+                {
+                    if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
+                    time += tg.Frequency / boss.BerserkTimer * tg.Duration / 1000f;
+                }
+                float perc = time / boss.BerserkTimer;
+                _additionalTargetPercent = Math.Max(0f, Math.Min(1f, perc));
+            }
+            _multipleTargets = _additionalTargets > 0 && _additionalTargetPercent > 0;
         }
 
         public bool PriorityInUse(EnhanceAbility abilityType)

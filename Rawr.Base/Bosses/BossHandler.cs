@@ -162,7 +162,7 @@ namespace Rawr {
         public float Frequency = -1;
         /// <summary>In MilliSeconds (1/1000 of a second)<para>Defaults to 20 seconds</para></summary>
         public float Duration = 20 * 1000;
-        /// <summary>Percentage, 0.50f = 50% Chance that this occurrs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
+        /// <summary>Percentage, 0.50f = 50% Chance that this occurs<para>Defaults to and almost every time in usage this should be 1.00f=100%</para></summary>
         public float Chance = 1.00f;
         /// <summary>The Number of Targets in this Target Group<para>Defaults to 2</para></summary>
         public float NumTargs = 2;
@@ -176,14 +176,9 @@ namespace Rawr {
         #region Functions
         public override string ToString()
         {
-            string retVal = "";
             if (Frequency <= 0) return "None";
-            retVal += "T: " + NumTargs.ToString("0") + "";
-            retVal += " F: " + Frequency.ToString("0") + "s";
-            retVal += " D: " + (Duration / 1000).ToString("0.00") + "s";
-            retVal += " C: " + Chance.ToString("0.0%");
-            retVal += NearBoss ? " : NB" : "";
-            return retVal;
+            return string.Format("#T: {0:0} F: {1:0.0}s D: {2:0}s C: {3:0%}%{4}",
+                NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "");
         }
         #endregion
     }
@@ -428,8 +423,8 @@ namespace Rawr {
                        INBACKPERC_RANGED = 0.00d;
         #endregion
         #region ==== Offensive ====
-        private double MAXNUMTARGS = 1d;
-        private double MULTITARGSPERC = 0.00d;
+        //private double MAXNUMTARGS = 1d;
+        //private double MULTITARGSPERC = 0.00d;
         public List<TargetGroup> Targets = new List<TargetGroup>();
         /// <summary>WARNING! This variable is not presently used!</summary>
         private List<DoT> DOTS = new List<DoT>();
@@ -481,8 +476,8 @@ namespace Rawr {
         #endregion
         #region ==== Offensive ====
         // ==== Multiple Targets ====
-        public double  MultiTargsPerc { get { return MULTITARGSPERC; } set { MULTITARGSPERC = CPd(value); OnPropertyChanged("MultiTargsPerc"); } }
-        public double  MaxNumTargets  { get { return MAXNUMTARGS;    } set { MAXNUMTARGS    = value; OnPropertyChanged("MaxNumTargs"        ); } }
+        //public double  MultiTargsPerc { get { return MULTITARGSPERC; } set { MULTITARGSPERC = CPd(value); OnPropertyChanged("MultiTargsPerc"); } }
+        //public double  MaxNumTargets  { get { return MAXNUMTARGS;    } set { MAXNUMTARGS    = value; OnPropertyChanged("MaxNumTargs"        ); } }
         public TargetGroup DynamicCompiler_MultiTargs {
             get {
                 // Make one
@@ -541,9 +536,8 @@ namespace Rawr {
                     foreach (TargetGroup s in Targets) { TotalMultiTargAmt += s.NumTargs; }
                     float dur = TotalMultiTargAmt / Targets.Count;
                     return dur;
-                } else { return MAXNUMTARGS; }
+                } else { return 0; }
             }
-            set { MAXNUMTARGS = value; }
         }
         public float MultiTargsChance {
             get {
@@ -580,6 +574,7 @@ namespace Rawr {
                 } else { return false; }
             }
         }
+        #region Attacks
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
@@ -605,7 +600,7 @@ namespace Rawr {
                     Dodgable = true,
                     Parryable = true,
                     Blockable = true,
-                    // Targetting Ignores
+                    // Targeting Ignores
                     IgnoresMTank = false,
                     IgnoresOTank = false,
                     IgnoresTTank = false,
@@ -656,7 +651,7 @@ namespace Rawr {
                 Dodgable = true,
                 Parryable = true,
                 Blockable = true,
-                // Targetting Ignores
+                // Targeting Ignores
                 IgnoresMTank = false,
                 IgnoresOTank = false,
                 IgnoresTTank = false,
@@ -811,6 +806,7 @@ namespace Rawr {
                 }
             }
         }
+        #endregion
         #endregion
         #region ==== Defensive ====
         public double Resist_Physical { get { return RESISTANCE_PHYSICAL; } set { RESISTANCE_PHYSICAL = value; OnPropertyChanged("Resist_Physical"); } }
@@ -1424,7 +1420,7 @@ namespace Rawr {
             }
         }
         // Offensive
-        public double[] MaxNumTargets
+        /*public double[] MaxNumTargets
         {
             get
             {
@@ -1463,7 +1459,7 @@ namespace Rawr {
                 this[i].MultiTargsPerc = value[i]; i++;
                 this[i].MultiTargsPerc = value[i];
             }
-        }
+        }*/
         // Defensive
         public double[] Resist_Physical
         {

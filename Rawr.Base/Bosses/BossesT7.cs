@@ -26,8 +26,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] {  2,  4,  0,  0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -39,14 +39,14 @@ namespace Rawr.Bosses {
                      * hit by these spikes will take 4,813 to 6,187 (Heroic: 5,688 to 7,312) physical
                      * damage and will be knocked into the air, suffering reduced fall damage when they land.
                      */
-                    Attack a = new Attack
-                    {
+                    Attack a = new Attack {
                         Name = "Impale",
                         DamageType = ItemDamageType.Physical,
-                        DamagePerHit = new float[] { (4813f + 6187f) / 2f, (5688f + 7312f) / 2f }[i],
+                        DamagePerHit = new float[] { (4813f + 6187f), (5688f + 7312f) }[i] / 2f,
                         MaxNumTargets = this[i].Max_Players,
                         AttackSpeed = 40.0f,
                         AttackType = ATTACK_TYPES.AT_AOE,
+                        IgnoresMTank = true,
                     };
                     this[i].Attacks.Add(a);
                     // When he Impales, he turns around and faces the raid
@@ -61,32 +61,45 @@ namespace Rawr.Bosses {
             #region Impedances
             for (int i = 0; i < 2; i++)
             {
+                Impedance M;
+                /* = Locust Swarm =
+                    * Every 80-120 seconds for 16 seconds you can't be on the target
+                    * Note: Adding 4 seconds to the Duration for moving out before it
+                    * starts and then back in after
+                */
+                this[i].Moves.Add(M = new Impedance()
                 {
-                    /* = Locust Swarm =
-                     * Every 80-120 seconds for 16 seconds you can't be on the target
-                     * Note: Adding 4 seconds to the Duration for moving out before it
-                     * starts and then back in after
-                    */
-                    this[i].Moves.Add(new Impedance()
-                    {
-                        Frequency = (80f + 120f) / 2f,
-                        Duration = (16f + 4f) * 1000f,
-                        Chance = 1f,
-                        Breakable = true
-                    });
-                }
+                    Frequency = (80f + 120f) / 2f,
+                    Duration = (16f + 4f) * 1000f,
+                    Chance = 1.00f,
+                    Breakable = false, // Because he's being Kited and if you stay near him you die
+                });
                 // Every time he Locust Swarms he summons a Crypt Guard
                 // Let's assume it's up for 10 seconds
-                float mtime = (this[i].BerserkTimer / 60f) * 10f;
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    Frequency = M.Frequency,
+                    Duration = 10 * 1000f,
+                    Chance = 1.00f,
+                    NearBoss = false,
+                    NumTargs = new float[] { 1 , 2 }[i],
+                });
                 // Every time he spawns a Crypt Guard and it dies, x seconds
                 // after he summons 10 scarabs from it's body
                 // Assuming they are up for 8 sec
-                mtime += ((this[i].BerserkTimer - 20f) / 60f) * 8f;
-                this[i].MaxNumTargets = 10f;
-                this[i].MultiTargsPerc = mtime / this[i].BerserkTimer;
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    Frequency = M.Frequency,
+                    Duration = 8 * 1000f,
+                    Chance = 1.00f,
+                    NearBoss = false,
+                    NumTargs = new float[] { 2, 4 }[i],
+                });
             }
             #endregion
-            // TODO: Adds
+            /* TODO:
+             * Damage from the Adds, minor but should still be there
+             */
         }
     }
     public class GrandWidowFaerlina : MultiDiffBoss
@@ -110,10 +123,18 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++) {
+                this[i].Targets.Add(new TargetGroup { // Worshippers
+                    Frequency = this[i].BerserkTimer - 1, // Once
+                    Chance = 1.00f,
+                    NearBoss = false,
+                    Duration = new float[] { 4, 6 }[i] * 5 * 1000, // 4(+2) adds, 5 seconds each, used to derage her
+                    NumTargs = 1
+                });
+
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new DoT
                 {
@@ -169,7 +190,6 @@ namespace Rawr.Bosses {
             #endregion
             /* TODO:
              * Frenzy
-             * Worshippers
              */
         }
     }
@@ -194,12 +214,18 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
-            MaxNumTargets = new double[] { 8, 8, 0, 0 };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].MultiTargsPerc = ((this[i].BerserkTimer / 40d) * 8d) / this[i].BerserkTimer;
+                // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
+                this[i].Targets.Add(new TargetGroup
+                {
+                    Frequency = 40,
+                    Chance = 1.00f,
+                    Duration = 8 * 1000,
+                    NumTargs = 8,
+                    NearBoss = true,
+                });
 
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 {
@@ -296,8 +322,8 @@ namespace Rawr.Bosses {
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
-             * Necrotic Poison
-             * Frenzy
+             * Necrotic Poison - Poison effect that reduces healing taken by 90% for 30 seconds.
+             * Frenzy - At 30% health, Maexxna will Frenzy, increasing attack speed and damage done by 50% (25 Player: damage by 75%).
              */
         }
     }
@@ -322,12 +348,20 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 3, 3, 0, 0 };
+            //MaxNumTargets = new double[] { 3, 3, 0, 0 };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
                 // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-                this[i].MultiTargsPerc = (this[i].BerserkTimer / 30f) * (20f) / this[i].BerserkTimer;
+                this[i].Targets.Add(new TargetGroup
+                {
+                    Frequency = 30,
+                    Chance = 1.00f,
+                    Duration = 20 * 1000,
+                    NumTargs = 2,
+                    NearBoss = false,
+                });
+                //this[i].MultiTargsPerc = (this[i].BerserkTimer / 30f) * (20f) / this[i].BerserkTimer;
 
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
@@ -378,8 +412,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -452,8 +486,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -535,8 +569,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -608,8 +642,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -671,8 +705,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -772,8 +806,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -834,8 +868,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -908,8 +942,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -965,8 +999,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1038,8 +1072,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1120,8 +1154,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1206,8 +1240,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1295,8 +1329,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1336,19 +1370,27 @@ namespace Rawr.Bosses {
             {
                 //Moves;
                 {
-                    // Every 30 seconds for 20 seconds dps has to jump onto the 6 adds that spawn
+                    // Every 30 seconds for 20 seconds DPS has to jump onto the 6 adds that spawn
+                    this[i].Targets.Add(new TargetGroup()
+                    {
+                        Frequency = 40,
+                        Chance = 1.00f,
+                        Duration = 16 * 1000,
+                        NumTargs = 6,
+                        NearBoss = false,
+                    });
                     this[i].Moves.Add(new Impedance()
                     {
                         Frequency = 30f + 20f,
-                        Duration = 20f * 1000f,
+                        Duration = (2 + 16 + 2) * 1000f,
                         Chance = 1f,
                         Breakable = false
                     });
-                    this[i].MultiTargsPerc += (this[i].BerserkTimer / (30f + 20f)) * (20f) / this[i].BerserkTimer;
-                    this[i].MaxNumTargets = 6 + 1;
+                    //this[i].MultiTargsPerc += (this[i].BerserkTimer / (30f + 20f)) * (20f) / this[i].BerserkTimer;
+                    //this[i].MaxNumTargets = 6 + 1;
                 }
                 {
-                    // Every (Shadow Fissure Cd) seconds dps has to move out for 5 seconds then back in for 1
+                    // Every (Shadow Fissure Cd) seconds DPS has to move out for 5 seconds then back in for 1
                     // 1/10 chance he'll pick you
                     this[i].Moves.Add(new Impedance()
                     {
@@ -1390,8 +1432,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1471,8 +1513,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1542,8 +1584,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1603,8 +1645,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {

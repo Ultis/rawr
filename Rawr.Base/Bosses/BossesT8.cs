@@ -28,8 +28,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -108,8 +108,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -223,8 +223,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 5, 5, 0, 0 };// need to drop this down to only when the swarm is up
-            MultiTargsPerc = new double[] { 0.50d, 0.50d, 0.00d, 0.00d };// need to sim this out
+            //MaxNumTargets = new double[] { 5, 5, 0, 0 };// need to drop this down to only when the swarm is up
+            //MultiTargsPerc = new double[] { 0.50d, 0.50d, 0.00d, 0.00d };// need to sim this out
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -291,8 +291,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -416,8 +416,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -523,8 +523,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -595,8 +595,8 @@ namespace Rawr.Bosses {
                 // She summons extra targets a lot, most of the time, they are within melee range of persons on the boss
                 // Guardian Swarm: Marks a player and summons a pack of 10 Swarming Guardians with low health around them soon after.
                 // Feral Defender: If you leave him alone, he's up about 90% of the fight
-                this[i].MultiTargsPerc = 0.90f; // need to sim this out
-                this[i].MaxNumTargets = 10f; // need to drop this down to only when the swarm is up
+                //this[i].MultiTargsPerc = 0.90f; // need to sim this out
+                //this[i].MaxNumTargets = 10f; // need to drop this down to only when the swarm is up
             }
             #endregion
             #endregion
@@ -654,8 +654,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -730,8 +730,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -810,8 +810,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -892,8 +892,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -966,8 +966,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1030,8 +1030,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
@@ -1107,8 +1107,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++)
             {

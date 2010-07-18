@@ -28,8 +28,8 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] {  2,  4, 0, 0 };
             #endregion
             #region Offensive
-            MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 2; i++) {
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));

@@ -160,7 +160,7 @@ namespace Rawr.DPSWarr {
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
 #if RAWR3 || SILVERLIGHT
-                BossOpts.MultiTargs && BossOpts.MultiTargsPerc > 0
+                BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
                 CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
 #endif
@@ -467,7 +467,17 @@ namespace Rawr.DPSWarr {
                     // Assign Rage to each ability
                     float RageForHSCL = availRage * (1f - percTimeUnder20);
 #if RAWR3 || SILVERLIGHT
-                    RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * ((float)BossOpts.MultiTargsPerc/* / 100f*/)) : 0f;
+                    //RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * ((float)BossOpts.MultiTargsPerc/* / 100f*/)) : 0f;
+                    {
+                        float time = 0;
+                        foreach (TargetGroup tg in BossOpts.Targets)
+                        {
+                            if (tg.Chance <= 0 || tg.Frequency <= 0 || tg.Duration <= 0) continue;
+                            time += tg.Frequency / BossOpts.BerserkTimer * tg.Duration / 1000f;
+                        }
+                        float perc = time / BossOpts.BerserkTimer;
+                        RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (Math.Max(0f, Math.Min(1f, perc)))) : 0f;
+                    }
 #else
                     RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * (CalcOpts.MultipleTargetsPerc / 100f)) : 0f;
 #endif
