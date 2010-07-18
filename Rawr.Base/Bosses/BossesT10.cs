@@ -25,8 +25,10 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 6972500, 23706500, 10500000, 31400000 };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 120, 180, 120, 150 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 2, 5, 3, 6 };
+            Min_Healers = new int[] { 2, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -146,8 +148,10 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 3346800f + 13992000f, 3346800f + 13992000f, 3346800f + 13992000f, 3346800f + 13992000f };// Mana Barrier, have to destroy mana before dps'g boss
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 150, 310, 150, 300 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 2, 5, 3, 6 };
+            Min_Healers = new int[] { 2, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 2, 2, 2, 2 };
@@ -276,8 +280,10 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 8785000f, 31860000f, 12300000f, 43930000f };
             BerserkTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, };
+            SpeedKillTimer = new int[] { 150, 180, 150, 180 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 3, 6 };
+            Min_Healers = new int[] { 2, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -371,8 +377,10 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 9412000f, 40440000f, 13700000f, 52200000f };
             BerserkTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60, };
+            SpeedKillTimer = new int[] { 150, 180, 180, 210 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 3, 6 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -515,12 +523,15 @@ namespace Rawr.Bosses
                 {
                     Name = "Vile Gas",
                     DamageType = ItemDamageType.Shadow,
-                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    AttackType = ATTACK_TYPES.AT_AOE,
                     TickInterval = 2f,
                     NumTicks = 3f, //damage every 2 seconds for 6 seconds
                     DamagePerTick = new int[] { (3900 + 4100), (4875 + 5125), (4875 + 5125), (6338 + 6662) }[i] / 2f, // assume everyone is spread out 8 yards and doesn't get hit with aoe from attack
                     MaxNumTargets = new float[] { 2f, 3f, 2f, 3f }[i],
                     AttackSpeed = 20f,
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                    IgnoresMeleeDPS = true,
                 });
                 this[i].Stuns.Add(new Impedance()
                 {
@@ -644,8 +655,10 @@ namespace Rawr.Bosses
             Health = new float[] { 7320000f, 36257000f, 10458000f, 47413000f };
             // Soft enrage is about 7 minutes in, Hard enrage is after 10 minutes (as shown in the DK soloing video)
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 120, 150, 180, 210 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -698,8 +711,10 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 9761500f, 42000000f, 13670000f, 50200000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            SpeedKillTimer = new int[] { 240, 270, 300, 330 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 3, 2, 3 }; // One tank does not do much damage to the boss while in Abom, doesn't start tanking until Phase 3
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -756,8 +771,10 @@ namespace Rawr.Bosses
             // Health is shared between the three bosses
             Health = new float[] { 5620000f, 22500000f, 7624000f, 30497000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            SpeedKillTimer = new int[] { 150, 180, 180, 210 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 3, 2, 3 }; // in 25 each boss is tanked separately.
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -808,34 +825,225 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 14200000f, 5940000f, 18900000f, 71300000f };
+            Health = new float[] { 14200000f, 59400000f, 18900000f, 71300000f };
             // 5 minute, 20 second fight
             BerserkTimer = new int[] { 320, 320, 320, 320 };
-            Min_Tanks = new int[] { 2, 3, 2, 3 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            SpeedKillTimer = new int[] { 270, 210, 270, 270 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
             MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-             this[i].Attacks.Add(new Attack
+            int avgbitetargets10 = (1 + 2 + 4 + 8) / 4;      // average number of bites in 10 man
+            int avgbitetargets25 = (1 + 2 + 4 + 8 + 16) / 5; // average number of bites in 25 man
+
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    // Heroic increases Lana'thel's damage by 10/5% in 10/25 man respecfully for each application of Essence of the Blood Queen
+                    DamagePerHit = (1 + new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i]) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
+                    IgnoresOTank = true,
+                    IgnoresTTank = true,
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
 
                     IsTheDefaultMelee = true,
                 });
+
+                // Blood Mirrored Melee attack from MT to OT as Shadow Damage
+                this[i].Attacks.Add(new Attack
+                {
+                    // Melee Attacks
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Shadow,
+                    // Hits for about 18k on normal 25
+                    DamagePerHit = (1 + new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i]) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 2f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    IgnoresMTank = true,
+                    IgnoresTTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Shroud of Sorrow - An aura of sorrow and despair emanates from the caster, 
+                //        inflicting 4500 Shadow damage every 2 sec. to nearby enemies.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Shroud of Sorrow",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { 4000, 4500, 4500, 4500 }[i],
+                    MaxNumTargets = this[i].Max_Players,
+                    AttackSpeed = 2f,
+                });
+
+                // Delirious Slash - Inflicts 50% of weapon damage to an enemy and causes it 
+                //        to bleed for 4500 to 5500 damage per application every 3 sec. for 15 sec.
+                // Only goes to Off-Tank
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Delirious Slash",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    TickInterval = 3f,
+                    NumTicks = 5f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * new float[] { .5f, .5f, .75f, .75f }[i],
+                    DamagePerTick = new int[] { (4500 + 5500), (5250 + 6750), (6125 + 7875), (7000 + 9000) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    AttackSpeed = 20f,
+                    IgnoresTTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                    IgnoresMTank = true,
+                });
+
+                // Vampiric Bite - Inflicts 12,025 to 13,975 physical damage to a target, granting them Essence of the Blood Queen
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Vampiric Bite",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (8325 + 9675), (10175 + 11825), (8325 + 9675), (10175 + 11825) }[i] / 2f,
+                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i], 
+                    // Bites are usable every 75/60 seconds in 10/25 respectfully
+                    AttackSpeed = new int[] { 75, 75, 60, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
+                    // The OT COULD be targeted but only as a last resourt. The MT should NOT be targeted.
+                    IgnoresMTank = true,
+                });
+                // Bitters or bittees need to move to get bitten
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 5f * 1000f, // Assume 5 seconds to move to the new biting target
+                    Chance = 1f / new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
+                    Breakable = false,
+                });
+
+                // If the person doesn't bite a non-vampire player within 15 seconds
+                // They go into a Uncontrollable Frenzy where they are Mind Controlled for 60 seconds then die after that period
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Uncontrollable Frenzy",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = 1f,
+                    DamageIsPerc = true,
+                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
+                    // Bites are usable every 75/60 seconds in 10/25 respectfully
+                    AttackSpeed = new int[] { 75, 75, 60, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
+                    IgnoresMTank = true,
+                    Interruptable = true, // Can be avoided if biten correctly
+                });
+                // if biten incorrectly, the bitter is mind controlled
+                this[i].Stuns.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 60f * 1000f, // 60 seconds of mind control before dying
+                    Chance = 1f / new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
+                    Breakable = false,
+                });
+
+                // Twilight Bloodbolt - Inflicts 9,250 to 10,750 shadow damage to a target and other players within 6 yards.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Twilight Bloodbolt",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (9250 + 10750), (9250 + 10750), (11250 + 13750), (11250 + 13750) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
+                    MaxNumTargets = new int[] { 2, 3, 2, 3 }[i], // assume range is spread out so that ther is no AOE
+                    // TODO: Double Check attack Speed
+                    AttackSpeed = 20f,
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                    IgnoresMeleeDPS = true,
+                });
+
+                // Swarming Shadows - The affected player spawns a mass of shadows every 1 second for 6 seconds. Each mass inflicts 2,313 to 2,687 shadow damage every 1 second to all targets within it.
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Swarming Shadows",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    NumTicks = 6f,
+                    TickInterval = 1f,
+                    // TODO: Double Check Damage per tick
+                    DamagePerTick = new int[] { (2313 + 2687), (2313 + 2687), (2313 + 2687), (2313 + 2687) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
+                    MaxNumTargets = new int[] { 2, 3, 2, 3 }[i], // assume range is spread out so that ther is no AOE
+                    // TODO: Double Check attack Speed
+                    AttackSpeed = 30.5f,
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 6f * 1000f, // move the shadows to the wall for 6 seconds
+                    Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
+                    Breakable = false,
+                });
+
+                // Pact of the Darkfallen - Links a number of players together, causing them to inflict 
+                //       3,500 Shadow damage every 1 second to non-linked players within 10 yards.
+                //       This effect expires when all linked targets are within 5 yards of each other.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Pact of the Darkfallen",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    // TODO: Double Check damage
+                    DamagePerHit = new int[] { 3500, 3500, 3500, 3500 }[i] * 4f, // assume 4 seconds to remove the debuff
+                    MaxNumTargets = new int[] { 2, 3, 2, 3 }[i],
+                    AttackSpeed = 30.5f, 
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                });
+
+                // Bloodbolt Whirl - Shoots a lot of Twilight Bloodbolts to random players for 6 seconds.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Bloodbolt Whirl",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (9250 + 10750), (12025 + 13975), (14250 + 15750), (16150 + 17850) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
+                    MaxNumTargets = this[i].Max_Players,
+                    AttackSpeed = (new int[] { 124, 124, 127, 127 }[i] + 100f + 100f) / 3f,
+                });
+                this[i].Fears.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed - 6f,
+                    Duration = 4f * 1000,
+                    Chance = this[i].Max_Players,
+                    Breakable = true,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed - 2f,
+                    Duration = 2f * 1000,
+                    Chance = this[i].Max_Players,
+                    Breakable = true,
+                });
+
+                // TODO: Essence of the Blood Queen - Increases damage by 100%, and causes attacks to 
+                //       heal the player for 15% of the damage done, as well as cause no threat.
+                // Lasts 75 seconds on 10 man, 60 seconds on 25 man
             }
             #endregion
             #endregion
@@ -869,8 +1077,10 @@ namespace Rawr.Bosses
             // Health is half her total health, which you HEAL, not dps
             Health = new float[] { 12000000f / 2f, 35999000f / 2f, 12000000f / 2f, 35999000f / 2f };
             BerserkTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, };
-            Min_Tanks = new int[] { 2, 2, 2, 4 }; // 1-2 Tertiary Tanks to kite the Blistering Zombie on Heroic 25
-            Min_Healers = new int[] { 2, 5, 3, 6 };
+            SpeedKillTimer = new int[] { 180, 240, 240, 240 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 2, 2, 3 }; // 1-2 Tertiary Tanks to kite the Blistering Zombie on Heroic 25
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -907,10 +1117,11 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 11156000f, 38348000f, 13950000f, 45950000f };
-            // Soft enrage is about 7 minutes in, Hard enrage is after 10 minutes (as shown in the DK soloing video)
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 210, 210, 300, 270 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -967,8 +1178,10 @@ namespace Rawr.Bosses
             // You have 15 minutes to bring him down to 10%. After which point it's a free kill with no berserker time.
             Health = new float[] { 17400000f * .9f, 61300000f * .9f, 29500000f * .9f, 103200000f * .9f };
             BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60, };
+            SpeedKillTimer = new int[] { 9 * 60, 13 * 60, 8 * 60, 14 * 60 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -1027,8 +1240,10 @@ namespace Rawr.Bosses
             // Normal and Heroic setting provide no difference to his health or abilities
             Health = new float[] { 3486000f, 11156000f, 3486000f, 11156000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5 };
+            Min_Healers = new int[] { 3, 5, 2, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -1082,8 +1297,10 @@ namespace Rawr.Bosses
             // Normal and Heroic setting provide no difference to her health or abilities
             Health = new float[] { 4183000f, 13945000f, 4183000f, 13945000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -1137,8 +1354,10 @@ namespace Rawr.Bosses
             // Normal and Heroic setting provide no difference to his health or abilities
             Health = new float[] { 11156000f, 43500000f, 15339900f, 58600000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -1192,8 +1411,10 @@ namespace Rawr.Bosses
             // Fight is split into 3 phases, first two everyone is DPSing him together, Phase 3 DPS is split up between live and shadow realm
             Health = new float[] { 4141000f, 14098000f, 4141000f, 14098000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            SpeedKillTimer = new int[] { 300, 300, 300, 300 };
+            Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 2, 5, 2, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             MaxNumTargets = new double[] { 1, 1, 1, 1 };
