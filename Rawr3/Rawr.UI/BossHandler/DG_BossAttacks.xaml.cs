@@ -78,12 +78,13 @@ namespace Rawr.UI
                     UseParryHaste = (bool)CK_UseParryHaste.IsChecked,
                     Interruptable = (bool)CK_Interruptable.IsChecked,
                     IsTheDefaultMelee = (bool)CK_IsDefaultMelee.IsChecked,
+                    IsDualWielding = (bool)CK_IsDualWielding.IsChecked,
                     // Player Avoidances
                     Missable = (bool)CK_Missable.IsChecked,
                     Dodgable = (bool)CK_Dodgable.IsChecked,
                     Parryable = (bool)CK_Parryable.IsChecked,
                     Blockable = (bool)CK_Blockable.IsChecked,
-                    // Targetting Ignores
+                    // Targeting Ignores
                     IgnoresMTank = (bool)CK_IgnoresMTank.IsChecked,
                     IgnoresOTank = (bool)CK_IgnoresOTank.IsChecked,
                     IgnoresTTank = (bool)CK_IgnoresTTank.IsChecked,

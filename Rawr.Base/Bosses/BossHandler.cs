@@ -32,9 +32,12 @@ namespace Rawr {
         public float MaxNumTargets;
         /// <summary>The frequency of this attack (in seconds)</summary>
         public float AttackSpeed;
-        /// <summary>The Attack Type (for AoE vs single-target Melee/Ranged)</summary>
+        /// <summary>The Attack Type (for AoE vs. single-target Melee/Ranged)</summary>
         public ATTACK_TYPES AttackType;
+        /// <summary>If the attack Parry Haste's, then the attacks that are parried will reset the swing timer.</summary>
         public bool UseParryHaste = false;
+        /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
+        public bool IsDualWielding = false;
         #region Player Avoidance
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
