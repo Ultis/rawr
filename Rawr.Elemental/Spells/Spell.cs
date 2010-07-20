@@ -161,14 +161,15 @@ namespace Rawr.Elemental.Spells
         /// </summary>
         public float CastTime
         {
+
             get
             {
                 if (gcd == 0 && castTime == 0)
                     return 0;
-                if (castTime >= Gcd)
-                    return Math.Max(castTime, Gcd) + Latency;
+                if (castTime > Gcd)
+                    return castTime + Latency;
                 else
-                    return Math.Max(1, Gcd) + Latency;
+                    return Gcd + Latency;
             }
         }
 
