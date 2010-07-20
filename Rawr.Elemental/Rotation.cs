@@ -186,10 +186,25 @@ namespace Rawr.Elemental
             switch (useDpsFireTotem)
             {
                 case true:
-                    if (ST.DpCT > MT.DpCT)
-                        ActiveTotem = ST;
-                    else
+                    /// Reasoning for this block:
+                    /// Magma totem is always higher DpS than searing totem.  The old formula, which used DpCT instead of 
+                    /// periodic DpS, always favored searing totem over magma totem, which isn't true in all cases.  The reason
+                    /// searing eventually "outscales" magma is because magma's excessive use of GCDs for 100% uptime makes it 
+                    /// less favorable in gear with lots of haste, when the shaman begins approaching the GCD with spells.
+                    /// Losing a GCD when an LB takes 2 seconds to cast is less costly than a GCD with a 1.2 second LB.
+                    /// Theory behind it:
+                    /// The higher DpS spell between CL and LB will be the relative benchmark.  The gap in DpS between magma
+                    /// and searing are taken and multiplied by 20 (the amount of damage gained by using magma in that period).
+                    /// It is then modified by the cast time difference between MT and the relativeDpSValue.  This adjusts 
+                    /// magma's value according to how much of a gap there is in between the GCD and the cast time of the 
+                    /// benchmark spell.  The larger the gap, the more valuable magma totem's gained DpS.  If the gained DpS
+                    /// isn't more valuable than the direct DpS of the benchmark, searing is selected instead.
+                    Spell relativeDpSValue = (CL.DirectDpS > LB.DirectDpS) ? (Spell)CL : (Spell)LB;
+                    if ((((MT.PeriodicDpS - ST.PeriodicDpS) * 20) / (MT.CastTime / relativeDpSValue.CastTime))
+                        > relativeDpSValue.DirectDpS)
                         ActiveTotem = MT;
+                    else
+                        ActiveTotem = ST;
                     break;
                 case false:
                     ActiveTotem = null;
@@ -199,7 +214,7 @@ namespace Rawr.Elemental
 
             while (true)
             {
-                if (GetTime() >= LvBreadyAt) //LvB is ready
+                if (GetTime() >= LvBreadyAt) //LvB is ready 
                 {
                     if (GetTime() + LvBFS.CastTimeWithoutGCD < FSdropsAt) //the LvB cast will be finished before FS runs out
                     {
