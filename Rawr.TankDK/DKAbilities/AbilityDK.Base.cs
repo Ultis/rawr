@@ -100,6 +100,7 @@ namespace Rawr.TankDK
         /// <summary>
         /// Any DK ability triggered by this ability.  
         /// Should not be recursive.
+        /// This would mean FF when using IT or Glyphed HB.
         /// </summary>
         public AbilityDK_Base m_TriggeredAbility;
 

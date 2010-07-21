@@ -6,7 +6,7 @@ namespace Rawr.TankDK
 {
     class CombatTable
     {
-        private bool m_bDW;
+        public bool m_bDW;
         public Character character;
 //        public CharacterCalculationsTankDK calcs;
         public DeathKnightTalents talents;

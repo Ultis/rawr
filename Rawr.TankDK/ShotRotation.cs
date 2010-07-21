@@ -417,9 +417,9 @@ namespace Rawr.TankDK {
                 HeartStrike = 0f;
                 curRotationDuration = 15f;
             }
-            const int indexBlood = 0; // Number of Blood Talents.
-            const int indexFrost = 28; // Number of Frost Talents.
-            const int indexUnholy = 28+29; // Number of Unholy Talents.
+            const int indexBlood = 0; // start index of Blood Talents.
+            const int indexFrost = 28; // start index of Frost Talents.
+            const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
             int[] TalentCounter = new int[4];
             int index = 0;
             foreach (int i in t.Data)
