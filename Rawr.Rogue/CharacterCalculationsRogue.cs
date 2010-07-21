@@ -46,7 +46,11 @@ namespace Rawr.Rogue
         public float MissedWhiteAttacks { get; set; }
         public float MissedAttacks { get; set; }
         public float MissedPoisonAttacks { get; set; }
-        public float CritChance { get; set; }
+        public float CritChanceYellow { get; set; }
+        public float CritChanceMHTotal { get; set; }
+        public float CritChanceMH { get; set; }
+        public float CritChanceOHTotal { get; set; }
+        public float CritChanceOH { get; set; }
         public float MainHandSpeed { get; set; }
         public float OffHandSpeed { get; set; }
         public float ArmorMitigationMH { get; set; }
@@ -85,11 +89,15 @@ namespace Rawr.Rogue
             float basePoisonMiss = StatConversion.GetSpellMiss(80 - TargetLevel, false) - BasicStats.SpellHit;
             float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float baseWhiteMHCrit = CritChanceMHTotal;
+            float baseWhiteOHCrit = CritChanceOHTotal;
             float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
             float capYellowMiss = (float)Math.Ceiling(baseYellowMiss * 100f * 32.78998947f);
             float capPoisonMiss = (float)Math.Ceiling(basePoisonMiss * 100f * 26.23f);
             float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
             float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
+            float capWhiteMHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 80] * 100 - MissedWhiteAttacks - DodgedMHAttacks;
+            float capWhiteOHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 80] * 100 - MissedWhiteAttacks - DodgedOHAttacks;
 
             string tipMiss = "*White: ";
             if (BasicStats.HitRating > capMiss)
@@ -123,6 +131,19 @@ namespace Rawr.Rogue
             else
                 tipDodge = "*Exactly at the cap";
 
+            string tipCrit = string.Format("Mainhand: {0}, ", CritChanceMH);
+            if (CritChanceMHTotal > capWhiteMHCrit)
+                tipCrit += string.Format("over the Crit cap by {0}%", CritChanceMHTotal - capWhiteMHCrit);
+            else if (CritChanceMHTotal < capWhiteMHCrit)
+                tipCrit += string.Format("under the Crit cap by {0}%", capWhiteMHCrit - CritChanceMHTotal);
+            else tipCrit += "exactly at the Crit cap";
+
+            tipCrit += string.Format("\nOffhand: {0}, ", CritChanceOH);
+            if (CritChanceOHTotal > capWhiteOHCrit)
+                tipCrit += string.Format("over the Crit cap by {0}%", CritChanceOHTotal - capWhiteOHCrit);
+            else if (CritChanceOHTotal < capWhiteOHCrit)
+                tipCrit += string.Format("under the Crit cap by {0}%", capWhiteOHCrit - CritChanceOHTotal);
+            else tipCrit += "exactly at the Crit cap";
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
@@ -138,7 +159,7 @@ namespace Rawr.Rogue
             dictValues.Add("Avoided White Attacks", string.Format("{0}% / {1}%*Mainhand: {2}% Dodged, {3}% Missed\n   Offhand: {4}% Dodged, {3}% Missed", AvoidedWhiteMHAttacks, AvoidedWhiteOHAttacks, DodgedMHAttacks, MissedWhiteAttacks, DodgedOHAttacks));
             dictValues.Add("Avoided Yellow Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedMHAttacks, MissedAttacks));
             dictValues.Add("Avoided Poison Attacks", string.Format("{0}%*{1}% Missed", AvoidedPoisonAttacks, MissedPoisonAttacks));
-            dictValues.Add("Crit Chance", CritChance.ToString() + "%");
+            dictValues.Add("Crit Chance", CritChanceYellow.ToString() + "%*" + tipCrit);
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
             dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
             dictValues.Add("Armor Mitigation MainHand", ArmorMitigationMH.ToString() + "%");

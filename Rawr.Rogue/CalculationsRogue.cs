@@ -513,8 +513,10 @@ namespace Rawr.Rogue
             float chanceHitEvis = 0f;
             //float chanceCritBleed = 0f;
             float chanceGlance = 0f;
+            float chanceCritWhiteMainTotal = 0f;
             float chanceCritWhiteMain = 0f;
             float chanceHitWhiteMain = 0f;
+            float chanceCritWhiteOffTotal = 0f;
             float chanceCritWhiteOff = 0f;
             float chanceHitWhiteOff = 0f;
             float chanceCritPoison = 0f;
@@ -527,8 +529,8 @@ namespace Rawr.Rogue
                 float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Rogue)
                     + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Rogue)
                     + stats.PhysicalCrit
-                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80])
-                    + bonusMainHandCrit;
+                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]
+                    + bonusMainHandCrit);
                 float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
                 float chanceCritPoisonTemp = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating + iStat.Value)
                     + stats.SpellCrit
@@ -563,10 +565,12 @@ namespace Rawr.Rogue
                 //White
                 float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
                 //White Mainhand
+                float chanceCritWhiteMainTotalTemp = chanceCritYellowTemp;
                 float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteMHAvoided);
                 float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteMHAvoided - chanceGlanceTemp;
                 //White Offhand
-                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteOHAvoided);
+                float chanceCritWhiteOffTotalTemp = chanceCritYellowTemp - bonusMainHandCrit + bonusOffHandCrit;
+                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp - bonusMainHandCrit + bonusOffHandCrit, 1f - chanceGlanceTemp - chanceWhiteOHAvoided);
                 float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteOHAvoided - chanceGlanceTemp;
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
@@ -586,8 +590,10 @@ namespace Rawr.Rogue
                 chanceCritEvis += iStat.Chance * chanceCritEvisTemp;
                 chanceHitEvis += iStat.Chance * chanceHitEvisTemp;
                 chanceGlance += iStat.Chance * chanceGlanceTemp;
+                chanceCritWhiteMainTotal += iStat.Chance * chanceCritWhiteMainTotalTemp;
                 chanceCritWhiteMain += iStat.Chance * chanceCritWhiteMainTemp;
                 chanceHitWhiteMain += iStat.Chance * chanceHitWhiteMainTemp;
+                chanceCritWhiteOffTotal += iStat.Chance * chanceCritWhiteOffTotalTemp;
                 chanceCritWhiteOff += iStat.Chance * chanceCritWhiteOffTemp;
                 chanceHitWhiteOff += iStat.Chance * chanceHitWhiteOffTemp;
                 chanceCritPoison += iStat.Chance * chanceCritPoisonTemp;
@@ -840,7 +846,11 @@ namespace Rawr.Rogue
             calculatedStats.DodgedMHAttacks = chanceMHDodge * 100f;
             calculatedStats.ParriedAttacks = chanceParry * 100f;
             calculatedStats.MissedAttacks = chanceMiss * 100f;
-            calculatedStats.CritChance = chanceCritYellow * 100f;
+            calculatedStats.CritChanceYellow = chanceCritYellow * 100f;
+            calculatedStats.CritChanceMHTotal = chanceCritWhiteMainTotal * 100f;
+            calculatedStats.CritChanceMH = chanceCritWhiteMain * 100f;
+            calculatedStats.CritChanceOHTotal = chanceCritWhiteOffTotal * 100f;
+            calculatedStats.CritChanceOH = chanceCritWhiteOff * 100f;
             calculatedStats.MainHandSpeed = mainHandSpeed;
             calculatedStats.OffHandSpeed = offHandSpeed;
             calculatedStats.ArmorMitigationMH = (1f - mainHandModArmor) * 100f;
