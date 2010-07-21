@@ -17,6 +17,8 @@ namespace Rawr.DPSWarr {
             BossOpts = (bo == null ? new BossOptions() : bo);
             WhiteAtks = wa;
 
+            _cachedLatentGCD = 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact;
+            _cachedNumGCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD;
             // Initialize();
         }
         #region Variables

@@ -26,9 +26,6 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] {  2,  4,  0,  0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
@@ -56,7 +53,6 @@ namespace Rawr.Bosses {
                     this[i].InBackPerc_Ranged -= time / this[i].BerserkTimer;
                 }
             }
-            #endregion
             #endregion
             #region Impedances
             for (int i = 0; i < 2; i++)
@@ -123,9 +119,6 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++) {
                 this[i].Targets.Add(new TargetGroup { // Worshippers
                     Frequency = this[i].BerserkTimer - 1, // Once
@@ -170,7 +163,6 @@ namespace Rawr.Bosses {
                 }
             }
             #endregion
-            #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -214,7 +206,6 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
                 // 8 Adds every 40 seconds for 8 seconds (only 7300 HP each)
@@ -303,7 +294,6 @@ namespace Rawr.Bosses {
                 }
             }
             #endregion
-            #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -329,6 +319,24 @@ namespace Rawr.Bosses {
     }
     // Plague Quarter
     public class NoththePlaguebringer : MultiDiffBoss {
+        /// <summary>
+        /// Phase 1: Ground Phase
+        /// <para>o Curse of the Plaguebringer - Places a curse on 3 party members. After 10 seconds, every cursed target will cast Wrath of the
+        ///     Plaguebringer, which will hit everybody in 30 yards range for 3,700 to 4,300 (25 Player: 5,550 to 6,450) Shadow damage and
+        ///     additional 1,313 to 1687 (25 Player: 3,150 to 3,850) Shadow damage every 2 seconds, for 10 seconds.</para>
+        /// <para>o Blink (25 Player) - Every 20-30 seconds Noth will Blink away from the tank, wiping all aggro and casting Cripple on everybody
+        ///     around his old location.</para>
+        /// <para>o Cripple - Noth will place a magic debuff on a few players in melee range, reducing their attack speed by 100% and movement
+        ///     speed and Strength by 50%, for 15 seconds.</para>
+        /// <para>o Plagued Warrior - Summoned every 30 seconds while in Phase 1. They Cleave, dealing 110% weapon damage to two targets.</para>
+        /// <para>o Change Phase: Balcony - After 110 seconds on the ground, Noth will teleport to his balcony, entering Phase 2.</para>
+        /// <para>Phase 2: Balcony Phase</para>
+        /// <para>o Plagued Champion - Summoned during Phase 2-1 and 2-2. They will use Mortal Strike, dealing 100% weapon damage and reducing
+        ///     healing done by 50% and Shadow Shock, which hits nearby enemies for 2,313 to 2,687 (25 Player: 2,960 to 3,440) Shadow damage.</para>
+        /// <para>o Plagued Guardian - Summoned during Phase 2-2 and 2-3. Their primary damaging ability is Arcane Explosion, which hits every in
+        ///     30 yards range for 2,313 to 2,687 (25 Player: 2,590 to 3,010) Arcane damage.</para>
+        /// <para>o Change Phase: Ground - After 70 seconds on the balcony, Noth will teleport back to the ground, re-entering Phase 1.</para>
+        /// </summary>
         public NoththePlaguebringer() {
             // If not listed here use values from defaults
             #region Info
@@ -348,8 +356,6 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 3, 3, 0, 0 };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
                 // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
@@ -361,11 +367,9 @@ namespace Rawr.Bosses {
                     NumTargs = 2,
                     NearBoss = false,
                 });
-                //this[i].MultiTargsPerc = (this[i].BerserkTimer / 30f) * (20f) / this[i].BerserkTimer;
 
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1626,6 +1630,84 @@ namespace Rawr.Bosses {
     }
     // ===== The Eye of Eternity ======================
     public class Malygos : MultiDiffBoss {
+        /// <summary>
+        /// <para>* Phase 1</para>
+        /// <para>The fight against Malygos consists of three phases. Phase 1 is only slightly more than a tank 'n' spank fight. The tank needs to have Malygos
+        /// faced away from the raid to avoid the others being damaged by Arcane Breath. Throughout the phase, Power Sparks spawn off star light at the
+        /// edges of the room and attempt to slowly approach Malygos. The best thing is killing them in a 5-10 yards distance to Malygos, so melee and
+        /// ranged DPS get advantage of the damage increasing buff which otherwise would have been granted to the boss, stackingly increasing his damage.
+        /// Crowd Control is an awesome tool. At least 20k health is needed to survive the vortices cast throughout the fight. Players will only be able
+        /// to cast instant spells and suffer periodical damage. While in a vortex, players spin around the transform, being slowly dragged to it and fall.</para>
+        ///     <para>o Arcane Breath - Deals 18,850 to 21,150 (25 Player: 28,275 to 31,725) Arcane damage to enemies in front of the caster. Also causes
+        ///           the affected targets to explode after 5 seconds, dealing 9,425 to 10,575 (25 Player: 18,850 to 21,150) Arcane damage to nearby allies.</para>
+        ///     <para>o Vortex - Causes the raid to spin around the platform, constantly dealing Arcane damage to them. At this point, players should use
+        ///     damage-reducing cooldowns. They will be dragged in a spiral-like motion towards the platform, land there and suffer fall damage.
+        ///     Only instant spells and abilities work, as the vortex forces to move.</para>
+        ///     <para>o Power Spark - Spawned throughout the fight and slowly shift towards Malygos. Once they reach him, they buff him with Power Spark,
+        ///     increasing the damage output by 50% for 10 seconds, stacking multiplicatively. If killed, they instead grant players in proximity
+        ///     the same buff, Power Spark, which especially is a great buff for melee players close to Malygos.</para>
+        /// 
+        /// <para>* Phase 2</para>
+        /// <para>Phase 2 begins when Malygos has lost 50% of his health. Slowly shifting in the air, players have approximately 10 seconds time to DPS him.
+        /// In this Phase, two different NPC groups will spawn, namely Nexus Lords and Scions of Eternity. Protective Bubbles repeatedly spawn and become
+        /// smaller over time so raid members are forced to move when they get small. They decrease Arcane damage taken by the players inside them. Flying
+        /// Nexus Lords need to be tanked while standing in the bubbles. Once a Lord is dead, his disc will drop and a raid member can hop on it and kill
+        /// the flying Scions of Eternity, whose discs also can pick up other players. Ranged DPS should focus on Scions. While standing on a disc,
+        /// players do take damage, therefore they should fly high to avoid Malygos' Deep Breaths, also known as Arcane Pulse. This should be repeated
+        /// until all NPCs are dead.</para>
+        ///     <para>o Nexus Lord - They fly on discs and use Arcane Shock, causing 9,425 to 10,575 (25 Player: 14,138 to 15,862) Arcane damage. Also use
+        ///     Haste, increasing their attack, casting and movement speed by 100% for 15 seconds. After killed, they drop off their discs which can
+        ///     be used by players to kill remaining NPCs.</para>
+        ///     <para>o Scion of Eternity - They also fly on discs, using Arcane Barrage, dealing Arcane damage.</para>
+        ///     <para>o Arcane Pulse - Inflicts 28,275 to 31,725 Arcane damage to enemies within 30 yards, cast every 0.5 to 1 second. Preceded by a raid
+        ///     warning "Malygos takes a deep breath..."</para>
+        ///     <para>o Arcane Storm - Inflicts 9,425 to 10,575 (25 Player: 11,782 to 13,218) Arcane damage upon hitting them with missiles.</para>
+        /// 
+        /// <para>* Phase 3</para>
+        /// <para>Once all NPCs are dead, Phase 3, a vehicle phase, will begin. Players are sent out flying on dragons, using special abilities. The raid needs
+        /// to stack to get advantage of the healers' AoE heals which is pretty much the only thing to do. The dragons you will be riding have Rogue-like
+        /// abilities. The optimal rotation for DPS is having two combo points and then use a finishing move, for healers using the lesser heals five
+        /// times and then blow off the big one. Note that combo points earned through Flame Spikes cannot be used for the Burst of Life and respectively
+        /// Revivify combo points not for Engulf in Flames. Malygos will occasionally cast Surge of Power, which will kill the player if no heals occur.
+        /// Due to the group stacking this will not be a difficult problem. Static Fields occur throughout Phase 3 and the raid should move to one side
+        /// to stay in group. Phase 3 can be practiced through the daily quest Aces High! given by Corastrasza.</para>
+        ///     <para>o Dragons</para>
+        ///         <para>Each player's dragon has 75,000 base health.</para>
+        ///             <para>+ Flame Spike - Inflicts 943 to 1,057 Fire damage. Awards 1 combo point.</para>
+        ///             <para>+ Engulf in Flames - Ignites the target with fire, causing Fire damage every 3 seconds. Should be used after two preceding
+        ///             Flame Spikes.</para>
+        /// 
+        ///                 <para>1 point ---> 6  seconds (3,000 Fire damage)</para>
+        ///                 <para>2 points --> 10 seconds (4,500 Fire damage)</para>
+        ///                 <para>3 points --> 14 seconds (6,000 Fire damage)</para>
+        ///                 <para>4 points --> 18 seconds (8,000 Fire damage)</para>
+        ///                 <para>5 points --> 22 seconds (9,500 Fire damage)</para>
+        /// 
+        ///             <para>+ Revivify - Heals the target for 500 every second. Lasts 10 second, if not refreshed. Stacks up to 5 times. Should be used 5
+        ///             times to take full advantage of Life Burst.</para>
+        ///             <para>+ Life Burst - Instantly heals allies within 60 yards and increases the healing done by 50% for an amount of time. Should be
+        ///             used after 5 preceding Revivify spells.</para>
+        /// 
+        ///                 <para>1 point ---> 5  seconds (5,000  healed)</para>
+        ///                 <para>2 points --> 10 seconds (7,500  healed)</para>
+        ///                 <para>3 points --> 15 seconds (10,000 healed)</para>
+        ///                 <para>4 points --> 20 seconds (12,500 healed)</para>
+        ///                 <para>5 points --> 25 seconds (15,000 healed)</para>
+        /// 
+        ///             <para>+ Flame Shield - Summons a shield protecting the caster and reducing damage suffered by 80% for an amount of time.</para>
+        /// 
+        ///                 <para>1 point ---> 2 seconds</para>
+        ///                 <para>2 points --> 3 seconds</para>
+        ///                 <para>3 points --> 4 seconds</para>
+        ///                 <para>4 points --> 5 seconds</para>
+        ///                 <para>5 points --> 6 seconds</para>
+        /// 
+        ///             <para>+ Blazing Speed - Increases the dragon's speed by 500% for 8 seconds.</para>
+        ///     <para>o Static Field - Randomly summoned throughout Phase 3, dealing 9,425 to 10,575 Arcane damage every second to players within 30 yards
+        ///     of the field. The raid should move to one side in order to stay in group.</para>
+        ///     <para>o Surge of Power - Inflicts 5,000 (25 Player: 12,000 for 3 seconds) Arcane damage to nearby allies per second, for 5 seconds. Those
+        ///     targeted receive a raid warning.</para>
+        /// </summary>
         public Malygos() {
             // If not listed here use values from defaults
             #region Info
@@ -1633,10 +1715,14 @@ namespace Rawr.Bosses {
             Instance = "The Eye of Eternity";
             Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, BossHandler.TierLevels.T7_0, BossHandler.TierLevels.T7_5, };
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
+            Comment = "ToDo's:\r\n"
+                    + "* We have no way to model Phase 3, and since it's not based on your actual DPS, who cares!\r\n"
+                    + "* Need Buff tie-ins for the Power Sparks bonus damage zones in Phase 1\r\n"
+                    + "* Arcane Pulse should only be occurring in Phase 2, but can't limit it\r\n";
             #endregion
             #region Basics
             Health = new float[] { 2230000f, 19523000f, 0, 0 };
-            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1645,14 +1731,58 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                this[i].Targets.Add(new TargetGroup {
+                    // {Phase 1: Sparks}
+                    Frequency = 45, // Once every {unconfirmed} seconds
+                    Duration = 10 * 1000f, // Lets say about 10 seconds of actually killing the little bastard
+                    Chance =  1f / 3f, // Happens no matter what for 1 of 3 Phases
+                    NearBoss = false, // You can't let them reach the boss
+                    NumTargs = 1, // There's only one at a time
+                });
+                this[i].Targets.Add(new TargetGroup {
+                    // {Phase 2: Scions}
+                    Frequency = this[i].BerserkTimer - 1, // Once
+                    Duration = this[i].BerserkTimer / 3f * 1000f, // 1/3 of the fight
+                    Chance = 1.00f, // Happens no matter what
+                    NearBoss = false, // Can't DPS boss in this phase
+                    NumTargs = 2, // There are a bunch of targets, but you can really only DPS 1-2 at a time
+                });
+
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                this[i].Attacks.Add(new Attack {
+                    Name = "Arcane Breath",
+                    AttackSpeed = 40,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new float[] { (18850f + 21150f), (28275f + 31725f) }[i] / 2f,
+                    DamageType = ItemDamageType.Arcane,
+                    Missable = false, Dodgable = false, Parryable = false, Blockable = false, 
+                    IgnoresHealers = true, IgnoresMeleeDPS = true, IgnoresOTank = true, IgnoresTTank = true, IgnoresRangedDPS = true,
+                    MaxNumTargets = this[i].Max_Players,
+                });
+
+                this[i].Attacks.Add(new Attack {
+                    Name = "Vortex",
+                    AttackSpeed = 40,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new float[] { 4000, 6000 }[i], // unconfirmed
+                    DamageType = ItemDamageType.Arcane,
+                    Missable = false, Dodgable = false, Parryable = false, Blockable = false,
+                    MaxNumTargets = this[i].Max_Players,
+                });
+
+                this[i].Attacks.Add(new Attack {
+                    Name = "Arcane Pulse",
+                    AttackSpeed = 1,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new float[] { (28275f + 31725f), (28275f + 31725f) }[i] / 2f,
+                    DamageType = ItemDamageType.Arcane,
+                    Missable = false, Dodgable = false, Parryable = false, Blockable = false, 
+                    MaxNumTargets = this[i].Max_Players,
+                });
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1664,21 +1794,18 @@ namespace Rawr.Bosses {
             Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             #region Impedances
-            // Every 70-120 seconds for 16 seconds you can't be on the target
+            // Every 70-120 seconds for 16 seconds you can't be on the target (Vortex)
             // Adding 4 seconds to the Duration for moving out before starts and then back in after
             for (int i = 0; i < 2; i++) {
-                this[i].Moves.Add(new Impedance()
-                {
+                this[i].Moves.Add(new Impedance() {
                     Frequency = (70f + 120f) / 2f,
                     Duration = (16f + 4f) * 1000f,
-                    Chance = 1f,
-                    Breakable = false
+                    Chance = 1f / 3f, // 1/3 of the fight
+                    Breakable = false,
                 });
             }
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            /* TODO:
-             */
         }
     }
 }

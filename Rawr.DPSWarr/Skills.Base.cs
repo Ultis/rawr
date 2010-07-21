@@ -423,7 +423,7 @@ namespace Rawr.DPSWarr.Skills
             BonusCritChance = 0.00f;
             UseSpellHit = false;
             UseHitTable = true;
-            validatedSet = null;
+            validatedSet = false;
             SwingsOffHand = false;
             SwingsPerActivate = 1f;
             UsesGCD = true;
@@ -476,8 +476,29 @@ namespace Rawr.DPSWarr.Skills
         public float Cd { get; set; }
         public float Duration { get; protected set; } // In Seconds
         public float RageCost { get; protected set; }
-        public float CastTime { get; protected set; } // In Seconds
-        public float GCDTime { get; protected set; } // In Seconds
+        protected float _cachedCastTime = -1f;
+        public float CastTime // In Seconds
+        {
+            get { return _cachedCastTime; }
+            protected set {
+                _cachedCastTime = value;
+                _cachedUseTime = CalcOpts != null ? CalcOpts.Latency
+                    + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) : 0f
+                    + Math.Min(Math.Max(1.5f, value), _cachedGCDTime);
+            }
+        }
+        protected float _cachedGCDTime = 1.5f;
+        public float GCDTime // In Seconds
+        {
+            get { return _cachedGCDTime; }
+            protected set
+            {
+                _cachedGCDTime = value;
+                _cachedUseTime = CalcOpts != null ? CalcOpts.Latency
+                    + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) : 0f
+                    + Math.Min(Math.Max(1.5f, _cachedCastTime), value);
+            }
+        }
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         public float DamageBase { get; set; }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
@@ -515,43 +536,37 @@ namespace Rawr.DPSWarr.Skills
         protected bool UseHitTable { get; set; }
         public bool isMaint { get; protected set; }
         public bool UsesGCD { get; protected set; }
-        private bool? validatedSet = null;
-        public virtual bool Validated
-        {
-            get
+        private bool validatedSet = false;
+        public virtual bool Validated { get { return validatedSet; } }
+        private bool setValidation() {
+            if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater])
             {
-                if (validatedSet == null)
-                {
-                    if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater])
-                    {
-                        validatedSet = false;
-                    }
-                    else if (ReqTalent && Talent2ChksValue < 1)
-                    {
-                        validatedSet = false;
-                    }
-                    else if (ReqMeleeWeap && (Char.MainHand == null || Char.MainHand.MaxDamage <= 0))
-                    {
-                        validatedSet = false;
-                    }
-#if RAWR3 || SILVERLIGHT
-                    else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
-#else
-                    else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
-#endif
-                    {
-                        validatedSet = false;
-                    }
-                    else if ((CalcOpts.FuryStance && !StanceOkFury)
-                        || (!CalcOpts.FuryStance && !StanceOkArms))
-                    {
-                        validatedSet = false;
-                    }
-                    else validatedSet = true;
-                }
-
-                return (validatedSet == true);
+                validatedSet = false;
             }
+            else if (ReqTalent && Talent2ChksValue < 1)
+            {
+                validatedSet = false;
+            }
+            else if (ReqMeleeWeap && (Char.MainHand == null || Char.MainHand.MaxDamage <= 0))
+            {
+                validatedSet = false;
+            }
+#if RAWR3 || SILVERLIGHT
+                else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
+#else
+            else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
+#endif
+            {
+                validatedSet = false;
+            }
+            else if ((CalcOpts.FuryStance && !StanceOkFury)
+                || (!CalcOpts.FuryStance && !StanceOkArms))
+            {
+                validatedSet = false;
+            }
+            else validatedSet = true;
+
+            return validatedSet;
         }
         /// <summary>Number of times it can possibly be activated (# times actually used may be less or same).</summary>
         public virtual float Activates { get { return !Validated ? 0f : ActivatesOverride; } }
@@ -579,7 +594,8 @@ namespace Rawr.DPSWarr.Skills
                 return Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
             }
         }
-        public float UseTime { get { return CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
+        protected float _cachedUseTime = 0;
+        public float UseTime { get { return _cachedUseTime; } } //CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
         protected float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
         protected float HealingOnUse { get { return Healing * combatFactors.HealthBonus; } }
         //protected float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
@@ -628,6 +644,7 @@ namespace Rawr.DPSWarr.Skills
                 MHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, true, UseSpellHit, !UseHitTable);
                 OHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, false, UseSpellHit, !UseHitTable);
             }
+            setValidation();
         }
         public virtual float GetRageUseOverDur(float acts)
         {
@@ -843,5 +860,4 @@ namespace Rawr.DPSWarr.Skills
         ///  - (Talents.FocusedRage * 1f)
     }
     #endregion
-
 }

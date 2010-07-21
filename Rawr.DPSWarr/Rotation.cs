@@ -7,13 +7,17 @@ namespace Rawr.DPSWarr {
     public class Rotation {
         public class AbilWrapper
         {
-            public AbilWrapper(Skills.Ability abil) { ability = abil; }
+            public AbilWrapper(Skills.Ability abil) {
+                ability = abil;
+                _cachedIsDamaging = ability.DamageOverride > 0f;
+            }
             public Skills.Ability ability { get; set; }
             public float numActivates { get; set; }
             public float Rage { get { return ability.GetRageUseOverDur(numActivates); } }
             public float DPS { get { return ability.GetDPS(numActivates); } }
             public float HPS { get { return ability.GetHPS(numActivates); } }
-            public bool isDamaging { get { return ability.DamageOverride > 0f; } }
+            protected bool _cachedIsDamaging = false;
+            public bool isDamaging { get { return _cachedIsDamaging; } }
         }
         // Constructors
         public Rotation()
@@ -46,6 +50,11 @@ namespace Rawr.DPSWarr {
         public List<AbilWrapper> GetAbilityList()
         {
             return new List<AbilWrapper>(AbilityList.Values);
+        }
+
+        public List<AbilWrapper> GetAbilityListThatGCDs()
+        {
+            return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD);
         }
 
         public AbilWrapper GetWrapper<T>()
@@ -118,13 +127,15 @@ namespace Rawr.DPSWarr {
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsDPSWarr CalcOpts { get; set; }
         protected BossOptions BossOpts { get; set; }
-        
-        protected float LatentGCD { get { return 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
+
+        protected float _cachedLatentGCD = 1.5f;
+        protected float LatentGCD { get { return _cachedLatentGCD; } }
         
         /// <summary>
         /// How many GCDs are in the rotation, based on fight duration and latency
         /// </summary>
-        protected float NumGCDs { get { return CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD; } }
+        protected float NumGCDs { get { return _cachedNumGCDs; } }
+        protected float _cachedNumGCDs = 0f;
         
         /// <summary>
         /// How many GCDs have been used by the rotation
@@ -134,9 +145,9 @@ namespace Rawr.DPSWarr {
             get
             {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in GetAbilityList())
+                foreach (AbilWrapper aw in GetAbilityListThatGCDs()/*GetAbilityList()*/)
                 {
-                    if (aw.ability.UsesGCD)
+                    //if (aw.ability.UsesGCD)
                         gcds += aw.numActivates * aw.ability.UseTime / LatentGCD;
                 }
                 return gcds;
@@ -263,7 +274,15 @@ namespace Rawr.DPSWarr {
 
         private void AddAbility(AbilWrapper abilWrapper)
         {
-            AbilityList.Add(abilWrapper.ability.GetType(), abilWrapper);
+            try
+            {
+                AbilityList.Add(abilWrapper.ability.GetType(), abilWrapper);
+            }
+            catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in adding an Ability Wrapper",
+                    ex.Message, "AddAbility(...)", "No Additional Info", ex.StackTrace);
+                eb.Show();
+            }
         }
 
         public virtual void doIterations() { }

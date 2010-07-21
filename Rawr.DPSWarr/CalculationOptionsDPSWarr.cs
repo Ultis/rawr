@@ -406,20 +406,23 @@ namespace Rawr.DPSWarr {
         public float Lag
         {
             get { return _Lag; }
-            set { _Lag = value; OnPropertyChanged("Lag"); }
+            set { _Lag = value; _cachedLatency = value / 1000f; OnPropertyChanged("Lag"); }
         }
         private float _React;
         public float React
         {
             get { return _React; }
-            set { _React = value; OnPropertyChanged("React"); }
+            set { _React = value; _cachedAllowedReact = Math.Max(0f, (value - 200f) / 1000f); OnPropertyChanged("React"); }
         }
-        public float Latency { get { return Lag / 1000f; } }
-        public float AllowedReact { get { return Math.Max(0f, (React - 200f) / 1000f); } }
+        [XmlIgnore]
+        private float _cachedLatency = -1000000f;
+        public float Latency { get { return _cachedLatency; } }
+        [XmlIgnore]
+        private float _cachedAllowedReact = -1000000f;
+        public float AllowedReact { get { return _cachedAllowedReact; } }
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
         #region Boss Options
-//#if !RAWR3 && !SILVERLIGHT
         private string _FilterType;
         public string FilterType
         {
@@ -576,7 +579,6 @@ namespace Rawr.DPSWarr {
             get { return _disarms ?? (_disarms = new List<Impedance>()); }
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
-//#endif
         #endregion
         #endregion
         #region Functions

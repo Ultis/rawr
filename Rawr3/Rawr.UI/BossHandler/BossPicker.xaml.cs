@@ -54,7 +54,6 @@ namespace Rawr.UI
         {
             if (isLoading) { return; }
             isLoading = true;
-            //DataContext = BossOptions;
             // Basics
             CB_Level.SelectedItem = BossOptions.Level;
             CB_Armor.SelectedItem = BossOptions.Armor;
@@ -72,6 +71,7 @@ namespace Rawr.UI
             CB_MinHealers.SelectedItem = BossOptions.Min_Healers;
             // Offensive
             BT_MultiTargs.IsEnabled = (bool)(CK_MultiTargs.IsChecked = BossOptions.MultiTargs);
+            BT_MultiTargs.Content = BossOptions.DynamicCompiler_MultiTargs.ToString();
             BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
             BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
             // Defensive

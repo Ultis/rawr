@@ -291,9 +291,6 @@ namespace Rawr {
             this.Min_Healers = clone.Min_Healers;
             this.Min_Tanks = clone.Min_Tanks;
             // Offensive
-            //this.MaxNumTargets = clone.MaxNumTargets;
-            //this.MultiTargsPerc = clone.MultiTargsPerc;
-            //this.MultiTargs = (this.MultiTargsPerc > 0f && this.MaxNumTargets > 1f);
             this.Targets = clone.Targets; this.MultiTargs = this.Targets != null && this.Targets.Count > 0;
             this.DoTs = clone.DoTs;
             this.Attacks = clone.Attacks;
@@ -392,7 +389,7 @@ namespace Rawr {
         public enum Versions   : int { V_10N = 0, V_25N = 1, V_10H = 2, V_25H = 3, V_10 = 0, V_25 = 1 } // last two are for file compatibility between versions
         public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9 }
         public static readonly float[] StandardMeleePerHit = new float[] {
-                5000f*2f, //T7_0,
+                 5000f*2f, //T7_0,
                 10000f*2f, //T7_5,
                 20000f*2f, //T8_0,
                 30000f*2f, //T8_5,
@@ -423,8 +420,6 @@ namespace Rawr {
                        INBACKPERC_RANGED = 0.00d;
         #endregion
         #region ==== Offensive ====
-        //private double MAXNUMTARGS = 1d;
-        //private double MULTITARGSPERC = 0.00d;
         public List<TargetGroup> Targets = new List<TargetGroup>();
         /// <summary>WARNING! This variable is not presently used!</summary>
         private List<DoT> DOTS = new List<DoT>();
@@ -576,7 +571,7 @@ namespace Rawr {
         }
         #region Attacks
         // ==== Attacks ====
-        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Dont even try!
+        public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Don't even try!
         public List<Attack> Attacks { get { return ATTACKS; } set { ATTACKS = value; } }
         public Attack DynamicCompiler_Attacks
         {
@@ -1256,6 +1251,17 @@ namespace Rawr {
                 this[i].Version = value[i]; i++;
                 this[i].Version = value[i]; i++;
                 this[i].Version = value[i];
+            }
+        }
+        public string Comment
+        {
+            get { return this[0].Comment; }
+            set
+            {
+                this[0].Comment = value;
+                this[1].Comment = value;
+                this[2].Comment = value;
+                this[3].Comment = value;
             }
         }
         // Basics
