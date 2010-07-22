@@ -38,6 +38,24 @@ namespace Rawr.Rogue
             get { return _targetPoisonable; }
             set { if (_targetPoisonable != value) { _targetPoisonable = value; OnPropertyChanged("TargetPoisonable"); } }
         }
+        private bool _bleedIsUp = true;
+        public bool BleedIsUp
+        {
+            get { return _bleedIsUp; }
+            set { if (_bleedIsUp != value) { _bleedIsUp = value; OnPropertyChanged("BleedIsUp"); } }
+        }
+        private int _duration = 300;
+        public int Duration
+        {
+            get { return _duration; }
+            set { if (_duration != value) { _duration = value; OnPropertyChanged("Duration"); } }
+        }
+        private int _lagVariance = 200;
+        public int LagVariance
+        {
+            get { return _lagVariance; }
+            set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
+        }
         private int _customCPG = 1;
         public int CustomCPG
         {
@@ -61,12 +79,6 @@ namespace Rawr.Rogue
         {
             get { return _customUseTotT; }
             set { if (_customUseTotT != value) { _customUseTotT = value; OnPropertyChanged("CustomUseTotT"); } }
-        }
-        private bool _bleedIsUp = true;
-        public bool BleedIsUp
-        {
-            get { return _bleedIsUp; }
-            set { if (_bleedIsUp != value) { _bleedIsUp = value; OnPropertyChanged("BleedIsUp"); } }
         }
         private int _customFinisher = 1;
         public int CustomFinisher
@@ -98,12 +110,6 @@ namespace Rawr.Rogue
             get { return _customOHPoison; }
             set { if (_customOHPoison != value) { _customOHPoison = value; OnPropertyChanged("CustomOHPoison"); } }
         }
-        private int _duration = 300;
-        public int Duration
-        {
-            get { return _duration; }
-            set { if (_duration != value) { _duration = value; OnPropertyChanged("Duration"); } }
-        }
         private float _trinketOffset = 0f;
         public float TrinketOffset
         {
@@ -115,12 +121,6 @@ namespace Rawr.Rogue
         {
             get { return _PTRMode; }
             set { if (_PTRMode != value) { _PTRMode = value; OnPropertyChanged("PTRMode"); } }
-        }
-        private int _lagVariance = 200;
-        public int LagVariance
-        {
-            get { return _lagVariance; }
-            set { if (_lagVariance != value) { _lagVariance = value; OnPropertyChanged("LagVariance"); } }
         }
 
         #region INotifyPropertyChanged Members
