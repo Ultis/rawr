@@ -90,18 +90,13 @@ namespace Rawr.DPSWarr.Skills
         public Execute Exec;
         public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
         public float UsedExtraRage { get { return Exec.UsedExtraRage; } set { Exec.UsedExtraRage = value; } }
-        private SpecialEffect _buff;
-        protected SpecialEffect Buff {
-            get {
-                return _buff ?? (_buff = new SpecialEffect(
-                    Trigger.MeleeHit,
-                    new Stats() { },
-                    (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0 ? 20f : 10f),
-                    0f,
-                    Talents.SuddenDeath * 0.03f));
-            }
-            set { _buff = value; }
-        }
+        private static readonly SpecialEffect[/*Talents.SuddenDeath*/][/*StatS.BonusWarrior_T10_4P_BSSDProcChange>0?1:0*/] _buff = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (false ? 20f : 10f), 0f, 0 * 0.03f), new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (true ? 20f : 10f), 0f, 0 * 0.03f), },
+            new SpecialEffect[] { new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (false ? 20f : 10f), 0f, 1 * 0.03f), new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (true ? 20f : 10f), 0f, 1 * 0.03f), },
+            new SpecialEffect[] { new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (false ? 20f : 10f), 0f, 2 * 0.03f), new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (true ? 20f : 10f), 0f, 2 * 0.03f), },
+            new SpecialEffect[] { new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (false ? 20f : 10f), 0f, 3 * 0.03f), new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (true ? 20f : 10f), 0f, 3 * 0.03f), },
+        };
+        protected SpecialEffect Buff { get { return _buff[Talents.SuddenDeath][StatS.BonusWarrior_T10_4P_BSSDProcChange > 0 ? 1 : 0]; } }
         // Functions
         public float GetActivates(float landedatksoverdur) {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }

@@ -111,6 +111,7 @@
     <Compile Include="CalculationOptionsPanelMoonkin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MoonkinConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

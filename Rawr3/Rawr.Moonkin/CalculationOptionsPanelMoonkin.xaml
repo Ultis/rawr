@@ -12,6 +12,7 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 
 <UserControl.Resources>
 	<local:CalculationOptionsMoonkin x:Key="CalculationOptionsMoonkinDataSource" d:IsDataSource="True"/>
+    <local:PercentConverter x:Key="PercentConverter"/>
 </UserControl.Resources>
 
 <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsMoonkinDataSource}}">

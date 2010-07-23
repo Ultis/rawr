@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Rawr.DPSWarr.Skills;
+using System.Threading;
 
 namespace Rawr.DPSWarr {
     public class Rotation {
@@ -461,10 +462,6 @@ namespace Rawr.DPSWarr {
             }
         }
         
-        private static readonly SpecialEffect _SE_ZERKERDUMMY = new SpecialEffect(Trigger.Use,
-            new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
-            10f, 30f);
-
         protected virtual float RageGenOverDur_Anger {
             get {
                 return (Talents.AngerManagement / 3.0f) * FightDuration;
@@ -931,7 +928,15 @@ namespace Rawr.DPSWarr {
             }
             return percTimeInMovement;
         }
+        #endregion
 
+        #region Cached Special Effects
+        #region Berserker Rage
+        private static readonly SpecialEffect _SE_ZERKERDUMMY = new SpecialEffect(Trigger.Use,
+            new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
+            10f, 30f);
+        #endregion
+        #region Charge
         /// <summary>
         /// This is a 2D array because both the Juggernaught talent and the Glyph of Rapid Charge affect this thing
         /// <para>No Jug,No Glyph | No Jug,Glyph</para>
@@ -942,8 +947,6 @@ namespace Rawr.DPSWarr {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10, ((15f + 1 * 5f) * (1f - (false ? 0.07f : 0f)))), new SpecialEffect(Trigger.Use, null, 10, ((15f + 1 * 5f) * (1f - (true ? 0.07f : 0f)))) },
         };
         #endregion
-
-        #region Cached Special Effects
         #region Battle Shout
         /// <summary>
         /// 3d Array, Commanding Presence 0-5, Glyph of Battle 0-1, Booming Voice 0-2
@@ -1064,6 +1067,13 @@ namespace Rawr.DPSWarr {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
         };
         #endregion
+        #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
+        private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
+        private static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
+        private static Dictionary<float, SpecialEffect[]> _SE_ThunderClap = new Dictionary<float, SpecialEffect[]>();
+        private static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
+        private static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
+        #endregion
         #endregion
 
         public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
@@ -1079,41 +1089,50 @@ namespace Rawr.DPSWarr {
             if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.CommandingPresence][talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
             if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.CommandingPresence][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
             if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.ImprovedDemoralizingShout][talents.BoomingVoice]); }
-            if (ST.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
-                SpecialEffect shatt = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.20f, },
-                    ST.Duration, ST.Cd,
-                    ST.MHAtkTable.AnyLand);
-                statsTotal.AddSpecialEffect(shatt);
+            if (ST.Validated) {
+                float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
+                if (!_SE_ShatteringThrow.ContainsKey(value)) {
+                    _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                }
+                statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
             }
-            if (TH.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
-                SpecialEffect tc = new SpecialEffect(Trigger.Use,
-                    new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
-                    TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand);
-                statsTotal.AddSpecialEffect(tc);
+            if (TH.Validated) {
+                float value = (float)Math.Round(TH.MHAtkTable.AnyLand, 3);
+                if (!_SE_ThunderClap.ContainsKey(value)) {
+                    _SE_ThunderClap.Add(value, new SpecialEffect[] {
+                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 0 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
+                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 1 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
+                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 2 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
+                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 3 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
+                    });
+                }
+                statsTotal.AddSpecialEffect(_SE_ThunderClap[value][talents.ImprovedThunderClap]);
             }
-            if (SN.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
-                SpecialEffect sn = new SpecialEffect(Trigger.Use,
-                    new Stats() { ArmorPenetration = 0.04f, },
-                    SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5);
-                statsTotal.AddSpecialEffect(sn);
+            if (SN.Validated) {
+                float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
+                if (!_SE_SunderArmor.ContainsKey(value)) {
+                    _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                }
+                statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
             }
             float landedAtksInterval = LandedAtksOverDur / FightDuration;
             float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
-            if (SW.Validated) { // can't cache this one in an array, the Duration parameter can't be predicted
-                SpecialEffect sweep = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusTargets = 1f, },
-                    landedAtksInterval * 5f, SW.Cd);
-                statsTotal.AddSpecialEffect(sweep);
+            if (SW.Validated) {
+                float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
+                if (!_SE_SweepingStrikes.ContainsKey(interval)) {
+                    _SE_SweepingStrikes.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
+                }
+                statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
             }
-            if (RK.Validated && CalcOpts.FuryStance) { // can't cache this one in an array, the Duration parameter can't be predicted
-            SpecialEffect reck = new SpecialEffect(Trigger.Use,
-                new Stats() { PhysicalCrit = 1f - critRate },
-                landedAtksInterval * 3f, RK.Cd);
-                statsTotal.AddSpecialEffect(reck);
+            if (RK.Validated && CalcOpts.FuryStance) {
+                float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
+                if (!_SE_Recklessness.ContainsKey(interval)) {
+                    _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f /*- critRate*/ }, landedAtksInterval * 3f, RK.Cd));
+                }
+                statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
             }
             /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
-            {
+            { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above
                 //float value = talents.Flurry * 0.05f;
                 SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
                     new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);

@@ -40,11 +40,13 @@ namespace Rawr.DPSWarr
             initAbilities();
             // doIterations();
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool clok = 
 #if RAWR3 || SILVERLIGHT
-            bool clok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
-            bool clok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                CalcOpts.MultipleTargets
 #endif
+                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             percHS = (hsok ? 1f : 0f);
             if (clok)
@@ -72,11 +74,13 @@ namespace Rawr.DPSWarr
             base.Initialize(calcs);
             
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool clok =
 #if RAWR3 || SILVERLIGHT
-            bool clok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
-            bool clok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                CalcOpts.MultipleTargets
 #endif
+                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
             BloodSurge _BS = GetWrapper<BloodSurge>().ability as BloodSurge;
             percHS = (hsok ? 1f : 0f);
             if (clok)
@@ -376,11 +380,13 @@ namespace Rawr.DPSWarr
             availRage += WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
 
             bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool CLok = 
 #if RAWR3 || SILVERLIGHT
-            bool CLok = BossOpts.MultiTargs && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
-            bool CLok = CalcOpts.MultipleTargets && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                CalcOpts.MultipleTargets
 #endif
+                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
  

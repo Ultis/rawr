@@ -278,9 +278,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = (5f * 60f - Talents.ImprovedDisciplines * 30f) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
             StanceOkFury = true;
-            Effect = new SpecialEffect(Trigger.Use,
-                new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, },
-                Duration, Cd);
+            //Effect = new SpecialEffect(Trigger.Use, new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, }, Duration, Cd);
             UseHitTable = false;
             Initialize();
         }
@@ -604,13 +602,9 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 10f - (Talents.FocusedRage * 1f);
             //Targets += StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*//* },
-                Duration, Duration);
-            float Chance = Talents.ImprovedHamstring * 0.05f + (Talents.GlyphOfHamstring ? 0.10f : 0.00f);
-            Effect2 = new SpecialEffect(Trigger.Use,
-                new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*//* },
-                5f, Duration, Chance);*/
+            //Effect = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*/ }, Duration, Duration);
+            //float Chance = Talents.ImprovedHamstring * 0.05f + (Talents.GlyphOfHamstring ? 0.10f : 0.00f);
+            //Effect2 = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*/ }, 5f, Duration, Chance);
             //
             Initialize();
         }
