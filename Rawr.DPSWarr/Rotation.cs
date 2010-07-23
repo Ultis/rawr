@@ -919,8 +919,7 @@ namespace Rawr.DPSWarr {
                     Stats stats = new Stats
                     {
                         BonusWarrior_T8_4P_MSBTCritIncrease = 0.25f *
-                            (new SpecialEffect(Trigger.Use, null, 10, CH.ability.Cd)
-                             ).GetAverageUptime(FightDuration / actsCharge, 1f, CombatFactors._c_mhItemSpeed, FightDuration)
+                            (_SE_ChargeUse[Talents.Juggernaut][Talents.GlyphOfRapidCharge?1:0]).GetAverageUptime(FightDuration / actsCharge, 1f, CombatFactors._c_mhItemSpeed, FightDuration)
                     };
                     stats.Accumulate(StatS);
                     // I'm not sure if this is gonna work, but hell, who knows
@@ -932,6 +931,139 @@ namespace Rawr.DPSWarr {
             }
             return percTimeInMovement;
         }
+
+        /// <summary>
+        /// This is a 2D array because both the Juggernaught talent and the Glyph of Rapid Charge affect this thing
+        /// <para>No Jug,No Glyph | No Jug,Glyph</para>
+        /// <para>   Jug,No Glyph |    Jug,Glyph</para>
+        /// </summary>
+        private static readonly SpecialEffect[][] _SE_ChargeUse = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10, ((15f + 0 * 5f) * (1f - (false ? 0.07f : 0f)))), new SpecialEffect(Trigger.Use, null, 10, ((15f + 0 * 5f) * (1f - (true ? 0.07f : 0f)))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10, ((15f + 1 * 5f) * (1f - (false ? 0.07f : 0f)))), new SpecialEffect(Trigger.Use, null, 10, ((15f + 1 * 5f) * (1f - (true ? 0.07f : 0f)))) },
+        };
+        #endregion
+
+        #region Cached Special Effects
+        #region Battle Shout
+        /// <summary>
+        /// 3d Array, Commanding Presence 0-5, Glyph of Battle 0-1, Booming Voice 0-2
+        /// </summary>
+        private static readonly SpecialEffect[/*commPresence:0-5*/][/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_BattleShout = {
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+        };
+        #endregion
+        #region Commanding Shout
+        /// <summary>
+        /// 3d Array, Commanding Presence 0-5, Glyph of Command 0-1, Booming Voice 0-2
+        /// </summary>
+        private static readonly SpecialEffect[/*commPresence:0-5*/][/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_CommandingShout = {
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 1 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 2 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 3 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 4 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+            new SpecialEffect[][] {
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+                new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                      new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            },
+        };
+        #endregion
+        #region Demoralizing Shout
+        private static readonly SpecialEffect[][] _SE_DemoralizingShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 1 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 1 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 2 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 2 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 3 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 3 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 4 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 4 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
+        };
+        #endregion
         #endregion
 
         public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
@@ -944,48 +1076,23 @@ namespace Rawr.DPSWarr {
                     SN = GetWrapper<SunderArmor>().ability,
                     SW = GetWrapper<SweepingStrikes>().ability,
                     RK = GetWrapper<Recklessness>().ability;
-            if (ST.Validated)
-            {
+            if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.CommandingPresence][talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+            if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.CommandingPresence][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+            if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.ImprovedDemoralizingShout][talents.BoomingVoice]); }
+            if (ST.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
                 SpecialEffect shatt = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.20f, },
                     ST.Duration, ST.Cd,
                     ST.MHAtkTable.AnyLand);
                 statsTotal.AddSpecialEffect(shatt);
             }
-            if (BTS.Validated)
-            {
-                SpecialEffect bs = new SpecialEffect(Trigger.Use,
-                    new Stats() { AttackPower = (548f * (1f + talents.CommandingPresence * 0.05f)), },
-                    BTS.Duration, BTS.Cd);
-                statsTotal.AddSpecialEffect(bs);
-            }
-            if (CS.Validated)
-            {
-                //float value = (2255f * (1f + talents.CommandingPresence * 0.05f));
-                SpecialEffect cs = new SpecialEffect(Trigger.Use,
-                    new Stats() { Health = 2255f * (1f + talents.CommandingPresence * 0.05f), },
-                    CS.Duration, CS.Cd);
-                statsTotal.AddSpecialEffect(cs);
-            }
-            if (DS.Validated)
-            {
-                //float value = (410f * (1f + talents.ImprovedDemoralizingShout * 0.08f));
-                SpecialEffect ds = new SpecialEffect(Trigger.Use,
-                    new Stats() { BossAttackPower = 410f * (1f + talents.ImprovedDemoralizingShout * 0.08f) * -1f, },
-                    DS.Duration, DS.Cd);
-                statsTotal.AddSpecialEffect(ds);
-            }
-            if (TH.Validated)
-            {
-                //float value = (0.10f * (1f + (float)Math.Ceiling(talents.ImprovedThunderClap * 10f / 3f) / 100f));
+            if (TH.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
                 SpecialEffect tc = new SpecialEffect(Trigger.Use,
                     new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + talents.ImprovedThunderClap / 30f)), },
                     TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand);
                 statsTotal.AddSpecialEffect(tc);
             }
-            if (SN.Validated)
-            {
-                //float value = 0.04f;
+            if (SN.Validated) { // can't cache this one in an array, the Chance parameter can't be predicted
                 SpecialEffect sn = new SpecialEffect(Trigger.Use,
                     new Stats() { ArmorPenetration = 0.04f, },
                     SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5);
@@ -993,18 +1100,16 @@ namespace Rawr.DPSWarr {
             }
             float landedAtksInterval = LandedAtksOverDur / FightDuration;
             float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
-            if (SW.Validated)
-            {
+            if (SW.Validated) { // can't cache this one in an array, the Duration parameter can't be predicted
                 SpecialEffect sweep = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusTargets = 1f, },
                     landedAtksInterval * 5f, SW.Cd);
                 statsTotal.AddSpecialEffect(sweep);
             }
-            if (RK.Validated && CalcOpts.FuryStance)
-            {
-                SpecialEffect reck = new SpecialEffect(Trigger.Use,
-                    new Stats() { PhysicalCrit = 1f - critRate },
-                    landedAtksInterval * 3f, RK.Cd);
+            if (RK.Validated && CalcOpts.FuryStance) { // can't cache this one in an array, the Duration parameter can't be predicted
+            SpecialEffect reck = new SpecialEffect(Trigger.Use,
+                new Stats() { PhysicalCrit = 1f - critRate },
+                landedAtksInterval * 3f, RK.Cd);
                 statsTotal.AddSpecialEffect(reck);
             }
             /*if (talents.Flurry > 0 && CalcOpts.FuryStance)

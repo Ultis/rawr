@@ -318,16 +318,24 @@ namespace Rawr.DPSWarr.Skills
                        combatFactors._c_mhItemType == ItemType.OneHandSword);
             }
         }
+
+        private static readonly SpecialEffect[] _SE_SwordSpec = {
+            null,
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 6, 1 * 0.02f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 6, 2 * 0.02f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 6, 3 * 0.02f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 6, 4 * 0.02f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 6, 5 * 0.02f),
+        };
+
         public float GetActivates(float YellowsThatLandOverDur, float heroic, float cleave)
         {
             if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
             // This attack doesnt consume GCDs and doesn't affect the swing timer
             Whiteattacks.HSOverridesOverDur = heroic;
             Whiteattacks.CLOverridesOverDur = cleave;
-            float rate = Talents.SwordSpecialization * 0.02f;
-            SpecialEffect ss = new SpecialEffect(Trigger.MeleeHit, new Stats() { }, 0f, Cd, rate);
             float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
-            float effectActs = ss.GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
+            float effectActs = _SE_SwordSpec[Talents.SwordSpecialization].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
             effectActs *= FightDuration;
             return effectActs;
         }
