@@ -16,7 +16,7 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
     </UserControl.Resources>
 
     <layoutToolkit:Accordion x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsRogueDataSource}}" HorizontalAlignment="Stretch" SelectionMode="ZeroOrMore" VerticalAlignment="Top">
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch">
+        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" IsSelected="True">
             <layoutToolkit:AccordionItem.Header>
                 <TextBlock Margin="0,-2,0,2"><Run Text="Fight Parameters"/></TextBlock>
             </layoutToolkit:AccordionItem.Header>
@@ -43,7 +43,7 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                 </ComboBox>
 
                 <TextBlock Text="Target is poisonable: " VerticalAlignment="Center" Margin="2" Grid.Row="1" />
-                <CheckBox Grid.Column="1" Grid.Row="1" Margin="2" IsChecked="{Binding TargetPoisonable, Mode=TwoWay}" Content="" />
+                <CheckBox Grid.Column="1" Grid.Row="1" Margin="2" IsChecked="{Binding TargetPoisonable, Mode=TwoWay}" />
 
                 <TextBlock Text="Target is bleeding: " VerticalAlignment="Center" Margin="2" Grid.Row="2" />
                 <CheckBox Grid.Column="1" Grid.Row="2" Margin="2" IsChecked="{Binding BleedIsUp, Mode=TwoWay}" />
@@ -58,11 +58,11 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                 <inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="5" Value="{Binding LagVariance, Mode=TwoWay}" Maximum="10000" Increment="50" />
             </Grid>
         </layoutToolkit:AccordionItem>
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch">
+        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" IsSelected="True">
             <layoutToolkit:AccordionItem.Header>
                 <TextBlock Margin="0,-2,0,2"><Run Text="Custom Rotation"/></TextBlock>
             </layoutToolkit:AccordionItem.Header>
-            <Grid Margin="2,2,2,8" DataContext="{Binding}">
+            <Grid Margin="2,2,2,8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -78,11 +78,11 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="CPG: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="0" SelectedIndex="{Binding Mode=TwoWay, Path=CustomCPG}">
-                    <ListBoxItem Content="Mutilate"/>
-                    <ListBoxItem Content="Sinister Strike"/>
-                    <ListBoxItem Content="Backstab"/>
-                    <ListBoxItem Content="Hemorrhage"/>
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="0" SelectedIndex="{Binding CustomCPG, Mode=TwoWay}">
+                    <ComboBoxItem Content="Mutilate"/>
+                    <ComboBoxItem Content="Sinister Strike"/>
+                    <ComboBoxItem Content="Backstab"/>
+                    <ComboBoxItem Content="Hemorrhage"/>
                 </ComboBox>
                 <TextBlock Text="SnD CP: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="2" />
                 <ComboBox Margin="2" Grid.Column="3" Grid.Row="0" SelectedItem="{Binding CustomCPSnD, Mode=TwoWay}">
@@ -93,10 +93,10 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <System:Int32>5</System:Int32>
                 </ComboBox>
                 <TextBlock Text="Finisher: " VerticalAlignment="Center" Margin="2" Grid.Row="1" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedIndex="{Binding CustomFinisher, Mode=TwoWay}">
-                    <ListBoxItem Content="None"/>
-                    <ListBoxItem Content="Eviscerate"/>
-                    <ListBoxItem Content="Envenom"/>
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedIndex="{Binding CustomFinisher, Mode=TwoWay, NotifyOnValidationError=True, BindsDirectlyToSource=True}">
+                    <ComboBoxItem Content="None"/>
+                    <ComboBoxItem Content="Eviscerate"/>
+                    <ComboBoxItem Content="Envenom"/>
                 </ComboBox>
                 <TextBlock Text="Finisher CP: " VerticalAlignment="Center" Margin="2" Grid.Row="1" Grid.Column="2" />
                 <ComboBox Margin="2" Grid.Column="3" Grid.Row="1" SelectedItem="{Binding CustomCPFinisher, Mode=TwoWay}">
@@ -107,20 +107,20 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <System:Int32>5</System:Int32>
                 </ComboBox>
                 <TextBlock Text="MH Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="2" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" SelectedIndex="{Binding CustomMHPoison,Mode =TwoWay}">
-                    <ListBoxItem Content="None / Other"/>
-                    <ListBoxItem Content="Instant"/>
-                    <ListBoxItem Content="Deadly"/>
-                    <ListBoxItem Content="Wound"/>
-                    <ListBoxItem Content="Anesthetic"/>
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" SelectedIndex="{Binding CustomMHPoison, Mode=TwoWay}">
+                    <ComboBoxItem Content="None / Other"/>
+                    <ComboBoxItem Content="Instant"/>
+                    <ComboBoxItem Content="Deadly"/>
+                    <ComboBoxItem Content="Wound"/>
+                    <ComboBoxItem Content="Anesthetic"/>
                 </ComboBox>
                 <TextBlock Text="OH Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="2" Grid.Column="2" />
-                <ComboBox Margin="2" Grid.Column="3" Grid.Row="2" SelectedIndex="{Binding CustomOHPoison,Mode =TwoWay}">
-                    <ListBoxItem Content="None / Other"/>
-                    <ListBoxItem Content="Instant"/>
-                    <ListBoxItem Content="Deadly"/>
-                    <ListBoxItem Content="Wound"/>
-                    <ListBoxItem Content="Anesthetic"/>
+                <ComboBox Margin="2" Grid.Column="3" Grid.Row="2" SelectedIndex="{Binding CustomOHPoison, Mode=TwoWay}">
+                    <ComboBoxItem Content="None / Other"/>
+                    <ComboBoxItem Content="Instant"/>
+                    <ComboBoxItem Content="Deadly"/>
+                    <ComboBoxItem Content="Wound"/>
+                    <ComboBoxItem Content="Anesthetic"/>
                 </ComboBox>
                 <TextBlock Text="Rupture: " VerticalAlignment="Center" Margin="2" Grid.Row="3" Grid.Column="0" />
                 <CheckBox Grid.Column="1" Grid.Row="3" Margin="2" IsChecked="{Binding CustomUseRupt, Mode=TwoWay}" />
@@ -130,7 +130,7 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                 <CheckBox Grid.Column="1" Grid.Row="4" Margin="2" IsChecked="{Binding CustomUseTotT, Mode=TwoWay}" />
             </Grid>
         </layoutToolkit:AccordionItem>
-        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
             <layoutToolkit:AccordionItem.Header>
                 <TextBlock Margin="0,-2,0,2"><Run Text="Misc"/></TextBlock>
             </layoutToolkit:AccordionItem.Header>
