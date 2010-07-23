@@ -62,6 +62,39 @@ namespace Rawr.DPSDK
             }
         }
 
+        // TODO: Update this to the default graphs
+        #region StatsGraph
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            statsList.Add(new Stats() { Strength = 1f });
+//            statsList.Add(new Stats() { Stamina = 1f });
+            statsList.Add(new Stats() { Agility = 1f });
+            statsList.Add(new Stats() { AttackPower = 2f });
+            statsList.Add(new Stats() { CritRating = 1f });
+            statsList.Add(new Stats() { HitRating = 1f });
+            statsList.Add(new Stats() { ExpertiseRating = 1f });
+            statsList.Add(new Stats() { HasteRating = 1f });
+            statsList.Add(new Stats() { ArmorPenetrationRating = 1f });
+//            statsList.Add(new Stats() { DefenseRating = 1f });
+//            statsList.Add(new Stats() { DodgeRating = 1f });
+//            statsList.Add(new Stats() { ParryRating = 1f });
+            return statsList.ToArray();
+        }
+
+        private void btnGraph_Click(object sender, EventArgs e)
+        {
+            Stats[] statsList = BuildStatsList();
+            Rawr.Base.Graph graph = new Rawr.Base.Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your Overall Score.\n\nAt the Zero position is your current Overall.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of Overall points added or lost";
+            graph.SetupStatsGraph(Character, statsList, 1000, explanatoryText, null);
+            graph.Show();
+        }
+        #endregion
+        
+        /*
         private void btnGraph_Click(object sender, EventArgs e)
         {
             CalculationsDPSDK DKCalc = new CalculationsDPSDK();
@@ -185,7 +218,7 @@ namespace Rawr.DPSDK
 
             graph.Invalidate();
             graph.Update();
-        }
+        }*/
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {

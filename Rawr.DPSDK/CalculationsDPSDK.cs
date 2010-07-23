@@ -396,9 +396,10 @@ namespace Rawr.DPSDK
 
                 AbilityHandler abilities = new AbilityHandler(stats, combatTable, character, calcOpts);
 
+                // TODO: This gets very expensive.
                 if ((calcOpts.GetRefreshForReferenceCalcs ? referenceCalculation : false)
-                    || (calcOpts.GetRefreshForDisplayCalcs ? needsDisplayCalculations : false) || 
-                    (calcOpts.GetRefreshForSignificantChange ? significantChange : false))
+                    || (calcOpts.GetRefreshForDisplayCalcs ? needsDisplayCalculations : false) 
+                    || (calcOpts.GetRefreshForSignificantChange ? significantChange : false))
                 {
                     if (talents.HeartStrike > 0)
                     {
@@ -850,6 +851,9 @@ namespace Rawr.DPSDK
                 #endregion
 
                 calcs.OverallPoints = calcs.DPSPoints;
+
+                // TODO: Display rotation data:
+
             }
 
             return calcs;
@@ -889,13 +893,13 @@ namespace Rawr.DPSDK
                 foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
                 {
                     // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && se1.Equals(FC1))
+                    if (bFC1Found && FC1.Stats.Equals(se1.Stats) && FC1.Trigger.Equals(se1.Trigger))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && se1.Equals(FC2))
+                    else if (bFC2Found && FC2.Stats.Equals(se1.Stats) && FC2.Trigger.Equals(se1.Trigger))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (se1.Equals(FC1))
+                    else if (FC1.Stats.Equals(se1.Stats) && FC1.Trigger.Equals(se1.Trigger))
                         bFC1Found = true;
-                    else if (se1.Equals(FC2))
+                    else if (FC2.Stats.Equals(se1.Stats) && FC2.Trigger.Equals(se1.Trigger))
                         bFC2Found = true;
                 }
             }
@@ -1509,7 +1513,7 @@ namespace Rawr.DPSDK
 
         private bool relevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
+            bool bResults = (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration +
                 stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
@@ -1527,6 +1531,23 @@ namespace Rawr.DPSDK
                 stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor
                 + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusObliterateMultiplier +
                 stats.BonusHeartStrikeMultiplier + stats.BonusScourgeStrikeMultiplier + stats.DeathbringerProc + stats.FrostDamage) != 0;
+
+            // Filter out caster gear:
+            if (bResults && 
+                // Let's make sure that if we've got some stats that may be interesting
+                (stats.Strength == 0 
+                && stats.AttackPower == 0 
+                && stats.ExpertiseRating == 0 
+                && stats.HitRating == 0))
+            {
+                bResults = !((stats.Intellect != 0)
+                    || (stats.Spirit != 0)
+                    || (stats.Mp5 != 0)
+                    || (stats.SpellPower != 0)
+                    || (stats.Mana != 0)
+                    );
+            }
+            return bResults;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSDK calcOpts) {
