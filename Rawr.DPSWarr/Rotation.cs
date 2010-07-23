@@ -451,10 +451,7 @@ namespace Rawr.DPSWarr {
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
                 if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {
-                    SpecialEffect effect = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
-                        10f, 30f);
-                    float upTime = effect.GetAverageUptime(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
+                    float upTime = _SE_ZERKERDUMMY.GetAverageUptime(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
                     zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
@@ -463,6 +460,11 @@ namespace Rawr.DPSWarr {
                 return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
             }
         }
+        
+        private static readonly SpecialEffect _SE_ZERKERDUMMY = new SpecialEffect(Trigger.Use,
+            new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
+            10f, 30f);
+
         protected virtual float RageGenOverDur_Anger {
             get {
                 return (Talents.AngerManagement / 3.0f) * FightDuration;

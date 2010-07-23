@@ -1412,6 +1412,31 @@ These numbers to do not include racial bonuses.",
             return new Stats() { };
         }
 
+        #region Talents That are handled as SpecialEffects
+        // We need these to be static so they aren't re-created 50 bajillion times
+        private static SpecialEffect[] _SE_WreckingCrew = {
+            null,
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 1 * 0.02f, }, 12, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 2 * 0.02f, }, 12, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 3 * 0.02f, }, 12, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 4 * 0.02f, }, 12, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 5 * 0.02f, }, 12, 0),
+        };
+
+        private static SpecialEffect[] _SE_Trauma = {
+            null,
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = 1 * 0.15f, }, 15, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = 2 * 0.15f, }, 15, 0),
+        };
+
+        private static SpecialEffect[] _SE_DeathWish = {
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 0)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 1)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 2)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 3)),
+        };
+        #endregion
+
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
@@ -1496,25 +1521,10 @@ These numbers to do not include racial bonuses.",
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
             };
             // Add Talents that give SpecialEffects
-            if (talents.Rampage > 0 && isBuffed) {
-                statsTalents.PhysicalCrit += 0.05f;
-            }
-            if (talents.WreckingCrew > 0) {
-                //float value = talents.WreckingCrew * 0.02f;
-                SpecialEffect wrecking = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = talents.WreckingCrew * 0.02f, }, 12, 0);
-                statsTalents.AddSpecialEffect(wrecking);
-            }
-            if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) {
-                //float value = talents.Trauma * 0.15f;
-                SpecialEffect trauma = new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = talents.Trauma * 0.15f, }, 15, 0);
-                statsTalents.AddSpecialEffect(trauma);
-            }
-            if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) {
-                SpecialEffect death = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
-                    30f, 3f * 60f * (1f - 1f / 9f * talents.IntensifyRage));
-                statsTalents.AddSpecialEffect(death);
-            }
+            if (talents.Rampage > 0 && isBuffed) { statsTalents.PhysicalCrit += 0.05f; }
+            if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
+            if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_Trauma[talents.Trauma]); }
+            if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
             #endregion
 
             /*Stats statsGearEnchantsBuffs = new Stats();

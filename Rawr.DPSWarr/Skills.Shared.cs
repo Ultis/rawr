@@ -155,9 +155,6 @@ namespace Rawr.DPSWarr.Skills
             UseHitTable = false;
             UsesGCD = false;
             UseReact = true;
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusRageGen = 1f * (1f + Talents.ImprovedBloodrage * 0.25f), },
-                Duration, Cd);*/
             //
             Initialize();
         }
@@ -186,9 +183,6 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 10f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { AttackPower = (548f*(1f+Talents.CommandingPresence*0.05f)), },
-                Duration, Cd);*/
             //
             Initialize();
         }
@@ -226,9 +220,6 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 10f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { Health = (2255f*(1f+Talents.CommandingPresence*0.05f)), },
-                Duration, Cd);*/
             //
             Initialize();
         }
@@ -264,9 +255,6 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 10f;
             StanceOkArms = StanceOkFury = true;
             UseHitTable = false;
-            /*Effect = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, },
-                    Duration, Cd);*/
             //
             Initialize();
         }
@@ -353,7 +341,6 @@ namespace Rawr.DPSWarr.Skills
             Duration = 10f; // Using 4 seconds to sim consume time
             RageCost = -10f * Talents.SecondWind;
             StanceOkDef = StanceOkFury = StanceOkArms = true;
-            //Effect = new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 10f * Talents.SecondWind, }, Duration, Cd);
             HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
             UseHitTable = false;
             UsesGCD = false;
@@ -485,10 +472,6 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
             Initialize();
-            //
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { ArmorPenetration = 0.04f, },
-                Duration, Cd, MHAtkTable.Hit, 5);*/
         }
         protected override float ActivatesOverride
         {
@@ -544,11 +527,6 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = 12f + StatS.AttackPower * 0.50f;
             //
             Initialize();
-            //
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { ArmorPenetration = 0.20f, },
-                Duration, Cd,
-                MHAtkTable.Hit + MHAtkTable.Crit);*/
         }
     }
     public class DemoralizingShout : BuffEffect
@@ -575,12 +553,6 @@ namespace Rawr.DPSWarr.Skills
             UseSpellHit = true;
             //
             Initialize();
-            //
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { /*AttackPower = 411f,*/
-            /* }, // needs to be boss debuff
-            Duration, Duration,
-            MHAtkTable.Hit + MHAtkTable.Crit);*/
         }
         protected override float ActivatesOverride
         {
@@ -632,13 +604,13 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 10f - (Talents.FocusedRage * 1f);
             //Targets += StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
-            Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*/ },
+            /*Effect = new SpecialEffect(Trigger.Use,
+                new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*//* },
                 Duration, Duration);
             float Chance = Talents.ImprovedHamstring * 0.05f + (Talents.GlyphOfHamstring ? 0.10f : 0.00f);
             Effect2 = new SpecialEffect(Trigger.Use,
-                new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*/ },
-                5f, Duration, Chance);
+                new Stats() { AttackPower = 0f, /*TargetStunned = 0.50f,*//* },
+                5f, Duration, Chance);*/
             //
             Initialize();
         }
