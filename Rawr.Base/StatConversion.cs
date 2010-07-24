@@ -36,18 +36,18 @@ namespace Rawr
 
         public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
         public const float RATING_PER_ARMORPENETRATION = 1399.572614f; // 4.69512177f / (1.1/1.25f) * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_BLOCK = 1639.4994f; // 5f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_BLOCK = 1639.499474f;
         public const float RATING_PER_DEFENSE = 4.918498039f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
         public const float RATING_PER_DODGE = 4525.018692f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_EXPERTISE = 8.1974969f; // 2.5f * LEVEL_80_COMBATRATING_MODIFIER;
 		public const float RATING_PER_PARRY = 4525.018692f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_PHYSICALCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_PHYSICALHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_PHYSICALHIT = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_PHYSICALCRIT = 4590.598679f;
+        public const float RATING_PER_PHYSICALHASTE = 3278.998947f;
+        public const float RATING_PER_PHYSICALHIT = 3278.998947f;
         public const float RATING_PER_RESILIENCE = 9427.122498f; // 25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_SPELLCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_SPELLHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
-        public const float RATING_PER_SPELLHIT = 2623.1990f; //8f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_SPELLCRIT = 4590.598679f;
+        public const float RATING_PER_SPELLHASTE = 3278.998947f;
+        public const float RATING_PER_SPELLHIT = 2623.199272f;
         public const float RATING_PER_ARMOR = 2.00f; //2 Armor per 1 AGI;
         public const float RATING_PER_HEALTH = 10.00f; //10 Health per 1 STA;
         public const float RATING_PER_MANA = 15.00f; //15 Mana per 1 INT;
