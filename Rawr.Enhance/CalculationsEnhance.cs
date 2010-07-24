@@ -206,6 +206,9 @@ namespace Rawr.Enhance
         }
         #endregion
 
+        private static readonly SpecialEffect T10_2P = new SpecialEffect(Trigger.Use, new Stats { BonusDamageMultiplier = .12f }, 15f, 0f);
+        private static readonly SpecialEffect T10_4P = new SpecialEffect(Trigger.Use, new Stats { /*BonusAttackPowerMultiplier = .20f*/ }, 10f, 0);
+
         #region Main Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
@@ -287,15 +290,14 @@ namespace Rawr.Enhance
             // Tier 10 Bonuses
             if (stats.Enhance2T10 == 1)
             {
-                SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { BonusDamageMultiplier = .12f }, 15f, 0f);
-                calculatedStats.T10_2Uptime = t10.GetAverageUptime(cs.AbilityCooldown(EnhanceAbility.ShamanisticRage), 1f) * 100f;
-                t10.AccumulateAverageStats(stats, cs.AbilityCooldown(EnhanceAbility.ShamanisticRage));
+                calculatedStats.T10_2Uptime = T10_2P.GetAverageUptime(cs.AbilityCooldown(EnhanceAbility.ShamanisticRage), 1f) * 100f;
+                T10_2P.AccumulateAverageStats(stats, cs.AbilityCooldown(EnhanceAbility.ShamanisticRage));
             }
             if (stats.Enhance4T10 == 1)
             {
-                SpecialEffect t10 = new SpecialEffect(Trigger.Use, new Stats { AttackPower = .2f * stats.AttackPower }, 10f, 0);
-                calculatedStats.T10_4Uptime = t10.GetAverageUptime(cs.SecondsToFiveStack, .15f) * 100f;
-                t10.AccumulateAverageStats(stats, cs.SecondsToFiveStack, 0.15f);
+                calculatedStats.T10_4Uptime = T10_4P.GetAverageUptime(cs.SecondsToFiveStack, .15f) * 100f;
+                //T10_4P.AccumulateAverageStats(stats, cs.SecondsToFiveStack, 0.15f);
+                stats.AttackPower += stats.AttackPower * 0.20f * calculatedStats.T10_4Uptime / 100f;
             }
 
             // assign basic variables for calcs
