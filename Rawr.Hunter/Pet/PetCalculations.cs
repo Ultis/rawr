@@ -192,7 +192,7 @@ namespace Rawr.Hunter
             set { _ywAtkTable = value; }
         }
 
-        SpecialEffect frenzy = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = 0.30f, }, 8f, 1f, Talents.Frenzy * 0.20f);
+        SpecialEffect frenzy = null;
 
         public void GenPetStats()
         {
@@ -272,6 +272,9 @@ namespace Rawr.Hunter
                 petStatsTalents.AddSpecialEffect(primary);
             }
             if (Talents.Frenzy > 0) {
+                if (frenzy == null) {
+                    frenzy = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = 0.30f, }, 8f, 1f, Talents.Frenzy * 0.20f);
+                }
                 petStatsTalents.AddSpecialEffect(frenzy);
             }
             if (PetTalents.LastStand.Value > 0) {
