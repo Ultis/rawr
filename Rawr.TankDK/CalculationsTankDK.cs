@@ -333,7 +333,71 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				}; 
 			} 
 		}
-		/// <summary>
+
+        #region Static SpecialEffects
+        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float,SpecialEffect[]>();
+        private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
+        private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
+        private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+        private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
+        };
+        private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
+        };
+        private static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
+        };
+        private static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
+        };
+        private static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
+        private static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 1) }, 0, 0, 0.35f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 2) }, 0, 0, 0.35f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 3) }, 0, 0, 0.35f),
+        };
+        private static readonly SpecialEffect[] _SE_IcyTalons = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 1) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 2) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 3) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 4) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 5) }, 20f, 0f),
+        };
+        private static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
+            new SpecialEffect[] {
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 0 * 10f),
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 0 * 10f),
+            },
+            new SpecialEffect[] {
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 1 * 10f),
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 1 * 10f),
+            },
+        };
+        private static readonly SpecialEffect[] _SE_Acclimation = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 1), 3),
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 2), 3),
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 3), 3),
+        };
+        private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        #endregion
+
+        /// <summary>
 		/// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
 		/// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
 		/// those total stats for the character, and any calculationoptions on the character, perform all the 
@@ -474,12 +538,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			TDK.opts.m_Rotation.m_fParry = stats.Parry;
 			TDK.opts.m_Rotation.m_fPhysicalHaste = stats.PhysicalHaste;
 
-			if (character.DeathKnightTalents.SpellDeflection > 0)
-			{
-				Stats newStats = new Stats();
-				newStats.SpellDamageTakenMultiplier -= 0.15f * TDK.Char.DeathKnightTalents.SpellDeflection;
-				SpecialEffect se = new SpecialEffect(Trigger.DamageSpellHit, newStats, 0f, 0f, stats.Parry);
-				stats.AddSpecialEffect(se);
+			if (character.DeathKnightTalents.SpellDeflection > 0) {
+                float key = (float)Math.Round(stats.Parry, 5);
+                if (!_SE_SpellDeflection.ContainsKey(key)) {
+                    _SE_SpellDeflection.Add(key, new SpecialEffect[] {
+                        null, // this array point will never get selected because the opening If statement prevents it
+                        new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellDamageTakenMultiplier = -0.15f * 1 }, 0f, 0f, stats.Parry),
+                        new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellDamageTakenMultiplier = -0.15f * 2 }, 0f, 0f, stats.Parry),
+                        new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellDamageTakenMultiplier = -0.15f * 3 }, 0f, 0f, stats.Parry),
+                    });
+                }
+                stats.AddSpecialEffect(_SE_SpellDeflection[key][TDK.Char.DeathKnightTalents.SpellDeflection]);
 			}
 
 			// This is the point that SHOULD have the right values according to the paper-doll.
@@ -502,8 +571,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				// Blood Armor:
 				// When you activate Blood Tap, you gain 12% damage reduction from all attacks for 10 sec.
 				// For now, we're going to assume that Blood Tap is used at every opportunity.
-				SpecialEffect SE4T10 = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -(stats.TankDK_T10_4pc) }, 10f, 60f);
-				stats.AddSpecialEffect(SE4T10);
+                stats.AddSpecialEffect(_SE_T10_4P);
 			}
 			#endregion 
 
@@ -511,20 +579,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
 				&& character.MainHandEnchant == character.OffHandEnchant)
 			{
-				SpecialEffect FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
-				SpecialEffect FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
 				bool bFC1Found = false;
 				bool bFC2Found = false;
 				foreach (SpecialEffect se1 in stats.SpecialEffects())
 				{
 					// if we've already found them, and we're seeing them again, then remove these repeats.
-					if (bFC1Found && se1.Equals(FC1))
+					if (bFC1Found && se1.Equals(_SE_FC1))
 						stats.RemoveSpecialEffect(se1);
-					else if (bFC2Found && se1.Equals(FC2))
+					else if (bFC2Found && se1.Equals(_SE_FC2))
 						stats.RemoveSpecialEffect(se1);
-					else if (se1.Equals(FC1))
+					else if (se1.Equals(_SE_FC1))
 						bFC1Found = true;
-					else if (se1.Equals(FC2))
+					else if (se1.Equals(_SE_FC2))
 						bFC2Found = true;
 				}
 			}
@@ -665,21 +731,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Talent: Vampiric Blood
 			if (character.DeathKnightTalents.VampiricBlood > 0)
 			{
-				Stats VBStats = new Stats()
-				{
-					Health = (stats.Health * 0.15f),
-					HealingReceivedMultiplier = 0.35f,
-				};
-
-				float fVB_CD = 60f;
-				if (m_bT9_4PC) fVB_CD -= 10f;
-				float fVB_Dur = 10f;
-				if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
-				{
-					fVB_Dur += 5f;
-				}
-				SpecialEffect SE = new SpecialEffect(Trigger.Use, VBStats, fVB_Dur, fVB_CD);
-				SE.AccumulateAverageStats(stats);
+				Stats VBStats = new Stats() { Health = (stats.Health * 0.15f), HealingReceivedMultiplier = 0.35f, };
+                float uptime = _SE_VampiricBlood[m_bT9_4PC ? 1 : 0][character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0].GetAverageUptime(0f, 1f);
+                stats.Accumulate(VBStats, uptime);
 			}
 			#endregion
 
@@ -687,16 +741,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Talent: Rune Tap
 			if (character.DeathKnightTalents.RuneTap > 0)
 			{
-				Stats newStats = new Stats();
-				float fCD = 60f;
-				newStats.Healed = (stats.Health * .1f);
-				// Improved Rune Tap.
-				// increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-				fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-				newStats.Healed += (newStats.Healed * (character.DeathKnightTalents.ImprovedRuneTap / 3f));
-
-				SpecialEffect SE = new SpecialEffect(Trigger.Use, newStats, 0, fCD);
-				SE.AccumulateAverageStats(stats);
+                // Improved Rune Tap.
+                // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
+                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) * (1f + (character.DeathKnightTalents.ImprovedRuneTap / 3f)) };
+                float uptime = _SE_RuneTap[character.DeathKnightTalents.ImprovedRuneTap].GetAverageUptime(0f, 1f);
+                stats.Accumulate(newStats, uptime);
 			}
 			#endregion
 			#endregion
@@ -1438,10 +1487,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// 1% per point bonus to physical damage for 30 secs after a crit w/ up to 3 stacks.
 			if (character.DeathKnightTalents.BloodyVengeance > 0)
 			{
-				newStats = new Stats();
-				newStats.BonusPhysicalDamageMultiplier = .01f * character.DeathKnightTalents.BloodyVengeance;
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, newStats, 30, 0, 1, 3));
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit, newStats, 30, 0, 1, 3));
+                newStats = new Stats() { BonusPhysicalDamageMultiplier = .01f * character.DeathKnightTalents.BloodyVengeance };
+                FullCharacterStats.AddSpecialEffect(_SE_BloodyVengeance1[character.DeathKnightTalents.BloodyVengeance]);
+				FullCharacterStats.AddSpecialEffect(_SE_BloodyVengeance2[character.DeathKnightTalents.BloodyVengeance]);
 			}
 
 			// Abominations Might
@@ -1461,13 +1509,22 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Healing you 150% of the damage they do for 20 sec.
 			if (character.DeathKnightTalents.Bloodworms > 0)
 			{
-				newStats = new Stats();
 				// TODO: figure out how much damage the worms do.
 				fDamageDone = 100f;
 				float fBWAttackSpeed = 2f;
 				float fBWDuration = 20f;
-				newStats.Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f);
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, newStats, fBWDuration, 0, .03f * character.DeathKnightTalents.Bloodworms));
+                float key = (fDamageDone * fBWDuration / fBWAttackSpeed);
+                // note, while this only creates one Dictionary entry and may seem like a waste
+                // I left it open like this so that your above TODO for figuring out how much damage the worms do will make this part dynamic
+                if (!_SE_Bloodworms.ContainsKey(key)) {
+                    _SE_Bloodworms.Add(key, new SpecialEffect[] {
+                        null,
+                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 1),
+                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 2),
+                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 3),
+                    });
+                }
+                FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[key][character.DeathKnightTalents.Bloodworms]);
 			}
 
 			// Hysteria
@@ -1529,11 +1586,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
 			if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
 			{
-				newStats = new Stats();
-				newStats.DamageTakenMultiplier -= (0.05f * character.DeathKnightTalents.WillOfTheNecropolis);
 				// Need to factor in the damage taken aspect of the trigger.
 				// Using the assumption that the tank will be at < 35% health about that % of the time.
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, newStats, 0, 0, 0.35f));
+				FullCharacterStats.AddSpecialEffect(_SE_WillOfTheNecropolis[character.DeathKnightTalents.WillOfTheNecropolis]);
 			}
 
 			// Heart Strike
@@ -1605,9 +1660,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Increase melee attack speed by 4% per point for the next 20 sec.
 			if (character.DeathKnightTalents.IcyTalons > 0)
 			{
-				newStats = new Stats();
-				newStats.PhysicalHaste += (0.04f * character.DeathKnightTalents.IcyTalons);
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.FrostFeverHit, newStats, 20f, 0f));
+				FullCharacterStats.AddSpecialEffect(_SE_IcyTalons[character.DeathKnightTalents.IcyTalons]);
 			}
 
 			// Lichborne
@@ -1733,21 +1786,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Reinforces your armor with a thick coat of ice, Increasing Armor by 25% and increasing your Strength by 20% for 20 sec.
 			if (character.DeathKnightTalents.UnbreakableArmor > 0)
 			{
-				newStats = new Stats();
-				newStats.BonusStrengthMultiplier += 0.20f;
-				newStats.BaseArmorMultiplier += .25f;
-				newStats.BonusArmorMultiplier += .25f;
-				if (character.DeathKnightTalents.GlyphofUnbreakableArmor)
-				{
-					// As per wowhead:
-					// Effect: Apply Aura: Add % Modifier (3)
-					// Value: 20
-					newStats.BaseArmorMultiplier += .2f;
-					newStats.BonusArmorMultiplier += .2f;
-				}
-				float fUACD = 60f;
-				if (m_bT9_4PC) fUACD -= 10f;
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 20f, fUACD));
+                // As per wowhead: GlyphofUnbreakableArmor
+                // Effect: Apply Aura: Add % Modifier (3) Value: 20
+                FullCharacterStats.AddSpecialEffect(_SE_UnbreakableArmor[character.DeathKnightTalents.GlyphofUnbreakableArmor?1:0][m_bT9_4PC ? 1 : 0]);
 			}
 
 			// Acclimation
@@ -1755,15 +1796,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// up to 3 stacks.
 			if (character.DeathKnightTalents.Acclimation > 0)
 			{
-				newStats = new Stats();
-				float chance = (.1f * character.DeathKnightTalents.Acclimation);
-				newStats.FireResistance += 50f;
-				newStats.FrostResistance += 50f;
-				newStats.ArcaneResistance += 50f;
-				newStats.ShadowResistance += 50f;
-				newStats.NatureResistance += 50f;
-				// TODO: SpellHit is not sufficient.  Need to have this be DamageTakenSpell (vs. DamageTakenPhysical)
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenMagical, newStats, 18f, 0f, chance, 3));
+                // TODO: SpellHit is not sufficient.  Need to have this be DamageTakenSpell (vs. DamageTakenPhysical)
+				FullCharacterStats.AddSpecialEffect(_SE_Acclimation[character.DeathKnightTalents.Acclimation]);
 			}
 
 			// Frost Strike
@@ -1784,9 +1818,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				// The glyph provides a MIN of 30% damage reduction, but doesn't help if your def takes you over that.
 				ibfReduction = Math.Max(0.4f, ibfReduction);
 			}
-			newStats = new Stats();
-			newStats.DamageTakenMultiplier -= ibfReduction;
-			FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fIBFDur, 120)); // Patch 3.2
+            FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -1f * ibfReduction }, fIBFDur, 120)); // Patch 3.2
 
 			// Tundra Stalker
 			// Your spells & abilities deal 3% per point more damage to targets w/ FF
@@ -1906,9 +1938,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Lasts 10 secs or X damage.  
 			if (character.DeathKnightTalents.AntiMagicZone > 0)
 			{
-				newStats = new Stats();
-				newStats.SpellDamageTakenMultiplier -= .75f * character.DeathKnightTalents.AntiMagicZone;
-				FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 10f, 2f * 60f));
+				FullCharacterStats.AddSpecialEffect(_SE_AntiMagicZone);
 			}
 
 			// Improved Unholy Presence

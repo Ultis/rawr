@@ -1970,8 +1970,8 @@ These numbers to do not include racial bonuses.",
                     float numProcs = 0;
                     if (effect.Stats.ManaorEquivRestore > 0f && effect.Stats.HealthRestoreFromMaxHealth > 0f) {
                         // effect.Duration = 0, so GetAverageStats won't work
-                        float value1 = effect.Stats.Clone().ManaorEquivRestore;
-                        float value2 = effect.Stats.Clone().HealthRestoreFromMaxHealth;
+                        float value1 = effect.Stats.ManaorEquivRestore;
+                        float value2 = effect.Stats.HealthRestoreFromMaxHealth;
                         SpecialEffect dummy = new SpecialEffect(effect.Trigger, new Stats() { ManaorEquivRestore = value1, HealthRestoreFromMaxHealth = value2 }, effect.Duration, effect.Cooldown, effect.Chance);
                         numProcs = dummy.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.ManaorEquivRestore += dummy.Stats.ManaorEquivRestore * numProcs;
