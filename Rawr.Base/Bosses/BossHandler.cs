@@ -126,7 +126,7 @@ namespace Rawr {
         #region Functions
         public override string ToString() {
             if (Frequency < 0) return "None";
-            return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}%{3}",
+            return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}{3}",
                 Frequency, Duration, Chance, Breakable ? " : B" : "");
         }
         #endregion
@@ -177,7 +177,7 @@ namespace Rawr {
         public override string ToString()
         {
             if (Frequency <= 0) return "None";
-            return string.Format("#T: {0:0} F: {1:0.0}s D: {2:0}s C: {3:0%}%{4}",
+            return string.Format("#T: {0:0} F: {1:0.0}s D: {2:0}s C: {3:0%}{4}",
                 NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "");
         }
         #endregion

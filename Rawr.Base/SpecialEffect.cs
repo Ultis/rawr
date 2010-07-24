@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Rawr
 {
@@ -156,6 +157,8 @@ namespace Rawr
 
     public partial class SpecialEffect
     {
+//        public static int numSpecEffectsCreatedEver = 0;
+
         public Trigger Trigger { get; set; }
         public Stats Stats { get; set; }
         public float Duration { get; set; }
@@ -333,6 +336,7 @@ namespace Rawr
         {
             Chance = 1.0f;
             MaxStack = 1;
+            //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
         public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown)
@@ -343,6 +347,7 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
         public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance)
@@ -353,6 +358,7 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
         public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, int maxStack)
@@ -363,6 +369,7 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
         /// <summary>
@@ -1057,7 +1064,7 @@ namespace Rawr
                     {
                         // this is a special case, meaning that it basically auto triggers on cooldown
                         float t = fightDuration;
-                        float cc = Cooldown;
+                        float cc = float.IsPositiveInfinity(Cooldown) ? fightDuration : Cooldown;
                         float total = (float)Math.Floor(t / cc) * Duration;
                         t -= (float)Math.Floor(t / cc) * cc;
                         total += Math.Min(t, Duration);
@@ -1537,6 +1544,7 @@ namespace Rawr
         {
             get
             {
+                if (float.IsPositiveInfinity(Cooldown)) { return "Once per Fight"; }
                 int cooldown = (int)Cooldown;
                 if (cooldown % 60 == 0)
                 {
