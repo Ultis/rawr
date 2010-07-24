@@ -16,6 +16,7 @@ x:Class="Rawr.Tree.CalculationOptionsPanelTree"
 
 <UserControl.Resources>
 	<local:CalculationOptionsTree x:Key="CalculationOptionsTreeDataSource" d:IsDataSource="True"/>
+	<local:CalculationsTree x:Key="CalculationsTreeDataSource" d:IsDataSource="True"/>
 </UserControl.Resources>
 
 <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsTreeDataSource}}">
