@@ -323,9 +323,9 @@ namespace Rawr.Hunter.Skills
             Cd = 30f; // In Seconds
             ManaCostisPerc = true;
             ManaCost = 0.06f; // 6% of base mana
-            Effect = new SpecialEffect(Trigger.Use,
+            /*Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusDamageMultiplier = 0.06f, },
-                Duration, Cd);
+                Duration, Cd);*/
             //
             Initialize();
         }
@@ -542,14 +542,14 @@ namespace Rawr.Hunter.Skills
             ManaCost = 0.03f;
             UseHitTable = false;
             //
-            Effect = new SpecialEffect(Trigger.Use,
+            /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { RangedHaste = 0.40f + (Talents.GlyphOfRapidFire ? 0.08f : 0f), },
                     Duration, Cd);
             if (Talents.RapidRecuperation > 0) {
                 Effect2 = new SpecialEffect(Trigger.Use,
                         new Stats() { ManaRestore = StatS.Mana * (0.02f * Talents.RapidRecuperation) * Duration / 3f, },
                         Duration, Cd);
-            } else { Effect2 = null; }
+            } else { Effect2 = null; }*/
             //
             Initialize();
         }

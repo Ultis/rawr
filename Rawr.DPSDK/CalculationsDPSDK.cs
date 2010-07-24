@@ -863,6 +863,9 @@ namespace Rawr.DPSDK
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
         }
 
+        private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
+        private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
         /// combine all of the information about the character, including race, gear, enchants, buffs,
@@ -886,20 +889,18 @@ namespace Rawr.DPSDK
             if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
                 && character.MainHandEnchant == character.OffHandEnchant)
             {
-                SpecialEffect FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
-                SpecialEffect FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
                 bool bFC1Found = false;
                 bool bFC2Found = false;
                 foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
                 {
                     // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && FC1.Stats.Equals(se1.Stats) && FC1.Trigger.Equals(se1.Trigger))
+                    if (bFC1Found && _SE_FC1.Stats.Equals(se1.Stats) && _SE_FC1.Trigger.Equals(se1.Trigger))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && FC2.Stats.Equals(se1.Stats) && FC2.Trigger.Equals(se1.Trigger))
+                    else if (bFC2Found && _SE_FC2.Stats.Equals(se1.Stats) && _SE_FC2.Trigger.Equals(se1.Trigger))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (FC1.Stats.Equals(se1.Stats) && FC1.Trigger.Equals(se1.Trigger))
+                    else if (_SE_FC1.Stats.Equals(se1.Stats) && _SE_FC1.Trigger.Equals(se1.Trigger))
                         bFC1Found = true;
-                    else if (FC2.Stats.Equals(se1.Stats) && FC2.Trigger.Equals(se1.Trigger))
+                    else if (_SE_FC2.Stats.Equals(se1.Stats) && _SE_FC2.Trigger.Equals(se1.Trigger))
                         bFC2Found = true;
                 }
             }
@@ -998,6 +999,8 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
+        private static readonly SpecialEffect _SE_UnbreakableArmor = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f }, 20f, 60f);
+
         public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
@@ -1017,7 +1020,7 @@ namespace Rawr.DPSDK
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.2f }, 20f, 60f));
+                statsTalents.AddSpecialEffect(_SE_UnbreakableArmor);
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -1570,29 +1573,6 @@ namespace Rawr.DPSDK
                     if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
                     if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
                     if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }*/
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
                 }
             }*/
             #endregion

@@ -1499,29 +1499,6 @@ the Threat Scale defined on the Options tab.",
             }*/
             #endregion
 
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
-            #endregion
-
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {

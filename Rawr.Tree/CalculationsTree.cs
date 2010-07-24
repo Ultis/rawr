@@ -849,6 +849,12 @@ applied and result is scaled down by 100)",
 
             return calculationResult;
         }
+        private static readonly SpecialEffect[] _SE_NaturesGrace = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 1 * 1f / 3f, 1),
+            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 2 * 1f / 3f, 1),
+            new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, 3 * 1f / 3f, 1),
+        };
         public override Stats GetCharacterStats(Character character, Item additionalItem) { return GetCharacterStats(character, additionalItem, new Stats()); }
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statsProcs) {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
@@ -871,9 +877,8 @@ applied and result is scaled down by 100)",
                 RevitalizeChance         = talents.Revitalize * 0.05f,
             };
 
-            if (!calcOpts.IgnoreNaturesGrace)
-            {
-                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCrit, new Stats() { SpellHaste = 0.2f }, 3f, 0, talents.NaturesGrace * 1f / 3f, 1));
+            if (!calcOpts.IgnoreNaturesGrace && talents.NaturesGrace > 0) {
+                statsTalents.AddSpecialEffect(_SE_NaturesGrace[talents.NaturesGrace]);
             }
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -2051,29 +2056,6 @@ applied and result is scaled down by 100)",
              * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
              * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
              */
-            #endregion
-
-            #region Special Pot Handling
-            /*foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }*/
             #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);

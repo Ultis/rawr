@@ -192,6 +192,8 @@ namespace Rawr.Hunter
             set { _ywAtkTable = value; }
         }
 
+        SpecialEffect frenzy = new SpecialEffect(Trigger.MeleeCrit, new Stats() { PhysicalHaste = 0.30f, }, 8f, 1f, Talents.Frenzy * 0.20f);
+
         public void GenPetStats()
         {
             // Initial Variables
@@ -270,15 +272,10 @@ namespace Rawr.Hunter
                 petStatsTalents.AddSpecialEffect(primary);
             }
             if (Talents.Frenzy > 0) {
-                SpecialEffect frenzy = new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { PhysicalHaste = 0.30f, },
-                    8f, 1f, Talents.Frenzy * 0.20f);
                 petStatsTalents.AddSpecialEffect(frenzy);
             }
             if (PetTalents.LastStand.Value > 0) {
-                SpecialEffect laststand = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusHealthMultiplier = 0.30f, },
-                    20f, (1f * 60f) * LongevityCdAdjust);
+                SpecialEffect laststand = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.30f, }, 20f, (1f * 60f) * LongevityCdAdjust);
                 petStatsTalents.AddSpecialEffect(laststand);
             }
             #endregion

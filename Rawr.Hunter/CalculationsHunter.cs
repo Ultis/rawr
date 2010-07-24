@@ -739,29 +739,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
              */
             #endregion
 
-            #region Special Pot Handling
-            foreach (Buff potionBuff in character.ActiveBuffs.FindAll(b => b.Name.Contains("Potion")))
-            {
-                if (potionBuff.Stats._rawSpecialEffectData != null
-                    && potionBuff.Stats._rawSpecialEffectData[0] != null)
-                {
-                    Stats newStats = new Stats();
-                    newStats.AddSpecialEffect(new SpecialEffect(potionBuff.Stats._rawSpecialEffectData[0].Trigger,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Stats,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Duration,
-                                                                calcOpts.Duration,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].Chance,
-                                                                potionBuff.Stats._rawSpecialEffectData[0].MaxStack));
-
-                    Buff newBuff = new Buff() { Stats = newStats };
-                    character.ActiveBuffs.Remove(potionBuff);
-                    character.ActiveBuffsAdd(newBuff);
-                    removedBuffs.Add(potionBuff);
-                    addedBuffs.Add(newBuff);
-                }
-            }
-            #endregion
-
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             foreach (Buff b in removedBuffs) {
@@ -2647,9 +2624,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (calcOpts.PetFamily == PetFamily.Wolf
                     && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
                 {
-                    SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use,
-                        new Stats() { AttackPower = 320f, PetAttackPower = 320f, },
-                        20f, 40f);
                     statsTotal.AddSpecialEffect(FuriousHowl);
                 }
                 
@@ -2706,6 +2680,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 return new Stats();
             }
         }
+
+        private static readonly SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 320f, PetAttackPower = 320f, }, 20f, 40f);
 
         private static void CalculateTriggers(Character character, CharacterCalculationsHunter calculatedStats, Stats statsTotal,
             CalculationOptionsHunter calcOpts,
