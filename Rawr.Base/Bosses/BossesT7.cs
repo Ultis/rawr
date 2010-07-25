@@ -347,11 +347,11 @@ namespace Rawr.Bosses {
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
             #endregion
             #region Basics
+            Health = new float[] { 2789000f, 8436725f, 0, 0 };
             float[] Phase1Length = { 110, 110, 0, 0 };
             float[] Phase2Length = {  70,  70, 0, 0 };
-            Health = new float[] { 2789000f, 8436725f, 0, 0 };
             BerserkTimer = new int[] { ((int)Phase1Length[0] + (int)Phase2Length[0]) * 3, ((int)Phase1Length[1] + (int)Phase2Length[1]) * 3, 0, 0 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { (int)Phase1Length[0], (int)Phase1Length[1], 0, 0 };
             float[] PercDurInPhase1 = { ((BerserkTimer[0] / Phase1Length[0]) * Phase2Length[0]) / BerserkTimer[0], ((BerserkTimer[1] / Phase1Length[1]) * Phase2Length[1]) / BerserkTimer[1] };
             float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
@@ -445,22 +445,24 @@ namespace Rawr.Bosses {
             #endregion
             #region Basics
             Health = new float[] { 3067900f, 9273425f, 0, 0 };
+            float[] Phase1Length = { 90, 90, 0, 0 };
+            float[] Phase2Length = { 45, 45, 0, 0 };
             BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
-            InBackPerc_Melee = new double[] { 0.25f, 0.25f, 0, 0 };
+            float[] PercDurInPhase1 = { ((BerserkTimer[0] / Phase1Length[0]) * Phase2Length[0]) / BerserkTimer[0], ((BerserkTimer[1] / Phase1Length[1]) * Phase2Length[1]) / BerserkTimer[1] };
+            float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
+            InBackPerc_Melee = new double[] { 0.00f, 0.25f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
             Min_Tanks = new int[] { 1, 1, 0, 0 };
-            Min_Healers = new int[] { 3, 4, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                this[i].Attacks.Add(new Attack
+                this[i].Attacks.Add(new Attack // ToDo: An Actual DoT
                 {
                     Name = "Decrepit Fever",
                     DamageType = ItemDamageType.Nature,
@@ -469,8 +471,8 @@ namespace Rawr.Bosses {
                     AttackSpeed = 30.0f,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -494,8 +496,8 @@ namespace Rawr.Bosses {
                 {
                     Frequency = 90f + 45f,
                     Duration = (45f - 4f * 5f) * 1000f,
-                    Chance = 1f,
-                    Breakable = false
+                    Chance = new float[] { PercDurInPhase2[i], 1.00f }[i], // 10 man can corner cheat, 25 man has to dance
+                    Breakable = false,
                 });
                 //Stuns;
                 //Fears;
@@ -505,6 +507,9 @@ namespace Rawr.Bosses {
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
+             * Decrepit Fever as DoT
+             * Spell Disruption - Every few seconds Heigan will debuff everybody in 20 yards range with a debuff that increases casting time by 300% for 10 seconds.
+             * Make the attacks limited to Phase 1
              */
         }
     }
@@ -528,11 +533,9 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
@@ -552,8 +555,8 @@ namespace Rawr.Bosses {
                     AttackSpeed = 120.0f,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -611,11 +614,9 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
@@ -635,8 +636,8 @@ namespace Rawr.Bosses {
                     AttackSpeed = 10.0f,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -675,8 +676,12 @@ namespace Rawr.Bosses {
             #endregion
             #region Basics
             Health = new float[] { 836700f, 2510100f, 0, 0 };
-            BerserkTimer = new int[] { 19*60 - (4 * 60 + 34), 19*60 - (4 * 60 + 34), 0, 0 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            float[] Phase1Length = { 274, 274, 0, 0 };
+            float[] Phase2Length = { 45, 45, 0, 0 };
+            BerserkTimer = new int[] { 19 * 60 - 274, 19 * 60 - 274, 0, 0 };
+            SpeedKillTimer = new int[] { (int)Phase1Length[0] + (int)Phase2Length[0], (int)Phase1Length[0] + (int)Phase2Length[0], 0, 0 };
+            float[] PercDurInPhase1 = { Phase1Length[0] / BerserkTimer[0], Phase1Length[1] / BerserkTimer[1] };
+            float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
@@ -684,11 +689,44 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region MultiTargs
+                // NOTE: I'm not duplicating these to the Undead side (on purpose)
+                /* Unrelenting Trainee (Live side) - Total of 24 of those will spawn throughout the fight, always coming in pairs.
+                 * They cast Death Plague, which does 85 (25 Player: 170) Nature damage per 3 seconds, stacking indefinitely. Will
+                 * spawn Spectral Trainee.*/
+                this[i].Targets.Add(new TargetGroup {
+                    Frequency = Phase1Length[i] / (24/2),
+                    Duration = 10 * 1000,
+                    Chance = PercDurInPhase1[i],
+                    NumTargs = 2,
+                    NearBoss = false,
+                });
+                /* Unrelenting Death Knight (Live side) - Total of 7 of those will spawn throughout the fight. They cast Shadow Mark,
+                 * which hits for ~3,500 (25 Player: ~5,000) on plate and applies a Shadow Mark debuff, which causes all Unrelenting
+                 * Riders to be able to hit the debuffed players with shadow bolts. Will spawn Spectral Death Knight.*/
+                this[i].Targets.Add(new TargetGroup {
+                    Frequency = Phase1Length[i] / (7),
+                    Duration = 10 * 1000,
+                    Chance = 1.00f,
+                    NumTargs = 1,
+                    NearBoss = false,
+                });
+                /* Unrelenting Rider (Live side) - Total of 4 of those will spawn throughout the fight. Their Unholy Aura will hit
+                 * everybody in line of sight for 350 (25 Player: 500) Shadow damage every 2 seconds. Shadow Bolt Volley will hit for
+                 * 3,800 to 4,200 (25 Player: 5,700 to 6,300) Shadow damage, but will affect only people with the Mark of Shadow
+                 * debuff. Will spawn Spectral Rider and Spectral Horse.*/
+                this[i].Targets.Add(new TargetGroup {
+                    Frequency = Phase1Length[i] / (4),
+                    Duration = 10 * 1000,
+                    Chance = PercDurInPhase1[i],
+                    NumTargs = 1,
+                    NearBoss = false,
+                });
+                #endregion
+
+                #region Attacks
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Shadowbolt",
@@ -698,8 +736,8 @@ namespace Rawr.Bosses {
                     AttackSpeed = 1.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -719,11 +757,11 @@ namespace Rawr.Bosses {
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { PercDurInPhase1[0], PercDurInPhase1[1], 0, 0 };
             #endregion
             /* TODO:
-             * Phase 1 (Adds)
              * Harvest Soul
+             * Phase 2 Blinking
              */
         }
     }
@@ -848,11 +886,9 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack {
                     Name = "Hateful Strike",
@@ -862,8 +898,8 @@ namespace Rawr.Bosses {
                     AttackSpeed = 1.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
