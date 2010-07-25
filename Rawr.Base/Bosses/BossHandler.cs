@@ -118,9 +118,31 @@ namespace Rawr {
         }
         #endregion
         #region Variables
+        /// <summary>
+        /// The amount of tim between activations of this Impedance, in sec
+        /// <para>Eg- This Impedance occurs every 45 sec</para>
+        /// <para>Frequency = 45f</para>
+        /// </summary>
         public float Frequency;
+        /// <summary>
+        /// The amount of time spent in this state, in millisec
+        /// <para>Eg- This Impedance lasts 4 seconds:</para>
+        /// <para>Duration = 4f * 1000f</para>
+        /// </summary>
         public float Duration;
+        /// <summary>
+        /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
+        /// <para>Eg- An Impedance effects one random raid target:</para>
+        /// <para>Chance = 1f / this.Max_Players</para>
+        /// </summary>
         public float Chance;
+        /// <summary>
+        /// Flag which indicates whether the player can reduce or break the Duration of the Impedance
+        /// <para>Eg- The player has to move for 4 seconds, movement can be broken by MovementSpeed bonus and Charge-like abilities:</para>
+        /// <para>Breakable = true</para>
+        /// <para>Eg- The player is stunned by Smite (Deadmines) for 4 seconds, this stun is scripted and cannot be broken:</para>
+        /// <para>Breakable = false</para>
+        /// </summary>
         public bool Breakable;
         #endregion
         #region Functions
