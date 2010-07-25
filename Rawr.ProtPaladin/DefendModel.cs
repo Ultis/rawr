@@ -77,13 +77,13 @@ namespace Rawr.ProtPaladin
             */
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin options)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin options, bool useHolyShield)
         {
             Character   = character;
             Stats       = stats;
             Options     = options;
             ParryModel  = new ParryModel(character, stats, options);
-            DefendTable = new DefendTable(character, stats, options); 
+            DefendTable = new DefendTable(character, stats, options, useHolyShield);
             Calculate();
         }
     }

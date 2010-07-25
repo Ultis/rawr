@@ -168,6 +168,7 @@ namespace Rawr.ProtPaladin
                     "Defensive Stats:Parry",
                     "Defensive Stats:Block",
                     "Defensive Stats:Chance to be Crit",
+                    "Defensive Stats:...Without Holy Shield",
                     "Defensive Stats:Resilience",
                     "Defensive Stats:Block Value",                      
                     "Defensive Stats:Avoidance",
@@ -243,7 +244,7 @@ focus on Survival Points.",
                     "Avoidance Points",
                     "% Avoid + Block Attacks",
                     "% Chance to be Crit",
-                    "Defense Skill",
+                    "% Chance to be Crit Without Holy Shield",
                     "Block Value",
                     "% Block Chance",
                     "Burst Time", 
@@ -316,7 +317,8 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-            DefendModel dm = new DefendModel(character, stats, calcOpts);
+            DefendModel dm = new DefendModel(character, stats, calcOpts, true);
+            DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, false);
             AttackModel am = new AttackModel(character, stats, amm, calcOpts);
 
             calculatedStats.BasicStats = stats;
@@ -339,6 +341,7 @@ focus on Survival Points.",
             calculatedStats.Block = dm.DefendTable.Block;
 
             calculatedStats.Defense = stats.Defense + (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
+            calculatedStats.DefenseRating = stats.DefenseRating;
             calculatedStats.StaticBlockValue = stats.BlockValue;
             calculatedStats.ActiveBlockValue = stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue;
 
@@ -346,6 +349,8 @@ focus on Survival Points.",
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
             calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calcOpts.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
+            calculatedStats.CritVulnerabilityWithoutHolyShield = dmWithoutHolyShield.DefendTable.Critical;
+            calculatedStats.UsingHolyShield = calcOpts.UseHolyShield;
 
             calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calcOpts.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;

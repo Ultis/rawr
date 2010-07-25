@@ -130,7 +130,7 @@ namespace Rawr.ProtPaladin
             Character        = character;
             Options          = options;
             Stats            = stats;
-            DefendTable      = new DefendTable(character, stats, options);
+            DefendTable      = new DefendTable(character, stats, options, true);
             ParryModel       = new ParryModel(character, stats, options);
             _attackModelMode = attackModelMode;
 

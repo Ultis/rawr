@@ -55,11 +55,14 @@ namespace Rawr.ProtPaladin
 
         //Basic Tank Defensive Stats
         public float Defense { get; set; }
+        public float DefenseRating { get; set; }
         public float Dodge { get; set; }
         public float Parry { get; set; }
         public float Miss { get; set; }
         public float CritReduction { get; set; }
         public float CritVulnerability { get; set; }
+        public float CritVulnerabilityWithoutHolyShield { get; set; }
+        public bool UsingHolyShield { get; set; }
         public float ArmorReduction { get; set; }
         public float GuaranteedReduction { get; set; }
         public float DodgePlusMissPlusParry { get; set; }
@@ -164,15 +167,33 @@ namespace Rawr.ProtPaladin
                                 StatConversion.GetCritReductionFromResilience(BasicStats.Resilience,CharacterClass.Paladin),
                                 StatConversion.GetCritReductionFromResilience(BasicStats.Resilience,CharacterClass.Paladin)*2f));
 
-            if (CritVulnerability > 0.0001f) {
-                double defenseNeeded = Math.Ceiling((CritVulnerability / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) / StatConversion.RATING_PER_DEFENSE);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability / (StatConversion.RATING_PER_RESILIENCE / 100f));
+            if (CritVulnerability > 0.0001f)
+            {
+                double defenseNeeded = Math.Ceiling((100 * CritVulnerability / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * StatConversion.RATING_PER_DEFENSE);
+                double resilienceNeeded = Math.Ceiling(CritVulnerability * StatConversion.RATING_PER_RESILIENCE);
                 dictValues.Add("Chance to be Crit",
-                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense rating or {2:0} resilience rating to be uncrittable.",
+                    string.Format("{0:0.00%}*CRITTABLE! Short by approximately {1:0} defense rating or approximately {2:0} resilience rating to be uncrittable.",
                                     CritVulnerability, defenseNeeded, resilienceNeeded));
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
+
+            if (UsingHolyShield)
+            {
+                if (CritVulnerabilityWithoutHolyShield > 0.0001f) {
+                    double defenseNeeded = Math.Ceiling((100 * CritVulnerabilityWithoutHolyShield / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * StatConversion.RATING_PER_DEFENSE);
+                    double resilienceNeeded = Math.Ceiling(CritVulnerability * StatConversion.RATING_PER_RESILIENCE);
+                    dictValues.Add("...Without Holy Shield",
+                        string.Format("{0:0.00%}*CRITTABLE! Short by approximately {1:0} defense rating or approximately {2:0} resilience rating to be uncrittable without holy shield.",
+                                        CritVulnerabilityWithoutHolyShield, defenseNeeded, resilienceNeeded));
+                }
+                else
+                    dictValues.Add("...Without Holy Shield", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerabilityWithoutHolyShield, CritReduction));
+            }
+            else
+            {
+                dictValues.Add("...Without Holy Shield", "N/A*Not applicable");
+            }
 
             dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance, NatureReduction));
             dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance, ArcaneReduction));
@@ -282,7 +303,7 @@ namespace Rawr.ProtPaladin
                 case "Avoidance Points": return DodgePlusMissPlusParry * 10000.0f;
                 case "% Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
-                case "Defense Skill": return Defense;
+                case "% Chance to be Crit Without Holy Shield": return ((float)Math.Round(CritVulnerabilityWithoutHolyShield * 100.0f, 2));
                 case "Block Value": return StaticBlockValue;
                 case "% Block Chance": return Block * 100.0f;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;

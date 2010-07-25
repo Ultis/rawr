@@ -44,8 +44,16 @@ namespace Rawr.ProtPaladin
 
     public class DefendTable : CombatTable
     {
+        private bool UseHolyShield { get; set; }
+
         protected override void Calculate()
         {
+            // Hack to not count holy shield when we are trying to calculate crit chance without it
+            if (!UseHolyShield && Options.UseHolyShield)
+            {
+                Stats.Accumulate(new Stats() { Block = -0.3f });
+            }
+
             float tableSize = 0.0f;
 
             // Miss
@@ -70,10 +78,17 @@ namespace Rawr.ProtPaladin
             Hit = Math.Max(0.0f, 1.0f - tableSize);
             // Partial Resists don't belong in the combat table
             Resist = 1.0f - StatConversion.GetResistanceTable(Options.TargetLevel, Character.Level, Stats.FrostResistance, 0.0f)[0];
+
+            // Hack to put back holy shield when we are trying to calculate crit chance without it
+            if (!UseHolyShield && Options.UseHolyShield)
+            {
+                Stats.Accumulate(new Stats() { Block = 0.3f });
+            }
         }
 
-        public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin options)
+        public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin options, bool useHolyShield)
         {
+            UseHolyShield = useHolyShield;
             Initialize(character, stats, Ability.None, options);
         }
     }
