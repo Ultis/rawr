@@ -5,8 +5,29 @@ using System.Text;
 
 namespace Rawr.ShadowPriest
 {
+
     public class SolverBase
     {
+        private static SpecialEffect[] _seSpiritTap = new SpecialEffect[] {
+            null,
+            new SpecialEffect(
+                Trigger.SpellCrit, 
+                new Stats { BonusSpiritMultiplier = 0.05f, SpellCombatManaRegeneration = 0.17f },
+                8f, 0f),
+            new SpecialEffect(
+                Trigger.SpellCrit, 
+                new Stats { BonusSpiritMultiplier = 0.10f, SpellCombatManaRegeneration = 0.33f },
+                8f, 0f),
+        };
+
+        private static SpecialEffect[] _seGlyphOfShadow = new SpecialEffect[] {
+            null,
+            new SpecialEffect(
+                Trigger.SpellHit,
+                new Stats {},
+                10f, 0f),
+        };
+
         public List<Spell> SpellPriority { get; protected set; }
         public List<Spell> SpellSimulation { get; protected set; }
         public float OverallDamage { get; protected set; }
@@ -92,7 +113,6 @@ namespace Rawr.ShadowPriest
                 + stats.ValkyrDamage;
         }
 
-
         public SolverBase(Stats playerStats, Character _char) 
         {
             character = _char;
@@ -142,19 +162,11 @@ namespace Rawr.ShadowPriest
             ManaSources = new List<ManaSource>();
 
             // Spirit Tap
-            if (character.PriestTalents.ImprovedSpiritTap > 0)
-                seSpiritTap = new SpecialEffect(Trigger.SpellHit,
-                                new Stats
-                                {
-                                    BonusSpiritMultiplier = 0.05f * character.PriestTalents.ImprovedSpiritTap,
-                                    SpellCombatManaRegeneration = 1f / 6f * character.PriestTalents.ImprovedSpiritTap
-                                },
-                                8f, 0f);
+            if (character.PriestTalents.ImprovedSpiritTap > 0 && character.PriestTalents.ImprovedSpiritTap < 3)
+                seSpiritTap = _seSpiritTap[character.PriestTalents.ImprovedSpiritTap];
             // Glyph of Shadow
             if (character.PriestTalents.GlyphofShadow)
-                seGlyphofShadow = new SpecialEffect(Trigger.SpellHit,
-                                    new Stats {},
-                                    10f, 0f);
+                seGlyphofShadow = _seGlyphOfShadow[1];
 
             PlayerStats = playerStats;      
         }
