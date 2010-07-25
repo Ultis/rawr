@@ -40,14 +40,22 @@ namespace Rawr.UI
             set {
                 if (_char != null) {
                     _char.ClassChanged -= new EventHandler(character_ClassChanged);
+                    _char.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
                 }
                 _char = value;
                 if (_char != null) {
                     _char.ClassChanged += new EventHandler(character_ClassChanged);
-                    character_ClassChanged(this, EventArgs.Empty);
+                    _char.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                     BossOptions = Character.BossOptions;
+                    character_ClassChanged(this, EventArgs.Empty);
+                    character_CalculationsInvalidated(this, EventArgs.Empty);
                 }
             }
+        }
+
+        private void character_CalculationsInvalidated(object sender, EventArgs e) {
+            if(BossOptions == null) return;
+            TB_BossInfo.Text = BossOptions.GenInfoString(Character);
         }
 
         public void bossOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,7 +103,7 @@ namespace Rawr.UI
             BT_Roots.Content = BossOptions.DynamicCompiler_Root.ToString();
             BT_Disarms.Content = BossOptions.DynamicCompiler_Disarm.ToString();
             // Summary
-            TB_BossInfo.Text = BossOptions.GenInfoString();
+            TB_BossInfo.Text = BossOptions.GenInfoString(Character);
             //
             if (CB_BossList.SelectedIndex == -1) { CB_BossList.SelectedIndex = 0; } // Sets it to Custom
             isLoading = false;
@@ -390,7 +398,7 @@ namespace Rawr.UI
                         addInfo += "\r\nBoss Info Set";
 
                         // Set Controls to those Values
-                        TB_BossInfo.Text = boss.GenInfoString();
+                        TB_BossInfo.Text = boss.GenInfoString(Character);
 
                         // Save the new names
                         if (!firstload) {
@@ -408,7 +416,7 @@ namespace Rawr.UI
                         boss.Name = "Custom";
                         BossOptions.BossName = boss.Name;
                         //
-                        TB_BossInfo.Text = boss.GenInfoString();
+                        TB_BossInfo.Text = boss.GenInfoString(Character);
                         isLoading = false;
                     }
                     bossOpts_PropertyChanged(null, null);

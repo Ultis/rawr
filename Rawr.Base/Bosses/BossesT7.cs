@@ -320,7 +320,7 @@ namespace Rawr.Bosses {
     // Plague Quarter
     public class NoththePlaguebringer : MultiDiffBoss {
         /// <summary>
-        /// Phase 1: Ground Phase
+        /// <para>Phase 1: Ground Phase</para>
         /// <para>o Curse of the Plaguebringer - Places a curse on 3 party members. After 10 seconds, every cursed target will cast Wrath of the
         ///     Plaguebringer, which will hit everybody in 30 yards range for 3,700 to 4,300 (25 Player: 5,550 to 6,450) Shadow damage and
         ///     additional 1,313 to 1687 (25 Player: 3,150 to 3,850) Shadow damage every 2 seconds, for 10 seconds.</para>
@@ -330,6 +330,7 @@ namespace Rawr.Bosses {
         ///     speed and Strength by 50%, for 15 seconds.</para>
         /// <para>o Plagued Warrior - Summoned every 30 seconds while in Phase 1. They Cleave, dealing 110% weapon damage to two targets.</para>
         /// <para>o Change Phase: Balcony - After 110 seconds on the ground, Noth will teleport to his balcony, entering Phase 2.</para>
+        /// 
         /// <para>Phase 2: Balcony Phase</para>
         /// <para>o Plagued Champion - Summoned during Phase 2-1 and 2-2. They will use Mortal Strike, dealing 100% weapon damage and reducing
         ///     healing done by 50% and Shadow Shock, which hits nearby enemies for 2,313 to 2,687 (25 Player: 2,960 to 3,440) Shadow damage.</para>
@@ -346,9 +347,13 @@ namespace Rawr.Bosses {
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
             #endregion
             #region Basics
+            float[] Phase1Length = { 110, 110, 0, 0 };
+            float[] Phase2Length = {  70,  70, 0, 0 };
             Health = new float[] { 2789000f, 8436725f, 0, 0 };
-            BerserkTimer = new int[] { (110 + 70) * 3, (110 + 70) * 3, 0, 0 };
+            BerserkTimer = new int[] { ((int)Phase1Length[0] + (int)Phase2Length[0]) * 3, ((int)Phase1Length[1] + (int)Phase2Length[1]) * 3, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            float[] PercDurInPhase1 = { ((BerserkTimer[0] / Phase1Length[0]) * Phase2Length[0]) / BerserkTimer[0], ((BerserkTimer[1] / Phase1Length[1]) * Phase2Length[1]) / BerserkTimer[1] };
+            float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
@@ -358,17 +363,42 @@ namespace Rawr.Bosses {
             #region Offensive
             for (int i = 0; i < 2; i++)
             {
+                #region MultiTargs
+                #region Phase 1
                 // Every 30 seconds 2 adds will spawn with 100k HP each, simming their life-time to 20 seconds
-                this[i].Targets.Add(new TargetGroup
-                {
+                this[i].Targets.Add(new TargetGroup { // Plagued Warriors
                     Frequency = 30,
-                    Chance = 1.00f,
+                    Chance = PercDurInPhase1[i],
                     Duration = 20 * 1000,
-                    NumTargs = 2,
+                    NumTargs = new int[] { 2, 3 }[i],
                     NearBoss = false,
                 });
+                #endregion
+                #region Phase 2
+                this[i].Targets.Add(new TargetGroup // Plagued Champions/Guardians
+                {
+                    Frequency = 30,
+                    Chance = PercDurInPhase2[i],
+                    Duration = 20 * 1000,
+                    NumTargs = new int[] { 2, 4 }[i],
+                    NearBoss = false,
+                });
+                #endregion
+                #endregion
 
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                this[i].Attacks.Add(new Attack { // ToDo: Real DoT damage
+                    Name = "Curse of the Plaguebringer",
+                    AttackSpeed = 45,//unc
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamagePerHit = new float[] { (3700f + 4300f), (5550f + 6450f) }[i] / 2f,
+                    DamageType = ItemDamageType.Shadow,
+                    MaxNumTargets = new float[] { 3, 10 }[i],
+                    Missable = false, Dodgable = false, Parryable = false, Blockable = false,
+                });
+                #endregion
             }
             #endregion
             #region Defensive
@@ -384,15 +414,23 @@ namespace Rawr.Bosses {
             for (int i = 0; i < 2; i++)
             {
                 //Moves;
+                this[i].Moves.Add(new Impedance { // Blink
+                    Frequency = (20f+30f)/2f,
+                    Duration = 2 * 1000f,
+                    Chance = PercDurInPhase1[i],
+                    Breakable = true,
+                });
                 //Stuns;
                 //Fears;
                 //Roots;
                 //Disarms;
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { PercDurInPhase2[0], PercDurInPhase2[1], 0, 0 };
             #endregion
             /* TODO:
-             * Phase 2
+             * Cripple
+             * Add's Damage
+             * Make the Default Melee limited to Phase 1
              */
         }
     }

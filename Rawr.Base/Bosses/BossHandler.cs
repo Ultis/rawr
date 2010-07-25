@@ -251,34 +251,47 @@ namespace Rawr {
                 if (_MyModelSupportsThis == null)
                 {
                     _MyModelSupportsThis = new Dictionary<string, Dictionary<string, bool>>();
-                    _MyModelSupportsThis.Add("Bear", DefaultSupports);
-                    _MyModelSupportsThis.Add("Cat", DefaultSupports);
-                    _MyModelSupportsThis.Add("DPSDK", DefaultSupports);
-                    _MyModelSupportsThis.Add("Elemental", DefaultSupports);
-                    _MyModelSupportsThis.Add("Enhance", DefaultSupports);
-                    _MyModelSupportsThis.Add("Healadin", DefaultSupports);
-                    _MyModelSupportsThis.Add("HealPriest", DefaultSupports);
-                    _MyModelSupportsThis.Add("Mage", DefaultSupports);
-                    _MyModelSupportsThis.Add("Moonkin", DefaultSupports);
-                    _MyModelSupportsThis.Add("ProtPaladin", DefaultSupports);
-                    _MyModelSupportsThis.Add("ProtWarr", DefaultSupports);
-                    _MyModelSupportsThis.Add("RestoSham", DefaultSupports);
-                    _MyModelSupportsThis.Add("Rogue", DefaultSupports);
-                    _MyModelSupportsThis.Add("ShadowPriest", DefaultSupports);
-                    _MyModelSupportsThis.Add("TankDK", DefaultSupports);
-                    _MyModelSupportsThis.Add("Tree", DefaultSupports);
-                    _MyModelSupportsThis.Add("Warlock", DefaultSupports);
-                    // Custom
-                    {
+                    { // Melee DPS
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
-                        custom["InBack_Ranged"] = false;
-                        custom["TimeSub35"] = false;
-                        _MyModelSupportsThis.Add("DPSWarr", custom);
+                        custom["InBack_Ranged"] = false; // You aren't Ranged
+                        _MyModelSupportsThis.Add("Cat", DefaultSupports);
+                        _MyModelSupportsThis.Add("DPSDK", DefaultSupports);
+                        _MyModelSupportsThis.Add("Enhance", DefaultSupports);
+                        _MyModelSupportsThis.Add("Rogue", DefaultSupports);
+                    }
+                    { // Ranged DPS
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Melee"] = false; // You aren't melee
+                        _MyModelSupportsThis.Add("Hunter", custom);
+                        _MyModelSupportsThis.Add("Moonkin", custom);
+                        _MyModelSupportsThis.Add("Elemental", custom);
+                        _MyModelSupportsThis.Add("Mage", custom);
+                        _MyModelSupportsThis.Add("ShadowPriest", custom);
+                        _MyModelSupportsThis.Add("Warlock", custom);
+                    }
+                    { // Tanks
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // The boss is focused on you
+                        _MyModelSupportsThis.Add("Bear", DefaultSupports);
+                        _MyModelSupportsThis.Add("ProtPaladin", DefaultSupports);
+                        _MyModelSupportsThis.Add("ProtWarr", DefaultSupports);
+                        _MyModelSupportsThis.Add("TankDK", DefaultSupports);
+                    }
+                    { // Heals
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Doesn't matter
+                        custom["Level"] = false; // Your target isn't the boss
+                        custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
+                        _MyModelSupportsThis.Add("Healadin", DefaultSupports);
+                        _MyModelSupportsThis.Add("HealPriest", DefaultSupports);
+                        _MyModelSupportsThis.Add("RestoSham", DefaultSupports);
+                        _MyModelSupportsThis.Add("Tree", DefaultSupports);
                     }
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
-                        custom["InBack_Melee"] = false;
-                        _MyModelSupportsThis.Add("Hunter", custom);
+                        custom["InBack_Ranged"] = false; // Not Ranged
+                        custom["TimeSub35"] = false; // No abilities tied to this
+                        _MyModelSupportsThis.Add("DPSWarr", custom);
                     }
                 }
                 return _MyModelSupportsThis;
@@ -1130,46 +1143,42 @@ namespace Rawr {
         public string GenInfoString(float BossDamageBonus, float BossDamagePenalty,
                                   float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal)
         {
+            int room = Max_Players - Min_Healers - Min_Tanks;
+            float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - MovingTargsTime);
+            float dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
+            float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
             string retVal = "";
             //
-            retVal += "Name: " + Name + "\r\n";
-            retVal += "Content: " + ContentString + "\r\n";
-            retVal += "Instance: " + Instance + " (" + VersionString + ")\r\n";
-            retVal += "Health: " + Health.ToString("#,##0") + "\r\n";
-            TimeSpan ts = TimeSpan.FromMinutes(BerserkTimer/60d);
-            retVal += "Enrage Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
-            ts = TimeSpan.FromMinutes(SpeedKillTimer/60d);
-            retVal += "Speed Kill Timer: " + ts.Minutes.ToString("00") + " Min " + ts.Seconds.ToString("00") + " Sec\r\n";
-            retVal += "\r\n";
-            retVal += "Fight Requirements:" + "\r\n";
-            retVal += "Max Players: "  + Max_Players.ToString() + "\r\n";
-            retVal += "Min Healers: "  + Min_Healers.ToString() + "\r\n";
-            retVal += "Min Tanks: "    + Min_Tanks.ToString() + "\r\n";
-            int room = Max_Players - Min_Healers - Min_Tanks;
-            retVal += "Room for DPS: " + room.ToString() + "\r\n";
-            retVal += "\r\n";
-            float TotalDPSNeeded = Health / (BerserkTimer - TimeBossIsInvuln - MovingTargsTime);
-            retVal += "To beat the Enrage Timer you need " + TotalDPSNeeded.ToString("#,##0") + " Total DPS\r\n";
-            float dpsdps  =  TotalDPSNeeded * ((float)room      / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
-            float tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
-            retVal += "Tanks Req'd DPS per: " + tankdps.ToString("#,##0") + "\r\n";
-            retVal += "DPS Req'd DPS per: " + dpsdps.ToString("#,##0") + "\r\n";
-            retVal += "\r\n";
+            retVal += string.Format("Name: {0}\r\nContent: {1}\r\nInstance: {2} ({3})\r\nHealth: {4:#,##0}\r\n",
+                Name, ContentString.Replace("  "," "), Instance, VersionString, Health);
+            //
+            retVal += string.Format("Enrage Timer: {0:mm} min {0:ss} sec\r\nSpeed Kill Timer: {1:mm} min {1:ss} sec\r\n\r\n",
+                TimeSpan.FromSeconds(BerserkTimer), TimeSpan.FromSeconds(SpeedKillTimer));
+            //
+            retVal += string.Format("Raid Setup: {0:0} man ({1:0} Tanks {2:0} Healers {3:0} DPS)\r\n\r\n",
+                Max_Players, Min_Tanks, Min_Healers, room);
+            //
+            retVal += string.Format("To beat the Enrage Timer you need {0:#,##0} Total DPS\r\n"
+                + "{1:#,##0} from each Tank {2:#,##0} from each DPS\r\n\r\n",
+                TotalDPSNeeded, tankdps, dpsdps);
+            //
             TotalDPSNeeded = Health / (SpeedKillTimer - TimeBossIsInvuln - SpeedKillTimer * (MovingTargsTime / BerserkTimer));
-            retVal += "To beat the Speed Kill Timer you need " + TotalDPSNeeded.ToString("#,##0") + " Total DPS\r\n";
             dpsdps = TotalDPSNeeded * ((float)room / ((float)Min_Tanks / 2f + (float)room)) / (float)room;
             tankdps = (TotalDPSNeeded * ((float)Min_Tanks / ((float)Min_Tanks / 2f + (float)room)) / (float)Min_Tanks) / 2f;
-            retVal += "Tanks Req'd DPS per: " + tankdps.ToString("#,##0") + "\r\n";
-            retVal += "DPS Req'd DPS per: " + dpsdps.ToString("#,##0") + "\r\n";
-            retVal += "\r\n";
-            retVal += "This boss does the following Damage Per Second Amounts, factoring Armor and Defend Tables where applicable:" + "\r\n";
-            retVal += "Single Target Melee: " + GetDPSByType(ATTACK_TYPES.AT_MELEE,BossDamageBonus, BossDamagePenalty,
-                                  p_missPerc, p_dodgePerc, p_parryPerc, p_blockPerc, p_blockVal).ToString("0.0") + "\r\n";
-            retVal += "Single Target Ranged: " + GetDPSByType(ATTACK_TYPES.AT_RANGED, BossDamageBonus, BossDamagePenalty,
-                                  p_missPerc).ToString("0.0") + "\r\n";
-            retVal += "Raid AoE: " + GetDPSByType(ATTACK_TYPES.AT_AOE, BossDamageBonus, 0).ToString("0.0") + "\r\n";
-            retVal += "\r\n";
-            retVal += "Comment(s):\r\n" + Comment;
+            //
+            retVal += string.Format("To beat the Speed Kill Timer you need {0:#,##0} Total DPS\r\n"
+                + "{1:#,##0} from each Tank {2:#,##0} from each DPS\r\n\r\n",
+                TotalDPSNeeded, tankdps, dpsdps);
+            //
+            retVal += string.Format("This boss does the following Damage Per Second Amounts, factoring Armor, Resistance and Defend Tables where applicable:\r\n"
+                + "Single Target Melee: {0:0.0}\r\n"
+                + "Single Target Ranged: {1:0.0}\r\n"
+                + "Raid AoE: {2:0.0}\r\n\r\n",
+                GetDPSByType(ATTACK_TYPES.AT_MELEE, BossDamageBonus, BossDamagePenalty, p_missPerc, p_dodgePerc, p_parryPerc, p_blockPerc, p_blockVal),
+                GetDPSByType(ATTACK_TYPES.AT_RANGED, BossDamageBonus, BossDamagePenalty, p_missPerc),
+                GetDPSByType(ATTACK_TYPES.AT_AOE, BossDamageBonus, 0));
+            //
+            retVal += string.Format("Comment(s):\r\n{0}", Comment);
             //
             return retVal;
         }
@@ -1178,6 +1187,13 @@ namespace Rawr {
         /// </summary>
         /// <returns>The generated string</returns>
         public string GenInfoString() { return GenInfoString(0,0,0,0,0,0,0); }
+        public string GenInfoString(Character character) {
+            if (character == null || character.CurrentCalculations == null) return GenInfoString();
+            Stats stats = character.CurrentCalculations.GetCharacterStats(character);
+            return GenInfoString(stats.DamageTakenMultiplier, 0f,
+                stats.Defense * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER,
+                stats.Dodge, stats.Parry, stats.Block, stats.BlockValue);
+        }
         #endregion
 
         #region INotifyPropertyChanged Members

@@ -457,18 +457,32 @@ namespace Rawr {
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
-            // Basics
+            #region Info
             retboss.Name = "The Easiest Boss";
-            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Ceiling(value);
-            value = passedList[0].Health; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Health); } retboss.Health = value;
+            value = (int)BossHandler.TierLevels.T10_9; foreach (BossHandler boss in passedList) { value = Math.Min(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Floor(value);
+            // Instance, Version, Comment Skipped
+            #endregion
+            #region Basics
+            value = passedList[0].Level; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Level); } retboss.Level = (int)value;
             value = passedList[0].Armor; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Armor); } retboss.Armor = (int)value;
-            // Resistance
-            foreach (ItemDamageType t in DamageTypes) {
-                value = (float)passedList[0].Resistance(t);
-                foreach (BossHandler boss in passedList) {
-                    value = (float)Math.Min(value, boss.Resistance(t));
-                }
-                retboss.Resistance(t, value);
+            value = passedList[0].Health; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Health); } retboss.Health = (int)value;
+            value = 1f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Ceiling(value);
+            value = 1f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.SpeedKillTimer); } retboss.SpeedKillTimer = (int)Math.Ceiling(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee); } retboss.InBackPerc_Melee = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Ranged); } retboss.InBackPerc_Ranged = value;
+            bool is25 = false;
+            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
+            retboss.Max_Players = is25 ? 25 : 10;
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Tanks); } retboss.Min_Tanks = (int)Math.Ceiling(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Min_Healers); } retboss.Min_Healers = (int)Math.Ceiling(value);
+            #endregion
+            #region Offensive
+            {   // Multi-targs
+                float f = -1, d = -1, n = 1;
+                value = 0; foreach (BossHandler boss in passedList) { if (boss.MultiTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MultiTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
+                value = 5000; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsNum); } n = value;
+                if (!(f <= 0 || d <= 0 || n <= 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, }); }
             }
             #region Attacks
             {
@@ -540,75 +554,48 @@ namespace Rawr {
                         AttackSpeed = atkspd,
                     });
                 }
-
-                /*{
-                    float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.Attacks[0].Name == "Invalid" ? perhit : boss.Attacks[0].DamagePerHit); }
-                    float numtrg = passedList[0].Attacks[0].MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.Attacks[0].Name == "Invalid" ? numtrg : boss.Attacks[0].MaxNumTargets); }
-                    float atkspd = passedList[0].Attacks[0].AttackSpeed; foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.Attacks[0].Name == "Invalid" ? atkspd : boss.Attacks[0].AttackSpeed); }
-                    retboss.Attacks[0] = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-                }*/
             }
             #endregion
-            // Situational Changes
-            // In Back
-            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee  ); } retboss.InBackPerc_Melee   = value;
-            value = 0f;     foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Ranged ); } retboss.InBackPerc_Ranged  = value;
-            // Multi-targs
-            {
-                float f = -1, d = -1, n = 1;
-                value = 0;      foreach (BossHandler boss in passedList) { if (boss.MultiTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MultiTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
-                value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                value = 0;      foreach (BossHandler boss in passedList) { value = Math.Min(value, (float)boss.MultiTargsNum); } n = value;
-                if (f <= 0 || d <= 0 || n <= 0) {
-                } else {
-                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
+            #endregion
+            #region Defensive
+            foreach (ItemDamageType t in DamageTypes) {
+                value = (float)passedList[0].Resistance(t);
+                foreach (BossHandler boss in passedList) {
+                    value = (float)Math.Min(value, boss.Resistance(t));
                 }
+                retboss.Resistance(t, value);
             }
+            #endregion
             #region Impedances
             {   // Move
                 float f = -1, d = -1;
                 value = 0;      foreach (BossHandler boss in passedList) { if (boss.MovingTargsFreq    <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.MovingTargsFreq); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
                 value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MovingTargsDur); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (f <= 0 || d <= 0) {
-                } else {
-                    retboss.Moves.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
+                if (!(f <= 0 || d <= 0)) { retboss.Moves.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
             }
             {   // Stun
                 float f = -1, d = -1;
                 value = 0;      foreach (BossHandler boss in passedList) { if (boss.StunningTargsFreq  <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.StunningTargsFreq  ); } } f  = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
                 value = 10*1000;foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.StunningTargsDur  ); } d   = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (f <= 0 || d <= 0) {
-                } else {
-                    retboss.Stuns.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
+                if (!(f <= 0 || d <= 0)) { retboss.Stuns.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
             }
             {   // Fear
                 float f = -1, d = -1;
                 value = 0;      foreach (BossHandler boss in passedList) { if (boss.FearingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.FearingTargsFreq   ); } } f   = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
                 value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.FearingTargsDur   ); } d    = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (f <= 0 || d <= 0) {
-                } else {
-                    retboss.Fears.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
+                if (!(f <= 0 || d <= 0)) { retboss.Fears.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
             }
             {   // Root
                 float f = -1, d = -1;
                 value = 0;      foreach (BossHandler boss in passedList) { if (boss.RootingTargsFreq   <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.RootingTargsFreq   ); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
                 value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.RootingTargsDur   ); } d = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (f <= 0 || d <= 0) {
-                } else {
-                    retboss.Roots.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
+                if (!(f <= 0 || d <= 0)) { retboss.Roots.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
             }
             {   // Disarm
                 float f = -1, d = -1;
                 value = 0;      foreach (BossHandler boss in passedList) { if (boss.DisarmingTargsFreq <= 0) { value = 0f; break; } else { value = Math.Max(value, boss.DisarmingTargsFreq ); } } f = (value >= retboss.BerserkTimer || value <= 0 ? 0000 : value);
                 value = 5000;   foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.DisarmingTargsDur ); } d  = (value >= retboss.BerserkTimer || value <= 0 ? 5000 : value);
-                if (f <= 0 || d <= 0) {
-                } else {
-                    retboss.Disarms.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, });
-                }
+                if (!(f <= 0 || d <= 0)) { retboss.Disarms.Add(new Impedance() { Frequency = f, Duration = d, Chance = 1f, Breakable = true, }); }
             }
             #endregion
             //
@@ -619,19 +606,35 @@ namespace Rawr {
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
-            // Basics
+            #region Info
             retboss.Name = "The Average Boss";
-            value = 0f; foreach (BossHandler boss in passedList) { value += boss.BerserkTimer; } value /= passedList.Length; retboss.BerserkTimer = (int)Math.Floor(value);
-            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Health; } value /= passedList.Length; retboss.Health = value;
+            value = (int)BossHandler.TierLevels.T7_0; foreach (BossHandler boss in passedList) { value += (int)boss.Content; } retboss.Content = (BossHandler.TierLevels)Math.Floor(value / (float)passedList.Length);
+            // Instance, Version, Comment Skipped
+            #endregion
+            #region Basics
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Level; } value /= passedList.Length; retboss.Level = (int)value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Armor; } value /= passedList.Length; retboss.Armor = (int)value;
-            // Resistance
-            foreach (ItemDamageType t in DamageTypes) {
-                value = 0f;
-                foreach (BossHandler boss in passedList) {
-                    value += (float)boss.Resistance(t);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.BerserkTimer; } value /= passedList.Length; retboss.BerserkTimer = (int)Math.Floor(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.SpeedKillTimer; } value /= passedList.Length; retboss.SpeedKillTimer = (int)Math.Floor(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Health; } value /= passedList.Length; retboss.Health = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
+            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
+            bool is25 = false;
+            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
+            retboss.Max_Players = is25 ? 25 : 10;
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Min_Tanks; } value /= passedList.Length; retboss.Min_Tanks = (int)Math.Floor(value);
+            value = 0f; foreach (BossHandler boss in passedList) { value += boss.Min_Healers; } value /= passedList.Length; retboss.Min_Healers = (int)Math.Floor(value);
+            #endregion
+            #region Offensive
+            {   // Multi-targs
+                float f = -1, d = -1, n = 1;
+                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MultiTargsFreq > 0 && boss.MultiTargsFreq < boss.BerserkTimer) ? boss.MultiTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
+                value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsDur; } value /= passedList.Length; d = value;
+                value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsNum; } value /= passedList.Length; n = value;
+                if (f <= 0 || d == 0) {
+                } else {
+                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
                 }
-                value /= passedList.Length;
-                retboss.Resistance(t, value);
             }
             #region Attacks
             {
@@ -730,36 +733,19 @@ namespace Rawr {
                         });
                     }
                 }
-
-                /*
-                int count = 0;
-                float perhit = passedList[0].Attacks[0].DamagePerHit;
-                foreach (BossHandler boss in passedList) {
-                    perhit += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].DamagePerHit;
-                    if (boss.Attacks[0].Name != "Invalid") { count++; }
-                }
-                perhit /= (float)count;
-                count = 0; float numtrg = 1f; foreach (BossHandler boss in passedList) { numtrg += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].MaxNumTargets; if (boss.Attacks[0].Name != "Invalid") { count++; } } numtrg /= (float)count;
-                count = 0; float atkspd = 0f; foreach (BossHandler boss in passedList) { atkspd += boss.Attacks[0].Name == "Invalid" ? 0f : boss.Attacks[0].AttackSpeed; if (boss.Attacks[0].Name != "Invalid") { count++; } } atkspd /= (float)count;
-                retboss.Attacks.Add(new Attack { Name = "Melee", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, });
-                */
             }
             #endregion
-            // Situational Changes
-            // In Back
-            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Melee; } value /= passedList.Length; retboss.InBackPerc_Melee = value;
-            value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.InBackPerc_Ranged; } value /= passedList.Length; retboss.InBackPerc_Ranged = value;
-            // Multi-targs
-            {
-                float f = -1, d = -1, n = 1;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (boss.MultiTargsFreq > 0 && boss.MultiTargsFreq < boss.BerserkTimer) ? boss.MultiTargsFreq : retboss.BerserkTimer; } value /= passedList.Length; f = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += boss.MultiTargsDur; } value /= passedList.Length; d = value;
-                value = 0f; foreach (BossHandler boss in passedList) { value += (float)boss.MultiTargsNum; } value /= passedList.Length; n = value;
-                if (f <= 0 || d == 0) {
-                } else {
-                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = true, });
+            #endregion
+            #region Defensive
+            foreach (ItemDamageType t in DamageTypes) {
+                value = 0f;
+                foreach (BossHandler boss in passedList) {
+                    value += (float)boss.Resistance(t);
                 }
+                value /= passedList.Length;
+                retboss.Resistance(t, value);
             }
+            #endregion
             #region Impedances
             {
                 // Move
@@ -820,35 +806,32 @@ namespace Rawr {
             BossHandler retboss = new BossHandler();
             if (passedList.Length < 1) { return retboss; }
             float value = 0f;
-            // Basics
+            #region Info
             retboss.Name = "The Hardest Boss";
-            value = passedList[0].BerserkTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Floor(value);
-            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Health); } retboss.Health = value;
+            value = (int)BossHandler.TierLevels.T7_0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Ceiling(value);
+            // Instance, Version, Comment Skipped
+            #endregion
+            #region Basics
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Level); } retboss.Level = (int)value;
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Armor); } retboss.Armor = (int)value;
-            // Resistance
-            foreach (ItemDamageType t in DamageTypes) {
-                value = 0f;
-                foreach (BossHandler boss in passedList) {
-                    value = (float)Math.Max(value, boss.Resistance(t));
-                }
-                retboss.Resistance(t, value);
-            }
-            // Fight Requirements
+            value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Health); } retboss.Health = value;
+            value = passedList[0].BerserkTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Floor(value);
+            value = passedList[0].SpeedKillTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.SpeedKillTimer); } retboss.SpeedKillTimer = (int)Math.Floor(value);
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
+            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
             bool is25 = false;
-            foreach (BossHandler boss in passedList) {
-                if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) {
-                    is25 = true;
-                    break;
-                }
-            }
-            if (is25) {
-                retboss.Max_Players = 25;
-                retboss.Min_Tanks = 3;
-                retboss.Min_Healers = 5;
-            } else {
-                retboss.Max_Players = 10;
-                retboss.Min_Tanks = 3;
-                retboss.Min_Healers = 3;
+            foreach (BossHandler boss in passedList) { if (boss.Version == BossHandler.Versions.V_25N || boss.Version == BossHandler.Versions.V_25H) { is25 = true; break; } }
+            retboss.Max_Players = is25 ? 25 : 10;
+            value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Min_Tanks); } retboss.Min_Tanks = (int)value;
+            value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Min_Healers); } retboss.Min_Healers = (int)value;
+            #endregion
+            #region Offensive
+            {   // Multi-targs
+                float f = -1, d = -1, n = 1;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsFreq > 0 ? boss.MultiTargsFreq : value); } f = value;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsDur); } d = value;
+                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsNum); } n = value;
+                if (!(f == 0 || d == 0)) { retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = false, }); }
             }
             #region Attacks
             {
@@ -920,32 +903,12 @@ namespace Rawr {
                         AttackSpeed = atkspd,
                     });
                 }
-
-                /*{
-                    float perhit = passedList[0].Attacks[0].DamagePerHit; foreach (BossHandler boss in passedList) { perhit = Math.Max(perhit, boss.Attacks[0].Name == "Invalid" ? perhit : boss.Attacks[0].DamagePerHit); }
-                    float numtrg = passedList[0].Attacks[0].MaxNumTargets; foreach (BossHandler boss in passedList) { numtrg = Math.Max(numtrg, boss.Attacks[0].Name == "Invalid" ? numtrg : boss.Attacks[0].MaxNumTargets); }
-                    float atkspd = passedList[0].Attacks[0].AttackSpeed; foreach (BossHandler boss in passedList) { atkspd = Math.Min(atkspd, boss.Attacks[0].Name == "Invalid" ? atkspd : boss.Attacks[0].AttackSpeed); }
-                    retboss.Attacks[0] = new Attack { Name = "Melee Attack", DamageType = ItemDamageType.Physical, DamagePerHit = perhit, MaxNumTargets = numtrg, AttackSpeed = atkspd, };
-                }*/
             }
             #endregion
-            // Situational Changes
-            // In Back
-            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Melee   ); } retboss.InBackPerc_Melee  = value;
-            value = 1.00f;      foreach (BossHandler boss in passedList) { value = (float)Math.Min(value, boss.InBackPerc_Ranged  ); } retboss.InBackPerc_Ranged = value;
-            // Multi-targs
-            {
-                float f = -1, d = -1, n = 1;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.MultiTargsFreq > 0 ? boss.MultiTargsFreq : value); } f = value;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.MultiTargsDur); } d = value;
-                value = 0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsNum); } n = value;
-                if (f == 0 || d == 0) {
-                } else {
-                    retboss.Targets.Add(new TargetGroup() { Frequency = f, Duration = d, Chance = 1f, NumTargs = n, NearBoss = false, });
-                }
-            }
-            //value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MultiTargsPerc     ); } retboss.MultiTargsPerc    = value;
-            //value = 0f;         foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.MaxNumTargets      ); } retboss.MaxNumTargets     = (float)Math.Ceiling(value);
+            #endregion
+            #region Defensive
+            foreach (ItemDamageType t in DamageTypes) { value = 0f; foreach (BossHandler boss in passedList) { value = (float)Math.Max(value, boss.Resistance(t)); } retboss.Resistance(t, value); }
+            #endregion
             #region Impedances
             {
                 // Move
