@@ -442,7 +442,7 @@ namespace Rawr
                         S.Health = 7604;
                         S.Armor = 0;
                         S.AttackPower = 140;
-                        S.PhysicalCrit = 0.047f;
+                        S.PhysicalCrit = -0.00295f;
                         S.Dodge = 0.0205570f;
                         S.Parry = 0.05f;
                         S.SpellPower = 0;

@@ -527,7 +527,7 @@ namespace Rawr.Rogue
                 WeightedStat iStat = critRatingUptimes[i];
                 //Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
                 float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Rogue)
-                    + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Rogue)
+                    + StatConversion.GetCritFromAgility(stats.Agility - 10f, CharacterClass.Rogue)
                     + stats.PhysicalCrit
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]
                     + bonusMainHandCrit);

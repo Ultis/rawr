@@ -214,7 +214,7 @@ namespace Rawr.Rogue
                 float ruptsFromNewCP = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
 
                 ruptCount += ruptsFromNewCP;
-                cpgCount += (averageFinisherCP / CPPerCPG) * ruptsFromNewCP;
+                cpgCount += (averageFinisherCP - CPOnFinisher / CPPerCPG) * ruptsFromNewCP;
                 totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP;
                 #endregion
             }
@@ -230,7 +230,7 @@ namespace Rawr.Rogue
                 float evisFromNewCP = totalEnergyAvailable / evisCycleEnergy;
 
                 evisCount += evisFromNewCP * evisDamageMultiplier;
-                cpgCount += evisFromNewCP * (averageEvisCP / CPPerCPG);
+                cpgCount += evisFromNewCP * (averageEvisCP - CPOnFinisher / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -246,7 +246,7 @@ namespace Rawr.Rogue
                 float envenomFromNewCP = totalEnergyAvailable / envenomCycleEnergy;
 
                 envenomCount += envenomFromNewCP * envenomDamageMultiplier;
-                cpgCount += envenomFromNewCP * (averageEnvenomCP / CPPerCPG);
+                cpgCount += envenomFromNewCP * (averageEnvenomCP - CPOnFinisher / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
