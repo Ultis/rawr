@@ -254,10 +254,10 @@ namespace Rawr {
                     { // Melee DPS
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Ranged"] = false; // You aren't Ranged
-                        _MyModelSupportsThis.Add("Cat", DefaultSupports);
-                        _MyModelSupportsThis.Add("DPSDK", DefaultSupports);
-                        _MyModelSupportsThis.Add("Enhance", DefaultSupports);
-                        _MyModelSupportsThis.Add("Rogue", DefaultSupports);
+                        _MyModelSupportsThis.Add("Cat", custom);
+                        _MyModelSupportsThis.Add("DPSDK", custom);
+                        _MyModelSupportsThis.Add("Enhance", custom);
+                        _MyModelSupportsThis.Add("Rogue", custom);
                     }
                     { // Ranged DPS
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
@@ -272,20 +272,20 @@ namespace Rawr {
                     { // Tanks
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // The boss is focused on you
-                        _MyModelSupportsThis.Add("Bear", DefaultSupports);
-                        _MyModelSupportsThis.Add("ProtPaladin", DefaultSupports);
-                        _MyModelSupportsThis.Add("ProtWarr", DefaultSupports);
-                        _MyModelSupportsThis.Add("TankDK", DefaultSupports);
+                        _MyModelSupportsThis.Add("Bear", custom);
+                        _MyModelSupportsThis.Add("ProtPaladin", custom);
+                        _MyModelSupportsThis.Add("ProtWarr", custom);
+                        _MyModelSupportsThis.Add("TankDK", custom);
                     }
                     { // Heals
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Doesn't matter
                         custom["Level"] = false; // Your target isn't the boss
                         custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
-                        _MyModelSupportsThis.Add("Healadin", DefaultSupports);
-                        _MyModelSupportsThis.Add("HealPriest", DefaultSupports);
-                        _MyModelSupportsThis.Add("RestoSham", DefaultSupports);
-                        _MyModelSupportsThis.Add("Tree", DefaultSupports);
+                        _MyModelSupportsThis.Add("Healadin", custom);
+                        _MyModelSupportsThis.Add("HealPriest", custom);
+                        _MyModelSupportsThis.Add("RestoSham", custom);
+                        _MyModelSupportsThis.Add("Tree", custom);
                     }
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();

@@ -937,7 +937,7 @@ namespace Rawr.Bosses {
             #endregion
             #region Basics
             Health = new float[] { 2928000f, 9552325, 0, 0 };
-            BerserkTimer = new int[] { 12 * 60, 12 * 60, 0, 0 };
+            BerserkTimer = new int[] { 12 * 60, 9 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -946,14 +946,22 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region MultiTargs
+                this[i].Targets.Add(new TargetGroup { // Fallout Slimes
+                     Frequency = 15,
+                     Duration = 5*1000,
+                     Chance = 1.00f,
+                     NumTargs = 1,
+                     NearBoss = false,
+                });
+                #endregion
+
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1068,32 +1076,41 @@ namespace Rawr.Bosses {
             #endregion
             #region Basics
             Health = new float[] { 3850000f + 838300f, 3834875 + 838300f, 0, 0 };// one player only deals with one of the add's total health + thadd's health
-            BerserkTimer = new int[] { 6 * 60, 6 * 60, 0, 0 };
+            float[] Phase1Length = { 1 * 60, 1 * 60, 0, 0 }; // Simming Feugen/Stalagg to 1 min since they die pretty easily for an at-content geared group
+            float[] Phase2Length = { 6 * 60, 6 * 60, 0, 0 }; // Simming Thaddius to the rest, since he starts a zerk timer of 6 min at engagement
+            BerserkTimer = new int[] { 7 * 60, 7 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
-            InBackPerc_Melee = new double[] { 0.50f, 0.50f, 0, 0 };
+            float[] PercDurInPhase1 = { ((BerserkTimer[0] / Phase1Length[0]) * Phase2Length[0]) / BerserkTimer[0], ((BerserkTimer[1] / Phase1Length[1]) * Phase2Length[1]) / BerserkTimer[1] };
+            float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
+            InBackPerc_Melee = new double[] { 1.00f * PercDurInPhase1[0] + 0.50f * PercDurInPhase2[0], 1.00f * PercDurInPhase1[1] + 0.50f * PercDurInPhase2[1], 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
             Min_Tanks = new int[] { 2, 2, 0, 0 };
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-                this[i].Attacks.Add(new Attack
-                {
-                    Name = "Chain Lightning",
+                this[i].Attacks.Add(new Attack {
+                    Name = "Chain Lightning (Thaddius)",
                     DamageType = ItemDamageType.Nature,
                     DamagePerHit = new float[] { (3600f + 4400f) / 2f, (6938f + 8062f) / 2f }[i],
                     MaxNumTargets = 5f,
                     AttackSpeed = 15.0f,
                     AttackType = ATTACK_TYPES.AT_AOE,
                 });
+                this[i].Attacks.Add(new Attack {
+                    Name = "Static Field (Feugen)",
+                    DamageType = ItemDamageType.Nature,
+                    DamagePerHit = new float[] { 2500f, 3500f }[i],
+                    MaxNumTargets = 5f,
+                    AttackSpeed = 15.0f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1110,12 +1127,18 @@ namespace Rawr.Bosses {
                 //Moves;
                 // Every 30 seconds, polarity shift, 3 sec move
                 // 50% chance that your polarity will change
-                this[i].Moves.Add(new Impedance()
-                {
+                this[i].Moves.Add(new Impedance() {
                     Frequency = 30f,
                     Duration = 3f * 1000f,
-                    Chance = 0.50f,
-                    Breakable = false
+                    Chance = PercDurInPhase2[i] * 0.50f,
+                    Breakable = true
+                });
+                // You have to run from Stal/Feug to Thaddius once
+                this[i].Moves.Add(new Impedance() {
+                    Frequency = BerserkTimer[i] - 1,
+                    Duration = 5f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true
                 });
                 //Stuns;
                 //Fears;
@@ -1140,7 +1163,7 @@ namespace Rawr.Bosses {
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
             #endregion
             #region Basics
-            Health = new float[] { 4250000f, 4250000f, 0, 0 };
+            Health = new float[] { 4183500, 13038575, 0, 0 };
             BerserkTimer = new int[] { 15 * 60, 15 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
@@ -1150,12 +1173,28 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 2, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Cleave",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] + 50,
+                    MaxNumTargets = 10,
+                    AttackSpeed = 10.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                });
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Tail Sweep",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = new float[] { 1500f + 2500f, 2188f + 2812f }[i] / 2f,
+                    MaxNumTargets = 10,
+                    AttackSpeed = 10.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                });
                 this[i].Attacks.Add(new Attack
                 {
                     Name = "Frost Aura",
@@ -1174,12 +1213,12 @@ namespace Rawr.Bosses {
                     AttackSpeed = 24.0f,
                     AttackType = ATTACK_TYPES.AT_RANGED,
                 });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.75f, 0.75f, 0, 0 };
             Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
             Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1222,9 +1261,13 @@ namespace Rawr.Bosses {
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, };
             #endregion
             #region Basics
-            Health = new float[] { 2230000f, 2500000f, 0, 0 };
-            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
-            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 0, 0 };
+            Health = new float[] { 2230000f, 14000000f, 0, 0 };
+            float[] Phase1Length = { 3 * 60 + 48, 3 * 60 + 48, 0, 0 };
+            float[] Phase2Length = { 19 * 60 - Phase1Length[0], 19 * 60 - Phase1Length[1], 0, 0 };
+            BerserkTimer = new int[] { ((int)Phase1Length[0] + (int)Phase2Length[0]), ((int)Phase1Length[1] + (int)Phase2Length[1]), 0, 0 };
+            SpeedKillTimer = new int[] { (int)Phase1Length[0] + 3*60, (int)Phase1Length[1] + 3*60, 0, 0 };
+            float[] PercDurInPhase1 = { ((BerserkTimer[0] / Phase1Length[0]) * Phase2Length[0]) / BerserkTimer[0], ((BerserkTimer[1] / Phase1Length[1]) * Phase2Length[1]) / BerserkTimer[1] };
+            float[] PercDurInPhase2 = { 1f - PercDurInPhase1[0], 1f - PercDurInPhase1[1] };
             InBackPerc_Melee = new double[] { 1.00f, 1.00f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
@@ -1232,11 +1275,9 @@ namespace Rawr.Bosses {
             Min_Healers = new int[] { 3, 4, 0, 0 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                #region Attacks
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
                 this[i].Attacks.Add(new Attack
                 {
@@ -1256,8 +1297,27 @@ namespace Rawr.Bosses {
                     AttackSpeed = 40.0f,
                     AttackType = ATTACK_TYPES.AT_AOE,
                 });
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Mana Detonation",
+                    DamageType = ItemDamageType.Arcane,
+                    DamagePerHit = new float[] { (10000f + 25000f), (12500f + 30000f) }[i] / 2f,
+                    MaxNumTargets = 1,
+                    AttackSpeed = 30.0f,
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                });
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Frost Blast",
+                    DamageType = ItemDamageType.Frost,
+                    DamagePerHit = 1.04f,DamageIsPerc = true,
+                    MaxNumTargets = 1,
+                    AttackSpeed = 45.0f,
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    IgnoresMTank = new bool[] { true, false }[i],
+                });
+                #endregion
             }
-            #endregion
             #endregion
             #region Defensive
             Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -1273,14 +1333,14 @@ namespace Rawr.Bosses {
             {
                 //Moves;
                 // Phase 2 & 3, gotta move out of Shadow Fissures periodically
-                // We're assuming they pop every 30 seconds and you have to be
-                // moved for 6 seconds and there's a 1/10 chance he will select
+                // We're assuming they pop every 15-20 seconds and you have to be
+                // moved for 6 seconds and there's a 1/RaidSize chance he will select
                 // you over someone else
                 this[i].Moves.Add(new Impedance()
                 {
-                    Frequency = 30f,
+                    Frequency = (15f+20f)/2f,
                     Duration = 6f * 1000f,
-                    Chance = 1f / this[i].Max_Players,
+                    Chance = 1f / this[i].Max_Players * PercDurInPhase2[i],
                     Breakable = false
                 });
                 //Stuns;
@@ -1289,8 +1349,7 @@ namespace Rawr.Bosses {
                 //Disarms;
             }
             // Phase 1, no damage to KT
-            //TimeBossIsInvuln = 3f * 60f + 48f;
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            TimeBossIsInvuln = new float[] { PercDurInPhase1[0], PercDurInPhase1[1], 0, 0 };
             #endregion
             /* TODO:
              * The Mobs in Phase 1
