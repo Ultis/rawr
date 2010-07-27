@@ -59,9 +59,18 @@ namespace Rawr {
             EmalonTheStormWatcher EmalonTheStormWatcher = new EmalonTheStormWatcher();
             #endregion
             #region ==== Tier 9 Content ====
+            // The Vault of Archavon
             KoralonTheFlameWatcher KoralonTheFlameWatcher = new KoralonTheFlameWatcher();
+            // Trial of the Crusader
+            NorthrendBeasts NorthrendBeasts = new NorthrendBeasts();
+            LordJaraxxus LordJaraxxus = new LordJaraxxus();
+            FactionChampions FactionChampions = new FactionChampions();
+            TwinValkyr TwinValkyr = new TwinValkyr();
+            Anubarak Anubarak = new Anubarak();
             #endregion
             #region ==== Tier 10 Content ====
+            // The Vault of Archavon
+            ToravonTheIceWatcher ToravonTheIceWatcher = new ToravonTheIceWatcher();
             // Icecrown Citadel
             LordMarrowgar LordMarrowgar = new LordMarrowgar();
             LadyDeathwhisper LadyDeathwhisper = new LadyDeathwhisper();
@@ -131,8 +140,15 @@ namespace Rawr {
                 // Vault of Archavon
                 KoralonTheFlameWatcher[0],KoralonTheFlameWatcher[1],
                 // Trial of the Crusader
+                NorthrendBeasts[0],NorthrendBeasts[1],NorthrendBeasts[2],NorthrendBeasts[3],
+                LordJaraxxus[0],LordJaraxxus[1],LordJaraxxus[2],LordJaraxxus[3],
+                FactionChampions[0],FactionChampions[1],FactionChampions[2],FactionChampions[3],
+                TwinValkyr[0],TwinValkyr[1],TwinValkyr[2],TwinValkyr[3],
+                Anubarak[0],Anubarak[1],Anubarak[2],Anubarak[3],
                 #endregion
                 #region ==== Tier 10 Content ====
+                // Vault of Archavon
+                ToravonTheIceWatcher[0],ToravonTheIceWatcher[1],
                 // Icecrown Citadel
                 LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
                 LadyDeathwhisper[0],LadyDeathwhisper[1],LadyDeathwhisper[2],LadyDeathwhisper[3],
