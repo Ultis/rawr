@@ -13,7 +13,7 @@ namespace Rawr.DPSWarr {
         #region Constructors
         public CalculationOptionsDPSWarr()
         {
-            FuryStance = true;
+            //FuryStance = true;
             AllowFlooring = false;
             SE_UseDur = true;
             UseMarkov = false;
@@ -87,12 +87,12 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Variables
         #region Basics
-        private bool _FuryStance;
+        /*private bool _FuryStance;
         public bool FuryStance
         {
             get { return _FuryStance; }
             set { _FuryStance = value; OnPropertyChanged("FuryStance"); }
-        }
+        }*/
         private bool _AllowFlooring;
         public bool AllowFlooring
         {

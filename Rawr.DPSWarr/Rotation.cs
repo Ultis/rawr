@@ -484,7 +484,7 @@ namespace Rawr.DPSWarr {
                     // 4pcT7
                     if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
                         rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * FightDuration;
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CalcOpts.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
+                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CombatFactors.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
                     }
                     
                 return rage;
@@ -847,7 +847,7 @@ namespace Rawr.DPSWarr {
                  */
                 AbilWrapper HF = GetWrapper<HeroicFury>();
                 AbilWrapper CH;
-                if (CalcOpts.FuryStance) CH = GetWrapper<Intercept>();
+                if (CombatFactors.FuryStance) CH = GetWrapper<Intercept>();
                 else CH = GetWrapper<Charge>();
                 
                 float MovementSpeed = 7f * (1f + StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
@@ -855,7 +855,7 @@ namespace Rawr.DPSWarr {
                       MinMovementTimeRegain = 0f, MaxMovementTimeRegain = 0f,
                       ChanceYouHaveToMove = 1f;
                 float ChargeMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.ability.Activates) : CH.ability.Activates;
-                if (CalcOpts.FuryStance && HF.ability.Validated)
+                if (CombatFactors.FuryStance && HF.ability.Validated)
                 {
                     ChargeMaxActs += HF.ability.Activates - HF.numActivates;
                 }
@@ -1124,7 +1124,7 @@ namespace Rawr.DPSWarr {
                 }
                 statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
             }
-            if (RK.Validated && CalcOpts.FuryStance) {
+            if (RK.Validated && CombatFactors.FuryStance) {
                 float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
                 if (!_SE_Recklessness.ContainsKey(interval)) {
                     _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f /*- critRate*/ }, landedAtksInterval * 3f, RK.Cd));

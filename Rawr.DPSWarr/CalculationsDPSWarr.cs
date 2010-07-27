@@ -1267,7 +1267,7 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.TeethBonus = (stats.Armor * talents.ArmoredToTheTeeth / 108f);
                 calculatedStats.BonusCritPercPoleAxeSpec = ((character.MainHand != null && (combatFactors._c_mhItemType == ItemType.TwoHandAxe || combatFactors._c_mhItemType == ItemType.Polearm)) ? character.WarriorTalents.PoleaxeSpecialization * 0.01f : 0.00f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
-                calculatedStats.ArmorPenetrationStance = ((!calcOpts.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
+                calculatedStats.ArmorPenetrationStance = ((!combatFactors.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
                 calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
                 calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
@@ -1412,6 +1412,8 @@ These numbers to do not include racial bonuses.",
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
+            if (dpswarchar.bossOpts == null) { dpswarchar.bossOpts = dpswarchar.Char.BossOptions; }
+            if (dpswarchar.combatFactors == null) { dpswarchar.combatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.calcOpts, dpswarchar.bossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
 
             #region From Race
@@ -1442,10 +1444,10 @@ These numbers to do not include racial bonuses.",
             #region From Options
             Stats statsOptionsPanel = new Stats()
             {
-                BonusStrengthMultiplier = (dpswarchar.calcOpts.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                PhysicalCrit = (dpswarchar.calcOpts.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
+                BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
 
-                DamageTakenMultiplier = (dpswarchar.calcOpts.FuryStance ? 0.05f : 0f),
+                DamageTakenMultiplier = (dpswarchar.combatFactors.FuryStance ? 0.05f : 0f),
 
                 // Battle Shout
                 AttackPower = (dpswarchar.calcOpts.M_BattleShout ? (548f * (1f + talents.CommandingPresence * 0.05f)) : 0f),
@@ -1534,7 +1536,7 @@ These numbers to do not include racial bonuses.",
             Stats statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed);
             combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts);
             whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts, bossOpts);
-            if (calcOpts.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);
+            if (combatFactors.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);
             else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);
             
             if (statType == (StatType.Buffed | StatType.Unbuffed))
@@ -1755,7 +1757,7 @@ These numbers to do not include racial bonuses.",
 
                 float arpenBuffs =
                                 ((charStruct.combatFactors._c_mhItemType == ItemType.TwoHandMace) ? charStruct.Char.WarriorTalents.MaceSpecialization * 0.03f : 0.00f) +
-                                (!charStruct.calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
+                                (!charStruct.combatFactors.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                 float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
                     originalStats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating);
@@ -1832,7 +1834,7 @@ These numbers to do not include racial bonuses.",
                     dwbleed = fightDuration * dwTicks;
                 }
                 addInfo += "\r\nBuncha Floats started";
-                float bleed = dwbleed + fightDuration * (charStruct.calcOpts.FuryStance || !charStruct.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
+                float bleed = dwbleed + fightDuration * (charStruct.combatFactors.FuryStance || !charStruct.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
 
                 float bleedHitInterval = fightDuration / bleed;
                 float dwbleedHitInterval = fightDuration / dwbleed;

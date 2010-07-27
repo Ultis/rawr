@@ -71,7 +71,7 @@ x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr"
                 </StackPanel>
             	<TextBlock x:Name="LB_Primaries" Margin="4" Grid.Row="1" Text="Primary Abilities" FontWeight="Bold" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="14" Foreground="Red"/>
             	<StackPanel x:Name="LO_PrimaryArms" Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="2">
-            		<RadioButton x:Name="RB_StanceArms" Margin="0,0,0,4" Content="Arms" GroupName="Stance" IsChecked="True" HorizontalContentAlignment="Left" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
+            		<TextBlock x:Name="RB_StanceArms" Margin="4,2,0,2" Text="Arms" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
             		<CheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment"/>
             		<CheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
             		<CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
@@ -85,7 +85,7 @@ x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr"
             		<CheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
             	</StackPanel>
             	<StackPanel x:Name="LO_PrimaryFury" Margin="2,4,4,4" Grid.Row="2" Grid.Column="1">
-            		<RadioButton x:Name="RB_StanceFury" Margin="0,0,0,4" RenderTransformOrigin="0.467,0.412" Content="Fury" d:LayoutOverrides="HorizontalAlignment, GridBox" IsChecked="{Binding FuryStance, Mode=TwoWay, UpdateSourceTrigger=Default}" GroupName="Stance" FontWeight="Bold"/>
+            		<TextBlock x:Name="RB_StanceFury" Margin="4,2,0,2" RenderTransformOrigin="0.467,0.412" Text="Fury" d:LayoutOverrides="HorizontalAlignment, GridBox" FontWeight="Bold"/>
             		<CheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
             		<CheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
             		<CheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>

@@ -1252,7 +1252,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName == "FuryStance") {
                 // Change Rotations if stance changes
-                bool Checked = calcOpts.FuryStance;
+                bool Checked = true;// CalcOpts.FuryStance;
                 // Fury
                 CK_M_F_WW.IsChecked = Checked;
                 CK_M_F_BS.IsChecked = Checked;
@@ -1261,17 +1261,17 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
                 CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
                 // Arms
-                CK_M_A_BLS.IsChecked = !Checked;
-                CK_M_A_MS.IsChecked = !Checked;
-                CK_M_A_RD.IsChecked = !Checked;
-                CK_M_A_OP.IsChecked = !Checked;
-                CK_M_A_TB.IsChecked = !Checked;
-                CK_M_A_SD.IsChecked = !Checked;
-                CK_M_A_SL.IsChecked = !Checked;
+                CK_M_A_BLS.IsChecked = Checked;
+                CK_M_A_MS.IsChecked = Checked;
+                CK_M_A_RD.IsChecked = Checked;
+                CK_M_A_OP.IsChecked = Checked;
+                CK_M_A_TB.IsChecked = Checked;
+                CK_M_A_SD.IsChecked = Checked;
+                CK_M_A_SL.IsChecked = Checked;
                 // Arms Special
-                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
-                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
-                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
+                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && Checked;
+                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && Checked;
+                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && Checked;
             }
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }

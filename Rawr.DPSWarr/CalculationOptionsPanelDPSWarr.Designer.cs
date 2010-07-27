@@ -97,8 +97,6 @@
             this.CB_Lag = new System.Windows.Forms.NumericUpDown();
             this.LB_React = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.CB_React = new System.Windows.Forms.NumericUpDown();
-            this.RB_StanceArms = new System.Windows.Forms.RadioButton();
-            this.RB_StanceFury = new System.Windows.Forms.RadioButton();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.Page_00_Instructions = new System.Windows.Forms.TabPage();
             this.Tab_Instr = new System.Windows.Forms.TabControl();
@@ -350,31 +348,6 @@
             0,
             0});
             this.CB_React.ValueChanged += new System.EventHandler(this.CB_Latency_ValueChanged);
-            // 
-            // RB_StanceArms
-            // 
-            this.RB_StanceArms.AutoSize = true;
-            this.RB_StanceArms.Location = new System.Drawing.Point(236, 6);
-            this.RB_StanceArms.Name = "RB_StanceArms";
-            this.RB_StanceArms.Size = new System.Drawing.Size(48, 17);
-            this.RB_StanceArms.TabIndex = 1;
-            this.RB_StanceArms.TabStop = true;
-            this.RB_StanceArms.Text = "Arms";
-            this.RB_StanceArms.UseVisualStyleBackColor = true;
-            this.RB_StanceArms.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
-            // 
-            // RB_StanceFury
-            // 
-            this.RB_StanceFury.AutoSize = true;
-            this.RB_StanceFury.Checked = true;
-            this.RB_StanceFury.Location = new System.Drawing.Point(185, 6);
-            this.RB_StanceFury.Name = "RB_StanceFury";
-            this.RB_StanceFury.Size = new System.Drawing.Size(45, 17);
-            this.RB_StanceFury.TabIndex = 0;
-            this.RB_StanceFury.TabStop = true;
-            this.RB_StanceFury.Text = "Fury";
-            this.RB_StanceFury.UseVisualStyleBackColor = true;
-            this.RB_StanceFury.CheckedChanged += new System.EventHandler(this.RB_StanceFury_CheckedChanged);
             // 
             // Tabs
             // 
@@ -1113,8 +1086,6 @@
             // 
             this.Page_02_Maintenance.Controls.Add(this.CK_Flooring);
             this.Page_02_Maintenance.Controls.Add(this.CTL_Maints);
-            this.Page_02_Maintenance.Controls.Add(this.RB_StanceFury);
-            this.Page_02_Maintenance.Controls.Add(this.RB_StanceArms);
             this.Page_02_Maintenance.Location = new System.Drawing.Point(4, 22);
             this.Page_02_Maintenance.Name = "Page_02_Maintenance";
             this.Page_02_Maintenance.Padding = new System.Windows.Forms.Padding(3);
@@ -1575,8 +1546,6 @@
         public System.Windows.Forms.ComboBox CB_TargArmor;
         private System.Windows.Forms.NumericUpDown CB_Duration;
         private System.Windows.Forms.Label LB_Duration;
-        private System.Windows.Forms.RadioButton RB_StanceArms;
-        private System.Windows.Forms.RadioButton RB_StanceFury;
         private System.Windows.Forms.Label LB_Lag;
         private System.Windows.Forms.NumericUpDown CB_Lag;
         private Rawr.CustomControls.ExtendedToolTipLabel LB_React;

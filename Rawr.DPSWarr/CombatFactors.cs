@@ -16,6 +16,20 @@ namespace Rawr.DPSWarr {
             
             //Set_c_values();
         }
+        private bool? _FuryStance = null;
+        public bool FuryStance {
+            get {
+                if (_FuryStance == null) {
+                    if (Talents == null) { return false; } // wait till there is one
+                    int armsCounter = 0, furyCounter = 0;
+                    for (int i =  0; i <= 30; i++) { armsCounter += int.Parse(Talents.ToString()[i].ToString()); }
+                    for (int i = 31; i <= 57; i++) { furyCounter += int.Parse(Talents.ToString()[i].ToString()); }
+                    if(armsCounter >= furyCounter) _FuryStance = false;
+                    else if(armsCounter < furyCounter) _FuryStance = true;
+                }
+                return (bool)_FuryStance;
+            }
+        }
         public WeightedStat[] critProcs { get; set; }
         private void Set_c_values()
         {
@@ -140,7 +154,7 @@ namespace Rawr.DPSWarr {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs =
                         ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
-                        (!CalcOpts.FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
+                        (!FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
 #if RAWR3 || SILVERIGHT

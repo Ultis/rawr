@@ -559,8 +559,8 @@ namespace Rawr.DPSWarr.Skills
             {
                 validatedSet = false;
             }
-            else if ((CalcOpts.FuryStance && !StanceOkFury)
-                || (!CalcOpts.FuryStance && !StanceOkArms))
+            else if ((combatFactors.FuryStance && !StanceOkFury)
+                || (!combatFactors.FuryStance && !StanceOkArms))
             {
                 validatedSet = false;
             }

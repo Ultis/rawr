@@ -198,7 +198,7 @@ namespace Rawr.DPSWarr {
 
                 float[] passiveContrsVals = new float[] {
                     combatFactors.Char.WarriorTalents.StrengthOfArms * 0.02f,
-                    (combatFactors.CalcOpts.FuryStance ? combatFactors.Char.WarriorTalents.ImprovedBerserkerStance * 0.04f : 0f),
+                    (combatFactors.FuryStance ? combatFactors.Char.WarriorTalents.ImprovedBerserkerStance * 0.04f : 0f),
                     BuffsStats.Strength,
                     BuffsStats.BonusStrengthMultiplier,
                 };
@@ -313,8 +313,8 @@ namespace Rawr.DPSWarr {
                     AgilityCritBonus,
                     StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc),
                     combatFactors.Char.WarriorTalents.Cruelty * 0.01f,
-                    (combatFactors.CalcOpts.FuryStance ? 0.03f : 0f),
-                    (combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
+                    (combatFactors.FuryStance ? 0.03f : 0f),
+                    (combatFactors.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
                     BonusCritPercPoleAxeSpec,
                     BuffsStats.PhysicalCrit + useRamp,
                 };
@@ -366,8 +366,8 @@ namespace Rawr.DPSWarr {
             {
                 float ArPCap = 1.00f;
                 float[] passiveContrsVals = new float[] {
-                    (!combatFactors.CalcOpts.FuryStance ? 0.10f : 0f),
-                    (!combatFactors.CalcOpts.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
+                    (!combatFactors.FuryStance ? 0.10f : 0f),
+                    (!combatFactors.FuryStance ? AverageStats.BonusWarrior_T9_2P_ArP : 0f),
                     ArmorPenetrationMaceSpec
                 };
                 float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1] + passiveContrsVals[2];

@@ -157,7 +157,7 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 CB_TargArmor.Text = calcOpts.TargetArmor.ToString("0"); isLoading = true;
                 CB_Duration.Value = (decimal)calcOpts.Duration; isLoading = true;
                 NUD_TargHP.Value = (decimal)calcOpts.TargetHP; isLoading = true;
-                RB_StanceArms.Checked = !calcOpts.FuryStance;  isLoading = true;
+                //RB_StanceArms.Checked = !comb calcOpts.FuryStance;  isLoading = true;
                 CK_PTRMode.Checked = calcOpts.PTRMode; isLoading = true;
                 CK_HideDefGear.Checked = calcOpts.HideBadItems_Def; CalculationsDPSWarr.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
                 CK_HideSplGear.Checked = calcOpts.HideBadItems_Spl; CalculationsDPSWarr.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
@@ -228,9 +228,9 @@ Turn all three of these options off for normal behavior based solely on Item Typ
                 // Special Effects Special Option
                 CK_SE_UseDur.Checked = calcOpts.SE_UseDur;
                 //
-                calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
-                RB_StanceFury.Checked = calcOpts.FuryStance;
-                RB_StanceArms.Checked = !RB_StanceFury.Checked;
+                //calcOpts.FuryStance = (Character.WarriorTalents.TitansGrip > 0);
+                //RB_StanceFury.Checked = calcOpts.FuryStance;
+                //RB_StanceArms.Checked = !RB_StanceFury.Checked;
                 //
                 CK_Markov.Checked = calcOpts.UseMarkov;
                 //
@@ -1355,9 +1355,9 @@ CB_Version.Items.Add("All");
             if (isLoading) return;
             CB_BossList.Text = "Custom";
             CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.FuryStance = RB_StanceFury.Checked;
-            CTL_Maints.Nodes[3].Nodes[0].Checked = calcOpts.FuryStance;
-            CTL_Maints.Nodes[3].Nodes[1].Checked = !calcOpts.FuryStance;
+            //calcOpts.FuryStance = RB_StanceFury.Checked;
+            CTL_Maints.Nodes[3].Nodes[0].Checked = true;
+            CTL_Maints.Nodes[3].Nodes[1].Checked = true;
             Character.OnCalculationsInvalidated();
         }
         // Boss
