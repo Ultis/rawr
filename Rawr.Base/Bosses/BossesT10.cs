@@ -29,6 +29,11 @@ namespace Rawr.Bosses
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 3, 2, 3 };
             Min_Healers = new int[] { 2, 5, 3, 5 };
+            // 90 seconds behind the boss, 20/30 seconds without during bone storm
+            //      110 seconds rotation during normal; 120 seconds rotation during heroic
+            InBackPerc_Melee = new double[] { 70 / 90, 70 / 90, 60 / 90, 60 / 90 };
+            InBackPerc_Ranged = new double[] { 70 / 90, 70 / 90, 60 / 90, 60 / 90 };
+
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -37,7 +42,29 @@ namespace Rawr.Bosses
             for (int i = 0; i < 4; i++)
             {
                 // Melee
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Melee",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    // Hits for about 18k on normal 25
+                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    MaxNumTargets = 1f,
+                    // Only performs this attack during non-Bone Storm phases
+                    AttackSpeed = new float[] { (90 / (70 / 2)), (90 / (70 / 2)), (90 / (60 / 2)), (90 / (60 / 2)) }[i],
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+
+                    IsTheDefaultMelee = true,
+                });
+
                 // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
                 this[i].Attacks.Add(new Attack
                 {
@@ -46,11 +73,19 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = this[i].Min_Tanks,
-                    AttackSpeed = 2.0f,
+                    // Only performs this attack during non-Bone Storm phases
+                    AttackSpeed = new float[] { (90 / (70 / 2)), (90 / (70 / 2)), (90 / (60 / 2)), (90 / (60 / 2)) }[i],
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
+                    
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
                 });
+
                 // Coldflame - Inflicts 6,000 Frost damage every 1 second for 3 seconds to anyone caught by the moving line of frost.
                 this[i].Attacks.Add(new DoT
                 {
@@ -58,58 +93,76 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Frost,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     NumTicks = 3,
-                    DamagePerTick = new int[] { 6000, 8000, 9000, 11000 }[i] / 3,
+                    TickInterval = 1,
+                    DamagePerTick = new int[] { 6000, 8000, 9000, 11000 }[i],
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 6.0f,
                 });
+
                 // Bone Spike Graveyard
                 //   Hurls a spike at a random player, impaling all players between the boss and the target on Bone Spikes,
                 //   inflicting 9,000 direct Physical damage, and additional 10% health as damage every 1 second until the
                 //   spike is destroyed.
                 // The player that is spiked is considered unbreakably stunned
-                int duration = 3; // Assuming you will be broken out within 3 sec
                 this[i].Attacks.Add(new DoT
                 {
                     Name = "Bone Spike Graveyard",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_RANGED,
+                    NumTicks = 3f, // Assuming you will be broken out within 3 sec
                     DamagePerHit = 9000f,
-                    DamagePerTick = (new float[] { 0.10f, 0.10f, 0.10f, 0.10f }[i] * 0.10f * duration),
+                    DamagePerTick = new float[] { 0.10f, 0.10f, 0.10f, 0.10f }[i],
                     DamageIsPerc = true,
-                    MaxNumTargets = new int[] { 1, 3, 1, 3 }[i],
-                    AttackSpeed = 6.0f,
+                    MaxNumTargets = new int[] { 1, 1, 3, 3 }[i],
+                    // Cooldown is every 18 seconds. Normal 10 or 25 does not get cast during bone storm,
+                    //      Heroic 10 and 25 bone spike continues during bone storm
+                    AttackSpeed = new float[] { (float)(90 / 4), (float)(90 / 4), 18, 18 }[i],
                     IgnoresMTank = true,
                     IgnoresOTank = true,
                     IgnoresTTank = true,
                 });
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Chance = this[i].Attacks[this[i].Attacks.Count - 1].MaxNumTargets / (this[i].Max_Players - this[i].Min_Tanks),
+                    Duration = 3f * 1000f,
+                    NumTargs = this[i].Attacks[this[i].Attacks.Count - 1].MaxNumTargets,
+                    NearBoss = false,
+                });
                 this[i].Stuns.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = duration * 1000,
-                    Chance = 1f / (this[i].Max_Players - this[i].Min_Tanks),
+                    Duration = 3f * 1000f,
+                    Chance = this[i].Attacks[this[i].Attacks.Count - 1].MaxNumTargets / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
                 });
+
                 // Bone Storm
                 //   Inflicts 6,000 Physical damage every 2 seconds to players caught in the Bone Storm.
                 //   The entire storm lasts ~20 seconds.
-                this[i].Attacks.Add(new Attack
+                this[i].Attacks.Add(new DoT
                 {
                     Name = "Bone Storm",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new int[] { 6000, 12000, 12000, 14000 }[i] * new int[] { 20, 30, 20, 30 }[i] / 2 * 0.25f, // 6k per tick for 2 sec. 25% mod as people will be running away to take less damage
+                    NumTicks = new int[] { 20, 20, 30, 30 }[i] / 2f,
+                    TickInterval = 2f,
+                    DamagePerTick = new int[] { 6000, 12000, 12000, 14000 }[i] * 0.25f, // 6k per tick for 2 sec. 25% mod as people will be running away to take less damage
                     MaxNumTargets = this[i].Max_Players,
-                    AttackSpeed = 45f + 22f,
+                    AttackSpeed = 90f,
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
                 });
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = (18f + 2f + 2f) * 1000f,
+                    Duration = new int[] { 20, 30, 20, 30 }[i] * 1000f,
                     Chance = 1f,
                     Breakable = false,
                 });
-                // Situational Changes
-                this[i].InBackPerc_Melee = 1.00f;
             }
             #endregion
             #endregion
@@ -146,9 +199,11 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 3346800f + 13992000f, 3346800f + 13992000f, 3346800f + 13992000f, 3346800f + 13992000f };// Mana Barrier, have to destroy mana before dps'g boss
+            // Health = Mana + Health
+            // Mana Barrier, have to destroy mana before dps'g boss
+            Health = new float[] { 3346800f + 3000000f, 11000000f + 13400000f, 3346800f + 6000000f, 13900000f + 26800000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            SpeedKillTimer = new int[] { 150, 310, 150, 300 };
+            SpeedKillTimer = new int[] { 150, 300, 150, 300 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 3, 2, 3 };
             Min_Healers = new int[] { 2, 5, 3, 5 };
@@ -159,22 +214,35 @@ namespace Rawr.Bosses
             for (int i = 0; i < 4; i++)
             {
                 // Adds come 3 at a time, either 2 Adherents 1 Fanatic or 1 Adherent 2 Fanatics
-                // They will also randomly respawn as Reanimated or Mutated (? forgot word used)
+                // 10 man - only 3 at a time
+                // 25 man - 7 at a time (3 on left [2 fanatic, 1 adherent], 3 on right [1 fanatic, 2 adherent], 1 in the back [random between the two])
+                // They will also randomly respawn as Reanimated or Mutated or Empowered
                 this[i].Targets.Add(new TargetGroup()
                 {
-                    Frequency = 45,
-                    Duration = 30 * 1000,
-                    NumTargs = 2,
-                    Chance = 2f / 3f, // only 2 phases have them
+                    Frequency = new float[] { 60, 60, 45, 45 }[i],
+                    Duration = 35 * 1000,
+                    NumTargs = new float[] { 3, 7, 3, 7 }[i],
+                    Chance = .5f, // phase 1 which lasts for about 50%
                     NearBoss = false,
                 });
-                // Heroic version spawns adds (1 add on 10 man, 3 adds on 25 man); 50-60% of fight in Phase 2
+                // at least 1 add is reanimated to full health each round in Phase 1
                 this[i].Targets.Add(new TargetGroup()
                 {
-                    Frequency = 60, // Every 60 seconds and up for 35 sec before back on boss
-                    Duration = 35 * 1000,
+                    Frequency = new float[] { 60, 60, 45, 45 }[i],
+                    Duration = 35f * 1000,
+                    NumTargs = 1f,
+                    Chance = .5f * new float[] { 1 / 3, 1 / 7, 1 / 3, 1 / 7 }[i], // phase 1 which lasts for about 50%
+                    NearBoss = false,
+                });
+
+                // Heroic version spawns adds (1 add on 10 man, 3 adds on 25 man); 50% of fight in Phase 2
+                //          None of the adds are turned into Reanimated, Mutated, or Empowered mobs
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    Frequency = 45f, // Every 45 seconds and up for 35 sec before back on boss
+                    Duration = 35f * 1000,
                     NumTargs = new float[] { 0, 0, 1, 3 }[i],
-                    Chance = new float[] { 0, 0, 1f / 3f, 1f / 3f }[i], // only 1 phase has them and only in Heroic Mode
+                    Chance = new float[] { 0, 0, .5f, .5f }[i], // only 1 phase has them and only in Heroic Mode
                     NearBoss = false,
                 });
 
@@ -183,11 +251,12 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 11k in Normal 25 
                     DamagePerHit = ( ( BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f ) / 1.3f ),
                     MaxNumTargets = 1f,
-                    AttackSpeed = 2f, 
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    AttackSpeed = this[i].BerserkTimer / ( (this[i].BerserkTimer * .5f) / 2f), 
+
                     Dodgable = true,
                     Missable = true,
                     Parryable = true,
@@ -206,8 +275,9 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = new int[] { (7438 + 9562), (9188 + 11812), (9188 + 11812), (11375 + 14625) }[i] / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 2f + 2.0f,
+                    AttackSpeed = 4f,
                 });
+
                 // Frostbolt - Inflicts 40,950/44,850/50,700/58,500 to 43,050/47,150/53,330/61,500 Frost damage
                 //           to the current target. Can be interrupted. 4 second Cast
                 //      Only cast during Phase 2
@@ -218,13 +288,14 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     DamagePerHit = new int[] { (40950 + 43050), (50700 + 53330), (44850 + 47150), (58500 + 61500) }[i] / 2f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = 4.0f,
+                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer * .5f) / 4f),
                     Interruptable = true,
                     
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
                 });
+
                 // Frostbolt Volley - Inflicts 8550/10800/14400 to 10450/13200/17600 Frost damage to nearby enemies, reducing their movement speed by 30% for 4 sec.
                 //      Only cast during Phase 2
                 this[i].Attacks.Add(new Attack()
@@ -234,8 +305,9 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = new int[] { (8550 + 10450), (10800 + 13200), (10800 + 13200), (14400 + 17600) }[i] / 2f,
                     MaxNumTargets = this[i].Max_Players,
-                    AttackSpeed = 20f,
+                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer * .5f) / 20f),
                 });
+
                 // Death and Decay - Inflicts 4,500 Shadow damage every 1 second to enemies within the area of the spell. 
                 //          The entire spell lasts 10 seconds.
                 this[i].Attacks.Add(new DoT()
@@ -249,31 +321,143 @@ namespace Rawr.Bosses
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 45f,
                 });
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 45f,
+                    Duration = 4f * 1000f, // assume 4 seconds to move out
+                    Chance = 1 / this[i].Max_Players,
+                    Breakable = false,
+                });
 
-                // TODO: Dark Empowerment - Empowers a random Adherent or Fanatic, causing them to deal area damage with spells. Also makes the target immune to interrupts.
+                // **** Add information **** \\
+                // Cult Adherent/Empowered Adherent/Reanimated Adherent
+                // Deathchill Bolt - Deals 8788 to 10212 Shadowfrost damage to an enemy target. 2 sec cast. 11563-13437 on Heroic
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Deathchill Bolt",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (6938 + 8062), (8788 + 10212), (8788 + 10212), (11563 + 13437) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    // Average uptime of the 2 second cast per round; * average number of casters per pull; for half the fight
+                    AttackSpeed = ((new float[] { 60, 60, 45, 45 }[i] / (35f / 2f)) * new float[] { 1.5f, 3.5f, 1.5f, 3.5f }[i] * .5f) + ((new float[] { 60, 60, 45, 45 }[i] / (35f / 2f)) * new float[] { 0f, 0f, .5f, 1.5f }[i] * .5f),
+                });
+
+                // Cult Fanatic/Deformed Fanatic/Reanimated Fanatic
+                // Necrotic Strike - Strikes an enemy with a cursed blade, dealing 70% of weapon damage to the target and inflicting
+                //          a lasting malady that negates the next 14000 healing received. Instant. 20 sec duration. 20000 healing on Heroic 
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Necrotic Strike",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = ((BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f) / 1.3f) * .7f,
+                    MaxNumTargets = 1f,
+                    // Average uptime of the 20 second cd per round; * average number of fanatic per pull; for half the fight
+                    AttackSpeed = ((new float[] { 60, 60, 45, 45 }[i] / (35f / 20f)) * new float[] { 1.5f, 3.5f, 1.5f, 3.5f }[i] * .5f) + ((new float[] { 60, 60, 45, 45 }[i] / (35f / 20f)) * new float[] { 0f, 0f, .5f, 1.5f }[i] * .5f),
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Shadow Cleave - Inflicts 15913 to 17587 Shadow damage to enemies in front of the attacker. 19000-21000 on Heroic (6 sec cooldown)
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Shadow Cleave",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new int[] { (14250 + 15750), (15913 + 17587), (15913 + 17587), (19000 + 21000) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    // Average uptime of the 6 second cd per round; * average number of fanatic per pull; for half the fight
+                    AttackSpeed = ((new float[] { 60, 60, 45, 45 }[i] / (35f / 6f)) * new float[] { 1.5f, 3.5f, 1.5f, 3.5f }[i] * .5f) + ((new float[] { 60, 60, 45, 45 }[i] / (35f / 6f)) * new float[] { 0f, 0f, .5f, 1.5f }[i] * .5f),
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                //  Vengeful Shades - Inflicts 19300 to 20700 Shadowfrost damage to an enemy. Normal; 1 shad in 10, 3 shades in 25; most raids don't move on normal
+                //     in Heroic people will move since it hits multiple people within a 15/20 yard radius in 10 and 25 man respectfully.
+                //     Dies within 10 seconds if it does not hit it's target.
+                //     Cannot be targeted
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    Frequency = 30f,
+                    Duration = 7f * 1000,
+                    NumTargs = new float[] { 1, 3, 1, 3 }[i],
+                    Chance = .5f, // phase 2 which lasts for about 50%
+                    NearBoss = false,
+                });
+                // Vengeful Blast on Normal - Most raids don't have people run away from them since they only target 1 or 3 people in 10 or 25 man respectfully
+                //    And just heal through the damage
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Vengeful Blast on Normal",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (17853 + 19147), (19300 + 20700), 0, 0 }[i] / 2f,
+                    MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
+                    AttackSpeed = 30f,
+                });
+                // Vengeful Blast on Heroic - People run away from them on heroic since they damage all people within a 15 or 20 yard radius in 10 or 25 man respectfully
+                //    if the vengeful spirit hits their intended target.
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Vengeful Blast on Heroic",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { 0, 0, (17370 + 18630), (23160 + 24840) }[i] / 2f,
+                    MaxNumTargets = this[i].Max_Players,
+                    AttackSpeed = 30f,
+                    // Interruptable if the person is successfully able to kit the vengeful Spirit for 7 seconds
+                    Interruptable = true,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = 30f,
+                    Duration = 7f * 1000,
+                    Chance = new int[]{ 0, 0, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
+                    Breakable = false,
+                });
             }
             #endregion
             #endregion
             #region Impedances
             //Moves;
+            //Stuns;
             // Dominate Mind - 1 target in 10 man heroic, and 25 normal; 3 targets in 25 heroic. Lasts 12 seconds; 40 second Cooldown
             for (int i = 0; i < 4; i++)
             {
-                this[i].Moves.Add(new Impedance()
+                this[i].Stuns.Add(new Impedance()
                 {
-                    Frequency = 40f,
+                    // First dominate mind is after 30 seconds, then every 40 seconds there-after
+                    Frequency = this[i].BerserkTimer / ( (this[i].BerserkTimer - 30f) / 40f),
                     Duration = 12f * 1000f,
                     Chance = new int[] { 0, (1 / (this[i].Max_Players - this[i].Min_Tanks)), (1 / (this[i].Max_Players - this[i].Min_Tanks)), (3 / (this[i].Max_Players - this[i].Min_Tanks)) }[i],
                     Breakable = false,
                 });
             }
-            //Stuns;
             //Fears;
             //Roots;
             //Disarms;
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
             #endregion
             /* TODO:
+             * Dark Empowerment - Empowers a random Adherent or Fanatic, causing them to deal area damage with spells. Also makes the target immune to interrupts.
+             * Curse of Torpor - Afflicts an enemy target with a curse that increases ability cooldowns by 15 seconds. (ie an instant cast becomes a 15 second cd)
+             * Frost Fever  - A disease dealing Frost damage every 3 seconds and reducing the target's melee and ranged attack 
+             *          speed by 14% for 15 seconds. Instant 
+             * Deathchill Blast  - Deals 11563 to 13437 Shadowfrost damage to all enemies within 10 yards of the target. 2 sec 
+             *          cast. Only cast while empowered. 11563-13437 on Heroic 
+             *          If everyone is away from add people should not take damage from this
+             * Necrotic Strike - Strikes an enemy with a cursed blade, inflicting a lasting malady that negates the next 14000 healing received. 
+             *          lasts 20 seconds; 20000 healing on Heroic 
              */
         }
     }
@@ -307,11 +491,16 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 1f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
 
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
@@ -319,9 +508,7 @@ namespace Rawr.Bosses
 
                     IsTheDefaultMelee = true,
                 });
-                // TO DO: Blood Power - Increases damage and size by 1%; Stacks up to 100%
-                // TO DO: Frenzy  - Increases Saurfang's attack speed by 30% and size by 20%.
-                //       Used when Saurfang's health reaches 30%.
+
                 // Boiling Blood - Inflicts 5,000 Physical damage every 3 seconds for 24 seconds. 
                 //       Used on a random target. (Same amount in all three versions)
                 this[i].Attacks.Add(new DoT() {
@@ -344,9 +531,6 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 20f,
                 });
-                // TO DO: Rune of Blood - Marks a target with Rune of Blood, causing Saurfang's melee attacks
-                //       against that target to leech 5,100/5,950 to 6,900/8,050 health from them, and heal the 
-                //       Deathbringer for 10 times that amount. Lasts 20 seconds.
             }
            #endregion
             #endregion
@@ -366,9 +550,20 @@ namespace Rawr.Bosses
              *          reduced by 95% and damage from Diseases is reduced by 70%.
              * Scent of Blood - Saurfang buffs the Blood Beasts, causing them to reduce the movement speed of all nearby players by 80%,
              *          while increasing the Beasts' damage by 300%. Lasts 10 seconds. (Heroic 10 and 25 only)
+             *          Normal, adds die in 7 seconds
+             *          Heroic - about 10 seconds
              */
             #endregion
             /* TODO:
+             * TO DO: Blood Power - Increases damage and size by 1%; Stacks up to 100%
+             *        This is based on the amount of raid damage and how fast tanks can taunt.
+             *        High end guilds can get 2-3 100% stacks out in a fight, 0 on normal;
+             *        10man normal 0 - 100% stacks; 10man heroic 1-2 - 100% stacks
+             * TO DO: Frenzy  - Increases Saurfang's attack speed by 30% and size by 20%.
+             *       Used when Saurfang's health reaches 30%.
+             * TO DO: Rune of Blood - Marks a target with Rune of Blood, causing Saurfang's melee attacks
+             *       against that target to leech 5,100/5,950 to 6,900/8,050 health from them, and heal the 
+             *       Deathbringer for 10 times that amount. Lasts 20 seconds.
              */
         }
     }
@@ -407,11 +602,12 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee with 0 Inhales",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 11k in 25 man
                     DamagePerHit =  ( ( BossHandler.StandardMeleePerHit[ (int)this[i].Content ] / 1.3f ) / 1.3f ) ,
                     MaxNumTargets = 1f,
                     AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.1f ) ) ), // hits every 1.8 seconds for 30 seconds
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
                     Dodgable = true,
                     Missable = true,
                     Parryable = true,
@@ -428,11 +624,12 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee with 1 Inhales",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 14k in 25 man
                     DamagePerHit = ( BossHandler.StandardMeleePerHit[ (int)this[i].Content ] / 1.3f ),
                     MaxNumTargets = 1f,
                     AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.4f ) ) ), // hits every 1.45 seconds for 30 seconds
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
                     Dodgable = true,
                     Missable = true,
                     Parryable = true,
@@ -447,11 +644,12 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee with 2 Inhales",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 19k in 25 man
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content  ],
                     MaxNumTargets = 1f,
                     AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.7f ) ) ),  // hits 1.17 seconds for 30 seconds
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
                     Dodgable = true,
                     Missable = true,
                     Parryable = true,
@@ -466,11 +664,12 @@ namespace Rawr.Bosses
                 {
                     Name = "Melee with 3 Inhales",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 25k in 25 man
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ] * 1.3f,
                     MaxNumTargets = 1f,
                     AttackSpeed = ( inhalerotationlength / 30f ),  // hits every second for 30 seconds
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
                     Dodgable = true,
                     Missable = true,
                     Parryable = true,
@@ -480,6 +679,7 @@ namespace Rawr.Bosses
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
                 });
+
                 // Gaseous Blight—The Gaseous Plague inflicts 4,388 to 4,612 Shadow damage to all nearby players.
                 //              (lasts 30 seconds + 1st inhale cast time [3.5 seconds])
                 this[i].Attacks.Add(new DoT()
@@ -493,6 +693,7 @@ namespace Rawr.Bosses
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = inhalerotationlength,
                 });
+
                 // Gaseous Blight—(After 1 inhale) The Gaseous Plague inflicts 2,925 to 3,075 Shadow damage to all nearby players.
                 //             (lasts 30 seconds + 2st inhale cast time [3.5 seconds]) (lasts 30 seconds + 2st inhale cast time [3.5 seconds])
                 this[i].Attacks.Add(new DoT()
@@ -688,6 +889,11 @@ namespace Rawr.Bosses
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
@@ -743,6 +949,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
 
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
@@ -804,6 +1015,11 @@ namespace Rawr.Bosses
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
@@ -840,10 +1056,15 @@ namespace Rawr.Bosses
             Health = new float[] { 14200000f, 59400000f, 18900000f, 71300000f };
             // 5 minute, 20 second fight
             BerserkTimer = new int[] { 320, 320, 320, 320 };
-            SpeedKillTimer = new int[] { 270, 210, 270, 270 };
+            SpeedKillTimer = new int[] { 210, 210, 270, 270 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
+            this.InBackPerc_Melee = new double[] { (320 - 12 - 12) /320, (320 - 12 - 12) /320, (320 - 12 - 12) /320, (320 - 12 - 12) /320 };
+            this.InBackPerc_Ranged = new double[] { (320 - 4 - 4) /320, (320 - 4 - 4) /320, (320 - 4 - 4) /320, (320 - 4 - 4) /320 };;
+            
+            // Assume that by the time by the end of the second Air Phase, guilds should be at 35%
+            //Under35Perc = new double[] { (320 - 124 - 100 - 3) / 320, (320 - 127 - 100 - 3) / 320, (320 - 124 - 100 - 3) / 320, (320 - 127 - 100 - 3) / 320 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
@@ -859,12 +1080,17 @@ namespace Rawr.Bosses
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     // Heroic increases Lana'thel's damage by 10/5% in 10/25 man respecfully for each application of Essence of the Blood Queen
-                    DamagePerHit = (1 + new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i]) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    DamagePerHit = (1 + (new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i])) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
 
                     IgnoresOTank = true,
                     IgnoresTTank = true,
@@ -879,13 +1105,19 @@ namespace Rawr.Bosses
                 this[i].Attacks.Add(new Attack
                 {
                     // Melee Attacks
-                    Name = "Melee",
+                    Name = "Off-Tank Melee Damage",
                     DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = (1 + new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i]) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    // Heroic increases Lana'thel's damage by 10/5% in 10/25 man respecfully for each application of Essence of the Blood Queen
+                    DamagePerHit = ( 1 + (new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i] ) ) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
 
                     IgnoresMTank = true,
                     IgnoresTTank = true,
@@ -920,11 +1152,17 @@ namespace Rawr.Bosses
                     DamagePerTick = new int[] { (4500 + 5500), (5250 + 6750), (6125 + 7875), (7000 + 9000) }[i] / 2f,
                     MaxNumTargets = 1f,
                     AttackSpeed = 20f,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
+                    IgnoresMTank = true,
                     IgnoresTTank = true,
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
-                    IgnoresMTank = true,
                 });
 
                 // Vampiric Bite - Inflicts 12,025 to 13,975 physical damage to a target, granting them Essence of the Blood Queen
@@ -934,9 +1172,9 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = new int[] { (8325 + 9675), (10175 + 11825), (8325 + 9675), (10175 + 11825) }[i] / 2f,
-                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i], 
+                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets25, avgbitetargets10, avgbitetargets25 }[i], 
                     // Bites are usable every 75/60 seconds in 10/25 respectfully
-                    AttackSpeed = new int[] { 75, 75, 60, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
+                    AttackSpeed = new int[] { 75, 60, 75, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
                     // The OT COULD be targeted but only as a last resourt. The MT should NOT be targeted.
                     IgnoresMTank = true,
                 });
@@ -944,8 +1182,8 @@ namespace Rawr.Bosses
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
-                    Duration = 5f * 1000f, // Assume 5 seconds to move to the new biting target
-                    Chance = 1f / new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
+                    Duration = 3f * 1000f, // Assume 3 seconds to move to the new biting target
+                    Chance = 1f / new int[] { avgbitetargets10, avgbitetargets25, avgbitetargets10, avgbitetargets25 }[i],
                     Breakable = false,
                 });
 
@@ -960,7 +1198,7 @@ namespace Rawr.Bosses
                     DamageIsPerc = true,
                     MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
                     // Bites are usable every 75/60 seconds in 10/25 respectfully
-                    AttackSpeed = new int[] { 75, 75, 60, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
+                    AttackSpeed = new int[] { 75, 60, 75, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
                     IgnoresMTank = true,
                     Interruptable = true, // Can be avoided if biten correctly
                 });
@@ -979,7 +1217,7 @@ namespace Rawr.Bosses
                     Name = "Twilight Bloodbolt",
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new int[] { (9250 + 10750), (9250 + 10750), (11250 + 13750), (11250 + 13750) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
+                    DamagePerHit = new int[] { (9250 + 10750), (11250 + 13750), (9250 + 10750), (11250 + 13750) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
                     MaxNumTargets = new int[] { 2, 3, 2, 3 }[i], // assume range is spread out so that ther is no AOE
                     // TODO: Double Check attack Speed
                     AttackSpeed = 20f,
@@ -988,7 +1226,8 @@ namespace Rawr.Bosses
                     IgnoresMeleeDPS = true,
                 });
 
-                // Swarming Shadows - The affected player spawns a mass of shadows every 1 second for 6 seconds. Each mass inflicts 2,313 to 2,687 shadow damage every 1 second to all targets within it.
+                // Swarming Shadows - The affected player spawns a mass of shadows every 1 second for 6 seconds. Each mass inflicts 
+                //         2,313 to 2,687 shadow damage every 1 second to all targets within it.
                 this[i].Attacks.Add(new DoT
                 {
                     Name = "Swarming Shadows",
@@ -998,7 +1237,7 @@ namespace Rawr.Bosses
                     TickInterval = 1f,
                     // TODO: Double Check Damage per tick
                     DamagePerTick = new int[] { (2313 + 2687), (2313 + 2687), (2313 + 2687), (2313 + 2687) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
-                    MaxNumTargets = new int[] { 2, 3, 2, 3 }[i], // assume range is spread out so that ther is no AOE
+                    MaxNumTargets = new int[] { 1, 1, 1, 1 }[i],
                     // TODO: Double Check attack Speed
                     AttackSpeed = 30.5f,
                     IgnoresMTank = true,
@@ -1015,17 +1254,24 @@ namespace Rawr.Bosses
                 // Pact of the Darkfallen - Links a number of players together, causing them to inflict 
                 //       3,500 Shadow damage every 1 second to non-linked players within 10 yards.
                 //       This effect expires when all linked targets are within 5 yards of each other.
-                this[i].Attacks.Add(new Attack
+                this[i].Attacks.Add(new DoT
                 {
                     Name = "Pact of the Darkfallen",
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    // TODO: Double Check damage
-                    DamagePerHit = new int[] { 3500, 3500, 3500, 3500 }[i] * 4f, // assume 4 seconds to remove the debuff
-                    MaxNumTargets = new int[] { 2, 3, 2, 3 }[i],
+                    NumTicks = 4f,  // assume 4 seconds to remove the debuff
+                    TickInterval = 1f,
+                    DamagePerTick = new int[] { 3500, 3500, 3500, 3500 }[i],
+                    // Assume half of the raid get hit by by the debuff while people are running to get rid of the debuff
+                    MaxNumTargets = this[i].Max_Players / 2f, 
                     AttackSpeed = 30.5f, 
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 4f * 1000f, // assume 4 seconds to remove the debuff
+                    Chance = new float[] { 2, 3, 2, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
+                    Breakable = false,
                 });
 
                 // Bloodbolt Whirl - Shoots a lot of Twilight Bloodbolts to random players for 6 seconds.
@@ -1036,20 +1282,24 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = new int[] { (9250 + 10750), (12025 + 13975), (14250 + 15750), (16150 + 17850) }[i] / 2f, // assume range is spread out and doesn't do any splash damage
                     MaxNumTargets = this[i].Max_Players,
-                    AttackSpeed = (new int[] { 124, 124, 127, 127 }[i] + 100f + 100f) / 3f,
+                    AttackSpeed = (new int[] { 124, 127, 124, 127 }[i] + 100f + 100f) / 3f,
                 });
+                // Right before the Bloodbolt Whirl, the boss fears everyone for 4 seconds. This can be dispelled/ fear warded
                 this[i].Fears.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed - 6f,
                     Duration = 4f * 1000,
-                    Chance = this[i].Max_Players,
+                    Chance = this[i].Max_Players / this[i].Max_Players,
                     Breakable = true,
                 });
+                // After the fear is gone, everyone has 3 seconds to spread out for the Bloodbolt whirl.
+                //      If people are too close to each other, they cause splash damage to each other.
+                //      Some people can find spots immediatly upon release of fear so it is "breakable."
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed - 2f,
-                    Duration = 2f * 1000,
-                    Chance = this[i].Max_Players,
+                    Duration = 3f * 1000,
+                    Chance = 1f,
                     Breakable = true,
                 });
 
@@ -1145,11 +1395,16 @@ namespace Rawr.Bosses
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
 
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
@@ -1205,11 +1460,16 @@ namespace Rawr.Bosses
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Dodgable = true,
+                    Missable = true,
+                    Parryable = true,
+                    Blockable = true,
 
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
@@ -1255,29 +1515,161 @@ namespace Rawr.Bosses
             SpeedKillTimer = new int[] { 120, 120, 120, 120 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 2, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                // 300 / (300 * (.5 * .5)) = 300 / 75 = 4
+                int cloneattackspeed10man = (int) ( BerserkTimer[i] / ( BerserkTimer[i] * ( .5f * .5f ) ) );
+                // 300 / ( ( 300 * (.66 * .5 ) ) + ( 300 * (.33 * .5) ) ) = 300 / ( 99 + 49.5 ) = 300 / 148.5 = 2.020202
+                int cloneattackspeed25man = (int) ( BerserkTimer[i] / ( ( BerserkTimer[i] * ( .66f * .5f ) ) + ( BerserkTimer[i] * ( .33f * .5f ) ) ) );
+
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
-                    AttackSpeed = 2f,
+                    // TODO: Double Check Enervating Brand's CD; minus 20 seconds; all divided by 2 seconds
+                    AttackSpeed = 3f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
 
                     IsTheDefaultMelee = true,
+                });
+
+                // At 50% in 10man and 66% and 33% in 25 man, the boss will split himself up; the new add will be picked
+                //    by the off-tank. DPS does not attack the adds and focus on the main boss
+                //    The boss will then perform a knockback/stun when he does this ability that lasts for 4 seconds
+                //    to everyone in melee range of him
+                // Can be 3 tanked if needbe (1 OT and 1 TT) if the damage is too much for one off-tank in 25 man, 
+                //              though not necessary
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Cloned Melee",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = new int[] { 1, (1 + 2) / 2, 1, (1 + 2) / 2 }[i] * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = new int[] { cloneattackspeed10man, cloneattackspeed25man, cloneattackspeed10man, cloneattackspeed25man }[i],
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
+                    IgnoresMTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Enervating Brand: Brands an enemy, drawing energy from him and allies within 12 yards. 
+                //     Stacks every 2 seconds, reducing the enemies' damage by 2% and increasing the caster's damage by 2%. Lasts 20 seconds.
+                // Siphoned Might: Increases the caster's damage by 2% per applied brands.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Siphoned Might",
+                    DamageType = ItemDamageType.Arcane,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    // Assuming everyone is spread out
+                    DamagePerHit = ((1f + (1f + (.02f * 20f / 2f))) / 2f) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    // TODO: Double Check Enervating Brand's CD; minus normal attacks uptime; all divided by 2 seconds
+                    AttackSpeed = (30f - 10f) / 3f,
+
+                    IgnoresOTank = true,
+                    IgnoresTTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Blade Tempest: Deals 70% of weapon damage to enemies in front of the attacker. 
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Blade Tempest",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * .7f,
+                    MaxNumTargets = this[i].Min_Tanks,
+                    AttackSpeed = 1.5f,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Repelling Wave: Knocks nearby enemies back, inflicting 4,163 to 4,837 Fire damage, and stunning them for 3 seconds.
+                //        Used while summoning a clone.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Repelling Wave",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * .7f,
+                    MaxNumTargets = this[i].Max_Players - this[i].Min_Healers,
+
+                    IgnoresOTank = true,
+                    IgnoresTTank = true,
+                    IgnoresHealers = true,
+                    IgnoresRangedDPS = true,
+                });
+                // Repelling wave stuns melee for 3 seconds. At the same time, the boss knocks Melee away from the boss
+                // This stun is scripted and cannot be dispelled
+                this[i].Stuns.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 3f * 1000f,
+                    Chance = 1f / (this[i].Max_Players - this[i].Min_Healers),
+                    Breakable = false,
+                });
+                // Allow 3 seconds for melee to run back to the boss after the stun.
+                this[i].Moves.Add(new Impedance()
+                {
+                    Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
+                    Duration = 3f * 1000f,
+                    Chance = 1f / (this[i].Max_Players - this[i].Min_Healers),
+                    Breakable = false,
+                });
+
+                // Cleave: Inflicts 110% of normal melee damage to an enemy and its nearest allies, affecting up to 3 targets. 
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Cleave",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * 1.1f,
+                    MaxNumTargets = 3f,
+                    AttackSpeed = 20f,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
                 });
             }
             #endregion
@@ -1291,6 +1683,8 @@ namespace Rawr.Bosses
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
             #endregion
             /* TODO:
+             *  Enervating Brand: Brands an enemy, drawing energy from him and allies within 12 yards. 
+             *        Stacks every 2 seconds, reducing the enemies' damage by 2%. Lasts 20 seconds.
              */
         }
     }
@@ -1315,8 +1709,6 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 1, 1 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 4; i++) {
             this[i].Attacks.Add(new Attack
@@ -1324,11 +1716,16 @@ namespace Rawr.Bosses
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
                     
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
@@ -1336,12 +1733,74 @@ namespace Rawr.Bosses
 
                     IsTheDefaultMelee = true,
                 });
+
+                // Flame Breath - Inflicts 24,500 to 31,500 Fire damage to enemies in a cone in front of Saviana.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Flame Breath",
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = new int[] { (24500 + 31500), (33687 + 43312), (24500 + 31500), (33687 + 43312) }[i] / 2f,
+                    MaxNumTargets = 1f,
+                    // First attack is 12 seconds in, and every 25 seconds after
+                    AttackSpeed = (this[i].BerserkTimer / ( (this[i].BerserkTimer - 12f) / 25f ) ),
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Enrage - Decreases the time between your attacks by 150% for 10 sec.
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Enrage",
+                    DamageType = ItemDamageType.Physical,
+                    NumTicks = 10f / (2f / 1.5f),
+                    TickInterval = (2f / 1.5f),
+                    DamagePerTick = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = this[i].Min_Tanks,
+                    AttackSpeed = 30f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    Interruptable = true,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
+
+                // Fire Nova - Inflicts 7,601 to 7,600 Fire damage to players within 100 yards.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Fire Nova",
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = 7600f,
+                    MaxNumTargets = this[i].Max_Players,
+                    AttackSpeed = 15f,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                });
             }
             #endregion
             #endregion
             #region Impedances
             //Moves;
             //Stuns;
+            for (int i = 0; i < 4; i++)
+            {
+                // Conflagration - Causes the affected players to temporarily do Fire damage to all nearby allies.
+                //    Assume all players are spread out; Can target tanks; Stuns targets for 6 seconds
+                this[i].Stuns.Add(new Impedance()
+                {
+                    Frequency = this[i].BerserkTimer / ( ( this[i].BerserkTimer - 32f ) / 50f ),
+                    Duration = 6f * 1000f,
+                    Chance = new float[] { 2, 5, 2, 5 }[i] / this[i].Max_Players,
+                    Breakable = false,
+                });
+            }
             //Fears;
             //Roots;
             //Disarms;
@@ -1376,22 +1835,65 @@ namespace Rawr.Bosses
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
             for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
-            {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
 
                     IsTheDefaultMelee = true,
+                });
+
+                // Summon Flamecaller - Summons 3 Onyx Flamecallers.
+                this[i].Targets.Add(new TargetGroup()
+                {
+                    // First set of adds is after 15.5 seconds, then every 45.5 seconds after
+                    Frequency = this[i].BerserkTimer / ((this[i].BerserkTimer - 15.5f) / 45.5f),
+                    Chance = 1f,
+                    Duration = 15f * 1000f, // Assume 15 seconds to kill adds; Can be ignored and just burn the boss
+                    NearBoss = false,
+                    NumTargs = 3f,
+                });
+                // Blast Nova - Inflicts 5688 to 7312 Fire damage to nearby enemies.
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Blast Nova",
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (5688 + 7312), (6563 + 8437), (5688 + 7312), (6563 + 8437) }[i] / 2f,
+                    MaxNumTargets = this[i].Max_Players,
+                    // Averaging Flamecallers frequency by their duration, assume that the normal cast of the spell is every 5 seconds; All devided by the number of targets
+                    AttackSpeed = ((this[i].Targets[this[i].Targets.Count - 1].Frequency * 1000f) / (this[i].Targets[this[i].Targets.Count - 1].Duration / 5f)) / this[i].Targets[this[i].Targets.Count - 1].NumTargs,
+
+                    Missable = true,
+                });
+                // Lava Gout - Inflicts 8483 to 9517 Fire damage to an enemy; Can be interrupted
+                this[i].Attacks.Add(new Attack()
+                {
+                    Name = "Lava Gout",
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = new int[] { (8483 + 9517), (9897 + 9897), (8483 + 11103), (9897 + 11103) }[i] / 2f,
+                    MaxNumTargets = this[i].Targets[this[i].Targets.Count - 1].NumTargs,
+                    // Averaging Flamecallers frequency by their duration, assume that the normal cast of the spell is every 2 seconds; All devided by the number of targets
+                    AttackSpeed = ((this[i].Targets[this[i].Targets.Count - 1].Frequency * 1000f) / (this[i].Targets[this[i].Targets.Count - 1].Duration / 2f)) / this[i].Targets[this[i].Targets.Count - 1].NumTargs,
+                    Interruptable = true,
+                    
+                    Missable = true,
                 });
             }
             #endregion
@@ -1402,9 +1904,25 @@ namespace Rawr.Bosses
             //Fears;
             //Roots;
             //Disarms;
+            for (int i = 0; i < 4; i++)
+            {
+                // Intimidating Roar - Causes all raid members to be stunned in fear for 4 seconds.
+                //         This is a scripted event that cannot be broken
+                this[i].Stuns.Add(new Impedance()
+                {
+                    // First stun is after 14 seconds, then every 33 seconds after
+                    Frequency = this[i].BerserkTimer / ((this[i].BerserkTimer - 14f) / 33f),
+                    Chance = 1f,
+                    Duration = 4f * 1000f,
+                    Breakable = false,
+                });
+            }
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0.00f, 0.00f };
             #endregion
             /* TODO:
+             *    Add tank Armor reducing ability
+             *    Cleave Armor - Reduces the target's [tanks] armor by 20% for 30 seconds. Stacks up to 5 times.
+             *                 Tanks taunt after 3 stacks
              */
         }
     }
@@ -1421,8 +1939,8 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Fight is split into 3 phases, first two everyone is DPSing him together, Phase 3 DPS is split up between live and shadow realm
-            Health = new float[] { 4141000f, 14098000f, 4141000f, 14098000f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
+            Health = new float[] { 11156000f, 43500000f, 15339900f, 58600000f };
+            BerserkTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, };
             SpeedKillTimer = new int[] { 300, 300, 300, 300 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
@@ -1443,6 +1961,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    Missable = true,
+                    Parryable = true,
+                    Dodgable = true,
+                    Blockable = true,
                     
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
