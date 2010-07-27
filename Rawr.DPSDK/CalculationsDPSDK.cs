@@ -238,15 +238,8 @@ namespace Rawr.DPSDK
 #endif
             Stats stats = new Stats();
 
-            if (true)
-            {
-                stats = GetCharacterStats(character, additionalItem);
-//                _cachedstats_ = stats.Clone();
-            }
-            else
-            {
-//                stats = _cachedstats_.Clone();
-            }
+            stats = GetCharacterStats(character, additionalItem);
+
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             calcs.BasicStats = stats;
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -291,6 +284,11 @@ namespace Rawr.DPSDK
             physPowerMult *= 1f + stats.BonusDamageMultiplier;
             spellPowerMult *= 1f + stats.BonusDamageMultiplier;
             frostSpellPowerMult *= 1f + stats.BonusDamageMultiplier;
+
+            // The Bonus Damage Multiplier needs to get applied to the stats object that gets passed into the Ability Handler.
+            stats.BonusPhysicalDamageMultiplier = physPowerMult;
+            stats.BonusSpellPowerMultiplier = spellPowerMult;
+            stats.BonusFrostDamageMultiplier = frostSpellPowerMult;
 
             //spell AP multipliers, for diseases its per tick
             float HowlingBlastAPMult = 0.2f;
@@ -907,7 +905,7 @@ namespace Rawr.DPSDK
 
 
             //Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
@@ -922,12 +920,14 @@ namespace Rawr.DPSDK
                 statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){ BonusStrengthMultiplier = 0.2f}, 20f, 60f));
             }
             Stats statsTotal = new Stats();
-            Stats statsGearEnchantsBuffs = new Stats();
+//            Stats statsGearEnchantsBuffs = new Stats();
+            statsTotal.Accumulate(statsBaseGear);
+            statsTotal.Accumulate(statsBuffs);
+            statsTotal.Accumulate(statsRace);
+            statsTotal.Accumulate(statsTalents);
 
-            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
-
-            statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
-            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsGearEnchantsBuffs.ExpertiseRating);
+            statsTotal = GetRelevantStats(statsTotal);
+            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
             float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
@@ -942,15 +942,14 @@ namespace Rawr.DPSDK
                         && ((effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating) > tempCap))
                     {
                         SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, effect.Stats.Clone(), effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-                        tempEffect.Stats.ArmorPenetrationRating =
-                            (tempCap - statsTotal.ArmorPenetrationRating > 0f ? tempCap - statsTotal.ArmorPenetrationRating : 0f);
+                        tempEffect.Stats.ArmorPenetrationRating = Math.Max(tempCap - statsTotal.ArmorPenetrationRating, 0f);
                         se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-                        statsTotal += se.getSpecialEffects(calcOpts, tempEffect);
+                        statsTotal.Accumulate(se.getSpecialEffects(calcOpts, tempEffect));
                     }
                     else
                     {
                         se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-                        statsTotal += se.getSpecialEffects(calcOpts, effect);
+                        statsTotal.Accumulate(se.getSpecialEffects(calcOpts, effect));
                     }
                 }
             }
@@ -967,8 +966,6 @@ namespace Rawr.DPSDK
             statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
-            // Copy from TankDK.
-            // statsTotal.Armor = (float)Math.Floor((statsTotal.Armor + statsTotal.BonusArmor + 2f * statsTotal.Agility) * 1f);
             statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
@@ -1553,41 +1550,6 @@ namespace Rawr.DPSDK
             return bResults;
         }
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsDPSDK calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
-
-            //float hasRelevantBuff;
-
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }*/
-            #endregion
-
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
-
-            return statsBuffs;
-        }
 
         private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels
