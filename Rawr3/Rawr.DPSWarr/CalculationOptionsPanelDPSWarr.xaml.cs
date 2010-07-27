@@ -24,8 +24,6 @@ using Rawr.Base;
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
         private bool _loadingCalculationOptions = false;
-        //private bool firstload = true;
-        //private BossList bosslist = null;
         CalculationOptionsDPSWarr calcOpts = null;
         /// <summary>This Model's local bosslist</summary>
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
@@ -96,6 +94,7 @@ namespace Rawr.DPSWarr {
             }
             _loadingCalculationOptions = false;
         }
+        // Informational
         private void SetUpFAQ() {
 FAQStuff.Add(
 "Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.",
@@ -165,12 +164,12 @@ FAQStuff.Add(
 "Why can't I select X weapon type or Y Armor Type?",
 @"Some weapon types are pointless to factor in, Staves and one handed weapons definitely being the big part of this. Same for Armor, though we can wear cloth, cloth can't physically boost our DPS in any way compared to Plate. Leather and Mail at top end items have a chance to beat out your DPS plate in some circumstances. If you want to enable Leather and Mail you can by use of Refine Types of Items Listed from the Tools menu."
 );
-            /*//CB_FAQ_Questions.Items.Add("All");
-            string[] arr = new string[FAQStuff.Keys.Count];
+            CB_FAQ_Questions.Items.Add((String)"All");
+            String[] arr = new String[FAQStuff.Keys.Count];
             FAQStuff.Keys.CopyTo(arr,0);
-            //CB_FAQ_Questions.Items.AddRange(arr);
-            //CB_FAQ_Questions.SelectedIndex = 0;
-            CB_FAQ_Questions_SelectedIndexChanged(null, null);*/
+            foreach (String a in arr) { CB_FAQ_Questions.Items.Add(a); }
+            CB_FAQ_Questions.SelectedIndex = 0;
+            CB_FAQ_Questions_SelectedIndexChanged(null, null);
         }
         private void SetUpPatchNotes()
         {
@@ -887,12 +886,12 @@ Note to DPSWarr Users: New testing in Arms shows an optimize for Max DPS without
 - Enforced activation of buffs Trauma, Rampage and Blood Frenzy if you have the talents
 - Formulaic fixes and some Talent/Glyph improvements"
             );
-            /*CB_Version.Items.Add("All");
-            string[] arr = new string[PNStuff.Keys.Count];
+            CB_Version.Items.Add("All");
+            String[] arr = new String[PNStuff.Keys.Count];
             PNStuff.Keys.CopyTo(arr, 0);
-            CB_Version.Items.AddRange(arr);
+            foreach (String a in arr) { CB_Version.Items.Add(a); }
             CB_Version.SelectedIndex = 0;
-            CB_PatchNotes_SelectedIndexChanged(null, null);*/
+            CB_Version_SelectedIndexChanged(null, null);
         }
         private void SetUpOther() {
 RTB_Welcome.Text = @"Welcome to Rawr.DPSWarr!
@@ -935,6 +934,86 @@ The Ability Maintenance Tab
 
 Select additional abilities to watch how they affect your DPS. Thunder Clap applies a debuff to bosses as do Sunder Armor, Demoralizing Shout, Shattering Throw, etc.";
         }
+        private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //try {
+                string text = "";
+                if ((String)CB_FAQ_Questions.SelectedItem == "All") {
+                    int Iter = 1;
+                    text += "== CONTENTS ==" + "\n";
+                    foreach (string s in FAQStuff.Keys) {
+                        text += Iter.ToString("00") + "Q. " + s + "\n"; // Question
+                        Iter++;
+                    } Iter = 1;
+                    text += "\n";
+                    text += "== READ ON ==" + "\n";
+                    foreach (string s in FAQStuff.Keys) {
+                        string a = "invalid";
+                        text += Iter.ToString("00") + "Q. " + s + "\n"; // Question
+                        bool ver = FAQStuff.TryGetValue(s, out a);
+                        text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\n"; // Answer
+                        text += "\n" + "\n";
+                        Iter++;
+                    } Iter = 1;
+                    RTB_FAQ.Text = text;
+                } else {
+                    string s = (String)CB_FAQ_Questions.SelectedItem;
+                    string a = "invalid";
+                    bool ver = FAQStuff.TryGetValue(s, out a);
+                    text += s + "\n";
+                    text += "\n";
+                    text += (ver ? a : "An error occurred calling the string");
+                    RTB_FAQ.Text = text;
+                    RTB_FAQ.SelectAll();
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+                    RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
+                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+                }
+            /*} catch(Exception ex){
+                new ErrorBoxDPSWarr("Error in setting the FAQ Item",
+                    ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
+            }*/
+        }
+        private void CB_Version_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string text = "";
+            if ((String)CB_Version.SelectedItem == "All")
+            {
+                int Iter = 1;
+                text += "== CONTENTS ==" + "\r\n";
+                foreach (string s in PNStuff.Keys)
+                {
+                    text += s + "\r\n";
+                    Iter++;
+                } Iter = 1;
+                text += "\r\n";
+                text += "== READ ON ==" + "\r\n";
+                foreach (string s in PNStuff.Keys)
+                {
+                    string a = "invalid";
+                    text += s + "\r\n";
+                    bool ver = PNStuff.TryGetValue(s, out a);
+                    text += (ver ? a : "An error occurred calling the string") + "\r\n";
+                    text += "\r\n" + "\r\n";
+                    Iter++;
+                } Iter = 1;
+                RTB_Version.Text = text;
+            } else {
+                string s = (String)CB_Version.SelectedItem;
+                string a = "invalid";
+                bool ver = PNStuff.TryGetValue(s, out a);
+                text += s + "\r\n";
+                text += "\r\n";
+                text += (ver ? a : "An error occurred calling the string");
+                RTB_Version.Text = text;
+                RTB_Version.SelectAll();
+                //RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
+                RTB_Version.Select(0, RTB_Version.Text.IndexOf('\n'));
+                //RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
+            }
+        }
+        // Tooltips
+        private AbilityTooltip tooltip = new AbilityTooltip();
         private string wrapText(string toWrap) {
             int wrapWidth = 63;
             if (toWrap.Length <= wrapWidth) { return toWrap; } // Don't bother wrapping
@@ -961,180 +1040,161 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
 
             return retVal;
         }
-        private void settooltip(DependencyObject element, string name, string desc, string whatitdo)
+        private void settooltip(DependencyObject element)
         {
-            string Format = "{0}\r\n\r\nDesc:\r\n{1}\r\n\r\nWhat Checking this does:\r\n{2}";
-            ToolTipService.SetToolTip(element, string.Format(Format, name, wrapText(desc), wrapText(whatitdo)));
+            if (element.GetType() == typeof(CheckBox))
+            {
+                ((CheckBox)(element)).MouseEnter += new MouseEventHandler(Element_MouseEntered);
+                ((CheckBox)(element)).MouseLeave += new MouseEventHandler(Element_MouseLeave);
+            }
+            else if (element.GetType() == typeof(RadioButton))
+            {
+                ((RadioButton)(element)).MouseEnter += new MouseEventHandler(Element_MouseEntered);
+                ((RadioButton)(element)).MouseLeave += new MouseEventHandler(Element_MouseLeave);
+            }
         }
         private void SetUpToolTips()
         {
+            // Arms
+            settooltip(CK_M_A_BLS);
+            settooltip(CK_M_A_MS);
+            settooltip(CK_M_A_RD);
+            settooltip(CK_M_A_OP);
+            settooltip(CK_M_A_TB);
+            settooltip(CK_M_A_SD);
+            settooltip(CK_M_A_SL);
+            //
+            settooltip(CK_M_A_TH);
+            settooltip(CK_M_A_ST);
+            settooltip(CK_M_A_SW);
+            // Fury
+            settooltip(CK_M_F_WW);
+            settooltip(CK_M_F_BT);
+            settooltip(CK_M_F_BS);
+            //
+            settooltip(CK_M_F_DW);
+            settooltip(CK_M_F_RK);
+            // Rage Gen
+            settooltip(CK_Zerker);
+            settooltip(CK_BloodRage);
+            // Rage Dump
+            settooltip(CK_Cleave);
+            settooltip(CK_HeroicStrike);
+            // Shout
+            settooltip(RB_Shout_Battle);
+            settooltip(RB_Shout_Comm);
+            settooltip(RB_Shout_None);
+            // DeBuff
+            settooltip(CK_DemoShout);
+            settooltip(CK_Sunder);
+            settooltip(CK_Hamstring);
+            // Other
+            settooltip(CK_EnragedRegen);
+            settooltip(CK_ExecSpam);
+            settooltip(CK_Flooring);
+        }
+        private void Element_MouseEntered(object sender, MouseEventArgs e)
+        {
             string MultiTargets = "This ability will also do additional damage if there are multiple mobs present per the Boss Handler.";
             // Arms
-            settooltip(CK_M_A_BLS, "Bladestorm",
-                "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.",
-                "Four GCDs are consumed and Damage is put out. " + MultiTargets);
-            settooltip(CK_M_A_MS, "Mortal Strike",
+            if (sender == CK_M_A_BLS) tooltip.Setup("Bladestorm",
+                 "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.",
+                 "Four GCDs are consumed and Damage is put out. " + MultiTargets);
+            else if (sender == CK_M_A_MS) tooltip.Setup("Mortal Strike",
                 "A vicious strike that deals weapon damage plus x and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",
                 "A GCD is consumed and Damage is put out.");
-            settooltip(CK_M_A_RD, "Rend",
+            else if (sender == CK_M_A_RD) tooltip.Setup("Rend",
                 "Wounds the target causing them to bleed for x damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.",
                 "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
-            settooltip(CK_M_A_OP, "Overpower",
+            else if (sender == CK_M_A_OP) tooltip.Setup("Overpower",
                 "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.",
                 "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            settooltip(CK_M_A_TB, "Taste for Blood",
+            else if (sender == CK_M_A_TB) tooltip.Setup("Taste for Blood",
                 "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.",
                 "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            settooltip(CK_M_A_SD, "Sudden Death",
+            else if (sender == CK_M_A_SD) tooltip.Setup("Sudden Death",
                 "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.",
                 "A GCD is consumed and Damage is put out.");
-            settooltip(CK_M_A_SL, "Slam",
+            else if (sender == CK_M_A_SL) tooltip.Setup("Slam",
                 "Slams the opponent, causing weapon damage plus x.",
                 "A GCD is consumed and Damage is put out.");
             //
-            settooltip(CK_M_A_TH, "Thunder Clap",
+            else if (sender == CK_M_A_TH) tooltip.Setup("Thunder Clap",
                 "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.",
                 "A GCD will be consumed and the debuff will become active after each cooldown period. " + MultiTargets);
-            settooltip(CK_M_A_ST, "Shattering Throw",
+            else if (sender == CK_M_A_ST) tooltip.Setup("Shattering Throw",
                 "Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power), reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.",
                 "A GCD will be consumed and the debuff will become active after each cooldown period");
-            settooltip(CK_M_A_SW, "Sweeping Strikes",
+            else if (sender == CK_M_A_SW) tooltip.Setup("Sweeping Strikes",
                 "Your next 5 melee attacks strike an additional nearby opponent.",
                 "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
             // Fury
-            settooltip(CK_M_F_WW, "Whirlwind",
-                "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.", 
+            else if (sender == CK_M_F_WW) tooltip.Setup("Whirlwind",
+                "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.",
                 "A GCD is consumed and Damage is put out. " + MultiTargets);
-            settooltip(CK_M_F_BT, "Bloodthirst",
+            else if (sender == CK_M_F_BT) tooltip.Setup("Bloodthirst",
                 "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.",
                 "A GCD is consumed and Damage is put out.");
-            settooltip(CK_M_F_BS, "Bloodsurge",
+            else if (sender == CK_M_F_BS) tooltip.Setup("Bloodsurge",
                 "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.",
                 "A GCD is consumed and Damage is put out.");
             //
-            settooltip(CK_M_F_DW, "Death Wish",
+            else if (sender == CK_M_F_DW) tooltip.Setup("Death Wish",
                 "When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.",
                 "A GCD will be consumed and the buff will become active after each cooldown period");
-            settooltip(CK_M_F_RK, "Recklessness",
+            else if (sender == CK_M_F_RK) tooltip.Setup("Recklessness",
                 "Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.",
                 "A GCD will be consumed and the buff will become active after each cooldown period");
             // Rage Gen
-            settooltip(CK_Zerker, "Berserker Rage",
+            else if (sender == CK_Zerker) tooltip.Setup("Berserker Rage",
                 "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra rage when taking damage. Lasts 10 sec.",
                 "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
-            settooltip(CK_BloodRage, "Bloodrage",
+            else if (sender == CK_BloodRage) tooltip.Setup("Bloodrage",
                 "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.",
                 "This adds to the total rage for maintaining your rotation (usually resulting in more Heroic Strikes).");
             // Rage Dump
-            settooltip(CK_Cleave, "Cleave",
+            else if (sender == CK_Cleave) tooltip.Setup("Cleave",
                 "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.",
                 "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
-            settooltip(CK_HeroicStrike, "Heroic Strike",
+            else if (sender == CK_HeroicStrike) tooltip.Setup("Heroic Strike",
                 "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.",
                 "You White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
             // Shout
-            settooltip(RB_Shout_Battle, "Battle Shout",
+            else if (sender == RB_Shout_Battle) tooltip.Setup("Battle Shout",
                 "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.",
                 "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
-            settooltip(RB_Shout_Comm, "Commanding Shout",
+            else if (sender == RB_Shout_Comm) tooltip.Setup("Commanding Shout",
                 "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.",
                 "The Buff version of Commanding Shout (and it's equivalents) will be disabled in favor of your own Commanding Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
-            settooltip(RB_Shout_None, "No Shout",
+            else if (sender == RB_Shout_None) tooltip.Setup("No Shout",
                 "You opt to not put up a shout yourself",
                 "The Buff Versions of Battle and Commanding Shout will become available and you will not consume GCDs for shouts");
             // DeBuff
-            settooltip(CK_DemoShout, "Demoralizing Shout",
+            else if (sender == CK_DemoShout) tooltip.Setup("Demoralizing Shout",
                 "Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.",
                 "A GCD will be consumed and the debuff will become active after each cooldown period");
-            settooltip(CK_Sunder, "Sunder Armor",
+            else if (sender == CK_Sunder) tooltip.Setup("Sunder Armor",
                 "Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.",
                 "A GCD will be consumed and the debuff will become active after each cooldown period");
-            settooltip(CK_Hamstring, "Hamstring",
+            else if (sender == CK_Hamstring) tooltip.Setup("Hamstring",
                 "Maims the enemy, reducing movement speed by 50% for 15 sec.",
                 "A GCD will be consumed and the debuff will become active after each cooldown period");
             // Other
-            settooltip(CK_EnragedRegen, "Enraged Regeneration",
+            else if (sender == CK_EnragedRegen) tooltip.Setup("Enraged Regeneration",
                 "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.",
                 "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
+            else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam",
+                "When the target's health drops below 20%, your Execute ability becomes active",
+                "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes\nNOTE: This check is presently non-functional due to calculational reasons. We do not presently have an ETA for Execute Spam support. It IS still what you want to be doing during Execute Phase.");
+            else if (sender == CK_Flooring) tooltip.Setup("Flooring Activations",
+                "Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs).",
+                "Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be.\nUse Flooring at your own risk.");
+            //tooltip.Setup();
+            tooltip.Show((UIElement)sender);
         }
-        private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            /*try {
-                string text = "";
-                if (true /*CB_FAQ_Questions.Text == "All"*//*) {
-                    int Iter = 1;
-                    text += "== CONTENTS ==" + "\r\n";
-                    foreach (string s in FAQStuff.Keys) {
-                        text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
-                        Iter++;
-                    } Iter = 1;
-                    text += "\r\n";
-                    text += "== READ ON ==" + "\r\n";
-                    foreach (string s in FAQStuff.Keys) {
-                        string a = "invalid";
-                        text += Iter.ToString("00") + "Q. " + s + "\r\n"; // Question
-                        bool ver = FAQStuff.TryGetValue(s, out a);
-                        text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\r\n"; // Answer
-                        text += "\r\n" + "\r\n";
-                        Iter++;
-                    } Iter = 1;
-                    RTB_FAQ.Text = text;
-                } else {
-                    string s = "";//CB_FAQ_Questions.Text;
-                    string a = "invalid";
-                    bool ver = FAQStuff.TryGetValue(s, out a);
-                    text += s + "\r\n";
-                    text += "\r\n";
-                    text += (ver ? a : "An error occurred calling the string");
-                    RTB_FAQ.Text = text;
-                    RTB_FAQ.SelectAll();
-                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-                    RTB_FAQ.Select(0, RTB_FAQ.Text.IndexOf('\n'));
-                    //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
-                }
-            } catch(Exception ex){
-                new ErrorBoxDPSWarr("Error in setting the FAQ Item",
-                    ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
-            }*/
-        }
-        private void CB_Version_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        private void Element_MouseLeave(object sender, MouseEventArgs e)
         {
-            /*string text = "";
-            if (CB_Version.Text == "All")
-            {
-                int Iter = 1;
-                text += "== CONTENTS ==" + "\r\n";
-                foreach (string s in PNStuff.Keys)
-                {
-                    text += s + "\r\n";
-                    Iter++;
-                } Iter = 1;
-                text += "\r\n";
-                text += "== READ ON ==" + "\r\n";
-                foreach (string s in PNStuff.Keys)
-                {
-                    string a = "invalid";
-                    text += s + "\r\n";
-                    bool ver = PNStuff.TryGetValue(s, out a);
-                    text += (ver ? a : "An error occurred calling the string") + "\r\n";
-                    text += "\r\n" + "\r\n";
-                    Iter++;
-                } Iter = 1;
-                RTB_Version.Text = text;
-            }
-            else
-            {
-                string s = CB_Version.Text;
-                string a = "invalid";
-                bool ver = PNStuff.TryGetValue(s, out a);
-                text += s + "\r\n";
-                text += "\r\n";
-                text += (ver ? a : "An error occurred calling the string");
-                RTB_Version.Text = text;
-                RTB_Version.SelectAll();
-                RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
-                RTB_Version.Select(0, RTB_Version.Text.IndexOf('\n'));
-                RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
-            }*/
+            tooltip.Hide();
         }
         // Abilities to Maintain Changes
         public static void CheckSize(CalculationOptionsDPSWarr calcOpts)

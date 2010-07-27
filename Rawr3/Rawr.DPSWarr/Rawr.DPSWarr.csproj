@@ -140,6 +140,9 @@
     <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSWarr.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AbilityTooltip.xaml.cs">
+      <DependentUpon>AbilityTooltip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +155,10 @@
     <Page Include="CalculationOptionsPanelDPSWarr.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="AbilityTooltip.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

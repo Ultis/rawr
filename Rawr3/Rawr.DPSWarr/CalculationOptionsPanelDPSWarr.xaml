@@ -124,7 +124,7 @@ x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr"
             		<TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
             		<CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
             		<CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" ToolTipService.ToolTip="This presently doesn't work due to calculational issues. Rest assured, Execute Spamming at &lt;20% target health is still a good idea."/>
-            		<CheckBox x:Name="CK_Flooring" Height="19" Margin="0" Content="Allow Flooring *" ToolTipService.ToolTip="Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs). Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be.\r\nUse Flooring at your own risk." IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+            		<CheckBox x:Name="CK_Flooring" Height="19" Margin="0" Content="Allow Flooring *" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
             	</StackPanel>
             </Grid>
         </controls:TabItem>

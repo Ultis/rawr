@@ -199,7 +199,7 @@ namespace Rawr {
         public override string ToString()
         {
             if (Frequency <= 0) return "None";
-            return string.Format("#T: {0:0} F: {1:0.0}s D: {2:0}s C: {3:0%}{4}",
+            return string.Format("#T: {0:0.00} F: {1:0.0}s D: {2:0.00}s C: {3:0%}{4}",
                 NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "");
         }
         #endregion
@@ -282,6 +282,10 @@ namespace Rawr {
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Doesn't matter
                         custom["Level"] = false; // Your target isn't the boss
                         custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
+                        custom["Defensive"] = false; // Your target isn't the boss
+                        custom["Invulnerables"] = false; // Your target isn't the boss
+                        custom["TimeSub35"] = false; // No abilities tied to this
+                        custom["TimeSub20"] = false; // No abilities tied to this
                         _MyModelSupportsThis.Add("Healadin", custom);
                         _MyModelSupportsThis.Add("HealPriest", custom);
                         _MyModelSupportsThis.Add("RestoSham", custom);
