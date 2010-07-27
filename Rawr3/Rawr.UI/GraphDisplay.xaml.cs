@@ -175,7 +175,8 @@ namespace Rawr.UI
                          + "|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"
                          + "|Burst Mana Regeneration";
                 }
-                default:                         { return buffGroup; }
+                case "Current": { return "Current"; }
+                default: { return buffGroup; }
             }
         }
 
@@ -406,6 +407,8 @@ namespace Rawr.UI
                     newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, true);
                     compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, sts.Name, same);
                     compare.Item = null;
+                    compare.Name = sts.ToString();
+                    compare.Description = sts.Spec;
                     talentCalculations.Add(compare);
                     found = found || same;
                 }
@@ -469,9 +472,13 @@ namespace Rawr.UI
         private void UpdateGraphEquipped(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
-            if (subgraph == "Gear")
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+
+            if (subgraph == "Gear" || subgraph == "All")
             {
-				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 				CharacterSlot[] slots = new CharacterSlot[]
 				{
 					 CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
@@ -488,15 +495,9 @@ namespace Rawr.UI
 						itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
 					}
 				}
-
-                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
-				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
             }
-            else if (subgraph == "Enchants")
+            if (subgraph == "Enchants" || subgraph == "All")
             {
-				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 				ItemSlot[] slots = new ItemSlot[]
 				{
 					 ItemSlot.Back, ItemSlot.Chest, ItemSlot.Feet, ItemSlot.Finger,
@@ -508,16 +509,14 @@ namespace Rawr.UI
 				foreach (ItemSlot slot in slots)
 					foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
 						itemCalculations.Add(calc);
-
-                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
-				ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-				ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-				ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
 			}
-            else if (subgraph == "Buffs")
+            if (subgraph == "Buffs" || subgraph == "All")
             {
-                UpdateGraphBuffs("Current");
+                itemCalculations.AddRange(Calculations.GetBuffCalculations(Character, Calculations.GetCharacterCalculations(Character), ConvertBuffSelector("Current")));
+                ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
             }
+            // Now Push the results to the screen
+            ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
         }
 
         private void UpdateGraphAvailable(string subgraph)
