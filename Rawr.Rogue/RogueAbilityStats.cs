@@ -48,7 +48,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost);
             return stats;
         }
@@ -59,7 +59,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost);
             return stats;
         }
@@ -70,7 +70,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost);
             return stats;
         }
@@ -81,7 +81,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost);
             return stats;
         }
@@ -92,7 +92,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\nDuration:  {6}sec\r\nUptime:  {7:P}",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\nDuration:  {6}sec\r\nUptime:  {7:P}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost, DurationUptime + (cp * DurationPerCP), ((DurationUptime + (cp * DurationPerCP)) * useCount) / totalDuration);
             return stats;
         }
@@ -111,7 +111,7 @@ namespace Rawr.Rogue
             float dpe4 = (DamagePerSwing + 4f * DamagePerSwingPerCP) / EnergyCost;
             float dpe5 = (DamagePerSwing + 5f * DamagePerSwingPerCP) / EnergyCost;
 
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
                 useCount, damageDone, damageDone / totalDamage, damagePerSwing * chanceNonAvoided, damagePerHit, damagePerSwing / EnergyCost, dpe1, dpe2, dpe3, dpe4, dpe5);
             return stats;
         }
@@ -130,7 +130,7 @@ namespace Rawr.Rogue
             float dpe4 = (DamagePerSwing + 4f * DamagePerSwingPerCP) / EnergyCost;
             float dpe5 = (DamagePerSwing + 5f * DamagePerSwingPerCP) / EnergyCost;
 
-            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
+            string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
                 useCount, damageDone, damageDone / totalDamage, damagePerSwing * chanceNonAvoided, damagePerHit, damagePerSwing / EnergyCost, dpe1, dpe2, dpe3, dpe4, dpe5);
             return stats;
         }
@@ -153,7 +153,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}",
+            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit);
             return stats;
         }
@@ -164,7 +164,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}",
+            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit);
             return stats;
         }
@@ -175,7 +175,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}",
+            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit);
             return stats;
         }   
@@ -186,7 +186,7 @@ namespace Rawr.Rogue
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
             float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
-            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}",
+            string stats = string.Format("{0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
                 useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit);
             return stats;
         }
