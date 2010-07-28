@@ -808,7 +808,6 @@ namespace Rawr.Rogue
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
 
             bool bleedIsUp = calcOpts.BleedIsUp;
-
             for (int snDCP = 1; snDCP < 6; snDCP++)
                 for (int finisher = 0; finisher < 3; finisher++)
                 {
