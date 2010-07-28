@@ -156,29 +156,29 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="You can turn off abilities that you don't want to be considered by the optimizer, this will speed up optimizing considerably." VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" />
+                <!--<TextBlock Text="You can turn off abilities that you don't want to be considered by the optimizer, this will speed up optimizing considerably." VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" />-->
                 <TextBlock Text="Mutilate: " VerticalAlignment="Center" Margin="2" Grid.Row="1" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="1" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="1" Margin="2" IsChecked="{Binding EnableMuti, Mode=TwoWay}" />
                 <TextBlock Text="Sinister Strike: " VerticalAlignment="Center" Margin="2" Grid.Row="2" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="2" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="2" Margin="2" IsChecked="{Binding EnableSS, Mode=TwoWay}" />
                 <TextBlock Text="Backstab: " VerticalAlignment="Center" Margin="2" Grid.Row="3" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="3" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="3" Margin="2" IsChecked="{Binding EnableBS, Mode=TwoWay}" />
                 <TextBlock Text="Hemorrhage: " VerticalAlignment="Center" Margin="2" Grid.Row="4" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="4" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="4" Margin="2" IsChecked="{Binding EnableHemo, Mode=TwoWay}" />
                 <TextBlock Text="Instant Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="5" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="5" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="5" Margin="2" IsChecked="{Binding EnableIP, Mode=TwoWay}" />
                 <TextBlock Text="Deadly Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="6" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="6" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="6" Margin="2" IsChecked="{Binding EnableDP, Mode=TwoWay}" />
                 <TextBlock Text="Wound Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="7" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="7" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="7" Margin="2" IsChecked="{Binding EnableWP, Mode=TwoWay}" />
                 <TextBlock Text="Anesthetic Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="8" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="8" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="8" Margin="2" IsChecked="{Binding EnableAP, Mode=TwoWay}" />
                 <TextBlock Text="Rupture: " VerticalAlignment="Center" Margin="2" Grid.Row="9" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="9" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="9" Margin="2" IsChecked="{Binding EnableRupt, Mode=TwoWay}" />
                 <TextBlock Text="Eviscerate: " VerticalAlignment="Center" Margin="2" Grid.Row="10" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="10" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="10" Margin="2" IsChecked="{Binding EnableEvis, Mode=TwoWay}" />
                 <TextBlock Text="Envenom: " VerticalAlignment="Center" Margin="2" Grid.Row="11" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="11" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
+                <CheckBox Grid.Column="1" Grid.Row="11" Margin="2" IsChecked="{Binding EnableEnvenom, Mode=TwoWay}" />
             </Grid>
         </layoutToolkit:AccordionItem>
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" IsSelected="True">

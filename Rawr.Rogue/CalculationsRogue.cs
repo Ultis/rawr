@@ -811,12 +811,33 @@ namespace Rawr.Rogue
 
             for (int snDCP = 1; snDCP < 6; snDCP++)
                 for (int finisher = 0; finisher < 3; finisher++)
+                {
+                    if ((finisher == 1 && calcOpts.EnableEvis == false) ||
+                       (finisher == 2 && calcOpts.EnableEnvenom == false)) continue;
                     for (int finisherCP = 1; finisherCP < 6; finisherCP++)
-                        for (int CPG = (mutiStats.DamagePerSwing > 0 ? 0 : 1); CPG < (hemoStats.DamagePerSwing > 0 ? 4 : 3); CPG++)
-                            for (int mHPoison = targetPoisonable || mainHand == null ? 1 : 0; targetPoisonable ? mHPoison < 4 : mHPoison < 1; mHPoison++)
-                                for (int oHPoison = targetPoisonable || offHand == null ? 1 : 0; targetPoisonable ? oHPoison < 4 : oHPoison < 1; oHPoison++)
+                        for (int CPG = 0; CPG < 4; CPG++)
+                        {
+                            if ((CPG == 0 && (calcOpts.EnableMuti == false || mutiStats.DamagePerSwing == 0)) ||
+                                (CPG == 1 && calcOpts.EnableSS == false) ||
+                                (CPG == 2 && (calcOpts.EnableBS == false || backstabStats.DamagePerSwing == 0)) ||
+                                (CPG == 3 && (calcOpts.EnableHemo == false || hemoStats.DamagePerSwing == 0))) continue;
+                            for (int mHPoison = 0; mHPoison < 5; mHPoison++)
+                            {
+                                if (!targetPoisonable || mainHand == null) break;
+                                if ((mHPoison == 1 && calcOpts.EnableIP == false) ||
+                                    (mHPoison == 2 && calcOpts.EnableDP == false) ||
+                                    (mHPoison == 3 && calcOpts.EnableWP == false) ||
+                                    (mHPoison == 4 && calcOpts.EnableAP == false)) continue;
+                                for (int oHPoison = 0; oHPoison < 5; oHPoison++)
+                                {
+                                    if (!targetPoisonable || offHand == null) break;
+                                    if ((oHPoison == 1 && calcOpts.EnableIP == false) ||
+                                        (oHPoison == 2 && calcOpts.EnableDP == false) ||
+                                        (oHPoison == 3 && calcOpts.EnableWP == false) ||
+                                        (oHPoison == 4 && calcOpts.EnableAP == false)) continue;
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
                                     {
+                                        if (useRupt == 1 && calcOpts.EnableRupt == false) continue;
                                         bool useTotT = stats.BonusToTTEnergy > 0;
                                         RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
                                             rotationCalculator.GetRotationCalculations(
@@ -824,6 +845,10 @@ namespace Rawr.Rogue
                                         if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                             rotationCalculationDPS = rotationCalculation;
                                     }
+                                }
+                            }
+                        }
+                }
 
             calculatedStats.HighestDPSRotation = rotationCalculationDPS;
             calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(

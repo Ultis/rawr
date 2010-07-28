@@ -110,6 +110,72 @@ namespace Rawr.Rogue
             get { return _customOHPoison; }
             set { if (_customOHPoison != value) { _customOHPoison = value; OnPropertyChanged("CustomOHPoison"); } }
         }
+        private bool _enableMuti = true;
+        public bool EnableMuti
+        {
+            get { return _enableMuti; }
+            set { if (_enableMuti != value) { _enableMuti = value; OnPropertyChanged("EnableMuti"); } }
+        }
+        private bool _enableSS = true;
+        public bool EnableSS
+        {
+            get { return _enableSS; }
+            set { if (_enableSS != value) { _enableSS = value; OnPropertyChanged("EnableSS"); } }
+        }
+        private bool _enableBS = true;
+        public bool EnableBS
+        {
+            get { return _enableBS; }
+            set { if (_enableBS != value) { _enableBS = value; OnPropertyChanged("EnableBS"); } }
+        }
+        private bool _enableHemo = true;
+        public bool EnableHemo
+        {
+            get { return _enableHemo; }
+            set { if (_enableHemo != value) { _enableHemo = value; OnPropertyChanged("EnableHemo"); } }
+        }
+        private bool _enableIP = true;
+        public bool EnableIP
+        {
+            get { return _enableIP; }
+            set { if (_enableIP != value) { _enableIP = value; OnPropertyChanged("EnableIP"); } }
+        }
+        private bool _enableDP = true;
+        public bool EnableDP
+        {
+            get { return _enableDP; }
+            set { if (_enableDP != value) { _enableDP = value; OnPropertyChanged("EnableDP"); } }
+        }
+        private bool _enableWP = true;
+        public bool EnableWP
+        {
+            get { return _enableWP; }
+            set { if (_enableWP != value) { _enableWP = value; OnPropertyChanged("EnableWP"); } }
+        }
+        private bool _enableAP = true;
+        public bool EnableAP
+        {
+            get { return _enableAP; }
+            set { if (_enableAP != value) { _enableAP = value; OnPropertyChanged("EnableAP"); } }
+        }
+        private bool _enableRupt = true;
+        public bool EnableRupt
+        {
+            get { return _enableRupt; }
+            set { if (_enableRupt != value) { _enableRupt = value; OnPropertyChanged("EnableRupt"); } }
+        }
+        private bool _enableEvis = true;
+        public bool EnableEvis
+        {
+            get { return _enableEvis; }
+            set { if (_enableEvis != value) { _enableEvis = value; OnPropertyChanged("EnableEvis"); } }
+        }
+        private bool _enableEnvenom = true;
+        public bool EnableEnvenom
+        {
+            get { return _enableEnvenom; }
+            set { if (_enableEnvenom != value) { _enableEnvenom = value; OnPropertyChanged("EnableEnvenom"); } }
+        }
         private float _trinketOffset = 0f;
         public float TrinketOffset
         {
