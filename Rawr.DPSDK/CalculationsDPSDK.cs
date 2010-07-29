@@ -13,7 +13,6 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-        private Stats _cachedstats_;
         public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -160,7 +159,16 @@ namespace Rawr.DPSDK
         private string[] _customChartNames = null;
         public override string[] CustomChartNames {
             get {
-                if (_customChartNames == null) { _customChartNames = new string[] { "Item Budget (10 point steps)", "Item Budget (25 point steps)", "Item Budget (50 point steps)", "Item Budget (100 point steps)"/*, "MH Weapon Speed", "OH Weapon Speed"*/ }; }
+                if (_customChartNames == null) 
+                { 
+                    _customChartNames = new string[] 
+                        { 
+                            "Item Budget (10 point steps)", 
+                            "Item Budget (25 point steps)", 
+                            "Item Budget (50 point steps)", 
+                            "Item Budget (100 point steps)",
+                            "Presences"
+                        }; }
                 return _customChartNames;
             }
         }
@@ -815,7 +823,8 @@ namespace Rawr.DPSDK
 
                                 tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
 
-                                if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
+                                // Change this to a buff that can be added to the Buffs list.
+/*                                if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
                                 {
                                     tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
                                     tempStats.BonusSpellPowerMultiplier *= 1.15f;
@@ -827,7 +836,7 @@ namespace Rawr.DPSDK
                                     tempStats.PhysicalHaste += 0.15f;
                                     tempStats.SpellHaste += 0.15f;
                                 }
-
+                                */
 
                                 drw = new DRW(combatTable, calcs, calcOpts, tempStats, character, talents);
                                 if (drw.dpsDancingRuneWeapon > dpsDRWMaximum)
@@ -857,12 +866,44 @@ namespace Rawr.DPSDK
             return calcs;
         }
 
-        private Stats GetRaceStats(Character character) {
+        private Stats GetRaceStats(Character character) 
+        {
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
         }
 
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+
+        private Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p)
+        {
+            Stats PresenceStats = new Stats();
+            switch(p)
+            {
+                case CalculationOptionsDPSDK.Presence.Blood:
+                {
+                    PresenceStats.BonusPhysicalDamageMultiplier = .15f;
+                    PresenceStats.BonusSpellPowerMultiplier = .15f;
+                    PresenceStats.BonusShadowDamageMultiplier = .15f;
+                    PresenceStats.BonusFrostDamageMultiplier = .15f;
+                    break;
+                }
+                case CalculationOptionsDPSDK.Presence.Unholy:
+                {
+                    PresenceStats.PhysicalHaste = 0.15f;
+                    PresenceStats.SpellHaste = 0.15f;
+                    break;
+                }
+                case CalculationOptionsDPSDK.Presence.Frost:
+                {
+                    PresenceStats.BonusStaminaMultiplier = 0.08f;
+                    PresenceStats.BaseArmorMultiplier = .60f;
+                    PresenceStats.DamageTakenMultiplier = .08f;
+                    break;
+                }
+            }
+            return PresenceStats;
+        }
+
 
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -906,8 +947,10 @@ namespace Rawr.DPSDK
 
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence);
             Stats statsTalents = new Stats()
             {
+                // TODO: Expand this since I know in TankDK this was a much broader set of Talent->Stat adjustments.
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
@@ -924,6 +967,7 @@ namespace Rawr.DPSDK
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
+            statsTotal.Accumulate(statsPresence);
             statsTotal.Accumulate(statsTalents);
 
             statsTotal = GetRelevantStats(statsTotal);
@@ -1260,7 +1304,42 @@ namespace Rawr.DPSDK
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
-                #region weapon speed charts
+                case "Presences":
+                    Item[] listPresenceStats = new Item[] {
+                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Blood) },
+                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Unholy) },
+                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Frost) },
+                    };
+                    string[] listPresence = new string[] {
+                        "Blood",
+                        "Unholy",
+                        "Frost",
+                    };
+
+                    // Set this to have no presence enabled.
+                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+                    // Set these to have the key presence enabled.
+                    for (int index = 0; index < listPresence.Length; index++)
+                    {
+                        calc = GetCharacterCalculations(character, listPresenceStats[index]) as CharacterCalculationsDPSDK;
+
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = listPresence[index];
+                        comparison.Equipped = false;
+                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                        subPoints = new float[calc.SubPoints.Length];
+                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        {
+                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                        }
+                        comparison.SubPoints = subPoints;
+
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+
+                    #region weapon speed charts
                 /*               case "MH Weapon Speed":
                     string[] speedList = new String[] {"1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8"};
                     Item MH = character.MainHand.Item;
@@ -1393,6 +1472,7 @@ namespace Rawr.DPSDK
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
 
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
