@@ -6,9 +6,9 @@ using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsDPSWarr : ICalculationOptionBase, INotifyPropertyChanged
+    public class CalculationOptionsDPSWarr : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Constructors
         public CalculationOptionsDPSWarr()
@@ -61,26 +61,26 @@ namespace Rawr.DPSWarr {
                     true   // Heroic Strike
             };
             // Latency
-		    Lag = 179f;
-		    React = 220f;
+            Lag = 179f;
+            React = 220f;
             // Boss Options
 //#if !RAWR3 && !SILVERLIGHT
-		    FilterType = "Content";
-		    Filter = "All";
-		    BossName = "Custom";
-		    TargetLevel = 83;
+            FilterType = "Content";
+            Filter = "All";
+            BossName = "Custom";
+            TargetLevel = 83;
             TargetArmor = StatConversion.NPC_ARMOR[TargetLevel - 80];
             TargetHP = 1000000f;
-		    Duration = 300f;
+            Duration = 300f;
             Under20Perc = 0.17f;
-		    // Rotational Changes
-		    InBack           = true ; InBackPerc           = 100;
-		    MultipleTargets  = false; MultipleTargetsPerc  =  25; MultipleTargetsMax  =    3;
-		    MovingTargets    = false; 
-		    StunningTargets  = false; 
+            // Rotational Changes
+            InBack           = true ; InBackPerc           = 100;
+            MultipleTargets  = false; MultipleTargetsPerc  =  25; MultipleTargetsMax  =    3;
+            MovingTargets    = false; 
+            StunningTargets  = false; 
             FearingTargets   = false; 
             RootingTargets   = false; 
-		    DisarmingTargets = false; // nonfunctional
+            DisarmingTargets = false; // nonfunctional
             AoETargets       = false; AoETargetsFreq       =  20; AoETargetsDMG       = 5000;
 //#endif
         }
@@ -583,11 +583,11 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Functions
         public string GetXml() {
-			var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
-			var xml = new StringBuilder();
-			var sw = new System.IO.StringWriter(xml);
-			s.Serialize(sw, this);
-			return xml.ToString();
+            var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
+            var xml = new StringBuilder();
+            var sw = new System.IO.StringWriter(xml);
+            s.Serialize(sw, this);
+            return xml.ToString();
         }
         #endregion
         #region INotifyPropertyChanged Members
