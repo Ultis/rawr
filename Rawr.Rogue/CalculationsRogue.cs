@@ -512,7 +512,7 @@ namespace Rawr.Rogue
             float chanceCritEvis = 0f;
             float chanceHitEvis = 0f;
             //float chanceCritBleed = 0f;
-            float chanceGlance = 0f;
+            float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
             float chanceCritWhiteMainTotal = 0f;
             float chanceCritWhiteMain = 0f;
             float chanceHitWhiteMain = 0f;
@@ -562,16 +562,14 @@ namespace Rawr.Rogue
                 float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + bonusEvisCrit);
                 float chanceHitEvisTemp = 1f - chanceCritEvisTemp;
 
-                //White
-                float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
                 //White Mainhand
                 float chanceCritWhiteMainTotalTemp = chanceCritYellowTemp;
-                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceWhiteMHAvoided);
-                float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteMHAvoided - chanceGlanceTemp;
+                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlance - chanceWhiteMHAvoided);
+                float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteMHAvoided - chanceGlance;
                 //White Offhand
                 float chanceCritWhiteOffTotalTemp = chanceCritYellowTemp - bonusMainHandCrit + bonusOffHandCrit;
-                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp - bonusMainHandCrit + bonusOffHandCrit, 1f - chanceGlanceTemp - chanceWhiteOHAvoided);
-                float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteOHAvoided - chanceGlanceTemp;
+                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp - bonusMainHandCrit + bonusOffHandCrit, 1f - chanceGlance - chanceWhiteOHAvoided);
+                float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteOHAvoided - chanceGlance;
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
                 chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
@@ -589,7 +587,6 @@ namespace Rawr.Rogue
                 cpPerHemo += iStat.Chance * cpPerHemoTemp;
                 chanceCritEvis += iStat.Chance * chanceCritEvisTemp;
                 chanceHitEvis += iStat.Chance * chanceHitEvisTemp;
-                chanceGlance += iStat.Chance * chanceGlanceTemp;
                 chanceCritWhiteMainTotal += iStat.Chance * chanceCritWhiteMainTotalTemp;
                 chanceCritWhiteMain += iStat.Chance * chanceCritWhiteMainTemp;
                 chanceHitWhiteMain += iStat.Chance * chanceHitWhiteMainTemp;
@@ -630,7 +627,7 @@ namespace Rawr.Rogue
             float mutiDamageRaw = (baseDamageNorm * 1f + 181f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * mainHandModArmor +
                                   (baseOffDamageNorm * 1f + 181f * (1f + bonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * offHandModArmor;
             mutiDamageRaw *= (character.RogueTalents.Mutilate > 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
-            float ruptDamageRaw = (1736f + stats.AttackPower * 0.3f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusRuptDamageMultiplier + bonusYellowDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
+            float ruptDamageRaw = (127f + 18f * 5f + 0.06f * stats.AttackPower * 5f / (3f + 5f)) * (3f + 5f + bonusRuptDuration / 2f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusRuptDamageMultiplier + bonusYellowDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
             float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusEvisDamageMultiplier + bonusYellowDamageMultiplier) * mainHandModArmor;
             float evisCPDamageRaw = (370f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusEvisDamageMultiplier + bonusYellowDamageMultiplier) * mainHandModArmor;
             float envenomBaseDamageRaw = 0f;

@@ -168,11 +168,13 @@ namespace Rawr.Rogue
             float averageFinisherCP = _averageCP[5];
 			
 			#region Melee
-			float mainHandCount = (Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration) * (1f - AvoidedWhiteMHAttacks);
-            float offHandCount = (Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration) * (1f - AvoidedWhiteOHAttacks);
-            totalEnergyAvailable += offHandCount * ChanceOnEnergyOnOHAttack +
-                                    ChanceOnEnergyOnCrit * mainHandCount * MainHandStats.CritChance +
-                                    ChanceOnEnergyOnCrit * offHandCount * OffHandStats.CritChance;
+			float whiteMHAttacks = Duration / MainHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
+            float whiteMHHits = whiteMHAttacks * (1f - AvoidedWhiteMHAttacks);
+            float whiteOHAttacks = Duration / OffHandSpeed + 0.5f * Stats.MoteOfAnger * Duration;
+            float whiteOHHits = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks);
+            totalEnergyAvailable += whiteOHHits * ChanceOnEnergyOnOHAttack +
+                                    ChanceOnEnergyOnCrit * whiteMHHits * MainHandStats.CritChance +
+                                    ChanceOnEnergyOnCrit * whiteOHHits * OffHandStats.CritChance;
 			#endregion
 
             #region Combo Point Generator
@@ -259,14 +261,14 @@ namespace Rawr.Rogue
             float HP277TPS = 0;
             if (MainHandStats.Weapon.Name == "Heartpierce")
                 if (MainHandStats.Weapon.ItemLevel == 264)
-                    HP264PPS += MainHandSpeedNorm / 60 * (mainHandCount + cpgCount + evisCount + envenomCount) / Duration;
+                    HP264PPS += MainHandSpeedNorm / 60 * (whiteMHHits + cpgCount + evisCount + envenomCount) / Duration;
                 else if (MainHandStats.Weapon.ItemLevel == 277)
-                    HP277PPS += MainHandSpeedNorm / 60 * (mainHandCount + cpgCount + evisCount + envenomCount) / Duration;
+                    HP277PPS += MainHandSpeedNorm / 60 * (whiteMHHits + cpgCount + evisCount + envenomCount) / Duration;
             if (OffHandStats.Weapon.Name == "Heartpierce")
                 if (OffHandStats.Weapon.ItemLevel == 264)
-                    HP264PPS += OffHandSpeedNorm / 60 * (offHandCount + (cpgCount == 0 ? cpgCount : 0)) / Duration;
+                    HP264PPS += OffHandSpeedNorm / 60 * (whiteOHHits + (cpgCount == 0 ? cpgCount : 0)) / Duration;
                 else if (OffHandStats.Weapon.ItemLevel == 277)
-                    HP277PPS += OffHandSpeedNorm / 60 * (offHandCount + (cpgCount == 0 ? cpgCount : 0)) / Duration;
+                    HP277PPS += OffHandSpeedNorm / 60 * (whiteOHHits + (cpgCount == 0 ? cpgCount : 0)) / Duration;
             if (HP264PPS > 0)
             {
                 float ChanceVar264 = (float)Math.Exp(-2 * HP264PPS);
@@ -289,13 +291,21 @@ namespace Rawr.Rogue
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
-            if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (mainHandCount + cpgCount + evisCount + envenomCount);
-            if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword) mainHandCount += ChanceOnMHAttackOnSwordAxeHit * (offHandCount + (cpgCount == 0 ? cpgCount : 0));
+            if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword)
+            {
+                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteMHHits + cpgCount + evisCount + envenomCount);
+                whiteMHHits += ChanceOnMHAttackOnSwordAxeHit * (whiteMHHits + cpgCount + evisCount + envenomCount) * (1f - AvoidedWhiteMHAttacks);
+            }
+            if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword)
+            {
+                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteOHHits + (cpgCount == 0 ? cpgCount : 0));
+                whiteMHHits += ChanceOnMHAttackOnSwordAxeHit * (whiteOHHits + (cpgCount == 0 ? cpgCount : 0)) * (1f - AvoidedWhiteMHAttacks);
+            }
             #endregion
 
             #region Poisons
-            float mHHitCount = mainHandCount + cpgCount + evisCount + envenomCount + snDCount;
-            float oHHitCount = offHandCount + (cpgCount == 0 ? cpgCount : 0);
+            float mHHitCount = whiteMHHits + cpgCount + evisCount + envenomCount + snDCount;
+            float oHHitCount = whiteOHHits + (cpgCount == 0 ? cpgCount : 0);
             float iPCount = 0f;
             float dPCount = 0f;
             float wPCount = 0f;
@@ -335,7 +345,7 @@ namespace Rawr.Rogue
             {
                 float dPCountTemp = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) *
                                     ((Duration - envenomBuffTime) / Duration + 1.15f * envenomBuffTime / Duration);
-                dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 5 + 5;
+                dPCountTemp -= (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10 + 10;
                 float dPStackTime = 5f / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteOHAttacks)) * OffHandSpeed;
                 dPCount = (Duration - dPStackTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * dPStackTime) / 3 * 5 +
                           10 + (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * 10;
@@ -371,12 +381,12 @@ namespace Rawr.Rogue
             #region Damage Totals
             float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + BonusDamageMultiplierHFB: 1f;
 
-            float mainHandDamageTotal = ((Duration - kSDuration) / Duration * (mainHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
-                                        kSDmgBonus * kSDuration / Duration * (mainHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+            float mainHandDamageTotal = ((Duration - kSDuration) / Duration * (whiteMHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
+                                        kSDmgBonus * kSDuration / Duration * (whiteMHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
                                         kSDmgBonus * kSAttacks) * MainHandStats.DamagePerSwing * HFBMultiplier +
                                         0.5f * Stats.MoteOfAnger * Duration * 0.5f * MainHandStats.DamagePerSwing * HFBMultiplier;
-            float offHandDamageTotal = ((Duration - kSDuration) / Duration * (offHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
-                                       kSDmgBonus * kSDuration / Duration * (offHandCount - 0.5f * Stats.MoteOfAnger * Duration) +
+            float offHandDamageTotal = ((Duration - kSDuration) / Duration * (whiteOHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
+                                       kSDmgBonus * kSDuration / Duration * (whiteOHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
                                        kSDmgBonus * kSAttacks) * OffHandStats.DamagePerSwing * HFBMultiplier +
                                        0.5f * Stats.MoteOfAnger * Duration * 0.5f * OffHandStats.DamagePerSwing * HFBMultiplier;
             float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
@@ -400,8 +410,8 @@ namespace Rawr.Rogue
                 DPS = damageTotal / Duration,
                 TotalDamage = damageTotal,
 
-                MainHandCount = mainHandCount,
-                OffHandCount = offHandCount,
+                MainHandCount = whiteMHHits,
+                OffHandCount = whiteOHHits,
                 BackstabCount = (CPG == 2 ? cpgCount : 0),
                 HemoCount = (CPG == 3 ? cpgCount : 0),
                 SStrikeCount = (CPG == 1 ? cpgCount : 0),
