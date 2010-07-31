@@ -414,14 +414,14 @@ namespace Rawr.DPSWarr {
             #region OnAttacks
             if (availRage > 0f && PercFailRage == 1f && (hsok || clok))
             { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lack of rage
-                float savedAvailRage = availRage - WhiteAtks.whiteRageGenOverDurNoHS;
+                float savedAvailRage = availRage - WhiteAtks.whiteRageGenOverDurNoHS * percTimeInDPSAndOver20;
                 float newSSActivates, oldSSActivates;
                 Iterator = 0;
                 do {
                     OnAttack _HS = HS.ability as OnAttack;
                     OnAttack _CL = CL.ability as OnAttack;
 
-                    availRage = savedAvailRage + WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndOver20; ;
+                    availRage = savedAvailRage + WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndOver20;
                     oldHSActivates = HS.numActivates;
                     oldCLActivates = CL.numActivates;
                     oldSSActivates = SS.numActivates;
@@ -874,7 +874,7 @@ namespace Rawr.DPSWarr {
 #if RAWR3 || SILVERLIGHT
                 PercTimeUnder20 = (float)BossOpts.Under20Perc;
 #else
-                //PercTimeUnder20 = CalcOpts.Under20Perc;
+                PercTimeUnder20 = CalcOpts.Under20Perc;
 #endif
             }
             MakeRotationandDoDPS(setCalcs, PercTimeUnder20);

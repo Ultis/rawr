@@ -649,12 +649,10 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 1, 1 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
-            // Inhale rotation consists of 4 x 30 second Gaseous Blight rotations, 3 x 3.5 second Inhale cast times, and 1 x 3 second Pungent Blight cast time
             float inhalerotationlength = ( 30f * 4f ) + ( 3.5f * 3f ) + 3f;
             for (int i = 0; i < 4; i++) {
+                #region Attacks
+                // Inhale rotation consists of 4 x 30 second Gaseous Blight rotations, 3 x 3.5 second Inhale cast times, and 1 x 3 second Pungent Blight cast time
                 // Melee
                 // 0 Inhales
                 this[i].Attacks.Add( new Attack
@@ -898,7 +896,7 @@ namespace Rawr.Bosses
                     Breakable = false,
                 });
             }
-           #endregion
+            #endregion
             #endregion
             #region Impedances
             //Moves;
