@@ -151,18 +151,18 @@ namespace Rawr.DPSWarr
                 do
                 {
                     oldBS = BS.Activates;
-                    oldHS = HS.numActivates;
-                    oldCL = CL.numActivates;
+                    oldHS = HS.allNumActivates;
+                    oldCL = CL.allNumActivates;
 
                     ovdRage = FreeRageOverDur;
                     hsRageUsed = ovdRage * percHS;
                     clRageUsed = ovdRage * percCL;
                     WhiteAtks.HSOverridesOverDur = HS.numActivates = Math.Min(hsRageUsed / _HS.FullRageCost, WhiteAtks.MhActivatesNoHS);
                     WhiteAtks.CLOverridesOverDur = CL.numActivates = Math.Min(clRageUsed / _CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
-                    BS.hsActivates = HS.numActivates;
+                    BS.hsActivates = HS.allNumActivates;
                 } while (Math.Abs(1f - (BS.Activates        != 0 ? oldBS / BS.Activates        : 1f)) > 0.005f ||
-                         Math.Abs(1f - (HS.numActivates <= 0 ? oldHS / HS.numActivates : 1f)) > 0.005f ||
-                         Math.Abs(1f - (CL.numActivates <= 0 ? oldCL / CL.numActivates : 1f)) > 0.005f);
+                         Math.Abs(1f - (HS.allNumActivates <= 0 ? oldHS / HS.allNumActivates : 1f)) > 0.005f ||
+                         Math.Abs(1f - (CL.allNumActivates <= 0 ? oldCL / CL.allNumActivates : 1f)) > 0.005f);
 
             }
             catch (Exception ex)
@@ -338,7 +338,7 @@ namespace Rawr.DPSWarr
             availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             DPS_TTL += WW.DPS;
             HPS_TTL += WW.HPS;
-            rageadd = WW.Rage;
+            rageadd = WW.allRage;
             availRage -= rageadd;
             
             // Priority 2 : Bloodthirst on every CD
@@ -349,7 +349,7 @@ namespace Rawr.DPSWarr
             availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             DPS_TTL += BT.DPS;
             HPS_TTL += BT.HPS;
-            rageadd = BT.Rage;
+            rageadd = BT.allRage;
             availRage -= rageadd;
             
             doIterations();
@@ -361,7 +361,7 @@ namespace Rawr.DPSWarr
             availGCDs = Math.Max(0f, NumGCDs - GCDsused);
             DPS_TTL += BS.DPS;
             HPS_TTL += BS.HPS;
-            rageadd = BS.Rage;
+            rageadd = BS.allRage;
             availRage -= rageadd;
 
             InvalidateCache();
@@ -388,7 +388,7 @@ namespace Rawr.DPSWarr
 #endif
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
-            WhiteAtks.Slam_Freq = 0f;// _SL_GCDs;
+            WhiteAtks.Slam_ActsOverDur = 0f;// _SL_GCDs;
  
                 DPS_TTL += WhiteAtks.MhDPS * (1f - timeLostPerc) + WhiteAtks.OhDPS * (1f - timeLostPerc);
                 DPS_TTL += GetWrapper<HeroicStrike>().DPS;

@@ -64,9 +64,9 @@ namespace Rawr.UI
                 List<CheckBox> toCheck = new List<CheckBox>();
                 foreach (Buff b in Character.ActiveBuffs)
                 {
-                    if (CheckBoxes.ContainsKey(b))
+                    if (CheckBoxes.ContainsKey(Buff.GetBuffByName(b.Name)))
                     {
-                        toCheck.Add(CheckBoxes[b]);
+                        toCheck.Add(CheckBoxes[Buff.GetBuffByName(b.Name)]);
                     }
                 }
                 foreach (CheckBox cb in toCheck) cb.IsChecked = true;
@@ -304,7 +304,7 @@ namespace Rawr.UI
             {
                 SavedBuffSet newSet = SavedCombo.SelectedItem as SavedBuffSet;
                 Character.ActiveBuffs = newSet.BuffSet;
-                //character_ClassChanged(this, EventArgs.Empty);
+                LoadBuffsFromCharacter();
                 Character.OnCalculationsInvalidated();
             }
         }

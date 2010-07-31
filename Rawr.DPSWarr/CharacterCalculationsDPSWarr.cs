@@ -510,16 +510,16 @@ namespace Rawr.DPSWarr {
 
             dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
             // DPS Abilities
-            format = "{0:0000} : {1:0000} : {2:000.00}";
+            format = "{0:0000} : {1:00000} : {2:000.00}";
             if (TotalDPS < 0f) { TotalDPS = 0f; }
             foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList()) {
                 if (!aw.ability.Name.Equals("Invalid")) {
-                    dictValues.Add(aw.ability.Name, string.Format(format, aw.DPS, aw.ability.DamageOnUse, aw.numActivates)
-                                                    + aw.ability.GenTooltip(aw.numActivates, aw.DPS / TotalDPS));
+                    dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates)
+                                                    + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
                 }
             }
             // DPS General
-            dictValues.Add("White DPS",             string.Format("{0:0000} : {1:0000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
+            dictValues.Add("White DPS",             string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
             dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize,Rot.DW.TickSize/TotalDPS));
             dictValues.Add("Special DMG Procs",     string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS / TotalDPS));
             dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));

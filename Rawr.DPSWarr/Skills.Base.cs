@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr.Skills
             //
             HSOverridesOverDur = 0f;
             CLOverridesOverDur = 0f;
-            Slam_Freq = 0f;
+            Slam_ActsOverDur = 0f;
             _uwProcValue_mh = combatFactors._c_mhItemSpeed * Talents.UnbridledWrath / 20.0f;
             _uwProcValue_oh = combatFactors._c_ohItemSpeed * Talents.UnbridledWrath / 20.0f;
         }
@@ -79,10 +79,10 @@ namespace Rawr.DPSWarr.Skills
         // Get/Set
         public float HSOverridesOverDur { get; set; }
         public float CLOverridesOverDur { get; set; }
-        public float Slam_Freq;
+        public float Slam_ActsOverDur;
         #endregion
         // bah
-        private float SlamFreqSpdMod { get { return (Slam_Freq == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_Freq / FightDuration))); } }
+        private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
         // Main Hand
         public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
         public float MhDamage
@@ -482,8 +482,7 @@ namespace Rawr.DPSWarr.Skills
             get { return _cachedCastTime; }
             protected set {
                 _cachedCastTime = value;
-                _cachedUseTime = CalcOpts != null ? CalcOpts.Latency
-                    + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) : 0f
+                _cachedUseTime = (CalcOpts == null ? 0f : CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact))
                     + Math.Min(Math.Max(1.5f, value), _cachedGCDTime);
             }
         }
@@ -494,11 +493,12 @@ namespace Rawr.DPSWarr.Skills
             protected set
             {
                 _cachedGCDTime = value;
-                _cachedUseTime = CalcOpts != null ? CalcOpts.Latency
-                    + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) : 0f
+                _cachedUseTime = (CalcOpts != null ? CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) : 0f)
                     + Math.Min(Math.Max(1.5f, _cachedCastTime), value);
             }
         }
+        protected float _cachedUseTime = 0;
+        public float UseTime { get { return _cachedUseTime; } }
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         public float DamageBase { get; set; }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
@@ -594,8 +594,6 @@ namespace Rawr.DPSWarr.Skills
                 return Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
             }
         }
-        protected float _cachedUseTime = 0;
-        public float UseTime { get { return _cachedUseTime; } } //CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact) + Math.Min(Math.Max(1.5f, CastTime), GCDTime); } }
         protected float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
         protected float HealingOnUse { get { return Healing * combatFactors.HealthBonus; } }
         //protected float AvgHealingOnUse { get { return HealingOnUse * Activates; } }

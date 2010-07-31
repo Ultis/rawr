@@ -99,15 +99,6 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates, red_arp, blu_arp, ylw_has, red_arp, group, enabled);
                 #endregion
 
-                /*foreach (GemmingTemplate gt in templates)
-                {
-                    List<GemmingTemplate> foo = templates.FindAll(t => (t.BlueId == gt.BlueId && t.RedId == gt.RedId && t.YellowId == gt.YellowId && t.MetaId == gt.MetaId));
-                    if (foo.Count > 1)
-                    {
-                        int j = 0; // break
-                    }
-                }*/
-                
                 templates.Sort(new Comparison<GemmingTemplate>(
                     delegate(GemmingTemplate first, GemmingTemplate second) {
                         char[] splitters = {' '};
@@ -147,28 +138,6 @@ namespace Rawr.DPSWarr {
                 }));
 
                 return templates;
-                /*return new List<GemmingTemplate>() {
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = insc[1], BlueId = svrn[1], PrismaticId = bold[1], MetaId = chaotic },// STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },// Max STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relent  },// Max STR with All red Meta
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = insc[1], BlueId = pusn[1], PrismaticId = frac[1], MetaId = chaotic },// ArP
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = chaotic },// Max ArP
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Rare",                  RedId = frac[1], YellowId = frac[1], BlueId = frac[1], PrismaticId = frac[1], MetaId = relent  },// Max ArP with All red Meta
-	
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[2], MetaId = chaotic },// STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },// Max STR
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relent  },// Max STR with All red Meta
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = insc[2], BlueId = pusn[2], PrismaticId = frac[2], MetaId = chaotic },// ArP
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = frac[2], BlueId = frac[2], PrismaticId = frac[2], MetaId = chaotic },// Max ArP
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Epic", Enabled = true,  RedId = frac[2], YellowId = frac[2], BlueId = frac[2], PrismaticId = frac[2], MetaId = relent  },// Max ArP with All red Meta
-						
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = insc[2], BlueId = svrn[2], PrismaticId = bold[3], MetaId = chaotic },// STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },// Max STR
-					new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = relent  },// Max STR with All red Meta
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = insc[2], BlueId = pusn[2], PrismaticId = frac[3], MetaId = chaotic },// ArP
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = chaotic },// Max ArP
-                    new GemmingTemplate() { Model = "DPSWarr", Group = "Jeweler",               RedId = frac[3], YellowId = frac[3], BlueId = frac[3], PrismaticId = frac[3], MetaId = relent  },// Max ArP with All red Meta
-				};*/
             }
         }
 
@@ -279,7 +248,7 @@ namespace Rawr.DPSWarr {
             get {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
-    					"Base Stats:Health and Stamina",
+                        "Base Stats:Health and Stamina",
                         "Base Stats:Armor",
                         "Base Stats:Strength",
                         "Base Stats:Attack Power",
@@ -369,13 +338,13 @@ These numbers to do not include racial bonuses.",
                         "Agility",
                         "Crit %",
                         "Haste %",
-					    "ArP %",
+                        "ArP %",
                         "% Chance to Miss (White)",
                         "% Chance to Miss (Yellow)",
                         "% Chance to be Dodged",
                         "% Chance to be Parried",
                         "% Chance to be Avoided (Yellow/Dodge)",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -1008,6 +977,7 @@ These numbers to do not include racial bonuses.",
                         "Ability DPS+Damage",
                         //"Ability Maintenance Changes",
                         "Rage Cost per Damage",
+                        "Execute Spam",
                     };
                 }
                 return _customChartNames;
@@ -1039,14 +1009,18 @@ These numbers to do not include racial bonuses.",
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
-            CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(character.Clone()) as CharacterCalculationsDPSWarr;
-            CalculationOptionsDPSWarr calcOpts = character.Clone().CalculationOptions as CalculationOptionsDPSWarr;
+            Character zeOriginal = character.Clone();
+            Character zeClone = character.Clone();
+            CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(zeOriginal) as CharacterCalculationsDPSWarr;
+            CalculationOptionsDPSWarr calcOpts = zeOriginal.CalculationOptions as CalculationOptionsDPSWarr;
+#if RAWR3 || SILVERLIGHT
+            ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = true;
+#endif
             bool[] origMaints = (bool[])calcOpts.Maintenance.Clone();
-            DPSWarrCharacter dpswarchar = new DPSWarrCharacter()
-            {
-                Char = character,
-                calcOpts = (CalculationOptionsDPSWarr)character.CalculationOptions,
-                bossOpts = character.BossOptions,
+            DPSWarrCharacter dpswarchar = new DPSWarrCharacter() {
+                Char = zeOriginal,
+                calcOpts = (CalculationOptionsDPSWarr)zeOriginal.CalculationOptions,
+                bossOpts = zeOriginal.BossOptions,
                 combatFactors = null,
                 Rot = null,
             };
@@ -1067,7 +1041,7 @@ These numbers to do not include racial bonuses.",
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
                         comparison.Description = aw.ability.Description;
-                        comparison.DPSPoints = aw.DPS;
+                        comparison.DPSPoints = aw.allDPS;
                         comparison.SurvPoints = aw.ability.DamageOnUse;
                         comparisons.Add(comparison);
                     }
@@ -1075,6 +1049,9 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.Maintenance = origMaints;
+#if RAWR3 || SILVERLIGHT
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+#endif
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1128,6 +1105,9 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.Maintenance = origMaints;
+#if RAWR3 || SILVERLIGHT
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+#endif
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1156,6 +1136,50 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.Maintenance = origMaints;
+#if RAWR3 || SILVERLIGHT
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+#endif
+                    return comparisons.ToArray();
+                }
+                #endregion
+                #region Execute Spam
+                case "Execute Spam": {
+                    _subPointNameColors = _subPointNameColors_Normal;
+                    List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                    {
+                        bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = true;
+                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                        comparison.Name = "With Execute Spam";
+                        comparison.Description = "Turning <20% Execute Spam on on the options pane will change your DPS to this";
+                        comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                        comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                        comparison.Equipped = orig == true;
+                        comparisons.Add(comparison);
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
+                    }
+                    {
+                        bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = false;
+                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                        comparison.Name = "Without Execute Spam";
+                        comparison.Description = "Turning <20% Execute Spam off on the options pane will change your DPS to this";
+                        comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                        comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                        comparison.Equipped = orig == false;
+                        comparisons.Add(comparison);
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
+                    }
+                    foreach (ComparisonCalculationDPSWarr comp in comparisons)
+                    {
+                        comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
+                    }
+                    calcOpts.Maintenance = origMaints;
+#if RAWR3 || SILVERLIGHT
+                    ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+#endif
                     return comparisons.ToArray();
                 }
                 #endregion
@@ -1166,6 +1190,7 @@ These numbers to do not include racial bonuses.",
 
         #region Character Calcs
 
+        private WarriorTalents _cachedTalents = null;
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
 #if (!RAWR3 && DEBUG)
             if (character.Name == "") {
@@ -1204,6 +1229,22 @@ These numbers to do not include racial bonuses.",
 
                 WarriorTalents talents = character.WarriorTalents;
                 //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
+
+                /*if (_cachedTalents == null || talents != _cachedTalents) {
+                    _cachedTalents = talents;
+                    int armsCounter = 0, furyCounter = 0, protCounter = 0;
+                    for (int i = 0; i <= 30; i++) { armsCounter += int.Parse(talents.ToString()[i].ToString()); }
+                    for (int i = 31; i <= 57; i++) { furyCounter += int.Parse(talents.ToString()[i].ToString()); }
+                    for (int i = 58; i < talents.ToString().IndexOf("."); i++) { protCounter += int.Parse(talents.ToString()[i].ToString()); }
+                    if (protCounter >= armsCounter && protCounter >= furyCounter) {
+                        calculatedStats.combatFactors = combatFactors;
+                        calculatedStats.Rot = Rot;
+                        calculatedStats.TotalDPS = 0;
+                        calculatedStats.TotalHPS = 0;
+                        calculatedStats.OverallPoints = 0;
+                        return calculatedStats;
+                    }
+                }*/
                  
                 if (calcOpts.UseMarkov)
                 {
@@ -1239,7 +1280,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
                 }
                 
-                calculatedStats.combatFactors = combatFactors; 
+                calculatedStats.combatFactors = combatFactors;
                 calculatedStats.Rot = Rot;
                 calculatedStats.TargetLevel =
 #if RAWR3 || SILVERLIGHT
@@ -1814,20 +1855,20 @@ These numbers to do not include racial bonuses.",
                     float dwTicks = 1f;
                     foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
                     {
-                        if (aw.numActivates > 0f && aw.ability.CanCrit)
+                        if (aw.allNumActivates > 0f && aw.ability.CanCrit)
                         {
                             if (aw.ability.SwingsOffHand)
                             {
 
-                                dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit * (1f - aw.ability.OHAtkTable.Crit), aw.numActivates / fightDuration);
-                                dwTicks *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, aw.numActivates / fightDuration);
+                                dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit * (1f - aw.ability.OHAtkTable.Crit), aw.allNumActivates / fightDuration);
+                                dwTicks *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, aw.allNumActivates / fightDuration);
                             }
                             else
                             {
                                 // to fix this breaking apart when you're close to yellow crit cap for these abilities, namely OP
                                 if (aw.ability is Skills.OverPower || aw.ability is Skills.TasteForBlood)
-                                    dwTicks *= (1f - aw.numActivates / fightDuration * aw.ability.MHAtkTable.Crit);
-                                else dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.numActivates / fightDuration);
+                                    dwTicks *= (1f - aw.allNumActivates / fightDuration * aw.ability.MHAtkTable.Crit);
+                                else dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.allNumActivates / fightDuration);
                             }
                         }
                     }
@@ -2062,18 +2103,18 @@ These numbers to do not include racial bonuses.",
                     flurryUptime = 1f;
                     foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
                     {
-                        if (aw.ability.CanCrit && aw.numActivates > 0f)
+                        if (aw.ability.CanCrit && aw.allNumActivates > 0f)
                         {
                             if (aw.ability is Skills.OnAttack)
                             {
-                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, numFlurryHits * mhPerc * aw.numActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
+                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, numFlurryHits * mhPerc * aw.allNumActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
                                 flurryUptime *= tempFactor;
                             }
                             else
                             {
-                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.numActivates / fightDuration));
+                                float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
                                 flurryUptime *= tempFactor;
-                                if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.numActivates / fightDuration));
+                                if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
                             }
                         }
                     }

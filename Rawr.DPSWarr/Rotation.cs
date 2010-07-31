@@ -10,13 +10,21 @@ namespace Rawr.DPSWarr {
         {
             public AbilWrapper(Skills.Ability abil) {
                 ability = abil;
-                _cachedIsDamaging = ability.DamageOverride > 0f;
+                _cachedIsDamaging = ability.DamageOverride + ability.DamageOnUseOverride > 0f;
             }
             public Skills.Ability ability { get; set; }
             public float numActivates { get; set; }
             public float Rage { get { return ability.GetRageUseOverDur(numActivates); } }
             public float DPS { get { return ability.GetDPS(numActivates); } }
             public float HPS { get { return ability.GetHPS(numActivates); } }
+            public float numActivatesU20 { get; set; }
+            public float RageU20 { get { return ability.GetRageUseOverDur(numActivatesU20); } }
+            public float DPSU20 { get { return ability.GetDPS(numActivatesU20); } }
+            public float HPSU20 { get { return ability.GetHPS(numActivatesU20); } }
+            public float allNumActivates { get { return numActivates + numActivatesU20; } }
+            public float allRage { get { return Rage + RageU20; } }
+            public float allDPS { get { return DPS + DPSU20; } }
+            public float allHPS { get { return HPS + HPSU20; } }
             protected bool _cachedIsDamaging = false;
             public bool isDamaging { get { return _cachedIsDamaging; } }
         }
@@ -64,59 +72,20 @@ namespace Rawr.DPSWarr {
         }
 
         public float _HPS_TTL;
-        public float _DPS_TTL;
+        public float _DPS_TTL, _DPS_TTL_U20;
         public string GCDUsage = "";
         protected CharacterCalculationsDPSWarr calcs = null;
         
         public bool _needDisplayCalcs = true;
         
         //protected float FightDuration;
-        protected float TimeLostGDCs;
+        protected float TimeLostGCDs;
         protected float RageGainedWhileMoving;
         public float TimesStunned = 0f;
         public float TimesFeared = 0f;
         public float TimesRooted = 0f;
         public float TimesDisarmed = 0f;
         
-        /*
-        #region Abilities
-        // Anti-DeBuff
-        public Skills.HeroicFury HF;
-        public Skills.EveryManForHimself EM;
-        public Skills.Charge CH;
-        public Skills.Intercept IN;
-        public Skills.Intervene IV;
-        // Rage Generators
-        public Skills.SecondWind SndW;
-        public Skills.BerserkerRage BZ;
-        public Skills.Bloodrage BR;
-        // Maintenance
-        public Skills.BattleShout BTS;
-        public Skills.CommandingShout CS;
-        public Skills.DemoralizingShout DS;
-        public Skills.SunderArmor SN;
-        public Skills.ThunderClap TH;
-        public Skills.Hamstring HMS;
-        public Skills.EnragedRegeneration ER;
-        // Periodics
-        public Skills.ShatteringThrow ST;
-        public Skills.SweepingStrikes SW;
-        public Skills.DeathWish Death;
-        public Skills.Recklessness RK;
-        // Fury that's shared with Arms
-        public Skills.WhirlWind WW;
-        // Arms that's shared with Fury
-        public Skills.Slam SL;
-        public float _SL_DPS = 0f, _SL_HPS = 0f, _SL_GCDs = 0f;
-        public float _WW_DPS = 0f, _WW_HPS = 0f, _WW_GCDs = 0f;
-        
-        // Generic
-        public Skills.DeepWounds DW;
-        public Skills.Cleave CL;
-        public Skills.HeroicStrike HS;
-        public Skills.Execute EX;
-        #endregion
-        */
         public Skills.DeepWounds DW;
 
         #endregion
@@ -137,6 +106,11 @@ namespace Rawr.DPSWarr {
         /// </summary>
         protected float NumGCDs { get { return _cachedNumGCDs; } }
         protected float _cachedNumGCDs = 0f;
+        /// <summary>
+        /// How many GCDs are in the rotation, based on fight duration and latency, under 20%
+        /// </summary>
+        protected float NumGCDsU20 { get { return _cachedNumGCDsU20; } }
+        protected float _cachedNumGCDsU20 = 0f;
         
         /// <summary>
         /// How many GCDs have been used by the rotation
@@ -154,11 +128,31 @@ namespace Rawr.DPSWarr {
                 return gcds;
             }
         }
+        /// <summary>
+        /// How many GCDs have been used by the rotation
+        /// </summary>
+        protected float GCDsUsedU20
+        {
+            get
+            {
+                float gcds = 0f;
+                foreach (AbilWrapper aw in GetAbilityListThatGCDs())
+                {
+                    gcds += aw.numActivatesU20 * aw.ability.UseTime / LatentGCD;
+                }
+                return gcds;
+            }
+        }
+
 
         /// <summary>
         /// How many GCDs are still available in the rotation
         /// </summary>
-        protected float GCDsAvailable { get { return Math.Max(0f, NumGCDs - GCDsUsed - TimeLostGDCs); } }
+        protected float GCDsAvailable { get { return Math.Max(0f, NumGCDs - GCDsUsed - TimeLostGCDs); } }
+        /// <summary>
+        /// How many GCDs are still available in the rotation sub 20%
+        /// </summary>
+        protected float GCDsAvailableU20 { get { return Math.Max(0f, NumGCDsU20 - GCDsUsedU20 - TimeLostGCDs); } }
         
         #endregion
         #region Functions
@@ -341,13 +335,13 @@ namespace Rawr.DPSWarr {
                     {
                         table = abil.ability.MHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                        count += abil.allNumActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
                     }
                     if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand)
                     {
                         table = abil.ability.OHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivates * abil.ability.AvgTargets * mod;
+                        count += abil.allNumActivates * abil.ability.AvgTargets * mod;
                     }
                 }
             }
@@ -406,9 +400,9 @@ namespace Rawr.DPSWarr {
                 AbilWrapper HS = GetWrapper<HeroicStrike>();
                 AbilWrapper SL = GetWrapper<Slam>();
                 AbilWrapper BS = GetWrapper<BloodSurge>();
-                return HS.numActivates * HS.ability.MHAtkTable.Crit * HS.ability.AvgTargets +
-                       SL.numActivates * SL.ability.MHAtkTable.Crit * SL.ability.AvgTargets +
-                       BS.numActivates * BS.ability.MHAtkTable.Crit * BS.ability.AvgTargets;
+                return HS.allNumActivates * HS.ability.MHAtkTable.Crit * HS.ability.AvgTargets +
+                       SL.allNumActivates * SL.ability.MHAtkTable.Crit * SL.ability.AvgTargets +
+                       BS.allNumActivates * BS.ability.MHAtkTable.Crit * BS.ability.AvgTargets;
             }
         }
 
@@ -417,7 +411,7 @@ namespace Rawr.DPSWarr {
         public float MaintainCDs {
             get {
                 float cds = 0f;
-                foreach (AbilWrapper aw in GetMaintenanceAbilities()) cds += aw.numActivates;
+                foreach (AbilWrapper aw in GetMaintenanceAbilities()) cds += aw.allNumActivates;
                 return cds;
             }
         }
@@ -477,8 +471,8 @@ namespace Rawr.DPSWarr {
 
                     foreach (AbilWrapper aw in GetAbilityList())
                     {
-                        if (aw.Rage < 0) 
-                            rage += (-1f) * aw.Rage;
+                        if (aw.allRage < 0) 
+                            rage += (-1f) * aw.allRage;
                     }
 
                     // 4pcT7
@@ -505,8 +499,8 @@ namespace Rawr.DPSWarr {
                 float rage = 0f;
                 foreach (AbilWrapper aw in GetAbilityList())
                 {
-                    if (aw.Rage > 0f) 
-                        rage += aw.Rage;
+                    if (aw.allRage > 0f) 
+                        rage += aw.allRage;
                 }
                 return rage;
             }
@@ -548,8 +542,8 @@ namespace Rawr.DPSWarr {
             if (_needDisplayCalcs && Abil_GCDs > 0)
                 GCDUsage += Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + aw.ability.Name + (aw.ability.UsesGCD ? "\n" : "(Doesn't use GCDs)\n");
 
-            _HPS_TTL += aw.HPS;
-            _DPS_TTL += aw.DPS;
+            _HPS_TTL += aw.allHPS;
+            _DPS_TTL += aw.allDPS;
             return aw.ability.GetRageUseOverDur(Abil_GCDs);
         }
         #endregion
@@ -565,7 +559,7 @@ namespace Rawr.DPSWarr {
         protected float CalculateTimeLost(Ability MS)
         {
             _emActs = 0f; //_emRecovery = 0f; _emRecoveryTotal = 0f;
-            TimeLostGDCs = 0;
+            TimeLostGCDs = 0;
             RageGainedWhileMoving = 0; 
 
             float percTimeInMovement = CalculateMovement(MS);
@@ -592,8 +586,8 @@ namespace Rawr.DPSWarr {
                 float HFMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(HF.ability.Activates) : HF.ability.Activates;
                 float HFActualActs = 0f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
-                float EMOldActs = EM.numActivates;
+                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMOldActs = EM.allNumActivates;
                 TimesRooted = 0f;
                 foreach (Impedance r in
 #if RAWR3 || SILVERLIGHT
@@ -619,14 +613,14 @@ namespace Rawr.DPSWarr {
                             timelostwhilerooted += (reducedDur * rootActs * percBZdVsUnBZd * ChanceYouAreRooted)
                                                  + (BaseRootDur * rootActs * (1f - percBZdVsUnBZd) * ChanceYouAreRooted);
                         }
-                        else if (Char.Race == CharacterRace.Human && EMMaxActs - EM.numActivates > 0f)
+                        else if (Char.Race == CharacterRace.Human && EMMaxActs - EM.allNumActivates > 0f)
                         {
                             MaxTimeRegain = Math.Max(0f, (BaseRootDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
+                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
                             float EMNewActs = Math.Min(rootActs, availEMacts);
                             EM.numActivates += EMNewActs;
-                            _emActs = EM.numActivates;
+                            _emActs = EM.allNumActivates;
 
                             //EMActualActs += EMNewActs;
                             // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
@@ -645,12 +639,12 @@ namespace Rawr.DPSWarr {
                 if (_needDisplayCalcs)
                 {
                     GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseRootDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (HF.numActivates > 0 ? HF.numActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + HF.ability.Name + "\n" : "");
-                    GCDUsage += (EM.numActivates - EMOldActs > 0 ? (EM.numActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (HF.allNumActivates > 0 ? HF.allNumActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + HF.ability.Name + "\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
-                TimeLostGDCs += Math.Min(NumGCDs, (BaseRootDur * TimesFeared) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * HF.numActivates) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * _emActs) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseRootDur * TimesFeared) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * HF.allNumActivates) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
                 timelostwhilerooted = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilerooted) : timelostwhilerooted;
                 percTimeInRoot = timelostwhilerooted / FightDuration;
@@ -674,8 +668,8 @@ namespace Rawr.DPSWarr {
                       MaxTimeRegain = 0f,
                       ChanceYouAreStunned = 1f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
-                float EMOldActs = EM.numActivates;
+                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
 #if RAWR3 || SILVERLIGHT
                 foreach (Impedance s in BossOpts.Stuns)
@@ -688,13 +682,13 @@ namespace Rawr.DPSWarr {
                     if (stunActs > 0f)
                     {
                         TimesFeared += stunActs;
-                        if (Char.Race == CharacterRace.Human && EMMaxActs - EM.numActivates > 0f) {
+                        if (Char.Race == CharacterRace.Human && EMMaxActs - EM.allNumActivates > 0f) {
                             MaxTimeRegain = Math.Max(0f, (BaseStunDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
+                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
                             float EMNewActs = Math.Min(stunActs, availEMacts);
                             EM.numActivates += EMNewActs;
-                            _emActs = EM.numActivates;
+                            _emActs = EM.allNumActivates;
 
                             //EMActualActs += EMNewActs;
                             // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
@@ -710,10 +704,10 @@ namespace Rawr.DPSWarr {
                 if (_needDisplayCalcs)
                 {
                     GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseStunDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (EM.numActivates - EMOldActs > 0 ? (EM.numActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseStunDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseStunDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
-                TimeLostGDCs += Math.Min(NumGCDs, (BaseStunDur * TimesFeared) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * _emActs) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseStunDur * TimesFeared) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
                 timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
                 percTimeInStun = timelostwhilestunned / FightDuration;
@@ -742,8 +736,8 @@ namespace Rawr.DPSWarr {
                 float BZMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.ability.Activates) : BZ.ability.Activates;
                 float BZActualActs = 0f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
-                float EMOldActs = EM.numActivates;
+                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
 #if RAWR3 || SILVERLIGHT
                 foreach (Impedance f in BossOpts.Fears)
@@ -767,14 +761,14 @@ namespace Rawr.DPSWarr {
                             timelostwhilefeared += (reducedDur * fearActs * percBZdVsUnBZd * ChanceYouAreFeared)
                                                  + (BaseFearDur * fearActs * (1f - percBZdVsUnBZd) * ChanceYouAreFeared);
                         }
-                        else if (Char.Race == CharacterRace.Human && EMMaxActs - EM.numActivates > 0f)
+                        else if (Char.Race == CharacterRace.Human && EMMaxActs - EM.allNumActivates > 0f)
                         {
                             MaxTimeRegain = Math.Max(0f, (BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.numActivates;
+                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
                             float EMNewActs = Math.Min(fearActs, availEMacts);
                             EM.numActivates += EMNewActs;
-                            _emActs = EM.numActivates;
+                            _emActs = EM.allNumActivates;
 
                             //EMActualActs += EMNewActs;
                             // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
@@ -793,12 +787,12 @@ namespace Rawr.DPSWarr {
                 if (_needDisplayCalcs)
                 {
                     GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseFearDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (BZ.numActivates > 0 ? BZ.numActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.ability.Name + "\n" : "");
-                    GCDUsage += (EM.numActivates - EMOldActs > 0 ? (EM.numActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (BZ.allNumActivates > 0 ? BZ.allNumActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.ability.Name + "\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
-                TimeLostGDCs += Math.Min(NumGCDs, (BaseFearDur * TimesFeared) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * BZ.numActivates) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * _emActs) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseFearDur * TimesFeared) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * BZ.allNumActivates) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
                 timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
                 percTimeInFear = timelostwhilefeared / FightDuration;
@@ -857,7 +851,7 @@ namespace Rawr.DPSWarr {
                 float ChargeMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.ability.Activates) : CH.ability.Activates;
                 if (CombatFactors.FuryStance && HF.ability.Validated)
                 {
-                    ChargeMaxActs += HF.ability.Activates - HF.numActivates;
+                    ChargeMaxActs += HF.ability.Activates - HF.allNumActivates;
                 }
                 float ChargeActualActs = 0f;
                 float timelostwhilemoving = 0f;
@@ -897,11 +891,11 @@ namespace Rawr.DPSWarr {
                 }
                 float actsCharge = ChargeActualActs;
                 
-                TimeLostGDCs += Math.Min(NumGCDs, (BaseMoveDur * moveGCDs) / LatentGCD);
-                TimeLostGDCs -= Math.Min(TimeLostGDCs, (reducedDur * actsCharge) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseMoveDur * moveGCDs) / LatentGCD);
+                TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * actsCharge) / LatentGCD);
                 CH.numActivates = actsCharge;
                 float actsHF = 0f;
-                if (CH.numActivates > CH.ability.Activates) actsHF += (CH.numActivates - CH.ability.Activates);
+                if (CH.allNumActivates > CH.ability.Activates) actsHF += (CH.allNumActivates - CH.ability.Activates);
                 HF.numActivates += actsHF;
                 if (_needDisplayCalcs)
                 {

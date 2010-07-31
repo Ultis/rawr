@@ -23,7 +23,7 @@ using Rawr.Base;
 
 namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
-        private bool _loadingCalculationOptions = false;
+        public bool _loadingCalculationOptions = false;
         CalculationOptionsDPSWarr calcOpts = null;
         /// <summary>This Model's local bosslist</summary>
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
