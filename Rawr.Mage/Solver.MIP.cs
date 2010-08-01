@@ -696,6 +696,21 @@ namespace Rawr.Mage
         {
             AnalyzeSolution();
 
+            if (segmentCooldowns && advancedConstraintsLevel >= 1)
+            {
+                resolution = lowResolution;
+                if (needsQuadratic)
+                {
+                    // evocation
+                    if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                    if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                    {
+                        if (!ValidateHastedEvocation()) return false;
+                        if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    }
+                }
+            }
+
             if (integralMana)
             {
                 if (manaPotionAvailable && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
@@ -751,12 +766,15 @@ namespace Rawr.Mage
                 }
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120f, true, ManaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
-                // evocation
-                if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
-                if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                if (!needsQuadratic)
                 {
-                    if (!ValidateHastedEvocation()) return false;
-                    if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    // evocation
+                    if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                    if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                    {
+                        if (!ValidateHastedEvocation()) return false;
+                        if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    }
                 }
                 // heroism
                 if (heroismAvailable && !ValidateCooldown((int)StandardEffect.Heroism, 40, -1)) return false;
@@ -776,6 +794,18 @@ namespace Rawr.Mage
             if (segmentCooldowns && advancedConstraintsLevel >= 2)
             {
                 resolution = highResolution;
+                if (needsQuadratic)
+                {
+                    // evocation
+                    if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                    if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                    {
+                        if (!ValidateHastedEvocation()) return false;
+                        if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    }
+                    // mana
+                    if (evocationAvailable && !ValidateEvocation()) return false;
+                }
                 // drums
                 if (berserkingAvailable && !ValidateCooldown((int)StandardEffect.Berserking, 10.0, 180.0, true, 10.0, rowSegmentBerserking, VariableType.None)) return false;
                 // make sure all cooldowns are tightly packed and not fragmented
@@ -808,15 +838,18 @@ namespace Rawr.Mage
                 }
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown((int)StandardEffect.ManaGemEffect, ManaGemEffectDuration, 120f, true, ManaGemEffectDuration, rowSegmentManaGemEffect, VariableType.None)) return false;
-                // evocation
-                if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
-                if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                if (!needsQuadratic)
                 {
-                    if (!ValidateHastedEvocation()) return false;
-                    if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    // evocation
+                    if (evocationAvailable && !ValidateCooldown((int)StandardEffect.Evocation, EvocationDuration, EvocationCooldown, false, 0.0, rowSegmentEvocation, VariableType.None)) return false;
+                    if (evocationAvailable && CalculationOptions.EnableHastedEvocation)
+                    {
+                        if (!ValidateHastedEvocation()) return false;
+                        if (icyVeinsAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIV, EvocationDurationIV, EvocationCooldown, VariableType.EvocationIV, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins)) return false;
+                    }
+                    // mana
+                    if (evocationAvailable && !ValidateEvocation()) return false;
                 }
-                // mana
-                if (evocationAvailable && !ValidateEvocation()) return false;
                 if (manaGemEffectAvailable && !ValidateManaGemEffect()) return false;
                 // heroism
                 if (heroismAvailable && !ValidateCooldown((int)StandardEffect.Heroism, 40, -1)) return false;
@@ -4956,6 +4989,77 @@ namespace Rawr.Mage
                     cooldownPresent[0][seg] = ivCount[seg] > eps;
                     cooldownPresent[1][seg] = heroCount[seg] > eps;
                     cooldownPresent[2][seg] = ivCount[seg] + heroCount[seg] > eps;
+                }
+            }
+
+            if (segmentMana)
+            {
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    if (evoCount[seg] > eps && (seg + 1 < SegmentList.Count && evoCount[seg + 1] > eps))
+                    {
+                        // if we're using mana segmentation then there can be nothing else in seg.1 or seg+1.0
+
+                        bool validCrossing = true;
+                        for (int index = 0; index < SolutionVariable.Count; index++)
+                        {
+                            if (SolutionVariable[index].Segment == seg && SolutionVariable[index].ManaSegment == 1)
+                            {
+                                CastingState state = SolutionVariable[index].State;
+                                if (state == null || !state.Evocation)
+                                {
+                                    if (solution[index] > eps)
+                                    {
+                                        validCrossing = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (SolutionVariable[index].Segment == seg + 1 && SolutionVariable[index].ManaSegment == 0)
+                            {
+                                if (solution[index] > eps)
+                                {
+                                    validCrossing = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!validCrossing)
+                        {
+                            // either there is evo crossing segment and there is nothing else in between
+                            // or evo is not crossing here, which means either no evo at seg or no evo at seg+1
+                            SolverLP branchlp = lp.Clone();
+                            if (branchlp.Log != null) branchlp.Log.AppendLine("Remove evocation at " + seg);
+                            DisableCooldown(branchlp, (int)StandardEffect.Evocation, seg);
+                            branchlp.ForceRecalculation(true);
+                            HeapPush(branchlp);
+
+                            branchlp = lp.Clone();
+                            if (branchlp.Log != null) branchlp.Log.AppendLine("Remove evocation at " + (seg + 1));
+                            DisableCooldown(branchlp, (int)StandardEffect.Evocation, seg + 1);
+                            branchlp.ForceRecalculation(true);
+                            HeapPush(branchlp);
+
+                            if (lp.Log != null) lp.Log.AppendLine("Fix evocation crossing at " + seg + "-" + (seg + 1));
+                            for (int index = 0; index < SolutionVariable.Count; index++)
+                            {
+                                if (SolutionVariable[index].Segment == seg && SolutionVariable[index].ManaSegment == 1)
+                                {
+                                    CastingState state = SolutionVariable[index].State;
+                                    if (state == null || !state.Evocation)
+                                    {
+                                        lp.EraseColumn(index);
+                                    }
+                                }
+                                else if (SolutionVariable[index].Segment == seg + 1 && SolutionVariable[index].ManaSegment == 0)
+                                {
+                                    lp.EraseColumn(index);
+                                }
+                            }
+                            lp.ForceRecalculation(true);
+                            HeapPush(lp);
+                        }
+                    }
                 }
             }
 

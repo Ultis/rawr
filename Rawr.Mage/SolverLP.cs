@@ -370,7 +370,7 @@ namespace Rawr.Mage
             {
                 if (needsQuadratic)
                 {
-                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, needsDual, maximizeColumn, targetValue);
+                    compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, Qk, needsDual, maximizeColumn, targetValue, solver.CalculationOptions.GlobalRestarts);
                 }
                 else if (needsDual)
                 {
@@ -420,7 +420,7 @@ namespace Rawr.Mage
             this.Qk = k;
             this.maximizeColumn = maximizeColumn;
             this.targetValue = targetValue * arraySet.rowScale[cRows];
-            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, skipLinear, maximizeColumn, this.targetValue);
+            compactSolution = lp.SolvePrimalQuadratic(mpsRow, sort, k, skipLinear, maximizeColumn, this.targetValue, solver.CalculationOptions.GlobalRestarts);
             UnscaleSolution();
             needsQuadratic = true;
         }

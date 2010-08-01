@@ -85,7 +85,7 @@ namespace Rawr.Optimizer
         private static Random _randSeed = new Random();
 
         [ThreadStatic]
-		private static Random _rand;
+        private static Random _rand;
 
         protected Random Rnd
         {
@@ -429,11 +429,11 @@ namespace Rawr.Optimizer
             } while (true);
         }
 
-		private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
-		{
-			//Begin Genetic
-			int i1, i2;
-			this.bestValue = bestValue = -10000000;
+        private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
+        {
+            //Begin Genetic
+            int i1, i2;
+            this.bestValue = bestValue = -10000000;
             this.bestValuation = bestValuation = default(TValuation);
             injected = false;
             // verify inject individual
@@ -442,14 +442,14 @@ namespace Rawr.Optimizer
                 injectIndividual = null;
             }
 
-			popSize = _thoroughness;
+            popSize = _thoroughness;
             islandSize = 20;
             islandStagnationLimit = 50;
             islandCount = (popSize - 1) / islandSize + 1;
-			int cycleLimit = _thoroughness;
+            int cycleLimit = _thoroughness;
             population = new TIndividual[popSize];
             popCopy = new TIndividual[popSize];
-			values = new float[popSize];
+            values = new float[popSize];
             float[] minIsland = new float[islandCount];
             float[] maxIsland = new float[islandCount];
             float[] bestIsland = new float[islandCount];
@@ -460,39 +460,39 @@ namespace Rawr.Optimizer
                 bestIsland[i] = -10000000;
             }
             share = new float[popSize];
-			float s, sum;
+            float s, sum;
             bestIndividual = null;
-			Random rand = Rnd;
+            Random rand = Rnd;
 
-			if (_thoroughness > 1)
-			{
-			    for (int i = 0; i < popSize; i++)
-			    {
-				    population[i] = BuildRandomIndividual(null);
-			    }
-			}
-			else
-			{
-				bestIndividual = injectIndividual;
+            if (_thoroughness > 1)
+            {
+                for (int i = 0; i < popSize; i++)
+                {
+                    population[i] = BuildRandomIndividual(null);
+                }
+            }
+            else
+            {
+                bestIndividual = injectIndividual;
                 if (bestIndividual == null)
                 {
                     bestIndividual = BuildRandomIndividual(null);
                 }
                 this.bestValue = GetOptimizationValue(bestIndividual);
-			}
+            }
 
-			noImprove = 0;
-			while (noImprove < cycleLimit)
-			{
-				if (_thoroughness > 1)
-				{
+            noImprove = 0;
+            while (noImprove < cycleLimit)
+            {
+                if (_thoroughness > 1)
+                {
                     if (cancellationPending)
                     {
                         population = null;
                         values = null;
                         return null;
                     }
-					ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), this.bestValue);
+                    ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), this.bestValue);
 
                     for (int i = 0; i < islandCount; i++)
                     {
@@ -500,8 +500,8 @@ namespace Rawr.Optimizer
                         maxIsland[i] = -10000000;
                         islandNoImprove[i]++;
                     }
-				    //minv = 10000000;
-				    //maxv = -10000000;
+                    //minv = 10000000;
+                    //maxv = -10000000;
                     if (ThreadPoolValuation)
                     {
                         threadPoolStarted = 0;
@@ -530,8 +530,8 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
-				    for (int i = 0; i < popSize; i++)
-				    {
+                    for (int i = 0; i < popSize; i++)
+                    {
                         int island = i / islandSize;                        
                         if (values[i] < minIsland[island]) minIsland[island] = values[i];
                         if (values[i] > maxIsland[island])
@@ -544,7 +544,7 @@ namespace Rawr.Optimizer
                             bestIsland[island] = values[i];
                             islandNoImprove[island] = 0;
                         }
-				    }
+                    }
                     for (int island = 0; island < islandCount; island++)
                     {
                         sum = 0;
@@ -575,12 +575,12 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
-				}
+                }
 
-				noImprove++;
+                noImprove++;
 
                 if (_thoroughness > 1 && noImprove < cycleLimit)
-				{
+                {
                     TIndividual[] swap = population;
                     population = popCopy;
                     popCopy = swap;
@@ -658,7 +658,7 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
-				}
+                }
                 else if (_thoroughness > 1 && injectIndividual != null && !injected && injectValue > this.bestValue)
                 {
                     population[popSize - 1] = BuildCopyIndividual(injectIndividual, population[popSize - 1]);
@@ -670,7 +670,7 @@ namespace Rawr.Optimizer
                     //last try, look for single direct upgrades
                     LookForDirectItemUpgrades();
                 }
-			}
+            }
 
             //if (this.bestValue == 0)
             //{
@@ -692,7 +692,7 @@ namespace Rawr.Optimizer
             share = null;
 
             return PostProcess(ret);
-		}
+        }
 
         protected virtual TIndividual PostProcess(TIndividual bestIndividual)
         {
@@ -831,11 +831,11 @@ namespace Rawr.Optimizer
             } while (true);
         }
 
-		protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, TItem[] itemList, out TValuation bestValuation)
-		{
+        protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, TItem[] itemList, out TValuation bestValuation)
+        {
             bestValuation = default(TValuation);
-			float value;
-			bool foundUpgrade = false;
+            float value;
+            bool foundUpgrade = false;
             if (itemList == null)
             {
                 itemList = (TItem[])GetItems(bestIndividual).Clone();
@@ -890,10 +890,10 @@ namespace Rawr.Optimizer
                     }
                 }
             }
-			if (foundUpgrade)
-				return new KeyValuePair<float, TIndividual>(best, bestIndividual);
-			return new KeyValuePair<float, TIndividual>(float.NegativeInfinity, null);
-		}
+            if (foundUpgrade)
+                return new KeyValuePair<float, TIndividual>(best, bestIndividual);
+            return new KeyValuePair<float, TIndividual>(float.NegativeInfinity, null);
+        }
 
         protected virtual float GetOptimizationValue(TIndividual individual)
         {
@@ -940,7 +940,7 @@ namespace Rawr.Optimizer
         protected delegate TItem GeneratorItemSelector(int slot, TItem[] items);
 
         protected virtual TIndividual GeneratorBuildIndividual(GeneratorItemSelector itemSelector, TIndividual recycledIndividual)
-		{
+        {
             TItem[] item = GetRecycledItems(recycledIndividual) ?? new TItem[slotCount];
             int validatorIndex = 0;
             for (int slot = 0; slot < slotCount; slot++)
@@ -966,7 +966,7 @@ namespace Rawr.Optimizer
             }
 
             return GenerateIndividual(item, true, recycledIndividual);
-		}
+        }
 
         protected virtual TIndividual BuildCopyIndividual(TIndividual individual, TIndividual recycledIndividual)
         {
@@ -987,15 +987,15 @@ namespace Rawr.Optimizer
             return GeneratorBuildIndividual(GetRandomItem, recycledIndividual);
         }
 
-		protected virtual TIndividual BuildChildIndividual(TIndividual father, TIndividual mother, TIndividual recycledIndividual)
-		{
+        protected virtual TIndividual BuildChildIndividual(TIndividual father, TIndividual mother, TIndividual recycledIndividual)
+        {
             return GeneratorBuildIndividual(
                 delegate(int slot, TItem[] items)
                 {
                     return Rnd.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                 },
                 recycledIndividual);
-		}
+        }
 
         /// <summary>
         /// This is funtions decides wether we take a new character or drop it
@@ -1059,11 +1059,11 @@ namespace Rawr.Optimizer
         }
 
         protected virtual TIndividual BuildMutantIndividual(TIndividual parent, TIndividual recycledIndividual)
-		{
+        {
             Random rand = Rnd;
-			int targetMutations = 2;
-			while (targetMutations < 32 && rand.NextDouble() < 0.75d) targetMutations++;
-			double mutationChance = (double)targetMutations / 32d;
+            int targetMutations = 2;
+            while (targetMutations < 32 && rand.NextDouble() < 0.75d) targetMutations++;
+            double mutationChance = (double)targetMutations / 32d;
 
             return GeneratorBuildIndividual(
                 delegate(int slot, TItem[] items)
@@ -1078,14 +1078,14 @@ namespace Rawr.Optimizer
                     }
                 },
                 recycledIndividual);
-		}
+        }
 
-		protected virtual TIndividual BuildSingleItemSwapIndividual(TIndividual baseIndividual, int replaceSlot, TItem replaceItem)
-		{
+        protected virtual TIndividual BuildSingleItemSwapIndividual(TIndividual baseIndividual, int replaceSlot, TItem replaceItem)
+        {
             TItem[] item = new TItem[slotCount];
             Array.Copy(GetItems(baseIndividual), item, slotCount);
             item[replaceSlot] = replaceItem;
             return GenerateIndividual(item, true, null);
-		}
+        }
     }
 }

@@ -860,138 +860,66 @@ namespace Rawr.Mage
             return -v * Qk;
         }
 
+        public double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear, int maximizeColumn, double targetValue, int globalRestarts)
+        {
+            if (hardInfeasibility) return new double[cols + 1];
+            double[] ret = null;
+            double[] bestret = null;
+
+            if (arraySet.cg_p == null || arraySet.cg_p.Length < cols + rows)
+            {
+                arraySet.RecreateCGArrays();
+            }
+
+            this.mpsRow = mpsRow;
+            this.sort = sort;
+            this.Qk = k;
+            if (_S == null || _S.Length < cols)
+            {
+                _S = new int[cols];
+            }
+
 #if SILVERLIGHT
-        public double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear, int maximizeColumn, double targetValue)
-        {
-            if (hardInfeasibility) return new double[cols + 1];
-            double[] ret = null;
-
-            if (arraySet.cg_p == null || arraySet.cg_p.Length < cols + rows)
             {
-                arraySet.RecreateCGArrays();
-            }
+                this.a = arraySet.SparseMatrixData;
+                this.U = arraySet.LU_U;
+                this.d = arraySet._d;
+                this.x = arraySet._x;
+                this.w = arraySet._w;
+                this.ww = arraySet._ww;
+                this.wd = arraySet._wd;
+                this.c = arraySet._c;
+                this.u = arraySet._u;
+                this.cost = arraySet._cost;
+                this.sparseValue = arraySet.SparseMatrixValue;
+                this.D = arraySet.extraConstraints;
+                this.B = _B;
+                this.V = _V;
+                this.S = _S;
+                this.OSB = arraySet._orderedSuperbasis;
+                this.sparseRow = arraySet.SparseMatrixRow;
+                this.sparseCol = arraySet.SparseMatrixCol;
+                this.flags = _flags;
+                this.lb = _lb;
+                this.ub = _ub;
+                this.mb = _mb;
+                this.pD = arraySet._pD;
+                this.qx = arraySet._qx;
+                this.qv = arraySet._qv;
+                this.vd = arraySet._vd;
+                this.spellDps = arraySet._spellDps;
+                this.cg_p = arraySet.cg_p;
+                this.cg_x = arraySet.cg_x;
+                this.cg_w = arraySet.cg_w;
+                this.cg_r = arraySet.cg_r;
+                this.cg_qp = arraySet.cg_qp;
+                this.cg_rr = arraySet.cg_rr;
+                this.cg_ww = arraySet.cg_ww;
 
-            this.mpsRow = mpsRow;
-            this.sort = sort;
-            this.Qk = k;
-            if (_S == null || _S.Length < cols)
-            {
-                _S = new int[cols];
-            }
+                SetupExtraConstraints();
 
-            this.a = arraySet.SparseMatrixData;
-            this.U = arraySet.LU_U;
-            this.d = arraySet._d;
-            this.x = arraySet._x;
-            this.w = arraySet._w;
-            this.ww = arraySet._ww;
-            this.wd = arraySet._wd;
-            this.c = arraySet._c;
-            this.u = arraySet._u;
-            this.cost = arraySet._cost;
-            this.sparseValue = arraySet.SparseMatrixValue;
-            this.D = arraySet.extraConstraints;
-            this.B = _B;
-            this.V = _V;
-            this.S = _S;
-            this.OSB = arraySet._orderedSuperbasis;
-            this.sparseRow = arraySet.SparseMatrixRow;
-            this.sparseCol = arraySet.SparseMatrixCol;
-            this.flags = _flags;
-            this.lb = _lb;
-            this.ub = _ub;
-            this.mb = _mb;
-            this.pD = arraySet._pD;
-            this.qx = arraySet._qx;
-            this.qv = arraySet._qv;
-            this.vd = arraySet._vd;
-            this.spellDps = arraySet._spellDps;
-            this.cg_p = arraySet.cg_p;
-            this.cg_x = arraySet.cg_x;
-            this.cg_w = arraySet.cg_w;
-            this.cg_r = arraySet.cg_r;
-            this.cg_qp = arraySet.cg_qp;
-            this.cg_rr = arraySet.cg_rr;
-            this.cg_ww = arraySet.cg_ww;
-
-            SetupExtraConstraints();
-
-            lu.BeginSafe();
-            if (maximizeColumn > -1)
-            {
-                ret = SolvePrimalQuadraticCGReciprocalUnsafe(maximizeColumn, targetValue);
-            }
-            else
-            {
-                if (!skipLinear)
-                {
-                    ret = SolvePrimalUnsafe(false, false, false, true);
-                }
-                ret = SolvePrimalQuadraticCGUnsafe();
-            }
-            lu.EndUnsafe();
-
-            this.a = null;
-            this.U = null;
-            this.d = null;
-            this.x = null;
-            this.w = null;
-            this.ww = null;
-            this.wd = null;
-            this.c = null;
-            this.u = null;
-            this.cost = null;
-            this.sparseValue = null;
-            this.D = null;
-            this.pD = null;
-            this.B = null;
-            this.V = null;
-            this.S = null;
-            this.OSB = null;
-            this.sparseRow = null;
-            this.sparseCol = null;
-            this.flags = null;
-            this.lb = null;
-            this.ub = null;
-            this.mb = null;
-            this.qx = null;
-            this.qv = null;
-            this.vd = null;
-            this.spellDps = null;
-            this.cg_p = null;
-            this.cg_x = null;
-            this.cg_w = null;
-            this.cg_r = null;
-            this.cg_qp = null;
-            this.cg_rr = null;
-            this.cg_ww = null;
-
-            return ret;
-        }
+                lu.BeginSafe();
 #else
-        public unsafe double[] SolvePrimalQuadratic(int mpsRow, int[] sort, double k, bool skipLinear, int maximizeColumn, double targetValue)
-        {
-            if (hardInfeasibility) return new double[cols + 1];
-            double[] ret = null;
-
-            if (arraySet.cg_p == null || arraySet.cg_p.Length < cols + rows)
-            {
-                arraySet.RecreateCGArrays();
-            }
-
-            this.mpsRow = mpsRow;
-            this.sort = sort;
-            /*sortinv = new int[cols];
-            for (int i = 0; i < cols; i++)
-            {
-                sortinv[sort[i]] = i;
-            }*/
-            this.Qk = k;
-            if (_S == null || _S.Length < cols)
-            {
-                _S = new int[cols];
-            }
-
             fixed (double** pD = arraySet._pD)
             fixed (double* a = arraySet.SparseMatrixData, U = arraySet.LU_U, sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2, d = arraySet._d, x = arraySet._x, w = arraySet._w, ww = arraySet._ww, wd = arraySet._wd, qx = arraySet._qx, qv = arraySet._qv, vd = arraySet._vd, c = arraySet._c, u = arraySet._u, cost = arraySet._cost, spellDps = arraySet._spellDps, costw = arraySet._costWorking, sparseValue = arraySet.SparseMatrixValue, D = arraySet.extraConstraints, lb = _lb, ub = _ub, mb = _mb, cg_p = arraySet.cg_p, cg_x = arraySet.cg_x, cg_w = arraySet.cg_w, cg_r = arraySet.cg_r, cg_qp = arraySet.cg_qp, cg_rr = arraySet.cg_rr, cg_ww = arraySet.cg_ww)
             fixed (int* B = _B, V = _V, S = _S, OSB = arraySet._orderedSuperbasis, sparseRow = arraySet.SparseMatrixRow, sparseCol = arraySet.SparseMatrixCol, P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart, flags = _flags)
@@ -1034,6 +962,11 @@ namespace Rawr.Mage
                 SetupExtraConstraints();
 
                 lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
+#endif
+                int step = 10;
+                double lastScore = double.NegativeInfinity;
+                List<int> perturbColumns = null;
+            GLOBALRESTART:
                 if (maximizeColumn > -1)
                 {
                     ret = SolvePrimalQuadraticCGReciprocalUnsafe(maximizeColumn, targetValue);
@@ -1042,9 +975,40 @@ namespace Rawr.Mage
                 {
                     if (!skipLinear)
                     {
+                        // we have to fix flags in case we're doing MIP and we're resolving with linear
+                        for (int i = 0; i < super; i++)
+                        {
+                            int col = S[i];
+                            if ((flags[col] & flagLB) != 0)
+                            {
+                                flags[col] = (flags[col] & ~flagN) | flagNLB;
+                            }
+                            else
+                            {
+                                flags[col] = (flags[col] & ~flagN) | flagNUB;
+                            }
+                        }
+                        super = 0;
                         ret = SolvePrimalUnsafe(false, false, false, true);
                     }
                     ret = SolvePrimalQuadraticCGUnsafe();
+                }
+                double score = ret[ret.Length - 1];
+                if (bestret == null || score > bestret[bestret.Length - 1])
+                {
+                    bestret = ret;
+                }
+                if (globalRestarts > 0 && score != 0.0)
+                {
+                    /*if (Math.Abs(score - lastScore) < epsPrimal)
+                    {
+                        step *= 2;
+                    }*/
+                    lastScore = score;
+                    skipLinear = true;
+                    GlobalRestart2(step, ref perturbColumns);
+                    globalRestarts--;
+                    goto GLOBALRESTART;
                 }
                 lu.EndUnsafe();
 
@@ -1084,9 +1048,273 @@ namespace Rawr.Mage
                 this.cg_ww = null;
             }
 
-            return ret;
+            return bestret;
         }
-#endif
+
+        private void GlobalRestart2(int steps, ref List<int> perturbColumns)
+        {
+            Random rnd = new Random();
+
+            if (perturbColumns == null)
+            {
+                perturbColumns = new List<int>();
+                for (int col = 0; col < cols; col++)
+                {
+                    if (spellDps[col] == 0.0 && a[col * baseRows + mpsRow] <= 0.0)
+                    {
+                        perturbColumns.Add(col);
+                    }
+                }
+            }
+
+            while (steps > 0)
+            {
+                steps--;
+
+                // pick a random nonbasic mana variable
+                int col = perturbColumns[rnd.Next(perturbColumns.Count)];
+                int maxj = Array.IndexOf(_V, col);
+                if (maxj == -1)
+                {
+                    continue;
+                }
+                double direction;
+
+                if ((flags[col] & flagNLB) != 0)
+                {
+                    S[super] = col;
+                    super++;
+                    flags[col] = (flags[col] & ~flagN) | flagNMid;
+                    osbDirty = true;
+
+                    direction = 1.0;
+                }
+                else if ((flags[col] & flagNUB) != 0)
+                {
+                    S[super] = col;
+                    super++;
+                    flags[col] = (flags[col] & ~flagN) | flagNMid;
+                    osbDirty = true;
+
+                    direction = -1.0;
+                }
+                else
+                {
+                    if (rnd.Next(2) == 0)
+                    {
+                        direction = 1.0;
+                    }
+                    else
+                    {
+                        direction = -1.0;
+                    }
+                }
+
+                // get blocking basic
+                ComputeBasisStep(maxj);
+
+                double dist;
+                if (direction > 0.0)
+                {
+                    dist = ub[col] - mb[col];
+                }
+                else
+                {
+                    dist = mb[col] - lb[col];
+                }
+                if (dist > 100.0)
+                {
+                    dist = 100.0;
+                }
+                double minr = dist * rnd.NextDouble();
+
+                if (minr > 0.0)
+                {
+                    minr *= direction;
+                    mb[col] += minr;
+                    for (int i = 0; i < rows; i++)
+                    {
+                        mb[B[i]] -= minr * w[i];
+                    }
+                }
+            }
+        }
+
+
+        private void GlobalRestart(int steps)
+        {
+            Random rnd = new Random();
+
+            Decompose();
+
+            if (lu.Singular)
+            {
+                PatchSingularBasis();
+                Decompose();
+            }
+
+            ComputePrimalSolution(false);
+            UpdateMB();
+
+            while (steps > 0)
+            {
+                steps--;
+
+                // pick a random nonbasic mana variable
+                int maxj;
+                int col;
+                do
+                {
+                    maxj = rnd.Next(cols);
+                    col = V[maxj];
+                } while (a[col * baseRows + mpsRow] > 0.0);
+                double direction;
+                if ((flags[col] & flagNLB) != 0)
+                {
+                    direction = 1.0;
+                }
+                else if ((flags[col] & flagNUB) != 0)
+                {
+                    direction = -1.0;
+                }
+                else
+                {
+                    if (rnd.Next(2) == 0)
+                    {
+                        direction = 1.0;
+                    }
+                    else
+                    {
+                        direction = -1.0;
+                    }
+                }
+
+                // get blocking basic
+                ComputeBasisStep(maxj);
+
+                int mini = -1;
+                double minr = double.PositiveInfinity;
+                int bound = flagNMid;
+                bool changeBasis = false;
+
+                if (!SelectReducedGradientOutgoing(direction, epsPrimal, ref mini, ref minr, ref bound))
+                {
+                    return;
+                }
+
+                double dist;
+                if (direction > 0.0)
+                {
+                    dist = ub[col] - mb[col];
+                }
+                else
+                {
+                    dist = mb[col] - lb[col];
+                }
+                if (double.IsInfinity(dist))
+                {
+                    continue;
+                }
+                if (minr >= dist - epsZero)
+                {
+                    // just a bound swap
+                    minr = dist;
+                    if ((flags[col] & flagNMid) != 0)
+                    {
+                        int s = Array.IndexOf(_S, col);
+                        S[s] = S[super - 1];
+                        super--;
+                        osbDirty = true;
+                    }
+                    if (direction > 0.0)
+                    {
+                        flags[col] = (flags[col] & ~flagN) | flagNUB;
+                    }
+                    else
+                    {
+                        flags[col] = (flags[col] & ~flagN) | flagNLB;
+                    }
+                }
+                else if (mini == -1)
+                {
+                    return;
+                }
+                else
+                {
+                    // we hit basic bound, update basis
+                    changeBasis = true;
+                    osbDirty = true;
+
+                    if ((flags[col] & flagNMid) != 0)
+                    {
+                        int s = Array.IndexOf(_S, col);
+                        S[s] = S[super - 1];
+                        super--;
+                        osbDirty = true;
+                    }
+                }
+
+                if (minr > 0.0)
+                {
+                    minr *= direction;
+                    mb[col] += minr;
+                    for (int i = 0; i < rows; i++)
+                    {
+                        mb[B[i]] -= minr * w[i];
+                    }
+                }
+
+                // swap basis
+                if (changeBasis)
+                {
+                    double pivot;
+                    lu.Update(ww, mini, out pivot);
+                    if (lu.Singular || Math.Abs(w[mini] - pivot) > 1.0e-6 * Math.Abs(w[mini]) + epsZero)
+                    {
+                        // we aren't making the swap
+                        // make sure to properly add superbasic back to S if we cancelled swap
+                        col = V[maxj];
+                        if ((flags[col] & flagNMid) != 0)
+                        {
+                            S[super] = col;
+                            super++;
+                        }
+
+                        Decompose();
+
+                        if (lu.Singular)
+                        {
+                            PatchSingularBasis();
+                            Decompose();
+                        }
+
+                        ComputePrimalSolution(false);
+                        UpdateMB();
+                        continue;
+                    }
+
+                    int k = B[mini];
+                    B[mini] = V[maxj];
+                    V[maxj] = k;
+                    flags[B[mini]] = (flags[B[mini]] | flagB) & ~flagN;
+                    flags[V[maxj]] = (flags[V[maxj]] | bound) & ~flagB;
+
+                    if (steps > 0 && steps % 50 == 0)
+                    {
+                        Decompose();
+
+                        if (lu.Singular)
+                        {
+                            PatchSingularBasis();
+                            Decompose();
+                        }
+
+                        ComputePrimalSolution(false);
+                        UpdateMB();
+                    }
+                }
+            }
+        }
 
         private void Decompose()
         {
@@ -1168,7 +1396,7 @@ namespace Rawr.Mage
                 if ((flags[B[singularColumn]] & flagNMid) != 0)
                 {
                     int s = Array.IndexOf(_S, B[singularColumn]);
-                    _S[s] = S[super - 1];
+                    S[s] = S[super - 1];
                     super--;
                 }
                 flags[B[singularColumn]] = (flags[B[singularColumn]] | flagB) & ~flagN & ~flagDis;
@@ -1715,6 +1943,40 @@ namespace Rawr.Mage
             return maxj;
         }
 
+        private int SelectPrimalIncomingBoundary(out double direction, bool prepareForDual)
+        {
+            double maxc = (prepareForDual) ? epsDualI : epsDual;
+            int maxj = -1;
+            direction = 0.0;
+            double dir = 0.0;
+            for (int j = 0; j < cols; j++)
+            {
+                int col = V[j];
+                double costj = 0.0;
+                if ((flags[col] & flagNLB) != 0)
+                {
+                    costj = c[j];
+                    dir = 1.0;
+                }
+                else if ((flags[col] & flagNUB) != 0)
+                {
+                    costj = -c[j];
+                    dir = -1.0;
+                }
+                else if ((flags[col] & flagNMid) != 0)
+                {
+                    continue;
+                }
+                if (costj > maxc && (flags[col] & flagDis) == 0 && (flags[col] & flagFix) == 0)
+                {
+                    maxc = costj;
+                    maxj = j;
+                    direction = dir;
+                }
+            }
+            return maxj;
+        }
+
         private int SelectPrimalAny()
         {
             double maxc = double.NegativeInfinity;
@@ -1839,7 +2101,7 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private int CheckTermination()
+        private int CheckTermination(out double direction)
         {
             double dir = 0.0;
             for (int j = 0; j < cols; j++)
@@ -1876,10 +2138,12 @@ namespace Rawr.Mage
 
                     if (0.5 * c[j] * dir * t > epsPrimal)
                     {
+                        direction = dir;
                         return j;
                     }
                 }
             }
+            direction = 0.0;
             return -1;
         }
 
@@ -4213,12 +4477,16 @@ namespace Rawr.Mage
             osbDirty = false;
         }
 
-        private bool ComputeCGStep(double eps, out double maxAlpha, bool useReducedGradient)
+        private bool ComputeCGStep(double eps, out double maxAlpha, bool useReducedGradient, out bool needsReducedGradientStep)
         {
             // compute CG step for superbasic variables
             // see ftp://ftp.numerical.rl.ac.uk/pub/reports/ghnRAL98069.ps.gz
 
             // INITIALIZE
+            int hardLimit = super * 5;
+            needsReducedGradientStep = false;
+
+        RESTART:
 
             //x = 0
             Zero(cg_x, cols + rows);
@@ -4254,6 +4522,35 @@ namespace Rawr.Mage
             else
             {
                 NullSpaceReduce(cg_w, cg_r);
+            }
+
+            // verify gradient on boundary, if some superbasic is on boundary and has gradient in
+            // opposite direction we'll want to remove it from superbasic, so that the truncate tests
+            // are meaningful
+            for (int i = 0; i < super; i++)
+            {
+                int col = S[i];
+
+                if (ub[col] - mb[col] < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow)
+                {
+                    if (ub[col] - (mb[col] + cg_w[col]) < -Math.Abs(ub[col]) * epsPrimalRel - epsPrimalLow)
+                    {
+                        cg_x[col] = 1.0;
+                        NullSpaceExpand(cg_x);
+                        maxAlpha = double.PositiveInfinity;
+                        return true;
+                    }
+                }
+                if (mb[col] - lb[col] < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow)
+                {
+                    if ((mb[col] + cg_w[col]) - lb[col] < -Math.Abs(lb[col]) * epsPrimalRel - epsPrimalLow)
+                    {
+                        cg_x[col] = -1.0;
+                        NullSpaceExpand(cg_x);
+                        maxAlpha = double.PositiveInfinity;
+                        return true;
+                    }
+                }
             }
 
             //p = w
@@ -4293,6 +4590,7 @@ namespace Rawr.Mage
 
             double minrtw = rtw;
             double startrtw = rtw;
+            int minstep = -1;
 
             int step = 0;
 
@@ -4321,12 +4619,9 @@ namespace Rawr.Mage
                         // definitely negative curvature
                         // use this as direction for line search until we hit boundary
                         // determine direction based on sign of gradient along this direction
-                        double grad = 0.0;
-                        for (int i = 0; i < osbStructural; i++)
-                        {
-                            int col = OSB[i];
-                            grad += (cost[col] - Qk * qx[col]) * cg_p[col];
-                        }
+                        // normalize size
+                        NormalizeCGStep(cg_p);
+                        double grad = ComputeGradient(cg_p);
                         if (grad < -limit)
                         {
                             // negative gradient, we should use the opposite direction
@@ -4344,6 +4639,31 @@ namespace Rawr.Mage
                                 cg_x[col] = cg_p[col];
                             }
                         }
+                        // verify that the selected direction has correct direction on boundary
+                        // otherwise we're in danger of infinite loop
+                        if (TrunkateBoundary(cg_x))
+                        {
+                            // we have to reverify that this is still direction of negative gradient
+                            QuadraticQOSB(cg_x, cg_qp);
+                            pqp = 0.0;
+                            for (int i = 0; i < osbStructural; i++)
+                            {
+                                int col = OSB[i];
+                                pqp += cg_qp[col] * cg_x[col];
+                            }
+                            pqp *= Qk;
+
+                            grad = ComputeGradient(cg_x);
+
+                            if (pqp > -limit || grad < -limit)
+                            {
+                                // we have a negative descent, but we can't make it feasible easily
+                                // in this case we have to fall back to reduced gradient step
+                                // so the we move into interior away from boundary
+                                needsReducedGradientStep = true;
+                                return false;
+                            }
+                        }
                         maxAlpha = double.PositiveInfinity;
                         return true;
                     }
@@ -4358,6 +4678,7 @@ namespace Rawr.Mage
                             {
                                 // gradient is significantly steep that we can treat this
                                 // as unbounded linear descent
+                                // this is in direction of gradient so we know it has to be a feasible direction
                                 maxAlpha = double.PositiveInfinity;
                                 for (int i = 0; i < rows + super; i++)
                                 {
@@ -4370,6 +4691,7 @@ namespace Rawr.Mage
                             {
                                 // assume we're close to optimal that it won't matter
                                 // if there are other optimal directions we'll get better gradient next time
+                                needsReducedGradientStep = true;
                                 return false;
                             }
                         }
@@ -4403,13 +4725,20 @@ namespace Rawr.Mage
                     // if we're too large cancel based on our prediction if we made any progress
                     if (alpha * infnorm > 1000.0)
                     {
-                        // check if it's safe to treat this as linear descent
-                        double grad = 0.0;
-                        for (int i = 0; i < osbStructural; i++)
+                        if (TrunkateBoundary(cg_p))
                         {
-                            int col = OSB[i];
-                            grad += (cost[col] - Qk * qx[col]) * cg_p[col];
+                            QuadraticQOSB(cg_p, cg_qp);
+                            pqp = 0.0;
+                            for (int i = 0; i < osbStructural; i++)
+                            {
+                                int col = OSB[i];
+                                pqp += cg_qp[col] * cg_p[col];
+                            }
+                            pqp *= Qk;
                         }
+
+                        // check if it's safe to treat this as linear descent
+                        double grad = ComputeGradient(cg_p);
                         double t = 100 / infnorm;
                         if (Math.Abs(grad) * t - 0.5 * t * t * pqp > 0)
                         {
@@ -4436,6 +4765,7 @@ namespace Rawr.Mage
 
                         if (rtw > startrtw)
                         {
+                            needsReducedGradientStep = true;
                             return false;
                         }
                         else
@@ -4483,10 +4813,17 @@ namespace Rawr.Mage
                 {
                     return true;
                 }
-                if (step > 5 * super || (step >= super && rtwnew < 2 * minrtw))
+                if (step > hardLimit || (step >= super && rtwnew < 2 * minrtw))
                 {
                     if (rtwnew > startrtw)
                     {
+                        if (minrtw < 0.1 * startrtw)
+                        {
+                            // we have a possibility of improving the value if we terminate early
+                            hardLimit = minstep - 1;
+                            goto RESTART;
+                        }
+                        needsReducedGradientStep = true;
                         return false;
                     }
                     if (step > super)
@@ -4495,6 +4832,15 @@ namespace Rawr.Mage
                         {
                             return true;
                         }
+                        // often when we come here we're dealing with numerical instabilities
+                        // it can happen that some of superbasics that start on boundary will have
+                        // their value in opposite direction of boundary despite gradient being in
+                        // the right direction
+                        // if this happens it's better to project that direction out since
+                        // otherwise we can get in an endless loop of adding/removing that variable
+                        // from superbasis
+                        TrunkateBoundary(cg_x);
+
                         // verify if generated direction has good gradient and curvature
                         QuadraticQOSB(cg_x, cg_qp);
                         pqp = 0.0;
@@ -4531,12 +4877,14 @@ namespace Rawr.Mage
                             // make sure gradient is ok
                             if (grad < -limit)
                             {
+                                needsReducedGradientStep = true;
                                 return false;
                             }
                             // make sure alpha = 1 is ok
                             // df = t * grad - 0.5 * t^2 * pqp
                             if (grad - 0.5 * pqp < -limit)
                             {
+                                needsReducedGradientStep = true;
                                 return false;
                             }
                             return true;
@@ -4546,6 +4894,7 @@ namespace Rawr.Mage
                 }
                 if (rtwnew < minrtw)
                 {
+                    minstep = step;
                     minrtw = rtwnew;
                 }
                 double beta = rtwnew / rtw;
@@ -4581,6 +4930,83 @@ namespace Rawr.Mage
                 cg_rr = tmp;
 #endif
             } while (true);
+        }
+
+#if SILVERLIGHT
+        private double ComputeGradient(double[] step)
+#else
+        private double ComputeGradient(double* step)
+#endif
+        {
+            double grad = 0.0;
+            for (int i = 0; i < osbStructural; i++)
+            {
+                int col = OSB[i];
+                grad += (cost[col] - Qk * qx[col]) * step[col];
+            }
+            return grad;
+        }
+
+#if SILVERLIGHT
+        private void NormalizeCGStep(double[] step)
+#else
+        private void NormalizeCGStep(double* step)
+#endif
+        {
+            double infnorm = 0.0;
+            for (int i = 0; i < rows + super; i++)
+            {
+                int col = OSB[i];
+                double v = Math.Abs(step[col]);
+                if (v > infnorm)
+                {
+                    infnorm = v;
+                }
+            }
+            if (infnorm > 1000.0)
+            {
+                for (int i = 0; i < rows + super; i++)
+                {
+                    int col = OSB[i];
+                    step[col] /= infnorm;
+                }
+            }
+        }
+
+#if SILVERLIGHT
+        private bool TrunkateBoundary(double[] step)
+#else
+        private bool TrunkateBoundary(double* step)
+#endif
+        {
+            bool dirty = false;
+            for (int i = 0; i < super; i++)
+            {
+                int col = S[i];
+
+                if (ub[col] - mb[col] < Math.Abs(ub[col]) * epsPrimalRel + epsPrimalLow)
+                {
+                    if (ub[col] - (mb[col] + step[col]) < -Math.Abs(ub[col]) * epsPrimalRel - epsPrimalLow)
+                    {
+                        step[col] = 0;
+                        dirty = true;
+                    }
+                }
+                if (mb[col] - lb[col] < Math.Abs(lb[col]) * epsPrimalRel + epsPrimalLow)
+                {
+                    if ((mb[col] + step[col]) - lb[col] < -Math.Abs(lb[col]) * epsPrimalRel - epsPrimalLow)
+                    {
+                        step[col] = 0;
+                        dirty = true;
+                    }
+                }
+            }
+            if (dirty)
+            {
+                NullSpaceExpand(step);
+                return true;
+            }
+            return false;
         }
 
 
@@ -5132,6 +5558,8 @@ namespace Rawr.Mage
             const int maxRedecompose = 50;
             bool changeBasis;
             double direction;
+            bool checkTermination;
+            bool needsReducedGradientStep = false;
             osbDirty = true;
 
             //int verificationAttempts = 0;
@@ -5148,6 +5576,19 @@ namespace Rawr.Mage
                     flags[i] &= ~flagDis;
                 }
                 disabledDirty = false;
+            }
+
+            // in MIP a superbasic may become fixed, if this happens remove it from superbasis
+            for (i = 0; i < super; i++)
+            {
+                int col = S[i];
+                if ((flags[col] & flagFix) != 0)
+                {
+                    flags[col] = (flags[col] & ~flagN) | flagNLB;
+                    S[i] = S[super - 1];
+                    super--;
+                    i--;
+                }
             }
 
             do
@@ -5223,7 +5664,7 @@ namespace Rawr.Mage
                         if ((flags[V[maxj]] & flagNMid) != 0)
                         {
                             int s = Array.IndexOf(_S, V[maxj]);
-                            _S[s] = _S[super - 1];
+                            S[s] = S[super - 1];
                             super--;
                         }
 
@@ -5236,6 +5677,12 @@ namespace Rawr.Mage
                 }
 
             MINISTEP:
+                if (updateCount > 50)
+                {
+                    feasible = false;
+                    continue;
+                }
+
                 round++;
                 if (round > limit)
                 {
@@ -5248,7 +5695,7 @@ namespace Rawr.Mage
                 if (super > 0)
                 {
                     ComputeQx();
-                    if (ComputeCGStep(eps, out alpha, false))
+                    if (ComputeCGStep(eps, out alpha, false, out needsReducedGradientStep))
                     {
 
                         if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
@@ -5315,7 +5762,7 @@ namespace Rawr.Mage
 
                     // freeing V[maxj] will result in improved solution
 
-                    if (super == 0 || (flags[V[maxj]] & flagNMid) != 0)
+                    if (super == 0 || needsReducedGradientStep || (flags[V[maxj]] & flagNMid) != 0)
                     {
                         // special case the one free variable case
                         // in this situation the CG step is overkill
@@ -5328,7 +5775,6 @@ namespace Rawr.Mage
                         // basis shouldn't give too many problems due to zero snapping
 
                         updateCount++;
-                        bool checkTermination;
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
                         {
                             // we lost feasibility, go to phase I
@@ -5341,7 +5787,7 @@ namespace Rawr.Mage
                         if (checkTermination)
                         {
                             ComputeReducedCostGradient();
-                            maxj = CheckTermination();
+                            maxj = CheckTermination(out direction);
                             if (maxj == -1)
                             {
                                 goto TERMINATION;
@@ -5362,7 +5808,7 @@ namespace Rawr.Mage
                             if ((flags[V[maxj]] & flagNMid) != 0)
                             {
                                 int s = Array.IndexOf(_S, V[maxj]);
-                                _S[s] = _S[super - 1];
+                                S[s] = S[super - 1];
                                 super--;
                             }
 
@@ -5458,12 +5904,13 @@ namespace Rawr.Mage
                 mini = Array.IndexOf(_B, col);
                 int inc = -1;
                 bool numericCheck = true;
-            SUPERBASICUPDATE:
-                for (i = super - 1; i >= 0; i--)
+                i = super - 1;
+            //SUPERBASICUPDATE:
+                for (; i >= 0; i--)
                 {
                     inc = S[i];
                     // skip if we disabled for numerical stability
-                    if ((flags[col] & flagDis) != 0)
+                    if (numericCheck && (flags[inc] & flagDis) != 0)
                     {
                         continue;
                     }
@@ -5486,7 +5933,7 @@ namespace Rawr.Mage
                             {
                                 redecompose = 0;
                                 feasible = false; // forces recalc
-                                flags[col] |= flagDis;
+                                flags[inc] |= flagDis;
                                 disabledDirty = true;
                                 goto DECOMPOSE;
                             }
@@ -5501,7 +5948,8 @@ namespace Rawr.Mage
                         {
                             // we need more than one superbasic to complete the replace
                             numericCheck = false;
-                            goto SUPERBASICUPDATE;
+                            //goto SUPERBASICUPDATE;
+                            continue;
                         }
                         else
                         {
@@ -5528,6 +5976,14 @@ namespace Rawr.Mage
                 {
                     Decompose();
                     redecompose = maxRedecompose;
+                }
+                if (lu.Singular)
+                {
+                    feasible = false;
+                    redecompose = 0;
+                    PatchSingularBasis();
+                    //ValidateSuperBasis();
+                    continue;
                 }
 
                 /*int inc = S[super - 1];
@@ -5563,7 +6019,7 @@ namespace Rawr.Mage
                 // so pretend superbasics are fixed and do a single direction change
                 ComputeReducedCostGradient();
 
-                maxj = SelectPrimalIncoming(out direction, false);
+                maxj = SelectPrimalIncomingBoundary(out direction, false);
 
                 if (maxj == -1)
                 {
@@ -5581,6 +6037,10 @@ namespace Rawr.Mage
                         }
                         disabledDirty = false;
                     }
+                    else
+                    {
+                        retry = true;
+                    }
                     if (retry)
                     {
                         maxj = SelectPrimalIncoming(out direction, false);
@@ -5593,7 +6053,7 @@ namespace Rawr.Mage
                 }
 
                 updateCount++;
-                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis))
+                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
                 {
                     // we lost feasibility, go to phase I
                     feasible = false;
@@ -5602,12 +6062,31 @@ namespace Rawr.Mage
                     goto DECOMPOSE;
                 }
 
+                if (checkTermination)
+                {
+                    ComputeReducedCostGradient();
+                    maxj = CheckTermination(out direction);
+                    if (maxj == -1)
+                    {
+                        goto TERMINATION;
+                    }
+                    updateCount++;
+                    if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                    {
+                        // we lost feasibility, go to phase I
+                        feasible = false;
+                        lowestInfeasibility = double.PositiveInfinity;
+                        redecompose = 0;
+                        goto DECOMPOSE;
+                    }
+                }
+
                 if (changeBasis)
                 {
                     if ((flags[V[maxj]] & flagNMid) != 0)
                     {
                         int s = Array.IndexOf(_S, V[maxj]);
-                        _S[s] = _S[super - 1];
+                        S[s] = S[super - 1];
                         super--;
                     }
 
@@ -5618,7 +6097,7 @@ namespace Rawr.Mage
                 goto MINISTEP;
             /*}
         }
-        //ValidateSuperBasis();
+        ValidateSuperBasis();
 
         // swap base
         maxj = Array.IndexOf(_V, inc);
@@ -5723,6 +6202,7 @@ namespace Rawr.Mage
             bool changeBasis;
             double direction;
             osbDirty = true;
+            bool needsReducedGradientStep = false;
 
             //int verificationAttempts = 0;
 
@@ -5813,7 +6293,7 @@ namespace Rawr.Mage
                         if ((flags[V[maxj]] & flagNMid) != 0)
                         {
                             int s = Array.IndexOf(_S, V[maxj]);
-                            _S[s] = _S[super - 1];
+                            S[s] = S[super - 1];
                             super--;
                         }
 
@@ -5853,7 +6333,7 @@ namespace Rawr.Mage
                         if ((flags[maximizeColumn] & flagNMid) != 0)
                         {
                             int s = Array.IndexOf(_S, maximizeColumn);
-                            _S[s] = _S[super - 1];
+                            S[s] = S[super - 1];
                             super--;
                             lb[maximizeColumn] = mb[maximizeColumn];
                             flags[maximizeColumn] = (flags[maximizeColumn] & ~flagN) | flagNLB;
@@ -5947,7 +6427,7 @@ namespace Rawr.Mage
                 if (super > 0)
                 {
                     ComputeQx();
-                    if (ComputeCGStep(eps, out alpha, false))
+                    if (ComputeCGStep(eps, out alpha, false, out needsReducedGradientStep))
                     {
 
                         if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
@@ -6040,7 +6520,7 @@ namespace Rawr.Mage
                         if (checkTermination)
                         {
                             ComputeReducedCostGradient();
-                            maxj = CheckTermination();
+                            maxj = CheckTermination(out direction);
                             if (maxj == -1)
                             {
                                 goto TERMINATION;
@@ -6061,7 +6541,7 @@ namespace Rawr.Mage
                             if ((flags[V[maxj]] & flagNMid) != 0)
                             {
                                 int s = Array.IndexOf(_S, V[maxj]);
-                                _S[s] = _S[super - 1];
+                                S[s] = S[super - 1];
                                 super--;
                             }
 
@@ -6306,7 +6786,7 @@ namespace Rawr.Mage
                     if ((flags[V[maxj]] & flagNMid) != 0)
                     {
                         int s = Array.IndexOf(_S, V[maxj]);
-                        _S[s] = _S[super - 1];
+                        S[s] = S[super - 1];
                         super--;
                     }
 
@@ -6424,6 +6904,7 @@ namespace Rawr.Mage
             bool changeBasis;
             double direction;
             osbDirty = true;
+            bool needsReducedGradientStep = false;
 
             //int verificationAttempts = 0;
 
@@ -6514,7 +6995,7 @@ namespace Rawr.Mage
                         if ((flags[V[maxj]] & flagNMid) != 0)
                         {
                             int s = Array.IndexOf(_S, V[maxj]);
-                            _S[s] = _S[super - 1];
+                            S[s] = S[super - 1];
                             super--;
                         }
 
@@ -6574,7 +7055,7 @@ namespace Rawr.Mage
                     col = -1;
                     alpha = 1.0;
 
-                    if (ComputeCGStep(eps, out alpha, true))
+                    if (ComputeCGStep(eps, out alpha, true, out needsReducedGradientStep))
                     {
                         if (!SelectCGOutgoing(eps, ref col, ref alpha, ref bound))
                         {
@@ -6797,7 +7278,7 @@ namespace Rawr.Mage
                                 if ((flags[V[maxj]] & flagNMid) != 0)
                                 {
                                     int s = Array.IndexOf(_S, V[maxj]);
-                                    _S[s] = _S[super - 1];
+                                    S[s] = S[super - 1];
                                     super--;
                                 }
 
@@ -6825,7 +7306,7 @@ namespace Rawr.Mage
                     if ((flags[V[maxj]] & flagNMid) != 0)
                     {
                         int s = Array.IndexOf(_S, V[maxj]);
-                        _S[s] = _S[super - 1];
+                        S[s] = S[super - 1];
                         super--;
                     }
 
@@ -6954,7 +7435,7 @@ namespace Rawr.Mage
                 if ((flags[col] & flagNMid) != 0)
                 {
                     int s = Array.IndexOf(_S, col);
-                    _S[s] = _S[super - 1];
+                    S[s] = S[super - 1];
                     super--;
                 }
                 if (direction > 0.0)
@@ -7037,7 +7518,7 @@ namespace Rawr.Mage
                 if ((flags[col] & flagNMid) != 0)
                 {
                     int s = Array.IndexOf(_S, col);
-                    _S[s] = _S[super - 1];
+                    S[s] = S[super - 1];
                     super--;
                     osbDirty = true;
                 }
@@ -7081,11 +7562,14 @@ namespace Rawr.Mage
                 osbDirty = true;
             }
 
-            minr *= direction;
-            mb[col] += minr;
-            for (int i = 0; i < rows; i++)
+            if (minr > 0.0)
             {
-                mb[B[i]] -= minr * w[i];
+                minr *= direction;
+                mb[col] += minr;
+                for (int i = 0; i < rows; i++)
+                {
+                    mb[B[i]] -= minr * w[i];
+                }
             }
             //ValidateFeasibility();
             /*if (!changeBasis)

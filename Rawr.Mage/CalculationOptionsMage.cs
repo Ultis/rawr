@@ -797,6 +797,13 @@ namespace Rawr.Mage
             set { _CustomSpellMixEnabled = value; OnPropertyChanged("CustomSpellMixEnabled"); }
         }
 
+        private int _GlobalRestarts;
+        public int GlobalRestarts
+        {
+            get { return _GlobalRestarts; }
+            set { _GlobalRestarts = value; OnPropertyChanged("GlobalRestarts"); }
+        }
+
         private bool _CustomSpellMixOnly;
         public bool CustomSpellMixOnly
         {

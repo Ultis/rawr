@@ -662,7 +662,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         if (sequence[b].MaxTime >= minLastSuper + lastSuper.Duration - buffer)
                                         {
                                             // splittable, make a split at max time
-                                            if (MinTime(lastSuper, a - 1) > t3)
+                                            if (MinTime(lastSuper, a - 1) > t3 + eps)
                                             {
                                                 SplitAt(b, minLastSuper - t3);
                                                 a++;
@@ -1691,6 +1691,7 @@ namespace Rawr.Mage.SequenceReconstruction
             index[0] = 0;
             constructionTimeHistory[0] = constructionTime;
             coldsnap[0] = 2;
+            int tickLimit = Environment.TickCount + 5000;
             do
             {
                 if (i == N)
@@ -2075,7 +2076,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-            } while (i >= 0 && (solver == null || !solver.CancellationPending));
+            } while (i >= 0 && (solver == null || !solver.CancellationPending) && Environment.TickCount < tickLimit);
         }
 
         private void SortGroups_ComputeSegmented(List<SequenceItem> itemList, Solver solver)

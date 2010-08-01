@@ -2397,7 +2397,8 @@ namespace Rawr.Mage
                     baseRegen = 0.003345f;
                     break;
                 case 82:
-                    spellCritPerInt = 0.003f;
+                    //spellCritPerInt = 0.003f;
+                    spellCritPerInt = 0.0029676f;  // 5/27/10
                     baseRegen = 0.003345f;
                     break;
                 case 83:
