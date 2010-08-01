@@ -796,7 +796,7 @@ namespace Rawr.UI
                 sortOptionsList.Add("Overall");
                 foreach (string s in customSubpoints) sortOptionsList.Add(s);
                 if (SortCombo.Items.Count == 2) { SortCombo.Items.Clear(); } // Then it's a default list and needs to be removed
-                SortCombo.SelectedItem = "Overall";
+                else { SortCombo.SelectedItem = "Overall"; } // There's a valid list in place and we need to enforce Overall as selected instead of a subpoint
                 SortCombo.ItemsSource = sortOptionsList;
                 SortCombo.SelectedItem = "Overall";
             } catch (Exception ex) {
