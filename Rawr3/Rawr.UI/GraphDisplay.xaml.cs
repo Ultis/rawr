@@ -787,24 +787,50 @@ namespace Rawr.UI
         private IEnumerable<string> customSubpoints;
         private void SetCustomSubpoints(IEnumerable<string> subpoints)
         {
-            try {
-                if (subpoints == null) customSubpoints = new string[0];
-                else customSubpoints = subpoints;
+            if (subpoints == null) customSubpoints = new string[0];
+            else customSubpoints = subpoints;
 
-                List<string> sortOptionsList = new List<string>();
-                sortOptionsList.Add("Alphabetical");
-                sortOptionsList.Add("Overall");
-                foreach (string s in customSubpoints) sortOptionsList.Add(s);
-                if (SortCombo.Items.Count == 2) { SortCombo.Items.Clear(); } // Then it's a default list and needs to be removed
-                else { SortCombo.SelectedItem = "Overall"; } // There's a valid list in place and we need to enforce Overall as selected instead of a subpoint
-                SortCombo.ItemsSource = sortOptionsList;
-                SortCombo.SelectedItem = "Overall";
-            } catch (Exception ex) {
-                new ErrorWindow() {
-                    Message = string.Format("Inner Exception: {0}\r\nMessage: {1}\r\n\r\nStack Trace:\r\n{2}",
-                        ex.InnerException, ex.Message, ex.StackTrace),
-                }.Show();
+            if (customSubpoints.Count<string>() == 3) {
+                // Add combination sorts, like Mit+Surv(noThreat) or Mit+Threat(noSurv)
+                List<string> newCustom = customSubpoints.ToList();
+                newCustom.Add(newCustom[0] + "+" + newCustom[1]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[2]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[2]);
+                customSubpoints = newCustom;
+            } else if (customSubpoints.Count<string>() == 4) {
+                // Add combination sorts, like Mit+Surv(noThreat) or Mit+Threat(noSurv)
+                List<string> newCustom = customSubpoints.ToList();
+                newCustom.Add(newCustom[0] + "+" + newCustom[1]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[2]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[3]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[2]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[3]);
+                newCustom.Add(newCustom[2] + "+" + newCustom[3]);
+                customSubpoints = newCustom;
+            } else if (customSubpoints.Count<string>() == 5) {
+                // Add combination sorts, like Mit+Surv(noThreat) or Mit+Threat(noSurv)
+                List<string> newCustom = customSubpoints.ToList();
+                newCustom.Add(newCustom[0] + "+" + newCustom[1]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[2]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[3]);
+                newCustom.Add(newCustom[0] + "+" + newCustom[4]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[2]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[3]);
+                newCustom.Add(newCustom[1] + "+" + newCustom[4]);
+                newCustom.Add(newCustom[2] + "+" + newCustom[3]);
+                newCustom.Add(newCustom[2] + "+" + newCustom[4]);
+                newCustom.Add(newCustom[3] + "+" + newCustom[4]);
+                customSubpoints = newCustom;
             }
+
+            List<string> sortOptionsList = new List<string>();
+            sortOptionsList.Add("Alphabetical");
+            sortOptionsList.Add("Overall");
+            foreach (string s in customSubpoints) sortOptionsList.Add(s);
+            if (SortCombo.Items.Count == 2) { SortCombo.Items.Clear(); } // Then it's a default list and needs to be removed
+            else { SortCombo.SelectedItem = "Overall"; } // There's a valid list in place and we need to enforce Overall as selected instead of a subpoint
+            SortCombo.ItemsSource = sortOptionsList;
+            SortCombo.SelectedItem = "Overall";
         }
 
         private void SortChanged(object sender, SelectionChangedEventArgs e)

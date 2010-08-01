@@ -25,8 +25,8 @@ namespace Rawr.Hunter
 
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
 
-		public float HunterDPSPoints  { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
-		public float PetDPSPoints     { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
+        public float HunterDPSPoints  { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
+        public float PetDPSPoints     { get { return _subPoints[1]; } set { _subPoints[1] = value; } }
         public float HunterSurvPoints { get { return _subPoints[2]; } set { _subPoints[2] = value; } }
         public float PetSurvPoints    { get { return _subPoints[3]; } set { _subPoints[3] = value; } }
 
@@ -37,14 +37,14 @@ namespace Rawr.Hunter
         {
             get { return _item; }
             set { _item = value; }
-		}
+        }
 
-		private ItemInstance _itemInstance = null;
-		public override ItemInstance ItemInstance
-		{
-			get { return _itemInstance; }
-			set { _itemInstance = value; }
-		}
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
 
         private bool _equipped = false;
         public override bool Equipped
