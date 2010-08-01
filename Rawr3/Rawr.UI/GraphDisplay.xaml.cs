@@ -120,21 +120,28 @@ namespace Rawr.UI
                 if (_character != null)
                 {
                     _character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
+                    _character.ClassChanged -= new EventHandler(character_ModelChanged);
                 }
                 _character = value;
                 _character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
+                _character.ClassChanged += new EventHandler(character_ModelChanged);
                 ComparisonGraph.Character = _character;
-				//CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
-				//CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
-
-				UpdateGraph();
+                //CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
+                //CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
+                SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
+                UpdateGraph();
             }
         }
         //#endregion
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-		{
-			UpdateGraph();
+        {
+            UpdateGraph();
+        }
+        public void character_ModelChanged(object sender, EventArgs e)
+        {
+            SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
+            UpdateGraph();
         }
 
         private bool _loading;
@@ -159,7 +166,7 @@ namespace Rawr.UI
 
         private string ConvertBuffSelector(string buffGroup) {
             switch (buffGroup) {
-				case "Raid Buffs":        {
+                case "Raid Buffs":        {
                     return "Agility and Strength|Armor|Damage Reduction (Major %)"
                          + "|Damage Reduction (Minor %)|Healing Received (%)|Attack Power"
                          + "|Attack Power (%)|Spell Power|Spell Sensitivity|Spirit"
@@ -207,23 +214,23 @@ namespace Rawr.UI
             }
         }
 
-		private int _calculationCount = 0;
-		private ComparisonCalculationBase[] _itemCalculations = null;
-		private AutoResetEvent _autoResetEvent = null;
-		private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
+        private int _calculationCount = 0;
+        private ComparisonCalculationBase[] _itemCalculations = null;
+        private AutoResetEvent _autoResetEvent = null;
+        private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
 
         private void UpdateGraphGear(string subgraph)
-		{
+        {
             SetGraphControl(ComparisonGraph);
-			_characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
+            _characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
             ComparisonGraph.Slot = _characterSlot;
-			bool seenEquippedItem = (Character[_characterSlot] == null);
+            bool seenEquippedItem = (Character[_characterSlot] == null);
 
             Calculations.ClearCache();
-			List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
+            List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
             _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
-			_calculationCount = 0;
-			_autoResetEvent = new AutoResetEvent(false);
+            _calculationCount = 0;
+            _autoResetEvent = new AutoResetEvent(false);
 
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("Starting Comparison Calculations");
@@ -233,32 +240,32 @@ namespace Rawr.UI
             {
                 foreach (ItemInstance item in relevantItemInstances)
                 {
-					if (!seenEquippedItem && Character[_characterSlot].Equals(item)) seenEquippedItem = true;
-					ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
-				}
-				_autoResetEvent.WaitOne();
+                    if (!seenEquippedItem && Character[_characterSlot].Equals(item)) seenEquippedItem = true;
+                    ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
+                }
+                _autoResetEvent.WaitOne();
             }
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("Finished Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
 #endif
 
-			List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
-			if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));
-			_itemCalculations = FilterTopXGemmings(listItemCalculations);
+            List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
+            if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));
+            _itemCalculations = FilterTopXGemmings(listItemCalculations);
 
 
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
-			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
-			ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-			ComparisonGraph.DisplayCalcs(_itemCalculations);
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            ComparisonGraph.DisplayCalcs(_itemCalculations);
         }
 
-		private void GetItemInstanceCalculations(object item)
-		{
-			ComparisonCalculationBase result = Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot);
-			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
-			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
-		}
+        private void GetItemInstanceCalculations(object item)
+        {
+            ComparisonCalculationBase result = Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot);
+            _itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+            if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
+        }
         
         private void UpdateGraphEnchants(string subgraph)
         {
@@ -284,34 +291,34 @@ namespace Rawr.UI
             }
             Calculations.ClearCache();
             Character.ClearRelevantGems(); // we need to reset relevant items for gems to allow colour selection
-			List<Item> relevantItems = Character.GetRelevantItems(cslot, islot);
-			_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
-			_calculationCount = 0;
-			_autoResetEvent = new AutoResetEvent(false);
+            List<Item> relevantItems = Character.GetRelevantItems(cslot, islot);
+            _itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
+            _calculationCount = 0;
+            _autoResetEvent = new AutoResetEvent(false);
 
             if (relevantItems.Count > 0)
             {
-				foreach (Item item in relevantItems)
-				{
-					ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
-				}
-				_autoResetEvent.WaitOne();
+                foreach (Item item in relevantItems)
+                {
+                    ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+                }
+                _autoResetEvent.WaitOne();
             }
 
-			_itemCalculations = FilterTopXGemmings(new List<ComparisonCalculationBase>(_itemCalculations));
+            _itemCalculations = FilterTopXGemmings(new List<ComparisonCalculationBase>(_itemCalculations));
 
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
-			ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(_itemCalculations);
-		}
+        }
 
-		private void GetItemCalculations(object item)
-		{
-			ComparisonCalculationBase result = Calculations.GetItemCalculations((Item)item, Character, _characterSlot);
-			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
-			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
-		}
+        private void GetItemCalculations(object item)
+        {
+            ComparisonCalculationBase result = Calculations.GetItemCalculations((Item)item, Character, _characterSlot);
+            _itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+            if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
+        }
 
         private void UpdateGraphBuffs(string subgraph)
         {
@@ -479,37 +486,37 @@ namespace Rawr.UI
 
             if (subgraph == "Gear" || subgraph == "All")
             {
-				CharacterSlot[] slots = new CharacterSlot[]
-				{
-					 CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
-					 CharacterSlot.Finger2, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs,
-					 CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile,
-					 CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders,
-					 CharacterSlot.Trinket1, CharacterSlot.Trinket2, CharacterSlot.Waist, CharacterSlot.Wrist
-				};
-				foreach (CharacterSlot slot in slots)
-				{
-					ItemInstance item = Character[slot];
-					if (item != null)
-					{
-						itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
-					}
-				}
+                CharacterSlot[] slots = new CharacterSlot[]
+                {
+                     CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
+                     CharacterSlot.Finger2, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs,
+                     CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile,
+                     CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders,
+                     CharacterSlot.Trinket1, CharacterSlot.Trinket2, CharacterSlot.Waist, CharacterSlot.Wrist
+                };
+                foreach (CharacterSlot slot in slots)
+                {
+                    ItemInstance item = Character[slot];
+                    if (item != null)
+                    {
+                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
+                    }
+                }
             }
             if (subgraph == "Enchants" || subgraph == "All")
             {
-				ItemSlot[] slots = new ItemSlot[]
-				{
-					 ItemSlot.Back, ItemSlot.Chest, ItemSlot.Feet, ItemSlot.Finger,
-					 ItemSlot.Hands, ItemSlot.Head, ItemSlot.Legs,
-					 ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.Shoulders,
-					 ItemSlot.Waist, ItemSlot.Wrist
-				};
-				
-				foreach (ItemSlot slot in slots)
-					foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
-						itemCalculations.Add(calc);
-			}
+                ItemSlot[] slots = new ItemSlot[]
+                {
+                     ItemSlot.Back, ItemSlot.Chest, ItemSlot.Feet, ItemSlot.Finger,
+                     ItemSlot.Hands, ItemSlot.Head, ItemSlot.Legs,
+                     ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.Shoulders,
+                     ItemSlot.Waist, ItemSlot.Wrist
+                };
+                
+                foreach (ItemSlot slot in slots)
+                    foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
+                        itemCalculations.Add(calc);
+            }
             if (subgraph == "Buffs" || subgraph == "All")
             {
                 itemCalculations.AddRange(Calculations.GetBuffCalculations(Character, Calculations.GetCharacterCalculations(Character), ConvertBuffSelector("Current")));
@@ -524,10 +531,10 @@ namespace Rawr.UI
             SetGraphControl(ComparisonGraph);
             if (subgraph == "Gear")
             {
-				foreach (string availableItem in Character.AvailableItems)
-				{
-					availableItem.ToString();
-				}
+                foreach (string availableItem in Character.AvailableItems)
+                {
+                    availableItem.ToString();
+                }
 
                 ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
                 calc.Name = "Chart Not Yet Implemented";
@@ -777,14 +784,32 @@ namespace Rawr.UI
             return filteredItemCalculations.ToArray();
         }
 
+        private IEnumerable<string> customSubpoints;
         private void SetCustomSubpoints(IEnumerable<string> subpoints)
         {
+            try {
+                if (subpoints == null) customSubpoints = new string[0];
+                else customSubpoints = subpoints;
 
+                List<string> sortOptionsList = new List<string>();
+                sortOptionsList.Add("Alphabetical");
+                sortOptionsList.Add("Overall");
+                foreach (string s in customSubpoints) sortOptionsList.Add(s);
+                if (SortCombo.Items.Count == 2) { SortCombo.Items.Clear(); } // Then it's a default list and needs to be removed
+                SortCombo.SelectedItem = "Overall";
+                SortCombo.ItemsSource = sortOptionsList;
+                SortCombo.SelectedItem = "Overall";
+            } catch (Exception ex) {
+                new ErrorWindow() {
+                    Message = string.Format("Inner Exception: {0}\r\nMessage: {1}\r\n\r\nStack Trace:\r\n{2}",
+                        ex.InnerException, ex.Message, ex.StackTrace),
+                }.Show();
+            }
         }
 
         private void SortChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SortCombo != null)
+            if (SortCombo != null && SortCombo.SelectedIndex != -1)
                 ComparisonGraph.Sort = (ComparisonSort)(SortCombo.SelectedIndex - 2);
         }
 

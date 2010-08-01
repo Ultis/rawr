@@ -13,8 +13,8 @@ using Rawr.Optimizer;
 
 namespace Rawr.UI
 {
-	public partial class ComparisonGraph : UserControl
-	{
+    public partial class ComparisonGraph : UserControl
+    {
 #if !SILVERLIGHT
         private ItemContextMenu ItemContextMenu = new ItemContextMenu();
 #endif
@@ -114,32 +114,32 @@ namespace Rawr.UI
             get { return legendItems; }
             set
             {
-				if (legendItems != value)
-				{
-					legendItems = value;
-					if (legendItems != null)
-					{
-						if (comparisonItems != null)
-						{
-							foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
-						}
-						/*LegendStack.Children.Clear();
+                if (legendItems != value)
+                {
+                    legendItems = value;
+                    if (legendItems != null)
+                    {
+                        if (comparisonItems != null)
+                        {
+                            foreach (ComparisonGraphItem item in comparisonItems) item.SetColors(legendItems.Values);
+                        }
+                        /*LegendStack.Children.Clear();
                         LegendStack.Visibility = Visibility.Collapsed;
-						foreach (KeyValuePair<string, Color> kvp in legendItems)
-						{
-							LegendStack.Children.Add(new ComparisonGraphBar() { Color = kvp.Value, Title = kvp.Key });
-						}*/
-					}
-				}
+                        foreach (KeyValuePair<string, Color> kvp in legendItems)
+                        {
+                            LegendStack.Children.Add(new ComparisonGraphBar() { Color = kvp.Value, Title = kvp.Key });
+                        }*/
+                    }
+                }
             }
         }
 
         private TextBlock[] AxisLabels;
         private Rectangle[] AxisLines;
-		public ComparisonGraph()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+        public ComparisonGraph()
+        {
+            // Required to initialize variables
+            InitializeComponent();
 
             mode = DisplayMode.Subpoints;
             sort = ComparisonSort.Overall;
@@ -154,7 +154,7 @@ namespace Rawr.UI
             AxisLines[3] = AxisLine4; AxisLines[4] = AxisLine5; AxisLines[5] = AxisLine6;
             AxisLines[6] = AxisLine7; AxisLines[7] = AxisLine8; AxisLines[8] = AxisLine9;
 
-		}
+        }
 
         private List<ComparisonGraphItem> comparisonItems;
 
@@ -168,9 +168,9 @@ namespace Rawr.UI
             if (calcs == null) return;
             currentCalcs = calcs;
             if (comparisonItems == null) comparisonItems = new List<ComparisonGraphItem>();
-			int i = 0;
+            int i = 0;
 #if DEBUG
-			DateTime dtA = DateTime.Now;
+            DateTime dtA = DateTime.Now;
 #endif
 
             minScale = 0; maxScale = 0;
@@ -214,10 +214,10 @@ namespace Rawr.UI
 
                 minScale = -(float)Math.Ceiling(-minScale / totalScale * 8f) * (totalScale / 8f);
                 maxScale = (float)Math.Ceiling(maxScale / totalScale * 8f) * (totalScale / 8f);
-			}
+            }
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
-			DateTime dtB = DateTime.Now;
+            System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
+            DateTime dtB = DateTime.Now;
 #endif
 
             ChangedSize(this, null);
@@ -227,12 +227,12 @@ namespace Rawr.UI
             else if (Sort == ComparisonSort.Overall)
                 orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.OverallPoints);
             else
-				orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
+                orderedCalcs = calcs.OrderByDescending(calc => calc == null ? 0 : calc.SubPoints[(int)Sort]);
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase B: {0}ms", DateTime.Now.Subtract(dtB).TotalMilliseconds));
-			DateTime dtC = DateTime.Now;
+            System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase B: {0}ms", DateTime.Now.Subtract(dtB).TotalMilliseconds));
+            DateTime dtC = DateTime.Now;
 #endif
-			foreach (ComparisonCalculationBase c in orderedCalcs)
+            foreach (ComparisonCalculationBase c in orderedCalcs)
             {
                 if (c == null) continue;
                 ComparisonGraphItem item;
@@ -270,15 +270,15 @@ namespace Rawr.UI
                 else { for (int j = 0; j < c.SubPoints.Length; j++) item[j] = c.SubPoints[j]; }
                 
                 i++;
-			}
+            }
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase C: {0}ms", DateTime.Now.Subtract(dtC).TotalMilliseconds));
-			DateTime dtD = DateTime.Now;
+            System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase C: {0}ms", DateTime.Now.Subtract(dtC).TotalMilliseconds));
+            DateTime dtD = DateTime.Now;
 #endif
-			for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
+            for (; i < comparisonItems.Count; i++) comparisonItems[i].Visibility = Visibility.Collapsed;
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase D: {0}ms", DateTime.Now.Subtract(dtD).TotalMilliseconds));
-			System.Diagnostics.Debug.WriteLine(string.Format("Finished DisplayCalcs: Total {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
+            System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase D: {0}ms", DateTime.Now.Subtract(dtD).TotalMilliseconds));
+            System.Diagnostics.Debug.WriteLine(string.Format("Finished DisplayCalcs: Total {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
 #endif
         }
 
