@@ -597,6 +597,7 @@ namespace Rawr.DPSWarr {
 #endif
 )
                 {
+                    ChanceYouAreRooted = r.Chance;
                     BaseRootDur = Math.Max(0f, (r.Duration / 1000f * (1f - StatS.SnareRootDurReduc)));
                     rootActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / r.Frequency) : FightDuration / r.Frequency;
                     if (rootActs > 0f)
@@ -677,6 +678,7 @@ namespace Rawr.DPSWarr {
                 foreach (Impedance s in CalcOpts.Stuns)
 #endif
                 {
+                    ChanceYouAreStunned = s.Chance;
                     BaseStunDur = Math.Max(0f, (s.Duration / 1000f * (1f - StatS.StunDurReduc)));
                     stunActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / s.Frequency) : FightDuration / s.Frequency;
                     if (stunActs > 0f)
@@ -745,6 +747,7 @@ namespace Rawr.DPSWarr {
                 foreach (Impedance f in CalcOpts.Fears)
 #endif
                 {
+                    ChanceYouAreFeared = f.Chance;
                     BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
                     fearActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / f.Frequency) : FightDuration / f.Frequency;
                     if (fearActs > 0f)
@@ -862,6 +865,7 @@ namespace Rawr.DPSWarr {
                 foreach (Impedance m in CalcOpts.Moves)
 #endif
                 {
+                    ChanceYouHaveToMove = m.Chance;
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
                     moveGCDs += movedActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / m.Frequency) : FightDuration / m.Frequency;
 
