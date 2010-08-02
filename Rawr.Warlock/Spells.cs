@@ -1447,7 +1447,7 @@ namespace Rawr.Warlock {
         }
 
         protected override float GetImmolateUpRate() {
-
+            if (!SimulatedStats.ContainsKey("immolate up-chance")) return 0f;
             return SimulatedStats["immolate up-chance"].GetValue();
         }
     }
