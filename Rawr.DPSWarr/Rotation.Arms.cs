@@ -552,11 +552,12 @@ namespace Rawr.DPSWarr {
             bool hsok = false; // CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
 #if RAWR3 || SILVERLIGHT
-                false // BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
+                false; // BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
+                //&& CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 #else
                 CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
-#endif
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#endif
             availRage += WhiteAtks.whiteRageGenOverDurNoHS * percTimeInDPS * (/*1f -*/ percTimeUnder20);
             availRage -= EX.RageU20;
             float repassAvailRage = 0f;

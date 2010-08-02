@@ -7,10 +7,10 @@ using System.Xml.Serialization;
 namespace Rawr.Hunter
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsHunter : ICalculationOptionBase, INotifyPropertyChanged
-	{
+    public class CalculationOptionsHunter : ICalculationOptionBase, INotifyPropertyChanged
+    {
         #region Basics Tab
         // ==== Fight Settings ====
         private int _TargetLevel = 83;
@@ -328,13 +328,23 @@ namespace Rawr.Hunter
             get { return _petHappiness; }
             set { _petHappiness = value; OnPropertyChanged("PetHappinessLevel"); }
         }
+#if RAWR3 || SILVERLIGHT
         [XmlIgnore]
-        private PetTalentTree _PetTalents;
-        [XmlIgnore]
-        public PetTalentTree PetTalents {
-            get { return _PetTalents ?? (_PetTalents = new PetTalentTree()); }
+        private PetTalents _PetTalents;
+        public PetTalents PetTalents
+        {
+            get { return _PetTalents ?? (_PetTalents = new PetTalents()); }
             set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
         }
+#else
+        [XmlIgnore]
+        private PetTalentTreeData _PetTalents;
+        [XmlIgnore]
+        public PetTalentTreeData PetTalents {
+            get { return _PetTalents ?? (_PetTalents = new PetTalentTreeData()); }
+            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
+        }
+#endif
         private string _petTalents;
         public string petTalents {
             get {
@@ -483,7 +493,7 @@ namespace Rawr.Hunter
         });
         #endregion
 
-        private bool[] _Maintenance;
+        /*private bool[] _Maintenance;
         public enum Maintenances
         {
             _RageGen__ = 0,
@@ -564,20 +574,20 @@ namespace Rawr.Hunter
                     });
             }
             set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
-        }
+        }*/
 
         #region ICalculationOptionBase Members
-		public string GetXml()
-		{
+        public string GetXml()
+        {
             _petActiveBuffsXml = new List<string>(_petActiveBuffs.ConvertAll(buff => buff.Name));
 
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHunter));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-		#endregion
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
+        #endregion
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)

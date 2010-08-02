@@ -304,7 +304,7 @@ namespace Rawr {
         #endregion
 
         public BossOptions() { }
-        public BossOptions Clone() {
+        public new BossOptions Clone() {
             BossOptions clone = (BossOptions)this.MemberwiseClone();
             return clone;
         }

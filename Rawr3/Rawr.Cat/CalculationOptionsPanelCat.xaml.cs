@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace Rawr.Cat
 {
@@ -30,12 +31,8 @@ namespace Rawr.Cat
         private Character character;
         public Character Character
         {
-            get
-            {
-                return character;
-            }
-            set
-            {
+            get { return character; }
+            set {
                 character = value;
                 LoadCalculationOptions();
             }
@@ -49,6 +46,18 @@ namespace Rawr.Cat
             this.DataContext = Character.CalculationOptions as CalculationOptionsCat;
             this.LayoutRoot.SelectAll();
             _loadingCalculationOptions = false;
+        }
+
+        public void CalculationOptionsPanelCat_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
+            if (e.PropertyName == "SomeProperty")
+            {
+                // Model Specific Code
+            }
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
     }

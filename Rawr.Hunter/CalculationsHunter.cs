@@ -21,7 +21,7 @@ namespace Rawr.Hunter {
         public CalculationOptionsHunter calcOpts;
     }
     [Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", CharacterClass.Hunter)]
-	public class CalculationsHunter : CalculationsBase {
+    public class CalculationsHunter : CalculationsBase {
         #region Variables and Properties
 
         public override List<GemmingTemplate> DefaultGemmingTemplates {
@@ -121,7 +121,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[
             public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
             private CalculationOptionsPanelBase calculationOptionsPanel = null;
-		    public override CalculationOptionsPanelBase CalculationOptionsPanel
+            public override CalculationOptionsPanelBase CalculationOptionsPanel
         #endif
             { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
 
@@ -130,38 +130,38 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[
             get {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
-				        "Basic Stats:Health and Stamina",
-				        "Basic Stats:Mana",
-				        "Basic Stats:Armor",
-				        "Basic Stats:Agility",
+                        "Basic Stats:Health and Stamina",
+                        "Basic Stats:Mana",
+                        "Basic Stats:Armor",
+                        "Basic Stats:Agility",
                         "Basic Stats:Ranged Attack Power",
-				        "Basic Stats:Intellect",
-				        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks
+                        "Basic Stats:Intellect",
+                        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks
 Focused Aim 0 - 8%-0%=8%=263 Rating soft cap
 Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
 Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
 Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
-				        "Basic Stats:Crit",
-				        "Basic Stats:Armor Penetration*Rating Cap 1400",
-				        "Basic Stats:Haste",
+                        "Basic Stats:Crit",
+                        "Basic Stats:Armor Penetration*Rating Cap 1400",
+                        "Basic Stats:Haste",
 
                         "Pet Stats:Pet Attack Power",
-				        "Pet Stats:Pet Hit Percentage",
+                        "Pet Stats:Pet Hit Percentage",
                         "Pet Stats:Pet Dodge Percentage",
-				        "Pet Stats:Pet Melee Crit Percentage",
-				        "Pet Stats:Pet Specials Crit Percentage",
-				        "Pet Stats:Pet White DPS",
-				        "Pet Stats:Pet Kill Command DPS",
-				        "Pet Stats:Pet Specials DPS",
+                        "Pet Stats:Pet Melee Crit Percentage",
+                        "Pet Stats:Pet Specials Crit Percentage",
+                        "Pet Stats:Pet White DPS",
+                        "Pet Stats:Pet Kill Command DPS",
+                        "Pet Stats:Pet Specials DPS",
 
-				        "Shot Stats:Aimed Shot",
-				        "Shot Stats:Arcane Shot",
-				        "Shot Stats:Multi Shot",
+                        "Shot Stats:Aimed Shot",
+                        "Shot Stats:Arcane Shot",
+                        "Shot Stats:Multi Shot",
                         "Shot Stats:Silencing Shot",
                         "Shot Stats:Steady Shot",
                         "Shot Stats:Kill Shot",
-				        "Shot Stats:Explosive Shot",
-				        "Shot Stats:Black Arrow",
+                        "Shot Stats:Explosive Shot",
+                        "Shot Stats:Black Arrow",
                         "Shot Stats:Volley",
                         "Shot Stats:Chimera Shot",
 
@@ -169,9 +169,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         //"Shot Stats:Readiness",
                         //"Shot Stats:Bestial Wrath",
 
-				        "Sting Stats:Serpent Sting",
-				        "Sting Stats:Scorpid Sting",
-				        "Sting Stats:Viper Sting",
+                        "Sting Stats:Serpent Sting",
+                        "Sting Stats:Scorpid Sting",
+                        "Sting Stats:Viper Sting",
 
                         "Trap Stats:Immolation Trap",
                         "Trap Stats:Explosive Trap",
@@ -196,33 +196,33 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Hunter DPS:Piercing Shots DPS",
                         "Hunter DPS:Special DMG Procs DPS*Like Bandit's Insignia or Hand-Mounted Pyro Rockets",
 
-				        "Combined DPS:Hunter DPS",
-				        "Combined DPS:Pet DPS",
-				        "Combined DPS:Total DPS"
-    			    };
+                        "Combined DPS:Hunter DPS",
+                        "Combined DPS:Pet DPS",
+                        "Combined DPS:Total DPS"
+                    };
                 }
                 return _characterDisplayCalculationLabels;
             }
         }
 
-		private string[] _optimizableCalculationLabels = null;
-		public override string[] OptimizableCalculationLabels {
-			get {
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels {
+            get {
                 if (_optimizableCalculationLabels == null) {
                     _optimizableCalculationLabels = new string[] {
-					    "Health",
+                        "Health",
                         "Attack Power",
                         "Agility",
                         "Mana",
-					    "Crit %",
+                        "Crit %",
                         "Haste %",
                         "Armor Penetration %",
                         "% Chance to Miss (Yellow)",
-					};
+                    };
                 }
-				return _optimizableCalculationLabels;
-			}
-		}
+                return _optimizableCalculationLabels;
+            }
+        }
 
         private Dictionary<string, Color> _subPointNameColors = null;
         private Dictionary<string, Color> _subPointNameColorsDPS = null;
@@ -255,16 +255,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHunter(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHunter(); }
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml) {
-			XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunter));
-			StringReader sr = new StringReader(xml);
-			CalculationOptionsHunter calcOpts = s.Deserialize(sr) as CalculationOptionsHunter;
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsHunter));
+            StringReader sr = new StringReader(xml);
+            CalculationOptionsHunter calcOpts = s.Deserialize(sr) as CalculationOptionsHunter;
 
             // convert buffs here!
             calcOpts.petActiveBuffs = new List<Buff>(calcOpts._petActiveBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
             calcOpts.petActiveBuffs.RemoveAll(buff => buff == null);
 
-			return calcOpts;
+            return calcOpts;
         }
 
         #endregion
@@ -278,14 +278,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             get {
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new[] {
-					    ItemType.None,
-					    ItemType.AmmoPouch,
+                        ItemType.None,
+                        ItemType.AmmoPouch,
                         ItemType.Arrow,
                         ItemType.Bow,
                         ItemType.Bullet,
                         ItemType.Crossbow,
                         ItemType.Dagger,
-					    ItemType.FistWeapon,
+                        ItemType.FistWeapon,
                         ItemType.Gun,
                         ItemType.Leather,
                         ItemType.Mail,
@@ -296,7 +296,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         ItemType.Staff,                    
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandSword
-				    });
+                    });
                 }
                 return _relevantItemTypes;
             }
@@ -314,35 +314,35 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
         public override Stats GetRelevantStats(Stats stats)
         {
-			Stats relevantStats = new Stats() {
+            Stats relevantStats = new Stats() {
                 // Basic Stats
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
-				Intellect = stats.Intellect,
-				Mana = stats.Mana,
-				Mp5 = stats.Mp5,
+                Intellect = stats.Intellect,
+                Mana = stats.Mana,
+                Mp5 = stats.Mp5,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 // Ratings
-				AttackPower = stats.AttackPower,
-				RangedAttackPower = stats.RangedAttackPower,
+                AttackPower = stats.AttackPower,
+                RangedAttackPower = stats.RangedAttackPower,
                 PetAttackPower = stats.PetAttackPower,
                 PhysicalCrit = stats.PhysicalCrit,
-				CritRating = stats.CritRating,
-				RangedCritRating = stats.RangedCritRating,
-				PhysicalHit = stats.PhysicalHit,
-				HitRating = stats.HitRating,
-				RangedHitRating = stats.RangedHitRating,
+                CritRating = stats.CritRating,
+                RangedCritRating = stats.RangedCritRating,
+                PhysicalHit = stats.PhysicalHit,
+                HitRating = stats.HitRating,
+                RangedHitRating = stats.RangedHitRating,
                 PhysicalHaste = stats.PhysicalHaste,
-				HasteRating = stats.HasteRating,
-				RangedHasteRating = stats.RangedHasteRating,
+                HasteRating = stats.HasteRating,
+                RangedHasteRating = stats.RangedHasteRating,
 
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
-				ArmorPenetration = stats.ArmorPenetration,
-				Miss = stats.Miss,
-				ScopeDamage = stats.ScopeDamage,
+                ArmorPenetration = stats.ArmorPenetration,
+                Miss = stats.Miss,
+                ScopeDamage = stats.ScopeDamage,
 
                 // Special
                 HighestStat = stats.HighestStat,
@@ -374,22 +374,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
                 // Multipliers
-				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-				BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-				BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-				BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
                 BonusPetAttackPowerMultiplier = stats.BonusPetAttackPowerMultiplier,
 
-				BonusManaPotion = stats.BonusManaPotion,
-				DamageTakenMultiplier = stats.DamageTakenMultiplier,
-				BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusManaPotion = stats.BonusManaPotion,
+                DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-				BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
-				BonusPetCritChance = stats.BonusPetCritChance,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
+                BonusPetCritChance = stats.BonusPetCritChance,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
@@ -600,9 +600,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //return base.IsBuffRelevant(buff);
         }
 
-		public override bool CanUseAmmo { get { return true; } }
+        public override bool CanUseAmmo { get { return true; } }
 
-		public override bool IsItemRelevant(Item item) {
+        public override bool IsItemRelevant(Item item) {
             if ( // Manual override for +X to all Stats gems
                    item.Name == "Nightmare Tear"
                 || item.Name == "Enchanted Tear"
@@ -624,7 +624,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 bool ignoreStats = HasIgnoreStats(stats);
                 return (wantedStats || survstats) && !ignoreStats && base.IsItemRelevant(item);
             }
-		}
+        }
 
         private static List<Buff> _relevantPetBuffs = new List<Buff>();
         public static List<Buff> RelevantPetBuffs {
@@ -655,15 +655,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (buff.Stats.Health != 0) return true;
 
             // Greater Blessing of Might & Battle Shout
-		    if (buff.Stats.AttackPower != 0) return true;
+            if (buff.Stats.AttackPower != 0) return true;
             if (buff.Stats.PetAttackPower != 0) return true;
 
             // True Shot Aura (not you) & Abo. Might & Unl. Rage
-		    if (buff.Stats.BonusAttackPowerMultiplier != 0) return true;
+            if (buff.Stats.BonusAttackPowerMultiplier != 0) return true;
             if (buff.Stats.BonusPetAttackPowerMultiplier != 0) return true;
 
             // Leader of the Pack/Rampage
-		    if (buff.Stats.PhysicalCrit != 0) return true;
+            if (buff.Stats.PhysicalCrit != 0) return true;
 
             // Strength of Earth Totem & Horn of Winter &  Gift of the Wild & Prayer of Fortitude & Scrolls
             if (buff.Stats.Strength != 0) return true;
@@ -671,13 +671,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (buff.Stats.Stamina != 0) return true;
 
             // WF Totem & Imp. Icy Talons & Swift Ret & Moonkin Aura
-		    if (buff.Stats.PhysicalHaste != 0) return true;
+            if (buff.Stats.PhysicalHaste != 0) return true;
 
             // Sunder Armor, Sting
             if (buff.Stats.ArmorPenetration != 0) return true;
 
             // Ret Aura & Feroc. Insp.
-		    if (buff.Stats.BonusDamageMultiplier != 0) return true;
+            if (buff.Stats.BonusDamageMultiplier != 0) return true;
 
             // Pet Food
             if (buff.Stats.PetStamina != 0) return true;
@@ -970,6 +970,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
         {
             List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
+#if RAWR3 || SILVERLIGHT
+#else
             Character baseChar = character.Clone(); CalculationOptionsHunter baseCalcOpts = baseChar.CalculationOptions as CalculationOptionsHunter;
             Character newChar = character.Clone(); CalculationOptionsHunter newCalcOpts = newChar.CalculationOptions as CalculationOptionsHunter;
             CharacterCalculationsHunter currentCalc;
@@ -1010,6 +1012,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 talentCalculations.Add(compare);
                 newCalcOpts.PetTalents.TalentTree[Index].Value = orig;
             }
+#endif
             return talentCalculations.ToArray();
         }
         private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
@@ -1096,7 +1099,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
         #endregion
 
-		#region CalculationsBase Overrides
+        #region CalculationsBase Overrides
         private void GenPrioRotation(CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, HunterTalents talents) {
             calculatedStats.priorityRotation = new ShotPriority(calcOpts);
             calculatedStats.priorityRotation.priorities[0] = getShotByIndex(calcOpts.PriorityIndex1, calculatedStats);
@@ -2410,15 +2413,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
                 if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
                 HunterTalents talents = character.HunterTalents;
-                PetTalentTree petTalents = calcOpts.PetTalents;
+#if RAWR3 || SILVERLIGHT
+                PetTalents petTalents = calcOpts.PetTalents;
+#else
+                PetTalentTreeData petTalents = calcOpts.PetTalents;
+#endif
                 int levelDif = calcOpts.TargetLevel - character.Level;
 
                 #region From Race
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
-			    statsRace.PhysicalCrit += (character.Ranged != null && 
-				    ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
-				    (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
-				    0.01f : 0.00f;
+                statsRace.PhysicalCrit += (character.Ranged != null && 
+                    ((character.Race == CharacterRace.Dwarf && character.Ranged.Item.Type == ItemType.Gun) ||
+                    (character.Race == CharacterRace.Troll && character.Ranged.Item.Type == ItemType.Bow))) ?
+                    0.01f : 0.00f;
                 #endregion
                 #region From Gear/Buffs
                 Stats statsBuffs = GetBuffsStats(character, calcOpts);
@@ -2479,7 +2486,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                     statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
                 }
+#if RAWR3 || SILVERLIGHT
+                if (petTalents.CallOfTheWild > 0) {
+#else
                 if (petTalents.CallOfTheWild.Value > 0) {
+#endif
                     SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.10f, },
                         20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
@@ -2497,8 +2508,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         10f, cooldown);
                     statsTalents.AddSpecialEffect(WrathBeastWithin);
                 }
+#if RAWR3 || SILVERLIGHT
+                if (petTalents.CullingTheHerd > 0) {
+                    float val1 = petTalents.CullingTheHerd * 0.01f;
+#else
                 if (petTalents.CullingTheHerd.Value > 0) {
                     float val1 = petTalents.CullingTheHerd.Value * 0.01f;
+#endif
                     SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
                         new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
                         10f, 0f);
@@ -2844,7 +2860,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return statsProcs;
         }
 
-		#endregion //overrides
+        #endregion //overrides
 
         #region Private Functions
         private ShotData getShotByIndex(int index, CharacterCalculationsHunter calculatedStats)
@@ -2917,5 +2933,5 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             return armorReduction;
         }
         #endregion
-	}
+    }
 }

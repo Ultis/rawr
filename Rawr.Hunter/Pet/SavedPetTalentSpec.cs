@@ -56,21 +56,33 @@ namespace Rawr.Hunter
             return ret;
         }
 
-        public SavedPetTalentSpec(String name, PetTalentTree talentSpec, int tree)
+#if RAWR3 || SILVERLIGHT
+        public SavedPetTalentSpec(String name, PetTalents talentSpec, int tree)
+#else
+        public SavedPetTalentSpec(String name, PetTalentTreeData talentSpec, int tree)
+#endif
         {
             Name = name;
             Tree = tree;
             if (talentSpec != null)
             {
                 Spec = talentSpec.ToString();
-                Class = talentSpec.GetClass();
+                Class = (PetFamilyTree)Tree;
             }
         }
 
-        public PetTalentTree TalentSpec()
+#if RAWR3 || SILVERLIGHT
+        public PetTalents TalentSpec()
+#else
+        public PetTalentTreeData TalentSpec()
+#endif
         {
             if (Spec == null) return null;
-            PetTalentTree spec = new PetTalentTree(Spec);
+#if RAWR3 || SILVERLIGHT
+            PetTalents spec = new PetTalents(Spec);
+#else
+            PetTalentTreeData spec = new PetTalentTreeData(Spec);
+#endif
             /*if (Class == PetFamilyTree.Cunning) spec = new PetTalents();
             else if (Class == CharacterClass.Warrior) spec = new WarriorTalents(Spec);
             else if (Class == CharacterClass.Paladin) spec = new PaladinTalents(Spec);
@@ -102,7 +114,11 @@ namespace Rawr.Hunter
             return string.Format("{0} ({1}){2}", Name, Tree, warning);
         }
 
-        public bool Equals(PetTalentTree talents)
+#if RAWR3 || SILVERLIGHT
+        public bool Equals(PetTalents talents)
+#else
+        public bool Equals(PetTalentTreeData talents)
+#endif
         {
             if (talents == null || Spec == null) return false;
             return talents.ToString().Equals(Spec) ;//&& Class == talents.GetClass();

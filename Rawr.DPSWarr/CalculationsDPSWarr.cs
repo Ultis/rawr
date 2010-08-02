@@ -1190,7 +1190,7 @@ These numbers to do not include racial bonuses.",
 
         #region Character Calcs
 
-        private WarriorTalents _cachedTalents = null;
+        //private WarriorTalents _cachedTalents = null;
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
 #if (!RAWR3 && DEBUG)
             if (character.Name == "") {

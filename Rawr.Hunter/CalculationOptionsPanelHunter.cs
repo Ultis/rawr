@@ -17,7 +17,7 @@ namespace Rawr.Hunter
     {
         #region Instance Variables
         private bool isLoading = false;
-		private CalculationOptionsHunter CalcOpts = null;
+        private CalculationOptionsHunter CalcOpts = null;
         private PetAttacks[] familyList = null;
         private List<ComboBox> ShotPriorityBoxes = new List<ComboBox>();
         #endregion
@@ -164,7 +164,7 @@ namespace Rawr.Hunter
                 CK_PTRMode.Checked = CalcOpts.PTRMode;
 
                 PetBuffs.character = Character;
-                PetBuffs.LoadBuffsFromOptions();
+                //PetBuffs.LoadBuffsFromOptions();
 
                 NUD_Latency.Value = (decimal)(CalcOpts.Latency * 1000.0);
 
@@ -215,7 +215,7 @@ namespace Rawr.Hunter
                 CB_PetPrio_06.SelectedItem = CalcOpts.PetPriority6;
                 CB_PetPrio_07.SelectedItem = CalcOpts.PetPriority7;
                 isLoading = true;
-                CalcOpts.PetTalents = new PetTalentTree(CalcOpts.petTalents);
+                CalcOpts.PetTalents = new PetTalentTreeData(CalcOpts.petTalents);
                 populatePetTalentCombos();
                 isLoading = true;
                 // set up shot priorities
@@ -247,7 +247,7 @@ namespace Rawr.Hunter
 
         private static readonly string _SavedFilePath;
         static CalculationOptionsPanelHunter() {
-			_SavedFilePath = 
+            _SavedFilePath = 
                 Path.Combine(
                     Path.Combine(
                         Path.GetDirectoryName(Application.ExecutablePath),
@@ -278,9 +278,9 @@ namespace Rawr.Hunter
             } catch (Exception ex) { Log.Write(ex.Message); Log.Write(ex.StackTrace); }
         }
 
-        private PetTalentTree _pettalents = null;
-        public PetTalentTree PetTalents {
-            get { return _pettalents ?? (CalcOpts.PetTalents != null ? new PetTalentTree(CalcOpts.PetTalents.ToString()) : new PetTalentTree()); }
+        private PetTalentTreeData _pettalents = null;
+        public PetTalentTreeData PetTalents {
+            get { return _pettalents ?? (CalcOpts.PetTalents != null ? new PetTalentTreeData(CalcOpts.PetTalents.ToString()) : new PetTalentTreeData()); }
             set {
                 _pettalents = value;
                 CalcOpts.PetTalents = _pettalents;
@@ -898,7 +898,7 @@ namespace Rawr.Hunter
             // one of the (many) talent combo boxes has been updated
             // so we need to update the options
 
-            PetTalentTree pt = CalcOpts.PetTalents;
+            PetTalentTreeData pt = CalcOpts.PetTalents;
             PetFamilyTree tree = getPetFamilyTree();
             int currentId = 0;
 
@@ -1086,7 +1086,7 @@ namespace Rawr.Hunter
             CB_PetFamily.Text = CurrentPet.Family;
             isLoading = false;
             // Convert the ArmoryPet spec to our spec
-            PetTalentTree pt = PetTalentTree.FromArmoryPet(CurrentPet);
+            PetTalentTreeData pt = PetTalentTreeData.FromArmoryPet(CurrentPet);
             // Populate the Pet Specs box
             {
                 CalcOpts.PetTalents = pt;

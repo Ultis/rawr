@@ -11,7 +11,8 @@ using System.Xml.Serialization;
 
 namespace Rawr.Hunter
 {
-    /*[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+#if RAWR3 || SILVERLIGHT
+    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public sealed class PetTalentDataAttribute : Attribute
     {
         /// <summary>
@@ -20,21 +21,21 @@ namespace Rawr.Hunter
         /// <param name="index">Unique identifier</param>
         /// <param name="name">Talent Name</param>
         /// <param name="maxPoints">Maximum number of Ranks player can assign</param>
-        /// <param name="tree">The id of the Tree (0,1,2), should aways be 0 on Pet</param>
-        /// <param name="column">1 based array, 4 columns (1,2,3,4)</param>
-        /// <param name="row">1 based array, 6 Rows (1,2,3,4,5,6)</param>
-        /// <param name="prerequisite">The ID of another Pet Talent that must be maxed before this one can be selected</param>
+        /// <param name="trees">The flags of the Trees (0,1,2), that the talent shows up in</param>
+        /// <param name="columns">1 based array, 4 columns (1,2,3,4)</param>
+        /// <param name="rows">1 based array, 6 Rows (1,2,3,4,5,6)</param>
+        /// <param name="prerequisites">The ID of another Pet Talent that must be maxed before this one can be selected</param>
         /// <param name="description">String array of descriptive stuff</param>
         /// <param name="icon">The icon to use for this talent, must specify the back end name for it</param>
-        public PetTalentDataAttribute(int index, string name, int maxPoints, int tree, int column, int row, int prerequisite, string[] description, string icon)
+        public PetTalentDataAttribute(int index, string name, int maxPoints, bool[] trees, int[] columns, int[] rows, int[] prerequisites, string[] description, string icon)
         {
             _index = index;
             _name = name;
             _maxPoints = maxPoints;
-            _tree = tree;
-            _column = column;
-            _row = row;
-            _prerequisite = prerequisite;
+            _trees = trees;
+            _columns = columns;
+            _rows = rows;
+            _prerequisites = prerequisites;
             _description = description;
             _icon = icon;
         }
@@ -42,20 +43,20 @@ namespace Rawr.Hunter
         private readonly int _index;
         private readonly string _name;
         private readonly int _maxPoints;
-        private readonly int _tree;
-        private readonly int _column;
-        private readonly int _row;
-        private readonly int _prerequisite;
+        private readonly bool[] _trees;
+        private readonly int[] _columns;
+        private readonly int[] _rows;
+        private readonly int[] _prerequisites;
         private readonly string _icon;
         private readonly string[] _description;
 
         public int Index { get { return _index; } }
         public string Name { get { return _name; } }
         public int MaxPoints { get { return _maxPoints; } }
-        public int Tree { get { return _tree; } }
-        public int Column { get { return _column; } }
-        public int Row { get { return _row; } }
-        public int Prerequisite { get { return _prerequisite; } }
+        public bool[] Trees { get { return _trees; } }
+        public int[] Columns { get { return _columns; } }
+        public int[] Rows { get { return _rows; } }
+        public int[] Prerequisites { get { return _prerequisites; } }
         public string[] Description { get { return _description; } }
         public string Icon { get { return _icon; } }
 
@@ -98,14 +99,14 @@ namespace Rawr.Hunter
         public CharacterClass GetClass() { return CharacterClass.Hunter; }
 
 #if RAWR3
-		public abstract PetTalentsBase Clone();
+        public abstract PetTalentsBase Clone();
 #endif
     }
 
     public partial class PetTalents : PetTalentsBase
 #if RAWR3
-	{
-		public override PetTalentsBase Clone()
+    {
+        public override PetTalentsBase Clone()
 #else
 , ICloneable
     {
@@ -118,240 +119,256 @@ namespace Rawr.Hunter
             return clone;
         }
 
-        private int[] _data = new int[81];
+        private int[] _data = new int[38];
         public override int[] Data { get { return _data; } }
         public PetTalents() { }
         public PetTalents(string talents) { LoadString(talents); }
-        public static string[] TreeNames = new string[] { @"Tenacity", @"Cunning", @"Ferocity", };
+        public static string[] TreeNames = new string[] { "Cunning", "Ferocity", "Tenacity" };
+        /*public static string[] TreeBackgrounds = new string[] {
+            "http://static.wowhead.com/images/wow/hunterpettalents/live/bg_3.jpg",
+            "http://static.wowhead.com/images/wow/hunterpettalents/live/bg_1.jpg",
+            "http://static.wowhead.com/images/wow/hunterpettalents/live/bg_2.jpg",
+        };*/
 
-/// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
-[PetTalentData(0, "Cobra Reflexes", 2, 0, 1, 1, -1, new string[] {
-@"Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.",
-@"Increases your pet's attack speed by 15%. Your pet will hit faster but each hit will do less damage.",
-@"Increases your pet's attack speed by 30%. Your pet will hit faster but each hit will do less damage." }, "ability_rogue_ambush")]
-public int CobraReflexes_Ten { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
-public int CobraReflexes_Cun { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
-public int CobraReflexes_Fer { get { return _data[0]; } set { _data[0] = value; } }
+        #region PetTalentData filled in
+        // ============================================
+        // == ROW 1 DATA ==
+        // ============================================
+        /// <summary>Increases your pet's attack speed by [15*Pts]%. Your pet will hit faster but each hit will do less damage.</summary>
+        [PetTalentData(0, "Cobra Reflexes", 2, new bool[] {true, true, true }, new int[] { 1, 1, 1 }, new int[] { 1, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases your pet's attack speed by 15%. Your pet will hit faster but each hit will do less damage.",
+        @"Increases your pet's attack speed by 30%. Your pet will hit faster but each hit will do less damage." }, "spell_nature_guardianward")]
+        public int CobraReflexes { get { return _data[0]; } set { _data[0] = value; } }
 
-/// <summary>Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.</summary>
-[PetTalentData(1, "Charge/Swoop", 1, 0, 1, 1, -1, new string[] {
-@"Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.",
-@"Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack." }, "ability_rogue_ambush")]
-public int ChargeSwoop { get { return _data[1]; } set { _data[1] = value; } }
+        /// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
+        [PetTalentData(1, "Dive/Dash", 1, new bool[] { true, true, false }, new int[] { 2, 2, 2 }, new int[] { 1, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases your pet's movement speed by 80% for 16 sec." }, "spell_shadow_burningspirit")]
+        public int DiveDash { get { return _data[1]; } set { _data[1] = value; } }
 
-        
-/// <summary>Reduces the damage your pet takes from area of effect attacks by [25*Pts]%.</summary>
-[PetTalentData(0, "Avoidance", 3, 0, 1, 1, -1, new string[] {
-@"Reduces the damage your pet takes from area of effect attacks by [25*Pts]%.",
-@"Reduces the damage your pet takes from area of effect attacks by 25%.",
-@"Reduces the damage your pet takes from area of effect attacks by 50%.",
-@"Reduces the damage your pet takes from area of effect attacks by 75%." }, "ability_rogue_ambush")]
-public int Avoidance { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
-[PetTalentData(1, "Blood Of The Rhino", 2, 0, 1, 1, -1, new string[] {
-@"Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.",
-@"Increases your pet's total Stamina by 2% and increases all healing effects on your pet by 20%.",
-@"Increases your pet's total Stamina by 4% and increases all healing effects on your pet by 40%." }, "ability_rogue_ambush")]
-public int BloodOfTheRhino { get { return _data[1]; } set { _data[1] = value; } }
-/// <summary>Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.</summary>
-[PetTalentData(2, "Bloodthirsty", 2, 0, 1, 1, -1, new string[] {
-@"Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.",
-@"Your pet's attacks have a 10% chance to increase its happiness by 5% and heal 5% of its total health.",
-@"Your pet's attacks have a 20% chance to increase its happiness by 5% and heal 5% of its total health." }, "ability_rogue_ambush")]
-public int Bloodthirsty { get { return _data[2]; } set { _data[2] = value; } }
-/// <summary>Increases your pet's movement speed by 30%.</summary>
-[PetTalentData(3, "Boar's Speed", 1, 0, 1, 1, -1, new string[] {
-@"Increases your pet's movement speed by 30%.",
-@"Increases your pet's movement speed by 30%." }, "ability_rogue_ambush")]
-public int BoarsSpeed { get { return _data[3]; } set { _data[3] = value; } }
-/// <summary>Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.</summary>
-[PetTalentData(4, "Bullheaded", 1, 0, 1, 1, -1, new string[] {
-@"Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.",
-@"Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec." }, "ability_rogue_ambush")]
-public int Bullheaded { get { return _data[4]; } set { _data[4] = value; } }
-/// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
-[PetTalentData(5, "Call Of The Wild", 1, 0, 1, 1, -1, new string[] {
-@"Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.",
-@"Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown." }, "ability_rogue_ambush")]
-public int CallOfTheWild { get { return _data[5]; } set { _data[5] = value; } }
-/// <summary>Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.</summary>
-[PetTalentData(6, "Carrion Feeder", 1, 0, 1, 1, -1, new string[] {
-@"Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.",
-@"Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures." }, "ability_rogue_ambush")]
-public int CarrionFeeder { get { return _data[6]; } set { _data[6] = value; } }
-/// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to eb critically hit.</summary>
-[PetTalentData(9, "Cornered", 2, 0, 1, 1, -1, new string[] {
-@"When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to be critically hit.",
-@"When at less than 35% health, your pet does 25% more damage and has a 30% reduced chance to be critically hit.",
-@"When at less than 35% health, your pet does 50% more damage and has a 60% reduced chance to be critically hit." }, "ability_rogue_ambush")]
-public int Cornered { get { return _data[9]; } set { _data[9] = value; } }
-/// <summary>Increases your pet's movement speed by 80% for 16 sec.</summary>
-[PetTalentData(10, "Dive/Dash", 1, 0, 1, 1, -1, new string[] {
-@"Increases your pet's movement speed by 80% for 16 sec.",
-@"Increases your pet's movement speed by 80% for 16 sec." }, "ability_rogue_ambush")]
-public int DiveDash { get { return _data[10]; } set { _data[10] = value; } }
-/// <summary>Your pet does [8*Pts]% additional damage to targets with less than 35% health.</summary>
-[PetTalentData(11, "Feeding Frenzy", 2, 0, 1, 1, -1, new string[] {
-@"Your pet does [8*Pts]% additional damage to targets with less than 35% health.",
-@"Your pet does 8% additional damage to targets with less than 35% health.",
-@"Your pet does 16% additional damage to targets with less than 35% health." }, "ability_rogue_ambush")]
-public int FeedingFrenzy { get { return _data[11]; } set { _data[11] = value; } }
-/// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
-[PetTalentData(12, "Grace Of The Mantis", 2, 0, 1, 1, -1, new string[] {
-@"Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.",
-@"Reduces the chance your pet will be critically hit by melee attacks by 2%.",
-@"Reduces the chance your pet will be critically hit by melee attacks by 4%." }, "ability_rogue_ambush")]
-public int GraceOfTheMantis { get { return _data[12]; } set { _data[12] = value; } }
-/// <summary>Your pet takes [5*Pts]% less damage from Arcane, Fire, Frost, Nature and Shadow magic.</summary>
-[PetTalentData(13, "Great Resistance", 3, 0, 1, 1, -1, new string[] {
-@"Your pet takes [5*Pts]% less damage from Arcane, Fire, Frost, Nature and Shadow magic.",
-@"Your pet takes 5% less damage from Arcane, Fire, Frost, Nature and Shadow magic.",
-@"Your pet takes 10% less damage from Arcane, Fire, Frost, Nature and Shadow magic.",
-@"Your pet takes 15% less damage from Arcane, Fire, Frost, Nature and Shadow magic." }, "ability_rogue_ambush")]
-public int GreatResistance { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's total Stamina by [4*Pts]%.</summary>
-[PetTalentData(14, "Great Stamina", 3, 0, 1, 1, -1, new string[] {
-@"Increases your pet's total Stamina by [4*Pts]%.",
-@"Increases your pet's total Stamina by 4%.",
-@"Increases your pet's total Stamina by 8%.",
-@"Increases your pet's total Stamina by 12%." }, "ability_rogue_ambush")]
-public int GreatStamina { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet's Growl generates [10*Pts]% additional threat and 10% of it's total happiness.</summary>
-[PetTalentData(15, "Guard Dog", 2, 0, 1, 1, -1, new string[] {
-@"Your pet's Growl generates [10*Pts]% additional threat and 10% of it's total happiness.",
-@"Your pet's Growl generates 10% additional threat and 10% of it's total happiness.",
-@"Your pet's Growl generates 20% additional threat and 10% of it's total happiness." }, "ability_rogue_ambush")]
-public int GuardDog { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>When your pet dies, it will miraculously return to life with full health.</summary>
-[PetTalentData(16, "Heart Of The Phoenix", 1, 0, 1, 1, -1, new string[] {
-@"When your pet dies, it will miraculously return to life with full health.",
-@"When your pet dies, it will miraculously return to life with full health." }, "ability_rogue_ambush")]
-public int HeartOfThePhoenix { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet's Cower also decreases damage taken by [10*Pts]% for the next 10 sec.</summary>
-[PetTalentData(17, "Improved Cower", 2, 0, 1, 1, -1, new string[] {
-@"Your pet's Cower also decreases damage taken by [10*Pts]% for the next 10 sec.",
-@"Your pet's Cower also decreases damage taken by 10% for the next 10 sec.",
-@"Your pet's Cower also decreases damage taken by 20% for the next 10 sec." }, "ability_rogue_ambush")]
-public int ImprovedCower { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them.</summary>
-[PetTalentData(18, "Intervene", 1, 0, 1, 1, -1, new string[] {
-@"Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them.",
-@"Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them." }, "ability_rogue_ambush")]
-public int Intervene { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost.</summary>
-[PetTalentData(19, "Last Stand", 1, 0, 1, 1, -1, new string[] {
-@"Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost.",
-@"Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost." }, "ability_rogue_ambush")]
-public int LastStand { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet heals itself for 100% of its total health over 5 sec while channeling.</summary>
-[PetTalentData(20, "Lick Your Wounds", 1, 0, 1, 1, -1, new string[] {
-@"Your pet heals itself for 100% of its total health over 5 sec while channeling.",
-@"Your pet heals itself for 100% of its total health over 5 sec while channeling." }, "ability_rogue_ambush")]
-public int LickYourWounds { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Reduces the duration of all Stun and Fear effects used against your pet by [15*Pts]%.</summary>
-[PetTalentData(21, "Lionhearted", 2, 0, 1, 1, -1, new string[] {
-@"Reduces the duration of all Stun and Fear effects used against your pet by [15*Pts]%.",
-@"Reduces the duration of all Stun and Fear effects used against your pet by 15%.",
-@"Reduces the duration of all Stun and Fear effects used against your pet by 30%." }, "ability_rogue_ambush")]
-public int Lionhearted { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Reduces the cooldown on your pet's Dive/Dash ability by [8*Pts] sec.</summary>
-[PetTalentData(22, "Mobility", 2, 0, 1, 1, -1, new string[] {
-@"Reduces the cooldown on your pet's Dive/Dash ability by [8*Pts] sec.",
-@"Reduces the cooldown on your pet's Dive/Dash ability by 8 sec.",
-@"Reduces the cooldown on your pet's Dive/Dash ability by 16 sec." }, "ability_rogue_ambush")]
-public int Mobility { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's armor by [5*Pts]%.</summary>
-[PetTalentData(23, "Natural Armor", 2, 0, 1, 1, -1, new string[] {
-@"Increases your pet's armor by [5*Pts]%.",
-@"Increases your pet's armor by 5%.",
-@"Increases your pet's armor by 10%." }, "ability_rogue_ambush")]
-public int NaturalArmor { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet has a [15*Pts]% chance after using an ability that the next ability will cost no Focus if used within 8 sec.</summary>
-[PetTalentData(24, "Owl's Focus", 2, 0, 1, 1, -1, new string[] {
-@"Your pet has a [15*Pts]% chance after using an ability that the next ability will cost no Focus if used within 8 sec.",
-@"Your pet has a 15% chance after using an ability that the next ability will cost no Focus if used within 8 sec.",
-@"Your pet has a 30% chance after using an ability that the next ability will cost no Focus if used within 8 sec." }, "ability_rogue_ambush")]
-public int OwlsFocus { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.</summary>
-[PetTalentData(25, "Pet Barding", 2, 0, 1, 1, -1, new string[] {
-@"Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.",
-@"Increases your pet's armor by 5% and chance to Dodge by 1%.",
-@"Increases your pet's armor by 10% and chance to Dodge by 2%." }, "ability_rogue_ambush")]
-public int PetBarding { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.</summary>
-[PetTalentData(26, "Rabid", 1, 0, 1, 1, -1, new string[] {
-@"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc.",
-@"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sc." }, "ability_rogue_ambush")]
-public int Rabid { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
-[PetTalentData(27, "Roar Of Recovery", 2, 0, 1, 1, -1, new string[] {
-@"Your pet's inspiring roar restores 30% of your total mana over 9 sec.",
-@"Your pet's inspiring roar restores 30% of your total mana over 9 sec." }, "ability_rogue_ambush")]
-public int RoarOfRecovery { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec.</summary>
-[PetTalentData(28, "Roar Of Sacrifice", 1, 0, 1, 1, -1, new string[] {
-@"Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec.",
-@"Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec." }, "ability_rogue_ambush")]
-public int RoarOfSacrifice { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
-[PetTalentData(29, "Shark Attack", 2, 0, 1, 1, -1, new string[] {
-@"Your pet does an additional [3*Pts]% damage with all attacks.",
-@"Your pet does an additional 3% damage with all attacks.",
-@"Your pet does an additional 6% damage with all attacks." }, "ability_rogue_ambush")]
-public int SharkAttack { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet's Growl also heals it for [1*Pts]% of its total health.</summary>
-[PetTalentData(30, "Silverback", 2, 0, 1, 1, -1, new string[] {
-@"Your pet's Growl also heals it for [1*Pts]% of its total health.",
-@"Your pet's Growl also heals it for 1% of its total health.",
-@"Your pet's Growl also heals it for 2% of its total health." }, "ability_rogue_ambush")]
-public int Silverback { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases the critical strike chance of your pet by [3*Pts]%.</summary>
-[PetTalentData(31, "Spider's Bite", 3, 0, 1, 1, -1, new string[] {
-@"Increases the critical strike chance of your pet by [3*Pts]%.",
-@"Increases the critical strike chance of your pet by 3%.",
-@"Increases the critical strike chance of your pet by 6%.",
-@"Increases the critical strike chance of your pet by 9%." }, "ability_rogue_ambush")]
-public int SpidersBite { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
-[PetTalentData(32, "Spiked Collar", 3, 0, 1, 1, -1, new string[] {
-@"Your pet does an additional [3*Pts]% damage with all attacks.",
-@"Your pet does an additional 3% damage with all attacks.",
-@"Your pet does an additional 6% damage with all attacks.",
-@"Your pet does an additional 9% damage with all attacks." }, "ability_rogue_ambush")]
-public int SpikedCollar { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Your pet taunts the target to attack it for 3 sec.</summary>
-[PetTalentData(33, "Taunt", 1, 0, 1, 1, -1, new string[] {
-@"Your pet taunts the target to attack it for 3 sec.",
-@"Your pet taunts the target to attack it for 3 sec." }, "ability_rogue_ambush")]
-public int Taunt { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat.</summary>
-[PetTalentData(34, "Thunderstomp", 1, 0, 1, 1, -1, new string[] {
-@"Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat.",
-@"Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat." }, "ability_rogue_ambush")]
-public int Thunderstomp { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases the contribution your pet gets from your Stamina by [20*Pts]% and attack power by [15*Pts]%.</summary>
-[PetTalentData(35, "Wild Hunt", 2, 0, 1, 1, -1, new string[] {
-@"Increases the contribution your pet gets from your Stamina by [20*Pts]% and attack power by [15*Pts]%.",
-@"Increases the contribution your pet gets from your Stamina by 20% and attack power by 15%.",
-@"Increases the contribution your pet gets from your Stamina by 40% and attack power by 30%." }, "ability_rogue_ambush")]
-public int WildHunt { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.</summary>
-[PetTalentData(36, "Wolverine Bite", 2, 0, 1, 1, -1, new string[] {
-@"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.",
-@"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_rogue_ambush")]
-public int WolverineBite { get { return _data[0]; } set { _data[0] = value; } }
-/// <summary>Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.</summary>
-[PetTalentData(37, "Culling The Herd", 3, 0, 1, 1, -1, new string[] {
-@"Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-@"Increases pet and hunter damage by 1% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-@"Increases pet and hunter damage by 2% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
-@"Increases pet and hunter damage by 3% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack." }, "ability_rogue_ambush")]
-public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
+        /// <summary>Increases your pet's total Stamina by [4*Pts]%.</summary>
+        [PetTalentData(3, "Great Stamina", 3, new bool[] { true, true, true }, new int[] { 3, 3, 3 }, new int[] { 1, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases your pet's total Stamina by 4%.",
+        @"Increases your pet's total Stamina by 8%.",
+        @"Increases your pet's total Stamina by 12%." }, "spell_nature_unyeildingstamina")]
+        public int GreatStamina { get { return _data[3]; } set { _data[3] = value; } }
+
+        /// <summary>Increases your pet's armor by [5*Pts]%.</summary>
+        [PetTalentData(4, "Natural Armor", 2, new bool[] { true, true, true }, new int[] { 4, 4, 4 }, new int[] { 1, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases your pet's armor by 5%.",
+        @"Increases your pet's armor by 10%." }, "spell_nature_spiritarmor")]
+        public int NaturalArmor { get { return _data[4]; } set { _data[4] = value; } }
+
+        /// <summary>Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack.</summary>
+        [PetTalentData(5, "Charge/Swoop", 1, new bool[] { false, true, true }, new int[] { 1, 4, 2 }, new int[] { 1, 3, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet charges an enemy, immobilizing the target for 1 sec, and increasing the pet's melee attack power by 25% for its next attack." }, "ability_hunter_pet_bear")]
+        public int ChargeSwoop { get { return _data[5]; } set { _data[5] = value; } }
+
+        // ============================================
+        // == ROW 2 DATA ==
+        // ============================================
+
+        /// <summary>Increases your pet's movement speed by 30%.</summary>
+        [PetTalentData(6, "Boar's Speed", 1, new bool[] { true, true, true }, new int[] { 1, 4, 2 }, new int[] { 2, 2, 2 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases your pet's movement speed by 30%." }, "ability_hunter_pet_boar")]
+        public int BoarsSpeed { get { return _data[6]; } set { _data[6] = value; } }
+
+        /// <summary>Reduces the cooldown on your pet's Dive/Dash ability by [8*Pts] sec.</summary>
+        [PetTalentData(7, "Mobility", 2, new bool[] { true, false, false }, new int[] { 2, 1, 1 }, new int[] { 2, 1, 1 }, new int[] { 1, -1, -1 }, new string[] {
+        @"Reduces the cooldown on your pet's Dive/Dash ability by 8 sec.",
+        @"Reduces the cooldown on your pet's Dive/Dash ability by 16 sec." }, "ability_hunter_animalhandler")]
+        public int Mobility { get { return _data[7]; } set { _data[7] = value; } }
+
+        /// <summary>Your pet has a [15*Pts]% chance after using an ability that the next ability will cost no Focus if used within 8 sec.</summary>
+        [PetTalentData(8, "Owl's Focus", 2, new bool[] { true, false, false }, new int[] { 3, 1, 1 }, new int[] { 2, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet has a 15% chance after using an ability that the next ability will cost no Focus if used within 8 sec.",
+        @"Your pet has a 30% chance after using an ability that the next ability will cost no Focus if used within 8 sec." }, "ability_hunter_pet_owl")]
+        public int OwlsFocus { get { return _data[8]; } set { _data[8] = value; } }
+
+        /// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
+        [PetTalentData(9, "Spiked Collar", 3, new bool[] { true, true, true }, new int[] { 4, 3, 1 }, new int[] { 2, 2, 2 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet does an additional 3% damage with all attacks.",
+        @"Your pet does an additional 6% damage with all attacks.",
+        @"Your pet does an additional 9% damage with all attacks." }, "inv_jewelry_necklace_22")]
+        public int SpikedCollar { get { return _data[9]; } set { _data[9] = value; } }
+
+        /// <summary>Your pet's Cower also decreases damage taken by [10*Pts]% for the next 10 sec.</summary>
+        [PetTalentData(10, "Improved Cower", 2, new bool[] { false, true, false }, new int[] { 1, 1, 1 }, new int[] { 1, 2, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet's Cower also decreases damage taken by 10% for the next 10 sec.",
+        @"Your pet's Cower also decreases damage taken by 20% for the next 10 sec." }, "ability_druid_cower")]
+        public int ImprovedCower { get { return _data[10]; } set { _data[10] = value; } }
+
+        /// <summary>Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.</summary>
+        [PetTalentData(11, "Bloodthirsty", 2, new bool[] { false, true, false }, new int[] { 1, 2, 1 }, new int[] { 1, 2, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        //@"Your pet's attacks have a [10*Pts]% chance to increase its happiness by 5% and heal 5% of its total health.",
+        @"Your pet's attacks have a 10% chance to increase its happiness by 5% and heal 5% of its total health.",
+        @"Your pet's attacks have a 20% chance to increase its happiness by 5% and heal 5% of its total health." }, "ability_druid_primaltenacity")]
+        public int Bloodthirsty { get { return _data[11]; } set { _data[11] = value; } }
+
+        /// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
+        [PetTalentData(12, "Blood Of The Rhino", 2, new bool[] { false, false, true }, new int[] { 1, 1, 3 }, new int[] { 1, 1, 2 }, new int[] { -1, -1, 3 }, new string[] {
+        @"Increases your pet's total Stamina by 2% and increases all healing effects on your pet by 20%.",
+        @"Increases your pet's total Stamina by 4% and increases all healing effects on your pet by 40%." }, "spell_shadow_lifedrain")]
+        public int BloodOfTheRhino { get { return _data[12]; } set { _data[12] = value; } }
+
+        /// <summary>Increases your pet's armor by [5*Pts]% and chance to Dodge by [1*Pts]%.</summary>
+        [PetTalentData(13, "Pet Barding", 2, new bool[] { false, false, true }, new int[] { 1, 1, 4 }, new int[] { 1, 1, 2 }, new int[] { -1, -1, 4 }, new string[] {
+        @"Increases your pet's armor by 5% and chance to Dodge by 1%.",
+        @"Increases your pet's armor by 10% and chance to Dodge by 2%." }, "inv_helmet_94")]
+        public int PetBarding { get { return _data[13]; } set { _data[13] = value; } }
+
+        // ============================================
+        // == ROW 3 DATA ==
+        // ============================================
+
+        /// <summary>Increases pet and hunter damage by [1*Pts]% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.</summary>
+        [PetTalentData(14, "Culling The Herd", 3, new bool[] { true, true, true }, new int[] { 1, 1, 1 }, new int[] { 3, 3, 3 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases pet and hunter damage by 1% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
+        @"Increases pet and hunter damage by 2% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack.",
+        @"Increases pet and hunter damage by 3% for 10 seconds each time the pet deals a critical strike with Claw, Bite, or Smack." }, "inv_misc_monsterhorn_06")]
+        public int CullingTheHerd { get { return _data[14]; } set { _data[14] = value; } }
+
+        /// <summary>Reduces the duration of all Stun and Fear effects used against your pet by [15*Pts]%.</summary>
+        [PetTalentData(15, "Lionhearted", 2, new bool[] { true, true, true }, new int[] { 2, 3, 3 }, new int[] { 3, 3, 3 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Reduces the duration of all Stun and Fear effects used against your pet by 15%.",
+        @"Reduces the duration of all Stun and Fear effects used against your pet by 30%." }, "inv_bannerpvp_02")]
+        public int Lionhearted { get { return _data[15]; } set { _data[15] = value; } }
+
+        /// <summary>Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures.</summary>
+        [PetTalentData(16, "Carrion Feeder", 1, new bool[] { true, false, false }, new int[] { 3, 1, 1 }, new int[] { 3, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet can generate health and happiness by eating a corpse. Will not work on the remains of elemental or mechanical creatures." }, "ability_racial_cannibalize")]
+        public int CarrionFeeder { get { return _data[16]; } set { _data[16] = value; } }
+
+        /// <summary>Your pet's Growl generates [10*Pts]% additional threat and 10% of it's total happiness.</summary>
+        [PetTalentData(17, "Guard Dog", 2, new bool[] { false, false, true }, new int[] { 1, 1, 2 }, new int[] { 1, 1, 3 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet's Growl generates 10% additional threat and 10% of it's total happiness.",
+        @"Your pet's Growl generates 20% additional threat and 10% of it's total happiness." }, "ability_physical_taunt")]
+        public int GuardDog { get { return _data[17]; } set { _data[17] = value; } }
+
+        /// <summary>Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat.</summary>
+        [PetTalentData(18, "Thunderstomp", 1, new bool[] { false, false, true }, new int[] { 1, 1, 4 }, new int[] { 1, 1, 3 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Shakes the ground with thundering force, doing 3 to 5 Nature damage to all enemeies within 8 yards. This ability causes a moderate amount of additional threat." }, "ability_golemthunderclap")]
+        public int Thunderstomp { get { return _data[18]; } set { _data[18] = value; } }
+
+        // ============================================
+        // == ROW 4 DATA ==
+        // ============================================
+
+        /// <summary>Your pet takes [5*Pts]% less damage from Arcane, Fire, Frost, Nature and Shadow magic.</summary>
+        [PetTalentData(19, "Great Resistance", 3, new bool[] { true, true, true }, new int[] { 2, 4, 4 }, new int[] { 4, 4, 4 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet takes 5% less damage from Arcane, Fire, Frost, Nature and Shadow magic.",
+        @"Your pet takes 10% less damage from Arcane, Fire, Frost, Nature and Shadow magic.",
+        @"Your pet takes 15% less damage from Arcane, Fire, Frost, Nature and Shadow magic." }, "spell_nature_resistnature")]
+        public int GreatResistance { get { return _data[19]; } set { _data[19] = value; } }
+
+        /// <summary>When at less than 35% health, your pet does [25*Pts]% more damage and has a [30*Pts]% reduced chance to be critically hit.</summary>
+        [PetTalentData(20, "Cornered", 2, new bool[] { true, false, false }, new int[] { 3, 1, 1 }, new int[] { 4, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"When at less than 35% health, your pet does 25% more damage and has a 30% reduced chance to be critically hit.",
+        @"When at less than 35% health, your pet does 50% more damage and has a 60% reduced chance to be critically hit." }, "ability_hunter_survivalinstincts")]
+        public int Cornered { get { return _data[20]; } set { _data[20] = value; } }
+
+        /// <summary>Your pet does [8*Pts]% additional damage to targets with less than 35% health.</summary>
+        [PetTalentData(21, "Feeding Frenzy", 2, new bool[] { true, false, false }, new int[] { 4, 1, 1 }, new int[] { 4, 1, 1 }, new int[] { 9, -1, -1 }, new string[] {
+        @"Your pet does 8% additional damage to targets with less than 35% health.",
+        @"Your pet does 16% additional damage to targets with less than 35% health." }, "inv_misc_fish_48")]
+        public int FeedingFrenzy { get { return _data[21]; } set { _data[21] = value; } }
+
+        /// <summary>When your pet dies, it will miraculously return to life with full health.</summary>
+        [PetTalentData(22, "Heart Of The Phoenix", 1, new bool[] { false, true, false }, new int[] { 1, 2, 1 }, new int[] { 1, 4, 1 }, new int[] { -1, 11, -1 }, new string[] {
+        @"When your pet dies, it will miraculously return to life with full health." }, "inv_misc_pheonixpet_01")]
+        public int HeartOfThePhoenix { get { return _data[22]; } set { _data[22] = value; } }
+
+        /// <summary>Increases the critical strike chance of your pet by [3*Pts]%.</summary>
+        [PetTalentData(23, "Spider's Bite", 3, new bool[] { false, true, false }, new int[] { 1, 3, 1 }, new int[] { 1, 4, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Increases the critical strike chance of your pet by 3%.",
+        @"Increases the critical strike chance of your pet by 6%.",
+        @"Increases the critical strike chance of your pet by 9%." }, "ability_hunter_pet_spider")]
+        public int SpidersBite { get { return _data[23]; } set { _data[23] = value; } }
+
+        /// <summary>Reduces the chance your pet will be critically hit by melee attacks by [2*Pts]%.</summary>
+        [PetTalentData(24, "Grace Of The Mantis", 2, new bool[] { true, false, true }, new int[] { 4, 1, 3 }, new int[] { 5, 1, 4 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Reduces the chance your pet will be critically hit by melee attacks by 2%.",
+        @"Reduces the chance your pet will be critically hit by melee attacks by 4%." }, "inv_misc_ahnqirajtrinket_02")]
+        public int GraceOfTheMantis { get { return _data[24]; } set { _data[24] = value; } }
+
+        // ============================================
+        // == ROW 5 DATA ==
+        // ============================================
+
+        /// <summary>A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.</summary>
+        [PetTalentData(25, "Wolverine Bite", 2, new bool[] { true, false, false }, new int[] { 1, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_druid_lacerate")]
+        public int WolverineBite { get { return _data[25]; } set { _data[25] = value; } }
+
+        /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
+        [PetTalentData(26, "Roar Of Recovery", 2, new bool[] { true, false, false }, new int[] { 2, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet's inspiring roar restores 30% of your total mana over 9 sec." }, "ability_druid_mastershapeshifter")]
+        public int RoarOfRecovery { get { return _data[26]; } set { _data[26] = value; } }
+
+        /// <summary>Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec.</summary>
+        [PetTalentData(27, "Bullheaded", 1, new bool[] { true, false, false }, new int[] { 3, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { 20, -1, -1 }, new string[] {
+        @"Removes all movement impairing effects and all effects which cause loss of control of your pet, and reduces damage done to your pet by 20% for 12 sec." }, "ability_warrior_bullrush")]
+        public int Bullheaded { get { return _data[27]; } set { _data[27] = value; } }
+
+        /// <summary>Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec.</summary>
+        [PetTalentData(28, "Rabid", 1, new bool[] { false, true, false }, new int[] { 1, 1, 1 }, new int[] { 1, 5, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet goes into a killing frenzy. Successful attacks have a chance to increase attack power by 5%. This effect will stack up to 5 times. Lasts 20 sec." }, "ability_druid_berserk")]
+        public int Rabid { get { return _data[28]; } set { _data[28] = value; } }
+
+        /// <summary>Your pet heals itself for 100% of its total health over 5 sec while channeling.</summary>
+        [PetTalentData(29, "Lick Your Wounds", 1, new bool[] { false, true, false }, new int[] { 1, 2, 1 }, new int[] { 1, 5, 1 }, new int[] { -1, 22, -1 }, new string[] {
+        @"Your pet heals itself for 100% of its total health over 5 sec while channeling." }, "ability_hunter_mendpet")]
+        public int LickYourWounds { get { return _data[29]; } set { _data[29] = value; } }
+
+        /// <summary>Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown.</summary>
+        [PetTalentData(30, "Call Of The Wild", 1, new bool[] { false, true, false }, new int[] { 1, 3, 1 }, new int[] { 1, 5, 1 }, new int[] { -1, 23, -1 }, new string[] {
+        @"Your pet roars, increasing your pet's and your melee and ranged attack power by 10%. Lasts 20 sec. 5 min cooldown." }, "ability_druid_kingofthejungle")]
+        public int CallOfTheWild { get { return _data[30]; } set { _data[30] = value; } }
+
+        /// <summary>Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost.</summary>
+        [PetTalentData(31, "Last Stand", 1, new bool[] { false, false, true }, new int[] { 1, 1, 1 }, new int[] { 1, 1, 5 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet temporarily gains 30% of it's maximum health for 20 sec. After the effect expires, the health is lost." }, "spell_nature_shamanrage")]
+        public int LastStand { get { return _data[31]; } set { _data[31] = value; } }
+
+        /// <summary>Your pet taunts the target to attack it for 3 sec.</summary>
+        [PetTalentData(32, "Taunt", 1, new bool[] { false, false, true }, new int[] { 1, 1, 2 }, new int[] { 1, 1, 5 }, new int[] { -1, -1, 17 }, new string[] {
+        @"Your pet taunts the target to attack it for 3 sec." }, "spell_nature_reincarnation")]
+        public int Taunt { get { return _data[32]; } set { _data[32] = value; } }
+
+        /// <summary>Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec.</summary>
+        [PetTalentData(33, "Roar Of Sacrifice", 1, new bool[] { true, false, true }, new int[] { 4, 1, 3 }, new int[] { 6, 1, 5 }, new int[] { 24, -1, 24 }, new string[] {
+        @"Protects a friendly target from critical strikes, making attacks against that target unable to be critical strikes, but 20% of all damage taken by that target is also taken by the pet. Lasts 12 sec." }, "ability_druid_demoralizingroar")]
+        public int RoarOfSacrifice { get { return _data[33]; } set { _data[33] = value; } }
+
+        /// <summary>Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them.</summary>
+        [PetTalentData(34, "Intervene", 1, new bool[] { false, false, true }, new int[] { 1, 1, 4 }, new int[] { 1, 1, 5 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet runs at high speed towards a group member, intercepting the next melee or ranged attack made against them." }, "ability_hunter_pet_turtle")]
+        public int Intervene { get { return _data[34]; } set { _data[34] = value; } }
+
+        // ============================================
+        // == ROW 6 DATA ==
+        // ============================================
+
+        /// <summary>Increases the contribution your pet gets from your Stamina by [20*Pts]% and attack power by [15*Pts]%.</summary>
+        [PetTalentData(35, "Wild Hunt", 2, new bool[] { true, true, true }, new int[] { 1, 3, 3 }, new int[] { 6, 6, 6 }, new int[] { 25, 30, 33 }, new string[] {
+        @"Increases the contribution your pet gets from your Stamina by 20% and attack power by 15%.",
+        @"Increases the contribution your pet gets from your Stamina by 40% and attack power by 30%." }, "inv_misc_horn_04")]
+        public int WildHunt { get { return _data[35]; } set { _data[35] = value; } }
+
+        /// <summary>Your pet does an additional [3*Pts]% damage with all attacks.</summary>
+        [PetTalentData(36, "Shark Attack", 2, new bool[] { false, true, false }, new int[] { 1, 1, 1 }, new int[] { 1, 6, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet does an additional 3% damage with all attacks.",
+        @"Your pet does an additional 6% damage with all attacks." }, "inv_misc_fish_35")]
+        public int SharkAttack { get { return _data[36]; } set { _data[36] = value; } }
+
+        /// <summary>Your pet's Growl also heals it for [1*Pts]% of its total health.</summary>
+        [PetTalentData(37, "Silverback", 2, new bool[] { false, false, true }, new int[] { 1, 1, 2 }, new int[] { 1, 1, 6 }, new int[] { -1, -1, -1 }, new string[] {
+        @"Your pet's Growl also heals it for 1% of its total health.",
+        @"Your pet's Growl also heals it for 2% of its total health." }, "ability_hunter_pet_gorilla")]
+        public int Silverback { get { return _data[37]; } set { _data[37] = value; } }
+
+        #endregion
     }
-    */
-    
+#else
     public class PetTalentData {
         /// <summary>A Pet Talent</summary>
         public PetTalentData() {
@@ -385,7 +402,7 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
 
         public override string ToString() {
             try{
- 	            return Name + " [" + Max.ToString() + "]\r\n" + Desc[0];
+                return Name + " [" + Max.ToString() + "]\r\n" + Desc[0];
             }catch (Exception){
                 return "Failed to convert PetTalentData to string.";
             }
@@ -421,13 +438,10 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             get { return _value; }
             set {
                 _value = value;
-                #if !RAWR3 && !SILVERLIGHT
                 UpdateIcon();
-                #endif
             }
         }
 
-#if !RAWR3 && !SILVERLIGHT
         private Image _icon;
         /// <summary>The actual Icon Image</summary>
         public Image TheIcon {
@@ -446,18 +460,17 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
                     ex.Message, "UpdateIcon()", "No Additional Info", ex.StackTrace);
             }
         }
-#endif
 
         public override string ToString() {
             try{
- 	            return Name + " [" + Value.ToString() + "/" + Max.ToString() + "]\r\n" + Desc[0];
+                return Name + " [" + Value.ToString() + "/" + Max.ToString() + "]\r\n" + Desc[0];
             }catch (Exception){
                 return "Failed to convert PetTalent to string.";
             }
         }
     }
 
-    public static class PetTalentsBase {
+    public static class PetTalentsBaseStatic {
         /// <summary>Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.</summary>
         public readonly static PetTalentData BloodOfTheRhino = new PetTalentData(0, "Blood Of The Rhino", 2, new string[] {
             @"Increases your pet's total Stamina by [2*Pts]% and increases all healing effects on your pet by [20*Pts]%.",
@@ -634,12 +647,12 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_druid_lacerate");
     }
 
-    public class PetTalentTree {
-        public PetTalentTree() {
+    public class PetTalentTreeData {
+        public PetTalentTreeData() {
             Initialize();
             MakeTree();
         }
-        public PetTalentTree(string source) {
+        public PetTalentTreeData(string source) {
             if (TalentTree != null) { TalentTree.Clear(); }
             Initialize();
             MakeTree();
@@ -822,43 +835,43 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
         #endregion
         /// <summary>Initializes the Abilities</summary>
         public void Initialize() {
-            BloodOfTheRhino = new PetTalent(PetTalentsBase.BloodOfTheRhino, 0);
-            Bloodthirsty = new PetTalent(PetTalentsBase.Bloodthirsty, 0);
-            BoarsSpeed = new PetTalent(PetTalentsBase.BoarsSpeed, 0);
-            Bullheaded = new PetTalent(PetTalentsBase.Bullheaded, 0);
-            CallOfTheWild = new PetTalent(PetTalentsBase.CallOfTheWild, 0);
-            CarrionFeeder = new PetTalent(PetTalentsBase.CarrionFeeder, 0);
-            ChargeSwoop = new PetTalent(PetTalentsBase.ChargeSwoop, 0);
-            CobraReflexes = new PetTalent(PetTalentsBase.CobraReflexes, 0);
-            Cornered = new PetTalent(PetTalentsBase.Cornered, 0);
-            DiveDash = new PetTalent(PetTalentsBase.DiveDash, 0);
-            FeedingFrenzy = new PetTalent(PetTalentsBase.FeedingFrenzy, 0);
-            GraceOfTheMantis = new PetTalent(PetTalentsBase.GraceOfTheMantis, 0);
-            GreatResistance = new PetTalent(PetTalentsBase.GreatResistance, 0);
-            GreatStamina = new PetTalent(PetTalentsBase.GreatStamina, 0);
-            GuardDog = new PetTalent(PetTalentsBase.GuardDog, 0);
-            HeartOfThePhoenix = new PetTalent(PetTalentsBase.HeartOfThePhoenix, 0);
-            ImprovedCower = new PetTalent(PetTalentsBase.ImprovedCower, 0);
-            Intervene = new PetTalent(PetTalentsBase.Intervene, 0);
-            LastStand = new PetTalent(PetTalentsBase.LastStand, 0);
-            LickYourWounds = new PetTalent(PetTalentsBase.LickYourWounds, 0);
-            Lionhearted = new PetTalent(PetTalentsBase.Lionhearted, 0);
-            Mobility = new PetTalent(PetTalentsBase.Mobility, 0);
-            NaturalArmor = new PetTalent(PetTalentsBase.NaturalArmor, 0);
-            OwlsFocus = new PetTalent(PetTalentsBase.OwlsFocus, 0);
-            PetBarding = new PetTalent(PetTalentsBase.PetBarding, 0);
-            Rabid = new PetTalent(PetTalentsBase.Rabid, 0);
-            RoarOfRecovery = new PetTalent(PetTalentsBase.RoarOfRecovery, 0);
-            RoarOfSacrifice = new PetTalent(PetTalentsBase.RoarOfSacrifice, 0);
-            SharkAttack = new PetTalent(PetTalentsBase.SharkAttack, 0);
-            Silverback = new PetTalent(PetTalentsBase.Silverback, 0);
-            SpidersBite = new PetTalent(PetTalentsBase.SpidersBite, 0);
-            SpikedCollar = new PetTalent(PetTalentsBase.SpikedCollar, 0);
-            Taunt = new PetTalent(PetTalentsBase.Taunt, 0);
-            Thunderstomp = new PetTalent(PetTalentsBase.Thunderstomp, 0);
-            WildHunt = new PetTalent(PetTalentsBase.WildHunt, 0);
-            WolverineBite = new PetTalent(PetTalentsBase.WolverineBite, 0);
-            CullingTheHerd = new PetTalent(PetTalentsBase.CullingTheHerd, 0);
+            BloodOfTheRhino = new PetTalent(PetTalentsBaseStatic.BloodOfTheRhino, 0);
+            Bloodthirsty = new PetTalent(PetTalentsBaseStatic.Bloodthirsty, 0);
+            BoarsSpeed = new PetTalent(PetTalentsBaseStatic.BoarsSpeed, 0);
+            Bullheaded = new PetTalent(PetTalentsBaseStatic.Bullheaded, 0);
+            CallOfTheWild = new PetTalent(PetTalentsBaseStatic.CallOfTheWild, 0);
+            CarrionFeeder = new PetTalent(PetTalentsBaseStatic.CarrionFeeder, 0);
+            ChargeSwoop = new PetTalent(PetTalentsBaseStatic.ChargeSwoop, 0);
+            CobraReflexes = new PetTalent(PetTalentsBaseStatic.CobraReflexes, 0);
+            Cornered = new PetTalent(PetTalentsBaseStatic.Cornered, 0);
+            DiveDash = new PetTalent(PetTalentsBaseStatic.DiveDash, 0);
+            FeedingFrenzy = new PetTalent(PetTalentsBaseStatic.FeedingFrenzy, 0);
+            GraceOfTheMantis = new PetTalent(PetTalentsBaseStatic.GraceOfTheMantis, 0);
+            GreatResistance = new PetTalent(PetTalentsBaseStatic.GreatResistance, 0);
+            GreatStamina = new PetTalent(PetTalentsBaseStatic.GreatStamina, 0);
+            GuardDog = new PetTalent(PetTalentsBaseStatic.GuardDog, 0);
+            HeartOfThePhoenix = new PetTalent(PetTalentsBaseStatic.HeartOfThePhoenix, 0);
+            ImprovedCower = new PetTalent(PetTalentsBaseStatic.ImprovedCower, 0);
+            Intervene = new PetTalent(PetTalentsBaseStatic.Intervene, 0);
+            LastStand = new PetTalent(PetTalentsBaseStatic.LastStand, 0);
+            LickYourWounds = new PetTalent(PetTalentsBaseStatic.LickYourWounds, 0);
+            Lionhearted = new PetTalent(PetTalentsBaseStatic.Lionhearted, 0);
+            Mobility = new PetTalent(PetTalentsBaseStatic.Mobility, 0);
+            NaturalArmor = new PetTalent(PetTalentsBaseStatic.NaturalArmor, 0);
+            OwlsFocus = new PetTalent(PetTalentsBaseStatic.OwlsFocus, 0);
+            PetBarding = new PetTalent(PetTalentsBaseStatic.PetBarding, 0);
+            Rabid = new PetTalent(PetTalentsBaseStatic.Rabid, 0);
+            RoarOfRecovery = new PetTalent(PetTalentsBaseStatic.RoarOfRecovery, 0);
+            RoarOfSacrifice = new PetTalent(PetTalentsBaseStatic.RoarOfSacrifice, 0);
+            SharkAttack = new PetTalent(PetTalentsBaseStatic.SharkAttack, 0);
+            Silverback = new PetTalent(PetTalentsBaseStatic.Silverback, 0);
+            SpidersBite = new PetTalent(PetTalentsBaseStatic.SpidersBite, 0);
+            SpikedCollar = new PetTalent(PetTalentsBaseStatic.SpikedCollar, 0);
+            Taunt = new PetTalent(PetTalentsBaseStatic.Taunt, 0);
+            Thunderstomp = new PetTalent(PetTalentsBaseStatic.Thunderstomp, 0);
+            WildHunt = new PetTalent(PetTalentsBaseStatic.WildHunt, 0);
+            WolverineBite = new PetTalent(PetTalentsBaseStatic.WolverineBite, 0);
+            CullingTheHerd = new PetTalent(PetTalentsBaseStatic.CullingTheHerd, 0);
         }
         /// <summary>Resets all Talents to 0</summary>
         public void Reset()
@@ -934,8 +947,8 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             return ret;
         }
 
-        public static PetTalentTree FromArmoryPet(ArmoryPet pet) {
-            PetTalentTree retVal = new PetTalentTree();
+        public static PetTalentTreeData FromArmoryPet(ArmoryPet pet) {
+            PetTalentTreeData retVal = new PetTalentTreeData();
             string armoryspec = pet.Spec;
             try {
                 retVal.Reset();
@@ -1049,4 +1062,5 @@ public int CullingTheHerd { get { return _data[0]; } set { _data[0] = value; } }
             return null;
         }
     }
+#endif
 }

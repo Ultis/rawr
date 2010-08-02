@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -10,21 +12,154 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Reflection;
+using System.Xml.Serialization;
 using Rawr.Base;
+using System.Text;
 
 namespace Rawr.Hunter {
-	public partial class CalculationOptionsPanelHunter : ICalculationOptionsPanel
+    public partial class CalculationOptionsPanelHunter : ICalculationOptionsPanel
     {
+        #region Instance Variables
+        private PetAttacks[] familyList = null;
+        private List<ComboBox> ShotPriorityBoxes = new List<ComboBox>();
+        #endregion
+
+        #region Constructors
         public CalculationOptionsPanelHunter()
         {
-		    InitializeComponent();
+            _loadingCalculationOptions = true;
+            //LoadPetTalentSpecs();
+            InitializeComponent();
+            PetBuffs.Character = Character;
             //
             SetUpFAQ();
             SetUpPatchNotes();
             SetUpOther();
+            //
+            // This should now be the only group of 10 lines, the rest are loop-capable
+            ShotPriorityBoxes.Clear();
+            ShotPriorityBoxes.Add(CB_ShotPrio_01);
+            ShotPriorityBoxes.Add(CB_ShotPrio_02);
+            ShotPriorityBoxes.Add(CB_ShotPrio_03);
+            ShotPriorityBoxes.Add(CB_ShotPrio_04);
+            ShotPriorityBoxes.Add(CB_ShotPrio_05);
+            ShotPriorityBoxes.Add(CB_ShotPrio_06);
+            ShotPriorityBoxes.Add(CB_ShotPrio_07);
+            ShotPriorityBoxes.Add(CB_ShotPrio_08);
+            ShotPriorityBoxes.Add(CB_ShotPrio_09);
+            ShotPriorityBoxes.Add(CB_ShotPrio_10);
+
+            //foreach (ComboBox cb in ShotPriorityBoxes) { InitializeShotList(cb); }
+
+            //UpdateSavedTalents();
+            //SavePetTalentSpecs();
+
+            //CB_CalculationToGraph.Items.Add(Graph.GetCalculationNames());
+            _loadingCalculationOptions = false;
         }
-        
-        private bool firstload = true;
+
+        private static readonly string _SavedFilePath;
+        static CalculationOptionsPanelHunter() {
+            _SavedFilePath = 
+                System.IO.Path.Combine(
+                    /*System.IO.Path.Combine(
+                        System.IO.Path.GetDirectoryName(Application.ExecutablePath),
+                        "Data"),*/
+                    "PetTalents.xml");
+        }
+
+        private SavedPetTalentSpecList _savedPetTalents;
+        private void LoadPetTalentSpecs() {
+            try {
+                if (File.Exists(_SavedFilePath)) {
+                    using (StreamReader reader = new StreamReader(_SavedFilePath, Encoding.UTF8)) {
+                        XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+                        _savedPetTalents = (SavedPetTalentSpecList)serializer.Deserialize(reader);
+                        reader.Close();
+                    }
+                }
+            } catch (Exception) { }
+            if (_savedPetTalents == null) { _savedPetTalents = new SavedPetTalentSpecList(10); }
+        }
+        private void SavePetTalentSpecs() {
+            //try {
+                using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8)) {
+                    XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+                    serializer.Serialize(writer, _savedPetTalents);
+                    writer.Close();
+                }
+            //} catch (Exception ex) { Log.Write(ex.Message); Log.Write(ex.StackTrace); }
+        }
+
+#if RAWR3 || SILVERLIGHT
+        private PetTalents _pettalents = null;
+        public PetTalents PetTalents
+        {
+            get { return _pettalents ?? (calcOpts.PetTalents != null ? new PetTalents(calcOpts.PetTalents.ToString()) : new PetTalents()); }
+#else
+        private PetTalentTreeData _pettalents = null;
+        public PetTalentTreeData PetTalents
+        {
+            get { return _pettalents ?? (CalcOpts.PetTalents != null ? new PetTalentTreeData(CalcOpts.PetTalents.ToString()) : new PetTalentTreeData()); }
+#endif
+            set {
+                _pettalents = value;
+                calcOpts.PetTalents = _pettalents;
+                UpdatePetTrees();
+            }
+        }
+
+        public SavedPetTalentSpec CustomPetSpec { get; set; }
+        public List<SavedPetTalentSpec> SpecsFor(PetFamilyTree petClass) {
+            List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+            foreach (SavedPetTalentSpec spec in _savedPetTalents) {
+                //if (spec.Class == _character.Class) {
+                    classTalents.Add(spec);
+                //}
+            }
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
+                CustomPetSpec = new SavedPetTalentSpec("Custom", _pettalents, _treeCount);
+                classTalents.Add(CustomPetSpec);
+            }
+            return classTalents;
+        }
+
+        public SavedPetTalentSpec CurrentPetSpec() {
+            if (CB_PetTalentsSpecSwitcher.SelectedItem == null) return CustomPetSpec;
+            else if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) return CustomPetSpec;
+            else return (SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem;
+        }
+
+        private int _treeCount;
+
+        private void UpdatePetTrees() { populatePetTalentCombos(); }
+
+        private bool _updateSaved = false;
+        private void UpdateSavedTalents() {
+            //if (_character != null) {
+                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+                SavedPetTalentSpec current = null;
+                foreach (SavedPetTalentSpec spec in _savedPetTalents) {
+                    //if (spec.Class == _character.Class) {
+                        classTalents.Add(spec);
+                        if (spec.Equals(_pettalents)) current = spec;
+                    //}
+                }
+                if (current == null) {
+                    current = new SavedPetTalentSpec("Custom", null, _treeCount);
+                    classTalents.Add(current);
+                }
+                _updateSaved = true;
+                if (CB_PetTalentsSpecSwitcher.Items.Count > 0) { CB_PetTalentsSpecSwitcher.Items.Clear(); }
+                CB_PetTalentsSpecSwitcher.ItemsSource = classTalents;
+                CB_PetTalentsSpecSwitcher.SelectedItem = current;
+                _updateSaved = false;
+            //}
+        }
+        #endregion
+
+        //private bool firstload = true;
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
 
@@ -70,6 +205,8 @@ namespace Rawr.Hunter {
                 }
                 else if (Character == null) { return; }
                 calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                ThePetTalentPicker.Character = character;
+                PetBuffs.Character = Character;
                 // Bad Item Hiding
                 CalculationsHunter.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
                 CalculationsHunter.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
@@ -752,7 +889,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         private void CB_FAQ_Questions_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
                 string text = "";
-                if (true /*CB_FAQ_Questions.Text == "All"*/) {
+                if ((string)CB_FAQ_Questions.SelectedItem == "All") {
                     int Iter = 1;
                     text += "== CONTENTS ==" + "\r\n";
                     foreach (string s in FAQStuff.Keys) {
@@ -823,105 +960,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             }
         }
         // Rotations
-        private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // only do anything if we weren't set to 0
-            if (_loadingCalculationOptions || CB_PriorityDefaults.SelectedIndex == 0) return;
-
-            _loadingCalculationOptions = true;
-
-            int i = 0;
-            //if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.BeastMaster.ShotList[i].Index; i++; } }
-            //else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Marksman.ShotList[i].Index; i++; } }
-            //else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedIndex = CalculationOptionsHunter.Survival.ShotList[i].Index; i++; } }
-
-            /* I want to do a conglomerate one:
-                CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
-                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BestialWrath.Index;
-                CB_ShotPriority_03.SelectedIndex = CalculationOptionsHunter.Readiness.Index;
-                CB_ShotPriority_04.SelectedIndex = CalculationOptionsHunter.SerpentSting.Index;
-                CB_ShotPriority_05.SelectedIndex = CalculationOptionsHunter.ChimeraShot.Index;
-                CB_ShotPriority_06.SelectedIndex = CalculationOptionsHunter.KillShot.Index;
-                CB_ShotPriority_07.SelectedIndex = CalculationOptionsHunter.ExplosiveShot.Index;
-                CB_ShotPriority_08.SelectedIndex = CalculationOptionsHunter.BlackArrow.Index;
-                CB_ShotPriority_09.SelectedIndex = CalculationOptionsHunter.AimedShot.Index;
-                CB_ShotPriority_10.SelectedIndex = CalculationOptionsHunter.SilencingShot.Index;
-                CB_ShotPriority_11.SelectedIndex = CalculationOptionsHunter.ArcaneShot.Index;
-                CB_ShotPriority_12.SelectedIndex = CalculationOptionsHunter.SteadyShot.Index;
-             * But this requires 2 extra slots minimum
-             * Gotta add even more for volley and traps, etc.
-             * So frack it, I'll just forget it until we have the
-             * new rotation setup where this stuff doesn't matter
-             */
-            _loadingCalculationOptions = false;
-
-            int j = 0;
-            int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-            //foreach (ComboBox cb in ShotPriorityBoxes) { _prioIndxs[j] = cb.SelectedIndex; j++; }
-            //CalcOpts.PriorityIndexes = _prioIndxs;
-
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex1 = CB_ShotPrio_01.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_02_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex2 = CB_ShotPrio_02.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_03_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex3 = CB_ShotPrio_03.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_04_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex4 = CB_ShotPrio_04.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_05_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex5 = CB_ShotPrio_05.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_06_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex6 = CB_ShotPrio_06.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_07_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex7 = CB_ShotPrio_07.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_08_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex8 = CB_ShotPrio_08.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_09_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex9 = CB_ShotPrio_09.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-        private void CB_ShotPrio_10_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) return;
-            calcOpts.PriorityIndex10 = CB_ShotPrio_10.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
         private void CB_PetPrio_01_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_loadingCalculationOptions) return;
@@ -965,13 +1003,676 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             Character.OnCalculationsInvalidated();
         }
         //
-        private int _CurrentSpec;
-        private int CurrentSpec
+        #region Rotations
+        private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
+            // only do anything if we weren't set to 0
+            if (_loadingCalculationOptions || CB_PriorityDefaults.SelectedIndex == 0) return;
+
+            _loadingCalculationOptions = true;
+
+            int i = 0;
+            if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.BeastMaster.ShotList[i]; i++; } }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.Marksman.ShotList[i]; i++; } }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.Survival.ShotList[i]; i++; } }
+
+            /* I want to do a conglomerate one:
+                CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
+                CB_ShotPriority_02.SelectedIndex = CalculationOptionsHunter.BestialWrath.Index;
+                CB_ShotPriority_03.SelectedIndex = CalculationOptionsHunter.Readiness.Index;
+                CB_ShotPriority_04.SelectedIndex = CalculationOptionsHunter.SerpentSting.Index;
+                CB_ShotPriority_05.SelectedIndex = CalculationOptionsHunter.ChimeraShot.Index;
+                CB_ShotPriority_06.SelectedIndex = CalculationOptionsHunter.KillShot.Index;
+                CB_ShotPriority_07.SelectedIndex = CalculationOptionsHunter.ExplosiveShot.Index;
+                CB_ShotPriority_08.SelectedIndex = CalculationOptionsHunter.BlackArrow.Index;
+                CB_ShotPriority_09.SelectedIndex = CalculationOptionsHunter.AimedShot.Index;
+                CB_ShotPriority_10.SelectedIndex = CalculationOptionsHunter.SilencingShot.Index;
+                CB_ShotPriority_11.SelectedIndex = CalculationOptionsHunter.ArcaneShot.Index;
+                CB_ShotPriority_12.SelectedIndex = CalculationOptionsHunter.SteadyShot.Index;
+             * But this requires 2 extra slots minimum
+             * Gotta add even more for volley and traps, etc.
+             * So frack it, I'll just forget it until we have the
+             * new rotation setup where this stuff doesn't matter
+             */
+            _loadingCalculationOptions = false;
+
+            int j = 0;
+            int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+            foreach (ComboBox cb in ShotPriorityBoxes) { _prioIndxs[j] = ((Shot)(cb.SelectedItem)).Index; j++; }
+            calcOpts.PriorityIndexes = _prioIndxs;
+
+            Character.OnCalculationsInvalidated();
+        }
+        /// <summary>
+        /// This is to figure out which of the default rotations (if any) are in use
+        /// </summary>
+        /// <returns>The combobox index to use</returns>
+        private int ShotRotationIndexCheck() {
+            int specIndex = 0;
+
+            List<Shot> list = new List<Shot>() { };
+            foreach (ComboBox cb in ShotPriorityBoxes) { list.Add(CalculationOptionsHunter.ShotList[cb.SelectedIndex]); }
+            ShotGroup current = new ShotGroup("Custom", list);
+
+            if (current == CalculationOptionsHunter.BeastMaster) { specIndex = (int)Specs.BeastMaster; }
+            else if (current == CalculationOptionsHunter.Marksman) { specIndex = (int)Specs.Marksman; }
+            else if (current == CalculationOptionsHunter.Survival) { specIndex = (int)Specs.Survival; }
+            
+            return specIndex;
+        }
+
+        private int _CurrentSpec;
+        private int CurrentSpec {
             get { return _CurrentSpec; }
             set { _CurrentSpec = value; }
         }
-        public enum Specs { BeastMaster = 1, Marksman, Survival }
+        public enum Specs { BeastMaster=1, Marksman, Survival }
+
+        private void CharTalents_Changed(object sender, EventArgs e) {
+            if (_loadingCalculationOptions) return;
+            //CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            //ErrorBox eb = new ErrorBox("Event fired", "yay!", "CharTalents_Changed");
+            int rightSpec = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
+            if (ShotRotationFunctions.ShotRotationIsntSet(calcOpts)) {
+                 // No Shot Priority set up, use a default based on talent spec
+                CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
+            } else if (rightSpec != 0 && CurrentSpec != 0 && CurrentSpec != rightSpec) {
+                // The rotation setup needs to change, user has changed to a totally different spec
+                CB_PriorityDefaults.SelectedIndex = rightSpec;
+            }
+            CurrentSpec = CB_PriorityDefaults.SelectedIndex;
+        }
+        #endregion
+        #region Pet
+        private void PopulatePetAbilities() {
+            // the abilities should be in this order:
+            //
+            // 1) focus dump (bite / claw / smack)
+            // 2) dash / dive / none
+            // 3) charge / swoop / none
+            // 4) family skill (the one selected by default)
+            // 5) second family skill (not selected by default)
+            //   
+            // only Cat and SpiritBeast currently have a #5!
+            //
+
+            switch (calcOpts.PetFamily)
+            {
+                case PetFamily.Bat:         familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.SonicBlast }; break;
+                case PetFamily.Bear:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Swipe }; break;
+                case PetFamily.BirdOfPrey:  familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dive, PetAttacks.None, PetAttacks.Snatch }; break;
+                case PetFamily.Boar:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.Gore }; break;
+                case PetFamily.CarrionBird: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.DemoralizingScreech }; break;
+                case PetFamily.Cat:         familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Rake, PetAttacks.Prowl }; break;
+                case PetFamily.Chimaera:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FroststormBreath }; break;
+                case PetFamily.CoreHound:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.LavaBreath }; break;
+                case PetFamily.Crab:        familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pin }; break;
+                case PetFamily.Crocolisk:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.BadAttitude }; break;
+                case PetFamily.Devilsaur:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.MonstrousBite }; break;
+                case PetFamily.Dragonhawk:  familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.FireBreath }; break;
+                case PetFamily.Gorilla:     familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Pummel }; break;
+                case PetFamily.Hyena:       familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.TendonRip }; break;
+                case PetFamily.Moth:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.SerenityDust }; break;
+                case PetFamily.NetherRay:   familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.NetherShock }; break;
+                case PetFamily.Raptor:      familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SavageRend }; break;
+                case PetFamily.Ravager:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Ravage }; break;
+                case PetFamily.Rhino:       familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.None, PetAttacks.Charge, PetAttacks.Stampede }; break;
+                case PetFamily.Scorpid:     familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.None, PetAttacks.Charge, PetAttacks.ScorpidPoison }; break;
+                case PetFamily.Serpent:     familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.PoisonSpit }; break;
+                case PetFamily.Silithid:    familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.None, PetAttacks.VenomWebSpray }; break;
+                case PetFamily.Spider:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.None, PetAttacks.Web }; break;
+                case PetFamily.SpiritBeast: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.SpiritStrike, PetAttacks.Prowl }; break;
+                case PetFamily.SporeBat:    familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.None, PetAttacks.SporeCloud }; break;
+                case PetFamily.Tallstrider: familyList = new PetAttacks[] { PetAttacks.Claw, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.DustCloud }; break;
+                case PetFamily.Turtle:      familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.ShellShield }; break;
+                case PetFamily.WarpStalker: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.Warp }; break;
+                case PetFamily.Wasp:        familyList = new PetAttacks[] { PetAttacks.Smack, PetAttacks.Dive, PetAttacks.Swoop, PetAttacks.Sting }; break;
+                case PetFamily.WindSerpent: familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dive, PetAttacks.None, PetAttacks.LightningBreath }; break;
+                case PetFamily.Wolf:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.Dash, PetAttacks.Charge, PetAttacks.FuriousHowl }; break;
+                case PetFamily.Worm:        familyList = new PetAttacks[] { PetAttacks.Bite, PetAttacks.None, PetAttacks.Charge, PetAttacks.AcidSpit }; break;
+            }
+
+            CB_PetPrio_01.Items.Clear();
+            CB_PetPrio_01.Items.Add(PetAttacks.None);
+
+            int family_mod = 0;
+
+            if (calcOpts.PetFamily != PetFamily.None)
+            {
+                CB_PetPrio_01.Items.Add(PetAttacks.Growl);
+                CB_PetPrio_01.Items.Add(PetAttacks.Cower);
+
+                foreach (PetAttacks A in familyList)
+                {
+                    if (A == PetAttacks.None) {
+                        family_mod++;
+                    } else {
+                        CB_PetPrio_01.Items.Add(A);
+                    }
+                }
+
+                PetFamilyTree family = getPetFamilyTree();
+
+                if (family == PetFamilyTree.Cunning) {
+                    //comboBoxPet1.Items.Add(PetAttacks.RoarOfRecovery);
+                    CB_PetPrio_01.Items.Add(PetAttacks.RoarOfSacrifice);
+                    CB_PetPrio_01.Items.Add(PetAttacks.WolverineBite);
+                    //comboBoxPet1.Items.Add(PetAttacks.Bullheaded);
+                }
+
+                if (family == PetFamilyTree.Ferocity) {
+                    CB_PetPrio_01.Items.Add(PetAttacks.LickYourWounds);
+                    //comboBoxPet1.Items.Add(PetAttacks.CallOfTheWild);
+                    //comboBoxPet1.Items.Add(PetAttacks.Rabid);
+                }
+
+                if (family == PetFamilyTree.Tenacity) {
+                    CB_PetPrio_01.Items.Add(PetAttacks.Thunderstomp);
+                    CB_PetPrio_01.Items.Add(PetAttacks.LastStand);
+                    CB_PetPrio_01.Items.Add(PetAttacks.Taunt);
+                    CB_PetPrio_01.Items.Add(PetAttacks.RoarOfSacrifice);
+                }
+            }
+
+            object[] attacks_picklist = new object[CB_PetPrio_01.Items.Count];
+            CB_PetPrio_01.Items.CopyTo(attacks_picklist, 0);
+
+            CB_PetPrio_02.Items.Clear();
+            CB_PetPrio_03.Items.Clear();
+            CB_PetPrio_04.Items.Clear();
+            CB_PetPrio_05.Items.Clear();
+            CB_PetPrio_06.Items.Clear();
+            CB_PetPrio_07.Items.Clear();
+
+            CB_PetPrio_02.Items.Add(attacks_picklist);
+            CB_PetPrio_03.Items.Add(attacks_picklist);
+            CB_PetPrio_04.Items.Add(attacks_picklist);
+            CB_PetPrio_05.Items.Add(attacks_picklist);
+            CB_PetPrio_06.Items.Add(attacks_picklist);
+            CB_PetPrio_07.Items.Add(attacks_picklist);
+
+            if (calcOpts.PetFamily != PetFamily.None) {
+                CB_PetPrio_01.SelectedIndex = 6 - family_mod; // family skill 1
+                CB_PetPrio_02.SelectedIndex = 3; // focus dump
+            } else {
+                CB_PetPrio_01.SelectedIndex = 0; // none
+                CB_PetPrio_02.SelectedIndex = 0; // none
+            }
+
+            CB_PetPrio_03.SelectedIndex = 0; // none
+            CB_PetPrio_04.SelectedIndex = 0; // none
+            CB_PetPrio_05.SelectedIndex = 0; // none
+            CB_PetPrio_06.SelectedIndex = 0; // none
+            CB_PetPrio_07.SelectedIndex = 0; // none
+        }
+        private void CB_Pets_SelectedIndexChanged(object sender, EventArgs e) {
+            if (_loadingCalculationOptions) return;
+            calcOpts.PetPriority1 = CB_PetPrio_01.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_01.SelectedItem;
+            calcOpts.PetPriority2 = CB_PetPrio_02.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_02.SelectedItem;
+            calcOpts.PetPriority3 = CB_PetPrio_03.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_03.SelectedItem;
+            calcOpts.PetPriority4 = CB_PetPrio_04.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_04.SelectedItem;
+            calcOpts.PetPriority5 = CB_PetPrio_05.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_05.SelectedItem;
+            calcOpts.PetPriority6 = CB_PetPrio_06.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_06.SelectedItem;
+            calcOpts.PetPriority7 = CB_PetPrio_07.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_07.SelectedItem;
+            Character.OnCalculationsInvalidated();
+        }
+        private void initTalentImages() {
+            /*PetTalentTree pt = (CalcOpts == null ? new PetTalentTree() : CalcOpts.PetTalents);
+            int currentId = 0;
+            try {
+                // Cunning
+                currentId = pt.CobraReflexes.ID;
+                LB_CunningCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.DiveDash.ID;
+                LB_CunningDiveDash.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatStamina.ID;
+                LB_CunningGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.NaturalArmor.ID;
+                LB_CunningNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.BoarsSpeed.ID;
+                LB_CunningBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Mobility.ID;
+                LB_CunningMobility.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.SpikedCollar.ID;
+                LB_CunningSpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.CullingTheHerd.ID;  LB_CunningCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
+                currentId = pt.Lionhearted.ID;  LB_CunningLionHearted.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.CarrionFeeder.ID;  LB_CunningCarrionFeeder.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatResistance.ID;  LB_CunningGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.OwlsFocus.ID;  LB_CunningOwlsFocus.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Cornered.ID;  LB_CunningCornered.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.FeedingFrenzy.ID;  LB_CunningFeedingFrenzy.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.WolverineBite.ID;  LB_CunningWolverineBite.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.RoarOfRecovery.ID;  LB_CunningRoarOfRecovery.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Bullheaded.ID;  LB_CunningBullheaded.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GraceOfTheMantis.ID;  LB_CunningGraceOfTheMantis.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.WildHunt.ID;  LB_CunningWildHunt.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.RoarOfSacrifice.ID;  LB_CunningRoarofSacrifice.Image = pt.TalentTree[currentId].TheIcon;
+                // Ferocity
+                currentId = pt.CobraReflexes.ID;  LB_FerocityCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.DiveDash.ID;  LB_FerocityDiveDash.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.ChargeSwoop.ID;  LB_FerocityChargeSwoop.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatStamina.ID;  LB_FerocityGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.NaturalArmor.ID;  LB_FerocityNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.BoarsSpeed.ID;  LB_FerocityBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.SpikedCollar.ID;  LB_FerocitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.ImprovedCower.ID;  LB_FerocityImprovedCower.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Bloodthirsty.ID;  LB_FerocityBloodthirsty.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.CullingTheHerd.ID;  LB_FerocityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
+                currentId = pt.Lionhearted.ID;  LB_FerocityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatResistance.ID;  LB_FerocityGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.HeartOfThePhoenix.ID;  LB_FerocityHeartOfThePheonix.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.SpidersBite.ID;  LB_FerocitySpidersBite.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Rabid.ID;  LB_FerocityRabid.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.LickYourWounds.ID;  LB_FerocityLickYourWounds.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.CallOfTheWild.ID;  LB_FerocityCalloftheWild.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.SharkAttack.ID;  LB_FerocitySharkAttack.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.WildHunt.ID;  LB_FerocityWildHunt.Image = pt.TalentTree[currentId].TheIcon;
+                // Tenacity
+                currentId = pt.CobraReflexes.ID;  LB_TenacityCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.ChargeSwoop.ID;  LB_TenacityCharge.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatStamina.ID;  LB_TenacityGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.NaturalArmor.ID;  LB_TenacityNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.BoarsSpeed.ID;  LB_TenacityBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.SpikedCollar.ID;  LB_TenacitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.BloodOfTheRhino.ID;  LB_TenacityBloodOfTheRhino.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.PetBarding.ID;  LB_TenacityPetBarding.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.CullingTheHerd.ID;  LB_TenacityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
+                currentId = pt.Lionhearted.ID;  LB_TenacityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GuardDog.ID;  LB_TenacityGuardDog.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Thunderstomp.ID;  LB_TenacityThunderstomp.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GreatResistance.ID;  LB_TenacityGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.GraceOfTheMantis.ID;  LB_TenacityGraceOfTheMantis.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.LastStand.ID;  LB_TenacityLastStand.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Taunt.ID;  LB_TenacityTaunt.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Intervene.ID;  LB_TenacityIntervene.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.WildHunt.ID;  LB_TenacityWildHunt.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.RoarOfSacrifice.ID;  LB_TenacityRoarOfSacrifice.Image = pt.TalentTree[currentId].TheIcon;
+                currentId = pt.Silverback.ID; LB_TenacitySilverback.Image = pt.TalentTree[currentId].TheIcon;
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error Setting Pet Talents Images", ex.Message,
+                    "initTalentImages",
+                    "Current ID: " + currentId.ToString() + "\r\nCurrent Talent: " + pt.TalentTree[currentId].Name,
+                    ex.StackTrace);
+                eb.Show();
+            }*/
+        }
+        private void CB_PetFamily_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_loadingCalculationOptions) updateTalentDisplay();
+
+            if (!_loadingCalculationOptions && CB_PetFamily.SelectedItem != null)
+            {
+                calcOpts.PetFamily = (PetFamily)CB_PetFamily.SelectedItem;
+                PopulatePetAbilities();
+                updateTalentDisplay();
+                resetTalents();
+                _loadingCalculationOptions = false; // force it
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void initTalentValues(ComboBox cmbBox, int max) {
+            cmbBox.Items.Clear();
+            for (int i = 0; i <= max; i++) {
+                cmbBox.Items.Add(i);
+            }
+            cmbBox.SelectedIndex = 0;
+        }
+        private PetFamilyTree getPetFamilyTree()
+        {
+            if (CB_PetFamily.SelectedItem == null) return PetFamilyTree.None;
+            switch ((PetFamily)CB_PetFamily.SelectedItem)
+            {
+                case PetFamily.Bat:
+                case PetFamily.Chimaera:
+                case PetFamily.Dragonhawk:
+                case PetFamily.NetherRay:
+                case PetFamily.Ravager:
+                case PetFamily.Serpent:
+                case PetFamily.Silithid:
+                case PetFamily.Spider:
+                case PetFamily.SporeBat:
+                case PetFamily.WindSerpent:
+                    return PetFamilyTree.Cunning;
+
+                case PetFamily.Bear:
+                case PetFamily.Boar:
+                case PetFamily.Crab:
+                case PetFamily.Crocolisk:
+                case PetFamily.Gorilla:
+                case PetFamily.Rhino:
+                case PetFamily.Scorpid:
+                case PetFamily.Turtle:
+                case PetFamily.WarpStalker:
+                case PetFamily.Worm:
+                    return PetFamilyTree.Tenacity;
+
+                case PetFamily.BirdOfPrey:
+                case PetFamily.CarrionBird:
+                case PetFamily.Cat:
+                case PetFamily.CoreHound:
+                case PetFamily.Devilsaur:
+                case PetFamily.Hyena:
+                case PetFamily.Moth:
+                case PetFamily.Raptor:
+                case PetFamily.SpiritBeast:
+                case PetFamily.Tallstrider:
+                case PetFamily.Wasp:
+                case PetFamily.Wolf:
+                    return PetFamilyTree.Ferocity;
+            }
+
+            // hmmm!
+            return PetFamilyTree.None;
+        }
+        private void updateTalentDisplay()
+        {
+            PetFamilyTree tree = getPetFamilyTree();
+            ThePetTalentPicker.TreeTab1.Visibility = tree == PetFamilyTree.Cunning ? Visibility.Visible : Visibility.Collapsed;
+            ThePetTalentPicker.TreeTab2.Visibility = tree == PetFamilyTree.Ferocity ? Visibility.Visible : Visibility.Collapsed;
+            ThePetTalentPicker.TreeTab3.Visibility = tree == PetFamilyTree.Tenacity ? Visibility.Visible : Visibility.Collapsed;
+        }
+        private void resetTalents() {
+#if RAWR3 || SILVERLIGHT
+            calcOpts.PetTalents = new Hunter.PetTalents(); // TODO not sure if this is the right thing to do here
+#else
+            CalcOpts.PetTalents.Reset();
+#endif
+            populatePetTalentCombos();
+        }
+        FormSavePetTalentSpec form = null;
+        private void BT_PetTalentSpecButton_Click(object sender, EventArgs e) {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
+                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
+                foreach (SavedPetTalentSpec spec in _savedPetTalents) {
+                    /*if (spec.Class == Character.Class)*/ classTalents.Add(spec);
+                }
+                form = new FormSavePetTalentSpec(classTalents);
+                form.Closed += new EventHandler(FormSavePetTalentSpec_Closed);
+                form.Show();
+            } else {
+                _savedPetTalents.Remove((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem);
+                UpdateSavedTalents();
+                SavePetTalentSpecs();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        private void FormSavePetTalentSpec_Closed(object sender, EventArgs e) {
+            if ((bool)form.DialogResult) {
+                SavedPetTalentSpec spec = form.PetTalentSpec();
+                String specName = form.PetTalentSpecName();
+                if (spec == null) {
+                    spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
+                    _savedPetTalents.Add(spec);
+                }
+                else spec.Spec = PetTalents.ToString();
+                UpdateSavedTalents();
+                SavePetTalentSpecs();
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void CB_PetTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
+                BT_PetTalentsSaveDel.Content = "Save";
+            } else {
+                BT_PetTalentsSaveDel.Content = "Delete";
+                if (!_updateSaved) PetTalents = ((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).TalentSpec();
+            }
+            populatePetTalentCombos();
+            if(Character != null) Character.OnCalculationsInvalidated();
+        }
+
+        private void petTalentCombo_Changed(object sender, EventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // one of the (many) talent combo boxes has been updated
+            // so we need to update the options
+
+            PetTalents pt = calcOpts.PetTalents;
+            PetFamilyTree tree = getPetFamilyTree();
+            int currentId = 0;
+
+            try {
+                /*if (tree == PetFamilyTree.Cunning)
+                {
+                    currentId = pt.CobraReflexes.ID; pt.TalentTree[currentId].Value = CB_CunningCobraReflexes.SelectedIndex; //LB_CunningCobraReflexes.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.DiveDash.ID; pt.TalentTree[currentId].Value = CB_CunningDiveDash.SelectedIndex; //LB_CunningDiveDash.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatStamina.ID; pt.TalentTree[currentId].Value = CB_CunningGreatStamina.SelectedIndex; //LB_CunningGreatStamina.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.NaturalArmor.ID; pt.TalentTree[currentId].Value = CB_CunningNaturalArmor.SelectedIndex; //LB_CunningNaturalArmor.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.BoarsSpeed.ID; pt.TalentTree[currentId].Value = CB_CunningBoarsSpeed.SelectedIndex; //LB_CunningBoarsSpeed.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Mobility.ID; pt.TalentTree[currentId].Value = CB_CunningMobility.SelectedIndex; //LB_CunningMobility.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_CunningSpikedCollar.SelectedIndex; //LB_CunningSpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_CunningCullingTheHerd.SelectedIndex; //LB_CunningCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
+                    currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_CunningLionhearted.SelectedIndex; //LB_CunningLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.CarrionFeeder.ID; pt.TalentTree[currentId].Value = CB_CunningCarrionFeeder.SelectedIndex; //LB_CunningCarrionFeeder.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatResistance.ID; pt.TalentTree[currentId].Value = CB_CunningGreatResistance.SelectedIndex; //LB_CunningGreatResistance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.OwlsFocus.ID; pt.TalentTree[currentId].Value = CB_CunningOwlsFocus.SelectedIndex; //LB_CunningOwlsFocus.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Cornered.ID; pt.TalentTree[currentId].Value = CB_CunningCornered.SelectedIndex; //LB_CunningCornered.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.FeedingFrenzy.ID; pt.TalentTree[currentId].Value = CB_CunningFeedingFrenzy.SelectedIndex; //LB_CunningFeedingFrenzy.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.WolverineBite.ID; pt.TalentTree[currentId].Value = CB_CunningWolverineBite.SelectedIndex; //LB_CunningWolverineBite.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.RoarOfRecovery.ID; pt.TalentTree[currentId].Value = CB_CunningRoarOfRecovery.SelectedIndex; //LB_CunningRoarOfRecovery.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Bullheaded.ID; pt.TalentTree[currentId].Value = CB_CunningBullheaded.SelectedIndex; //LB_CunningBullheaded.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GraceOfTheMantis.ID; pt.TalentTree[currentId].Value = CB_CunningGraceOfTheMantis.SelectedIndex; //LB_CunningGraceOfTheMantis.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.WildHunt.ID; pt.TalentTree[currentId].Value = CB_CunningWildHunt.SelectedIndex; //LB_CunningWildHunt.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.RoarOfSacrifice.ID; pt.TalentTree[currentId].Value = CB_CunningRoarOfSacrifice.SelectedIndex; //LB_CunningRoarofSacrifice.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                }
+                if (tree == PetFamilyTree.Ferocity)
+                {
+                    currentId = pt.CobraReflexes.ID; pt.TalentTree[currentId].Value = CB_FerocityCobraReflexes.SelectedIndex; //LB_FerocityCobraReflexes.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.DiveDash.ID; pt.TalentTree[currentId].Value = CB_FerocityDiveDash.SelectedIndex; //LB_FerocityDiveDash.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.ChargeSwoop.ID; pt.TalentTree[currentId].Value = CB_FerocityChargeSwoop.SelectedIndex; //LB_FerocityChargeSwoop.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatStamina.ID; pt.TalentTree[currentId].Value = CB_FerocityGreatStamina.SelectedIndex; //LB_FerocityGreatStamina.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.NaturalArmor.ID; pt.TalentTree[currentId].Value = CB_FerocityNaturalArmor.SelectedIndex; //LB_FerocityNaturalArmor.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.BoarsSpeed.ID; pt.TalentTree[currentId].Value = CB_FerocityBoarsSpeed.SelectedIndex; //LB_FerocityBoarsSpeed.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_FerocitySpikedCollar.SelectedIndex; //LB_FerocitySpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.ImprovedCower.ID; pt.TalentTree[currentId].Value = CB_FerocityImprovedCower.SelectedIndex; //LB_FerocityImprovedCower.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Bloodthirsty.ID; pt.TalentTree[currentId].Value = CB_FerocityBloodthirsty.SelectedIndex; //LB_FerocityBloodthirsty.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_FerocityCullingTheHerd.SelectedIndex; //LB_FerocityCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
+                    currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_FerocityLionhearted.SelectedIndex; //LB_FerocityLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatResistance.ID; pt.TalentTree[currentId].Value = CB_FerocityGreatResistance.SelectedIndex; //LB_FerocityGreatResistance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.HeartOfThePhoenix.ID; pt.TalentTree[currentId].Value = CB_FerocityHeartOfThePheonix.SelectedIndex; //LB_FerocityHeartOfThePheonix.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.SpidersBite.ID; pt.TalentTree[currentId].Value = CB_FerocitySpidersBite.SelectedIndex; //LB_FerocitySpidersBite.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Rabid.ID; pt.TalentTree[currentId].Value = CB_FerocityRabid.SelectedIndex; //LB_FerocityRabid.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.LickYourWounds.ID; pt.TalentTree[currentId].Value = CB_FerocityLickYourWounds.SelectedIndex; //LB_FerocityLickYourWounds.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.CallOfTheWild.ID; pt.TalentTree[currentId].Value = CB_FerocityCallOfTheWild.SelectedIndex; //LB_FerocityCalloftheWild.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.SharkAttack.ID; pt.TalentTree[currentId].Value = CB_FerocitySharkAttack.SelectedIndex; //LB_FerocitySharkAttack.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.WildHunt.ID; pt.TalentTree[currentId].Value = CB_FerocityWildHunt.SelectedIndex; //LB_FerocityWildHunt.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                }
+                if (tree == PetFamilyTree.Tenacity)
+                {
+                    currentId = pt.CobraReflexes.ID; pt.TalentTree[currentId].Value = CB_TenacityCobraReflexes.SelectedIndex; //LB_TenacityCobraReflexes.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.ChargeSwoop.ID; pt.TalentTree[currentId].Value = CB_TenacityChargeSwoop.SelectedIndex; //LB_TenacityCharge.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatStamina.ID; pt.TalentTree[currentId].Value = CB_TenacityGreatStamina.SelectedIndex; //LB_TenacityGreatStamina.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.NaturalArmor.ID; pt.TalentTree[currentId].Value = CB_TenacityNaturalArmor.SelectedIndex; //LB_TenacityNaturalArmor.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.BoarsSpeed.ID; pt.TalentTree[currentId].Value = CB_TenacityBoarsSpeed.SelectedIndex; //LB_TenacityBoarsSpeed.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.SpikedCollar.ID; pt.TalentTree[currentId].Value = CB_TenacitySpikedCollar.SelectedIndex; //LB_TenacitySpikedCollar.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.BloodOfTheRhino.ID; pt.TalentTree[currentId].Value = CB_TenacityBloodOfTheRhino.SelectedIndex; //LB_TenacityBloodOfTheRhino.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.PetBarding.ID; pt.TalentTree[currentId].Value = CB_TenacityPetBarding.SelectedIndex; //LB_TenacityPetBarding.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.CullingTheHerd.ID; pt.TalentTree[currentId].Value = CB_TenacityCullingTheHerd.SelectedIndex; //LB_TenacityCullingTheHerd.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];// Add in 3.3
+                    currentId = pt.Lionhearted.ID; pt.TalentTree[currentId].Value = CB_TenacityLionhearted.SelectedIndex; //LB_TenacityLionHearted.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GuardDog.ID; pt.TalentTree[currentId].Value = CB_TenacityGuardDog.SelectedIndex; //LB_TenacityGuardDog.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Thunderstomp.ID; pt.TalentTree[currentId].Value = CB_TenacityThunderstomp.SelectedIndex; //LB_TenacityThunderstomp.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GreatResistance.ID; pt.TalentTree[currentId].Value = CB_TenacityGreatResistance.SelectedIndex; //LB_TenacityGreatResistance.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.GraceOfTheMantis.ID; pt.TalentTree[currentId].Value = CB_TenacityGraceOfTheMantis.SelectedIndex; //LB_TenacityGraceOfTheMantis.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.LastStand.ID; pt.TalentTree[currentId].Value = CB_TenacityLastStand.SelectedIndex; //LB_TenacityLastStand.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Taunt.ID; pt.TalentTree[currentId].Value = CB_TenacityTaunt.SelectedIndex; //LB_TenacityTaunt.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Intervene.ID; pt.TalentTree[currentId].Value = CB_TenacityIntervene.SelectedIndex; //LB_TenacityIntervene.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.WildHunt.ID; pt.TalentTree[currentId].Value = CB_TenacityWildHunt.SelectedIndex; //LB_TenacityWildHunt.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.RoarOfSacrifice.ID; pt.TalentTree[currentId].Value = CB_TenacityRoarOfSacrifice.SelectedIndex; //LB_TenacityRoarOfSacrifice.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                    currentId = pt.Silverback.ID; pt.TalentTree[currentId].Value = CB_TenacitySilverback.SelectedIndex; //LB_TenacitySilverback.ToolTipText = pt.TalentTree[currentId].Desc[pt.TalentTree[currentId].Value];
+                }*/
+
+                //if (tree == PetFamilyTree.None) { CalcOpts.PetTalents.Reset(); }
+
+                //initTalentImages();
+                calcOpts.petTalents = calcOpts.PetTalents.ToString();
+
+                {
+                    //ComboBox item = sender as ComboBox;
+                    _treeCount = 0;
+                    foreach (Char c in pt.ToString()) { _treeCount += int.Parse(c.ToString()); }
+                    //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
+                    UpdateSavedTalents();
+                    SavePetTalentSpecs();
+                }
+
+                Character.OnCalculationsInvalidated();
+            }
+            catch (Exception ex)
+            {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error Setting Pet Talents after a Change", ex.Message,
+                    "talentComboChanged", "Current ID: " + currentId.ToString() + "\r\nCurrent Talent: " /*+ pt.TalentTree[currentId].Name*/, ex.StackTrace);
+                eb.Show();
+            }
+        }
+        private void populatePetTalentCombos()
+        {
+            // called when options are loaded to allow us to set the selected indexes
+            int line = 0;
+            try
+            {
+                _loadingCalculationOptions = true;
+                PetFamilyTree tree = getPetFamilyTree();
+                // Cunning
+                /*CB_CunningCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++; // Add in 3.3
+                CB_CunningBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;
+                CB_CunningBullheaded.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Bullheaded.Value : 0; line++;
+                CB_CunningCarrionFeeder.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.CarrionFeeder.Value : 0; line++;
+                CB_CunningCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.CobraReflexes.Value : 0; line++;
+                CB_CunningCornered.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Cornered.Value : 0; line++;
+                CB_CunningDiveDash.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.DiveDash.Value : 0; line++;
+                CB_CunningFeedingFrenzy.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.FeedingFrenzy.Value : 0; line++;
+                CB_CunningGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.GraceOfTheMantis.Value : 0; line++;
+                CB_CunningGreatResistance.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.GreatResistance.Value : 0; line++;
+                CB_CunningGreatStamina.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.GreatStamina.Value : 0; line++;
+                CB_CunningLionhearted.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Lionhearted.Value : 0; line++;
+                CB_CunningMobility.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.Mobility.Value : 0; line++;
+                CB_CunningNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.NaturalArmor.Value : 0; line++;
+                CB_CunningOwlsFocus.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.OwlsFocus.Value : 0; line++;
+                CB_CunningRoarOfRecovery.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.RoarOfRecovery.Value : 0; line++;
+                CB_CunningRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.RoarOfSacrifice.Value : 0; line++;
+                CB_CunningSpikedCollar.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.SpikedCollar.Value : 0; line++;
+                CB_CunningWildHunt.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.WildHunt.Value : 0; line++;
+                CB_CunningWolverineBite.SelectedIndex = (tree == PetFamilyTree.Cunning) ? CalcOpts.PetTalents.WolverineBite.Value : 0; line++;
+                // Ferocity
+                CB_FerocityCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++;  // Add in 3.3
+                CB_FerocityBloodthirsty.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.Bloodthirsty.Value : 0; line++;
+                CB_FerocityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;
+                CB_FerocityCallOfTheWild.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.CallOfTheWild.Value : 0; line++;
+                CB_FerocityChargeSwoop.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.ChargeSwoop.Value : 0; line++;
+                CB_FerocityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.CobraReflexes.Value : 0; line++;
+                CB_FerocityDiveDash.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.DiveDash.Value : 0; line++;
+                CB_FerocityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.GreatResistance.Value : 0; line++;
+                CB_FerocityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.GreatStamina.Value : 0; line++;
+                CB_FerocityHeartOfThePheonix.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.HeartOfThePhoenix.Value : 0; line++;
+                CB_FerocityImprovedCower.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.ImprovedCower.Value : 0; line++;
+                CB_FerocityLickYourWounds.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.LickYourWounds.Value : 0; line++;
+                CB_FerocityLionhearted.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.Lionhearted.Value : 0; line++;
+                CB_FerocityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.NaturalArmor.Value : 0; line++;
+                CB_FerocityRabid.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.Rabid.Value : 0; line++;
+                CB_FerocitySharkAttack.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.SharkAttack.Value : 0; line++;
+                CB_FerocitySpidersBite.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.SpidersBite.Value : 0; line++;
+                CB_FerocitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.SpikedCollar.Value : 0; line++;
+                CB_FerocityWildHunt.SelectedIndex = (tree == PetFamilyTree.Ferocity) ? CalcOpts.PetTalents.WildHunt.Value : 0; line++;
+                // Tenacity Tree
+                CB_TenacityCullingTheHerd.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.CullingTheHerd.Value : 0; line++;  // Add in 3.3
+                CB_TenacityBloodOfTheRhino.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.BloodOfTheRhino.Value : 0; line++;
+                CB_TenacityBoarsSpeed.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.BoarsSpeed.Value : 0; line++;
+                CB_TenacityChargeSwoop.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.ChargeSwoop.Value : 0; line++;
+                CB_TenacityCobraReflexes.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.CobraReflexes.Value : 0; line++;
+                CB_TenacityGraceOfTheMantis.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.GraceOfTheMantis.Value : 0; line++;
+                CB_TenacityGreatResistance.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.GreatResistance.Value : 0; line++;
+                CB_TenacityGreatStamina.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.GreatStamina.Value : 0; line++;
+                CB_TenacityGuardDog.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.GuardDog.Value : 0; line++;
+                CB_TenacityIntervene.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Intervene.Value : 0; line++;
+                CB_TenacityLastStand.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.LastStand.Value : 0; line++;
+                CB_TenacityLionhearted.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Lionhearted.Value : 0; line++;
+                CB_TenacityNaturalArmor.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.NaturalArmor.Value : 0; line++;
+                CB_TenacityPetBarding.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.PetBarding.Value : 0; line++;
+                CB_TenacityRoarOfSacrifice.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.RoarOfSacrifice.Value : 0; line++;
+                CB_TenacitySilverback.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Silverback.Value : 0; line++;
+                CB_TenacitySpikedCollar.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.SpikedCollar.Value : 0; line++;
+                CB_TenacityTaunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Taunt.Value : 0; line++;
+                CB_TenacityThunderstomp.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.Thunderstomp.Value : 0; line++;
+                CB_TenacityWildHunt.SelectedIndex = (tree == PetFamilyTree.Tenacity) ? CalcOpts.PetTalents.WildHunt.Value : 0; line++;*/
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
+                    "Error Populating Pet Talent ComboBoxes", ex.Message,
+                    "populatePetTalentCombos", "Line: " + line.ToString(), ex.StackTrace);
+            }
+            _loadingCalculationOptions = false;
+        }
+
+        private void CB_ArmoryPets_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_loadingCalculationOptions) return;
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            // Save the Index
+            calcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
+            ArmoryPet CurrentPet = (ArmoryPet)CB_ArmoryPets.SelectedItem;
+            // Populate the Pet Family
+            _loadingCalculationOptions = true;
+            CB_PetFamily.SelectedItem = CurrentPet.Family;
+            _loadingCalculationOptions = false;
+            // Convert the ArmoryPet spec to our spec
+            /*PetTalents pt = PetTalents.FromArmoryPet(CurrentPet);
+            // Populate the Pet Specs box
+            {
+                CalcOpts.PetTalents = pt;
+                CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
+                //ComboBox item = sender as ComboBox;
+                _treeCount = 0;
+                foreach (Char c in pt.ToString()) { _treeCount += int.Parse(c.ToString()); }
+                //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
+                UpdateSavedTalents();
+                SavePetTalentSpecs();
+            }*/
+            CB_PetTalentSpec_SelectedIndexChanged(null, null);
+        }
+        #endregion
+
+        #region Stat Graph
+        private Stats[] BuildStatsList()
+        {
+            List<Stats> statsList = new List<Stats>();
+            if (CK_StatsAgility.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Agility = 1f }); }
+            if (CK_StatsAP.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { AttackPower = 1f }); }
+            if (CK_StatsCrit.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { CritRating = 1f }); }
+            if (CK_StatsHit.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HitRating = 1f }); }
+            if (CK_StatsHaste.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HasteRating = 1f }); }
+            if (CK_StatsArP.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
+            return statsList.ToArray();
+        }
+        private void BT_StatsGraph_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            Stats[] statsList = BuildStatsList();
+            Graph graph = new Graph();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of dps added or lost";
+            graph.SetupStatsGraph(Character, statsList, calcOpts.StatsIncrement, explanatoryText, calcOpts.CalculationToGraph);
+            //graph.Show();
+        }
+        //private void CK_StatsAgility_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[0] = CK_StatsAgility.IsChecked.GetValueOrDefault(true); }
+        //private void CK_StatsAP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts      = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[1] = CK_StatsAP.IsChecked.GetValueOrDefault(true); }
+        //private void CK_StatsCrit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts    = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[2] = CK_StatsCrit.IsChecked.GetValueOrDefault(true); }
+        //private void CK_StatsHit_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts     = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[3] = CK_StatsHit.IsChecked.GetValueOrDefault(true); }
+        //private void CK_StatsHaste_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts   = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[4] = CK_StatsHaste.IsChecked.GetValueOrDefault(true); }
+        //private void CK_StatsArP_CheckedChanged(object sender, EventArgs e) { CalculationOptionsHunter calcOpts     = Character.CalculationOptions as CalculationOptionsHunter; calcOpts.StatsList[5] = CK_StatsArP.IsChecked.GetValueOrDefault(true); }
+        private void CB_CalculationToGraph_SelectedIndexChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+        }
+        private void NUD_StatsIncrement_ValueChanged(object sender, EventArgs e) {
+            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            calcOpts.StatsIncrement = (int)NUD_StatsIncrement.Value;
+        }
+        #endregion
     }
     public static class ShotRotationFunctions
     {
