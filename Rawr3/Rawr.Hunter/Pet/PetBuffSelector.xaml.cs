@@ -232,7 +232,7 @@ namespace Rawr.Hunter
         public PetBuffSelector()
         {
             InitializeComponent();
-            TheScroll.SetIsMouseWheelScrollingEnabled(true);
+            //TheScroll.SetIsMouseWheelScrollingEnabled(true);
 
             //OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
             //OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);

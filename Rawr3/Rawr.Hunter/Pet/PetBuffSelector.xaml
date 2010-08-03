@@ -9,8 +9,6 @@
     d:DesignWidth="340" d:DesignHeight="580">
 
     <Grid x:Name="LayoutRoot">
-        <ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0" Margin="0,0,0,0">
-            <StackPanel x:Name="BuffStack" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto"/>
-        </ScrollViewer>
+        <StackPanel x:Name="BuffStack" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto"/>
     </Grid>
 </UserControl>

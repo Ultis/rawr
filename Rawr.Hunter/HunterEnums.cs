@@ -4,22 +4,22 @@ using System.Text;
 
 namespace Rawr.Hunter
 {
-	public enum Aspect
-	{
+    public enum Aspect
+    {
         Beast,
-		Hawk,
-		Viper,
+        Hawk,
+        Viper,
         Monkey,
         Dragonhawk,
         None
-	}
+    }
 
-	public enum ShotRotation
-	{
-		AutoShotOnly,
-		OneToOne,
-		ThreeToTwo
-	}
+    public enum ShotRotation
+    {
+        AutoShotOnly,
+        OneToOne,
+        ThreeToTwo
+    }
 
     public enum Shots
     {
@@ -93,14 +93,14 @@ namespace Rawr.Hunter
     }
 
     public enum Faction
-	{
-		None,
-		Aldor,
-		Scryer
-	}
+    {
+        None,
+        Aldor,
+        Scryer
+    }
 
-	public enum PetAttacks
-	{
+    public enum PetAttacks
+    {
         AcidSpit,
         BadAttitude,
         Bite,

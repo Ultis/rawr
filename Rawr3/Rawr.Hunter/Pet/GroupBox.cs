@@ -47,7 +47,7 @@ namespace Rawr.Hunter
                 HeaderRect = (RectangleGeometry)GetTemplateChild("HeaderRect");
                 HeaderContainer = (ContentControl)GetTemplateChild("HeaderContainer");
                 HeaderContainer.SizeChanged += HeaderContainer_SizeChanged;
-            }catch (Exception ex) {}
+            }catch (Exception /*ex*/) {}
         }
 
         public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register("Header", typeof(object), typeof(GroupBox), null);
@@ -71,7 +71,7 @@ namespace Rawr.Hunter
                 if (FullRect == null) FullRect = new RectangleGeometry();
                 FullRect.Rect = new Rect(new Point(), e.NewSize);
             }
-            catch (Exception ex) { }
+            catch (Exception /*ex*/) { }
         }
 
         private void HeaderContainer_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)

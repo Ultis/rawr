@@ -136,6 +136,7 @@
     <Compile Include="..\..\Rawr.Hunter\Skills.Shots.cs">
       <Link>Skills.Shots.cs</Link>
     </Compile>
+    <Compile Include="HunterConverters.cs" />
     <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.xaml</DependentUpon>
     </Compile>
