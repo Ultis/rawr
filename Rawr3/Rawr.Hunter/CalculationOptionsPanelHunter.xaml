@@ -36,22 +36,36 @@
                         </controls:TabItem>
                         <controls:TabItem x:Name="Tab_FAQ" Header="F.A.Q.">
                             <Grid x:Name="Tab_FAQ_Layout">
-                                <dataInput:Label x:Name="LB_FAQ" Height="48" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="298" RenderTransformOrigin="0.474,-14.575" Content="Got a question about Rawr.Hunter?&#xd;&#xa;The answer may be here...&#xd;&#xa;Select a Question or choose All to display All"/>
-                                <ComboBox x:Name="CB_FAQ_Questions" Height="21" Margin="3,52,3,0" VerticalAlignment="Top" SelectionChanged="CB_FAQ_Questions_SelectedIndexChanged"/>
-                                <TextBox x:Name="RTB_FAQ" Margin="3,77,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="LB_FAQ1" Text="Got a question about Rawr.Hunter?" Margin="4,2" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                                <TextBlock x:Name="LB_FAQ2" Text="The answer may be here..." Margin="4,2" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Center" />
+                                <TextBlock x:Name="LB_FAQ3" Text="Select a Question or choose All to display All" Margin="4,2" TextWrapping="Wrap" Grid.Row="2" HorizontalAlignment="Center" />
+                                <ComboBox x:Name="CB_FAQ_Questions" SelectionChanged="CB_FAQ_Questions_SelectedIndexChanged" Grid.Row="3" Margin="4,2" />
+                                <TextBox x:Name="RTB_FAQ" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Row="4" Margin="4,2" />
                             </Grid>
                         </controls:TabItem>
                         <controls:TabItem x:Name="Tab_Version" Header="Version Notes">
                             <Grid x:Name="Tab_Version_Layout">
-                                <TextBox x:Name="RTB_Version" Margin="3,49,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-                                <dataInput:Label x:Name="LB_Version" Height="20" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="273" RenderTransformOrigin="0.474,-14.575" Content="Select a Version or choose All to display all"/>
-                                <ComboBox x:Name="CB_Version" Height="21" Margin="3,24,3,0" VerticalAlignment="Top" SelectionChanged="CB_Version_SelectedIndexChanged"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBox x:Name="RTB_Version" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.Row="2" Margin="4,2" />
+                                <dataInput:Label x:Name="LB_Version" RenderTransformOrigin="0.474,-14.575" Content="Select a Version or choose All to display all" MinHeight="20" Margin="4,2" HorizontalContentAlignment="Center" />
+                                <ComboBox x:Name="CB_Version" VerticalAlignment="Top" SelectionChanged="CB_Version_SelectedIndexChanged" Grid.Row="1" Margin="4,2" />
                             </Grid>
                         </controls:TabItem>
                     </controls:TabControl>
                 </Grid>
             </controls:TabItem>
-            <controls:TabItem x:Name="Page_01_Basics" Header="Basics">
+            <controls:TabItem x:Name="Page_01_Basics" Header="Hunter">
                 <ScrollViewer x:Name="SV_Page01" VerticalScrollBarVisibility="Auto" Padding="0">
                     <Grid x:Name="Page_01_Layout" HorizontalAlignment="Stretch" VerticalAlignment="Top">
                         <Grid.RowDefinitions>
@@ -75,27 +89,26 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="50*" />
                         </Grid.ColumnDefinitions>
 
-                        <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment" Grid.ColumnSpan="2" Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                        <dataInput:Label x:Name="LB_FightSettings" FontWeight="Bold" Content="Fight Settings" d:LayoutOverrides="VerticalAlignment" Grid.ColumnSpan="6" Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         <dataInput:Label x:Name="LB_Latency" Content="Latency (ms):" Grid.Row="1" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" />
-                        <inputToolkit:NumericUpDown x:Name="NUD_Latency" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50" Grid.Column="3" Grid.Row="1" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
+                        <inputToolkit:NumericUpDown x:Name="NUD_Latency" d:LayoutOverrides="VerticalAlignment" Maximum="1000" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="50" Grid.Column="2" Grid.Row="1" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
                         <dataInput:Label x:Name="LB_CDCutoff" Content="CDCutoff(s):" Grid.Row="4" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" />
-                        <inputToolkit:NumericUpDown x:Name="NUD_CDCutOff" d:LayoutOverrides="Height" Maximum="60" Value="{Binding CDCutOff, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Column="3" Grid.Row="4" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
+                        <inputToolkit:NumericUpDown x:Name="NUD_CDCutOff" d:LayoutOverrides="Height" Maximum="60" Value="{Binding CDCutOff, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Column="2" Grid.Row="4" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
                         <dataInput:Label x:Name="LB_BossStartHPPerc" Content="Boss Starting HP%:" d:LayoutOverrides="Height" Grid.Row="2" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" />
-                        <inputToolkit:NumericUpDown x:Name="NUD_BossHP" d:LayoutOverrides="Height" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=BossHPPerc, Converter={StaticResource PercentConverter}}" Increment="20" Grid.Row="2" Grid.Column="3" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
-                        <dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Content="Hunter Settings" Grid.ColumnSpan="2" Grid.Row="3" Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+                        <inputToolkit:NumericUpDown x:Name="NUD_BossHP" d:LayoutOverrides="Height" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=BossHPPerc, Converter={StaticResource PercentConverter}}" Increment="20" Grid.Row="2" Grid.Column="2" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3" />
+                        <dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Content="Cooldown Usage" Grid.ColumnSpan="6" Grid.Row="3" Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         <dataInput:Label x:Name="LB_Aspect" HorizontalAlignment="Stretch" Content="Aspect:" Grid.Row="5" Margin="4,2" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
-                        <ComboBox x:Name="CB_Aspect" SelectedItem="{Binding SelectedAspect, Mode=TwoWay}" Grid.Column="3" Grid.Row="5" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3">
+                        <ComboBox x:Name="CB_Aspect" SelectedItem="{Binding SelectedAspect, Mode=TwoWay}" Grid.Column="2" Grid.Row="5" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3">
                             <local:Aspect>Beast</local:Aspect>
                             <local:Aspect>Hawk</local:Aspect>
                             <local:Aspect>Viper</local:Aspect>
@@ -104,73 +117,41 @@
                             <local:Aspect>None</local:Aspect>
                         </ComboBox>
                         <dataInput:Label x:Name="LB_ViperUsage" HorizontalAlignment="Stretch" Content="Viper Usage:" Grid.Row="6" Margin="4,2" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
-                        <ComboBox x:Name="CB_AspectUsage" SelectedItem="{Binding AspectUsage, Mode=TwoWay}" Grid.Column="3" Grid.Row="6" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3">
+                        <ComboBox x:Name="CB_AspectUsage" SelectedItem="{Binding AspectUsage, Mode=TwoWay}" Grid.Column="2" Grid.Row="6" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20" Grid.ColumnSpan="3">
                             <local:AspectUsage>None</local:AspectUsage>
                             <local:AspectUsage>ViperToOOM</local:AspectUsage>
                             <local:AspectUsage>ViperRegen</local:AspectUsage>
                         </ComboBox>
                         <CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Stretch" Content="Use Aspect of the Beast during Bestial Wrath" IsChecked="{Binding UseBeastDuringBestialWrath, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="6" Grid.Row="7" Margin="4,2" VerticalAlignment="Stretch" />
-                        <CheckBox x:Name="CK_UseRotation" Content="Use Shot Rotation Test instead of Frequencies" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="6" Grid.Row="8" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
-                        <CheckBox x:Name="CK_RandomProcs" Content="Randomize Procs on Shot Rotation Test" d:LayoutOverrides="Height" IsChecked="{Binding RandomizeProcs, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="5" Grid.Row="9" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1" />
-                    </Grid>
-                </ScrollViewer>
-            </controls:TabItem>
-            <controls:TabItem x:Name="Page_02_Rotations" Header="Rotation">
-                <ScrollViewer x:Name="SV_Page02" VerticalScrollBarVisibility="Auto" Padding="0">
-                    <Grid x:Name="Page_02_Layout">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <dataInput:Label x:Name="LB_HShotPrios" Content="Hunter Shot Priority" FontWeight="Bold" Grid.ColumnSpan="2" Margin="4" HorizontalContentAlignment="Center" />
-                        <ComboBox x:Name="CB_PriorityDefaults" SelectionChanged="CB_PriorityDefaults_SelectedIndexChanged" Grid.ColumnSpan="2" Grid.Row="1" Margin="4,2">
+                        <CheckBox x:Name="CK_UseRotation" Content="Use Shot Rotation Test instead of Frequencies" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4,2" />
+                        <CheckBox x:Name="CK_RandomProcs" Content="Randomize Procs on Shot Rotation Test" d:LayoutOverrides="Height" IsChecked="{Binding RandomizeProcs, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="5" Grid.Row="9" Margin="24,2,4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" />
+                        <dataInput:Label x:Name="LB_HShotPrios" Content="Shot Priorities" FontWeight="Bold" Grid.ColumnSpan="6" Margin="4" HorizontalContentAlignment="Center" Grid.Row="11" />
+                        <ComboBox x:Name="CB_PriorityDefaults" SelectionChanged="CB_PriorityDefaults_SelectedIndexChanged" Grid.ColumnSpan="6" Grid.Row="12" Margin="4,2">
                             <ComboBoxItem Content="Custom" IsSelected="True"/>
                             <ComboBoxItem Content="Beast Master"/>
                             <ComboBoxItem Content="Marksman"/>
                             <ComboBoxItem Content="Survival"/>
                         </ComboBox>
-                        <dataInput:Label x:Name="LB_ShotPrio_01" HorizontalAlignment="Left" Content="Priority 01:" Height="23" Grid.Row="2" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_01" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex1, Mode=TwoWay}" Grid.Column="1" Grid.Row="2" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_02" Height="23" HorizontalAlignment="Left" Content="Priority 02:" Grid.Row="3" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_02" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex2, Mode=TwoWay}" Grid.Column="1" Grid.Row="3" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_03" Height="23" HorizontalAlignment="Left" Content="Priority 03:" Grid.Row="4" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_03" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex3, Mode=TwoWay}" Grid.Column="1" Grid.Row="4" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_04" Height="23" HorizontalAlignment="Left" Content="Priority 04:" Grid.Row="5" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_04" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex4, Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_05" Height="23" HorizontalAlignment="Left" Content="Priority 05:" Grid.Row="6" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_05" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex5, Mode=TwoWay}" Grid.Column="1" Grid.Row="6" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_06" Height="23" HorizontalAlignment="Left" Content="Priority 06:" Grid.Row="7" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_06" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex6, Mode=TwoWay}" Grid.Column="1" Grid.Row="7" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_07" Height="23" HorizontalAlignment="Left" Content="Priority 07:" Grid.Row="8" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_07" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex7, Mode=TwoWay}" Grid.Column="1" Grid.Row="8" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_08" Height="23" HorizontalAlignment="Left" Content="Priority 08:" Grid.Row="9" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_08" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex8, Mode=TwoWay}" Grid.Column="1" Grid.Row="9" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_09" Height="23" HorizontalAlignment="Left" Content="Priority 09:" Grid.Row="10" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_09" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex9, Mode=TwoWay}" Grid.Column="1" Grid.Row="10" Margin="4,2" />
-                        <dataInput:Label x:Name="LB_ShotPrio_10" Height="23" HorizontalAlignment="Left" Content="Priority 10:" Grid.Row="11" Margin="4,2" />
-                        <ComboBox x:Name="CB_ShotPrio_10" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex10, Mode=TwoWay}" Grid.Column="1" Grid.Row="11" Margin="4,2" />
+                        <dataInput:Label x:Name="LB_ShotPrio_01" Content="Priority 01:" Height="23" Grid.Row="13" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_01" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex1, Mode=TwoWay}" Grid.Column="1" Grid.Row="13" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_02" Height="23" Content="Priority 02:" Grid.Row="14" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_02" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex2, Mode=TwoWay}" Grid.Column="1" Grid.Row="14" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_03" Height="23" Content="Priority 03:" Grid.Row="15" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_03" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex3, Mode=TwoWay}" Grid.Column="1" Grid.Row="15" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_04" Height="23" Content="Priority 04:" Grid.Row="16" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_04" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex4, Mode=TwoWay}" Grid.Column="1" Grid.Row="16" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_05" Height="23" Content="Priority 05:" Grid.Row="17" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_05" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex5, Mode=TwoWay}" Grid.Column="1" Grid.Row="17" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_06" Height="23" Content="Priority 06:" Grid.Row="18" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_06" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex6, Mode=TwoWay}" Grid.Column="1" Grid.Row="18" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_07" Height="23" Content="Priority 07:" Grid.Row="19" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_07" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex7, Mode=TwoWay}" Grid.Column="1" Grid.Row="19" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_08" Height="23" Content="Priority 08:" Grid.Row="20" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_08" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex8, Mode=TwoWay}" Grid.Column="1" Grid.Row="20" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_09" Height="23" Content="Priority 09:" Grid.Row="21" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_09" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex9, Mode=TwoWay}" Grid.Column="1" Grid.Row="21" Margin="4,2" Grid.ColumnSpan="4" />
+                        <dataInput:Label x:Name="LB_ShotPrio_10" Height="23" Content="Priority 10:" Grid.Row="22" Margin="4,2" />
+                        <ComboBox x:Name="CB_ShotPrio_10" Height="23" ItemsSource="{Binding Path=ShotList}" SelectedIndex="{Binding Path=PriorityIndex10, Mode=TwoWay}" Grid.Column="1" Grid.Row="22" Margin="4,2" Grid.ColumnSpan="4" />
                     </Grid>
                 </ScrollViewer>
             </controls:TabItem>

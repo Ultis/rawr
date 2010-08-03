@@ -35,7 +35,6 @@ namespace Rawr.Hunter {
                 ((ScrollViewer)this.Parent).VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
             }*/
             SV_Page01.SetIsMouseWheelScrollingEnabled(true);
-            SV_Page02.SetIsMouseWheelScrollingEnabled(true);
             PetBuffs.Character = Character;
             //
             SetUpFAQ();
