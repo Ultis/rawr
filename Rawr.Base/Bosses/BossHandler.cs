@@ -258,6 +258,7 @@ namespace Rawr {
                         _MyModelSupportsThis.Add("DPSDK", custom);
                         _MyModelSupportsThis.Add("Enhance", custom);
                         _MyModelSupportsThis.Add("Rogue", custom);
+                        _MyModelSupportsThis.Add("Retribution", custom);
                     }
                     { // Ranged DPS
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
