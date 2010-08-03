@@ -9,6 +9,7 @@ namespace Rawr.Hunter {
         public ShotData[] priorities = new ShotData[10];
 
         public CalculationOptionsHunter CalcOpts;
+        public BossOptions BossOpts;
 
         public bool chimeraRefreshesSerpent = false;
         public bool chimeraRefreshesViper = false;
@@ -60,7 +61,11 @@ namespace Rawr.Hunter {
                 //if (priorities[i] != null && (priorities[i].Type == Shots.Volley && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
 
                 // Requires Multiple Targets
+#if RAWR3 || SILVERLIGHT
+                if (priorities[i] != null && (priorities[i].Type == Shots.Volley && (!BossOpts.MultiTargs || (BossOpts.MultiTargs && BossOpts.MultiTargsTime == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
+#else
                 if (priorities[i] != null && (priorities[i].Type == Shots.Volley && (!CalcOpts.MultipleTargets || (CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
+#endif
 
                 // shots which require talents
                 if (priorities[i] != null && priorities[i].Type == Shots.BlackArrow && Talents.BlackArrow == 0){ priorities[i].FailReason_LackTalent = true; priorities[i] = null; }

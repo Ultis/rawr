@@ -11,6 +11,7 @@ namespace Rawr.Hunter
         Character character;
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter CalcOpts;
+        BossOptions BossOpts;
 #if RAWR3 || SILVERLIGHT
         PetTalents PetTalents;
 #else
@@ -34,12 +35,13 @@ namespace Rawr.Hunter
         private float PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[83 - 80];
         #endregion
 
-        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcopts,
+        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcopts, BossOptions bossOpts,
             Stats hunterStats, Stats statsPetBuffs)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.CalcOpts = calcopts;
+            this.BossOpts = bossOpts;
             this.PetTalents = calcopts.PetTalents;
             this.Talents = character.HunterTalents;
             this.HunterStats = hunterStats;
@@ -104,7 +106,11 @@ namespace Rawr.Hunter
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
+#if RAWR3 || SILVERLIGHT
+            float fightDuration = BossOpts.BerserkTimer;
+#else
             float fightDuration = CalcOpts.Duration;
+#endif
             float atkspeed = attemptedAtkIntervals[1];
             
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
@@ -203,7 +209,11 @@ namespace Rawr.Hunter
         public void GenPetStats()
         {
             // Initial Variables
+#if RAWR3 || SILVERLIGHT
+            int levelDiff = BossOpts.Level - character.Level;
+#else
             int levelDiff = CalcOpts.TargetLevel - character.Level;
+#endif
             Stats petStatsBase = BasePetStats;
             #region From Hunter
             Stats petStatsFromHunter = new Stats() {
@@ -345,9 +355,17 @@ namespace Rawr.Hunter
                 float freq = priorityRotation.getSkillFrequency(PetAttacks.SerenityDust);
                 SpecialEffect serenitydust = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusAttackPowerMultiplier = 0.10f, },
+#if RAWR3 || SILVERLIGHT
+                    15f, BossOpts.BerserkTimer / freq);
+#else
                     15f, CalcOpts.Duration / freq);
+#endif
                 petStatsOptionsPanel.AddSpecialEffect(serenitydust);
+#if RAWR3 || SILVERLIGHT
+                petStatsOptionsPanel.HealthRestore += (BossOpts.BerserkTimer / freq) * 825f;
+#else
                 petStatsOptionsPanel.HealthRestore += (CalcOpts.Duration / freq) * 825f;
+#endif
             }
             #endregion
 
@@ -671,9 +689,15 @@ namespace Rawr.Hunter
             calculatedStats.manaRegenRoarOfRecovery = 0;
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0) {
+#if RAWR3 || SILVERLIGHT
+                float roarOfRecoveryUseCount = (float)Math.Ceiling(BossOpts.BerserkTimer / roarOfRecoveryFreq);
+                float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
+                calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / BossOpts.BerserkTimer : 0;
+#else
                 float roarOfRecoveryUseCount = (float)Math.Ceiling(CalcOpts.Duration / roarOfRecoveryFreq);
                 float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / CalcOpts.Duration : 0;
+#endif
             }
 
             //Invigoration
@@ -690,10 +714,14 @@ namespace Rawr.Hunter
 
             #region Target Armor Effect
             //31-10-2009 Drizz: added Armor effect
+#if RAWR3 || SILVERLIGHT
+            double petEffectiveArmor = BossOpts.Armor * (1f - calculatedStats.petArmorDebuffs);
+            calculatedStats.petTargetArmorReduction = StatConversion.GetArmorDamageReduction(character.Level, BossOpts.Armor, calculatedStats.petArmorDebuffs, 0, 0);
+#else
             double petEffectiveArmor = CalcOpts.TargetArmor * (1f - calculatedStats.petArmorDebuffs);
-            calculatedStats.petTargetArmorReduction =
-                StatConversion.GetArmorDamageReduction(80, CalcOpts.TargetArmor, calculatedStats.petArmorDebuffs, 0, 0);
-                //petEffectiveArmor/(petEffectiveArmor - 22167.5f + (467.5f*80f));
+            calculatedStats.petTargetArmorReduction = StatConversion.GetArmorDamageReduction(character.Level, CalcOpts.TargetArmor, calculatedStats.petArmorDebuffs, 0, 0);
+#endif
+            //petEffectiveArmor/(petEffectiveArmor - 22167.5f + (467.5f*80f));
             #endregion
         }
 
@@ -701,7 +729,11 @@ namespace Rawr.Hunter
         {
             if (CalcOpts.PetFamily == PetFamily.None) return;
 
+#if RAWR3 || SILVERLIGHT
+            int levelDifference = BossOpts.Level - character.Level;
+#else
             int levelDifference = CalcOpts.TargetLevel - character.Level;
+#endif
 
             // setup
             #region Attack Power
@@ -720,7 +752,11 @@ namespace Rawr.Hunter
             float fullResistDamageAdjust = 1f - fullResist;
 
             // Partial Resists (Spell Hit)
+#if RAWR3 || SILVERLIGHT
+            float averageResist = (BossOpts.Level - character.Level) * 0.02f;
+#else
             float averageResist = (CalcOpts.TargetLevel - character.Level) * 0.02f;
+#endif
             float resist10 = 5.0f * averageResist;
             float resist20 = 2.5f * averageResist;
             float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
@@ -746,20 +782,24 @@ namespace Rawr.Hunter
             float damageAdjustFeedingFrenzy = 1;
 #if RAWR3 || SILVERLIGHT
             if (PetTalents.FeedingFrenzy > 0) {
+                float feedingFrenzyTimeSpent = ((float)BossOpts.Under20Perc + (float)BossOpts.Under35Perc) * BossOpts.BerserkTimer;
+                float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / BossOpts.BerserkTimer : 0;
+                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy * 0.08f;
+            }
 #else
             if (PetTalents.FeedingFrenzy.Value > 0) {
-#endif
-                                                        float feedingFrenzyTimeSpent = CalcOpts.TimeSpentSub20 + CalcOpts.TimeSpent35To20;
+                float feedingFrenzyTimeSpent = CalcOpts.TimeSpentSub20 + CalcOpts.TimeSpent35To20;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / CalcOpts.Duration : 0;
-#if RAWR3 || SILVERLIGHT
-                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy * 0.08f;
-#else
                 damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy.Value * 0.08f;
-#endif
             }
+#endif
 
             // Glancing Blows
+#if RAWR3 || SILVERLIGHT
+            float glancingBlowsSkillDiff = (BossOpts.Level * 5) - (CalcOpts.PetLevel * 5); // F55
+#else
             float glancingBlowsSkillDiff = (CalcOpts.TargetLevel * 5) - (CalcOpts.PetLevel * 5); // F55
+#endif
             if (glancingBlowsSkillDiff < 0) glancingBlowsSkillDiff = 0;
             float glancingBlowsChance  = glancingBlowsSkillDiff > 15 ? 0.25f : 0.1f + glancingBlowsSkillDiff * 0.01f; // F56
             float glancingBlowsLowEnd  = (float)Math.Min(1.3f - 0.05f * glancingBlowsSkillDiff, 0.91f); // F57
@@ -834,8 +874,11 @@ namespace Rawr.Hunter
             float damageAdjustMangle = 1f + PetStats.BonusBleedDamageMultiplier;
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
-            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(
-                CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+#if RAWR3 || SILVERLIGHT
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+#else
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+#endif
 
             float damageAdjustBase = 1f
                     * (1f + PetStats.BonusDamageMultiplier)

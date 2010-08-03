@@ -10,7 +10,8 @@ namespace Rawr.Hunter
         // passed in by the caller
         private Character character;
         private CharacterCalculationsHunter calculatedStats;
-        private CalculationOptionsHunter options;
+        private CalculationOptionsHunter CalcOpts;
+        private BossOptions BossOpts;
 
         // used for calculation
         private Dictionary<Shots, RotationShotInfo> shotData;
@@ -30,10 +31,11 @@ namespace Rawr.Hunter
         public float IAotHTime = 0;
         public float IAotHUptime = 0;
  
-        public RotationTest(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options)
+        public RotationTest(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
         {
             this.character = character;
-            this.options = options;
+            this.CalcOpts = calcOpts;
+            this.BossOpts = bossOpts;
             this.calculatedStats = calculatedStats;
             // 091109 Drizz: Added
             this.calculatedStats.sequence = "Time  :Shot          :CastTime:Done   :CD Until" + Environment.NewLine;
@@ -47,9 +49,13 @@ namespace Rawr.Hunter
 
         public void RunTest()
         {
-            float FightLength = options.Duration;
-            float Latency = options.Latency;
-            float CDCutoff = options.CDCutoff;
+#if RAWR3 || SILVERLIGHT
+            float FightDuration = BossOpts.BerserkTimer;
+#else
+            float FightDuration = CalcOpts.Duration;
+#endif
+            float Latency = CalcOpts.Latency;
+            float CDCutoff = CalcOpts.CDCutoff;
             float Longevity = character.HunterTalents.Longevity;
             float GCD = 1.5f;
             float BA = calculatedStats.blackArrow.Duration;
@@ -58,28 +64,32 @@ namespace Rawr.Hunter
             float ft = calculatedStats.freezingTrap.Duration;
             float frt = calculatedStats.frostTrap.Duration;
             float vly = calculatedStats.volley.Duration;
-            float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * options.LALProcChance : -1;
-            bool RandomProcs = options.RandomizeProcs;
+            float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * CalcOpts.LALProcChance : -1;
+            bool RandomProcs = CalcOpts.RandomizeProcs;
             int ISSfix = 0;
             int IAotHfix = 0;
             int LALfix = 0;
             float AutoShotSpeed = 2; // Speed at which we shoot auto-shots
             //float IAotHEffect = 1 + calculatedStats.quickShotsEffect; // haste increase during IAoTH
             float IAotHChance = character.HunterTalents.ImprovedAspectOfTheHawk > 0 ? 10 : -1;
-            float WaitForESCS = options.waitForCooldown;
-            bool InterleaveLAL = options.interleaveLAL;
-            bool ArcAimedPrio = options.prioritiseArcAimedOverSteady;
+            float WaitForESCS = CalcOpts.waitForCooldown;
+            bool InterleaveLAL = CalcOpts.interleaveLAL;
+            bool ArcAimedPrio = CalcOpts.prioritiseArcAimedOverSteady;
             float ISSTalent = character.HunterTalents.ImprovedSteadyShot * 5;
             float ISSDuration = -1;
             int ISSprocsAimed = 0;
             int ISSProcsArcane = 0;
             int ISSProcsChimera = 0;
-            float BossHPPercentage = options.BossHPPerc * 100;
-            float Sub20Time = (BossHPPercentage > 20) ? FightLength - options.TimeSpentSub20 : 0; // time *until* we hit sub-20
+            float BossHPPercentage = CalcOpts.BossHPPerc * 100;
+#if RAWR3 || SILVERLIGHT
+            float Sub20Time = (BossHPPercentage > 20) ? FightDuration - (float)BossOpts.Under20Perc * FightDuration : 0; // time *until* we hit sub-20
+#else
+            float Sub20Time = (BossHPPercentage > 20) ? FightDuration - CalcOpts.TimeSpentSub20 : 0; // time *until* we hit sub-20
+#endif
             bool UseKillShot = calculatedStats.priorityRotation.containsShot(Shots.KillShot);
             bool BMSpec = character.HunterTalents.BestialWrath + character.HunterTalents.TheBeastWithin > 0;
 
-            if (options.PetFamily == PetFamily.None) BMSpec = false;
+            if (CalcOpts.PetFamily == PetFamily.None) BMSpec = false;
 
             int currentShot;
             float currentTime;
@@ -338,10 +348,10 @@ namespace Rawr.Hunter
                                 // Check if TBW/BW CD is nearly up if we want to use Rapid Fire
                             } else if (s.type == Shots.Readiness &&  RFCD < (currentTime + CDCutoff)) {
                                 // Wait for Rapid Fire if it's close too
-                            } else if (s.type == Shots.SerpentSting && FightLength - currentTime < s.cooldown) {
+                            } else if (s.type == Shots.SerpentSting && FightDuration - currentTime < s.cooldown) {
                                 // do nothing if Rapid Fire is about to come off CD
                                 // do nothing if we don't get all the ticks of Serpent Sting anyway
-                            } else if (s.type == Shots.BlackArrow && FightLength - currentTime < BA) {
+                            } else if (s.type == Shots.BlackArrow && FightDuration - currentTime < BA) {
                                 // ditto for Black Arrow
                             } else if (s.type == Shots.BestialWrath && !BMSpec) {
                                 // do nothing
@@ -695,7 +705,7 @@ namespace Rawr.Hunter
                 }
                 #endregion
             }
-            while (currentTime < FightLength - 1);
+            while (currentTime < FightDuration - 1);
 
             #endregion
             #region Save Results

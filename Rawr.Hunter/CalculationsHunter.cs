@@ -1114,7 +1114,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.priorityRotation.priorities[9] = getShotByIndex(calcOpts.PriorityIndex10, calculatedStats);
             calculatedStats.priorityRotation.validateShots(talents);
         }
-        private void GenAbilityCds(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, HunterTalents talents)
+        private void GenAbilityCds(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcOpts, BossOptions bossOpts, HunterTalents talents)
         {
             calculatedStats.serpentSting.Cd = 1.5f;
             calculatedStats.serpentSting.Duration = talents.GlyphOfSerpentSting ? 21 : 15;
@@ -1154,10 +1154,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.frostTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.frostTrap.Duration = 30;
 
+#if RAWR3 || SILVERLIGHT
+            if (bossOpts.MultiTargs && bossOpts.MultiTargsTime > 0) {
+                // Good to go, now change the cooldown based on the multitargs uptime
+                calculatedStats.volley.Duration = 6f;
+                calculatedStats.volley.Cd = (1f / (bossOpts.MultiTargsTime / calculatedStats.volley.Duration)) * bossOpts.BerserkTimer;
+#else
             if (calcOpts.MultipleTargets && calcOpts.MultipleTargetsPerc > 0) {
                 // Good to go, now change the cooldown based on the multitargs uptime
                 calculatedStats.volley.Duration = 6f;
                 calculatedStats.volley.Cd = (1f / ((calcOpts.MultipleTargetsPerc * calcOpts.Duration) / calculatedStats.volley.Duration)) * calcOpts.Duration;
+#endif
             } else {
                 // invalidate it
                 calculatedStats.volley.Cd = -1f;
@@ -1190,7 +1197,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
         }
         private static void GenRotation(Character character, Stats stats, CharacterCalculationsHunter calculatedStats,
-            CalculationOptionsHunter calcOpts, HunterTalents talents,
+            CalculationOptionsHunter calcOpts, BossOptions bossOpts, HunterTalents talents,
             out float rangedWeaponSpeed, out float rangedAmmoDPS, out float rangedWeaponDamage, out float autoShotSpeed,
             out float autoShotsPerSecond, out float specialShotsPerSecond, out float totalShotsPerSecond, out float shotsPerSecondWithoutHawk,
             out RotationTest rotationTest)
@@ -1225,7 +1232,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region Rotation Test
             // Using the rotation test will get us better frequencies
             //RotationTest
-                rotationTest = new RotationTest(character, calculatedStats, calcOpts);
+                rotationTest = new RotationTest(character, calculatedStats, calcOpts, bossOpts);
 
             if (calcOpts.UseRotationTest) {
                 // The following properties of CalculatedStats must be ready by this call:
@@ -1283,11 +1290,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
             CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-            calculatedStats.calcOpts = calcOpts;
+            calculatedStats.CalcOpts = calcOpts;
+            BossOptions bossOpts = character.BossOptions;
+            calculatedStats.BossOpts = bossOpts;
             Stats stats = GetCharacterStats(character, additionalItem);
             HunterTalents talents = character.HunterTalents;
-            CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
-            WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts);
+            CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts, bossOpts);
+            WhiteAttacks whiteAttacks = new WhiteAttacks(character, stats, combatFactors, calcOpts, bossOpts);
 
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
@@ -1299,7 +1308,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.BasicStats = stats;
             calculatedStats.BaseHealth = statsRace.Health;
 
-            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, stats, GetPetBuffsStats(character, calcOpts));
+            calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, stats, GetPetBuffsStats(character, calcOpts));
             
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
                                              && character.Ranged.Item.Type != ItemType.Gun
@@ -1308,20 +1317,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 //skip all the calculations if there is no ranged weapon
                 return calculatedStats;
             }
-
+#if RAWR3 || SILVERLIGHT
+            int   levelDifI = bossOpts.Level - character.Level;
+#else
             int   levelDifI = calcOpts.TargetLevel - character.Level;
+#endif
             float levelDifF = (float)levelDifI;
 
             float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];
 
             GenPrioRotation(calculatedStats, calcOpts, talents);
-            GenAbilityCds(character, calculatedStats, calcOpts, talents);
+            GenAbilityCds(character, calculatedStats, calcOpts, bossOpts, talents);
 
             float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
             float autoShotSpeed = 0;
             float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
             RotationTest rotationTest;
-            GenRotation(character, stats, calculatedStats, calcOpts, talents,
+            GenRotation(character, stats, calculatedStats, calcOpts, bossOpts, talents,
                 out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
@@ -1562,7 +1574,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
             }
 
+#if RAWR3 || SILVERLIGHT
+            calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)bossOpts.BerserkTimer;
+#else
             calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)calcOpts.Duration;
+#endif
 
             // Target Debuffs
             calculatedStats.manaRegenTargetDebuffs = targetDebuffsMP5 / 5f;
@@ -1604,10 +1620,32 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                   aspectUptimeHawk           = 0f,
                   aspectUptimeViper          = 0f;
 
-            if (calculatedStats.manaTimeToOOM >= 0f
-                && calculatedStats.manaTimeToOOM < calcOpts.Duration
-                && calculatedStats.manaRegenViper > 0f)
+#if RAWR3 || SILVERLIGHT
+            if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < bossOpts.BerserkTimer && calculatedStats.manaRegenViper > 0f)
             {
+                viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * bossOpts.BerserkTimer) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
+            }
+
+            if (calculatedStats.manaTimeToOOM >= 0 && calculatedStats.manaTimeToOOM < bossOpts.BerserkTimer)
+            {
+                if (calcOpts.AspectUsage == AspectUsage.ViperRegen)
+                {
+                    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calculatedStats.manaTimeToOOM, calculatedStats.manaTimeToFull) / (calculatedStats.manaTimeToFull + calculatedStats.manaTimeToOOM);
+                }
+                else if (calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f)
+                {
+                    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calculatedStats.manaTimeToOOM, viperTimeNeededToLastFight) / bossOpts.BerserkTimer;
+                }
+                else if (calcOpts.AspectUsage == AspectUsage.None)
+                {
+                    PercTimeNoDPSforNoMana = (bossOpts.BerserkTimer - calculatedStats.manaTimeToOOM) / bossOpts.BerserkTimer;
+                }
+            }
+
+            float aspectUptimeBeast = calcOpts.UseBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
+                ? (calculatedStats.bestialWrath.Duration * (bossOpts.BerserkTimer / calculatedStats.bestialWrath.Cd)) / bossOpts.BerserkTimer : 0;
+#else
+            if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < calcOpts.Duration && calculatedStats.manaRegenViper > 0f) {
                 viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * calcOpts.Duration) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
             }
 
@@ -1623,6 +1661,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float aspectUptimeBeast = calcOpts.UseBeastDuringBestialWrath && calculatedStats.bestialWrath.Freq > 0
                 ? (calculatedStats.bestialWrath.Duration * (calcOpts.Duration / calculatedStats.bestialWrath.Cd)) / calcOpts.Duration : 0;
+#endif
 
             switch (calcOpts.SelectedAspect) {
                 case Aspect.Viper:
@@ -1671,7 +1710,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float RAP = calculatedStats.apTotal;
             #endregion
             #region Armor Penetration
-            float ArmorDamageReduction = GetArmorDamageReduction(character, stats, calcOpts);
+            float ArmorDamageReduction = GetArmorDamageReduction(character, stats, calcOpts, bossOpts);
             calculatedStats.damageReductionFromArmor = (1f - ArmorDamageReduction);
             #endregion
             #region Damage Adjustments
@@ -1689,7 +1728,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow)) {
                 SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
                                             calculatedStats.blackArrow.Duration, calculatedStats.blackArrow.Freq);
+#if RAWR3 || SILVERLIGHT
+                blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)bossOpts.BerserkTimer);
+#else
                 blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
+#endif
             }
             float blackArrowAuraDamageAdjust = 1f + (0.06f * blackArrowUptime);
             float blackArrowSelfDamageAdjust = 1f + (RAP / 225000f);
@@ -1818,7 +1861,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
                     new Stats() { RangedHaste = quickShotsEffect, },
                     12f, 0f, 0.10f);
+#if RAWR3 || SILVERLIGHT
+                QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, bossOpts.BerserkTimer).RangedHaste;
+#else
                 QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, calcOpts.Duration).RangedHaste;
+#endif
             }
 
             calculatedStats.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - calculatedStats.aspectUptimeHawk) * hunterAutoDPS;
@@ -2298,7 +2345,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
             float timeSpentSubTwenty = 0;
+#if RAWR3 || SILVERLIGHT
+            if (bossOpts.BerserkTimer > 0 && bossOpts.Under20Perc > 0) timeSpentSubTwenty = (float)bossOpts.Under20Perc;
+#else
             if (calcOpts.Duration > 0 && calcOpts.TimeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.TimeSpentSub20 / (float)calcOpts.Duration;
+#endif
             if (calcOpts.BossHPPerc < 0.2f) timeSpentSubTwenty = 1f;
 
             float killShotSubGain = timeSpentSubTwenty * killShotDPSGain;
@@ -2326,8 +2377,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float Armor2SurvHunter = (stats.Armor) / 100f;
             float Armor2SurvPet = (calculatedStats.pet.PetStats.Armor) / 100f;
             //float spiritbondcoeff = (talents.SpiritBond * 0.01f * (calcOpts.Duration / 10f));
+#if RAWR3 || SILVERLIGHT
+            float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
+            float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
+#else
             float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
             float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (calcOpts.Duration / 10f)) / calcOpts.Duration;
+#endif
             #endregion
 
             #region Zod's Repeating Longbow
@@ -2348,23 +2404,34 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                            1f,
                                                            autoShotDamageAdjust);
                 SpecialEffect zod = new SpecialEffect(Trigger.RangedHit, new Stats(), 0f, 0f, Chance);
+#if RAWR3 || SILVERLIGHT
+                float numProcs = bossOpts.BerserkTimer * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, bossOpts.BerserkTimer);
+                float totalDamage = numProcs * ProcDamageReal;
+                calculatedStats.BonusAttackProcsDPS = totalDamage / bossOpts.BerserkTimer;
+#else
                 float numProcs = calcOpts.Duration * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, calcOpts.Duration);
                 float totalDamage = numProcs * ProcDamageReal;
                 calculatedStats.BonusAttackProcsDPS = totalDamage / calcOpts.Duration;
+#endif
             }
             #endregion
 
             #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
             Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-            CalculateTriggers(character, calculatedStats, stats, calcOpts, triggerIntervals, triggerChances);
+            CalculateTriggers(character, calculatedStats, stats, calcOpts, bossOpts, triggerIntervals, triggerChances);
             DamageProcs.SpecialDamageProcs SDP;
             calculatedStats.SpecProcDPS = 0f;
             if (stats._rawSpecialEffectData != null)
             {
                 SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
+#if RAWR3 || SILVERLIGHT
+                    bossOpts.Level - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
+                    triggerIntervals, triggerChances, bossOpts.BerserkTimer, combatFactors.DamageReduction);
+#else
                     calcOpts.TargetLevel - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
                     triggerIntervals, triggerChances, calcOpts.Duration, combatFactors.DamageReduction);
+#endif
                 calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
                 calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
                 calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
@@ -2412,13 +2479,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             try {
                 CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
                 if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
+                BossOptions bossOpts = character.BossOptions;
                 HunterTalents talents = character.HunterTalents;
 #if RAWR3 || SILVERLIGHT
                 PetTalents petTalents = calcOpts.PetTalents;
+                int levelDif = bossOpts.Level - character.Level;
 #else
                 PetTalentTreeData petTalents = calcOpts.PetTalents;
-#endif
                 int levelDif = calcOpts.TargetLevel - character.Level;
+#endif
 
                 #region From Race
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
@@ -2438,7 +2507,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 };
                 CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
                 GenPrioRotation(calculatedStats, calcOpts, talents);
-                GenAbilityCds(character, calculatedStats, calcOpts, talents);
+                GenAbilityCds(character, calculatedStats, calcOpts, bossOpts, talents);
                 if (calculatedStats.priorityRotation.containsShot(Shots.RapidFire)) {
                     statsOptionsPanel.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                         new Stats() { RangedHaste = (talents.GlyphOfRapidFire ? 0.48f : 0.40f), },
@@ -2628,14 +2697,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #endregion
 
                 #region Handle Special Effects
-                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, statsTotal,
+                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal,
                     GetPetBuffsStats(character, calcOpts));
                 calculatedStats.pet.GenPetStats();
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
 
-                CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, triggerIntervals, triggerChances);
+                CalculateTriggers(character, calculatedStats, statsTotal, calcOpts, bossOpts, triggerIntervals, triggerChances);
 
                 if (calcOpts.PetFamily == PetFamily.Wolf
                     && calculatedStats.pet.priorityRotation.getSkillFrequency(PetAttacks.FuriousHowl) > 0)
@@ -2700,17 +2769,21 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         private static readonly SpecialEffect FuriousHowl = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 320f, PetAttackPower = 320f, }, 20f, 40f);
 
         private static void CalculateTriggers(Character character, CharacterCalculationsHunter calculatedStats, Stats statsTotal,
-            CalculationOptionsHunter calcOpts,
+            CalculationOptionsHunter calcOpts, BossOptions bossOpts,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
+#if RAWR3 || SILVERLIGHT
+            int levelDif = bossOpts.Level - character.Level;
+#else
             int levelDif = calcOpts.TargetLevel - character.Level;
+#endif
             float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
             HunterTalents talents = character.HunterTalents;
             float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
             float autoShotSpeed = 0;
             float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
             RotationTest rotationTest;
-            GenRotation(character, statsTotal, calculatedStats, calcOpts, talents,
+            GenRotation(character, statsTotal, calculatedStats, calcOpts, bossOpts, talents,
                 out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
@@ -2754,11 +2827,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             Stats statsTotal, Stats statsToProcess)
         {
             CalculationOptionsHunter calcOpts = Char.CalculationOptions as CalculationOptionsHunter;
+            BossOptions bossOpts = Char.BossOptions;
             ItemInstance RangeWeap = Char.MainHand;
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
+#if RAWR3 || SILVERLIGHT
+            float fightDuration_M = bossOpts.BerserkTimer;
+#else
             float fightDuration_M = calcOpts.Duration;
+#endif
             Stats _stats;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
@@ -2920,14 +2998,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             return dmg;
         }
-        public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts) {
+        public float GetArmorDamageReduction(Character Char, Stats StatS, CalculationOptionsHunter CalcOpts, BossOptions BossOpts) {
             float armorReduction;
             float arpenBuffs = 0.0f;
 
+#if RAWR3 || SILVERLIGHT
             if (CalcOpts == null) {
+#else
+            if (BossOpts == null) {
+#endif
                 armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
             } else {
+#if RAWR3 || SILVERLIGHT
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+#else
                 armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+#endif
             }
 
             return armorReduction;

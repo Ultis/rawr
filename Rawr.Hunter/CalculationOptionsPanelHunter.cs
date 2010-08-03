@@ -18,6 +18,7 @@ namespace Rawr.Hunter
         #region Instance Variables
         private bool isLoading = false;
         private CalculationOptionsHunter CalcOpts = null;
+        private BossOptions BossOpts = null;
         private PetAttacks[] familyList = null;
         private List<ComboBox> ShotPriorityBoxes = new List<ComboBox>();
         #endregion
@@ -1107,7 +1108,7 @@ namespace Rawr.Hunter
             CalculationsHunter calcs = Character.CurrentCalculations as CalculationsHunter;
             CharacterCalculationsHunter charCalcs = calcs.GetCharacterCalculations(Character) as CharacterCalculationsHunter;
             charCalcs.collectSequence = true;
-            RotationTest rTest = new RotationTest(Character, charCalcs, CalcOpts);
+            RotationTest rTest = new RotationTest(Character, charCalcs, CalcOpts, BossOpts);
             rTest.RunTest();
             myShotsTable = rTest.getRotationTable();
             TB_Rotation.Text = charCalcs.sequence;

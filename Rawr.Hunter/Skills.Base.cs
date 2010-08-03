@@ -9,15 +9,20 @@ namespace Rawr.Hunter.Skills
     public class WhiteAttacks
     {
         // Constructors
-        public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter calcOpts)
+        public WhiteAttacks(Character character, Stats stats, CombatFactors cf, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
         {
             Char = character;
             StatS = stats;
             Talents = Char.HunterTalents == null ? new HunterTalents() : Char.HunterTalents;
             combatFactors = cf;
             CalcOpts = calcOpts;
+            BossOpts = bossOpts;
             RWAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, false, false);
+#if RAWR3 || SILVERLIGHT
+            FightDuration = BossOpts.BerserkTimer;
+#else
             FightDuration = CalcOpts.Duration;
+#endif
             //
             Targets = 1f;
             HSOverridesOverDur = 0f;
@@ -34,6 +39,7 @@ namespace Rawr.Hunter.Skills
         private readonly HunterTalents Talents;
         private readonly CombatFactors combatFactors;
         private CalculationOptionsHunter CalcOpts;
+        private BossOptions BossOpts;
         private float TARGETS;
         public AttackTable RWAtkTable;
         private float OVDOVERDUR_HS;
@@ -42,12 +48,20 @@ namespace Rawr.Hunter.Skills
         private float Targets { get { return TARGETS; } set { TARGETS = value; } }
         private float AvgTargets {
             get {
+#if RAWR3 || SIVLERLIGHT
+                if (BossOpts.MultiTargs)
+#else
                 if (CalcOpts.MultipleTargets)
+#endif
                 {
                     //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                     return 1f +
                         //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) *
+#if RAWR3 || SIVLERLIGHT
+                        (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
+#else
                         CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
+#endif
                 }
                 else { return 1f; }
             }
@@ -264,6 +278,7 @@ namespace Rawr.Hunter.Skills
         private AttackTable RWATTACKTABLE;
         private WhiteAttacks WHITEATTACKS;
         private CalculationOptionsHunter CALCOPTS;
+        private BossOptions BOSSOPTS;
         private bool USESPELLHIT = false;
         private bool USEHITTABLE = true;
         public int AbilIterater;
@@ -283,12 +298,21 @@ namespace Rawr.Hunter.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
+#if RAWR3 || SILVERLIGHT
+                    _AvgTargets = 1f +
+                       (BossOpts.MultiTargs ?
+                           StatS.BonusTargets +
+                           (BossOpts.MultiTargsTime / BossOpts.BerserkTimer) // *
+                           //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
+                           : 0f);
+#else
                     _AvgTargets = 1f +
                        (CalcOpts.MultipleTargets ?
                            StatS.BonusTargets +
                            CalcOpts.MultipleTargetsPerc / 100f // *
-                           //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
+                        //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f)
                            : 0f);
+#endif
                 }
                 return _AvgTargets;
             }
@@ -360,8 +384,13 @@ namespace Rawr.Hunter.Skills
         public virtual AttackTable RWAtkTable { get { return RWATTACKTABLE; } protected set { RWATTACKTABLE = value; } }
         public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
         protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
+        protected BossOptions BossOpts { get { return BOSSOPTS; } set { BOSSOPTS = value; } }
         public virtual float ManaUseOverDur { get { return (!Validated ? 0f : Activates * ManaCost); } }
+#if RAWR3 || SILVERLIGHT
+        protected float FightDuration { get { return BossOpts.BerserkTimer; } }
+#else
         protected float FightDuration { get { return CalcOpts.Duration; } }
+#endif
         protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
         protected bool UseHitTable { get { return USEHITTABLE; } set { USEHITTABLE = value; } }
         public bool isMaint { get; protected set; }
@@ -390,7 +419,11 @@ namespace Rawr.Hunter.Skills
                 {
                     validatedSet = false;
                 }
+#if RAW3 || SILVERLIGHT
+                else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.MultiTargsTime == 0))
+#else
                 else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
+#endif
                 {
                     validatedSet = false;
                 }
@@ -674,3 +707,4 @@ namespace Rawr.Hunter.Skills
         }
     }
 }
+

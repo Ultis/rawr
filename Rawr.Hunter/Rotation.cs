@@ -23,6 +23,7 @@ namespace Rawr.Hunter {
             Talents = null;
             CombatFactors = null;
             CalcOpts = null;
+            BossOpts = null;
 
             AbilityList = new Dictionary<Type,AbilWrapper>();
             InvalidateCache();
@@ -139,6 +140,7 @@ namespace Rawr.Hunter {
         protected CombatFactors CombatFactors { get; set; }
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }
         protected CalculationOptionsHunter CalcOpts { get; set; }
+        protected BossOptions BossOpts { get; set; }
         
         protected float LatentGCD { get { return 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact; } }
         
@@ -439,8 +441,12 @@ namespace Rawr.Hunter {
                 return 0;
             }
         }
+#if RAWR3 || SILVERLIGHT
+        protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * BossOpts.BerserkTimer; } }
+#else
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }
-        
+#endif
+
         protected virtual float RageGenOverDur_Other {
             get {
                     float mana = RageGenOverDur_Anger               // Anger Management Talent

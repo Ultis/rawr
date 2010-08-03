@@ -2,12 +2,13 @@ using System;
 
 namespace Rawr.Hunter {
     public class CombatFactors {
-        public CombatFactors(Character character, Stats stats, CalculationOptionsHunter calcOpts)
+        public CombatFactors(Character character, Stats stats, CalculationOptionsHunter calcOpts, BossOptions bossOpts)
         {
             Char = character;
             RW = Char == null || Char.Ranged == null ? new Knuckles() : Char.Ranged.Item;
             Talents = Char == null || Char.HunterTalents == null ? new HunterTalents() : Char.HunterTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsHunter() : calcOpts);
+            BossOpts = (bossOpts == null ? new BossOptions() : bossOpts);
             StatS = stats;
             InvalidateCache();
             // Optimizations
@@ -37,6 +38,7 @@ namespace Rawr.Hunter {
         public Stats StatS { get { return _Stats; } set { _Stats = value; } }
         private HunterTalents Talents;
         public CalculationOptionsHunter CalcOpts { get; private set; }
+        public BossOptions BossOpts { get; private set; }
         public Character Char { get; private set; }
         /// <summary>The character's Ranged Weapon</summary>
         public Item RW { get; private set; }
@@ -85,7 +87,11 @@ namespace Rawr.Hunter {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs = 0.0f;
+#if RAWR3 || SILVERLIGHT
+                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+#else
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+#endif
                 }
                 return _DamageReduction;
             }
@@ -184,9 +190,14 @@ namespace Rawr.Hunter {
                         + HitPerc;          // Bonus from Hit Rating
             }
         }
+#if RAWR3 || SILVERLIGHT
+        private float WhMissCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
+        private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
+#else
         private float WhMissCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
-        private float WhMissChance { get { return Math.Max(0f, WhMissCap - MissPrevBonuses); } }
         private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]; } }
+#endif
+        private float WhMissChance { get { return Math.Max(0f, WhMissCap - MissPrevBonuses); } }
         private float YwMissChance { get { return Math.Max(0f, YwMissCap - MissPrevBonuses); } }
         #endregion
         #region Dodge
@@ -252,14 +263,13 @@ namespace Rawr.Hunter {
         }
         #endregion
         #region Attackers Stats against you
+#if RAWR3 || SILVERLIGHT
+        private float LevelModifier { get { return (BossOpts.Level - Char.Level) * 0.002f; } }
+        private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, BossOpts.Level)); } }
+#else
         private float LevelModifier { get { return (CalcOpts.TargetLevel - Char.Level) * 0.002f; } }
-        private float NPC_CritChance {
-            get {
-                return Math.Max(0f, 0.05f + LevelModifier
-                                    - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel)
-                                );
-            }
-        }
+        private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, CalcOpts.TargetLevel) ); } }
+#endif
         #endregion
     }
 }
