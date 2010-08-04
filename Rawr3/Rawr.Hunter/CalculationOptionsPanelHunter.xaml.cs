@@ -25,6 +25,13 @@ namespace Rawr.Hunter {
         private List<ComboBox> ShotPriorityBoxes = new List<ComboBox>();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
+        private int _CurrentSpec;
+        private int CurrentSpec
+        {
+            get { return _CurrentSpec; }
+            set { _CurrentSpec = value; }
+        }
+        public enum Specs { BeastMaster = 1, Marksman, Survival }
         #endregion
 
         #region Constructors
@@ -55,96 +62,6 @@ namespace Rawr.Hunter {
             //CB_CalculationToGraph.Items.Add(Graph.GetCalculationNames());
             _loadingCalculationOptions = false;
         }
-        #endregion
-
-        #region ICalculationOptionsPanel Members
-        public UserControl PanelControl { get { return this; } }
-
-        CalculationOptionsHunter CalcOpts = null;
-
-        private Character character;
-        public Character Character
-        {
-            get { return character; }
-            set {
-                // Kill any old event connections
-                if (character != null && character.CalculationOptions != null
-                    && character.CalculationOptions is CalculationOptionsHunter)
-                    ((CalculationOptionsHunter)character.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
-                // Apply the new character
-                character = value;
-                // Load the new CalcOpts
-                LoadCalculationOptions();
-                // Model Specific Code
-                // Set the Data Context
-                LayoutRoot.DataContext = CalcOpts;
-                // Add new event connections
-                CalcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
-                // Run it once for any special UI config checks
-                CalculationOptionsPanelHunter_PropertyChanged(null, new PropertyChangedEventArgs(""));
-            }
-        }
-
-        private bool _loadingCalculationOptions = false;
-        public void LoadCalculationOptions()
-        {
-            string info = "";
-            _loadingCalculationOptions = true;
-            try {
-                if (Character != null && Character.CalculationOptions == null) {
-                    // If it's broke, make a new one with the defaults
-                    Character.CalculationOptions = new CalculationOptionsHunter();
-                    _loadingCalculationOptions = true;
-                }
-                else if (Character == null) { return; }
-                CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-                ThePetTalentPicker.Character = character;
-                PetBuffs.Character = Character;
-                PopulatePetAbilities();
-                PopulateArmoryPets();
-                // Bad Item Hiding
-                CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
-                CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
-                ItemCache.OnItemsChanged();
-            } catch (Exception ex) {
-                new ErrorBox("Error in loading the Hunter Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
-            }
-            _loadingCalculationOptions = false;
-        }
-
-        public void CalculationOptionsPanelHunter_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) { return; }
-            // Change abilities if stance changes
-            /*if (e.PropertyName == "FuryStance")
-            {
-                bool Checked = calcOpts.FuryStance;
-                // Fury
-                CK_M_F_WW.IsChecked = Checked;
-                CK_M_F_BS.IsChecked = Checked;
-                CK_M_F_BT.IsChecked = Checked;
-                // Fury Special
-                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
-                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
-                // Arms
-                CK_M_A_BLS.IsChecked = !Checked;
-                CK_M_A_MS.IsChecked = !Checked;
-                CK_M_A_RD.IsChecked = !Checked;
-                CK_M_A_OP.IsChecked = !Checked;
-                CK_M_A_TB.IsChecked = !Checked;
-                CK_M_A_SD.IsChecked = !Checked;
-                CK_M_A_SL.IsChecked = !Checked;
-                // Arms Special
-                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
-                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
-                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
-            }*/
-            //
-            if (Character != null) { Character.OnCalculationsInvalidated(); }
-        }
-        #endregion
 
         private void SetUpFAQ()
         {
@@ -855,7 +772,105 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 //RTB_Version.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
             }
         }
-        //
+        #endregion
+
+        #region ICalculationOptionsPanel Members
+        public UserControl PanelControl { get { return this; } }
+
+        CalculationOptionsHunter CalcOpts = null;
+
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set {
+                // Kill any old event connections
+                if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsHunter) {
+                    ((CalculationOptionsHunter)character.CalculationOptions).PropertyChanged
+                        -= new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
+                    character.TalentChangedEvent -= new System.EventHandler(CharTalents_Changed);
+                }
+                // Apply the new character
+                character = value;
+                // Load the new CalcOpts
+                LoadCalculationOptions();
+                // Model Specific Code
+                // Set the Data Context
+                LayoutRoot.DataContext = CalcOpts;
+                // Add new event connections
+                CalcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelHunter_PropertyChanged);
+                character.TalentChangedEvent += new System.EventHandler(CharTalents_Changed);
+                // Run it once for any special UI config checks
+                CalculationOptionsPanelHunter_PropertyChanged(null, new PropertyChangedEventArgs(""));
+            }
+        }
+
+        private bool _loadingCalculationOptions = false;
+        public void LoadCalculationOptions()
+        {
+            string info = "";
+            _loadingCalculationOptions = true;
+            try {
+                if (Character != null && Character.CalculationOptions == null) {
+                    // If it's broke, make a new one with the defaults
+                    Character.CalculationOptions = new CalculationOptionsHunter();
+                    _loadingCalculationOptions = true;
+                }
+                else if (Character == null) { return; }
+                CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+                ThePetTalentPicker.Character = character;
+                PetBuffs.Character = Character;
+                PopulatePetAbilities();
+                PopulateArmoryPets();
+                CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
+                if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
+                    _loadingCalculationOptions = false;
+                    CB_PriorityDefaults.SelectedIndex = ShotRotationFunctions.ShotRotationGetRightSpec(Character);
+                    _loadingCalculationOptions = true;
+                }
+                // Bad Item Hiding
+                CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
+                CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
+                ItemCache.OnItemsChanged();
+            } catch (Exception ex) {
+                new ErrorBox("Error in loading the Hunter Options Pane",
+                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
+            }
+            _loadingCalculationOptions = false;
+        }
+
+        public void CalculationOptionsPanelHunter_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_loadingCalculationOptions) { return; }
+            // Change abilities if stance changes
+            /*if (e.PropertyName == "FuryStance")
+            {
+                bool Checked = calcOpts.FuryStance;
+                // Fury
+                CK_M_F_WW.IsChecked = Checked;
+                CK_M_F_BS.IsChecked = Checked;
+                CK_M_F_BT.IsChecked = Checked;
+                // Fury Special
+                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
+                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
+                // Arms
+                CK_M_A_BLS.IsChecked = !Checked;
+                CK_M_A_MS.IsChecked = !Checked;
+                CK_M_A_RD.IsChecked = !Checked;
+                CK_M_A_OP.IsChecked = !Checked;
+                CK_M_A_TB.IsChecked = !Checked;
+                CK_M_A_SD.IsChecked = !Checked;
+                CK_M_A_SL.IsChecked = !Checked;
+                // Arms Special
+                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && !Checked;
+                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && !Checked;
+                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && !Checked;
+            }*/
+            //
+            if (Character != null) { Character.OnCalculationsInvalidated(); }
+        }
+        #endregion
+
         #region Rotations
         private void CB_PriorityDefaults_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -865,9 +880,29 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             _loadingCalculationOptions = true;
 
             int i = 0;
-            if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.BeastMaster.ShotList[i]; i++; } }
-            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.Marksman.ShotList[i]; i++; } }
-            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) { foreach (ComboBox cb in ShotPriorityBoxes) { cb.SelectedItem = CalculationOptionsHunter.Survival.ShotList[i]; i++; } }
+            int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+            if (CB_PriorityDefaults.SelectedIndex == (int)Specs.BeastMaster)
+            {
+                foreach (ComboBox cb in ShotPriorityBoxes) {
+                    //cb.SelectedItem = CalculationOptionsHunter.BeastMaster.ShotList[i];
+                    _prioIndxs[i] = CalculationOptionsHunter.BeastMaster.ShotList[i].Index;
+                    i++;
+                }
+            }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Marksman) {
+                foreach (ComboBox cb in ShotPriorityBoxes) {
+                    //cb.SelectedItem = CalculationOptionsHunter.Marksman.ShotList[i];
+                    _prioIndxs[i] = CalculationOptionsHunter.Marksman.ShotList[i].Index;
+                    i++;
+                }
+            }
+            else if (CB_PriorityDefaults.SelectedIndex == (int)Specs.Survival) {
+                foreach (ComboBox cb in ShotPriorityBoxes) {
+                    //cb.SelectedItem = CalculationOptionsHunter.Survival.ShotList[i];
+                    _prioIndxs[i] = CalculationOptionsHunter.Survival.ShotList[i].Index;
+                    i++;
+                }
+            }
 
             /* I want to do a conglomerate one:
                 CB_ShotPriority_01.SelectedIndex = CalculationOptionsHunter.RapidFire.Index;
@@ -889,9 +924,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
              */
             _loadingCalculationOptions = false;
 
-            int j = 0;
-            int[] _prioIndxs = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
-            foreach (ComboBox cb in ShotPriorityBoxes) { _prioIndxs[j] = ((Shot)(cb.SelectedItem)).Index; j++; }
             CalcOpts.PriorityIndexes = _prioIndxs;
 
             Character.OnCalculationsInvalidated();
@@ -904,7 +936,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             int specIndex = 0;
 
             List<Shot> list = new List<Shot>() { };
-            foreach (ComboBox cb in ShotPriorityBoxes) { list.Add(CalculationOptionsHunter.ShotList[cb.SelectedIndex]); }
+            foreach (ComboBox cb in ShotPriorityBoxes) {
+                list.Add(CalculationOptionsHunter.ShotList[cb.SelectedIndex < 0 ? 0 : cb.SelectedIndex]);
+            }
             ShotGroup current = new ShotGroup("Custom", list);
 
             if (current == CalculationOptionsHunter.BeastMaster) { specIndex = (int)Specs.BeastMaster; }
@@ -913,13 +947,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             
             return specIndex;
         }
-
-        private int _CurrentSpec;
-        private int CurrentSpec {
-            get { return _CurrentSpec; }
-            set { _CurrentSpec = value; }
-        }
-        public enum Specs { BeastMaster=1, Marksman, Survival }
 
         private void CharTalents_Changed(object sender, EventArgs e) {
             if (_loadingCalculationOptions) return;
@@ -1096,8 +1123,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (_loadingCalculationOptions) return;
             try { if ((string)CB_ArmoryPets.SelectedItem == "No Armory Pets Loaded") return; } catch (Exception) { } // ignore any exceptions
             // Save the Index
-            //CalcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
             ArmoryPet CurrentPet = (ArmoryPet)CB_ArmoryPets.SelectedItem;
+            if (CurrentPet == null) return; // Don't continue and crash
             // Populate the Pet Family
             _loadingCalculationOptions = true;
             CB_PetFamily.SelectedItem = (PetFamily)int.Parse(ArmoryPet.PetFamilyNameToPetFamilyId(CurrentPet.Family));
@@ -1109,14 +1136,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CalcOpts.PetTalents = pt;
                 CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
                 updateTalentDisplay();
-                //ComboBox item = sender as ComboBox;
-                /*_treeCount = 0;
-                foreach (Char c in pt.ToString()) { _treeCount += int.Parse(c.ToString()); }
-                //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
-                UpdateSavedTalents();
-                SavePetTalentSpecs();*/
             }
-            //CB_PetTalentSpec_SelectedIndexChanged(null, null);
         }
         private void PopulateArmoryPets() {
             if (Character.ArmoryPets != null && Character.ArmoryPets.Count > 0)

@@ -63,6 +63,7 @@ namespace Rawr.UI
         public void TalentsChanged(object sender, EventArgs e)
         {
             UpdateSavedSpecs();
+            Character.OnTalentChange();
             Character.OnCalculationsInvalidated();
         }
 
@@ -136,6 +137,7 @@ namespace Rawr.UI
             {
                 SavedTalentSpec newSpec = SavedCombo.SelectedItem as SavedTalentSpec;
                 Character.CurrentTalents = newSpec.TalentSpec();
+                Character.OnTalentChange();
                 character_ClassChanged(this, EventArgs.Empty);
                 Character.OnCalculationsInvalidated();
             }
