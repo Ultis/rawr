@@ -292,12 +292,36 @@ namespace Rawr {
                         _MyModelSupportsThis.Add("RestoSham", custom);
                         _MyModelSupportsThis.Add("Tree", custom);
                     }
+                    #region DPSWarr
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Ranged"] = false; // Not Ranged
                         custom["TimeSub35"] = false; // No abilities tied to this
                         _MyModelSupportsThis.Add("DPSWarr", custom);
                     }
+                    #endregion
+                    #region ProtPaladin
+                    {
+                        // ProtPaladin needs a lot of work before it can support most of BossHandler
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["Timers"] = false; // NYI
+                        custom["Health"] = false; // NYI
+                        custom["TimeSub35"] = false; // No abilities tied to this
+                        custom["TimeSub20"] = false; // NYI
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // The boss is focused on you
+                        custom["RaidSize"] = false; // NYI
+                        custom["TargetGroups"] = false; // NYI
+                        custom["Attacks"] = false; // NYI
+                        custom["Defensive"] = false; // NYI
+                        custom["Moves"] = false; // NYI
+                        custom["Stuns"] = false; // NYI
+                        custom["Fears"] = false; // NYI
+                        custom["Roots"] = false; // NYI
+                        custom["Disarms"] = false; // NYI
+                        custom["Invulnerables"] = false; // NYI
+                        _MyModelSupportsThis.Add("ProtPaladin", custom);
+                    }
+                    #endregion
                 }
                 return _MyModelSupportsThis;
             }
