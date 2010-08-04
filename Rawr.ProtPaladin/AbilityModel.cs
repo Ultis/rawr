@@ -10,7 +10,10 @@ namespace Rawr.ProtPaladin {
         private Character Character;
         private Stats Stats;
         private PaladinTalents Talents;
-        private CalculationOptionsProtPaladin Options;
+        private CalculationOptionsProtPaladin CalcOpts;
+#if (RAWR3)
+        private BossOptions BossOpts;
+#endif
 
         public readonly AttackTable AttackTable;
 
@@ -28,6 +31,12 @@ namespace Rawr.ProtPaladin {
             float AP = Stats.AttackPower;
             float SP = Stats.SpellPower;
 
+#if (RAWR3)
+            int targetLevel = BossOpts.Level;
+#else
+            int targetLevel = CalcOpts.TargetLevel;
+#endif
+
             #region Ability Base Damage
             switch (Ability) {
                 // White Damage
@@ -35,7 +44,7 @@ namespace Rawr.ProtPaladin {
                     baseDamage        = Stats.WeaponDamage;
 
                     DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
-                                      * (1.0f - (Lookup.GlancingReduction(Character, Options.TargetLevel) * AttackTable.Glance))
+                                      * (1.0f - (Lookup.GlancingReduction(Character, targetLevel) * AttackTable.Glance))
                                       * (1.0f - ArmorReduction);
 
                     critMultiplier    = 1.0f;
@@ -208,8 +217,8 @@ namespace Rawr.ProtPaladin {
             if (Lookup.HasPartials(Ability))
             {
                 // Detailed table of Partial slices.
-                float[] partialChanceTable = StatConversion.GetResistanceTable(Character.Level, Options.TargetLevel, 0.0f, Stats.SpellPenetration);
-                
+                float[] partialChanceTable = StatConversion.GetResistanceTable(Character.Level, targetLevel, 0.0f, Stats.SpellPenetration);
+
                 // Here goes nothing, Damage averaged over the different partial slices that can happen.
                 float partialDamage = 0.0f;
                 
@@ -222,7 +231,7 @@ namespace Rawr.ProtPaladin {
 
             // Average critical strike bonuses
             if (Lookup.CanCrit(Ability))
-				baseDamage += baseDamage * critMultiplier * AttackTable.Critical;
+                baseDamage += baseDamage * critMultiplier * AttackTable.Critical;
 
             // Final Damage the Ability deals
             Damage = baseDamage;
@@ -257,21 +266,36 @@ namespace Rawr.ProtPaladin {
             Threat = abilityThreat;
         }
 
-        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin options) {
+#if (RAWR3)
+        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts) {
+#else   
+        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts) {
+#endif
             Character   = character;
             Stats       = stats;
             Ability     = ability;
-            Options     = options;
+            CalcOpts    = calcOpts;
+#if (RAWR3)
+            BossOpts    = bossOpts;
+#endif
             
             Talents     = Character.PaladinTalents;
-            AttackTable = new AttackTable(character, stats, ability, Options);
+#if (RAWR3)
+            AttackTable = new AttackTable(character, stats, ability, CalcOpts, BossOpts);
+#else
+            AttackTable = new AttackTable(character, stats, ability, CalcOpts);
+#endif
 
             if (!Lookup.IsSpell(Ability))
-                ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, Options.TargetArmor, Options.TargetLevel);
+#if (RAWR3)
+                ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, BossOpts.Armor, BossOpts.Level);
+#else
+                ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, CalcOpts.TargetArmor, CalcOpts.TargetLevel);
+#endif
 
             Name                = Lookup.Name(Ability);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
-            DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character, Options.TargetType);
+            DamageMultiplier   *= Lookup.CreatureTypeDamageMultiplier(Character, CalcOpts.TargetType);
 
             CalculateDamage();
             CalculateThreat();
@@ -280,9 +304,17 @@ namespace Rawr.ProtPaladin {
 
     public class AbilityModelList : Dictionary<Ability, AbilityModel>
     {
-		public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin options)
-		{
-            this.Add(ability, new AbilityModel(character, stats, ability, options));
-		}
+#if (RAWR3)
+        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else
+        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
+#endif
+        {
+#if (RAWR3)
+            this.Add(ability, new AbilityModel(character, stats, ability, calcOpts, bossOpts));
+#else
+            this.Add(ability, new AbilityModel(character, stats, ability, calcOpts));
+#endif
+        }
     }
 }

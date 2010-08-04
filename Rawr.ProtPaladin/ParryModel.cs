@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr.ProtPaladin {
     public class ParryModel {
         private Character Character;
-        private CalculationOptionsProtPaladin Options;
+        private CalculationOptionsProtPaladin CalcOpts;
         private Stats Stats;
 
         private AttackTable AttackTable;
@@ -15,7 +15,7 @@ namespace Rawr.ProtPaladin {
         public float WeaponSpeed { get; private set; }
 
         private void Calculate() {
-            float baseBossAttackSpeed   = Options.BossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
+            float baseBossAttackSpeed   = CalcOpts.BossAttackSpeed * (1f - Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
@@ -23,7 +23,7 @@ namespace Rawr.ProtPaladin {
             BossAttackSpeed             = baseBossAttackSpeed ;
             WeaponSpeed                 = baseWeaponSpeed;
 
-            if (Options.UseParryHaste) {
+            if (CalcOpts.UseParryHaste) {
                 // Iterate on this a few times to get a 'stable' result
                 for (int j = 0; j < 4; j++) {
                     bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.5f));
@@ -39,13 +39,21 @@ namespace Rawr.ProtPaladin {
             }
         }
 
-        public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin options) {
+#if (RAWR3)
+        public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts) {
+#else
+        public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts) {
+#endif
             Character   = character;
             Stats       = stats;
-            Options     = options;
-            AttackTable = new AttackTable(character, stats, options);
-            DefendTable = new DefendTable(character, stats, options, true);
-
+            CalcOpts    = calcOpts;
+#if (RAWR3)
+            AttackTable = new AttackTable(character, stats, calcOpts, bossOpts);
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, true);
+#else
+            AttackTable = new AttackTable(character, stats, calcOpts);
+            DefendTable = new DefendTable(character, stats, calcOpts, true);
+#endif
             Calculate();
         }
     }

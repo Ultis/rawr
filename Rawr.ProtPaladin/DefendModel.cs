@@ -7,7 +7,10 @@ namespace Rawr.ProtPaladin
     class DefendModel
     {
         private Character Character;
-        private CalculationOptionsProtPaladin Options;
+        private CalculationOptionsProtPaladin CalcOpts;
+#if (RAWR3)
+        private BossOptions BossOpts;
+#endif
         private Stats Stats;
 
         public readonly ParryModel ParryModel;
@@ -30,12 +33,16 @@ namespace Rawr.ProtPaladin
         public void Calculate()
         {
             float attackSpeed           = ParryModel.BossAttackSpeed; // Options.BossAttackSpeed;
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
-            float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
+#if (RAWR3)
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, BossOpts.Level));
+#else
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, CalcOpts.TargetLevel));
+#endif
+            float baseDamagePerSecond   = CalcOpts.BossAttackValue / CalcOpts.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
             float absorbed = Stats.DamageAbsorbed;
 
-            DamagePerHit    = (Options.BossAttackValue * guaranteedReduction) - absorbed;
+            DamagePerHit    = (CalcOpts.BossAttackValue * guaranteedReduction) - absorbed;
             DamagePerCrit   = (2.0f * DamagePerHit);
             DamagePerBlock  = Math.Max(0.0f, DamagePerHit - Lookup.ActiveBlockReduction(Character, Stats));
 
@@ -62,7 +69,7 @@ namespace Rawr.ProtPaladin
             double a = Convert.ToDouble(DefendTable.AnyMiss);
             double h = Convert.ToDouble(healthAD);
             double H = Convert.ToDouble(AverageDamagePerHit);
-            double s = Convert.ToDouble(ParryModel.BossAttackSpeed / Options.BossAttackSpeed);
+            double s = Convert.ToDouble(ParryModel.BossAttackSpeed / CalcOpts.BossAttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
             /*
             // Attempt to make a different TTL:
@@ -77,13 +84,26 @@ namespace Rawr.ProtPaladin
             */
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin options, bool useHolyShield)
+#if (RAWR3)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
+#else
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, bool useHolyShield)
+#endif
         {
             Character   = character;
             Stats       = stats;
-            Options     = options;
-            ParryModel  = new ParryModel(character, stats, options);
-            DefendTable = new DefendTable(character, stats, options, useHolyShield);
+            CalcOpts    = calcOpts;
+#if (RAWR3)
+            BossOpts    = bossOpts;
+#endif
+
+#if (RAWR3)
+            ParryModel = new ParryModel(character, stats, calcOpts, bossOpts);
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, useHolyShield);
+#else
+            ParryModel = new ParryModel(character, stats, calcOpts);
+            DefendTable = new DefendTable(character, stats, calcOpts, useHolyShield); 
+#endif
             Calculate();
         }
     }

@@ -9,26 +9,26 @@ using Rawr.CustomControls;
 
 namespace Rawr.ProtPaladin
 {
-	public partial class CalculationOptionsPanelProtPaladin : CalculationOptionsPanelBase
-	{
-		private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
+    public partial class CalculationOptionsPanelProtPaladin : CalculationOptionsPanelBase
+    {
+        private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
 
-		public CalculationOptionsPanelProtPaladin()
-		{
-			InitializeComponent();
+        public CalculationOptionsPanelProtPaladin()
+        {
+            InitializeComponent();
             armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Creatures");
             armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Bosses and Level 83 Creatures");
         }
 
-		protected override void LoadCalculationOptions()
-		{
-			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null)
-				Character.CalculationOptions = new CalculationOptionsProtPaladin();
+        protected override void LoadCalculationOptions()
+        {
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null)
+                Character.CalculationOptions = new CalculationOptionsProtPaladin();
 
-			CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+            CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
             PaladinTalents Talents = Character.PaladinTalents;
 
             CK_PTRMode.Checked = calcOpts.PTRMode;
@@ -36,7 +36,7 @@ namespace Rawr.ProtPaladin
             // Attacker Stats
             comboBoxTargetType.SelectedItem = calcOpts.TargetType.ToString();
             numericUpDownTargetLevel.Value = calcOpts.TargetLevel;
-			trackBarTargetArmor.Value = calcOpts.TargetArmor;
+            trackBarTargetArmor.Value = calcOpts.TargetArmor;
 
             trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
             trackBarBossAttackSpeed.Value = (int)(calcOpts.BossAttackSpeed / 0.25f);
@@ -77,8 +77,8 @@ namespace Rawr.ProtPaladin
             radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
 
             calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
-			
-			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+            
+            labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? ": " + armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
             labelBossAttackSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeed.Value) * 0.25f));
 
@@ -113,18 +113,17 @@ namespace Rawr.ProtPaladin
             }
             numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 20;
 
-			_loadingCalculationOptions = false;
-		}
+            _loadingCalculationOptions = false;
+        }
 
-		private bool _loadingCalculationOptions = false;
-		private void calculationOptionControl_Changed(object sender, EventArgs e)
-		{
-			if (!_loadingCalculationOptions)
-			{
-				CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
-				// Attacker Stats
-                trackBarTargetArmor.Value = trackBarTargetArmor.Value;
-				labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+        private bool _loadingCalculationOptions = false;
+        private void calculationOptionControl_Changed(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                // Attacker Stats
+                labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? ": " + armorBosses[trackBarTargetArmor.Value] : "");
                 trackBarBossAttackValue.Value = 500 * (trackBarBossAttackValue.Value / 500);
                 labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
                 labelBossAttackSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeed.Value) * 0.25f));
@@ -132,20 +131,20 @@ namespace Rawr.ProtPaladin
                 labelBossMagicSpeed.Text = String.Format("{0:0.00}s", ((float)(trackBarBossAttackSpeedMagic.Value) * 0.25f));
                 // Ranking System
                 labelThreatScale.Text = String.Format("{0:0.00}", ((float)(trackBarThreatScale.Value) * 0.01f));
-				labelMitigationScale.Text = String.Format("{0:0.00}", ((float)(trackBarMitigationScale.Value) * 0.01f));
+                labelMitigationScale.Text = String.Format("{0:0.00}", ((float)(trackBarMitigationScale.Value) * 0.01f));
 
-				//c alcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+                //c alcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
                 calcOpts.TargetLevel = (int)numericUpDownTargetLevel.Value;
-				calcOpts.TargetArmor = trackBarTargetArmor.Value;
+                calcOpts.TargetArmor = trackBarTargetArmor.Value;
                 calcOpts.BossAttackValue = trackBarBossAttackValue.Value;
                 calcOpts.BossAttackSpeed = ((float)(trackBarBossAttackSpeed.Value) * 0.25f);
                 calcOpts.ThreatScale = ((float)(trackBarThreatScale.Value / 10.0f));
                 calcOpts.MitigationScale = ((float)(trackBarMitigationScale.Value) * 170.0f);
                 calcOpts.SurvivalSoftCap = (int)numericUpDownSurvivalSoftCap.Value;
 
-				Character.OnCalculationsInvalidated();
-			}
-		}
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
         private void checkBoxUseParryHaste_CheckedChanged(object sender, EventArgs e)
         {
@@ -293,16 +292,16 @@ namespace Rawr.ProtPaladin
             }
         }
 
-		
-		private void ComboBoxTrinketOnUseHandling_SelectedIndexChanged(object sender, EventArgs e)
-		{
+        
+        private void ComboBoxTrinketOnUseHandling_SelectedIndexChanged(object sender, EventArgs e)
+        {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
                 calcOpts.TrinketOnUseHandling = comboBoxTrinketOnUseHandling.SelectedItem.ToString();
                 Character.OnCalculationsInvalidated();
             }
-		}
+        }
 
         private void CK_PTRMode_CheckedChanged(object sender, EventArgs e) {
             if (!_loadingCalculationOptions) {
@@ -313,12 +312,12 @@ namespace Rawr.ProtPaladin
         }
 
         private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
-		{
+        {
             numericUpDownSurvivalSoftCap.Enabled = comboBoxSurvivalSoftCap.SelectedIndex == 20;
             if (comboBoxSurvivalSoftCap.SelectedIndex < 20)
                 numericUpDownSurvivalSoftCap.Value =
                     (new decimal[] { 90000, 110000, 120000, 140000, 170000, 195000, 185000, 215000, 180000, 210000, 190000, 225000, 300000, 355000, 350000, 400000, 360000, 410000, 405000, 500000 })
                     [comboBoxSurvivalSoftCap.SelectedIndex];
         }
-	}
+    }
 }

@@ -12,7 +12,7 @@ using System.Windows.Shapes;
 
 namespace Rawr.ProtPaladin
 {
-	public partial class CalculationOptionsPanelProtPaladin : UserControl, ICalculationOptionsPanel
+    public partial class CalculationOptionsPanelProtPaladin : UserControl, ICalculationOptionsPanel
     {
         #region Initialization
 
@@ -57,11 +57,9 @@ namespace Rawr.ProtPaladin
             "Seal of Righteousness"
         };
 
-        private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
-
         public CalculationOptionsPanelProtPaladin()
-		{
-			InitializeComponent();
+        {
+            InitializeComponent();
 
             // Setup TargetType combo box
             cboTargetType.ItemsSource = TargetTypes;
@@ -74,12 +72,6 @@ namespace Rawr.ProtPaladin
 
             // Setup SealChoice combo box
             cboSealChoice.ItemsSource = SealChoices;
-
-            // Setup TargetArmor values
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[80 - 80], "Level 80 Creatures");
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[81 - 80], "Level 81 Creatures");
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[82 - 80], "Level 82 Creatures");
-            armorBosses.Add((int)StatConversion.NPC_ARMOR[83 - 80], "Bosses & Level 83 Creatures");
 
             // PTR Mode - Allow PTR mode or not by leaving one of these lines commented out
             borPTR.Visibility = Visibility.Collapsed; // PTR mode not available
@@ -94,11 +86,11 @@ namespace Rawr.ProtPaladin
         private CalculationOptionsProtPaladin calcOpts;
         
         private Character character;
-		public Character Character
-		{
-			get { return character; }
-			set
-			{
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
                 // Kill any old event connections
                 if (character != null && character.CalculationOptions != null
                     && character.CalculationOptions is CalculationOptionsProtPaladin)
@@ -115,9 +107,6 @@ namespace Rawr.ProtPaladin
                 calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelProtPaladin_PropertyChanged);
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelProtPaladin_PropertyChanged(null, new PropertyChangedEventArgs(""));
-
-                if (tbTargetArmor != null)
-                    tbTargetArmor.Text = string.Format("{0}{1}", calcOpts.TargetArmor, (armorBosses.ContainsKey(calcOpts.TargetArmor) ? ": " + armorBosses[calcOpts.TargetArmor] : ""));
 
                 if (tbBossAttackSpeed != null)
                     tbBossAttackSpeed.Text = string.Format("{0:N2} seconds", calcOpts.BossAttackSpeed);
@@ -158,17 +147,6 @@ namespace Rawr.ProtPaladin
         #endregion
 
         #region Events
-
-        private void sliTargetArmor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (tbTargetArmor != null)
-                tbTargetArmor.Text = string.Format("{0}{1}", e.NewValue, (armorBosses.ContainsKey((int)e.NewValue) ? ": " + armorBosses[(int)e.NewValue] : ""));
-        }
-
-        private void btnResetTargetArmor_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.TargetArmor = (int)StatConversion.NPC_ARMOR[calcOpts.TargetLevel - 80];
-        }
 
         private void btnResetBossAttackValue_Click(object sender, RoutedEventArgs e)
         {

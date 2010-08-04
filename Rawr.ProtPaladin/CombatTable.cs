@@ -7,7 +7,10 @@ namespace Rawr.ProtPaladin
     public abstract class CombatTable
     {
         protected Character Character;
-        protected CalculationOptionsProtPaladin Options;
+        protected CalculationOptionsProtPaladin CalcOpts;
+#if (RAWR3)
+        protected BossOptions BossOpts;
+#endif
         protected Stats Stats;
         protected Ability Ability;//TODO: expand the Ability Class to include DamageType(School) and AttackType
 
@@ -32,10 +35,17 @@ namespace Rawr.ProtPaladin
 
         protected virtual void Calculate() {}
 
-        protected void Initialize(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin options)
+#if (RAWR3)
+        protected void Initialize(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else
+        protected void Initialize(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts)
+#endif
         {
             Character   = character;
-            Options     = options;
+            CalcOpts    = calcOpts;
+#if (RAWR3)
+            BossOpts    = bossOpts;
+#endif
             Stats       = stats;
             Ability     = ability;
             Calculate();
@@ -49,47 +59,61 @@ namespace Rawr.ProtPaladin
         protected override void Calculate()
         {
             // Hack to not count holy shield when we are trying to calculate crit chance without it
-            if (!UseHolyShield && Options.UseHolyShield)
+            if (!UseHolyShield && CalcOpts.UseHolyShield)
             {
                 Stats.Accumulate(new Stats() { Block = -0.3f });
             }
 
             float tableSize = 0.0f;
 
+#if (RAWR3)
+            int targetLevel = BossOpts.Level;
+#else
+            int targetLevel = CalcOpts.TargetLevel;
+#endif
+
             // Miss
-            Miss = Math.Min(1.0f - tableSize,  Lookup.AvoidanceChance(Character, Stats, HitResult.Miss, Options.TargetLevel));
+            Miss = Math.Min(1.0f - tableSize,  Lookup.AvoidanceChance(Character, Stats, HitResult.Miss, targetLevel));
             tableSize += Miss;
             // Dodge
-            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge, Options.TargetLevel));
+            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge, targetLevel));
             tableSize += Dodge;
             // Parry
-            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel));
+            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry, targetLevel));
             tableSize += Parry;
             // Block
             if (Character.OffHand != null && Character.OffHand.Type == ItemType.Shield)
             {
-                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, Options.TargetLevel));
+                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, targetLevel));
                 tableSize += Block;
             }
             // Critical Hit
-            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats, Options.TargetLevel));
+            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats, targetLevel));
             tableSize += Critical;
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
             // Partial Resists don't belong in the combat table
-            Resist = 1.0f - StatConversion.GetResistanceTable(Options.TargetLevel, Character.Level, Stats.FrostResistance, 0.0f)[0];
+            Resist = 1.0f - StatConversion.GetResistanceTable(targetLevel, Character.Level, Stats.FrostResistance, 0.0f)[0];
 
             // Hack to put back holy shield when we are trying to calculate crit chance without it
-            if (!UseHolyShield && Options.UseHolyShield)
+            if (!UseHolyShield && CalcOpts.UseHolyShield)
             {
                 Stats.Accumulate(new Stats() { Block = 0.3f });
             }
         }
 
-        public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin options, bool useHolyShield)
+#if (RAWR3)
+        public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
+#else
+        public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, bool useHolyShield)
+#endif
         {
             UseHolyShield = useHolyShield;
-            Initialize(character, stats, Ability.None, options);
+#if (RAWR3)
+            Initialize(character, stats, Ability.None, calcOpts, bossOpts);
+#else
+            Initialize(character, stats, Ability.None, calcOpts);
+#endif
         }
     }
 /*
@@ -132,7 +156,14 @@ namespace Rawr.ProtPaladin
         protected override void Calculate()
         {
             float tableSize = 0.0f;
-            float SpellHitChance = Lookup.SpellHitChance(Character, Stats, Options.TargetLevel);
+
+#if (RAWR3)
+            int targetLevel = BossOpts.Level;
+#else
+            int targetLevel = CalcOpts.TargetLevel;
+#endif
+
+            float SpellHitChance = Lookup.SpellHitChance(Character, Stats, targetLevel);
             float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
 
             if (Lookup.IsSpell(Ability))
@@ -141,12 +172,12 @@ namespace Rawr.ProtPaladin
                 Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);// - bonusHit));
                 tableSize += Miss;
                 // Crit
-                Critical = Lookup.SpellCritChance(Character, Stats, Options.TargetLevel);
+                Critical = Lookup.SpellCritChance(Character, Stats, targetLevel);
                 tableSize += Critical;
             }
             else
             {
-                float bonusHit = Lookup.HitChance(Character, Stats, Options.TargetLevel);
+                float bonusHit = Lookup.HitChance(Character, Stats, targetLevel);
                 
                 // Miss
                 // Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
@@ -156,26 +187,26 @@ namespace Rawr.ProtPaladin
                 if (Lookup.IsAvoidable(Ability))
                 {
                     // Dodge
-                    Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, Options.TargetLevel) - bonusExpertise));
+                    Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, targetLevel) - bonusExpertise));
                     tableSize += Dodge;
                     // Parry
-                    Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel) - bonusExpertise));
+                    Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, targetLevel) - bonusExpertise));
                     tableSize += Parry;
                 }
                 // Glancing Blow
                 if (Ability == Ability.None)
                 {
-                    Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, Options.TargetLevel)));
+                    Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, targetLevel)));
                     tableSize += Glance;
                 }
                 // Block
                 if (Ability == Ability.None || Ability == Ability.HammerOfTheRighteous)
                 {
-                    Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block, Options.TargetLevel)));
+                    Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block, targetLevel)));
                     tableSize += Block;
                 }
                 // Critical Hit
-                Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel, Options.TargetType));
+                Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, targetLevel, CalcOpts.TargetType));
                 tableSize += Critical;//FIXME: Tablesize must not change when critchance is negative (boss)
             }
 
@@ -185,18 +216,34 @@ namespace Rawr.ProtPaladin
             // Partial Resist TODO: Partial Resists don't belong in the combat table, they're not an avoidance type but a damage multiplier.
             if (Lookup.HasPartials(Ability))
             {
-                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist, Options.TargetLevel)));
+                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist, targetLevel)));
             }
         }
 
-        public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin options)
+#if (RAWR3)
+        public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else
+        public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
+#endif
         {
-            Initialize(character, stats, Ability.None, options);
+#if (RAWR3)
+            Initialize(character, stats, Ability.None, calcOpts, bossOpts);
+#else
+            Initialize(character, stats, Ability.None, calcOpts);
+#endif
         }
 
-        public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin options)
+#if (RAWR3)
+        public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else
+        public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts)
+#endif
         {
-            Initialize(character, stats, ability, options);
+#if (RAWR3)
+            Initialize(character, stats, ability, calcOpts, bossOpts);
+#else
+            Initialize(character, stats, ability, calcOpts);
+#endif
         }
     }
 }

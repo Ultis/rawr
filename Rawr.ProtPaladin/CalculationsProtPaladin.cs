@@ -135,10 +135,10 @@ namespace Rawr.ProtPaladin
 
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-		public override ICalculationOptionsPanel CalculationOptionsPanel
+        public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
         {
             get {
@@ -286,9 +286,9 @@ focus on Survival Points.",
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-					_subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
-					_subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
-					_subPointNameColors.Add("Threat", Color.FromArgb(255, 255, 255, 0));
+                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Threat", Color.FromArgb(255, 255, 255, 0));
                 }
                 return _subPointNameColors;
             }
@@ -310,26 +310,49 @@ focus on Survival Points.",
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
+
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
+
+#if (RAWR3)
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) bossOpts = new BossOptions();
+#endif
+
+#if (RAWR3)
+            Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
+#else
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
+#endif
 
             AttackModelMode amm = AttackModelMode.BasicSoV;            
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
+#if (RAWR3)
+            DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts, true);
+            DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, bossOpts, false);
+            AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
+#else
             DefendModel dm = new DefendModel(character, stats, calcOpts, true);
             DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, false);
             AttackModel am = new AttackModel(character, stats, amm, calcOpts);
+#endif
 
             calculatedStats.BasicStats = stats;
 
             // Target Info
+#if (RAWR3)
+            calculatedStats.TargetLevel = bossOpts.Level;
+            calculatedStats.TargetArmor = bossOpts.Armor;
+#else   
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.TargetArmor = calcOpts.TargetArmor;
-            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calcOpts.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
-            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calcOpts.TargetArmor);
-            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calcOpts.TargetArmor, calcOpts.TargetLevel);
-            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calcOpts.TargetLevel, calcOpts.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+#endif
+            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calculatedStats.TargetArmor);
+            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
+            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calculatedStats.TargetLevel, calculatedStats.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
@@ -347,12 +370,12 @@ focus on Survival Points.",
 
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calcOpts.TargetLevel);
+            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calculatedStats.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
             calculatedStats.CritVulnerabilityWithoutHolyShield = dmWithoutHolyShield.DefendTable.Critical;
             calculatedStats.UsingHolyShield = calcOpts.UseHolyShield;
 
-            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calcOpts.TargetLevel);
+            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calculatedStats.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
             calculatedStats.BaseAttackerSpeed = calcOpts.BossAttackSpeed;
@@ -363,41 +386,41 @@ focus on Survival Points.",
             calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
-            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calcOpts.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
-            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, calcOpts.TargetLevel));
-            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, calcOpts.TargetLevel));
-            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, calcOpts.TargetLevel));
-            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, calcOpts.TargetLevel));
-            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, calcOpts.TargetLevel));
-            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane, calcOpts.TargetLevel);
-            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire, calcOpts.TargetLevel);
-            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost, calcOpts.TargetLevel);
-            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature, calcOpts.TargetLevel);
-            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow, calcOpts.TargetLevel);
+            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calculatedStats.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
+            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, calculatedStats.TargetLevel));
+            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, calculatedStats.TargetLevel));
+            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, calculatedStats.TargetLevel));
+            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, calculatedStats.TargetLevel));
+            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, calculatedStats.TargetLevel));
+            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane, calculatedStats.TargetLevel);
+            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire, calculatedStats.TargetLevel);
+            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost, calculatedStats.TargetLevel);
+            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature, calculatedStats.TargetLevel);
+            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow, calculatedStats.TargetLevel);
 
             // Offensive Stats
-            calculatedStats.Hit = Lookup.HitChance(character, stats, calcOpts.TargetLevel);
-            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats, calcOpts.TargetLevel);
-            calculatedStats.Crit = Lookup.CritChance(character, stats, calcOpts.TargetLevel);
-            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats, calcOpts.TargetLevel);
+            calculatedStats.Hit = Lookup.HitChance(character, stats, calculatedStats.TargetLevel);
+            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats, calculatedStats.TargetLevel);
+            calculatedStats.Crit = Lookup.CritChance(character, stats, calculatedStats.TargetLevel);
+            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats, calculatedStats.TargetLevel);
             calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
             calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
             calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
             calculatedStats.ArmorPenetration = 1.0f - (1.0f - stats.ArmorPenetration) * (1.0f - (float)Math.Min(1.0f, StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating)));
             calculatedStats.ArmorPenetrationFromRating = (float)Math.Min(1.0f, Lookup.BonusArmorPenetrationPercentage(character, stats));
-            calculatedStats.EffectiveArmorPenetration = (calcOpts.TargetArmor == 0) ? 0.0f : 1.0f - calculatedStats.EffectiveTargetArmor / calculatedStats.TargetArmor;
-            if ((calculatedStats.ArmorPenetrationFromRating * calcOpts.TargetArmor) == 0.0f)
+            calculatedStats.EffectiveArmorPenetration = (calculatedStats.TargetArmor == 0) ? 0.0f : 1.0f - calculatedStats.EffectiveTargetArmor / calculatedStats.TargetArmor;
+            if ((calculatedStats.ArmorPenetrationFromRating * calculatedStats.TargetArmor) == 0.0f)
                 calculatedStats.EffectiveArmorPenetrationRating = 0.0f;
             else
-                calculatedStats.EffectiveArmorPenetrationRating = (float)Math.Max(0.0f, 
-                    (calculatedStats.ArmorPenetrationFromRating * calculatedStats.ArmorPenetrationCap) / (calculatedStats.ArmorPenetrationFromRating * calcOpts.TargetArmor));
+                calculatedStats.EffectiveArmorPenetrationRating = (float)Math.Max(0.0f,
+                    (calculatedStats.ArmorPenetrationFromRating * calculatedStats.ArmorPenetrationCap) / (calculatedStats.ArmorPenetrationFromRating * calculatedStats.TargetArmor));
             float test = calculatedStats.EffectiveTargetArmorDamageReduction / calculatedStats.TargetArmorDamageReduction;
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.GlancingAttacks = am.Abilities[Ability.None].AttackTable.Glance;
-            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character, calcOpts.TargetLevel);
+            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character, calculatedStats.TargetLevel);
             calculatedStats.BlockedAttacks = am.Abilities[Ability.None].AttackTable.Block;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
@@ -523,10 +546,25 @@ focus on Survival Points.",
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+            if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
+
+#if (RAWR3)
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) bossOpts = new BossOptions();
+#endif
+
+#if (RAWR3)
+            return GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
+#else   
             return GetCharacterStats(character, additionalItem, calcOpts);            
+#endif
         }
 
+#if (RAWR3)
+        public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts)
+#endif
         {
             PaladinTalents talents = character.PaladinTalents;
 
@@ -609,7 +647,11 @@ focus on Survival Points.",
             // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
 
             // Calculate Procs and Special Effects
+#if (RAWR3)
+            statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts, bossOpts));
+#else
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts));
+#endif
 
             if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
             {
@@ -629,7 +671,11 @@ focus on Survival Points.",
             return statsTotal;
         }
 
+#if (RAWR3)
+        private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
+#else   
         private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
+#endif
         {
             Stats statsSpecialEffects = new Stats();
 
@@ -641,25 +687,34 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
+#if (RAWR3)
+            AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
+#else
             AttackModel am = new AttackModel(character, stats, amm, calcOpts);
+#endif
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
-            float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - calcOpts.TargetLevel, false) - hitBonusSpell);
-            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - hitBonusPhysical);
-            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel - 80] - expertiseBonus);
-            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[calcOpts.TargetLevel - 80] - expertiseBonus);
+#if (RAWR3)
+            int targetLevel = bossOpts.Level;
+#else
+            int targetLevel = calcOpts.TargetLevel;
+#endif
+            float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - targetLevel, false) - hitBonusSpell);
+            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonusPhysical);
+            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
+            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
 
             float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
                                        + stats.PhysicalCrit
-                                       + StatConversion.NPC_LEVEL_CRIT_MOD[calcOpts.TargetLevel - 80];
+                                       + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
             float chanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
                                        + stats.SpellCrit + stats.SpellCritOnTarget
-                                       - (0.006f * (calcOpts.TargetLevel - character.Level) + (calcOpts.TargetLevel == 83 ? 0.03f : 0.0f));
+                                       - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
             float chanceHitSpell = 1.0f - chanceMissSpell;
             float chanceDoTTick = chanceHitSpell * (character.PaladinTalents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
@@ -1042,56 +1097,56 @@ focus on Survival Points.",
 
                     return new ComparisonCalculationBase[] { 
                         comparisonStr,
-						comparisonAgi,
-						comparisonAC,
-						comparisonSta,
-						comparisonDef,
-						new ComparisonCalculationProtPaladin() { Name = "10 Dodge Rating",
+                        comparisonAgi,
+                        comparisonAC,
+                        comparisonSta,
+                        comparisonDef,
+                        new ComparisonCalculationProtPaladin() { Name = "10 Dodge Rating",
                             OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcDodgeValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "10 Parry Rating",
                             OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "10 Block Rating",
                             OverallPoints = (calcBlockValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcBlockValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcBlockValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "10 Haste Rating",
                             OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHasteValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "10 Expertise Rating",
                             OverallPoints = (calcExpertiseValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcExpertiseValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcExpertiseValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "10 Hit Rating",
                             OverallPoints = (calcHitValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "15.38 Block Value",
                             OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcBlockValueValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-						new ComparisonCalculationProtPaladin() { Name = "150 Health",
+                        new ComparisonCalculationProtPaladin() { Name = "150 Health",
                             OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHealthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-						new ComparisonCalculationProtPaladin() { Name = "10 Resilience",
+                        new ComparisonCalculationProtPaladin() { Name = "10 Resilience",
                             OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-					};
+                    };
                 #endregion 
                 #region Spell Resistance
                 case "Combat Table: Spell Resistance":

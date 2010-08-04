@@ -25,25 +25,15 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" FontWeight="Bold" Text="Target Statistics" />
-                        <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="0" Text="Target Level:" />
-                        <inputToolkit:NumericUpDown Margin="2 2 2 10"  Grid.Row="1" Grid.Column="1" Minimum="80" Maximum="83" Value="{Binding Mode=TwoWay, Path=TargetLevel}"/>
-                        <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="2" Text="Type:" />
-                        <ComboBox Margin="2 2 2 10" x:Name="cboTargetType" Grid.Row="1" Grid.Column="3" SelectedItem="{Binding Mode=TwoWay, Path=TargetType}" />
-                        <TextBlock Margin="2" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Text="Target Armor:" />
-                        <Slider Margin="2" x:Name="sliTargetArmor" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Minimum="0" Maximum="20000" LargeChange="1000" SmallChange="1" Value="{Binding Mode=TwoWay, Path=TargetArmor}" ValueChanged="sliTargetArmor_ValueChanged" />
-                        <Button Margin="2" x:Name="btnResetTargetArmor" Grid.Row="3" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click here to reset the target armor to its default value." Click="btnResetTargetArmor_Click" />
-                        <TextBlock Margin="2" x:Name="tbTargetArmor" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" />
+                        <TextBlock Margin="2 2 2 10" Grid.Row="1" Grid.Column="0" Text="Type:" />
+                        <ComboBox Margin="2 2 2 10" x:Name="cboTargetType" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Mode=TwoWay, Path=TargetType}" />
                     </Grid>
                 </Border>
                 <Border Margin="0 2" Background="Transparent" BorderBrush="Black" BorderThickness="1">
