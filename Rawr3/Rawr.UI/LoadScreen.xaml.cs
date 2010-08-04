@@ -25,6 +25,7 @@ namespace Rawr.UI
         {
             Classes = new Dictionary<string, Type>();
             Classes["Talents.xml"] = typeof(SavedTalentSpec);
+            Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["BuffSets.xml"] = typeof(SavedBuffSet);
             Classes["EnchantCache.xml"] = typeof(Enchant);
             Classes["ItemCache.xml"] = typeof(ItemCache);

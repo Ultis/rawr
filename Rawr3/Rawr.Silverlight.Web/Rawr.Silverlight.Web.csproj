@@ -112,7 +112,9 @@
     <Content Include="RawrLoading.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientBin\PetTalents.xml" />
+    <Content Include="ClientBin\PetTalents.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="RawrLoading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

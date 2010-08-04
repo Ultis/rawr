@@ -770,6 +770,7 @@ namespace Rawr.UI
 					"EnchantCache.xml",
 					"ItemCache.xml",
 					"Talents.xml",
+                    "PetTalents.xml",
                     "BuffSets.xml",
 					"ItemSource.xml",
 					"ItemFilter.xml",

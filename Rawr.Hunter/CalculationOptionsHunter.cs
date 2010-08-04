@@ -101,7 +101,7 @@ namespace Rawr.Hunter
             get { return _AspectUsage; }
             set { _AspectUsage = value; OnPropertyChanged("AspectUsage"); }
         }
-        public bool _UseBeastDuringBestialWrath = false;
+        public bool _UseBeastDuringBestialWrath = true;
         public bool UseBeastDuringBestialWrath
         {
             get { return _UseBeastDuringBestialWrath; }
@@ -501,6 +501,56 @@ namespace Rawr.Hunter
                 None,
         });
         #endregion
+        #endregion
+
+        #region Pet Functions
+        public static PetFamilyTree PetFamilyToPetFamilyTree(PetFamily family)
+        {
+            switch (family)
+            {
+                case PetFamily.Bat:
+                case PetFamily.Chimaera:
+                case PetFamily.Dragonhawk:
+                case PetFamily.NetherRay:
+                case PetFamily.Ravager:
+                case PetFamily.Serpent:
+                case PetFamily.Silithid:
+                case PetFamily.Spider:
+                case PetFamily.SporeBat:
+                case PetFamily.WindSerpent:
+                    return PetFamilyTree.Cunning;
+
+                case PetFamily.Bear:
+                case PetFamily.Boar:
+                case PetFamily.Crab:
+                case PetFamily.Crocolisk:
+                case PetFamily.Gorilla:
+                case PetFamily.Rhino:
+                case PetFamily.Scorpid:
+                case PetFamily.Turtle:
+                case PetFamily.WarpStalker:
+                case PetFamily.Worm:
+                    return PetFamilyTree.Tenacity;
+
+                case PetFamily.BirdOfPrey:
+                case PetFamily.CarrionBird:
+                case PetFamily.Cat:
+                case PetFamily.CoreHound:
+                case PetFamily.Devilsaur:
+                case PetFamily.Hyena:
+                case PetFamily.Moth:
+                case PetFamily.Raptor:
+                case PetFamily.SpiritBeast:
+                case PetFamily.Tallstrider:
+                case PetFamily.Wasp:
+                case PetFamily.Wolf:
+                    return PetFamilyTree.Ferocity;
+            }
+
+
+            // hmmm!
+            return PetFamilyTree.None;
+        }
         #endregion
 
         /*private bool[] _Maintenance;

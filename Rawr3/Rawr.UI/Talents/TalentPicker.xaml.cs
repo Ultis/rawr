@@ -10,8 +10,8 @@ using System.Windows.Shapes;
 
 namespace Rawr.UI
 {
-	public partial class TalentPicker : UserControl
-	{
+    public partial class TalentPicker : UserControl
+    {
         private Character character;
         public Character Character
         {
@@ -141,5 +141,5 @@ namespace Rawr.UI
             }
         }
 
-	}
+    }
 }

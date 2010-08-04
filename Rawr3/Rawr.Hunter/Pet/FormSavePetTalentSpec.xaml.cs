@@ -14,33 +14,63 @@ namespace Rawr.Hunter
 {
     public partial class FormSavePetTalentSpec : ChildWindow
     {
-        public FormSavePetTalentSpec()
+        private PetTalentsBase PetTalents;
+        private int Tree;
+        private PetFamilyTree Class;
+
+        public FormSavePetTalentSpec(PetTalentsBase spec, PetFamilyTree newClass, int tree)
         {
             InitializeComponent();
-        }
-        public FormSavePetTalentSpec(ICollection<SavedPetTalentSpec> specs)
-        {
-            InitializeComponent();
-            CB_TalentSpecs.ItemsSource = specs;
-        }
+            PetTalents = spec;
+            Tree = tree;
+            Class = newClass;
+            CB_Trees.SelectedItem = Class;
 
-        public SavedPetTalentSpec PetTalentSpec()
-        {
-            return TB_NewSpecName.Text != "" ? (SavedPetTalentSpec)(object)TB_NewSpecName.Text : (SavedPetTalentSpec)CB_TalentSpecs.SelectedItem;
-        }
-
-        public string PetTalentSpecName()
-        {
-            return TB_NewSpecName.Text != "" ? TB_NewSpecName.Text : (string)CB_TalentSpecs.SelectedItem;
+            SavedPetTalentSpecList saved = SavedPetTalentSpec.SpecsFor(Class);
+            if (saved.Count > 0) {
+                CB_TalentSpecs.ItemsSource = saved;
+                CB_TalentSpecs.SelectedIndex = 0;
+            } else {
+                CB_TalentSpecs.IsEnabled = false;
+            }
         }
 
         private void BT_OK_Click(object sender, RoutedEventArgs e)
         {
+            if (CB_TalentSpecs.SelectedIndex >= 0)
+            {
+                SavedPetTalentSpec spec = CB_TalentSpecs.SelectedItem as SavedPetTalentSpec;
+                spec.Spec = PetTalents.ToString();
+                spec.Class = (PetFamilyTree)CB_Trees.SelectedItem;
+                spec.Tree = Tree;
+            }
+            else
+            {
+                SavedPetTalentSpec.AllSpecs.Add(new SavedPetTalentSpec(TB_NewSpecName.Text, PetTalents, (PetFamilyTree)CB_Trees.SelectedItem, Tree));
+            }
             this.DialogResult = true;
         }
+
         private void BT_Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        private bool responding;
+        private void New_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (responding) return;
+            responding = true;
+            CB_TalentSpecs.SelectedIndex = -1;
+            responding = false;
+        }
+
+        private void Update_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (responding) return;
+            responding = true;
+            TB_NewSpecName.Text = "";
+            responding = false;
         }
     }
 }

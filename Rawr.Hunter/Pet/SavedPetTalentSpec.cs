@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.Hunter
 {
+    [GenerateSerializer]
     public class SavedPetTalentSpecList : List<SavedPetTalentSpec>
     {
         public SavedPetTalentSpecList() : base() { }
@@ -20,7 +21,7 @@ namespace Rawr.Hunter
 
         public int Tree { get; set; }
 
-        public SavedPetTalentSpec() : this("", null, 0) { ; }
+        public SavedPetTalentSpec() : this("", null, PetFamilyTree.None, 0) { ; }
 
         public static SavedPetTalentSpecList AllSpecs { get; private set; }
         public static void Load(TextReader reader)
@@ -41,8 +42,8 @@ namespace Rawr.Hunter
 
         public static void Save(TextWriter writer)
         {
-            XmlSerializer serilizer = new XmlSerializer(typeof(SavedPetTalentSpecList));
-            serilizer.Serialize(writer, AllSpecs);
+            XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+            serializer.Serialize(writer, AllSpecs);
             writer.Close();
         }
 
@@ -57,44 +58,33 @@ namespace Rawr.Hunter
         }
 
 #if RAWR3 || SILVERLIGHT
-        public SavedPetTalentSpec(String name, PetTalents talentSpec, int tree)
+        public SavedPetTalentSpec(String name, PetTalentsBase talentSpec, PetFamilyTree tree, int pts)
 #else
-        public SavedPetTalentSpec(String name, PetTalentTreeData talentSpec, int tree)
+        public SavedPetTalentSpec(String name, PetTalentTreeData talentSpec, PetFamilyTree tree, int pts)
 #endif
         {
             Name = name;
-            Tree = tree;
+            Tree = pts;
             if (talentSpec != null)
             {
                 Spec = talentSpec.ToString();
-                Class = (PetFamilyTree)Tree;
+                Class = tree;
             }
         }
 
 #if RAWR3 || SILVERLIGHT
-        public PetTalents TalentSpec()
-#else
-        public PetTalentTreeData TalentSpec()
-#endif
-        {
+        public PetTalents TalentSpec() {
             if (Spec == null) return null;
-#if RAWR3 || SILVERLIGHT
             PetTalents spec = new PetTalents(Spec);
-#else
-            PetTalentTreeData spec = new PetTalentTreeData(Spec);
-#endif
-            /*if (Class == PetFamilyTree.Cunning) spec = new PetTalents();
-            else if (Class == CharacterClass.Warrior) spec = new WarriorTalents(Spec);
-            else if (Class == CharacterClass.Paladin) spec = new PaladinTalents(Spec);
-            else if (Class == CharacterClass.Shaman) spec = new ShamanTalents(Spec);
-            else if (Class == CharacterClass.Hunter) spec = new HunterTalents(Spec);
-            else if (Class == CharacterClass.Rogue) spec = new RogueTalents(Spec);
-            else if (Class == CharacterClass.Druid) spec = new DruidTalents(Spec);
-            else if (Class == CharacterClass.Warlock) spec = new WarlockTalents(Spec);
-            else if (Class == CharacterClass.Priest) spec = new PriestTalents(Spec);
-            else spec = new MageTalents(Spec);*/
             return spec;
         }
+#else
+        public PetTalentTreeData TalentSpec() {
+            if (Spec == null) return null;
+            PetTalentTreeData spec = new PetTalentTreeData(Spec);
+            return spec;
+        }
+#endif
 
         public override string ToString()
         {

@@ -13,6 +13,8 @@ namespace Rawr.Hunter
 {
     public partial class PetTalentPicker : UserControl
     {
+        CalculationOptionsHunter CalcOpts = null;
+
         private Character character;
         public Character Character
         {
@@ -23,6 +25,7 @@ namespace Rawr.Hunter
                 character = value;
                 if (character != null)
                 {
+                    CalcOpts = character.CalculationOptions as CalculationOptionsHunter;
                     character.ClassChanged += new EventHandler(character_ClassChanged);
                     character_ClassChanged(this, EventArgs.Empty);
                 }
@@ -33,15 +36,14 @@ namespace Rawr.Hunter
         private void character_ClassChanged(object sender, EventArgs e)
         {
             if (Character.Class != CharacterClass.Hunter) return;
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
-            Tree1.Talents = calcOpts.PetTalents;
+            Tree1.Talents = CalcOpts.PetTalents;
             TreeTab1.Header = Tree1.TreeName;
-            Tree2.Talents = calcOpts.PetTalents;
+            Tree2.Talents = CalcOpts.PetTalents;
             TreeTab2.Header = Tree2.TreeName;
-            Tree3.Talents = calcOpts.PetTalents;
+            Tree3.Talents = CalcOpts.PetTalents;
             TreeTab3.Header = Tree3.TreeName;
             
-            //UpdateSavedSpecs();
+            UpdateSavedSpecs();
         }
 
         public PetTalentPicker()
@@ -63,24 +65,25 @@ namespace Rawr.Hunter
 
         public void TalentsChanged(object sender, EventArgs e)
         {
-            //UpdateSavedSpecs();
+            CalcOpts.PetTalents = (PetTalents)(sender == Tree1 ? Tree1.Talents :
+                                              (sender == Tree2 ? Tree2.Talents :
+                                              (sender == Tree3 ? Tree3.Talents :
+                                               CalcOpts.PetTalents)));
+            UpdateSavedSpecs();
             Character.OnCalculationsInvalidated();
         }
-
-        // BELOW IS NOT IN USE UNTIL I MIGRATE THE CODE OVER FROM THE OPTIONS PANE
-        #region
 
         public bool HasCustomSpec { get; private set; }
 
         private bool updating;
         private void UpdateSavedSpecs()
         {
-            SavedTalentSpecList savedSpecs = SavedTalentSpec.SpecsFor(Character.Class);
-            SavedTalentSpec current = null;
+            SavedPetTalentSpecList savedSpecs = SavedPetTalentSpec.SpecsFor(CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily));
+            SavedPetTalentSpec current = null;
             updating = true;
-            foreach (SavedTalentSpec sts in savedSpecs)
+            foreach (SavedPetTalentSpec sts in savedSpecs)
             {
-                if (sts.Equals(Character.CurrentTalents))
+                if (sts.Equals(CalcOpts.PetTalents))
                 {
                     current = sts;
                     break;
@@ -96,9 +99,14 @@ namespace Rawr.Hunter
             }
             else
             {
+                PetFamilyTree ftree = CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily);
+                int treepts = (ftree == PetFamilyTree.Cunning  ? Tree1.Points() :
+                              (ftree == PetFamilyTree.Ferocity ? Tree2.Points() :
+                              (ftree == PetFamilyTree.Tenacity ? Tree3.Points() :
+                               Tree1.Points() + Tree2.Points() + Tree3.Points())));
                 HasCustomSpec = true;
-                current = new SavedTalentSpec("Custom", Character.CurrentTalents, Tree1.Points(), Tree2.Points(), Tree3.Points());
-                SavedTalentSpecList currentList = new SavedTalentSpecList();
+                current = new SavedPetTalentSpec("Custom", CalcOpts.PetTalents, ftree, treepts);
+                SavedPetTalentSpecList currentList = new SavedPetTalentSpecList();
                 currentList.AddRange(savedSpecs);
                 currentList.Add(current);
                 SavedCombo.ItemsSource = null;
@@ -111,17 +119,18 @@ namespace Rawr.Hunter
 
         private void SaveDelete_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            SavedTalentSpec currentSpec = SavedCombo.SelectedItem as SavedTalentSpec;
-            if (HasCustomSpec)
-            {
-                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
-                FormSavePetTalentSpec dialog = new FormSavePetTalentSpec(classTalents);
+            SavedPetTalentSpec currentSpec = SavedCombo.SelectedItem as SavedPetTalentSpec;
+            if (HasCustomSpec) {
+                PetFamilyTree ftree = CalculationOptionsHunter.PetFamilyToPetFamilyTree(CalcOpts.PetFamily);
+                int treepts = (ftree == PetFamilyTree.Cunning ? Tree1.Points() :
+                              (ftree == PetFamilyTree.Ferocity ? Tree2.Points() :
+                              (ftree == PetFamilyTree.Tenacity ? Tree3.Points() :
+                               Tree1.Points() + Tree2.Points() + Tree3.Points())));
+                FormSavePetTalentSpec dialog = new FormSavePetTalentSpec(CalcOpts.PetTalents, ftree, treepts);
                 dialog.Closed += new EventHandler(dialog_Closed);
                 dialog.Show();
-            }
-            else
-            {
-                SavedTalentSpec.AllSpecs.Remove(currentSpec);
+            } else {
+                SavedPetTalentSpec.AllSpecs.Remove(currentSpec);
                 UpdateSavedSpecs();
             }
         }
@@ -139,12 +148,10 @@ namespace Rawr.Hunter
             if (!updating)
             {
                 SavedPetTalentSpec newSpec = SavedCombo.SelectedItem as SavedPetTalentSpec;
-                //Character.CurrentTalents = newSpec.TalentSpec(); // TODO
+                CalcOpts.PetTalents = newSpec.TalentSpec();
                 character_ClassChanged(this, EventArgs.Empty);
                 Character.OnCalculationsInvalidated();
             }
         }
-        #endregion
-
     }
 }
