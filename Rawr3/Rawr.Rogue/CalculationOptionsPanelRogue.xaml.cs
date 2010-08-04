@@ -18,6 +18,7 @@ namespace Rawr.Rogue
         public CalculationOptionsPanelRogue()
         {
             InitializeComponent();
+            SV_RotOpti.SetIsMouseWheelScrollingEnabled(true);
         }
 
         #region ICalculationOptionsPanel Members
@@ -51,15 +52,15 @@ namespace Rawr.Rogue
         }
 
         private bool _loadingCalculationOptions;
-		public void LoadCalculationOptions()
-		{
-			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsRogue();
+        public void LoadCalculationOptions()
+        {
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsRogue();
             calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
             // Model Specific Code
             //
             _loadingCalculationOptions = false;
-		}
+        }
 
         void CalculationOptionsPanelRogue_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

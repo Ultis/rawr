@@ -274,7 +274,6 @@ namespace Rawr {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // The boss is focused on you
                         _MyModelSupportsThis.Add("Bear", custom);
-                        _MyModelSupportsThis.Add("ProtPaladin", custom);
                         _MyModelSupportsThis.Add("ProtWarr", custom);
                         _MyModelSupportsThis.Add("TankDK", custom);
                     }
