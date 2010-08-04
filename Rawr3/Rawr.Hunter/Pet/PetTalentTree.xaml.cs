@@ -241,7 +241,7 @@ namespace Rawr.Hunter
                 return pts;
             }
         }
-        public int Points() { return PointsBelowRow(6); }
+        public int Points() { return PointsBelowRow(7); }
 
         private Dictionary<int, PetTalentDataAttribute> talentAttributes;
         public PetTalentDataAttribute GetAttribute(int index)

@@ -299,7 +299,7 @@ namespace Rawr.Hunter
                 //}
             }
             if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
-                CustomPetSpec = new SavedPetTalentSpec("Custom", _pettalents, _treeCount);
+                CustomPetSpec = new SavedPetTalentSpec("Custom", _pettalents, petClass, _treeCount);
                 classTalents.Add(CustomPetSpec);
             }
             return classTalents;
@@ -327,7 +327,7 @@ namespace Rawr.Hunter
                     //}
                 }
                 if (current == null) {
-                    current = new SavedPetTalentSpec("Custom", null, _treeCount);
+                    current = new SavedPetTalentSpec("Custom", null, (PetFamilyTree)CB_PetFamily.SelectedIndex, _treeCount);
                     classTalents.Add(current);
                 }
                 _updateSaved = true;
@@ -692,88 +692,6 @@ namespace Rawr.Hunter
             CalcOpts.PetPriority7 = CB_PetPrio_07.SelectedItem == null ? PetAttacks.None : (PetAttacks)CB_PetPrio_07.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
-        private void initTalentImages() {
-            /*PetTalentTree pt = (CalcOpts == null ? new PetTalentTree() : CalcOpts.PetTalents);
-            int currentId = 0;
-            try {
-                // Cunning
-                currentId = pt.CobraReflexes.ID;
-                LB_CunningCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.DiveDash.ID;
-                LB_CunningDiveDash.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatStamina.ID;
-                LB_CunningGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.NaturalArmor.ID;
-                LB_CunningNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.BoarsSpeed.ID;
-                LB_CunningBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Mobility.ID;
-                LB_CunningMobility.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.SpikedCollar.ID;
-                LB_CunningSpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.CullingTheHerd.ID;  LB_CunningCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
-                currentId = pt.Lionhearted.ID;  LB_CunningLionHearted.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.CarrionFeeder.ID;  LB_CunningCarrionFeeder.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatResistance.ID;  LB_CunningGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.OwlsFocus.ID;  LB_CunningOwlsFocus.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Cornered.ID;  LB_CunningCornered.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.FeedingFrenzy.ID;  LB_CunningFeedingFrenzy.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.WolverineBite.ID;  LB_CunningWolverineBite.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.RoarOfRecovery.ID;  LB_CunningRoarOfRecovery.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Bullheaded.ID;  LB_CunningBullheaded.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GraceOfTheMantis.ID;  LB_CunningGraceOfTheMantis.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.WildHunt.ID;  LB_CunningWildHunt.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.RoarOfSacrifice.ID;  LB_CunningRoarofSacrifice.Image = pt.TalentTree[currentId].TheIcon;
-                // Ferocity
-                currentId = pt.CobraReflexes.ID;  LB_FerocityCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.DiveDash.ID;  LB_FerocityDiveDash.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.ChargeSwoop.ID;  LB_FerocityChargeSwoop.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatStamina.ID;  LB_FerocityGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.NaturalArmor.ID;  LB_FerocityNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.BoarsSpeed.ID;  LB_FerocityBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.SpikedCollar.ID;  LB_FerocitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.ImprovedCower.ID;  LB_FerocityImprovedCower.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Bloodthirsty.ID;  LB_FerocityBloodthirsty.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.CullingTheHerd.ID;  LB_FerocityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
-                currentId = pt.Lionhearted.ID;  LB_FerocityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatResistance.ID;  LB_FerocityGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.HeartOfThePhoenix.ID;  LB_FerocityHeartOfThePheonix.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.SpidersBite.ID;  LB_FerocitySpidersBite.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Rabid.ID;  LB_FerocityRabid.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.LickYourWounds.ID;  LB_FerocityLickYourWounds.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.CallOfTheWild.ID;  LB_FerocityCalloftheWild.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.SharkAttack.ID;  LB_FerocitySharkAttack.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.WildHunt.ID;  LB_FerocityWildHunt.Image = pt.TalentTree[currentId].TheIcon;
-                // Tenacity
-                currentId = pt.CobraReflexes.ID;  LB_TenacityCobraReflexes.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.ChargeSwoop.ID;  LB_TenacityCharge.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatStamina.ID;  LB_TenacityGreatStamina.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.NaturalArmor.ID;  LB_TenacityNaturalArmor.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.BoarsSpeed.ID;  LB_TenacityBoarsSpeed.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.SpikedCollar.ID;  LB_TenacitySpikedCollar.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.BloodOfTheRhino.ID;  LB_TenacityBloodOfTheRhino.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.PetBarding.ID;  LB_TenacityPetBarding.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.CullingTheHerd.ID;  LB_TenacityCullingTheHerd.Image = pt.TalentTree[currentId].TheIcon;// Add in 3.3
-                currentId = pt.Lionhearted.ID;  LB_TenacityLionHearted.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GuardDog.ID;  LB_TenacityGuardDog.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Thunderstomp.ID;  LB_TenacityThunderstomp.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GreatResistance.ID;  LB_TenacityGreatResistance.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.GraceOfTheMantis.ID;  LB_TenacityGraceOfTheMantis.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.LastStand.ID;  LB_TenacityLastStand.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Taunt.ID;  LB_TenacityTaunt.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Intervene.ID;  LB_TenacityIntervene.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.WildHunt.ID;  LB_TenacityWildHunt.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.RoarOfSacrifice.ID;  LB_TenacityRoarOfSacrifice.Image = pt.TalentTree[currentId].TheIcon;
-                currentId = pt.Silverback.ID; LB_TenacitySilverback.Image = pt.TalentTree[currentId].TheIcon;
-            } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
-                    "Error Setting Pet Talents Images", ex.Message,
-                    "initTalentImages",
-                    "Current ID: " + currentId.ToString() + "\r\nCurrent Talent: " + pt.TalentTree[currentId].Name,
-                    ex.StackTrace);
-                eb.Show();
-            }*/
-        }
         private void CB_PetFamily_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (isLoading) updateTalentDisplay();
@@ -801,6 +719,7 @@ namespace Rawr.Hunter
             switch ((PetFamily)CB_PetFamily.SelectedItem)
             {
                 case PetFamily.Bat:
+                case PetFamily.BirdOfPrey:
                 case PetFamily.Chimaera:
                 case PetFamily.Dragonhawk:
                 case PetFamily.NetherRay:
@@ -824,7 +743,6 @@ namespace Rawr.Hunter
                 case PetFamily.Worm:
                     return PetFamilyTree.Tenacity;
 
-                case PetFamily.BirdOfPrey:
                 case PetFamily.CarrionBird:
                 case PetFamily.Cat:
                 case PetFamily.CoreHound:
@@ -864,7 +782,7 @@ namespace Rawr.Hunter
                     SavedPetTalentSpec spec = form.PetTalentSpec();
                     String specName = form.PetTalentSpecName();
                     if (spec == null) {
-                        spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
+                        spec = new SavedPetTalentSpec(specName, _pettalents, spec.Class, _treeCount);
                         _savedPetTalents.Add(spec);
                     }
                     else spec.Spec = PetTalents.ToString();

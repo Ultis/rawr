@@ -102,6 +102,7 @@ namespace Rawr.Hunter {
                 ThePetTalentPicker.Character = character;
                 PetBuffs.Character = Character;
                 PopulatePetAbilities();
+                PopulateArmoryPets();
                 // Bad Item Hiding
                 CalculationsHunter.HidingBadStuff_Spl = CalcOpts.HideBadItems_Spl;
                 CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
@@ -1068,9 +1069,16 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (CB_PetFamily.SelectedItem == null) return PetFamilyTree.None;
             return CalculationOptionsHunter.PetFamilyToPetFamilyTree((PetFamily)CB_PetFamily.SelectedItem);
         }
-        private void updateTalentDisplay()
+        private void updateTalentDisplay() { updateTalentDisplay(CalcOpts.PetTalents); }
+        private void updateTalentDisplay(PetTalents newtalents)
         {
             PetFamilyTree tree = getPetFamilyTree();
+            //if (newtalents != CalcOpts.PetTalents) {
+                ThePetTalentPicker.Tree1.Talents = newtalents;
+                ThePetTalentPicker.Tree2.Talents = newtalents;
+                ThePetTalentPicker.Tree3.Talents = newtalents;
+                ThePetTalentPicker.RefreshSpec();
+            //}
             ThePetTalentPicker.TreeTab1.Visibility = (tree == PetFamilyTree.None || tree == PetFamilyTree.Cunning ? Visibility.Visible : Visibility.Collapsed);
             ThePetTalentPicker.TreeTab2.Visibility = (tree == PetFamilyTree.None || tree == PetFamilyTree.Ferocity ? Visibility.Visible : Visibility.Collapsed);
             ThePetTalentPicker.TreeTab3.Visibility = (tree == PetFamilyTree.None || tree == PetFamilyTree.Tenacity ? Visibility.Visible : Visibility.Collapsed);
@@ -1082,83 +1090,43 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 default: { ThePetTalentPicker.TreeTab1.IsSelected = true; break; }
             }
         }
-        private void resetTalents() {
-#if RAWR3 || SILVERLIGHT
-            CalcOpts.PetTalents = new Hunter.PetTalents(); // TODO not sure if this is the right thing to do here
-#else
-            CalcOpts.PetTalents.Reset();
-#endif
-            //populatePetTalentCombos();
-        }
-        /*FormSavePetTalentSpec form = null;
-        private void BT_PetTalentSpecButton_Click(object sender, EventArgs e) {
-            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
-                List<SavedPetTalentSpec> classTalents = new List<SavedPetTalentSpec>();
-                foreach (SavedPetTalentSpec spec in _savedPetTalents) {
-                    classTalents.Add(spec);
-                }
-                form = new FormSavePetTalentSpec(classTalents, 0);
-                form.Closed += new EventHandler(FormSavePetTalentSpec_Closed);
-                form.Show();
-            } else {
-                _savedPetTalents.Remove((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem);
-                UpdateSavedTalents();
-                SavePetTalentSpecs();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-        private void FormSavePetTalentSpec_Closed(object sender, EventArgs e) {
-            if ((bool)form.DialogResult) {
-                SavedPetTalentSpec spec = form.PetTalentSpec();
-                String specName = form.PetTalentSpecName();
-                if (spec == null) {
-                    spec = new SavedPetTalentSpec(specName, _pettalents, _treeCount);
-                    _savedPetTalents.Add(spec);
-                }
-                else spec.Spec = PetTalents.ToString();
-                UpdateSavedTalents();
-                SavePetTalentSpecs();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void CB_PetTalentSpec_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).Spec == null) {
-                BT_PetTalentsSaveDel.Content = "Save";
-            } else {
-                BT_PetTalentsSaveDel.Content = "Delete";
-                if (!_updateSaved) PetTalents = ((SavedPetTalentSpec)CB_PetTalentsSpecSwitcher.SelectedItem).TalentSpec();
-            }
-            //populatePetTalentCombos();
-            if(Character != null) Character.OnCalculationsInvalidated();
-        }*/
-
-        private void CB_ArmoryPets_SelectedIndexChanged(object sender, EventArgs e)
+        private void resetTalents() { CalcOpts.PetTalents = new Hunter.PetTalents(); }
+        private void CB_ArmoryPets_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_loadingCalculationOptions) return;
-            CalculationOptionsHunter calcOpts = Character.CalculationOptions as CalculationOptionsHunter;
+            try { if ((string)CB_ArmoryPets.SelectedItem == "No Armory Pets Loaded") return; } catch (Exception) { } // ignore any exceptions
             // Save the Index
-            calcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
+            //CalcOpts.SelectedArmoryPet = CB_ArmoryPets.SelectedIndex;
             ArmoryPet CurrentPet = (ArmoryPet)CB_ArmoryPets.SelectedItem;
             // Populate the Pet Family
             _loadingCalculationOptions = true;
-            CB_PetFamily.SelectedItem = CurrentPet.Family;
+            CB_PetFamily.SelectedItem = (PetFamily)int.Parse(ArmoryPet.PetFamilyNameToPetFamilyId(CurrentPet.Family));
             _loadingCalculationOptions = false;
             // Convert the ArmoryPet spec to our spec
-            /*PetTalents pt = PetTalents.FromArmoryPet(CurrentPet);
+            PetTalents pt = PetTalents.FromArmoryPet(CurrentPet);
             // Populate the Pet Specs box
             {
                 CalcOpts.PetTalents = pt;
                 CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
+                updateTalentDisplay();
                 //ComboBox item = sender as ComboBox;
-                _treeCount = 0;
+                /*_treeCount = 0;
                 foreach (Char c in pt.ToString()) { _treeCount += int.Parse(c.ToString()); }
                 //if (item != null) PetTalents.Data[item.Index] = item.CurrentRank;
                 UpdateSavedTalents();
-                SavePetTalentSpecs();
+                SavePetTalentSpecs();*/
             }
-            CB_PetTalentSpec_SelectedIndexChanged(null, null);*/
+            //CB_PetTalentSpec_SelectedIndexChanged(null, null);
+        }
+        private void PopulateArmoryPets() {
+            if (Character.ArmoryPets != null && Character.ArmoryPets.Count > 0)
+            {
+                _loadingCalculationOptions = false;
+                if (CB_ArmoryPets.Items.Count == 1) { CB_ArmoryPets.Items.Clear(); }
+                CB_ArmoryPets.ItemsSource = Character.ArmoryPets.ToArray();
+                CB_ArmoryPets.SelectedIndex = CalcOpts.SelectedArmoryPet;
+                _loadingCalculationOptions = true;
+            }
         }
         #endregion
 

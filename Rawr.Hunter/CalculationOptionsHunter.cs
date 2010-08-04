@@ -209,6 +209,53 @@ namespace Rawr.Hunter
         #endregion
 
         #region Pet Tab
+        private int _petLevel = 80; // Not Editable
+        public int PetLevel {
+            get { return _petLevel; }
+            set { _petLevel = value; OnPropertyChanged("PetLevel"); }
+        }
+        [XmlIgnore]
+        public int _SelectedArmoryPet = 0;
+        public int SelectedArmoryPet {
+            get { return _SelectedArmoryPet; }
+            set { _SelectedArmoryPet = value; OnPropertyChanged("SelectedArmoryPet"); }
+        }
+        private PetHappiness _petHappiness = PetHappiness.Happy; // Not Editable
+        public PetHappiness PetHappinessLevel {
+            get { return _petHappiness; }
+            set { _petHappiness = value; OnPropertyChanged("PetHappinessLevel"); }
+        }
+#if RAWR3 || SILVERLIGHT
+        [XmlIgnore]
+        private PetTalents _PetTalents;
+        public PetTalents PetTalents
+        {
+            get { return _PetTalents ?? (_PetTalents = new PetTalents()); }
+            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
+        }
+#else
+        [XmlIgnore]
+        private PetTalentTreeData _PetTalents;
+        [XmlIgnore]
+        public PetTalentTreeData PetTalents {
+            get { return _PetTalents ?? (_PetTalents = new PetTalentTreeData()); }
+            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
+        }
+#endif
+        private string _petTalents;
+        public string petTalents {
+            get {
+                if ( String.IsNullOrEmpty(_petTalents) && _PetTalents != null) { _petTalents = _PetTalents.ToString(); }
+                return _petTalents;
+            }
+            set { _petTalents = value; }
+        }
+        private PetFamily _petFamily = PetFamily.Cat;
+        public PetFamily PetFamily {
+            get { return _petFamily; }
+            set { _petFamily = value; OnPropertyChanged("PetFamily"); }
+        }
+        #region Skill Priorities
         public PetAttacks _PetPriority1 = PetAttacks.Growl;
         public PetAttacks PetPriority1
         {
@@ -251,62 +298,19 @@ namespace Rawr.Hunter
             get { return _PetPriority7; }
             set { _PetPriority7 = value; OnPropertyChanged("PetPriority7"); }
         }
-        [XmlIgnore]
-        public int _SelectedArmoryPet = 0;
-        public int SelectedArmoryPet {
-            get { return _SelectedArmoryPet; }
-            set { _SelectedArmoryPet = value; OnPropertyChanged("SelectedArmoryPet"); }
-        }
+        #endregion
+        #region Buffs
         [XmlIgnore]
         private List<Buff> _petActiveBuffs;
         [XmlElement("petActiveBuffs")]
         public List<string> _petActiveBuffsXml = new List<string>();
         [XmlIgnore]
-        public List<Buff> petActiveBuffs {
+        public List<Buff> petActiveBuffs
+        {
             get { return _petActiveBuffs ?? (_petActiveBuffs = new List<Buff>()); }
             set { _petActiveBuffs = value; OnPropertyChanged("PetActiveBuffs"); }
         }
-        private int _petLevel = 80; // Not Editable
-        public int PetLevel {
-            get { return _petLevel; }
-            set { _petLevel = value; OnPropertyChanged("PetLevel"); }
-        }
-        private PetHappiness _petHappiness = PetHappiness.Happy; // Not Editable
-        public PetHappiness PetHappinessLevel {
-            get { return _petHappiness; }
-            set { _petHappiness = value; OnPropertyChanged("PetHappinessLevel"); }
-        }
-#if RAWR3 || SILVERLIGHT
-        [XmlIgnore]
-        private PetTalents _PetTalents;
-        public PetTalents PetTalents
-        {
-            get { return _PetTalents ?? (_PetTalents = new PetTalents()); }
-            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
-        }
-#else
-        [XmlIgnore]
-        private PetTalentTreeData _PetTalents;
-        [XmlIgnore]
-        public PetTalentTreeData PetTalents {
-            get { return _PetTalents ?? (_PetTalents = new PetTalentTreeData()); }
-            set { _PetTalents = value; OnPropertyChanged("PetTalents"); }
-        }
-#endif
-        private string _petTalents;
-        public string petTalents {
-            get {
-                if ( String.IsNullOrEmpty(_petTalents) && _PetTalents != null) { _petTalents = _PetTalents.ToString(); }
-                //if (!String.IsNullOrEmpty(_petTalents) && _petTalents.Length != 37) { _petTalents = "0000000000000000000000000000000000000"; }
-                return _petTalents;
-            }
-            set { _petTalents = value; }
-        }
-        private PetFamily _petFamily = PetFamily.Cat;
-        public PetFamily PetFamily {
-            get { return _petFamily; }
-            set { _petFamily = value; OnPropertyChanged("PetFamily"); }
-        }
+        #endregion
         #endregion
 
         #region Misc Tab
@@ -509,6 +513,7 @@ namespace Rawr.Hunter
             switch (family)
             {
                 case PetFamily.Bat:
+                case PetFamily.BirdOfPrey:
                 case PetFamily.Chimaera:
                 case PetFamily.Dragonhawk:
                 case PetFamily.NetherRay:
@@ -532,7 +537,6 @@ namespace Rawr.Hunter
                 case PetFamily.Worm:
                     return PetFamilyTree.Tenacity;
 
-                case PetFamily.BirdOfPrey:
                 case PetFamily.CarrionBird:
                 case PetFamily.Cat:
                 case PetFamily.CoreHound:
@@ -546,7 +550,6 @@ namespace Rawr.Hunter
                 case PetFamily.Wolf:
                     return PetFamilyTree.Ferocity;
             }
-
 
             // hmmm!
             return PetFamilyTree.None;
