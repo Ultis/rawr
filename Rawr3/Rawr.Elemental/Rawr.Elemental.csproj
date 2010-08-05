@@ -162,6 +162,7 @@
     <Compile Include="CalculationOptionsPanelElemental.xaml.cs">
       <DependentUpon>CalculationOptionsPanelElemental.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ElementalConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,9 +10,9 @@ using Rawr.Elemental.Spells;
 
 namespace Rawr.Elemental
 {
-	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman)]
-	public class CalculationsElemental : CalculationsBase
-	{
+    [Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", CharacterClass.Shaman)]
+    public class CalculationsElemental : CalculationsBase
+    {
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -118,21 +118,21 @@ namespace Rawr.Elemental
 
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-		public override ICalculationOptionsPanel CalculationOptionsPanel
+        public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
-		{
-			get
-			{
-				if (_calculationOptionsPanel == null)
-				{
-					_calculationOptionsPanel = new CalculationOptionsPanelElemental();
-				}
-				return _calculationOptionsPanel;
-			}
-		}
+        {
+            get
+            {
+                if (_calculationOptionsPanel == null)
+                {
+                    _calculationOptionsPanel = new CalculationOptionsPanelElemental();
+                }
+                return _calculationOptionsPanel;
+            }
+        }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
@@ -151,53 +151,53 @@ namespace Rawr.Elemental
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
-		private string[] _characterDisplayCalculationLabels = null;
-		public override string[] CharacterDisplayCalculationLabels
-		{
-			get
-			{
-				if (_characterDisplayCalculationLabels == null)
-					_characterDisplayCalculationLabels = new string[] {
-					"Summary:Overall Points*Sum of burst and sustained points",
-					"Summary:Burst Points*DPS until you go out of mana",
-					"Summary:Sustained Points*Total DPS of the fight",
+        private string[] _characterDisplayCalculationLabels = null;
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (_characterDisplayCalculationLabels == null)
+                    _characterDisplayCalculationLabels = new string[] {
+                    "Summary:Overall Points*Sum of burst and sustained points",
+                    "Summary:Burst Points*DPS until you go out of mana",
+                    "Summary:Sustained Points*Total DPS of the fight",
 
-					"Basic Stats:Health",
+                    "Basic Stats:Health",
                     "Basic Stats:Mana",
                     "Basic Stats:Stamina",
-					"Basic Stats:Intellect",
-					"Basic Stats:Spell Power",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Spell Power",
                     "Basic Stats:Hit Rating",
-					"Basic Stats:Crit Rating",
+                    "Basic Stats:Crit Rating",
                     "Basic Stats:Haste Rating",
-					"Basic Stats:Mana Regen",
+                    "Basic Stats:Mana Regen",
 
-					"Combat Stats:Average Health",
+                    "Combat Stats:Average Health",
                     "Combat Stats:Average Mana",
                     "Combat Stats:Average Stamina",
-					"Combat Stats:Average Intellect",
-					"Combat Stats:Average Spell Power",
+                    "Combat Stats:Average Intellect",
+                    "Combat Stats:Average Spell Power",
                     "Combat Stats:Average Hit Rating",
-					"Combat Stats:Average Crit Rating",
+                    "Combat Stats:Average Crit Rating",
                     "Combat Stats:Average Haste Rating",
-					"Combat Stats:Average Mana Regen",
+                    "Combat Stats:Average Mana Regen",
 
                     "Attacks:Lightning Bolt",
-					"Attacks:Chain Lightning",
-					"Attacks:Lava Burst",
+                    "Attacks:Chain Lightning",
+                    "Attacks:Lava Burst",
                     "Attacks:Flame Shock",
                     "Attacks:Earth Shock",
                     "Attacks:Frost Shock",
                     "Attacks:Fire Nova",
                     "Attacks:Searing Totem",
                     "Attacks:Magma Totem",
-					
-					"Simulation:Simulation",
-					"Simulation:Rotation",
-				};
-				return _characterDisplayCalculationLabels;
-			}
-		}
+                    
+                    "Simulation:Simulation",
+                    "Simulation:Rotation",
+                };
+                return _characterDisplayCalculationLabels;
+            }
+        }
 
         public override void SetDefaults(Character character)
         {
@@ -224,52 +224,52 @@ namespace Rawr.Elemental
             character.ActiveBuffsAdd(("Fish Feast"));
         }
 
-		private Dictionary<string, Color> _subPointNameColors = null;
-		public override Dictionary<string, Color> SubPointNameColors
-		{
-			get
-			{
-				if (_subPointNameColors == null)
-				{
-					_subPointNameColors = new Dictionary<string, Color>();
-					_subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
-					_subPointNameColors.Add("Sustained DPS", Color.FromArgb(255, 0, 0, 255));
-				}
-				return _subPointNameColors;
-			}
-		}
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Sustained DPS", Color.FromArgb(255, 0, 0, 255));
+                }
+                return _subPointNameColors;
+            }
+        }
 
-		private List<ItemType> _relevantItemTypes = null;
-		public override List<ItemType> RelevantItemTypes
-		{
-			get
-			{
-				if (_relevantItemTypes == null)
-				{
-					_relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
-						ItemType.None,
-						ItemType.Cloth,						
+        private List<ItemType> _relevantItemTypes = null;
+        public override List<ItemType> RelevantItemTypes
+        {
+            get
+            {
+                if (_relevantItemTypes == null)
+                {
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
+                    {
+                        ItemType.None,
+                        ItemType.Cloth,						
                         ItemType.Leather,
                         ItemType.Mail,
-						ItemType.Dagger,
+                        ItemType.Dagger,
                         ItemType.FistWeapon,
-						ItemType.OneHandAxe,
+                        ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.Shield,
                         ItemType.Staff,
                         ItemType.Totem,
                         ItemType.TwoHandAxe,
-						ItemType.TwoHandMace
-					});
-				}
-				return _relevantItemTypes;
-			}
-		}
+                        ItemType.TwoHandMace
+                    });
+                }
+                return _relevantItemTypes;
+            }
+        }
 
-		public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
-		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
-		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
+        public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
 
         private string[] _customChartNames = {};
         public override string[] CustomChartNames
@@ -333,31 +333,33 @@ namespace Rawr.Elemental
         }
 #endif
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml)
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));
-			System.IO.StringReader reader = new System.IO.StringReader(xml);
-			CalculationOptionsElemental calcOpts = serializer.Deserialize(reader) as CalculationOptionsElemental;
-			return calcOpts;
-		}
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsElemental));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsElemental calcOpts = serializer.Deserialize(reader) as CalculationOptionsElemental;
+            return calcOpts;
+        }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-		{
-			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
-			if (calcOpts == null) calcOpts = new CalculationOptionsElemental();
-			Stats stats = GetCharacterStats(character, additionalItem);
+        {
+            CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
+            if (calcOpts == null) calcOpts = new CalculationOptionsElemental();
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) bossOpts = new BossOptions();
+            Stats stats = GetCharacterStats(character, additionalItem);
 
-			CharacterCalculationsElemental calculatedStats = new CharacterCalculationsElemental();
-			calculatedStats.BasicStats = stats;
+            CharacterCalculationsElemental calculatedStats = new CharacterCalculationsElemental();
+            calculatedStats.BasicStats = stats;
             calculatedStats.LocalCharacter = character;
             calcOpts.calculatedStats = calculatedStats;
 
-            Rawr.Elemental.Estimation.solve(calculatedStats, calcOpts);
+            Rawr.Elemental.Estimation.solve(calculatedStats, calcOpts, bossOpts);
 
             return calculatedStats;
-			
-		}
+            
+        }
 
         //slowly being moved back into GetCharacterStats to reduce Stats
         public Stats GetTalentStats(ShamanTalents talents)
@@ -379,16 +381,16 @@ namespace Rawr.Elemental
             return statsTalents;
         }
 
-		public override Stats GetCharacterStats(Character character, Item additionalItem)
-		{
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
             CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 
             Stats statsRace = BaseStats.GetBaseStats(character);
-			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            Stats statsItems = GetItemStats(character, additionalItem);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsTalents = GetTalentStats(character.ShamanTalents);
 
-			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             if (statsTotal.HighestStat > 0)
             {
@@ -439,14 +441,14 @@ namespace Rawr.Elemental
             if (character.ShamanTalents.GlyphofWaterMastery) statsTotal.Mp5 += 30;
 
             return statsTotal;
-		}
+        }
 
-		public override bool IsItemRelevant(Item item)
-		{
+        public override bool IsItemRelevant(Item item)
+        {
             if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem))
                 return false;
             return base.IsItemRelevant(item);
-		}
+        }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
             string name = buff.Name;
@@ -457,7 +459,7 @@ namespace Rawr.Elemental
         }
 
         public override Stats GetRelevantStats(Stats stats)
-		{
+        {
             Stats s = new Stats()
             {
                 #region Basic stats
@@ -515,8 +517,8 @@ namespace Rawr.Elemental
             };
             #region Trinkets
             foreach (SpecialEffect effect in stats.SpecialEffects())
-			{
-				if (effect.Trigger == Trigger.Use || 
+            {
+                if (effect.Trigger == Trigger.Use || 
                     effect.Trigger == Trigger.SpellCast || 
                     effect.Trigger == Trigger.SpellHit || 
                     effect.Trigger == Trigger.SpellCrit || 
@@ -530,19 +532,19 @@ namespace Rawr.Elemental
                     effect.Trigger == Trigger.ShamanLightningBolt ||
                     effect.Trigger == Trigger.ShamanFlameShockDoTTick || 
                     effect.Trigger == Trigger.ShamanShock)
-				{
-					if (HasRelevantStats(effect.Stats))
-					{
-						s.AddSpecialEffect(effect);
-					}
-				}
-			}
+                {
+                    if (HasRelevantStats(effect.Stats))
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
             #endregion
             return s;
-		}
+        }
 
-		public override bool HasRelevantStats(Stats stats)
-		{
+        public override bool HasRelevantStats(Stats stats)
+        {
             float elementalStats = 0;
             #region Basic stats
             elementalStats +=
@@ -626,7 +628,7 @@ namespace Rawr.Elemental
             }
             #endregion
             return relevant;
-		}
+        }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsElemental calcOpts) {
             List<Buff> removedBuffs = new List<Buff>();
@@ -670,7 +672,7 @@ namespace Rawr.Elemental
             if ((slot == ItemSlot.OffHand && enchant.Slot != ItemSlot.OffHand) || slot == ItemSlot.Ranged) return false;
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
-	}
+    }
 
     public class CharacterCalculationsElemental : CharacterCalculationsBase
     {
@@ -802,14 +804,14 @@ namespace Rawr.Elemental
         }
     }
 
-	public class ComparisonCalculationElemental : ComparisonCalculationBase
-	{
-		private string _name = string.Empty;
-		public override string Name
-		{
-			get { return _name; }
-			set { _name = value; }
-		}
+    public class ComparisonCalculationElemental : ComparisonCalculationBase
+    {
+        private string _name = string.Empty;
+        public override string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
 
         private string _desc = string.Empty;
         public override string Description
@@ -819,18 +821,18 @@ namespace Rawr.Elemental
         }
 
         private float _overallPoints = 0f;
-		public override float OverallPoints
-		{
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-		}
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
 
-		private float[] _subPoints = new float[] { 0f, 0f };
-		public override float[] SubPoints
-		{
-			get { return _subPoints; }
-			set { _subPoints = value; }
-		}
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
 
         public float BurstPoints
         {
@@ -845,11 +847,11 @@ namespace Rawr.Elemental
         }
 
         private Item _item = null;
-		public override Item Item
-		{
-			get { return _item; }
-			set { _item = value; }
-		}
+        public override Item Item
+        {
+            get { return _item; }
+            set { _item = value; }
+        }
 
         private ItemInstance _itemInstance = null;
         public override ItemInstance ItemInstance
@@ -858,18 +860,18 @@ namespace Rawr.Elemental
             set { _itemInstance = value; }
         }
 
-		private bool _equipped = false;
-		public override bool Equipped
-		{
-			get { return _equipped; }
-			set { _equipped = value; }
-		}
+        private bool _equipped = false;
+        public override bool Equipped
+        {
+            get { return _equipped; }
+            set { _equipped = value; }
+        }
 
-		public override string ToString()
-		{
-			return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
+        }
+    }
 
     public static class Constants
     {

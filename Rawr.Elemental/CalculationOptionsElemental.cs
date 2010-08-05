@@ -7,10 +7,10 @@ using System.Xml.Serialization;
 namespace Rawr.Elemental
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
     public class CalculationOptionsElemental : ICalculationOptionBase, INotifyPropertyChanged
-	{
+    {
         public string GetXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsElemental));
@@ -21,30 +21,32 @@ namespace Rawr.Elemental
         }
 
         [XmlIgnore]
-		public CharacterCalculationsElemental calculatedStats = null;
+        public CharacterCalculationsElemental calculatedStats = null;
 
-		private int _BSRatio = 75; // goes from 0 to 100
+#if !RAWR3 && !SILVERLIGHT // BossHandler Options
+        private int _FightDuration = 300; //5 Minutes
+        public int FightDuration
+        {
+            get { return _FightDuration; }
+            set { _FightDuration = value; OnPropertyChanged("FightDuration"); }
+        }
+#endif
+
+        private int _BSRatio = 75; // goes from 0 to 100
         public int BSRatio
         {
             get { return _BSRatio; }
             set { _BSRatio = value; OnPropertyChanged("BSRatio"); }
         }
 
-		private int _FightDuration = 300; //5 Minutes
-        public int FightDuration
-        {
-            get { return _FightDuration; }
-            set { _FightDuration = value; OnPropertyChanged("FightDuration"); }
-        }
-
-		private bool _UseThunderstorm = true;
+        private bool _UseThunderstorm = true;
         public bool UseThunderstorm
         {
             get { return _UseThunderstorm; }
             set { _UseThunderstorm = value; OnPropertyChanged("UseThunderstorm"); }
         }
 
-		private int _rotationType = 0;
+        private int _rotationType = 0;
         public int RotationType
         {
             get { return _rotationType; }

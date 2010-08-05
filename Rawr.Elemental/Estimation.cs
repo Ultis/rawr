@@ -59,7 +59,7 @@ namespace Rawr.Elemental
             return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem));
         }
 
-        public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts)
+        public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts, BossOptions bossOpts)
         {
             Stats stats = calculatedStats.BasicStats;
             Character character = calculatedStats.LocalCharacter;
@@ -80,6 +80,11 @@ namespace Rawr.Elemental
             Rotation rot;
             float damage;
             Stats procStats;
+#if RAWR3 || SILVERLIGHT
+            float FightDuration = bossOpts.BerserkTimer;
+#else
+            float FightDuration = calcOpts.FightDuration;
+#endif
 
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts);
@@ -88,7 +93,7 @@ namespace Rawr.Elemental
             int nPasses = 2, k;
             for (k = 0; k < nPasses; k++)
             {
-                procStats = DoSpecialEffects(character, stats, rot, calcOpts.FightDuration);
+                procStats = DoSpecialEffects(character, stats, rot, FightDuration);
                 //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
                 e.Update(stats, procStats, talents, calcOpts);
                 rot = e.getPriorityRotation(calcOpts.RotationType);
@@ -99,7 +104,7 @@ namespace Rawr.Elemental
             #region Thunderstorm
             if (calcOpts.UseThunderstorm)
             {
-                float procsPerSecond = Thunderstorm.getProcsPerSecond(talents.GlyphofThunder, calcOpts.FightDuration);
+                float procsPerSecond = Thunderstorm.getProcsPerSecond(talents.GlyphofThunder, (int)FightDuration);
                 thunderstormRegen += (talents.GlyphofThunderstorm ? .1f : .08f) * stats.Mana * procsPerSecond * 5;
             }
             #endregion
@@ -119,14 +124,13 @@ namespace Rawr.Elemental
             // TotalDamage, CastFraction, TimeUntilOOM
             #region Calculate total damage in the fight
             float TimeUntilOOM = 0;
-            float FightDuration = calcOpts.FightDuration;
             float effectiveMPS = rot.MPS - ManaRegen / 5f;
             if (effectiveMPS <= 0) TimeUntilOOM = FightDuration;
             else TimeUntilOOM = (calculatedStats.BasicStats.Mana) / effectiveMPS;
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
             #region SpecialEffects from procs etc.
-            procStats = DoSpecialEffects(character, stats, rot, calcOpts.FightDuration);
+            procStats = DoSpecialEffects(character, stats, rot, FightDuration);
             //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
             //damage procs (Thunder Capacitor etc.) are effected by spellcrit and damage debuffs
             damage = procStats.ArcaneDamage * (1 + stats.BonusArcaneDamageMultiplier) + procStats.NatureDamage * (1 + stats.BonusNatureDamageMultiplier) + procStats.FireDamage * (1 + stats.BonusFireDamageMultiplier) + procStats.ShadowDamage * (1 + stats.BonusShadowDamageMultiplier);
