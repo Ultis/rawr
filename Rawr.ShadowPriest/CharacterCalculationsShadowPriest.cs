@@ -76,9 +76,10 @@ namespace Rawr.ShadowPriest
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            CalculationOptionsShadowPriest calcOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
+            CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
+            BossOptions BossOpts = character.BossOptions;
             Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
-            bool Ptr = calcOptions.PTR;
+            bool Ptr = calcOpts.PTR;
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetCritReductionFromResilience(1);
@@ -111,7 +112,11 @@ namespace Rawr.ShadowPriest
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 3f).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));
 
-            float Hit = calcOptions.TargetHit;
+#if RAWR3 || SILVERLIGHT
+            float Hit = 100 - (StatConversion.GetSpellMiss(BossOpts.Level - character.Level, false) * 100);
+#else
+            float Hit = 100 - (StatConversion.GetSpellMiss(calcOpts.TargetLevel, false) * 100);
+#endif
             float BonusHit = BasicStats.SpellHit * 100f;
             float RacialHit = 0;
             string RacialText = "";

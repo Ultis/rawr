@@ -20,10 +20,6 @@ namespace Rawr.HealPriest
             return xml.ToString();
         }
 
-        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
-        private int _ManaPot = 4;
-        public int ManaPot { get { return _ManaPot; } set { _ManaPot = value; OnPropertyChanged("ManaPot"); } }
-        public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public enum eRole
         {
             AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
@@ -82,6 +78,13 @@ namespace Rawr.HealPriest
         public int DispelCast { get { return _DispelCast; } set { _DispelCast = value; OnPropertyChanged("DispelCast"); } }
         private int _MDCast = 0;
         public int MDCast { get { return _MDCast; } set { _MDCast = value; OnPropertyChanged("MDCast"); } }
+
+        #region Obsolete, to be Removed
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
+        private int _ManaPot = 4;
+        public int ManaPot { get { return _ManaPot; } set { _ManaPot = value; OnPropertyChanged("ManaPot"); } }
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
+        #endregion
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

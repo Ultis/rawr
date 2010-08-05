@@ -105,6 +105,9 @@
     <Compile Include="CalculationOptionsPanelShadowPriest.xaml.cs">
       <DependentUpon>CalculationOptionsPanelShadowPriest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SpellPriorityForm.xaml.cs">
+      <DependentUpon>SpellPriorityForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +116,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SpellPriorityForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

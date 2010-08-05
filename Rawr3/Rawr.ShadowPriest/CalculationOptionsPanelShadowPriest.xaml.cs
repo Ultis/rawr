@@ -13,24 +13,24 @@ using System.Windows.Shapes;
 
 namespace Rawr.ShadowPriest
 {
-	public partial class CalculationOptionsPanelShadowPriest : UserControl, ICalculationOptionsPanel
-	{
-		public CalculationOptionsPanelShadowPriest()
-		{
-			InitializeComponent();
-		}
+    public partial class CalculationOptionsPanelShadowPriest : UserControl, ICalculationOptionsPanel
+    {
+        public CalculationOptionsPanelShadowPriest()
+        {
+            InitializeComponent();
+        }
 
-		#region ICalculationOptionsPanel Members
-		public UserControl PanelControl { get { return this; } }
+        #region ICalculationOptionsPanel Members
+        public UserControl PanelControl { get { return this; } }
 
         CalculationOptionsShadowPriest calcOpts = null;
 
-		private Character character;
-		public Character Character
-		{
-			get { return character; }
-			set
-			{
+        private Character character;
+        public Character Character
+        {
+            get { return character; }
+            set
+            {
                 // Kill any old event connections
                 if (character != null && character.CalculationOptions != null
                     && character.CalculationOptions is CalculationOptionsShadowPriest)
@@ -48,20 +48,20 @@ namespace Rawr.ShadowPriest
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelShadowPriest_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
-		}
+        }
 
-		private bool _loadingCalculationOptions;
-		public void LoadCalculationOptions()
-		{
-			_loadingCalculationOptions = true;
-			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsShadowPriest();
+        private bool _loadingCalculationOptions;
+        public void LoadCalculationOptions()
+        {
+            _loadingCalculationOptions = true;
+            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsShadowPriest();
             calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
             // Model Specific Code
             if (calcOpts.SpellPriority == null)
                 calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
             //
             _loadingCalculationOptions = false;
-		}
+        }
 
         void CalculationOptionsPanelShadowPriest_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -75,5 +75,23 @@ namespace Rawr.ShadowPriest
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
-	}
+
+        SpellPriorityForm priority = null;
+        private void bChangePriority_Click(object sender, RoutedEventArgs e)
+        {
+            priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity, Character);
+            priority.Closed += new EventHandler(bChangePriority_Closed);
+            priority.Show();
+        }
+        private void bChangePriority_Closed(object sender, EventArgs e) {
+            if (priority.DialogResult.GetValueOrDefault(false)) {
+                List<string> newList = new List<string>();
+                foreach (Object o in priority.lsSpellPriority.Items) {
+                    newList.Add(o.ToString());
+                }
+                calcOpts.SpellPriority = newList;
+                //character.OnCalculationsInvalidated();
+            }
+        }
+    }
 }

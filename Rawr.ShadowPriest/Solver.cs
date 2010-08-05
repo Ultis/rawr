@@ -37,7 +37,8 @@ namespace Rawr.ShadowPriest
         public float MovementDamageLoss { get; protected set; }
         public Dictionary<float, Spell> Sequence { get; protected set; }
 
-        public CalculationOptionsShadowPriest CalculationOptions { get; set; }
+        public CalculationOptionsShadowPriest CalcOpts { get; set; }
+        public BossOptions BossOpts { get; set; }
         public Stats PlayerStats { get; set; }
         public Character character { get; set; }
         public float HitChance { get; set; }
@@ -148,9 +149,14 @@ namespace Rawr.ShadowPriest
             Twinkets.SpellPower += (float)Math.Round(Twinkets.Spirit * SpellDamageFromSpiritPercentage);
             playerStats.Accumulate(Twinkets);
 
-            CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
+            CalcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
+            BossOpts = character.BossOptions;
 
-            HitChance = playerStats.SpellHit * 100f + CalculationOptions.TargetHit;
+#if RAWR3 || SILVERLIGHT
+            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(BossOpts.Level - character.Level, false) * 100);
+#else
+            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(CalcOpts.TargetLevel, false) * 100);
+#endif
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                 HitChance += character.PriestTalents.Misery * 1f;
             if (character.Race == CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
@@ -863,11 +869,11 @@ namespace Rawr.ShadowPriest
         public solverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
-            SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
+            SpellPriority = new List<Spell>(CalcOpts.SpellPriority.Count);
             float baseMana = BaseStats.GetBaseStats(character).Mana;
-            foreach (string spellname in CalculationOptions.SpellPriority)
+            foreach (string spellname in CalcOpts.SpellPriority)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalculationOptions.PTR);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalcOpts.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
@@ -922,6 +928,11 @@ namespace Rawr.ShadowPriest
             float hasteProcTimer = 0;
             int sequence = SpellPriority.Count-1;
             List<Spell> CastList = new List<Spell>();
+#if RAWR3 || SILVERLIGHT
+            int FightLength = (int)(BossOpts.BerserkTimer / 60f);
+#else
+            int FightLength = (int)CalcOpts.FightLength;
+#endif
 
             // Initial SW:Pain application
             if (bPnS)
@@ -933,8 +944,8 @@ namespace Rawr.ShadowPriest
 
             if (VE != null)
             {
-                VE.SpellStatistics.HitCount = CalculationOptions.FightLength;
-                VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost;
+                VE.SpellStatistics.HitCount = FightLength;
+                VE.SpellStatistics.ManaUsed = FightLength * VE.ManaCost;
             }
 
             if (DP != null && DP.ImprovedDP != null)
@@ -944,7 +955,7 @@ namespace Rawr.ShadowPriest
             bool CleanBreak = false;
             float timeSequenceReset = 0f;
             //Debug.Write(string.Format("\r\n\r\n----\r\nHaste: {0}, HasteRating: {1}", PlayerStats.SpellHaste.ToString("0.00"), PlayerStats.HasteRating));
-            while (timer < (60f * CalculationOptions.FightLength))
+            while (timer < (60 * FightLength))
             {
                 if (hasteProcTimer > 0 && hasteProcTimer < timer)
                 {
@@ -964,7 +975,7 @@ namespace Rawr.ShadowPriest
                 }
 
                 CastList.Add(spell);
-                timer += CalculationOptions.Delay / 1000f;
+                timer += CalcOpts.Delay / 1000f;
                 spell.SpellStatistics.HitCount++;
 
 
@@ -1164,12 +1175,12 @@ namespace Rawr.ShadowPriest
                 {
                     if (spell.CastTime > 0)
                     {
-                        float realMoveDuration = CalculationOptions.MoveDuration / (1f + simStats.MovementSpeed);
+                        float realMoveDuration = CalcOpts.MoveDuration / (1f + simStats.MovementSpeed);
                         float spellWait = (spell.Cooldown + spell.DebuffDuration) * 0.5f;
                         if (realMoveDuration > spellWait)
                         {   // Apply movement penalty
                             float DPSLossTime = spell.CastTime + realMoveDuration - spellWait;
-                            float DPSLoss = DPSLossTime / CalculationOptions.MoveFrequency;
+                            float DPSLoss = DPSLossTime / CalcOpts.MoveFrequency;
                             MovementDamageLoss += spell.SpellStatistics.DamageDone * DPSLoss;
                             spell.SpellStatistics.DamageDone *= (1f - DPSLoss);
                         }
@@ -1245,13 +1256,13 @@ namespace Rawr.ShadowPriest
             float MPS = OverallMana / timer;
             float SpiritRegen = (float)Math.Floor(StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
-            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalculationOptions.FSRRatio / 100f);
+            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalcOpts.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("Meditation", tmpregen));
                 regen += tmpregen;
             }
-            tmpregen = SpiritRegen * (1f - CalculationOptions.FSRRatio / 100f);
+            tmpregen = SpiritRegen * (1f - CalcOpts.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("OutFSR", tmpregen));
@@ -1269,13 +1280,13 @@ namespace Rawr.ShadowPriest
                     regen += tmpregen;
                 }
             }
-            tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
+            tmpregen = simStats.Mana / (FightLength * 60f);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
+            tmpregen = simStats.Mana * 0.002f * (CalcOpts.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = BaseStats.GetBaseStats(character).Mana * (simStats.ManaRestoreFromBaseManaPPM > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalculationOptions.JoW / 100f);
+            tmpregen = BaseStats.GetBaseStats(character).Mana * (simStats.ManaRestoreFromBaseManaPPM > 0 ? 0.02f * 0.25f : 0f) * HitsPerSecond * (CalcOpts.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
@@ -1330,9 +1341,9 @@ namespace Rawr.ShadowPriest
                     Rotation += "\r\n- Used Arcane Torrent";
             }
 
-            if (MPS > regen && CalculationOptions.ManaAmt > 0)
+            if (MPS > regen && CalcOpts.ManaAmt > 0)
             {   // Not enough mana, use Mana Potion
-                tmpregen = CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                tmpregen = CalcOpts.ManaAmt / (FightLength * 60f) * (1f + simStats.BonusManaPotion);
                 ManaSources.Add(new ManaSource("Mana Potion", tmpregen));
                 regen += tmpregen;
                 if (bVerbal)
@@ -1341,7 +1352,7 @@ namespace Rawr.ShadowPriest
 
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
-                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
+                float sf_rat = (CalcOpts.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
                 tmpregen = simStats.Mana * 0.5f * sf_rat;
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
@@ -1361,7 +1372,11 @@ namespace Rawr.ShadowPriest
                     Rotation += "\r\n- Used Dispersion";
             }
 
-            DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalculationOptions.TargetLevel, 0, 0)); // Level based Partial resists.
+#if RAWR3 || SILVERLIGHT
+            DPS *= (1f - StatConversion.GetAverageResistance(character.Level, BossOpts.Level, 0, 0)); // Level based Partial resists.
+#else
+            DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalcOpts.TargetLevel, 0, 0)); // Level based Partial resists.
+#endif
             //SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
@@ -1457,7 +1472,11 @@ namespace Rawr.ShadowPriest
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
         {
-            float fightLen = SSInfo[0].Solver.CalculationOptions.FightLength * 60f;
+#if RAWR3 || SILVERLIGHT
+            float fightLen = (int)(SSInfo[0].Solver.BossOpts.BerserkTimer / 60f) * 60f;
+#else
+            float fightLen = SSInfo[0].Solver.CalcOpts.FightLength * 60f;
+#endif
             foreach (SolverInfo si in SSInfo)
                 si.Solver.Calculate(calculatedStats);
 
@@ -1493,7 +1512,7 @@ namespace Rawr.ShadowPriest
 
             // Lets just say that 15% of resilience scales all health by 150%.
             float Resilience = (float)Math.Min(15f, StatConversion.GetCritReductionFromResilience(PlayerStats.Resilience) * 100f) / 15f;
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * CalculationOptions.Survivability / 100f;
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * CalcOpts.Survivability / 100f;
         }
     }
    
@@ -1516,7 +1535,7 @@ namespace Rawr.ShadowPriest
             float baseMana = BaseStats.GetBaseStats(character).Mana;
             foreach (string spellname in Spell.HolySpellList)
             {
-                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalculationOptions.PTR);
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character, baseMana, CalcOpts.PTR);
                 if (spelltmp != null) SpellPriority.Add(spelltmp);
             }
 
@@ -1556,8 +1575,13 @@ namespace Rawr.ShadowPriest
             float timer = 0;
             int sequence = SpellPriority.Count - 1;
             List<Spell> CastList = new List<Spell>();
+#if RAWR3 || SILVERLIGHT
+            int FightLength = (int)(BossOpts.BerserkTimer / 60f) * 60;
+#else
+            int FightLength = (int)CalcOpts.FightLength;
+#endif
 
-            while (timer < (CalculationOptions.FightLength * 60f))
+            while (timer < (FightLength * 60f))
             {
                 Spell spell = GetCastSpell(timer);
                 if (spell == null)
@@ -1639,18 +1663,18 @@ namespace Rawr.ShadowPriest
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
             float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
-            regen += simStats.Mana / (CalculationOptions.FightLength * 60f);
-            regen += simStats.Mana * 0.002f * (CalculationOptions.Replenishment / 100f);
+            regen += simStats.Mana / (FightLength * 60f);
+            regen += simStats.Mana * 0.002f * (CalcOpts.Replenishment / 100f);
 
-            if (MPS > regen && CalculationOptions.ManaAmt > 0)
+            if (MPS > regen && CalcOpts.ManaAmt > 0)
             {   // Not enough mana, use Mana Potion
-                regen += CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                regen += CalcOpts.ManaAmt / (FightLength * 60f) * (1f + simStats.BonusManaPotion);
                 Rotation += "\r\n- Used Mana Potion";
             }
 
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
-                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
+                float sf_rat = (CalcOpts.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
                 regen += simStats.Mana * 0.4f * sf_rat;
                 SustainDPS -= SM.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";
@@ -1664,8 +1688,13 @@ namespace Rawr.ShadowPriest
                 Rotation += "\r\n- Used Hymn of Hope";
             }
 
-            DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
-            SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+#if RAWR3 || SILVERLIGHT
+            DPS *= (1f - (BossOpts.Level - character.Level) * 0.02f); // Level based Partial resists.
+            SustainDPS *= (1f - (BossOpts.Level - character.Level) * 0.02f);
+#else
+            DPS *= (1f - CalcOpts.TargetLevel * 0.02f); // Level based Partial resists.
+            SustainDPS *= (1f - CalcOpts.TargetLevel * 0.02f);
+#endif
 
             SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
 
@@ -1675,7 +1704,7 @@ namespace Rawr.ShadowPriest
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalcOpts.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
         }
     }
 
