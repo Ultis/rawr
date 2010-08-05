@@ -57,7 +57,7 @@ namespace Rawr.HealPriest
         public Solver(Stats _stats, Character _char)
             : base(_stats, _char)
         {
-            role = calculationOptions.Role;
+            role = (CalculationOptionsHealPriest.eRole)calculationOptions.Role;
 
             if (role == CalculationOptionsHealPriest.eRole.AUTO_Tank) // OOOH MAGIC TANK ROTATION!!!
             {

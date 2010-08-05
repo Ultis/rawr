@@ -9,8 +9,8 @@ using Rawr;
 
 namespace Rawr.HealPriest
 {
-	[Rawr.Calculations.RawrModelInfo("HealPriest", "Spell_Holy_Renew", CharacterClass.Priest)]
-	public class CalculationsHealPriest : CalculationsBase 
+    [Rawr.Calculations.RawrModelInfo("HealPriest", "Spell_Holy_Renew", CharacterClass.Priest)]
+    public class CalculationsHealPriest : CalculationsBase 
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -292,18 +292,18 @@ namespace Rawr.HealPriest
                 switch (_currentChartName)
                 {
                     case "MP5 Sources":
-						_subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
+                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} total)", _currentChartTotal.ToString("0")), Color.FromArgb(255, 0, 0, 255));
                         break;
                     case "Spell HpS":
-						_subPointNameColors.Add("HpS", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors.Add("HpS", Color.FromArgb(255, 255, 0, 0));
                         break;
                     case "Spell HpM":
-						_subPointNameColors.Add("HpM", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors.Add("HpM", Color.FromArgb(255, 255, 0, 0));
                         break;
                     default:
-						_subPointNameColors.Add("HPS-Burst", Color.FromArgb(255, 255, 0, 0));
-						_subPointNameColors.Add("HPS-Sustained", Color.FromArgb(255, 0, 0, 255));
-						_subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
+                        _subPointNameColors.Add("HPS-Burst", Color.FromArgb(255, 255, 0, 0));
+                        _subPointNameColors.Add("HPS-Sustained", Color.FromArgb(255, 0, 0, 255));
+                        _subPointNameColors.Add("Survivability", Color.FromArgb(255, 0, 128, 0));
                         break;
                 }
                 _currentChartName = null;
@@ -318,17 +318,17 @@ namespace Rawr.HealPriest
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Basic Stats:Health",
-					"Basic Stats:Mana",
-					"Basic Stats:Stamina",
+                    "Basic Stats:Health",
+                    "Basic Stats:Mana",
+                    "Basic Stats:Stamina",
                     "Basic Stats:Resilience",
-					"Basic Stats:Intellect",
-					"Basic Stats:Spirit",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Spirit",
                     "Basic Stats:Spell Power",
-					"Basic Stats:In FSR MP5",
+                    "Basic Stats:In FSR MP5",
                     "Basic Stats:Spell Crit",
-					"Basic Stats:Healing Crit",
-					"Basic Stats:Spell Haste",
+                    "Basic Stats:Healing Crit",
+                    "Basic Stats:Spell Haste",
                     "Basic Stats:Armor",
                     "Basic Stats:Resistance",
                     "Simulation:Role",
@@ -336,19 +336,19 @@ namespace Rawr.HealPriest
                     "Simulation:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
                     "Spells:Greater Heal",
                     "Spells:Flash Heal",
-				    "Spells:Binding Heal",
+                    "Spells:Binding Heal",
                     "Spells:Renew",
                     "Spells:Prayer of Mending",
                     "Spells:Power Word Shield",
                     "Spells:PoH",
-				    "Spells:Holy Nova",
+                    "Spells:Holy Nova",
                     "Spells:Lightwell",
-				    "Spells:CoH",
+                    "Spells:CoH",
                     "Spells:Penance",
                     "Spells:Gift of the Naaru",
                     "Spells:Divine Hymn",
                     "Spells:Resurrection",
-				};
+                };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -360,12 +360,12 @@ namespace Rawr.HealPriest
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "Resilience",
                     "Mana",
                     "InFSR Regen",
                     "OutFSR Regen",
-					"Haste Rating",
+                    "Haste Rating",
                     "Haste %",
                     "Crit Rating",
                     "Healing Crit %",
@@ -379,7 +379,7 @@ namespace Rawr.HealPriest
                     "Frost Resistance",
                     "Nature Resistance",
                     "Shadow Resistance",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -387,10 +387,10 @@ namespace Rawr.HealPriest
 
 #if RAWR3
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-		public override ICalculationOptionsPanel CalculationOptionsPanel
+        public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		public override CalculationOptionsPanelBase CalculationOptionsPanel
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
         {
             get {
@@ -464,7 +464,7 @@ namespace Rawr.HealPriest
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
             BaseSolver solver;
-            if (calculationOptions.Role == CalculationOptionsHealPriest.eRole.CUSTOM)
+            if (calculationOptions.Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
@@ -541,7 +541,7 @@ namespace Rawr.HealPriest
                     _currentChartName = chartName;
                     CharacterCalculationsHealPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
                     BaseSolver mssolver;
-                    if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == CalculationOptionsHealPriest.eRole.CUSTOM)
+                    if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM)
                         mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
                     else
                         mssolver = new Solver(mscalcs.BasicStats, character);

@@ -7,30 +7,30 @@ using System.Xml.Serialization;
 namespace Rawr.HealPriest
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
     public class CalculationOptionsHealPriest : ICalculationOptionBase, INotifyPropertyChanged
-	{
-		public string GetXml()
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHealPriest));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
+    {
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsHealPriest));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 
-		private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
-		private int _ManaPot = 4;
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
+        private int _ManaPot = 4;
         public int ManaPot { get { return _ManaPot; } set { _ManaPot = value; OnPropertyChanged("ManaPot"); } }
-		public int ManaAmt { get { return manaAmt[ManaPot]; } }
-		public enum eRole
-		{
-			AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
-			Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM, Holy_Raid_Renew
-		};
-		private eRole _Role = 0;
-        public eRole Role { get { return _Role; } set { _Role = value; OnPropertyChanged("Role"); } }
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
+        public enum eRole
+        {
+            AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
+            Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM, Holy_Raid_Renew
+        };
+        private int _Role = (int)eRole.AUTO_Tank;
+        public int Role { get { return _Role; } set { _Role = value; OnPropertyChanged("Role"); } }
         private int _Rotation = 0;// LEGACY
         public int Rotation { get { return _Rotation; } set { _Rotation = value; OnPropertyChanged("Rotation"); } }// LEGACY
         private float _FSRRatio = 93f;
