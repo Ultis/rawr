@@ -7,20 +7,16 @@ using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Rawr.Warlock {
-    public partial class CalculationOptionsPanelWarlock
-        : CalculationOptionsPanelBase {
-
+namespace Rawr.Warlock
+{
+    public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase
+    {
         #region properties
-
         private CalculationOptionsWarlock _options;
         private int _ignoreCount;
-
         #endregion
 
-
         #region methods
-
         private void RefreshRotationPanel() {
 
             ++_ignoreCount;
@@ -59,7 +55,6 @@ namespace Rawr.Warlock {
 
             --_ignoreCount;
         }
-
         private void RefreshRotationButtons() {
 
             int itemCount = rotationList.Items.Count;
@@ -73,7 +68,6 @@ namespace Rawr.Warlock {
 
             rotationErrorLabel.Text = _options.GetActiveRotation().GetError();
         }
-
         private void RotationSwap(int swapWith) {
 
             int oldIndex = rotationList.SelectedIndex;
@@ -82,12 +76,10 @@ namespace Rawr.Warlock {
             RefreshRotationPanel();
             rotationList.SelectedIndex = newIndex;
         }
-
         private List<string> GetActivePriorities() {
 
             return _options.GetActiveRotation().SpellPriority;
         }
-
         private string PromptForRotationName(string title, string start) {
 
             string error = null;
@@ -118,27 +110,20 @@ namespace Rawr.Warlock {
                 }
             }
         }
-
         #endregion
 
-
         #region initialization
-
         public CalculationOptionsPanelWarlock() {
-
             InitializeComponent();
-
+            //
             petCombo.Items.Add("None");
             foreach (string pet in Pet.ALL_PETS) {
                 petCombo.Items.Add(pet);
             }
         }
-
         protected override void LoadCalculationOptions() {
-
             if (Character.CalculationOptions == null) {
-                Character.CalculationOptions
-                    = CalculationOptionsWarlock.MakeDefaultOptions();
+                Character.CalculationOptions = CalculationOptionsWarlock.MakeDefaultOptions();
             }
             _options = (CalculationOptionsWarlock) Character.CalculationOptions;
             ++_ignoreCount;
@@ -168,9 +153,7 @@ namespace Rawr.Warlock {
 
             --_ignoreCount;
         }
-
         #endregion
-
 
         #region options tab event handlers
 
@@ -194,8 +177,7 @@ namespace Rawr.Warlock {
             Character.OnCalculationsInvalidated();
         }
 
-        private void targetLevelCombo_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void targetLevelCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -286,8 +268,7 @@ namespace Rawr.Warlock {
             Character.OnCalculationsInvalidated();
         }
 
-        private void rotationMenu_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void rotationMenu_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -296,8 +277,7 @@ namespace Rawr.Warlock {
             RefreshRotationButtons();
         }
 
-        private void rotationList_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void rotationList_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -306,8 +286,7 @@ namespace Rawr.Warlock {
             RefreshRotationButtons();
         }
 
-        private void fillerCombo_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void fillerCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -318,8 +297,7 @@ namespace Rawr.Warlock {
             Character.OnCalculationsInvalidated();
         }
 
-        private void rotationCombo_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void rotationCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -392,8 +370,7 @@ namespace Rawr.Warlock {
             Character.OnCalculationsInvalidated();
         }
 
-        private void executeCombo_SelectedIndexChanged(
-            object sender, EventArgs e) {
+        private void executeCombo_SelectedIndexChanged(object sender, EventArgs e) {
 
             if (_ignoreCount > 0) {
                 return;
@@ -428,7 +405,6 @@ namespace Rawr.Warlock {
         }
 
         #endregion
-
 
         #region raid buff tab event handlers
 
@@ -515,7 +491,6 @@ namespace Rawr.Warlock {
         }
 
         #endregion
-
 
         #region debug stuff
 
