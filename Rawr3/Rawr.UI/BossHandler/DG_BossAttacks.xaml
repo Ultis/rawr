@@ -49,8 +49,10 @@ Title="Boss Attacks - Boss Handler" Width="506" Height="640"
 		<ColumnDefinition Width="*"/>
 		<ColumnDefinition Width="Auto"/>
 	</Grid.ColumnDefinitions>
-	
-	<ListBox x:Name="LB_TheList" Margin="4" Grid.RowSpan="2" Grid.ColumnSpan="3" MinHeight="90"/>
+
+    <ScrollViewer Grid.RowSpan="2" Grid.ColumnSpan="3" Padding="0" VerticalScrollBarVisibility="Auto">
+        <ListBox x:Name="LB_TheList" Margin="0" MinHeight="90"/>
+    </ScrollViewer>
 	
 	<!-- ===== BASICS ===== -->
 	<!-- Name -->
