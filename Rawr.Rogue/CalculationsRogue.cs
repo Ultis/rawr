@@ -951,11 +951,11 @@ namespace Rawr.Rogue
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
             hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
-            float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed + hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed + hasteBonus));
+            float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus));
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
             float iPPS = 8.53f * (1f + 0.1f * talents.ImprovedPoisons) / 60f;
-            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed + hasteBonus) * 0.3f;
+            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus) * 0.3f;
             float poisonHitInterval = 1 / (iPPS + dPPS);
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
