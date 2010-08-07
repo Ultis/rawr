@@ -16,6 +16,7 @@
 
     <UserControl.Resources>
         <local:CalculationOptionsHealPriest x:Key="CalculationOptionsHealPriestDataSource" d:IsDataSource="True"/>
+        <local:eRoleConverter x:Key="eRoleConverter" />
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsHealPriestDataSource}}">
@@ -83,7 +84,7 @@
                     <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="17" Name="numMDCast" Margin="4,2" Height="22" Maximum="1000" Value="{Binding Path=MDCast, Mode=TwoWay}" />
                     <inputToolkit:NumericUpDown Grid.Column="2" Grid.Row="9" Name="numRenewTicks" Margin="4,2" Height="22" Maximum="5000" Value="{Binding Path=RenewTicks, Mode=TwoWay}" />
                     <inputToolkit:NumericUpDown Grid.Column="2" Grid.Row="10" Name="numProMTicks" Margin="4,2" Height="22" Maximum="5000" Value="{Binding Path=ProMTicks, Mode=TwoWay}" />
-                    <ComboBox Grid.ColumnSpan="3" Grid.Row="3" Name="cbRotation" Margin="4,2" Height="22" ToolTipService.ToolTip="Pick the spells to cast when comparing gear." SelectedIndex="{Binding Path=Role, Mode=TwoWay}">
+                    <ComboBox Grid.ColumnSpan="3" Grid.Row="3" Name="cbRotation" Margin="4,2" Height="22" ToolTipService.ToolTip="Pick the spells to cast when comparing gear." SelectedIndex="{Binding Path=Role, Mode=TwoWay, Converter={StaticResource eRoleConverter}}">
                         <System:String>Auto Tank (Rawr picks from Talents)</System:String>
                         <System:String>Auto Raid (Rawr picks from Talents)</System:String>
                         <System:String>Greater Heal Spam (GH)</System:String>

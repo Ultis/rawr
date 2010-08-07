@@ -68,7 +68,7 @@ namespace Rawr.HealPriest
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName == "Role") {
                 // Do some code
-                bool isCustom = calcOpts.Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM;
+                bool isCustom = calcOpts.Role == eRole.CUSTOM;
                 numFlashHealCast.IsEnabled = isCustom;
                 numBindingHealCast.IsEnabled = isCustom;
                 numGreaterHealCast.IsEnabled = isCustom;

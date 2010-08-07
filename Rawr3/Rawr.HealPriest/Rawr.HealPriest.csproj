@@ -105,6 +105,7 @@
     <Compile Include="CalculationOptionsPanelHealPriest.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHealPriest.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HealPriestConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace Rawr.HealPriest
     {
         public Character character;
         public Stats stats;
-		public CalculationOptionsHealPriest calculationOptions;
+        public CalculationOptionsHealPriest calculationOptions;
 
         public string Role { get; protected set; }
         public string ActionList { get; protected set; }
@@ -52,35 +52,35 @@ namespace Rawr.HealPriest
 
     public class Solver : BaseSolver
     {
-        private CalculationOptionsHealPriest.eRole role;
+        private eRole role;
       
         public Solver(Stats _stats, Character _char)
             : base(_stats, _char)
         {
-            role = (CalculationOptionsHealPriest.eRole)calculationOptions.Role;
+            role = (eRole)calculationOptions.Role;
 
-            if (role == CalculationOptionsHealPriest.eRole.AUTO_Tank) // OOOH MAGIC TANK ROTATION!!!
+            if (role == eRole.AUTO_Tank) // OOOH MAGIC TANK ROTATION!!!
             {
                 Role = "Auto ";
                 if (character.PriestTalents.Penance > 0)
                 {
                     if (character.PriestTalents.DivineFury < 5)
-                        role = CalculationOptionsHealPriest.eRole.Disc_Tank_FH; // Disc-MT, Using Flash Heal instead of GH
+                        role = eRole.Disc_Tank_FH; // Disc-MT, Using Flash Heal instead of GH
                     else
-                        role = CalculationOptionsHealPriest.eRole.Disc_Tank_GH; // Disc-MT
+                        role = eRole.Disc_Tank_GH; // Disc-MT
                 }
                 else
-                    role = CalculationOptionsHealPriest.eRole.Holy_Tank; // Holy-MT
+                    role = eRole.Holy_Tank; // Holy-MT
             }
-            else if (role == CalculationOptionsHealPriest.eRole.AUTO_Raid) // Raid rotation
+            else if (role == eRole.AUTO_Raid) // Raid rotation
             {
                 Role = "Auto ";
                 if (character.PriestTalents.Penance > 0)
-                    role = CalculationOptionsHealPriest.eRole.Disc_Raid; // Disc-Raid (PW:S/Penance/Flash)
+                    role = eRole.Disc_Raid; // Disc-Raid (PW:S/Penance/Flash)
                 else if (character.PriestTalents.CircleOfHealing > 0)
-                    role = CalculationOptionsHealPriest.eRole.Holy_Raid; // Holy-Raid (CoH/FH)
+                    role = eRole.Holy_Raid; // Holy-Raid (CoH/FH)
                 else
-                    role = CalculationOptionsHealPriest.eRole.Flash_Heal; // Fallback to Flash Heal raid.
+                    role = eRole.Flash_Heal; // Fallback to Flash Heal raid.
 
             }
         }
@@ -165,8 +165,8 @@ namespace Rawr.HealPriest
             float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.04f * calculationOptions.TestOfFaith / 100f) * (1 + simstats.HealingReceivedMultiplier) * (1 + simstats.BonusHealingDoneMultiplier);
 
             // Add on Renewed Hope crit & Grace for Disc Maintank Rotation.
-            if (role == CalculationOptionsHealPriest.eRole.Disc_Tank_FH
-                || role == CalculationOptionsHealPriest.eRole.Disc_Tank_GH)
+            if (role == eRole.Disc_Tank_FH
+                || role == eRole.Disc_Tank_GH)
             {
                 simstats.SpellCrit += character.PriestTalents.RenewedHope * 0.02f;
                 healmultiplier *= (1 + character.PriestTalents.Grace * 0.045f);
@@ -211,15 +211,15 @@ namespace Rawr.HealPriest
             List<Spell> sr = new List<Spell>();
             switch (role)
             {
-                case CalculationOptionsHealPriest.eRole.Greater_Heal:     // Greater Heal Spam
+                case eRole.Greater_Heal:     // Greater Heal Spam
                     Role += "Greater Heal";
                     sr.Add(gh);
                     break;
-                case CalculationOptionsHealPriest.eRole.Flash_Heal:     // Flash Heal Spam
+                case eRole.Flash_Heal:     // Flash Heal Spam
                     Role += "Flash Heal";
                     sr.Add(fh);
                     break;
-                case CalculationOptionsHealPriest.eRole.CoH_PoH:     // Circle of Healing/Prayer of Healing spam
+                case eRole.CoH_PoH:     // Circle of Healing/Prayer of Healing spam
                     if (character.PriestTalents.CircleOfHealing > 0)
                     {
                         Role += "CoH + PoH";
@@ -239,7 +239,7 @@ namespace Rawr.HealPriest
                         sr.Add(proh_max);
                     }
                     break;
-                case CalculationOptionsHealPriest.eRole.Holy_Tank:     // Holy MT Healing, renew + prom + ghx5 repeat
+                case eRole.Holy_Tank:     // Holy MT Healing, renew + prom + ghx5 repeat
                     Role += "Holy Tank";
                     sr.Add(renew);      // 1.5s 1.5  -13.5 -??.?
                     sr.Add(prom_1);     // 1.5s 3.0  -12.0 -8.5
@@ -249,7 +249,7 @@ namespace Rawr.HealPriest
                     sr.Add(gh);         // 2.5s 13.0 -2    -??
                     sr.Add(gh);         // 2.5s 15.5 -??   -??   Although, adjusted for haste and improved holy conc, this gets better and better.
                     break;
-                case CalculationOptionsHealPriest.eRole.Holy_Raid:     // Holy Raid Healing, prom, coh, fhx2, proh, coh, fhx2, proh (2 haste stacks if serendipity)
+                case eRole.Holy_Raid:     // Holy Raid Healing, prom, coh, fhx2, proh, coh, fhx2, proh (2 haste stacks if serendipity)
                     Role += "Holy Raid";
                     sr.Add(prom_4);   // 1.5s 1.5 -8.5
                     sr.Add(coh);        // 1.5s 3.0 -7.0
@@ -262,7 +262,7 @@ namespace Rawr.HealPriest
                     sr.Add(proh_serendipity_2);
                     // Repeat
                     break;
-                case CalculationOptionsHealPriest.eRole.Disc_Tank_GH:     // Disc MT Healing, pws, penance, prom, gh, penance
+                case eRole.Disc_Tank_GH:     // Disc MT Healing, pws, penance, prom, gh, penance
                     Role += "Disc Tank w/Gheal";
                     sr.Add(pws);        
                     sr.Add(penance_bt); 
@@ -273,7 +273,7 @@ namespace Rawr.HealPriest
                     sr.Add(gh);         
                     // repeat
                     break;
-                case CalculationOptionsHealPriest.eRole.Disc_Tank_FH:     // Disc MT Healing, pws, penance, prom, fh - Does not have Divine Fury.
+                case eRole.Disc_Tank_FH:     // Disc MT Healing, pws, penance, prom, fh - Does not have Divine Fury.
                     Role += "Disc Tank w/Fheal";
                     sr.Add(pws);        
                     sr.Add(penance_bt); 
@@ -286,7 +286,7 @@ namespace Rawr.HealPriest
                     sr.Add(fh);         
                     // repeat
                     break;
-                case CalculationOptionsHealPriest.eRole.Disc_Raid:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
+                case eRole.Disc_Raid:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
                     Role += "Disc Raid";
                     sr.Add(pws);        // 1.5  1.5  -2.5  -??   -??
                     sr.Add(penance_bt); // 1.5  3.0  -1.0  -8.0  -??
@@ -295,7 +295,7 @@ namespace Rawr.HealPriest
                     sr.Add(fh_bt);      // 1.5  7.5  -1.0  -3.5  -5.5
                     // repeat
                     break;
-                case CalculationOptionsHealPriest.eRole.Holy_Raid_Renew:    // Holy Raid healing with Renew. Almost no FH.
+                case eRole.Holy_Raid_Renew:    // Holy Raid healing with Renew. Almost no FH.
                     Role += "Holy Raid Renew";
                     sr.Add(prom_4);
                     sr.Add(coh);

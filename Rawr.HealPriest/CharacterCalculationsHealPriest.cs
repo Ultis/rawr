@@ -151,7 +151,7 @@ namespace Rawr.HealPriest
             dictValues.Add("Resistance", ResistanceString);
 
             BaseSolver solver;
-            if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM)
+            if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(BasicStats, character);
             else
                 solver = new Solver(BasicStats, character);

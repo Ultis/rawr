@@ -6,6 +6,12 @@ using System.Xml.Serialization;
 
 namespace Rawr.HealPriest
 {
+    public enum eRole
+    {
+        AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
+        Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM, Holy_Raid_Renew
+    };
+
 #if !SILVERLIGHT
     [Serializable]
 #endif
@@ -20,13 +26,8 @@ namespace Rawr.HealPriest
             return xml.ToString();
         }
 
-        public enum eRole
-        {
-            AUTO_Tank, AUTO_Raid, Greater_Heal, Flash_Heal, CoH_PoH, Holy_Tank, Holy_Raid,
-            Disc_Tank_GH, Disc_Tank_FH, Disc_Raid, CUSTOM, Holy_Raid_Renew
-        };
-        private int _Role = (int)eRole.AUTO_Tank;
-        public int Role { get { return _Role; } set { _Role = value; OnPropertyChanged("Role"); } }
+        private eRole _Role = eRole.AUTO_Tank;
+        public eRole Role { get { return _Role; } set { _Role = value; OnPropertyChanged("Role"); } }
         private int _Rotation = 0;// LEGACY
         public int Rotation { get { return _Rotation; } set { _Rotation = value; OnPropertyChanged("Rotation"); } }// LEGACY
         private float _FSRRatio = 93f;

@@ -20,6 +20,7 @@ namespace Rawr.HealPriest
 
         protected override void LoadCalculationOptions()
         {
+            if (Character == null) { return; }
             loading = true;
             if (Character.CalculationOptions == null)
                 Character.CalculationOptions = new CalculationOptionsHealPriest();
@@ -28,11 +29,11 @@ namespace Rawr.HealPriest
 
             if (calcOpts.Rotation > 0)
             {   // Fix for Legacy
-                calcOpts.Role = (int)(CalculationOptionsHealPriest.eRole)calcOpts.Rotation;
+                calcOpts.Role = (eRole)calcOpts.Rotation;
                 calcOpts.Rotation = 0;
             }
             cbRotation.SelectedIndex = (int)calcOpts.Role;
-            panelCustom.Visible = calcOpts.Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM;
+            panelCustom.Visible = calcOpts.Role == eRole.CUSTOM;
 
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -107,9 +108,9 @@ namespace Rawr.HealPriest
             if (!loading)
             {
                 CalculationOptionsHealPriest calcOpts = Character.CalculationOptions as CalculationOptionsHealPriest;
-                calcOpts.Role = (int)(CalculationOptionsHealPriest.eRole)cbRotation.SelectedIndex;
+                calcOpts.Role = (eRole)cbRotation.SelectedIndex;
                 Character.OnCalculationsInvalidated();
-                panelCustom.Visible = calcOpts.Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM;
+                panelCustom.Visible = calcOpts.Role == eRole.CUSTOM;
             }
         }
 

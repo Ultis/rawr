@@ -464,7 +464,7 @@ namespace Rawr.HealPriest
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
             BaseSolver solver;
-            if (calculationOptions.Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM)
+            if (calculationOptions.Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
@@ -541,7 +541,7 @@ namespace Rawr.HealPriest
                     _currentChartName = chartName;
                     CharacterCalculationsHealPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHealPriest;
                     BaseSolver mssolver;
-                    if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == (int)CalculationOptionsHealPriest.eRole.CUSTOM)
+                    if ((character.CalculationOptions as CalculationOptionsHealPriest).Role == eRole.CUSTOM)
                         mssolver = new AdvancedSolver(mscalcs.BasicStats, character);
                     else
                         mssolver = new Solver(mscalcs.BasicStats, character);
