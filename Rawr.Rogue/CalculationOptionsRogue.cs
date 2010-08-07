@@ -152,12 +152,6 @@ namespace Rawr.Rogue
             get { return _enableWP; }
             set { if (_enableWP != value) { _enableWP = value; OnPropertyChanged("EnableWP"); } }
         }
-        private bool _enableAP = true;
-        public bool EnableAP
-        {
-            get { return _enableAP; }
-            set { if (_enableAP != value) { _enableAP = value; OnPropertyChanged("EnableAP"); } }
-        }
         private bool _enableRupt = true;
         public bool EnableRupt
         {

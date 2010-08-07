@@ -806,7 +806,7 @@ namespace Rawr.Rogue
 
             bool bleedIsUp = calcOpts.BleedIsUp;
             for (int snDCP = 1; snDCP < 6; snDCP++)
-                for (int finisher = 0; finisher < 3; finisher++)
+                for (int finisher = 1; finisher < 3; finisher++)
                 {
                     if ((finisher == 1 && calcOpts.EnableEvis == false) ||
                        (finisher == 2 && calcOpts.EnableEnvenom == false)) continue;
@@ -820,17 +820,15 @@ namespace Rawr.Rogue
                             for (int mHPoison = 0; mHPoison < 5; mHPoison++)
                             {
                                 if (!targetPoisonable || mainHand == null) break;
-                                if ((mHPoison == 1 && calcOpts.EnableIP == false) ||
+                                if ((mHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
                                     (mHPoison == 2 && calcOpts.EnableDP == false) ||
-                                    (mHPoison == 3 && calcOpts.EnableWP == false) ||
-                                    (mHPoison == 4 && calcOpts.EnableAP == false)) continue;
+                                    (mHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
                                 for (int oHPoison = 0; oHPoison < 5; oHPoison++)
                                 {
                                     if (!targetPoisonable || offHand == null) break;
-                                    if ((oHPoison == 1 && calcOpts.EnableIP == false) ||
+                                    if ((oHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
                                         (oHPoison == 2 && calcOpts.EnableDP == false) ||
-                                        (oHPoison == 3 && calcOpts.EnableWP == false) ||
-                                        (oHPoison == 4 && calcOpts.EnableAP == false)) continue;
+                                        (oHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
                                     for (int useRupt = 0; useRupt < 2; useRupt++)
                                     {
                                         if (useRupt == 1 && calcOpts.EnableRupt == false) continue;
