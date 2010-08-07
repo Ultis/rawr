@@ -327,7 +327,7 @@ namespace Rawr.Healadin
             : base(rotation)
         {
             Duration = 30f + Talents.DivineGuardian * 15f;
-            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.SSUptime;
+            Uptime = Rotation.FightLength * Rotation.CalcOpts.SSUptime;
             BaseCost = 527f;         
         }
 
@@ -379,7 +379,7 @@ namespace Rawr.Healadin
             : base(rotation)
         {
             Duration = 60f + (Talents.GlyphOfBeaconOfLight ? 30f : 0f);
-            Uptime = Rotation.CalcOpts.Length * 60f * Rotation.CalcOpts.BoLUp;
+            Uptime = Rotation.FightLength * Rotation.CalcOpts.BoLUp;
             BaseCost = 1537f;
         }
 

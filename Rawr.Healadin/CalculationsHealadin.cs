@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Rawr.Healadin
 {
-	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", CharacterClass.Paladin)]
-	public class CalculationsHealadin : CalculationsBase
+    [Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", CharacterClass.Paladin)]
+    public class CalculationsHealadin : CalculationsBase
     {
 
         #region Model Properties
@@ -138,12 +138,12 @@ namespace Rawr.Healadin
         //                RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
         //            new GemmingTemplate() { Model = "Healadin", Group = "Rare",
         //                RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
-						
+                        
         //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
         //                RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
         //            new GemmingTemplate() { Model = "Healadin", Group = "Epic", Enabled = true,
         //                RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
-						
+                        
         //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
         //                RedId = brilliant[2], YellowId = brilliant[3], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
         //            new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
@@ -182,14 +182,14 @@ namespace Rawr.Healadin
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "Holy Light Cast Time",
                     "Holy Light HPS",
                     "Holy Light Time",
                     "Flash of Light Cast Time",
                     "Flash of Light HPS",
                     "Flash of Light Time",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -219,19 +219,19 @@ namespace Rawr.Healadin
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Basic Stats:Health",
-					"Basic Stats:Mana",
-					"Basic Stats:Stamina",
-					"Basic Stats:Intellect",
-					"Basic Stats:Spell Power",
-					"Basic Stats:Mp5",
-					"Basic Stats:Spell Crit",
-					"Basic Stats:Spell Haste",
+                    "Basic Stats:Health",
+                    "Basic Stats:Mana",
+                    "Basic Stats:Stamina",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Spell Power",
+                    "Basic Stats:Mp5",
+                    "Basic Stats:Spell Crit",
+                    "Basic Stats:Spell Haste",
 
-					"Cycle Stats:Total Healed",
-					"Cycle Stats:Total Mana",
-					"Cycle Stats:Average Healing per sec",
-					"Cycle Stats:Average Healing per mana",
+                    "Cycle Stats:Total Healed",
+                    "Cycle Stats:Total Mana",
+                    "Cycle Stats:Average Healing per sec",
+                    "Cycle Stats:Average Healing per mana",
 
                     "Rotation Info:Holy Light Time",
                     "Rotation Info:Flash of Light Time",
@@ -249,11 +249,11 @@ namespace Rawr.Healadin
                     "Healing Breakdown:Other Healed*From trinket procs",
 
                     "Spell Information:Holy Light",
-					"Spell Information:Flash of Light",
-					"Spell Information:Holy Shock",
-					"Spell Information:Sacred Shield",
+                    "Spell Information:Flash of Light",
+                    "Spell Information:Holy Shock",
+                    "Spell Information:Sacred Shield",
 
-				};
+                };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -269,7 +269,7 @@ namespace Rawr.Healadin
                     "Mana Usage Breakdown",
                     "Healing Breakdown",
                     "Rotation Breakdown",
-					};
+                    };
                 return _customChartNames;
             }
         }
@@ -306,18 +306,18 @@ namespace Rawr.Healadin
         }
 #endif
 
-		public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
-		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
+        public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml)
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealadin));
-			System.IO.StringReader reader = new System.IO.StringReader(xml);
-			CalculationOptionsHealadin calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealadin;
-			return calcOpts;
-		}
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealadin));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsHealadin calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealadin;
+            return calcOpts;
+        }
         #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -357,8 +357,20 @@ namespace Rawr.Healadin
         public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats, CharacterCalculationsHealadin calc)
         {
             PaladinTalents talents = character.PaladinTalents;
+            
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+            if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
+            
+#if (RAWR3)
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) bossOpts = new BossOptions();
+#endif
+            
+#if (RAWR3)
+            float fightLength = bossOpts.BerserkTimer * 60f;
+#else
             float fightLength = calcOpts.Length * 60f;
+#endif
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -584,18 +596,18 @@ namespace Rawr.Healadin
                 if (_relevantItemTypes == null)
                 {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
+                    {
                         ItemType.Plate,
                         ItemType.Mail,
                         ItemType.Leather,
                         ItemType.Cloth,
                         ItemType.None,
-						ItemType.Shield,
-						ItemType.Libram,
-						ItemType.OneHandAxe,
-						ItemType.OneHandMace,
-						ItemType.OneHandSword
-					});
+                        ItemType.Shield,
+                        ItemType.Libram,
+                        ItemType.OneHandAxe,
+                        ItemType.OneHandMace,
+                        ItemType.OneHandSword
+                    });
                 }
                 return _relevantItemTypes;
             }

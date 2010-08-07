@@ -286,7 +286,6 @@ namespace Rawr {
                         custom["Invulnerables"] = false; // Your target isn't the boss
                         custom["TimeSub35"] = false; // No abilities tied to this
                         custom["TimeSub20"] = false; // No abilities tied to this
-                        _MyModelSupportsThis.Add("Healadin", custom);
                         _MyModelSupportsThis.Add("HealPriest", custom);
                         _MyModelSupportsThis.Add("RestoSham", custom);
                         _MyModelSupportsThis.Add("Tree", custom);
@@ -319,6 +318,29 @@ namespace Rawr {
                         custom["Disarms"] = false; // NYI
                         custom["Invulnerables"] = false; // NYI
                         _MyModelSupportsThis.Add("ProtPaladin", custom);
+                    }
+                    #endregion
+                    #region Healadin
+                    {
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["Level"] = false; // Your target isn't the boss
+                        custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
+                        custom["Health"] = false; // Your target isn't the boss
+                        custom["TimeSub35"] = false; // No abilities tied to this
+                        custom["TimeSub20"] = false; // No abilities tied to this
+                        custom["InBack_Melee"] = false; // NYI
+                        custom["InBack_Ranged"] = false; // You're not ranged
+                        custom["RaidSize"] = false; // No abilities tied to this
+                        custom["TargetGroups"] = false; // Your target isn't these groups
+                        custom["Attacks"] = false; // We don't model damage taken by the player
+                        custom["Defensive"] = false; // Your target isn't the boss
+                        custom["Moves"] = false; // NYI
+                        custom["Stuns"] = false; // NYI
+                        custom["Fears"] = false; // NYI
+                        custom["Roots"] = false; // NYI
+                        custom["Disarms"] = false; // NYI
+                        custom["Invulnerables"] = false; // Your target isn't the boss
+                        _MyModelSupportsThis.Add("Healadin", custom);
                     }
                     #endregion
                 }

@@ -16,7 +16,14 @@ namespace Rawr.Healadin
             {
                 _character = value;
                 _talents = _character.PaladinTalents;
+                
                 _calcOpts = _character.CalculationOptions as CalculationOptionsHealadin;
+                if (_calcOpts == null) _calcOpts = new CalculationOptionsHealadin();
+
+#if (RAWR3)
+                _bossOpts = _character.BossOptions;
+                if (_bossOpts == null) _bossOpts = new BossOptions();
+#endif
             }
         }
 
@@ -30,6 +37,13 @@ namespace Rawr.Healadin
         {
             get { return _calcOpts; }
         }
+#if (RAWR3)
+        private BossOptions _bossOpts;
+        public BossOptions BossOpts
+        {
+            get { return _bossOpts; }
+        }
+#endif
         private Stats _stats;
         public Stats Stats
         {
@@ -51,7 +65,11 @@ namespace Rawr.Healadin
         public Rotation(Character character, Stats stats)
         {
             Character = character;
+#if (RAWR3)
+            FightLength = BossOpts.BerserkTimer * 60f;
+#else
             FightLength = CalcOpts.Length * 60f;
+#endif
             Stats = stats;
             fol = new FlashOfLight(this);
             hl = new HolyLight(this);
