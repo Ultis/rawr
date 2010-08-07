@@ -50,9 +50,6 @@ namespace Rawr.Healadin
             trkBoLUp.Value = (int)Math.Round(calcOpts.BoLUp * 100);
             lblBoLUp.Text = trkBoLUp.Value + "%";
 
-            trkBoLEff.Value = (int)Math.Round(calcOpts.BoLEff * 100);
-            lblBoLEff.Text = trkBoLEff.Value + "%";
-
             trkBurstScale.Value = (int)Math.Round(calcOpts.BurstScale * 100);
             lblBurstScale.Text = trkBurstScale.Value + "%";
 
@@ -135,17 +132,6 @@ namespace Rawr.Healadin
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 lblBoLUp.Text = trkBoLUp.Value + "%";
                 calcOpts.BoLUp = trkBoLUp.Value / 100f;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void trkBoLEff_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                lblBoLEff.Text = trkBoLEff.Value + "%";
-                calcOpts.BoLEff = trkBoLEff.Value / 100f;
                 Character.OnCalculationsInvalidated();
             }
         }

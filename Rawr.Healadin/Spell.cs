@@ -385,7 +385,7 @@ namespace Rawr.Healadin
 
         public float HealingDone(float procableHealing)
         {
-            return procableHealing * Rotation.CalcOpts.BoLUp * Rotation.CalcOpts.BoLEff;
+            return procableHealing * Rotation.CalcOpts.BoLUp;
         }
 
     }

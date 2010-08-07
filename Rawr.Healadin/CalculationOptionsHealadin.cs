@@ -24,7 +24,6 @@ namespace Rawr.Healadin
             replenishment = .9f;
             divinePlea = 2f;
             boLUp = 1f;
-            boLEff = .2f;
             holyShock = .15f;
             burstScale = .4f;
             gHL_Targets = 1f;
@@ -74,13 +73,6 @@ namespace Rawr.Healadin
             set { boLUp = value; OnPropertyChanged("BoLUp"); }
         }
 
-        private float boLEff;
-        public float BoLEff
-        {
-            get { return boLEff; }
-            set { boLEff = value; OnPropertyChanged("BoLEff"); }
-        }
-
         private float holyShock;
         public float HolyShock
         {
@@ -92,8 +84,21 @@ namespace Rawr.Healadin
         public float BurstScale
         {
             get { return burstScale; }
-            set { burstScale = value; OnPropertyChanged("BurstScale"); }
+            set {
+                burstScale = value;
+                OnPropertyChanged("BurstScale");
+#if (RAWR3)
+                OnPropertyChanged("BurstScaleText");
+#endif
+            }
         }
+
+#if (RAWR3)
+        public string BurstScaleText
+        {
+            get { return string.Format("{0:P0} Burst, {1:P0} Fight", BurstScale, 1f - BurstScale).Replace(" %", "%"); }
+        }
+#endif
 
         private float gHL_Targets;
         public float GHL_Targets
@@ -113,8 +118,20 @@ namespace Rawr.Healadin
         public float IoLHolyLight
         {
             get { return ioLHolyLight; }
-            set { ioLHolyLight = value; OnPropertyChanged("IoLHolyLight"); }
+            set {
+                ioLHolyLight = value;
+                OnPropertyChanged("IoLHolyLight");
+#if (RAWR3)
+                OnPropertyChanged("IoLHolyLightText");
+#endif
+            }
         }
+
+#if (RAWR3)
+        public string IoLHolyLightText {
+            get { return string.Format("{0:P0} Holy Light, {1:P0} Flash of Light", IoLHolyLight, 1f - IoLHolyLight).Replace(" %", "%"); }
+        }
+#endif
 
         private bool jotP;
         public bool JotP

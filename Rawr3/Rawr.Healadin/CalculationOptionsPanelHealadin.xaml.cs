@@ -74,5 +74,37 @@ namespace Rawr.Healadin
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
         #endregion
+
+        private void btnResetBurstScale_Click(object sender, RoutedEventArgs e) {
+            calcOpts.BurstScale = .4f;
+        }
+
+        private void btnResetActivity_Click(object sender, RoutedEventArgs e) {
+            calcOpts.Activity = .85f;
+        }
+
+        private void btnResetHolyShock_Click(object sender, RoutedEventArgs e) {
+            calcOpts.HolyShock = .15f;
+        }
+
+        private void btnResetIoLHolyLight_Click(object sender, RoutedEventArgs e) {
+            calcOpts.IoLHolyLight = .9f;
+        }
+
+        private void btnResetSSUptime_Click(object sender, RoutedEventArgs e) {
+            calcOpts.SSUptime = 1f;
+        }
+
+        private void btnResetFoLOnTank_Click(object sender, RoutedEventArgs e) {
+            calcOpts.FoLOnTank = .25f;
+        }
+
+        private void btnResetReplenishment_Click(object sender, RoutedEventArgs e) {
+            calcOpts.Replenishment = .9f;
+        }
+
+        private void btnResetBoLUp_Click(object sender, RoutedEventArgs e) {
+            calcOpts.BoLUp = 1f;
+        }
     }
 }

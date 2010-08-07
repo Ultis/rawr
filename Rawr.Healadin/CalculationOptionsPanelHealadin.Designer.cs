@@ -42,10 +42,6 @@
             this.trkActivity = new System.Windows.Forms.TrackBar();
             this.lblActivity = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.lblBoLEff = new System.Windows.Forms.Label();
-            this.trkBoLEff = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
             this.lblBoLUp = new System.Windows.Forms.Label();
             this.trkBoLUp = new System.Windows.Forms.TrackBar();
@@ -77,8 +73,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDivinePlea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trkBoLEff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).BeginInit();
@@ -264,66 +258,20 @@
             this.label9.Text = "Activity:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.lblBoLEff);
-            this.groupBox1.Controls.Add(this.trkBoLEff);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.lblBoLUp);
-            this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(6, 340);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(294, 87);
-            this.groupBox1.TabIndex = 28;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Beacon of Light";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(148, 18);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 13);
-            this.label6.TabIndex = 33;
-            this.label6.Text = "Effectiveness:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblBoLEff
-            // 
-            this.lblBoLEff.AutoSize = true;
-            this.lblBoLEff.Location = new System.Drawing.Point(255, 64);
-            this.lblBoLEff.Name = "lblBoLEff";
-            this.lblBoLEff.Size = new System.Drawing.Size(33, 13);
-            this.lblBoLEff.TabIndex = 32;
-            this.lblBoLEff.Text = "100%";
-            // 
-            // trkBoLEff
-            // 
-            this.trkBoLEff.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBoLEff.Location = new System.Drawing.Point(151, 32);
-            this.trkBoLEff.Maximum = 100;
-            this.trkBoLEff.Name = "trkBoLEff";
-            this.trkBoLEff.Size = new System.Drawing.Size(137, 45);
-            this.trkBoLEff.TabIndex = 31;
-            this.trkBoLEff.TickFrequency = 10;
-            this.trkBoLEff.Value = 90;
-            this.trkBoLEff.Scroll += new System.EventHandler(this.trkBoLEff_Scroll);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 16);
+            this.label5.Location = new System.Drawing.Point(12, 337);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 13);
+            this.label5.Size = new System.Drawing.Size(121, 13);
             this.label5.TabIndex = 30;
-            this.label5.Text = "Uptime:";
+            this.label5.Text = "Beacon of Light Uptime:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblBoLUp
             // 
             this.lblBoLUp.AutoSize = true;
-            this.lblBoLUp.Location = new System.Drawing.Point(110, 66);
+            this.lblBoLUp.Location = new System.Drawing.Point(116, 387);
             this.lblBoLUp.Name = "lblBoLUp";
             this.lblBoLUp.Size = new System.Drawing.Size(33, 13);
             this.lblBoLUp.TabIndex = 29;
@@ -332,7 +280,7 @@
             // trkBoLUp
             // 
             this.trkBoLUp.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBoLUp.Location = new System.Drawing.Point(6, 32);
+            this.trkBoLUp.Location = new System.Drawing.Point(12, 353);
             this.trkBoLUp.Maximum = 100;
             this.trkBoLUp.Name = "trkBoLUp";
             this.trkBoLUp.Size = new System.Drawing.Size(137, 45);
@@ -546,7 +494,7 @@
             // chkSpiritIrrelevant
             // 
             this.chkSpiritIrrelevant.AutoSize = true;
-            this.chkSpiritIrrelevant.Location = new System.Drawing.Point(9, 433);
+            this.chkSpiritIrrelevant.Location = new System.Drawing.Point(12, 404);
             this.chkSpiritIrrelevant.Name = "chkSpiritIrrelevant";
             this.chkSpiritIrrelevant.Size = new System.Drawing.Size(110, 17);
             this.chkSpiritIrrelevant.TabIndex = 56;
@@ -557,7 +505,7 @@
             // chkHitIrrelevant
             // 
             this.chkHitIrrelevant.AutoSize = true;
-            this.chkHitIrrelevant.Location = new System.Drawing.Point(154, 433);
+            this.chkHitIrrelevant.Location = new System.Drawing.Point(157, 404);
             this.chkHitIrrelevant.Name = "chkHitIrrelevant";
             this.chkHitIrrelevant.Size = new System.Drawing.Size(100, 17);
             this.chkHitIrrelevant.TabIndex = 57;
@@ -588,7 +536,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.lblBoLUp);
             this.Controls.Add(this.lblFlashOfLightOnTank);
+            this.Controls.Add(this.trkBoLUp);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.trkFlashOfLightOnTank);
             this.Controls.Add(this.chkHitIrrelevant);
@@ -610,7 +561,6 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.lblHS);
             this.Controls.Add(this.trkHS);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.lblActivity);
@@ -625,9 +575,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudDivinePlea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trkBoLEff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLUp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).EndInit();
@@ -653,10 +600,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.TrackBar trkReplenishment;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label lblBoLEff;
-        private System.Windows.Forms.TrackBar trkBoLEff;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblBoLUp;
         private System.Windows.Forms.TrackBar trkBoLUp;
