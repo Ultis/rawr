@@ -637,6 +637,7 @@ namespace Rawr.Rogue
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + bonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float aPDamageRaw = ((218f + 280f) / 2f) + (1f + bonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
 
+            float total = chanceGlance + chanceCritWhiteMain + chanceHitWhiteMain;
             float meleeDamageAverage = chanceGlance * meleeDamageRaw * glanceMultiplier +
                                         chanceCritWhiteMain * meleeDamageRaw * critMultiplier +
                                         chanceHitWhiteMain * meleeDamageRaw;
@@ -921,10 +922,14 @@ namespace Rawr.Rogue
                 BonusStaminaMultiplier = 0.02f * talents.Endurance,
                 Dodge = 0.02f * talents.LightningReflexes,
                 Expertise = 5 * talents.WeaponExpertise,
-                PhysicalCrit = 0.01f * talents.Malice + (targetPoisonable ? 0.01f * talents.MasterPoisoner : 0),
+                PhysicalCrit = 0.01f * talents.Malice + ((targetPoisonable &&
+                                                          !(character.ActiveBuffsContains("Master Poisoner") || character.ActiveBuffsContains("Heart of the Crusader") || character.ActiveBuffsContains("Totem of Wrath")))
+                                                         ? 0.01f * talents.MasterPoisoner : 0),
                 PhysicalHit = 0.01f * talents.Precision,
                 PhysicalHaste = (talents.LightningReflexes == 1 ? 0.04f : (talents.LightningReflexes == 2 ? 0.07f : (talents.LightningReflexes == 3 ? 0.1f : 0))),
-                SpellCrit = 0.01f * talents.Malice + (targetPoisonable ? 0.01f * talents.MasterPoisoner : 0),
+                SpellCrit = 0.01f * talents.Malice + ((targetPoisonable &&
+                                                      !(character.ActiveBuffsContains("Master Poisoner") || character.ActiveBuffsContains("Heart of the Crusader") || character.ActiveBuffsContains("Totem of Wrath")))
+                                                      ? 0.01f * talents.MasterPoisoner : 0),
                 SpellHit = 0.01f * talents.Precision,
             };
 
@@ -1069,7 +1074,7 @@ namespace Rawr.Rogue
                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
                 float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                 critRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
-						effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi,
+						effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi - 10,
 						CharacterClass.Rogue) * StatConversion.RATING_PER_PHYSICALCRIT },
 					new WeightedStat() { Chance = 1f - uptime, Value = 0f }};
             }
@@ -1080,7 +1085,7 @@ namespace Rawr.Rogue
                 {
                     float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                     tempCritEffectsValues.Add(effect.Stats.CritRating +
-                        StatConversion.GetCritFromAgility(totalAgi, CharacterClass.Rogue) *
+                        StatConversion.GetCritFromAgility(totalAgi - 10, CharacterClass.Rogue) *
                         StatConversion.RATING_PER_PHYSICALCRIT);
                 }
 
