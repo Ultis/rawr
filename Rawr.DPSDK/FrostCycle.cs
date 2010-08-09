@@ -85,7 +85,7 @@ namespace Rawr.DPSDK
             {
                 meleeGCD = 1500;
                 spellGCD = (int)(1500 / ((1 + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1d + stats.SpellHaste)));
-                if (spellGCD < 1000) spellGCD = 1000;
+                spellGCD = Math.Max(spellGCD, 1000);
             }
 
             PhysicalGCDMultiplier = (1 / (1 - (combatTable.dodgedSpecial + combatTable.missedSpecial)));

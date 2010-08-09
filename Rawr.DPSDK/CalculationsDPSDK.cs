@@ -59,7 +59,15 @@ namespace Rawr.DPSDK
 				};
             }
         }
+        public float BonusMaxRunicPower = 0f;
 
+        public static float AddStatMultiplierStat(float statMultiplier, float newValue)
+        {
+            float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
+            return updatedStatModifier;
+        }
+
+        
         private Dictionary<string, Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -823,21 +831,6 @@ namespace Rawr.DPSDK
 
                                 tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
 
-                                // Change this to a buff that can be added to the Buffs list.
-/*                                if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
-                                {
-                                    tempStats.BonusPhysicalDamageMultiplier *= 1.15f;
-                                    tempStats.BonusSpellPowerMultiplier *= 1.15f;
-                                    tempStats.BonusShadowDamageMultiplier *= 1.15f;
-                                    tempStats.BonusFrostDamageMultiplier *= 1.15f;
-                                }
-                                else if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
-                                {
-                                    tempStats.PhysicalHaste += 0.15f;
-                                    tempStats.SpellHaste += 0.15f;
-                                }
-                                */
-
                                 drw = new DRW(combatTable, calcs, calcOpts, tempStats, character, talents);
                                 if (drw.dpsDancingRuneWeapon > dpsDRWMaximum)
                                 {
@@ -871,9 +864,6 @@ namespace Rawr.DPSDK
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
         }
 
-        private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
-        private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
-
         private Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p)
         {
             Stats PresenceStats = new Stats();
@@ -897,13 +887,12 @@ namespace Rawr.DPSDK
                 {
                     PresenceStats.BonusStaminaMultiplier = 0.08f;
                     PresenceStats.BaseArmorMultiplier = .60f;
-                    PresenceStats.DamageTakenMultiplier = .08f;
+                    PresenceStats.DamageTakenMultiplier = -.08f;
                     break;
                 }
             }
             return PresenceStats;
         }
-
 
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -945,16 +934,16 @@ namespace Rawr.DPSDK
             }
 
 
-            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence);
             Stats statsTalents = new Stats()
             {
-                // TODO: Expand this since I know in TankDK this was a much broader set of Talent->Stat adjustments.
+            // TODO: Expand this since I know in TankDK this was a much broader set of Talent->Stat adjustments.
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
                 BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
+
                 //ArmorPenetration = talents.BloodGorged * 2f / 100,
                 PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons
             };
@@ -962,8 +951,8 @@ namespace Rawr.DPSDK
             {
                 statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats(){ BonusStrengthMultiplier = 0.2f}, 20f, 60f));
             }
+
             Stats statsTotal = new Stats();
-//            Stats statsGearEnchantsBuffs = new Stats();
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
@@ -1040,8 +1029,6 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
-        private static readonly SpecialEffect _SE_UnbreakableArmor = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f }, 20f, 60f);
-
         public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
@@ -1061,7 +1048,7 @@ namespace Rawr.DPSDK
             };
             if (talents.UnbreakableArmor > 0)
             {
-                statsTalents.AddSpecialEffect(_SE_UnbreakableArmor);
+                statsTalents.AddSpecialEffect(_SE_UnbreakableArmor[character.DeathKnightTalents.GlyphofUnbreakableArmor ? 1 : 0][0]);
             }
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -1121,312 +1108,129 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
-        #region custom charts
+        #region Custom Charts
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             CharacterCalculationsDPSDK baseCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
+            float fMultiplier = 1f;
+
+            baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
+
+            string[] statList = new string[] 
+            {
+                "Strength",
+                "Agility",
+                "Attack Power",
+                "Crit Rating",
+                "Hit Rating",
+                "Expertise Rating",
+                "Haste Rating",
+                "Armor Penetration Rating",
+            };
 
             switch (chartName)
             {
 
-                    //"Item Budget (10 point steps)","Item Budget (25 point steps)","Item Budget(50 point steps)","Item Budget (100 point steps)"
+                //"Item Budget (10 point steps)","Item Budget (25 point steps)","Item Budget(50 point steps)","Item Budget (100 point steps)"
                 case "Item Budget (10 point steps)":
-                    Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 } },
-                        new Item() { Stats = new Stats() { Agility = 10 } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { HitRating = 10 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } },
-                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 } },
-                    };
-                    string[] statList = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration Rating",
-                    };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < itemList.Length; index++)
                     {
-                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
+                        fMultiplier = 1f;
+                        break;
                     }
-                    return comparisonList.ToArray();
-                    
                 case "Item Budget (25 point steps)":
-                    Item[] itemList25 = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { Agility = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 * 2.5f } },
-                        new Item() { Stats = new Stats() { CritRating = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { HitRating = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 * 2.5f } },
-                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 2.5f} },
-                    };
-                    string[] statList25 = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration Rating",
-                    };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < itemList25.Length; index++)
                     {
-                        calc = GetCharacterCalculations(character, itemList25[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList25[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
+                        fMultiplier = 2.5f;
+                        break;
                     }
-                    return comparisonList.ToArray();
-
                 case "Item Budget (50 point steps)":
-                    Item[] itemList50 = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 * 5f } },
-                        new Item() { Stats = new Stats() { Agility = 10 * 5f } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 * 5f } },
-                        new Item() { Stats = new Stats() { CritRating = 10 * 5f } },
-                        new Item() { Stats = new Stats() { HitRating = 10 * 5f } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 5f } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 * 5f } },
-                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 5f} },
-                    };
-                    string[] statList50 = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration Rating",
-                    };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < itemList50.Length; index++)
                     {
-                        calc = GetCharacterCalculations(character, itemList50[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList50[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
+                        fMultiplier = 5f;
+                        break;
                     }
-                    return comparisonList.ToArray();
-
                 case "Item Budget (100 point steps)":
-                    Item[] itemList100 = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 * 10f } },
-                        new Item() { Stats = new Stats() { Agility = 10 * 10f } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 * 10f } },
-                        new Item() { Stats = new Stats() { CritRating = 10 * 10f } },
-                        new Item() { Stats = new Stats() { HitRating = 10 * 10f } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 * 10f } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 * 10f } },
-                        new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * 10f} },
-                    };
-                    string[] statList100 = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration Rating",
-                    };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < itemList100.Length; index++)
                     {
-                        calc = GetCharacterCalculations(character, itemList100[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList100[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
+                        fMultiplier = 10f;
+                        break;
                     }
-                    return comparisonList.ToArray();
                 case "Presences":
-                    Item[] listPresenceStats = new Item[] {
-                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Blood) },
-                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Unholy) },
-                        new Item() { Stats = GetPresenceStats(CalculationOptionsDPSDK.Presence.Frost) },
-                    };
-                    string[] listPresence = new string[] {
-                        "Blood",
-                        "Unholy",
-                        "Frost",
-                    };
-
-                    // Set this to have no presence enabled.
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    // Set these to have the key presence enabled.
-                    for (int index = 0; index < listPresence.Length; index++)
                     {
-                        calc = GetCharacterCalculations(character, listPresenceStats[index]) as CharacterCalculationsDPSDK;
+                        string[] listPresence = new string[] {
+                            "None",
+                            "Blood",
+                            "Unholy",
+                            "Frost",
+                        };
 
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = listPresence[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
+                        // Set this to have no presence enabled.
+                        Character baseCharacter = character.Clone();
+                        (baseCharacter.CalculationOptions as CalculationOptionsDPSDK).CurrentPresence = CalculationOptionsDPSDK.Presence.None;
+                        // replacing pre-factored base calc since this is different than the Item budget lists. 
+                        baseCalc = GetCharacterCalculations(baseCharacter, null, true, false, false) as CharacterCalculationsDPSDK;
+
+                        // Set these to have the key presence enabled.
+                        for (int index = 1; index < listPresence.Length; index++)
                         {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                            (character.CalculationOptions as CalculationOptionsDPSDK).CurrentPresence = (CalculationOptionsDPSDK.Presence)index;
+                            
+                            calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsDPSDK;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = listPresence[index];
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                            subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
                         }
-                        comparison.SubPoints = subPoints;
-
-                        comparisonList.Add(comparison);
+                        return comparisonList.ToArray();
                     }
-                    return comparisonList.ToArray();
-
-                    #region weapon speed charts
-                /*               case "MH Weapon Speed":
-                    string[] speedList = new String[] {"1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8"};
-                    Item MH = character.MainHand.Item;
-                    Item MH14 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.4f), (int)((MH.MaxDamage / MH.Speed) * 1.4f), MH.DamageType, 1.4f, MH.RequiredClasses);
-                    Item MH16 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.6f), (int)((MH.MaxDamage / MH.Speed) * 1.6f), MH.DamageType, 1.6f, MH.RequiredClasses);
-                    Item MH18 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 1.8f), (int)((MH.MaxDamage / MH.Speed) * 1.8f), MH.DamageType, 1.8f, MH.RequiredClasses);
-                    Item MH20 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2f), (int)((MH.MaxDamage / MH.Speed) * 2f), MH.DamageType, 2f, MH.RequiredClasses);
-                    Item MH22 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.2f), (int)((MH.MaxDamage / MH.Speed) * 2.2f), MH.DamageType, 2.2f, MH.RequiredClasses);
-                    Item MH24 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.4f), (int)((MH.MaxDamage / MH.Speed) * 2.4f), MH.DamageType, 2.4f, MH.RequiredClasses);
-                    Item MH26 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.6f), (int)((MH.MaxDamage / MH.Speed) * 2.6f), MH.DamageType, 2.6f, MH.RequiredClasses);
-                    Item MH28 = new Item("", MH.Quality, MH.Type, MH.Id, MH.IconPath, MH.Slot, MH.SetName, MH.Unique, new Stats(), MH.SocketBonus, MH.SocketColor1,
-                        MH.SocketColor2, MH.SocketColor3, (int)((MH.MinDamage / MH.Speed) * 2.8f), (int)((MH.MaxDamage / MH.Speed) * 2.8f), MH.DamageType, 2.8f, MH.RequiredClasses);
-                    Item[] MHitemList = new Item[] {MH14, MH16, MH18, MH20, MH22, MH24, MH26, MH28};
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < MHitemList.Length; index++)
-                    {
-                        calc = GetCharacterCalculations(character, MHitemList[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = speedList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
-                case "OH Weapon Speed":
-                    string[] OHspeedList = new String[] { "1.4", "1.6", "1.8", "2.0", "2.2", "2.4", "2.6", "2.8" };
-                    Item OH = character.OffHand.Item;
-                    Item OH14 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.4f), (int)((OH.MaxDamage / OH.Speed) * 1.4f), OH.DamageType, 1.4f, OH.RequiredClasses);
-                    Item OH16 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.6f), (int)((OH.MaxDamage / OH.Speed) * 1.6f), OH.DamageType, 1.6f, OH.RequiredClasses);
-                    Item OH18 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 1.8f), (int)((OH.MaxDamage / OH.Speed) * 1.8f), OH.DamageType, 1.8f, OH.RequiredClasses);
-                    Item OH20 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2f), (int)((OH.MaxDamage / OH.Speed) * 2f), OH.DamageType, 2f, OH.RequiredClasses);
-                    Item OH22 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.2f), (int)((OH.MaxDamage / OH.Speed) * 2.2f), OH.DamageType, 2.2f, OH.RequiredClasses);
-                    Item OH24 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.4f), (int)((OH.MaxDamage / OH.Speed) * 2.4f), OH.DamageType, 2.4f, OH.RequiredClasses);
-                    Item OH26 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.6f), (int)((OH.MaxDamage / OH.Speed) * 2.6f), OH.DamageType, 2.6f, OH.RequiredClasses);
-                    Item OH28 = new Item("", OH.Quality, OH.Type, OH.Id, OH.IconPath, ItemSlot.OffHand, OH.SetName, OH.Unique, new Stats(), OH.SocketBonus, OH.SocketColor1,
-                        OH.SocketColor2, OH.SocketColor3, (int)((OH.MinDamage / OH.Speed) * 2.8f), (int)((OH.MaxDamage / OH.Speed) * 2.8f), OH.DamageType, 2.8f, OH.RequiredClasses);
-                    Item[] OHitemList = new Item[] { OH14, OH16, OH18, OH20, OH22, OH24, OH26, OH28 };
-
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsDPSDK;
-
-                    for (int index = 0; index < OHitemList.Length; index++)
-                    {
-                        calc = GetCharacterCalculations(character, OHitemList[index]) as CharacterCalculationsDPSDK;
-
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = OHspeedList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();*/
-                #endregion
                 default:
                     return new ComparisonCalculationBase[0];
             }
+
+            // Item Budget list. since it's used multiple times.
+            Item[] itemList = new Item[] 
+            {
+                new Item() { Stats = new Stats() { Strength = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { Agility = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { AttackPower = 20 * fMultiplier } },
+                new Item() { Stats = new Stats() { CritRating = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { HitRating = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { ExpertiseRating = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { HasteRating = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * fMultiplier } },
+            };
+            // Do the math.
+            for (int index = 0; index < itemList.Length; index++)
+            {
+                calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsDPSDK;
+
+                comparison = CreateNewComparisonCalculation();
+                comparison.Name = statList[index];
+                comparison.Equipped = false;
+                comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                subPoints = new float[calc.SubPoints.Length];
+                for (int i = 0; i < calc.SubPoints.Length; i++)
+                {
+                    subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                }
+                comparison.SubPoints = subPoints;
+
+                comparisonList.Add(comparison);
+            }
+            return comparisonList.ToArray();
         }
         #endregion
-        
+
+        #region Relevant Stats?
         public override bool IsItemRelevant(Item item)
         {
             if (item.Slot == ItemSlot.OffHand /*  ||
@@ -1474,7 +1278,7 @@ namespace Rawr.DPSDK
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-
+                
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
@@ -1629,7 +1433,7 @@ namespace Rawr.DPSDK
             }
             return bResults;
         }
-
+        #endregion
 
         private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels
@@ -1650,5 +1454,68 @@ namespace Rawr.DPSDK
                 return _optimizableCalculationLabels;
             }
         }
+
+        #region Static SpecialEffects
+        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
+        private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
+        private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
+        private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+        private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
+        };
+        private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
+            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
+        };
+        private static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
+        };
+        private static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
+        };
+        private static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
+        private static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 1) }, 0, 0, 0.35f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 2) }, 0, 0, 0.35f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 3) }, 0, 0, 0.35f),
+        };
+        private static readonly SpecialEffect[] _SE_IcyTalons = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 1) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 2) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 3) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 4) }, 20f, 0f),
+            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 5) }, 20f, 0f),
+        };
+        private static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
+            new SpecialEffect[] {
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 0 * 10f),
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 0 * 10f),
+            },
+            new SpecialEffect[] {
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 1 * 10f),
+                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 1 * 10f),
+            },
+        };
+        private static readonly SpecialEffect[] _SE_Acclimation = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 1), 3),
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 2), 3),
+            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 3), 3),
+        };
+        private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        #endregion
     }
 }

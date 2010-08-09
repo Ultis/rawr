@@ -158,14 +158,7 @@ namespace Rawr.DPSDK
                 float minDuration = totalMeleeAbilities * (float) physicalGCD +
                     totalSpellAbilities * (float) spellGCD;
 
-                if (minDuration > calcOpts.rotation.CurRotationDuration)
-                {
-                    realDuration = minDuration;
-                }
-                else
-                {
-                    realDuration = (float)(calcOpts.rotation.CurRotationDuration);
-                }
+                realDuration = (float)Math.Max(minDuration, calcOpts.rotation.CurRotationDuration);
 
                 float dodgeMissPerRotation = (float)(totalMeleeAbilities - calcOpts.rotation.FrostStrike);
                 chanceAvoided = chanceDodged + chanceMiss;

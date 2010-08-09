@@ -22,7 +22,10 @@ namespace Rawr.DPSDK
 
 		public enum Presence
 		{
-			Blood, Unholy, Frost
+			None = 0,
+            Blood, 
+            Unholy, 
+            Frost
 		}
 		
 		private float _GhoulUptime = 1f;
@@ -32,7 +35,7 @@ namespace Rawr.DPSDK
 			set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
 		}
 
-        private Presence _Presence = Presence.Blood;
+        private Presence _Presence = Presence.None;
         public Presence CurrentPresence
         {
             get { return _Presence; }
