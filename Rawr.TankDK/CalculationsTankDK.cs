@@ -1378,7 +1378,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 		{
 			s.BaseArmorMultiplier = AddStatMultiplierStat(s.BaseArmorMultiplier, .6f); // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
 			s.BonusStaminaMultiplier = AddStatMultiplierStat(s.BonusStaminaMultiplier, .08f); // Bonus 8% Stamina
-			s.DamageTakenMultiplier = AddStatMultiplierStat(s.DamageTakenMultiplier, .08f);// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
+			s.DamageTakenMultiplier = AddStatMultiplierStat(s.DamageTakenMultiplier, -.08f);// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
 //            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
 			// Tankspot and EJ conversations.
 		}
@@ -2430,7 +2430,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			return 0f;
 		}
  
-		private float AddStatMultiplierStat(float statMultiplier, float newValue)
+		public static float AddStatMultiplierStat(float statMultiplier, float newValue)
 		{
 			float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
 			return updatedStatModifier;
