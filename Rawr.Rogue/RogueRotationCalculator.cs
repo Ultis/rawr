@@ -63,6 +63,7 @@ namespace Rawr.Rogue
         private float[] _averageNormalCP = new float[6];
         private float[] _averageSStrikeCP = new float[6];
         private float[] _averageMutiCP = new float[6];
+        private float[] _avgMutiNeeded = new float[6];
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, bool maintainBleed,
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
@@ -142,12 +143,18 @@ namespace Rawr.Rogue
             _averageSStrikeCP[4] = 4 * (2 * f * c * h + f * h * h * h + nf * c * c + 3 * nf * c * h * h + nf * h * h * h * h) + 5 * (f * c * c + f * h * h * c + 2 * nf * c * h * c + nf * h * h * h * c);
             _averageSStrikeCP[5] = 5 * (f * c * c + 3 * f * c * h * h + f * h * h * h * h + 3 * nf * c * c * h + 4 * nf * c * h * h * h + nf * h * h * h * h * h) + 6 * (2 * f * c * h * c + f * h * h * h * c + nf * c * c * c + 3 * nf * c * h * h * c + nf * h * h * h * h * c);
             
-            c = ChanceExtraCPPerMutiHit; h = (1f - c * c);
+            c = ChanceExtraCPPerMutiHit; h = (1f - c);
             _averageMutiCP[1] = 1 * (f) + 2 * (nf * h) + 3 * (nf * c);
             _averageMutiCP[2] = 2 * (nf * h) + 3 * (f * h + nf * c) + 4 * (f * c);
             _averageMutiCP[3] = 3 * (f * h + nf * c) + 4 * (f * c + nf * h * h) + 5 * (nf * h * c);
-            _averageMutiCP[4] = 4 * (f * c + nf * h * h) + 5 * (f * h * h + 2 * nf * h * c) + 6 * (f * h * c + nf * c * c);
+            _averageMutiCP[4] = 4 * (f * c + nf * h * h) + 5 * (f * h * h + 2 * nf * h * c) + 5 * (f * h * c + nf * c * c);
             _averageMutiCP[5] = 5 * (f * h * h + 2 * nf * h * c) + 6 * (2 * f * h * c + nf * h * h * h + nf * c * c) + 7 * (f * c * c + nf * h * h * c);
+
+            _avgMutiNeeded[1] = 1 * (nf);
+            _avgMutiNeeded[2] = 1 * (f * h + f * c + nf * h + nf * c);
+            _avgMutiNeeded[3] = 1 * (f * h + f * c + nf * c) + 2 * (nf * h);
+            _avgMutiNeeded[4] = 1 * (f * c) + 2 * (f * h * h + f * h * c + nf * h * h + nf * h * c + nf * c);
+            _avgMutiNeeded[5] = 2 * (f + nf * h * c + nf * c) + 3 * (nf * h * h);
             #endregion
         }
 
@@ -212,11 +219,11 @@ namespace Rawr.Rogue
 
                 float ruptCountMax = durationRuptable / RuptStats.DurationAverage;
 
-                float ruptCycleEnergy = ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageFinisherCP);
+                float ruptCycleEnergy = ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageFinisherCP;
                 float ruptsFromNewCP = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
 
                 ruptCount += ruptsFromNewCP;
-                cpgCount += (averageFinisherCP - CPOnFinisher / CPPerCPG) * ruptsFromNewCP;
+                cpgCount += ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * ruptsFromNewCP;
                 totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP;
                 #endregion
             }
@@ -228,11 +235,11 @@ namespace Rawr.Rogue
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * averageEvisCP) /
                     (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * 5f));
 
-                float evisCycleEnergy = ((averageEvisCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EvisStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageEvisCP);
+                float evisCycleEnergy = ((averageEvisCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EvisStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageEvisCP;
                 float evisFromNewCP = totalEnergyAvailable / evisCycleEnergy;
 
                 evisCount += evisFromNewCP * evisDamageMultiplier;
-                cpgCount += evisFromNewCP * (averageEvisCP - CPOnFinisher / CPPerCPG);
+                cpgCount += evisFromNewCP * ((averageEvisCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -244,11 +251,11 @@ namespace Rawr.Rogue
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * averageEnvenomCP) /
                     (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * 5f));
 
-                float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageEnvenomCP);
+                float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageEnvenomCP;
                 float envenomFromNewCP = totalEnergyAvailable / envenomCycleEnergy;
 
                 envenomCount += envenomFromNewCP * envenomDamageMultiplier;
-                cpgCount += envenomFromNewCP * (averageEnvenomCP - CPOnFinisher / CPPerCPG);
+                cpgCount += envenomFromNewCP * ((averageEnvenomCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -394,8 +401,8 @@ namespace Rawr.Rogue
             float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
             float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing * HFBMultiplier;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * HFBMultiplier;
-            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
-            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * finisherCP) * HFBMultiplier;
+            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * HFBMultiplier;
+            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP],5)) * HFBMultiplier;
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing * HFBMultiplier;
             float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing * HFBMultiplier;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing * HFBMultiplier;
