@@ -614,7 +614,7 @@ namespace Rawr.Rogue
             #region Attack Damages
             float baseDamage = (mainHand == null ? 0f : mainHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
             float baseDamageNorm = mainHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = ((offHand == null ? 0f : offHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + bonusOffHandDamageMultiplier));
+            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * (0.5f * (1f + bonusOffHandDamageMultiplier));
             float baseOffDamageNorm = (offHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f * (1f + bonusOffHandDamageMultiplier));
             float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * mainHandModArmor;
             float meleeOffDamageRaw = baseOffDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * offHandModArmor;
