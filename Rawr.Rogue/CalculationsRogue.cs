@@ -425,7 +425,7 @@ namespace Rawr.Rogue
             float bonusMutiDamageMultiplier = 0.1f * character.RogueTalents.Opportunity;
             float bonusOffHandCrit = (character.OffHand != null) ? ((character.OffHand.Type == ItemType.Dagger || character.OffHand.Type == ItemType.FistWeapon) ? 0.01f * character.RogueTalents.CloseQuartersCombat : 0f) : 0f;
             float bonusOffHandDamageMultiplier = 0.1f * character.RogueTalents.DualWieldSpecialization;
-            float bonusPoisonDamageMultiplier = 0.07f * character.RogueTalents.VilePoisons;
+            float bonusPoisonDamageMultiplier = character.RogueTalents.VilePoisons == 3 ? 0.2f : 0.07f * character.RogueTalents.VilePoisons;
             float bonusRuptDamageMultiplier = 0.15f * character.RogueTalents.BloodSpatter + 0.1f * character.RogueTalents.SerratedBlades;
             float bonusRuptDuration = character.RogueTalents.GlyphOfRupture ? 4 : 0;
             float bonusSnDDuration = character.RogueTalents.GlyphOfSliceandDice ? 3 : 0;
