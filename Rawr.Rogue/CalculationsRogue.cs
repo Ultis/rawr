@@ -624,8 +624,9 @@ namespace Rawr.Rogue
             hemoDamageRaw *= (mainHand._type == ItemType.Dagger ? 1.6f/1.1f : 1f);
             hemoDamageRaw *= character.RogueTalents.Hemorrhage > 0 ? 1f : 0f;
             float sStrikeDamageRaw = (baseDamageNorm * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusSStrikeDamageMultiplier + bonusYellowDamageMultiplier) * mainHandModArmor;
-            float mutiDamageRaw = (baseDamageNorm * 1f + 181f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * mainHandModArmor +
-                                  (baseOffDamageNorm * 1f + 181f * (1f + bonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * offHandModArmor;
+            float mutiDamageMainRaw = (baseDamageNorm * 1f + 181f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * mainHandModArmor;
+            float mutiDamageOffRaw = (baseOffDamageNorm * 1f + 181f * (1f + bonusOffHandDamageMultiplier)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusMutiDamageMultiplier + bonusYellowDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * offHandModArmor;
+            float mutiDamageRaw = mutiDamageMainRaw + mutiDamageOffRaw;
             mutiDamageRaw *= (character.RogueTalents.Mutilate > 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
             float ruptDamageRaw = (127f + 18f * 5f + 0.06f * stats.AttackPower * 5f / (3f + 5f)) * (3f + 5f + bonusRuptDuration / 2f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusRuptDamageMultiplier + bonusYellowDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
             float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + bonusEvisDamageMultiplier + bonusYellowDamageMultiplier) * mainHandModArmor;
@@ -647,7 +648,10 @@ namespace Rawr.Rogue
             float backstabDamageAverage = (1f - chanceCritBackstab) * backstabDamageRaw + chanceCritBackstab * backstabDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
             float hemoDamageAverage = (1f - chanceCritHemo) * hemoDamageRaw + chanceCritHemo * hemoDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
             float sStrikeDamageAverage = (1f - chanceCritSStrike) * sStrikeDamageRaw + chanceCritSStrike * sStrikeDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
-            float mutiDamageAverage = (1f - chanceCritMuti) * mutiDamageRaw + chanceCritMuti * mutiDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
+            float mutiDamageAverage = chanceHitMuti * chanceHitMuti * mutiDamageRaw +
+                                      chanceCritMuti * chanceHitMuti * (mutiDamageMainRaw * (critMultiplier + bonusCPGCritDamageMultiplier) + mutiDamageOffRaw) +
+                                      chanceHitMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw * (critMultiplier + bonusCPGCritDamageMultiplier)) +
+                                      chanceCritMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw) * (critMultiplier + bonusCPGCritDamageMultiplier);
             float ruptDamageAverage = ((1f - chanceCritYellow) * ruptDamageRaw + chanceCritYellow * ruptDamageRaw * critMultiplierBleed);
             float evisBaseDamageAverage = (1f - chanceCritEvis) * evisBaseDamageRaw + chanceCritEvis * evisBaseDamageRaw * critMultiplier;
             float evisCPDamageAverage = (1f - chanceCritEvis) * evisCPDamageRaw + chanceCritEvis * evisCPDamageRaw * critMultiplier;
