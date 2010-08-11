@@ -11,8 +11,8 @@ using System.Windows.Media.Imaging;
 
 namespace Rawr.UI
 {
-	public partial class TalentItem : UserControl
-	{
+    public partial class TalentItem : UserControl
+    {
 
         public TalentTree TalentTree { get { return (TalentTree)(((Grid)Parent).Parent); } }
 
@@ -84,39 +84,68 @@ namespace Rawr.UI
             }
         }
 
+        private string wrapText(string toWrap)
+        {
+            int wrapWidth = 63;
+            if (toWrap.Length <= wrapWidth) { return toWrap; } // Don't bother wrapping
+
+            string retVal = toWrap;
+            bool eos = false;
+            bool foundspace = false;
+            int i = wrapWidth;
+
+            while (!eos)
+            {
+                while (!foundspace && i >= 0)
+                {
+                    if (retVal[i] == ' ') { foundspace = true; break; }
+                    i--; // didn't find a space so backtrack a char
+                }
+                if (foundspace)
+                {
+                    retVal = retVal.Insert(i + 1, "\r\n"); // +1 because we want it after the space
+                    i++; foundspace = false;
+                }
+                // Continue to next part of string unless we're at or close to the end
+                if (i + wrapWidth >= retVal.Length - 1) { eos = true; } else { i += wrapWidth; }
+            }
+
+            return retVal;
+        }
+
         public string GetTooltipString()
         {
             string n = talentData.Name + "\r\n";
             if (Current == 0)
             {
-                return string.Format(n + "Next Rank:\n{0}",talentData.Description[0]);
+                return string.Format(n + "Next Rank:\n{0}", wrapText(talentData.Description[0]));
             }
             else if (Current == talentData.MaxPoints)
             {
-                return talentData.Description[talentData.MaxPoints - 1];
+                return string.Format(n + "Max Points:\n{0}", wrapText(talentData.Description[talentData.MaxPoints - 1]));
             }
             else
             {
-                return string.Format(n + "{0}\n\nNext Rank:\n{1}",talentData.Description[Current - 1], talentData.Description[Current]);
+                return string.Format(n + "{0}\n\nNext Rank:\n{1}", wrapText(talentData.Description[Current - 1]), wrapText(talentData.Description[Current]));
             }
         }
 
-		public TalentItem()
-		{
-			// Required to initialize variables
-			InitializeComponent();
-		}
+        public TalentItem()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+        }
 
-		void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
-		{
-			//Handling this event makes it not throw the exception up to the user. This occurs when a talent image cannot be found, which is fine to ignore.
-		}
+        void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            //Handling this event makes it not throw the exception up to the user. This occurs when a talent image cannot be found, which is fine to ignore.
+        }
 
-		private void TalentClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		{
-			if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) Current--;
-			else Current++;
-		}
-		
-	}
+        private void TalentClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) Current--;
+            else Current++;
+        }
+        
+    }
 }

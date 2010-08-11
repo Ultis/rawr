@@ -47,8 +47,7 @@
                                         <Border Canvas.ZIndex="10" BorderBrush="#FF919191" BorderThickness="1" />
                                     </chartingprimitives:EdgePanel>
                                     <visualizationToolkit:Legend Margin="0,0,0,50" VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="Legend"
-                                               Style="{TemplateBinding LegendStyle}"
-                                               Title="{TemplateBinding LegendTitle}" />
+                                               Style="{TemplateBinding LegendStyle}"/><!-- Title="{TemplateBinding LegendTitle}" -->
                                 </Grid>
                             </Grid>
                         </Border>

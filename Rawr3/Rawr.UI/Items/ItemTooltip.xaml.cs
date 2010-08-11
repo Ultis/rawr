@@ -12,8 +12,8 @@ using Rawr.Base;
 
 namespace Rawr.UI
 {
-	public partial class ItemTooltip : UserControl
-	{
+    public partial class ItemTooltip : UserControl
+    {
         private string currentString;
         public string CurrentString
         {
@@ -116,36 +116,13 @@ namespace Rawr.UI
             }
         }
 
-        private void NonItemTooltip() {
+        private void NonItemTooltip()
+        {
             RootLayout.Visibility = Visibility.Visible;
             try
             {
                 string Title = CurrentString.Split('|')[0].Trim();
                 string Desc = CurrentString.Split('|')[1].Trim();
-
-                #region Discover the minimum size needed
-                int widthCharCount = 47;
-
-                int nextIndex = 0, lastIndex = 0;
-
-                int loopcount = 0;
-                while (lastIndex + widthCharCount < Desc.Length && loopcount < 50)
-                {
-                    string sub = Desc.Substring(lastIndex + 2, Math.Min(lastIndex + widthCharCount, Desc.Length - lastIndex) - 2);
-                    if (sub.Contains("\r\n")) {
-                        lastIndex = lastIndex + sub.IndexOf("\r\n") + 2;
-                        continue;
-                    }
-                    nextIndex = Desc.IndexOf(" ", lastIndex + widthCharCount);
-                    if (nextIndex > 0) {
-                        Desc = Desc.Insert(nextIndex + 1, "\r\n");
-                        lastIndex = nextIndex + 1;
-                    } else {
-                        lastIndex = Desc.Length;
-                    }
-                    loopcount++;
-                }
-                #endregion
 
                 ItemName.Text = Title;
                 ItemName.Foreground = new SolidColorBrush(Colors.Purple);
@@ -173,30 +150,31 @@ namespace Rawr.UI
             }
         }
 
-		public static void List2Panel( WrapPanel p, IList<string> li, Brush fore )
-		{
-			// reset
-			p.Children.Clear();
+        public static void List2Panel(WrapPanel p, IList<string> li, Brush fore, bool allowWrap)
+        {
+            // reset
+            p.Children.Clear();
 
-			// show
-			p.Visibility = li.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            // show
+            p.Visibility = li.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
-			// fill
-			foreach (var s in li)
-			{
-				var c = new TextBlock
-				        	{
-				        		Margin = new Thickness(0, 0, 8, 0),
-				        		HorizontalAlignment = HorizontalAlignment.Left,
-				        		VerticalAlignment = VerticalAlignment.Top,
-				        		Text = s
-				        	};
+            // fill
+            foreach (var s in li)
+            {
+                var c = new TextBlock
+                            {
+                                Margin = new Thickness(0, 0, 8, 0),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Text = s,
+                                TextWrapping = allowWrap ? TextWrapping.Wrap : TextWrapping.NoWrap,
+                            };
 
-				if (fore != null)
-					c.Foreground = fore;
-				p.Children.Add(c);
-			}
-		}
+                if (fore != null)
+                    c.Foreground = fore;
+                p.Children.Add(c);
+            }
+        }
 
         public void UpdateTooltip()
         {
@@ -217,10 +195,10 @@ namespace Rawr.UI
             ItemName.Text = actualItem != null ? actualItem.Name : "";
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem != null ? actualItem.Quality : ItemQuality.Common));
 
-			#region Displaying Item Types
+            #region Displaying Item Types
             //List<string> statsList = new List<string>();
  
-			var liTypes = new List<string>();
+            var liTypes = new List<string>();
 
             if (actualItem != null && actualItem.Type != ItemType.None)
             {
@@ -240,12 +218,12 @@ namespace Rawr.UI
                     liTypes.Add(string.Format("[{0}]", actualItem.Type));
                 //}
             }
-			List2Panel(TypesPanel, liTypes, new SolidColorBrush(Colors.Gray) );
-			
-			#endregion // Displaying Item Types
+            List2Panel(TypesPanel, liTypes, new SolidColorBrush(Colors.Gray) , false);
+            
+            #endregion // Displaying Item Types
 
-			#region Displaying Item Stats
-			List<string> statsList = new List<string>();
+            #region Displaying Item Stats
+            List<string> statsList = new List<string>();
 
             if (actualItem != null)
             {
@@ -288,7 +266,7 @@ namespace Rawr.UI
                     StatPanel.Children.Add(text);
                 }
             }*/
-            List2Panel(StatPanel, statsList, null);
+            List2Panel(StatPanel, statsList, null, true);
             #endregion
 
             #region Setting Up Gems
@@ -562,10 +540,10 @@ namespace Rawr.UI
             ItemPopup.IsOpen = false;
         }
 
-		public ItemTooltip()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+        public ItemTooltip()
+        {
+            // Required to initialize variables
+            InitializeComponent();
         }
-	}
+    }
 }

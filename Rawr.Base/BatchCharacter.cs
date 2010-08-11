@@ -42,7 +42,7 @@ namespace Rawr
             }
         }
 
-        private string absolutePath;
+        private string absolutePath = "";
         [XmlIgnore]
         public string AbsolutePath
         {

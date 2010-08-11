@@ -54,7 +54,7 @@ namespace Rawr.DPSWarr.Markov
 
         protected double HSProcChance;
 
-        protected BloodSurgeMatrix HSMatrix, WWMatrix, BTMatrix;
+        protected BloodSurgeMatrix /*HSMatrix,*/ WWMatrix, BTMatrix;
 
         protected double WhiteInterval;
         #endregion
@@ -388,12 +388,12 @@ namespace Rawr.DPSWarr.Markov
                     //s.WhiteCooldown == sf.WhiteCooldown &&
                     s.WWCooldown == sf.WWCooldown)
                 {
-                    int j = 0; //break
+                    //int j = 0; //break
                 }
             }
             if (prob != 1)
             {
-                int j = 0; //break
+                //int j = 0; //break
             }
 
             return list;
