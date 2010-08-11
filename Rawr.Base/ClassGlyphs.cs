@@ -518,7 +518,7 @@ namespace Rawr
         public bool GlyphoftheGhoul { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
         [GlyphData(24, "Glyph of Unbreakable Armor", true, @"Increases the armor granted by Unbreakable Armor by 20%.")]
         public bool GlyphofUnbreakableArmor { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
-        [GlyphData(25, "Glyph of Unholy Blight", true, @"Increases the duration of Unholy Blight by 10 sec.")]
+        [GlyphData(25, "Glyph of Unholy Blight", true, @"Increases the damage done by Unholy Blight by 40%.")]
         public bool GlyphofUnholyBlight { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         [GlyphData(26, "Glyph of Vampiric Blood", true, @"Increases  the duration of your Vampiric Blood by 10 sec.")]
         public bool GlyphofVampiricBlood { get { return _glyphData[26]; } set { _glyphData[26] = value; } }

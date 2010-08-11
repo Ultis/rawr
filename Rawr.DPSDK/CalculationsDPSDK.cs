@@ -744,39 +744,48 @@ namespace Rawr.DPSDK
                     dpsOtherFire * otherArcaneMult +
                     dpsOtherFrost * otherFrostMult;
 
-                if (talents.FrostStrike == 1)
+                // TODO: Re-work this to properly evaluate a base rotation and subrotations w/ special strikes.
+                Rotation.Type rType = GetRotationType(talents);
+                // First let's get the common stuff out of the ifs
+                // Diseases & the abilities that cause them
+                calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
+                calcs.BloodPlagueDPS = (float)((abilities.BP.Damage * r.BPTick) / (calcOpts.FightLength * 60));
+                calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
+                calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
+                calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
+                calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
+
+                if (rType == Rotation.Type.Frost)
                 {
-                    calcs.BloodPlagueDPS = (float)((abilities.BP.Damage * r.BPTick) / (calcOpts.FightLength * 60));
                     calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
-                    calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
-                    calcs.FrostStrikeDPS = (float)((abilities.FS.Damage * r.FrostStrike + abilities.FS.SecondaryDamage * r.KMFS) / (calcOpts.FightLength * 60));
-                    calcs.HowlingBlastDPS = (float)((abilities.HB.Damage * r.HowlingBlast + abilities.HB.SecondaryDamage * r.KMRime) / (calcOpts.FightLength * 60));
-                    calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
+                    if ( talents.FrostStrike > 0 )
+                        calcs.FrostStrikeDPS = (float)((abilities.FS.Damage * r.FrostStrike + abilities.FS.SecondaryDamage * r.KMFS) / (calcOpts.FightLength * 60));
+                    else
+                        calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
+
+                    if (talents.HowlingBlast > 0)
+                        calcs.HowlingBlastDPS = (float)((abilities.HB.Damage * r.HowlingBlast + abilities.HB.SecondaryDamage * r.KMRime) / (calcOpts.FightLength * 60));
                     calcs.ObliterateDPS = (float)((abilities.OB.Damage * r.Obliterate) / (calcOpts.FightLength * 60));
-                    calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
                 }
 
-                if (talents.HeartStrike == 1)
+                else if (rType == Rotation.Type.Blood)
                 {
-                    calcs.HeartStrikeDPS = (float)((abilities.HS.Damage * r.HeartStrike) / (calcOpts.FightLength * 60));
+                    if (talents.HeartStrike > 0 )
+                        calcs.HeartStrikeDPS = (float)((abilities.HS.Damage * r.HeartStrike) / (calcOpts.FightLength * 60));
+                    else
+                        calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
                     calcs.DeathStrikeDPS = (float)((abilities.DS.Damage * r.DeathStrike) / (calcOpts.FightLength * 60));
                     calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-                    calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
-                    calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
-                    calcs.BloodPlagueDPS = (float)((abilities.BP.Damage * r.BPTick) / (calcOpts.FightLength * 60));
-                    calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
                 }
 
-                if (talents.ScourgeStrike == 1)
+                else if (rType == Rotation.Type.Unholy)
                 {
-                    calcs.ScourgeStrikeDPS = (float)(((abilities.SS.Damage + abilities.SS.SecondaryDamage) * r.ScourgeStrike) / (calcOpts.FightLength * 60));
+                    if (talents.ScourgeStrike > 0)
+                        calcs.ScourgeStrikeDPS = (float)(((abilities.SS.Damage + abilities.SS.SecondaryDamage) * r.ScourgeStrike) / (calcOpts.FightLength * 60));
+                    else
+                        calcs.ObliterateDPS = (float)((abilities.OB.Damage * r.Obliterate) / (calcOpts.FightLength * 60));
                     calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
                     calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-                    calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
-                    calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
-                    calcs.BloodPlagueDPS = (float)((abilities.BP.Damage * r.BPTick) / (calcOpts.FightLength * 60));
-                    calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
-
                     if (talents.UnholyBlight > 0)
                     {
                         float modifier = (0.1f * (talents.GlyphofUnholyBlight ? 1.4f : 1));
@@ -1106,6 +1115,52 @@ namespace Rawr.DPSDK
                 }
             }
             return (statsTotal);
+        }
+
+        public Rotation.Type GetRotationType(DeathKnightTalents t)
+        {
+            Rotation.Type curRotationType = Rotation.Type.Custom;
+            const int indexBlood = 0; // start index of Blood Talents.
+            const int indexFrost = 28; // start index of Frost Talents.
+            const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
+            int[] TalentCounter = new int[4];
+            int index = indexBlood;
+            foreach (int i in t.Data)
+            {
+                if (i > 0)
+                {
+                    // Blood
+                    if (index < indexFrost)
+                        TalentCounter[(int)Rotation.Type.Blood]++;
+                    // Frost
+                    else if ((indexFrost <= index) && (index < indexUnholy))
+                    {
+                        TalentCounter[(int)Rotation.Type.Frost]++;
+                    }
+                    // Unholy
+                    else if (index >= indexUnholy)
+                    {
+                        TalentCounter[(int)Rotation.Type.Unholy]++;
+                    }
+                }
+                index++;
+            }
+            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Blood
+                curRotationType = Rotation.Type.Blood;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Frost
+                curRotationType = Rotation.Type.Frost;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
+            {
+                // Unholy
+                curRotationType = Rotation.Type.Unholy;
+            }
+            return curRotationType;
         }
 
         #region Custom Charts
