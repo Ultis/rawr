@@ -109,7 +109,7 @@ namespace Rawr.UI
                         ItemCache.OnItemsChanged();
                     }
 
-					Character.IsLoading = false;
+                    Character.IsLoading = false;
                     character_CalculationsInvalidated(this, EventArgs.Empty);
 
                     // it's important that ComparisonGraph hooks CalculationsInvalidated event after we do because
@@ -126,6 +126,7 @@ namespace Rawr.UI
             //_unsavedChanges = true;
         }
 
+        #region Batch Tools
         private Character _storedCharacter;
         private BatchCharacter _batchCharacter;
         public void BatchCharacterSaved(BatchCharacter character)
@@ -166,6 +167,7 @@ namespace Rawr.UI
                 _storedCharacter = null;
             }
         }
+        #endregion
 
         private class AsyncCalculationResult
         {
@@ -196,9 +198,9 @@ namespace Rawr.UI
         }
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
-		{
+        {
 #if DEBUG
-			DateTime start = DateTime.Now;
+            DateTime start = DateTime.Now;
 #endif
             this.Cursor = Cursors.Wait;
             if (asyncCalculation != null)
@@ -212,6 +214,20 @@ namespace Rawr.UI
             referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
             CalculationDisplay.SetCalculations(referenceCalculation.GetCharacterDisplayCalculationValues());
             UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
+            if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing)
+            {
+                //HandBSCheck.IsChecked = true;
+                //WristBSCheck.IsChecked = true;
+                HandBSCheck.IsEnabled = true;
+                WristBSCheck.IsEnabled = true;
+            }
+            else
+            {
+                HandBSCheck.IsChecked = false;
+                WristBSCheck.IsChecked = false;
+                HandBSCheck.IsEnabled = false;
+                WristBSCheck.IsEnabled = false;
+            }
             if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
             {
                 asyncCalculation = AsyncOperationManager.CreateOperation(null);
@@ -222,8 +238,12 @@ namespace Rawr.UI
             }
             this.Cursor = Cursors.Arrow;
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
+            System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
 #endif
+        }
+
+        public void ProfChanged(object sender, SelectionChangedEventArgs e) {
+            character_CalculationsInvalidated(null, null);
         }
 
         public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues, CharacterCalculationsBase _calculatedStats)
@@ -248,7 +268,7 @@ namespace Rawr.UI
         {
             Instance = this;
             InitializeComponent();
-			if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
+            if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
 
             // Assign the Version number to the status bar
             Assembly asm = Assembly.GetExecutingAssembly();
@@ -373,7 +393,7 @@ namespace Rawr.UI
         private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
         {
             Character.InvalidateItemInstances();
-			Character.OnCalculationsInvalidated();
+            Character.OnCalculationsInvalidated();
             if (!Character.IsLoading)
             {
                 ComparisonGraph.UpdateGraph();
@@ -388,16 +408,16 @@ namespace Rawr.UI
                 Application.Current.Install();
             }
 #endif
-		}
+        }
 
-		private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
-		{
-			DateTime start = DateTime.Now;
-			for (int i = 0; i < 20000; i++)
-				Calculations.GetCharacterCalculations(Character);
-			TimeSpan ts = DateTime.Now.Subtract(start);
-			MessageBox.Show(ts.ToString());
-		}
+        private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
+        {
+            DateTime start = DateTime.Now;
+            for (int i = 0; i < 20000; i++)
+                Calculations.GetCharacterCalculations(Character);
+            TimeSpan ts = DateTime.Now.Subtract(start);
+            MessageBox.Show(ts.ToString());
+        }
 
         private void EnsureItemsLoaded(string[] ids)
         {
@@ -432,33 +452,33 @@ namespace Rawr.UI
             Character = character;
         }
 
-		public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
-		{
-			ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
+        public void LoadFromArmory(string characterName, CharacterRegion region, string realm)
+        {
+            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
             armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
             armoryLoad.Show();
-			armoryLoad.Load(characterName, region, realm);
-		}
+            armoryLoad.Load(characterName, region, realm);
+        }
 
-		private void armoryLoad_Closed(object sender, EventArgs e)
+        private void armoryLoad_Closed(object sender, EventArgs e)
         {
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
             if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
-				Character character = ald.Character;
+                Character character = ald.Character;
                 // The removes force it to put those items at the end.
                 // So we can use that for recall later on what was last used
                 if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name)) {
                     Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
                 }
                 if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm)) {
-					Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
                 }
-				Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
-				Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
                 Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
 
-				this.Character = character;
+                this.Character = character;
             }
         }
 
@@ -553,7 +573,7 @@ namespace Rawr.UI
                 if (newIndex > 0)
                 {
                     OptionsMenu.IsDropDownOpen = false;
-					OptionsMenu.SelectedIndex = 0;
+                    OptionsMenu.SelectedIndex = 0;
                     if (newIndex == 1) ShowOptions(null, null);
                     else if (newIndex == 3) ResetItemCache(null, null);
                     else if (newIndex == 4) ResetAllCaches(null, null);
@@ -766,15 +786,15 @@ namespace Rawr.UI
             {
                 Character = new Character();
                 new FileUtils(new string[] {
-					"BuffCache.xml", 
-					"EnchantCache.xml",
-					"ItemCache.xml",
-					"Talents.xml",
+                    "BuffCache.xml", 
+                    "EnchantCache.xml",
+                    "ItemCache.xml",
+                    "Talents.xml",
                     "PetTalents.xml",
                     "BuffSets.xml",
-					"ItemSource.xml",
-					"ItemFilter.xml",
-					"Settings.xml"}).Delete();
+                    "ItemSource.xml",
+                    "ItemFilter.xml",
+                    "Settings.xml"}).Delete();
                 LoadScreen ls = new LoadScreen();
                 (App.Current.RootVisual as Grid).Children.Add(ls);
                 this.Visibility = Visibility.Collapsed;
