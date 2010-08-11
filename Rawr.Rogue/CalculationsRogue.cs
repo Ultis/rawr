@@ -481,7 +481,7 @@ namespace Rawr.Rogue
             float chanceMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
             float chancePoisonMiss = Math.Max(0f, StatConversion.GetSpellMiss(80 - targetLevel, false) - spellHitBonus);
 
-            float glanceMultiplier = 0.7f;
+            float glanceMultiplier = 0.75f;
             float chanceWhiteMHAvoided = chanceWhiteMiss + chanceMHDodge + chanceParry;
             float chanceWhiteOHAvoided = chanceWhiteMiss + chanceOHDodge + chanceParry;
             float chanceMHAvoided = chanceMiss + chanceMHDodge + chanceParry;
@@ -638,13 +638,8 @@ namespace Rawr.Rogue
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + bonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float aPDamageRaw = ((218f + 280f) / 2f) + (1f + bonusPoisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
 
-            float total = chanceGlance + chanceCritWhiteMain + chanceHitWhiteMain;
-            float meleeDamageAverage = chanceGlance * meleeDamageRaw * glanceMultiplier +
-                                        chanceCritWhiteMain * meleeDamageRaw * critMultiplier +
-                                        chanceHitWhiteMain * meleeDamageRaw;
-            float meleeOffDamageAverage = chanceGlance * meleeOffDamageRaw * glanceMultiplier +
-                                           chanceCritWhiteOff * meleeOffDamageRaw * critMultiplier +
-                                           chanceHitWhiteOff * meleeOffDamageRaw;
+            float meleeDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteMain * critMultiplier + chanceHitWhiteMain) * meleeDamageRaw;
+            float meleeOffDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageRaw;
             float backstabDamageAverage = (1f - chanceCritBackstab) * backstabDamageRaw + chanceCritBackstab * backstabDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
             float hemoDamageAverage = (1f - chanceCritHemo) * hemoDamageRaw + chanceCritHemo * hemoDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
             float sStrikeDamageAverage = (1f - chanceCritSStrike) * sStrikeDamageRaw + chanceCritSStrike * sStrikeDamageRaw * (critMultiplier + bonusCPGCritDamageMultiplier);
@@ -922,7 +917,9 @@ namespace Rawr.Rogue
                 BonusAgilityMultiplier = 0.03f * talents.SinisterCalling,
                 BonusAttackPowerMultiplier = (1f + 0.02f * talents.SavageCombat) * (1f + 0.02f * talents.Deadliness) - 1f,
                 BonusCritMultiplier = 0.04f * talents.PreyOnTheWeak,
-                BonusDamageMultiplier = (1f + 0.02f * talents.Murder) * (1f + 0.01f * talents.SlaughterFromTheShadows) - 1f,
+                BonusDamageMultiplier = (1f + 0.02f * talents.Murder) * 
+                                        (1f + 0.01f * talents.SlaughterFromTheShadows) * 
+                                        (1f + (0.05f + (talents.GlyphOfHungerforBlood ? 0.03f : 0f)) * talents.HungerForBlood) - 1f,
                 BonusStaminaMultiplier = 0.02f * talents.Endurance,
                 Dodge = 0.02f * talents.LightningReflexes,
                 Expertise = 5 * talents.WeaponExpertise,

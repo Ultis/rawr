@@ -107,7 +107,6 @@ namespace Rawr.Rogue
 
             #region Talent bonuses
             BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
-            BonusDamageMultiplierHFB = (0.05f + (Char.RogueTalents.GlyphOfHungerforBlood ? 0.03f : 0f)) * Char.RogueTalents.HungerForBlood;
             BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
             BonusEnergyRegenMultiplier = 0.08f * Char.RogueTalents.Vitality;
             BonusHemoDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks + 0.02f * Char.RogueTalents.SinisterCalling;
@@ -216,30 +215,20 @@ namespace Rawr.Rogue
                 #region Rupture
                 //Lose GCDs at the start of the fight to get SnD up and enough CPGs to get 5CPG.
                 float durationRuptable = Duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG));
-
                 float ruptCountMax = durationRuptable / RuptStats.DurationAverage;
-
                 float ruptCycleEnergy = ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageFinisherCP;
-                float ruptsFromNewCP = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
-
-                ruptCount += ruptsFromNewCP;
-                cpgCount += ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * ruptsFromNewCP;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptsFromNewCP;
+                ruptCount = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
+                cpgCount += ((averageFinisherCP - CPOnFinisher) / CPPerCPG) * ruptCount;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptCount;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
             {
                 #region Eviscerate
                 float averageEvisCP = _averageCP[finisherCP];
-                float evisDamageMultiplier = Math.Min(1f,
-                    (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * averageEvisCP) /
-                    (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * 5f));
-
                 float evisCycleEnergy = ((averageEvisCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EvisStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageEvisCP;
-                float evisFromNewCP = totalEnergyAvailable / evisCycleEnergy;
-
-                evisCount += evisFromNewCP * evisDamageMultiplier;
-                cpgCount += evisFromNewCP * ((averageEvisCP - CPOnFinisher) / CPPerCPG);
+                evisCount = totalEnergyAvailable / evisCycleEnergy;
+                cpgCount += evisCount * ((averageEvisCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -247,15 +236,9 @@ namespace Rawr.Rogue
             {
                 #region Envenom
                 float averageEnvenomCP = _averageCP[finisherCP];
-                float envenomDamageMultiplier = Math.Min(1f,
-                    (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * averageEnvenomCP) /
-                    (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * 5f));
-
                 float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher) / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * averageEnvenomCP;
-                float envenomFromNewCP = totalEnergyAvailable / envenomCycleEnergy;
-
-                envenomCount += envenomFromNewCP * envenomDamageMultiplier;
-                cpgCount += envenomFromNewCP * ((averageEnvenomCP - CPOnFinisher) / CPPerCPG);
+                envenomCount = totalEnergyAvailable / envenomCycleEnergy;
+                cpgCount += envenomCount * ((averageEnvenomCP - CPOnFinisher) / CPPerCPG);
                 totalEnergyAvailable = 0f;
                 #endregion
             }
@@ -386,30 +369,29 @@ namespace Rawr.Rogue
             #endregion
 
             #region Damage Totals
-            float HFBMultiplier = (bleedIsUp || ruptCount > 0) ? 1f + BonusDamageMultiplierHFB: 1f;
-
             float mainHandDamageTotal = ((Duration - kSDuration) / Duration * (whiteMHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
                                         kSDmgBonus * kSDuration / Duration * (whiteMHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
-                                        kSDmgBonus * kSAttacks) * MainHandStats.DamagePerSwing * HFBMultiplier +
-                                        0.5f * Stats.MoteOfAnger * Duration * 0.5f * MainHandStats.DamagePerSwing * HFBMultiplier;
+                                        kSDmgBonus * kSAttacks) * MainHandStats.DamagePerSwing +
+                                        0.5f * Stats.MoteOfAnger * Duration * 0.5f * MainHandStats.DamagePerSwing;
             float offHandDamageTotal = ((Duration - kSDuration) / Duration * (whiteOHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
                                        kSDmgBonus * kSDuration / Duration * (whiteOHAttacks - 0.5f * Stats.MoteOfAnger * Duration) +
-                                       kSDmgBonus * kSAttacks) * OffHandStats.DamagePerSwing * HFBMultiplier +
-                                       0.5f * Stats.MoteOfAnger * Duration * 0.5f * OffHandStats.DamagePerSwing * HFBMultiplier;
-            float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing * HFBMultiplier;
-            float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing * HFBMultiplier;
-            float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing * HFBMultiplier;
-            float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing * HFBMultiplier;
-            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * HFBMultiplier;
-            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * HFBMultiplier;
-            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP],5)) * HFBMultiplier;
-            float instantPoisonTotal = iPCount * IPStats.DamagePerSwing * HFBMultiplier;
-            float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing * HFBMultiplier;
-            float woundPoisonTotal = wPCount * WPStats.DamagePerSwing * HFBMultiplier;
-            float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing * HFBMultiplier;
+                                       kSDmgBonus * kSAttacks) * OffHandStats.DamagePerSwing +
+                                       0.5f * Stats.MoteOfAnger * Duration * 0.5f * OffHandStats.DamagePerSwing;
+            float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing;
+            float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing;
+            float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing;
+            float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing;
+            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f);
+            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5));
+            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP],5));
+            float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
+            float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing;
+            float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;
+            float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing;
 
             float damageTotal = mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + 
                                   mutiDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal + anestheticPoisonTotal;
+            if (Char.RogueTalents.HungerForBlood > 0 && !CalcOpts.BleedIsUp && ruptCount == 0) damageTotal /= 1.05f + 0.03f * (Char.RogueTalents.GlyphOfHungerforBlood ? 1 : 0);
             #endregion
 
             return new RogueRotationCalculation()
@@ -471,8 +453,8 @@ namespace Rawr.Rogue
             public int MHPoison { get; set; }
             public int OHPoison { get; set; }
 
-            public float CutToTheChase { get; set; }
             public bool UseTotT { get; set; }
+            public float CutToTheChase { get; set; }
 
             public override string ToString()
             {
