@@ -442,13 +442,13 @@ namespace Rawr.Rogue
             float modArmor = 0f;
             for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor * (1f - armorReduction - (mainHand.Type != ItemType.OneHandMace ? 0 : bonusMaceArP)), stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, 1f - (1f - stats.ArmorPenetration) * (1f - armorReduction) * (mainHand.Type == ItemType.OneHandMace ? 1f - bonusMaceArP : 1), 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
             }
             float mainHandModArmor = 1f - modArmor;
             modArmor = 0f;
             for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor * (1f - armorReduction - (offHand.Type != ItemType.OneHandMace ? 0 : bonusMaceArP)), stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, 1f - (1f - stats.ArmorPenetration) * (1f - armorReduction) * (offHand.Type == ItemType.OneHandMace ? 1f - bonusMaceArP : 1), 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
             }
             float offHandModArmor = 1f - modArmor;
             float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
