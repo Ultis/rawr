@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <!-- Popups -->
         <Popup x:Name="ListPopup" HorizontalOffset="72" Grid.ColumnSpan="3" Grid.RowSpan="2">
@@ -32,7 +32,7 @@
             <local:ItemListControl x:Name="ComparisonItemListGem3"/>
         </Popup>
         <!-- Buttons -->
-        <Button x:Name="MainButton" Click="MainButton_Click" MouseEnter="MainButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.RowSpan="3" Grid.Column="0">
+        <Button x:Name="MainButton" Click="MainButton_Click" MouseEnter="MainButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.RowSpan="3" Grid.Column="0" Width="70">
             <Image CacheMode="BitmapCache" x:Name="IconImage" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Button>
         <Button x:Name="GemButton1" Click="GemButton1_Click" MouseEnter="GemButton1_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="0" MinHeight="20" MinWidth="20" MaxWidth="20" MaxHeight="20" Grid.Column="1" HorizontalAlignment="Stretch">
