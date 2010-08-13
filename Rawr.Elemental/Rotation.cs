@@ -115,6 +115,7 @@ namespace Rawr.Elemental
         public FireNova FN;
         public SearingTotem ST;
         public MagmaTotem MT;
+        public FireElemental FE;
         public Totem ActiveTotem;
 
         public ShamanTalents Talents;
@@ -138,10 +139,11 @@ namespace Rawr.Elemental
             FN = spellBox.FN;
             ST = spellBox.ST;
             MT = spellBox.MT;
+            FE = spellBox.FE;
 
             useDpsFireTotem = rotOpt.UseDpsFireTotem;
 
-            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem);
+            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem, rotOpt.useFireEle);
         }
 
         /// <summary>
@@ -163,17 +165,17 @@ namespace Rawr.Elemental
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem)
+        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
             if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
-            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem);
+            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem)
+        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
             if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;

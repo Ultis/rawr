@@ -96,6 +96,13 @@ namespace Rawr.Elemental
             set { _UseDpsTotem = value; OnPropertyChanged("UseDpsTotem"); }
         }
 
+        private bool _UseFireEle = false;
+        public bool UseFireEle
+        {
+            get { return _UseFireEle; }
+            set { _UseFireEle = value; OnPropertyChanged("UseFireEle"); }
+        }
+
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

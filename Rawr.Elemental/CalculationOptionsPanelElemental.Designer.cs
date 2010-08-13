@@ -50,6 +50,7 @@
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.cbFireEle = new System.Windows.Forms.CheckBox();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -101,6 +102,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbFireEle);
             this.groupBox1.Controls.Add(this.cbFireDpsTotem);
             this.groupBox1.Controls.Add(this.cbChainLightning);
             this.groupBox1.Controls.Add(this.cbFireNova);
@@ -298,6 +300,18 @@
             this.tabControl1.Size = new System.Drawing.Size(297, 553);
             this.tabControl1.TabIndex = 23;
             // 
+            // cbFireEle
+            // 
+            this.cbFireEle.AutoSize = true;
+            this.cbFireEle.Location = new System.Drawing.Point(116, 38);
+            this.cbFireEle.Name = "cbFireEle";
+            this.cbFireEle.Size = new System.Drawing.Size(114, 17);
+            this.cbFireEle.TabIndex = 54;
+            this.cbFireEle.Text = "Use Fire Elemental";
+            this.cbFireEle.UseVisualStyleBackColor = true;
+            this.cbFireEle.Visible = false;
+            this.cbFireEle.CheckedChanged += new System.EventHandler(this.cbFireEle_CheckedChanged);
+            // 
             // CalculationOptionsPanelElemental
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -349,6 +363,7 @@
         private System.Windows.Forms.CheckBox cbChainLightning;
         private System.Windows.Forms.CheckBox cbFireNova;
         private System.Windows.Forms.CheckBox cbFireDpsTotem;
+        private System.Windows.Forms.CheckBox cbFireEle;
 
     }
 }

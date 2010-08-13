@@ -8,6 +8,8 @@ namespace Rawr.Elemental
     {
         private bool loading = false;
 
+        // The fire ele checkbox is currently set to "Visible = False" so that the UI is in place, but it is inaccessible at this moment
+
         public CalculationOptionsPanelElemental()
         {
             InitializeComponent();
@@ -68,6 +70,7 @@ namespace Rawr.Elemental
             cbFireNova.Checked = calcOpts.UseFireNova;
             cbChainLightning.Checked = calcOpts.UseChainLightning;
             cbFireDpsTotem.Checked = calcOpts.UseDpsTotem;
+            cbFireEle.Checked = calcOpts.UseFireEle;
 
             loading = false;
         }
@@ -172,6 +175,14 @@ namespace Rawr.Elemental
             if (loading) return;
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.UseDpsTotem = cbFireDpsTotem.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbFireEle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseFireEle = cbFireEle.Checked;
             Character.OnCalculationsInvalidated();
         }
     }

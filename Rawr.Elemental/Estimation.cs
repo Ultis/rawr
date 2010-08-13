@@ -56,7 +56,7 @@ namespace Rawr.Elemental
              */
             #endregion
             
-            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem));
+            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem, calcOpts.UseFireEle));
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts, BossOptions bossOpts)
@@ -69,7 +69,7 @@ namespace Rawr.Elemental
              * Clearcasting (-40% mana cost next 2 spells)
              * Glyph of flame shock or not
              * Clearcasting (5/10% more total damage)
-             * Elemental Mastery (+15% crit chance, 15 sec/3 min cd)
+             * Elemental Mastery (+15% haste chance, 15 sec/3 min cd)
              * Trinkets
              * 
              * Assume LvB used on CD and FS either after LvB, on dot drop or before LvB
