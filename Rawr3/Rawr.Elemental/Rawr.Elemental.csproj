@@ -114,6 +114,9 @@
     <Compile Include="..\..\Rawr.Elemental\Spells\ElementalMastery.cs">
       <Link>Spells\ElementalMastery.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Elemental\Spells\FireElemental.cs">
+      <Link>Spells\FireElemental.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Elemental\Spells\FlameShock.cs">
       <Link>Spells\FlameShock.cs</Link>
     </Compile>
