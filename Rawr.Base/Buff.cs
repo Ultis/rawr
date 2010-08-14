@@ -168,10 +168,10 @@ namespace Rawr
                 Buff[] allBuffArray = new Buff[allBuffs.Count];
                 allBuffs.Values.CopyTo(allBuffArray, 0);
                 _allBuffs = new BuffList(allBuffs.Values);
-				_allBuffsByName = null;
-				_allSetBonuses = null;
-				_relevantBuffs = null;
-				_relevantSetBonuses = null;
+                _allBuffsByName = null;
+                _allSetBonuses = null;
+                _relevantBuffs = null;
+                _relevantSetBonuses = null;
                 CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             } catch { }
         }
@@ -314,10 +314,10 @@ namespace Rawr
                 Source = "Shaman",
                 Group = "Agility and Strength",
                 Stats = { Strength = 155, Agility = 155 },
-				ConflictingBuffs = { "Agility", "Strength" },
+                ConflictingBuffs = { "Agility", "Strength" },
                 Improvements = { 
-					new Buff { Name = "Enhancing Totems (Agility/Strength)", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
-				}
+                    new Buff { Name = "Enhancing Totems (Agility/Strength)", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
+                }
             });
 
             defaultBuffs.Add(new Buff
@@ -338,12 +338,12 @@ namespace Rawr
                 Group = "Armor (Stackable)",
                 Stats = { BonusArmor = 1150f },
                 Improvements = { 
-					new Buff {
+                    new Buff {
                         Name = "Improved Stoneskin Totem (Armor)",
                         Source = "Shaman",
                         Stats = { BonusArmor = (float)Math.Floor(1150f * 0.20f) }
                     }
-				}
+                }
             });
             defaultBuffs.Add(new Buff
             {
@@ -352,12 +352,12 @@ namespace Rawr
                 Group = "Armor",
                 Stats = { BonusArmor = 1205f },
                 Improvements = { 
-					new Buff {
+                    new Buff {
                         Name = "Improved Devotion Aura (Armor)",
                         Source = "Prot Paladin",
                         Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) }
                     }
-				}
+                }
             });
             #endregion
 
@@ -366,15 +366,15 @@ namespace Rawr
             {
                 Name = "Ancestral Healing",
                 Source = "Resto Shaman",
-				Group = "Damage Reduction (Major %)",
-				Stats = { DamageTakenMultiplier = -0.1f }
+                Group = "Damage Reduction (Major %)",
+                Stats = { DamageTakenMultiplier = -0.1f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Inspiration",
                 Source = "Priest",
-				Group = "Damage Reduction (Major %)",
-				Stats = { DamageTakenMultiplier = -0.1f }
+                Group = "Damage Reduction (Major %)",
+                Stats = { DamageTakenMultiplier = -0.1f }
             });
             #endregion
 
@@ -386,8 +386,8 @@ namespace Rawr
                 Group = "Attack Power",
                 Stats = { AttackPower = 548 },
                 Improvements = { 
-					new Buff { Name = "Commanding Presence (Attack Power)", Stats = { AttackPower = (float)Math.Floor(548f * 0.25f) } }
-				}
+                    new Buff { Name = "Commanding Presence (Attack Power)", Stats = { AttackPower = (float)Math.Floor(548f * 0.25f) } }
+                }
             });
             defaultBuffs.Add(new Buff
             {
@@ -396,8 +396,8 @@ namespace Rawr
                 Group = "Attack Power",
                 Stats = { AttackPower = 550 },
                 Improvements = { 
-					new Buff { Name = "Improved Blessing of Might", Source = "Ret Paladin", Stats = { AttackPower = (float)Math.Floor(550f * 0.25f) } }
-				}
+                    new Buff { Name = "Improved Blessing of Might", Source = "Ret Paladin", Stats = { AttackPower = (float)Math.Floor(550f * 0.25f) } }
+                }
             });
             #endregion
 
@@ -454,7 +454,7 @@ namespace Rawr
             {
                 Name = "Blessing of Sanctuary",
                 Source = "Prot Paladin",
-				Group = "Damage Reduction (Minor %)",
+                Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f },
                 Improvements = {
                     new Buff {
@@ -474,7 +474,7 @@ namespace Rawr
             {
                 Name = "Renewed Hope",
                 Source = "Disc Priest",
-				Group = "Damage Reduction (Minor %)",
+                Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
             #endregion
@@ -533,8 +533,8 @@ namespace Rawr
                 Group = "Health",
                 Stats = { Health = 1330 },
                 Improvements = { 
-					new Buff { Name = "Improved Imp", Source = "Warlock Imp", Stats = { Health = (float)Math.Floor(1330f * 0.30f) } }
-				}
+                    new Buff { Name = "Improved Imp", Source = "Warlock Imp", Stats = { Health = (float)Math.Floor(1330f * 0.30f) } }
+                }
             });
             defaultBuffs.Add(new Buff
             {
@@ -543,8 +543,8 @@ namespace Rawr
                 Group = "Health",
                 Stats = { Health = 2250 },
                 Improvements = { 
-					new Buff { Name = "Commanding Presence (Health)", Source = "Warrior", Stats = { Health = (float)Math.Floor(2250f * 0.25f) } }
-				}
+                    new Buff { Name = "Commanding Presence (Health)", Source = "Warrior", Stats = { Health = (float)Math.Floor(2250f * 0.25f) } }
+                }
             });
             #endregion
 
@@ -564,7 +564,7 @@ namespace Rawr
                 Group = "Intellect",
                 Stats = { Intellect = 48 },
                 Improvements = { 
-					new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Intellect = (float)Math.Floor(48f * 0.1f) } }
+                    new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Intellect = (float)Math.Floor(48f * 0.1f) } }
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Intellect" }),
             });
@@ -604,8 +604,8 @@ namespace Rawr
                 Group = "Physical Haste",
                 Stats = { PhysicalHaste = 0.16f },
                 Improvements = { 
-					new Buff { Name = "Improved Windfury Totem", Source = "Enhance Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
-				}
+                    new Buff { Name = "Improved Windfury Totem", Source = "Enhance Shaman", Stats = { PhysicalHaste = (1.2f/1.16f) - 1f } }
+                }
             });
 
             defaultBuffs.Add(new Buff
@@ -664,8 +664,8 @@ namespace Rawr
                 Group = "Mana Regeneration",
                 Stats = { Mp5 = 91 },
                 Improvements = { 
-					new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(91f * 0.20f) } }
-				}
+                    new Buff { Name = "Restorative Totems", Source = "Resto Shaman", Stats = { Mp5 = (float)Math.Floor(91f * 0.20f) } }
+                }
             });
             defaultBuffs.Add(new Buff
             {
@@ -674,8 +674,8 @@ namespace Rawr
                 Group = "Mana Regeneration",
                 Stats = { Mp5 = 91 },
                 Improvements = { 
-					new Buff { Name = "Improved Blessing of Wisdom", Source = "Holy Paladin", Stats = { Mp5 = (float)Math.Floor(91 * 0.2f) } }
-				}
+                    new Buff { Name = "Improved Blessing of Wisdom", Source = "Holy Paladin", Stats = { Mp5 = (float)Math.Floor(91 * 0.2f) } }
+                }
             });
             #endregion
 
@@ -692,7 +692,7 @@ namespace Rawr
                         Source = "Holy Priest",
                         Stats = new Stats() { },
                     }
-				},
+                },
                 ConflictingBuffs = new List<string>() { }, // preventing this group from conflicting with itself
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
@@ -722,7 +722,7 @@ namespace Rawr
                         Source = "Resto Shaman",
                         Stats = new Stats() { },
                     }
-				},
+                },
                 ConflictingBuffs = new List<string>() { }, // preventing this group from conflicting with itself
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
@@ -793,7 +793,7 @@ namespace Rawr
                 Group = "Spell Power",
                 Stats = { SpellPower = 144f },
                 Improvements = {
-					new Buff { Name = "Enhancing Totems (Spell Power)", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
+                    new Buff { Name = "Enhancing Totems (Spell Power)", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
                 },
             });
             defaultBuffs.Add(new Buff
@@ -813,8 +813,8 @@ namespace Rawr
                 Group = "Spell Sensitivity",
                 Stats = { SpellPower = 255 },
                 Improvements = { 
-					new Buff { Name = "Magic Attunement", Stats = { SpellPower = (float)Math.Floor(255f * 0.5f) } } 
-				}
+                    new Buff { Name = "Magic Attunement", Stats = { SpellPower = (float)Math.Floor(255f * 0.5f) } } 
+                }
             });
             #endregion
 
@@ -826,7 +826,7 @@ namespace Rawr
                 Group = "Spirit",
                 Stats = { Spirit = 64f },
                 Improvements = { 
-					new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Spirit = (float)Math.Floor(64f * 0.1f) } }
+                    new Buff { Name = "Improved Felhunter", Source = "Afflic Warlock", Stats = { Spirit = (float)Math.Floor(64f * 0.1f) } }
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Spirit" }),
             });
@@ -848,8 +848,8 @@ namespace Rawr
                 Group = "Stamina",
                 Stats = { Stamina = 165f },
                 Improvements = { 
-					new Buff { Name = "Improved Power Word: Fortitude", Source = "Priest", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
-				},
+                    new Buff { Name = "Improved Power Word: Fortitude", Source = "Priest", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
+                },
                 ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
             });
             defaultBuffs.Add(new Buff
@@ -882,21 +882,21 @@ namespace Rawr
                     NatureResistanceBuff = 54,
                     ShadowResistanceBuff = 54
                 },
-				Improvements = { 
-					new Buff { Name = "Improved Mark of the Wild", Source = "Druid", Stats = {
-					BonusArmor = (float)Math.Floor(750f * 0.4f),
-					Strength = (float)Math.Floor(37f * 0.4f),
-					Agility = (float)Math.Floor(37f * 0.4f),
-					Stamina = (float)Math.Floor(37f * 0.4f),
-					Intellect = (float)Math.Floor(37f * 0.4f),
-					Spirit = (float)Math.Floor(37f * 0.4f),
-					ArcaneResistanceBuff = (float)Math.Floor(54f * 1.4f), // it is 1.4 because it's non stacking buff, it takes max
-					FireResistanceBuff = (float)Math.Floor(54f * 1.4f),
-					FrostResistanceBuff = (float)Math.Floor(54f * 1.4f),
-					NatureResistanceBuff = (float)Math.Floor(54f * 1.4f),
-					ShadowResistanceBuff = (float)Math.Floor(54f * 1.4f)} 
-					} 
-				},
+                Improvements = { 
+                    new Buff { Name = "Improved Mark of the Wild", Source = "Druid", Stats = {
+                    BonusArmor = (float)Math.Floor(750f * 0.4f),
+                    Strength = (float)Math.Floor(37f * 0.4f),
+                    Agility = (float)Math.Floor(37f * 0.4f),
+                    Stamina = (float)Math.Floor(37f * 0.4f),
+                    Intellect = (float)Math.Floor(37f * 0.4f),
+                    Spirit = (float)Math.Floor(37f * 0.4f),
+                    ArcaneResistanceBuff = (float)Math.Floor(54f * 1.4f), // it is 1.4 because it's non stacking buff, it takes max
+                    FireResistanceBuff = (float)Math.Floor(54f * 1.4f),
+                    FrostResistanceBuff = (float)Math.Floor(54f * 1.4f),
+                    NatureResistanceBuff = (float)Math.Floor(54f * 1.4f),
+                    ShadowResistanceBuff = (float)Math.Floor(54f * 1.4f)} 
+                    } 
+                },
                 ConflictingBuffs = new List<string>(new string[] { "StatArmor", "Mark of the Wild" })
             });
             defaultBuffs.Add(new Buff()
@@ -1116,7 +1116,7 @@ namespace Rawr
                 Name = "Expose Armor",
                 Source = "Rogue",
                 Group = "Armor (Major)",
-				Stats = { ArmorPenetration = 0.2f },
+                Stats = { ArmorPenetration = 0.2f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1124,7 +1124,7 @@ namespace Rawr
                 Name = "Sunder Armor",
                 Source = "Warrior",
                 Group = "Armor (Major)",
-				Stats = { ArmorPenetration = 0.2f },
+                Stats = { ArmorPenetration = 0.2f },
                 IsTargetDebuff = true,
             });
             #endregion
@@ -1143,7 +1143,7 @@ namespace Rawr
                 Name = "Faerie Fire",
                 Source = "Druid",
                 Group = "Armor (Minor)",
-				Stats = { ArmorPenetration = 0.05f },
+                Stats = { ArmorPenetration = 0.05f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1151,7 +1151,7 @@ namespace Rawr
                 Name = "Sting",
                 Source = "BM Hunter (Wasp pet)",
                 Group = "Armor (Minor)",
-				Stats = { ArmorPenetration = 0.05f },
+                Stats = { ArmorPenetration = 0.05f },
                 IsTargetDebuff = true,
             });
             #endregion
@@ -1164,17 +1164,17 @@ namespace Rawr
                 Group = "Ranged Attack Power",
                 Stats = { RangedAttackPower = 500f },
                 Improvements = { 
-					new Buff {
+                    new Buff {
                         Name = "Glyphed Hunter's Mark",
                         Stats = { RangedAttackPower = 100f },
                         ConflictingBuffs = { "Hunter's Mark Improvements" } 
                     },
-					new Buff { 
+                    new Buff { 
                         Name = "Improved Hunter's Mark", 
                         Stats = { RangedAttackPower = 150f }, 
                         ConflictingBuffs = { "Hunter's Mark Improvements" } 
                     },
-					new Buff { 
+                    new Buff { 
                         Name = "Improved and Glyphed Hunter's Mark", 
                         Stats = { RangedAttackPower = 250f }, 
                         ConflictingBuffs = { "Hunter's Mark Improvements" } 
@@ -1504,28 +1504,28 @@ namespace Rawr
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
                 Improvements = { new Buff { Name = "Flask of Chromatic Wonder (Mixology)", Stats = {
-					Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4, 
-					ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4, NatureResistance = 4 },
+                    Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4, 
+                    ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4, NatureResistance = 4 },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Lesser Flask of Resistance",
-				Group = "Elixirs and Flasks",
-				Stats =
-				{
-					ArcaneResistance = 50,
-					FireResistance = 50,
-					FrostResistance = 50,
-					ShadowResistance = 50,
-					NatureResistance = 50
-				},
-				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-				Improvements = { new Buff { Name = "Lesser Flask of Resistance (Mixology)", Stats = {
-					ArcaneResistance = 40, FireResistance = 40, FrostResistance = 40, ShadowResistance = 40, NatureResistance = 40 },
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Lesser Flask of Resistance",
+                Group = "Elixirs and Flasks",
+                Stats =
+                {
+                    ArcaneResistance = 50,
+                    FireResistance = 50,
+                    FrostResistance = 50,
+                    ShadowResistance = 50,
+                    NatureResistance = 50
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+                Improvements = { new Buff { Name = "Lesser Flask of Resistance (Mixology)", Stats = {
+                    ArcaneResistance = 40, FireResistance = 40, FrostResistance = 40, ShadowResistance = 40, NatureResistance = 40 },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
-			});
-			defaultBuffs.Add(new Buff()
+            });
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Flask of Distilled Wisdom",
                 Group = "Elixirs and Flasks",
@@ -1703,7 +1703,7 @@ namespace Rawr
                 Stats = { Stamina = 20, Intellect = 20, Spirit = 20, Strength = 20, Agility = 20 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
                 Improvements = { new Buff { Name = "Guru's Elixir (Mixology)", Stats = { 
-					Stamina = 8, Intellect = 8, Spirit = 8, Strength = 8, Agility = 8},
+                    Stamina = 8, Intellect = 8, Spirit = 8, Strength = 8, Agility = 8},
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -2102,7 +2102,7 @@ namespace Rawr
             {
                 Name = "Dodge Food",
                 Group = "Food",
-                Stats = { DodgeRating = 30 }
+                Stats = { DodgeRating = 40, Stamina = 40 }
             });
             #endregion
             #region Pet Food
@@ -2172,12 +2172,12 @@ namespace Rawr
             #endregion
 
             #region Temporary Weapon Enchantment
-			//defaultBuffs.Add(new Buff()
-			//{
-			//    Name = "Adamantite Weightstone",
-			//    Group = "Temporary Weapon Enchantment",
-			//    Stats = { WeaponDamage = 12, CritRating = 14 }
-			//});
+            //defaultBuffs.Add(new Buff()
+            //{
+            //    Name = "Adamantite Weightstone",
+            //    Group = "Temporary Weapon Enchantment",
+            //    Stats = { WeaponDamage = 12, CritRating = 14 }
+            //});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthliving Weapon",
@@ -2675,7 +2675,7 @@ namespace Rawr
                 SetName = "Dreamwalker Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-			});
+            });
             #endregion
             #region Garb
             defaultBuffs.Add(new Buff()
@@ -2725,25 +2725,25 @@ namespace Rawr
             #region Tier  8 | Nightsong
             #region Battlegear
             defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
-			{
+            {
                 Name = "Nightsong Battlegear (T8) 2 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-			    Stats = { ClearcastOnBleedChance = 0.02f },
-				SetName = "Nightsong Battlegear",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ClearcastOnBleedChance = 0.02f },
+                SetName = "Nightsong Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-			});
-			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
-			{
+            });
+            defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+            {
                 Name = "Nightsong Battlegear (T8) 4 Piece Bonus",
-			    Group = "Set Bonuses",
-			    ConflictingBuffs = new List<string>(new string[] { }),
-			    Stats = { BonusSavageRoarDuration = 8f },
-				SetName = "Nightsong Battlegear",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusSavageRoarDuration = 8f },
+                SetName = "Nightsong Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-			});
+            });
             #endregion
             #region Garb
             defaultBuffs.Add(new Buff()
@@ -2795,25 +2795,25 @@ namespace Rawr
             #region Tier  9 | Malfurion's
             #region Battlegear
             defaultBuffs.Add(new Buff()
-			{
+            {
                 Name = "Malfurion's Battlegear (T9) 2 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
-				SetName = "Malfurion's Battlegear",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusRakeDuration = 3f, BonusLacerateDamageMultiplier = 0.05f },
+                SetName = "Malfurion's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-			});
-			defaultBuffs.Add(new Buff()
-			{
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Malfurion's Battlegear (T9) 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
-				SetName = "Malfurion's Battlegear",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusRipCrit = 0.05f, BonusFerociousBiteCrit = 0.05f },
+                SetName = "Malfurion's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-			});
+            });
             #endregion
             #region Regalia
             defaultBuffs.Add(new Buff()
@@ -2822,7 +2822,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { MoonfireDotCrit = 1f },
-				SetName = "Malfurion's Regalia",
+                SetName = "Malfurion's Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
@@ -2832,7 +2832,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { BonusMoonkinNukeDamage = 0.04f },
-				SetName = "Malfurion's Regalia",
+                SetName = "Malfurion's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
@@ -2844,7 +2844,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { NourishCritBonus = 0.05f },
-				SetName = "Malfurion's Garb",
+                SetName = "Malfurion's Garb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
@@ -2854,7 +2854,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RejuvenationCrit = 1.0f },
-				SetName = "Malfurion's Garb",
+                SetName = "Malfurion's Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
@@ -2866,8 +2866,8 @@ namespace Rawr
             {
                 Name = "Lasherweave Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { RipCostReduction = 10f, BonusLacerateDamageMultiplier = 0.20f, BonusBearSwipeDamageMultiplier = 0.20f },
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { RipCostReduction = 10f, BonusLacerateDamageMultiplier = 0.20f, BonusBearSwipeDamageMultiplier = 0.20f },
                 SetName = "Lasherweave Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -2877,7 +2877,7 @@ namespace Rawr
                 Name = "Lasherweave Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { BonusRakeCrit = 1f, DamageTakenMultiplier = -0.02f},
+                Stats = { BonusRakeCrit = 1f, DamageTakenMultiplier = -0.02f},
                 SetName = "Lasherweave Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -3394,9 +3394,9 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = 
                 {
-                	BonusSealOfVengeanceDamageMultiplier = .1f,
-                	BonusSealOfCorruptionDamageMultiplier = .1f,
-                	BonusSealOfRighteousnessDamageMultiplier = .1f,
+                    BonusSealOfVengeanceDamageMultiplier = .1f,
+                    BonusSealOfCorruptionDamageMultiplier = .1f,
+                    BonusSealOfRighteousnessDamageMultiplier = .1f,
                 },
                 SetName = "Aegis Plate",
                 SetThreshold = 2,
@@ -3501,20 +3501,20 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { RighteousVengeanceCanCrit = 1f },
-				SetName = "Turalyon's Battlegear",
+                SetName = "Turalyon's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-			});
-			defaultBuffs.Add(new Buff()
-			{
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Turalyon's Battlegear 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { JudgementCrit = .05f },
-				SetName = "Turalyon's Battlegear",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { JudgementCrit = .05f },
+                SetName = "Turalyon's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-			});
+            });
             #endregion
             #endregion
             #region Tier 10 | Lightsworn
@@ -4359,7 +4359,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Enhance4T9 = 1 },
-				SetName = "Nobundo's Battlegear",
+                SetName = "Nobundo's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4825,7 +4825,7 @@ namespace Rawr
                 Stats setEffect = new Stats() { SpellPower = 222f };
                 // Guess at cooldown and proc chance, to be updated when more info available
                 setEffect.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = 2521 }, 0, 45, 0.2f));
-			    setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats()
+                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats()
                 { 
                     FireDamage = 2862,
                 }, 0, 45, 0.2f));
@@ -4899,13 +4899,13 @@ namespace Rawr
                 Stats = { BonusHealthMultiplier = -0.25f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Chill of the Throne",
-				Group = "Temporary Buffs",
-				Stats = { Dodge = -0.20f },
-				ConflictingBuffs = new List<string>(new string[] { })
-			});
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Chill of the Throne",
+                Group = "Temporary Buffs",
+                Stats = { Dodge = -0.20f },
+                ConflictingBuffs = new List<string>(new string[] { })
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Luck of the Draw",
@@ -4919,13 +4919,13 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
             });
             defaultBuffs.Add(new Buff()
-	        {
-		        Name = "Strength of Wrynn/Hellscream's Warsong (1)",
-		        Group = "Temporary Buffs",
+            {
+                Name = "Strength of Wrynn/Hellscream's Warsong (1)",
+                Group = "Temporary Buffs",
                 Source = "Icecrown Citadel Raid",
-		        Stats = {
+                Stats = {
                     BonusHealthMultiplier = .05f,
-			        BonusDamageMultiplier = .05f,
+                    BonusDamageMultiplier = .05f,
                     BonusHealingDoneMultiplier = .05f,
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
@@ -4936,7 +4936,7 @@ namespace Rawr
                 Source = "Icecrown Citadel Raid",
                 Stats = {
                     BonusHealthMultiplier = .10f,
-	                BonusDamageMultiplier = .10f,
+                    BonusDamageMultiplier = .10f,
                     BonusHealingDoneMultiplier = .10f,
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
@@ -4973,7 +4973,7 @@ namespace Rawr
                     BonusHealingDoneMultiplier = .25f,
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
-	        });
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Strength of Wrynn/Hellscream's Warsong (6)",
@@ -5000,9 +5000,9 @@ namespace Rawr
                 Stats = { BonusArmorMultiplier = 0.3f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
-			// Nightmare Seeds no longer drop from Nightmare Vine; Confirmed with Blue Post
-			// "Sorry for the late response, but I just confirmed that Nightmare Seeds were intentionally removed. You will no longer be able to get them in game. Thanks!"
-			// ~Ujumqin - http://forums.worldofwarcraft.com/thread.html?topicId=25170440756&pageNo=1&sid=1
+            // Nightmare Seeds no longer drop from Nightmare Vine; Confirmed with Blue Post
+            // "Sorry for the late response, but I just confirmed that Nightmare Seeds were intentionally removed. You will no longer be able to get them in game. Thanks!"
+            // ~Ujumqin - http://forums.worldofwarcraft.com/thread.html?topicId=25170440756&pageNo=1&sid=1
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Nightmare Seed",

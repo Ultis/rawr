@@ -95,14 +95,10 @@ namespace Rawr.Bosses
 
             #endregion
             #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 1, 1 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 // Melee
-                this[i].Attacks.Add(new Attack()
-                {
+                this[i].Attacks.Add(new Attack() {
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,

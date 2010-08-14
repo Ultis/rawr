@@ -100,7 +100,7 @@ namespace Rawr.DPSWarr.Skills
         // Functions
         public float GetActivates(float landedatksoverdur) {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            float acts = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, MHAtkTable.AnyLand, combatFactors._c_mhItemSpeed, FightDuration);
+            float acts = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f/*MHAtkTable.AnyLand*/, combatFactors._c_mhItemSpeed, FightDuration);
             acts *= FightDuration;
             if (StatS.BonusWarrior_T10_4P_BSSDProcChange > 0) { acts *= 1.20f; }
 
@@ -110,8 +110,10 @@ namespace Rawr.DPSWarr.Skills
         public override float GetRageUseOverDur(float acts)
         {
             if (!Validated) { return 0f; }
-            return acts * (RageCost + UsedExtraRage);
+            return acts * (RageCost + UsedExtraRage - SDRageReduc[Talents.SuddenDeath]);
         }
+        private float[] _SDRageReduc = { 0, 3, 7, 10 };
+        private float[] SDRageReduc { get{ return _SDRageReduc; } }
     }
     public class OverPower : Ability
     {

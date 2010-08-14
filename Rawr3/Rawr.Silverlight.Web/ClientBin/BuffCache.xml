@@ -9581,7 +9581,8 @@
     <Name>Dodge Food</Name>
     <Group>Food</Group>
     <Stats>
-      <DodgeRating>30</DodgeRating>
+      <DodgeRating>40</DodgeRating>
+      <Stamina>40</Stamina>
     </Stats>
     <SetThreshold>0</SetThreshold>
     <Improvements />

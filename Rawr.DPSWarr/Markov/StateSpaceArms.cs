@@ -61,7 +61,7 @@ namespace Rawr.DPSWarr.Markov
         {
             StateArms s = state as StateArms;
             List<StateTransition<Skills.Ability>> list = new List<StateTransition<Skills.Ability>>();
-
+            /*
             Rawr.DPSWarr.Rotation.AbilWrapper MS = Rot.GetWrapper<Skills.MortalStrike>();
             Rawr.DPSWarr.Rotation.AbilWrapper OP = Rot.GetWrapper<Skills.OverPower>();
             Rawr.DPSWarr.Rotation.AbilWrapper TB = Rot.GetWrapper<Skills.TasteForBlood>();
@@ -245,7 +245,7 @@ namespace Rawr.DPSWarr.Markov
                     ),
                     TransitionProbability = 1.0,
                 });
-            }
+            }*/
             return list;
         }
         private Dictionary<string, StateArms> stateDictionary = new Dictionary<string, StateArms>();

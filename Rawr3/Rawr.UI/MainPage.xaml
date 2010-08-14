@@ -195,8 +195,8 @@
         <toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="4,8,4,4">
             <StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,0,0">
                 <local:ItemButtonWithEnchant x:Name="MainHandButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0,8,0"/>
-                <local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" Width="70" HorizontalAlignment="Center" Margin="8,0,8,0"/>
-                <local:ItemButtonWithEnchant x:Name="RangedButton" HorizontalAlignment="Center" d:LayoutOverrides="Width, Height" Margin="8,0,8,0"/>
+                <local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" HorizontalAlignment="Center" Margin="8,0,8,0" />
+                <local:ItemButtonWithEnchant x:Name="RangedButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0,8,0"/>
             </StackPanel>
             <controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch">
                 <controls:TabItem x:Name="StatsTab" Header="Stats">
