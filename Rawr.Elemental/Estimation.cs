@@ -56,7 +56,7 @@ namespace Rawr.Elemental
              */
             #endregion
             
-            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem, calcOpts.UseFireEle, calcOpts.FightDuration));
+            return new Rotation(talents, spellbox, new RotationOptions(calcOpts.UseFireNova, calcOpts.UseChainLightning, calcOpts.UseDpsTotem, calcOpts.UseFireEle));
         }
 
         public static void solve(CharacterCalculationsElemental calculatedStats, CalculationOptionsElemental calcOpts, BossOptions bossOpts)

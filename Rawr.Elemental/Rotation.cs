@@ -143,7 +143,7 @@ namespace Rawr.Elemental
 
             useDpsFireTotem = rotOpt.UseDpsFireTotem;
 
-            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem, rotOpt.UseFireEle, rotOpt.FightDuration);
+            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem, rotOpt.UseFireEle);
         }
 
         /// <summary>
@@ -165,17 +165,17 @@ namespace Rawr.Elemental
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle, float fightDuration)
+        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
             if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
-            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle, fightDuration);
+            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle, float fightDuration)
+        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
             if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
