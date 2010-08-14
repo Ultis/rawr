@@ -9,5 +9,7 @@ namespace Rawr.Elemental
         bool UseFireNova { get; }
         bool UseChainLightning { get; }
         bool UseDpsFireTotem { get; }
+        bool UseFireEle { get; }
+        float FightDuration { get; }
     }
 }

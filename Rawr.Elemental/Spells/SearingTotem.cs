@@ -22,8 +22,6 @@ namespace Rawr.Elemental.Spells
             periodicTickTime = 2.2f;
             manaCost = .07f * Constants.BaseMana;
             shortName = "ST";
-            gcd = 1;
-            castTime = 0;
             dotCanCrit = 1;
         }
 

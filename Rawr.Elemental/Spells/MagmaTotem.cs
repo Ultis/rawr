@@ -25,8 +25,6 @@ namespace Rawr.Elemental.Spells
             manaCost = .27f * Constants.BaseMana;
             shortName = "MT";
             dotCanCrit = 1;
-            gcd = 1;
-            castTime = 0;
         }
 
         public override void Initialize(ISpellArgs args)

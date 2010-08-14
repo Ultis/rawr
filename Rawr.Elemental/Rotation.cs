@@ -143,7 +143,7 @@ namespace Rawr.Elemental
 
             useDpsFireTotem = rotOpt.UseDpsFireTotem;
 
-            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem, rotOpt.useFireEle);
+            CalculateRotation(rotOpt.UseFireNova, rotOpt.UseChainLightning, rotOpt.UseDpsFireTotem, rotOpt.UseFireEle, rotOpt.FightDuration);
         }
 
         /// <summary>
@@ -165,17 +165,17 @@ namespace Rawr.Elemental
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
+        public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle, float fightDuration)
         {
             if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
-            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle);
+            CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle, fightDuration);
         }
 
         /// <summary>
         /// Calculates a rotation based on the FS>LvB>LB priority.
         /// </summary>
-        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
+        public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle, float fightDuration)
         {
             if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
                 return;
@@ -183,11 +183,12 @@ namespace Rawr.Elemental
             spells.Clear();
             Invalidate();
 
-            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0;
+            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0, fireEleDropsAt = 0, fireEleReadyAt = 0;
 
             switch (useDpsFireTotem)
             {
                 case true:
+                    #region Massive Comment Block About Totem Math
                     /// Reasoning for this block:
                     /// Magma totem is always higher DpS than searing totem.  The old formula, which used DpCT instead of 
                     /// periodic DpS, always favored searing totem over magma totem, which isn't true in all cases.  The reason
@@ -201,9 +202,11 @@ namespace Rawr.Elemental
                     /// magma's value according to how much of a gap there is in between the GCD and the cast time of the 
                     /// benchmark spell.  The larger the gap, the more valuable magma totem's gained DpS.  If the gained DpS
                     /// isn't more valuable than the direct DpS of the benchmark, searing is selected instead.
+                    #endregion
+
                     Spell relativeDpSValue = (CL.DirectDpS > LB.DirectDpS) ? (Spell)CL : (Spell)LB;
                     if ((((MT.PeriodicDpS - ST.PeriodicDpS) * 20) / (MT.CastTime / relativeDpSValue.CastTime))
-                        > relativeDpSValue.DirectDpS)
+                            > relativeDpSValue.DirectDpS)
                         ActiveTotem = MT;
                     else
                         ActiveTotem = ST;

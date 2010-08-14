@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Rawr.Elemental.Spells
 {
-    // Thanks to Levva for help with Fire Elemental modelling
-    // Elemental version currently only about 20% complete
+    // Thanks to Levva for help with Fire Elemental modelling.
+    // Elemental version currently only about 35% complete
     // This will likely go through many iterations, hopefully live 
     // by 2.3.23 at the latest.
 
-    class FireElemental : Totem
+    public class FireElemental : Totem
     {
         private float ap = 0f;
         private float sp = 0f;
@@ -45,6 +45,14 @@ namespace Rawr.Elemental.Spells
             base.SetBaseValues();
 
             cooldown = 600;
+
+            periodicTick = 0f;
+            periodicTicks = 120f;
+            periodicTickTime = 1f;
+            manaCost = .23f * Constants.BaseMana;
+            shortName = "FE";
+            gcd = 1;
+            castTime = 0;
         }
 
         public override void  Initialize(ISpellArgs args)
@@ -73,16 +81,7 @@ namespace Rawr.Elemental.Spells
             totalMana = 4000 + (15 * (0.3f * args.Stats.Intellect));
             CalculateUses();
             CalculateDamage();
-        }
-
-        public float getDPS()
-        {
-            return totalDps;
-        }
-
-        private float getAverageUptime()
-        {
-            return 0f;
+            periodicTick = totalDps;
         }
 
         private void CalculateDamage()
@@ -95,19 +94,19 @@ namespace Rawr.Elemental.Spells
             float meleeNormal = meleeBaseDps * (1 - petMeleeMissRate - crit - .24f);
             float meleeCrits = meleeBaseDps * CritChance * 1.5f;
             float meleeGlances = meleeBaseDps * .75f;
-            meleeTotalDps = (meleeNormal + meleeNormal + meleeGlances) * petMeleeMultipliers * getAverageUptime();
+            meleeTotalDps = (meleeNormal + meleeNormal + meleeGlances) * petMeleeMultipliers;
 
             float blastNormal = blastBaseDps * (1 - petSpellMissRate - CritChance);
             float blastCrits = blastBaseDps * 2f * CritChance;
-            blastTotalDps = (blastNormal + blastCrits) * petSpellMultipliers * getAverageUptime(); 
+            blastTotalDps = (blastNormal + blastCrits) * petSpellMultipliers; 
 
             float novaNormal = novaBaseDps * (1 - petSpellMissRate - CritChance);
             float novaCrits = novaBaseDps * CritChance * 2f;
-            novaTotalDps = (novaNormal + novaCrits) * petSpellMultipliers * (additionalTargets + 1) * getAverageUptime();
+            novaTotalDps = (novaNormal + novaCrits) * petSpellMultipliers * (additionalTargets + 1);
 
             float shieldNormal = shieldBaseDps * (1 - petSpellMissRate - CritChance);
             float shieldCrits = shieldBaseDps * CritChance * 2f;
-            shieldTotalDps = (shieldNormal + shieldCrits) * petSpellMultipliers * (additionalTargets + 1) * getAverageUptime();
+            shieldTotalDps = (shieldNormal + shieldCrits) * petSpellMultipliers * (additionalTargets + 1);
 
             totalDps = meleeTotalDps + novaTotalDps + blastTotalDps + shieldTotalDps;
         }

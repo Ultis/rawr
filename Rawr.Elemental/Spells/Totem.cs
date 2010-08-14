@@ -4,6 +4,8 @@ namespace Rawr.Elemental.Spells
 {
     public class Totem : Spell
     {
+        protected float averageUptime;
+
         public Totem() : base()
         {
         }
@@ -21,6 +23,23 @@ namespace Rawr.Elemental.Spells
             get
             {
                 return 0f;
+            }
+        }
+
+        public override void Initialize(ISpellArgs args)
+        {
+            base.Initialize(args);
+        }
+
+        public float AverageUptime
+        {
+            get
+            {
+                return averageUptime;
+            }
+            set
+            {
+                averageUptime = value;
             }
         }
     }

@@ -32,6 +32,7 @@
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbFireEle = new System.Windows.Forms.CheckBox();
             this.cbFireDpsTotem = new System.Windows.Forms.CheckBox();
             this.cbChainLightning = new System.Windows.Forms.CheckBox();
             this.cbFireNova = new System.Windows.Forms.CheckBox();
@@ -50,7 +51,6 @@
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.cbFireEle = new System.Windows.Forms.CheckBox();
             this.tabPage4.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -113,6 +113,18 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Rotation options";
             // 
+            // cbFireEle
+            // 
+            this.cbFireEle.AutoSize = true;
+            this.cbFireEle.Location = new System.Drawing.Point(116, 38);
+            this.cbFireEle.Name = "cbFireEle";
+            this.cbFireEle.Size = new System.Drawing.Size(114, 17);
+            this.cbFireEle.TabIndex = 54;
+            this.cbFireEle.Text = "Use Fire Elemental";
+            this.cbFireEle.UseVisualStyleBackColor = true;
+            this.cbFireEle.Visible = false;
+            this.cbFireEle.CheckedChanged += new System.EventHandler(this.cbFireEle_CheckedChanged);
+            // 
             // cbFireDpsTotem
             // 
             this.cbFireDpsTotem.AutoSize = true;
@@ -149,7 +161,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.cbThunderstorm);
-            this.groupBox3.Location = new System.Drawing.Point(6, 375);
+            this.groupBox3.Location = new System.Drawing.Point(6, 374);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(277, 41);
             this.groupBox3.TabIndex = 54;
@@ -299,18 +311,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(297, 553);
             this.tabControl1.TabIndex = 23;
-            // 
-            // cbFireEle
-            // 
-            this.cbFireEle.AutoSize = true;
-            this.cbFireEle.Location = new System.Drawing.Point(116, 38);
-            this.cbFireEle.Name = "cbFireEle";
-            this.cbFireEle.Size = new System.Drawing.Size(114, 17);
-            this.cbFireEle.TabIndex = 54;
-            this.cbFireEle.Text = "Use Fire Elemental";
-            this.cbFireEle.UseVisualStyleBackColor = true;
-            this.cbFireEle.Visible = false;
-            this.cbFireEle.CheckedChanged += new System.EventHandler(this.cbFireEle_CheckedChanged);
             // 
             // CalculationOptionsPanelElemental
             // 

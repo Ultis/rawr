@@ -80,6 +80,18 @@ namespace Rawr.Elemental
             set;
         }
 
+        public bool UseFireEle
+        {
+            get;
+            set;
+        }
+
+        public float FightDuration
+        {
+            get;
+            set;
+        }
+
         #endregion
     }
 }
