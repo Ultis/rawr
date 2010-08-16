@@ -741,6 +741,7 @@
     <Resource Include="Images\temp.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\expand.png" />
     <Content Include="Images\icon-16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

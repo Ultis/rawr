@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Reflection;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Rawr.UI
 {
@@ -100,6 +101,11 @@ namespace Rawr.UI
         //    }
         //}
 
+        private List<ItemType> modelRelevant;
+        private List<ItemType> userRelevant;
+
+        private List<CheckBox> checkBoxes;
+
         private string _currentGraph = "Gear|Head";
         public string CurrentGraph
         {
@@ -129,6 +135,7 @@ namespace Rawr.UI
                 //CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
                 //CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
                 SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
+                UpdateBoxes();
                 UpdateGraph();
             }
         }
@@ -136,11 +143,13 @@ namespace Rawr.UI
 
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
+            UpdateBoxes();
             UpdateGraph();
         }
         public void character_ModelChanged(object sender, EventArgs e)
         {
             SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
+            UpdateBoxes();
             UpdateGraph();
         }
 
@@ -160,9 +169,96 @@ namespace Rawr.UI
             //GemCombo.SelectedIndex = 0;
             //BuffCombo.SelectedIndex = 0;
             //CustomCombo.SelectedIndex = -1;
+
+#if !DEBUG // Remove when the Filters on the Side work
+            // This keeps the right edge from looking indented for no reason
+            FilterAccordion.Margin = new Thickness(0);        
+#endif
+
+            SV_Bind.SetIsMouseWheelScrollingEnabled(true);
+            SV_Prof.SetIsMouseWheelScrollingEnabled(true);
+            SV_iLevel.SetIsMouseWheelScrollingEnabled(true);
+            SV_Type.SetIsMouseWheelScrollingEnabled(true);
+            SV_Gems.SetIsMouseWheelScrollingEnabled(true);
+
+            // From Refine Types of Items Listed
+            checkBoxes = new List<CheckBox>();
+
+            checkBoxes.Add(CheckBoxPlate);
+            checkBoxes.Add(CheckBoxMail);
+            checkBoxes.Add(CheckBoxLeather);
+            checkBoxes.Add(CheckBoxCloth);
+
+            checkBoxes.Add(CheckBoxDagger);
+            checkBoxes.Add(CheckBoxFistWeapon);
+            checkBoxes.Add(CheckBoxOneHandedAxe);
+            checkBoxes.Add(CheckBoxOneHandedMace);
+            checkBoxes.Add(CheckBoxOneHandedSword);
+
+            checkBoxes.Add(CheckBoxStaff);
+            checkBoxes.Add(CheckBoxPolearm);
+            checkBoxes.Add(CheckBoxTwoHandedAxe);
+            checkBoxes.Add(CheckBoxTwoHandedMace);
+            checkBoxes.Add(CheckBoxTwoHandedSword);
+
+            checkBoxes.Add(CheckBoxBow);
+            checkBoxes.Add(CheckBoxCrossBow);
+            checkBoxes.Add(CheckBoxGun);
+            checkBoxes.Add(CheckBoxThrown);
+            checkBoxes.Add(CheckBoxRelic);
+            checkBoxes.Add(CheckBoxWand);
+            checkBoxes.Add(CheckBoxShield);
+            checkBoxes.Add(CheckBoxMisc);
+
+            UpdateBoxes();
+            //
             _loading = false;
             UpdateGraph();
+            ButtonExpand_Click(null, null);
         }
+
+        // From Refine Types of Items Listed
+        public void UpdateBoxes()
+        {
+            /*modelRelevant = Calculations.Instance.RelevantItemTypes != null ? Calculations.Instance.RelevantItemTypes : new List<ItemType>();
+            userRelevant = Calculations.Instance != null ? ItemFilter.GetRelevantItemTypesList(Calculations.Instance) : new List<ItemType>();
+            foreach (CheckBox box in checkBoxes) {
+                if (box == CheckBoxRelic) {
+                    box.IsEnabled = modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Idol)
+                       || modelRelevant.Contains(ItemType.Totem) ||modelRelevant.Contains(ItemType.Sigil);
+                    box.IsChecked = userRelevant.Contains(ItemType.Libram) || userRelevant.Contains(ItemType.Idol)
+                        || userRelevant.Contains(ItemType.Totem) || userRelevant.Contains(ItemType.Sigil);
+                } else {
+                    box.IsEnabled = modelRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
+                    box.IsChecked = userRelevant.Contains((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
+                }
+            }*/
+        }
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            userRelevant.Clear();
+            modelRelevant = Calculations.Instance.RelevantItemTypes;
+            foreach (CheckBox box in checkBoxes)
+            {
+                if (box.IsChecked.GetValueOrDefault(false) && box.IsEnabled)
+                {
+                    if (box == CheckBoxRelic)
+                    {
+                        if (modelRelevant.Contains(ItemType.Libram)) userRelevant.Add(ItemType.Libram);
+                        if (modelRelevant.Contains(ItemType.Totem)) userRelevant.Add(ItemType.Totem);
+                        if (modelRelevant.Contains(ItemType.Idol)) userRelevant.Add(ItemType.Idol);
+                        if (modelRelevant.Contains(ItemType.Sigil)) userRelevant.Add(ItemType.Sigil);
+                    }
+                    else
+                    {
+                        userRelevant.Add((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
+                    }
+                }
+            }
+            ItemCache.OnItemsChanged();
+            //this.DialogResult = true;
+        }
+        //
 
         private string ConvertBuffSelector(string buffGroup) {
             switch (buffGroup) {
@@ -865,6 +961,53 @@ namespace Rawr.UI
                     TB_LiveFilter.Background = new SolidColorBrush(Colors.White);
                 // Weird Focus issue
                 //TB_LiveFilter.Focus();
+            }
+        }
+
+        DateTime lastClicked;
+        GridLength cachedColumnWidth;
+        void GridSplitter_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            // The Poor Man's DoubleClick:
+            if (DateTime.Now.Subtract(lastClicked).TotalMilliseconds < 500) {
+                // What column is it in?
+                int colIndex = (int)FilterSplitter.GetValue(Grid.ColumnProperty);
+                // And what grid are we talking about?
+                Grid grid = FilterSplitter.Parent as Grid;
+                Debug.Assert(grid.ColumnDefinitions.Count > 0);
+                // Cool...now look at the column definition:
+                GridLength gridLength = grid.ColumnDefinitions[colIndex].Width;
+                // In order to see if we've already slammed the splitter up against the side:
+                GridLength splitterWidth = new GridLength(10/*splitter.Width*/);
+                if (gridLength.Equals(splitterWidth)) {
+                    // Already collapsed..restore:
+                    grid.ColumnDefinitions[colIndex].Width = cachedColumnWidth;
+                } else {
+                    // Collapse the column:
+                    cachedColumnWidth = gridLength;
+                    grid.ColumnDefinitions[colIndex].Width = splitterWidth;
+                }
+            }
+            lastClicked = DateTime.Now;
+        }
+
+        private void ButtonExpand_Click(object sender, RoutedEventArgs e)
+        {
+            // What column is it in?
+            int colIndex = (int)FilterSplitter.GetValue(Grid.ColumnProperty);
+            // And what grid are we talking about?
+            Grid grid = FilterSplitter.Parent as Grid;
+            Debug.Assert(grid.ColumnDefinitions.Count > 0);
+            // Cool...now look at the column definition:
+            GridLength gridLength = grid.ColumnDefinitions[colIndex].Width;
+            // In order to see if we've already slammed the splitter up against the side:
+            GridLength splitterWidth = new GridLength(10/*splitter.Width*/);
+            if (gridLength.Equals(splitterWidth)) {
+                // Already collapsed..restore:
+                grid.ColumnDefinitions[colIndex].Width = cachedColumnWidth;
+            } else {
+                // Collapse the column:
+                cachedColumnWidth = gridLength;
+                grid.ColumnDefinitions[colIndex].Width = splitterWidth;
             }
         }
     }
