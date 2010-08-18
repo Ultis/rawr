@@ -264,7 +264,6 @@ namespace Rawr {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Melee"] = false; // You aren't melee
                         _MyModelSupportsThis.Add("Hunter", custom);
-                        _MyModelSupportsThis.Add("Moonkin", custom);
                         _MyModelSupportsThis.Add("Elemental", custom);
                         _MyModelSupportsThis.Add("Mage", custom);
                         _MyModelSupportsThis.Add("ShadowPriest", custom);
@@ -341,6 +340,27 @@ namespace Rawr {
                         custom["Disarms"] = false; // NYI
                         custom["Invulnerables"] = false; // Your target isn't the boss
                         _MyModelSupportsThis.Add("Healadin", custom);
+                    }
+                    #endregion
+                    #region Moonkin
+                    {
+                        // Moonkin only needs to support a few features - we don't have any fancy executes or other cool stuff
+                        Dictionary<string, bool> custom = DuplicateDefaultSupports();
+                        custom["Health"] = false; // NYI
+                        custom["TimeSub35"] = false; // Not applicable
+                        custom["TimeSub20"] = false; // Not applicable
+                        custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // We're a caster, we don't care
+                        custom["RaidSize"] = false; // NYI
+                        custom["TargetGroups"] = false; // NYI
+                        custom["Attacks"] = false; // NYI
+                        custom["Defensive"] = false; // NYI
+                        custom["Moves"] = false; // NYI
+                        custom["Stuns"] = false; // NYI
+                        custom["Fears"] = false; // NYI
+                        custom["Roots"] = false; // Not applicable
+                        custom["Disarms"] = false; // Not applicable
+                        custom["Invulnerables"] = false; // NYI
+                        _MyModelSupportsThis.Add("Moonkin", custom);
                     }
                     #endregion
                 }

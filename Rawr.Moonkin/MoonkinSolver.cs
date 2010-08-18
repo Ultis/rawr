@@ -188,15 +188,15 @@ namespace Rawr.Moonkin
             // Do tree calculations: Calculate damage per cast.
             float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
             // Extend that to number of casts per fight.
-            float treeCasts = (float)Math.Floor(calcOpts.FightLength / 3) + 1.0f;
+            float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
-            if ((int)calcOpts.FightLength % 3 == 0 && calcOpts.FightLength - (int)calcOpts.FightLength < 0.5)
-                treeCasts += (calcOpts.FightLength - (int)calcOpts.FightLength) / 0.5f - 1.0f;
+            if ((int)calcs.FightLength % 3 == 0 && calcs.FightLength - (int)calcs.FightLength < 0.5)
+                treeCasts += (calcs.FightLength - (int)calcs.FightLength) / 0.5f - 1.0f;
             treeDamage *= treeCasts;
             // Multiply by raid-wide damage increases.
             treeDamage *= (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier);
             // Calculate the DPS averaged over the fight length.
-            float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
+            float treeDPS = treeDamage / (calcs.FightLength * 60.0f);
             // Calculate mana usage for trees.
             float treeManaUsage = (float)Math.Ceiling(treeCasts) * CalculationsMoonkin.BaseMana * 0.12f;
             manaPool -= talents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
@@ -211,10 +211,10 @@ namespace Rawr.Moonkin
                 (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
                 (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
             float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
-            float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallCD) + 1.0f;
+            float numStarfallCasts = (float)Math.Floor(calcs.FightLength / starfallCD) + 1.0f;
             // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
             // calculate a partial cast
-            float starfallDiff = calcOpts.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
+            float starfallDiff = calcs.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
             if (starfallDiff > 0 && starfallDiff < 10)
                 numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
@@ -222,7 +222,7 @@ namespace Rawr.Moonkin
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
             // Simple faerie fire mana calc
-            float faerieFireCasts = (float)Math.Floor(calcOpts.FightLength / 5) + (calcOpts.FightLength % 5 != 0 ? 1.0f : 0.0f);
+            float faerieFireCasts = (float)Math.Floor(calcs.FightLength / 5) + (calcs.FightLength % 5 != 0 ? 1.0f : 0.0f);
             float faerieFireMana = faerieFireCasts * CalculationsMoonkin.BaseMana * 0.08f;
             if (talents.ImprovedFaerieFire > 0)
                 manaPool -= faerieFireMana;
@@ -499,7 +499,7 @@ namespace Rawr.Moonkin
                     float upTime = effect.GetAverageUptime(rot.Duration / rot.CastCount, 1f);
                     t10StarfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
                 }
-                float starfallDPS = t10StarfallDamage / (calcOpts.FightLength * 60.0f);
+                float starfallDPS = t10StarfallDamage / (calcs.FightLength * 60.0f);
                 burstDPS += trinketDPS + treeDPS + starfallDPS;
                 sustainedDPS += trinketDPS + treeDPS + starfallDPS;
 
@@ -586,22 +586,14 @@ namespace Rawr.Moonkin
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
             // Mana pot calculations
-            int numPots = calcOpts.ManaPots ? 1 : 0;
             float manaRestoredByPots = 0.0f;
-            if (numPots > 0)
+            foreach (Buff b in character.ActiveBuffs)
             {
-                float manaPerPot = 0.0f;
-                if (calcOpts.ManaPotType == "Runic Mana Potion")
-                    manaPerPot = 4320.0f;
-                if (calcOpts.ManaPotType == "Fel Mana Potion")
-                    manaPerPot = 3200.0f;
-                // Bonus from Alchemist's Stone
-                if (calcs.BasicStats.BonusManaPotion > 0)
+                if (b.Stats.ManaRestore > 0)
                 {
-                    manaPerPot *= 1 + calcs.BasicStats.BonusManaPotion;
+                    manaRestoredByPots = b.Stats.ManaRestore;
+                    break;
                 }
-
-                manaRestoredByPots = numPots * manaPerPot;
             }
 
             // Innervate calculations
@@ -611,7 +603,7 @@ namespace Rawr.Moonkin
 
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
-            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength * 60;
+            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcs.FightLength * 60;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }

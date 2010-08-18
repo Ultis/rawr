@@ -18,15 +18,15 @@ namespace Rawr.Moonkin
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType == typeof(float)) return System.Convert.ToSingle(value) * 100.0f;
-            if (targetType == typeof(double)) return System.Convert.ToDouble(value) * 100.0d;
-            return System.Convert.ToDouble(value) * 100.0d;
+            if (targetType == typeof(float)) return System.Convert.ToSingle(value, culture) * 100.0f;
+            if (targetType == typeof(double)) return System.Convert.ToDouble(value, culture) * 100.0d;
+            return DependencyProperty.UnsetValue;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType == typeof(float)) return System.Convert.ToSingle(value) / 100f;
-            if (targetType == typeof(double)) return System.Convert.ToDouble(value) / 100d;
-            return System.Convert.ToDouble(value) / 100d;
+            if (targetType == typeof(float)) return System.Convert.ToSingle(value, culture) / 100f;
+            if (targetType == typeof(double)) return System.Convert.ToDouble(value, culture) / 100d;
+            return DependencyProperty.UnsetValue;
         }
     }
 }

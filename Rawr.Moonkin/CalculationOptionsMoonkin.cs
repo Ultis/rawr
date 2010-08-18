@@ -60,20 +60,6 @@ namespace Rawr.Moonkin
 			set { innervateDelay = value; OnPropertyChanged("InnervateDelay"); }
 		}
 
-		private bool manaPots = false;
-		public bool ManaPots
-		{
-			get { return manaPots; }
-			set { manaPots = value; OnPropertyChanged("ManaPots"); }
-		}
-
-		private string manaPotType = "Runic Mana Potion";
-		public string ManaPotType
-		{
-			get { return manaPotType; }
-			set { manaPotType = value; OnPropertyChanged("ManaPotType"); }
-		}
-
 		private string aldorScryer = "Aldor";
 		public string AldorScryer
 		{

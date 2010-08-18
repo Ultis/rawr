@@ -630,8 +630,16 @@ namespace Rawr.Moonkin
             calcs.SpellPower = stats.SpellPower + spellPowerFromStats;
 
             calcs.Latency = calcOpts.Latency;
+
+#if RAWR3
+            BossOptions bossOpts = new BossOptions();
+            if (character.BossOptions != null) bossOpts = character.BossOptions;
+            calcs.FightLength = bossOpts.BerserkTimer / 60f;
+            calcs.TargetLevel = bossOpts.Level;
+#else
             calcs.FightLength = calcOpts.FightLength;
             calcs.TargetLevel = calcOpts.TargetLevel;
+#endif
 
             // 3.1 spirit regen
             float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);

@@ -35,11 +35,8 @@
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chkInnervate = new System.Windows.Forms.CheckBox();
-            this.chkManaPots = new System.Windows.Forms.CheckBox();
-            this.cmbPotType = new System.Windows.Forms.ComboBox();
             this.lblInnervateOffset = new System.Windows.Forms.Label();
             this.txtInnervateDelay = new System.Windows.Forms.TextBox();
-            this.lblManaPotType = new System.Windows.Forms.Label();
             this.trkReplenishmentUptime = new System.Windows.Forms.TrackBar();
             this.trkTreantLifespan = new System.Windows.Forms.TrackBar();
             this.lblReplenishmentUptime = new System.Windows.Forms.Label();
@@ -121,29 +118,6 @@
             this.chkInnervate.UseVisualStyleBackColor = true;
             this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
             // 
-            // chkManaPots
-            // 
-            this.chkManaPots.AutoSize = true;
-            this.chkManaPots.Location = new System.Drawing.Point(6, 132);
-            this.chkManaPots.Name = "chkManaPots";
-            this.chkManaPots.Size = new System.Drawing.Size(117, 17);
-            this.chkManaPots.TabIndex = 6;
-            this.chkManaPots.Text = "Use mana potions?";
-            this.chkManaPots.UseVisualStyleBackColor = true;
-            this.chkManaPots.CheckedChanged += new System.EventHandler(this.chkManaPots_CheckedChanged);
-            // 
-            // cmbPotType
-            // 
-            this.cmbPotType.FormattingEnabled = true;
-            this.cmbPotType.Items.AddRange(new object[] {
-            "Runic Mana Potion",
-            "Fel Mana Potion"});
-            this.cmbPotType.Location = new System.Drawing.Point(108, 155);
-            this.cmbPotType.Name = "cmbPotType";
-            this.cmbPotType.Size = new System.Drawing.Size(93, 21);
-            this.cmbPotType.TabIndex = 7;
-            this.cmbPotType.SelectedIndexChanged += new System.EventHandler(this.cmbPotType_SelectedIndexChanged);
-            // 
             // lblInnervateOffset
             // 
             this.lblInnervateOffset.AutoSize = true;
@@ -161,21 +135,12 @@
             this.txtInnervateDelay.TabIndex = 5;
             this.txtInnervateDelay.Leave += new System.EventHandler(this.txtInnervateDelay_Leave);
             // 
-            // lblManaPotType
-            // 
-            this.lblManaPotType.AutoSize = true;
-            this.lblManaPotType.Location = new System.Drawing.Point(3, 158);
-            this.lblManaPotType.Name = "lblManaPotType";
-            this.lblManaPotType.Size = new System.Drawing.Size(97, 13);
-            this.lblManaPotType.TabIndex = 21;
-            this.lblManaPotType.Text = "Mana Potion Type:";
-            // 
             // trkReplenishmentUptime
             // 
-            this.trkReplenishmentUptime.Location = new System.Drawing.Point(125, 182);
+            this.trkReplenishmentUptime.Location = new System.Drawing.Point(119, 132);
             this.trkReplenishmentUptime.Maximum = 100;
             this.trkReplenishmentUptime.Name = "trkReplenishmentUptime";
-            this.trkReplenishmentUptime.Size = new System.Drawing.Size(76, 42);
+            this.trkReplenishmentUptime.Size = new System.Drawing.Size(76, 45);
             this.trkReplenishmentUptime.TabIndex = 11;
             this.trkReplenishmentUptime.TickFrequency = 10;
             this.trkReplenishmentUptime.Value = 100;
@@ -183,10 +148,10 @@
             // 
             // trkTreantLifespan
             // 
-            this.trkTreantLifespan.Location = new System.Drawing.Point(128, 230);
+            this.trkTreantLifespan.Location = new System.Drawing.Point(122, 180);
             this.trkTreantLifespan.Maximum = 100;
             this.trkTreantLifespan.Name = "trkTreantLifespan";
-            this.trkTreantLifespan.Size = new System.Drawing.Size(73, 42);
+            this.trkTreantLifespan.Size = new System.Drawing.Size(73, 45);
             this.trkTreantLifespan.TabIndex = 12;
             this.trkTreantLifespan.TickFrequency = 10;
             this.trkTreantLifespan.Value = 50;
@@ -195,7 +160,7 @@
             // lblReplenishmentUptime
             // 
             this.lblReplenishmentUptime.AutoSize = true;
-            this.lblReplenishmentUptime.Location = new System.Drawing.Point(3, 192);
+            this.lblReplenishmentUptime.Location = new System.Drawing.Point(-3, 142);
             this.lblReplenishmentUptime.Name = "lblReplenishmentUptime";
             this.lblReplenishmentUptime.Size = new System.Drawing.Size(116, 13);
             this.lblReplenishmentUptime.TabIndex = 31;
@@ -204,7 +169,7 @@
             // lblTreantLifespan
             // 
             this.lblTreantLifespan.AutoSize = true;
-            this.lblTreantLifespan.Location = new System.Drawing.Point(3, 241);
+            this.lblTreantLifespan.Location = new System.Drawing.Point(-3, 191);
             this.lblTreantLifespan.Name = "lblTreantLifespan";
             this.lblTreantLifespan.Size = new System.Drawing.Size(84, 13);
             this.lblTreantLifespan.TabIndex = 32;
@@ -213,7 +178,7 @@
             // lblUptimeValue
             // 
             this.lblUptimeValue.AutoSize = true;
-            this.lblUptimeValue.Location = new System.Drawing.Point(127, 211);
+            this.lblUptimeValue.Location = new System.Drawing.Point(122, 164);
             this.lblUptimeValue.Name = "lblUptimeValue";
             this.lblUptimeValue.Size = new System.Drawing.Size(25, 13);
             this.lblUptimeValue.TabIndex = 33;
@@ -222,7 +187,7 @@
             // lblLifespanValue
             // 
             this.lblLifespanValue.AutoSize = true;
-            this.lblLifespanValue.Location = new System.Drawing.Point(127, 259);
+            this.lblLifespanValue.Location = new System.Drawing.Point(122, 212);
             this.lblLifespanValue.Name = "lblLifespanValue";
             this.lblLifespanValue.Size = new System.Drawing.Size(19, 13);
             this.lblLifespanValue.TabIndex = 34;
@@ -231,7 +196,7 @@
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(3, 281);
+            this.lblUserRotation.Location = new System.Drawing.Point(-3, 231);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -250,7 +215,7 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 278);
+            this.cmbUserRotation.Location = new System.Drawing.Point(102, 228);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
             this.cmbUserRotation.TabIndex = 21;
@@ -260,7 +225,7 @@
             // 
             this.chkPtrMode.AutoSize = true;
             this.chkPtrMode.Enabled = false;
-            this.chkPtrMode.Location = new System.Drawing.Point(6, 306);
+            this.chkPtrMode.Location = new System.Drawing.Point(0, 256);
             this.chkPtrMode.Name = "chkPtrMode";
             this.chkPtrMode.Size = new System.Drawing.Size(78, 17);
             this.chkPtrMode.TabIndex = 45;
@@ -282,11 +247,8 @@
             this.Controls.Add(this.lblReplenishmentUptime);
             this.Controls.Add(this.trkTreantLifespan);
             this.Controls.Add(this.trkReplenishmentUptime);
-            this.Controls.Add(this.lblManaPotType);
             this.Controls.Add(this.txtInnervateDelay);
             this.Controls.Add(this.lblInnervateOffset);
-            this.Controls.Add(this.cmbPotType);
-            this.Controls.Add(this.chkManaPots);
             this.Controls.Add(this.chkInnervate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFightLength);
@@ -312,11 +274,8 @@
         private System.Windows.Forms.TextBox txtFightLength;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkInnervate;
-        private System.Windows.Forms.CheckBox chkManaPots;
-        private System.Windows.Forms.ComboBox cmbPotType;
         private System.Windows.Forms.Label lblInnervateOffset;
         private System.Windows.Forms.TextBox txtInnervateDelay;
-        private System.Windows.Forms.Label lblManaPotType;
         private System.Windows.Forms.TrackBar trkReplenishmentUptime;
         private System.Windows.Forms.TrackBar trkTreantLifespan;
         private System.Windows.Forms.Label lblReplenishmentUptime;
