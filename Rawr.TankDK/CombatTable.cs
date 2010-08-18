@@ -1111,6 +1111,7 @@ namespace Rawr.TankDK
 
             // Multiply by Frost Presence modifier:
             DPSPoints *= 2.0735f;
+            DPSPoints *= 1 + stats.BonusDamageMultiplier;
             // Figure out how much damage may have been done when factoring in missrate.
             // This currenty is just physicalhit not spell hit.  Need to fix that.
             DPSPoints *= 1f - chanceMissed;
