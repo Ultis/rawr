@@ -103,7 +103,7 @@ namespace Rawr.Moonkin
 
             retVal.Add("Burst Spell Breakdown", sb.ToString());
             retVal.Add("Starfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} s w/NG\n{3:F2}% max non-Eclipse\n{4:F2}% max Eclipse\n{5:F2} avg hit\n{6:F0} avg mana",
-                SelectedRotation.StarfireAvgHit / SelectedRotation.StarfireAvgCast,
+                SelectedRotation.StarfireAvgHit / (SelectedRotation.StarfireAvgCast > 0 ? SelectedRotation.StarfireAvgCast : 1f),
                 SelectedRotation.StarfireAvgCast,
                 SelectedRotation.StarfireNGCastTime,
                 100 * SelectedRotation.StarfireNonEclipseCrit,
@@ -111,25 +111,25 @@ namespace Rawr.Moonkin
                 SelectedRotation.StarfireAvgHit,
                 SelectedRotation.StarfireManaCost));
             retVal.Add("Wrath", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} s w/NG\n{3:F2} avg hit\n{4:F0} avg mana",
-                SelectedRotation.WrathAvgHit / SelectedRotation.WrathAvgCast,
+                SelectedRotation.WrathAvgHit / (SelectedRotation.WrathAvgCast > 0 ? SelectedRotation.WrathAvgCast : 1f),
                 SelectedRotation.WrathAvgCast,
                 SelectedRotation.WrathNGCastTime,
                 SelectedRotation.WrathAvgHit,
                 SelectedRotation.WrathManaCost));
             retVal.Add("Moonfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit\n{3:F0} avg mana",
-                SelectedRotation.MoonfireAvgHit / SelectedRotation.MoonfireDuration,
+                SelectedRotation.MoonfireAvgHit / (SelectedRotation.MoonfireDuration > 0 ? SelectedRotation.MoonfireDuration : 1f),
                 SelectedRotation.MoonfireCastTime,
                 (SelectedRotation.MoonfireAvgHit),
                 SelectedRotation.MoonfireManaCost));
             retVal.Add("Insect Swarm", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit\n{3:F0} avg mana",
-                SelectedRotation.InsectSwarmAvgHit / SelectedRotation.InsectSwarmDuration,
+                SelectedRotation.InsectSwarmAvgHit / (SelectedRotation.InsectSwarmDuration > 0 ? SelectedRotation.InsectSwarmDuration : 1f),
                 SelectedRotation.InsectSwarmCastTime,
                 SelectedRotation.InsectSwarmAvgHit,
                 SelectedRotation.InsectSwarmManaCost));
             retVal.Add("Starfall", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per star\n{3:F0} avg mana",
                 SelectedRotation.StarfallDamage / 10.0f,
                 SelectedRotation.StarfallDamage,
-                SelectedRotation.StarfallDamage / SelectedRotation.StarfallStars,
+                SelectedRotation.StarfallDamage / (SelectedRotation.StarfallStars > 0 ? SelectedRotation.StarfallStars : 1f),
                 StarfallMana));
             retVal.Add("Treants", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per tree",
                 TreantDamage / 30.0f, TreantDamage, TreantDamage / 3.0f));
