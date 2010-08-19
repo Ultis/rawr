@@ -17,7 +17,7 @@ namespace Rawr
         //early morning
         //summer soul and solace
         //the world is watching
-        //viscious circle
+        //vicious circle
         public string Name;
         public string Group;
         public Stats Stats = new Stats();
@@ -4740,86 +4740,6 @@ namespace Rawr
             #endregion
             #endregion // Set Bonuses
 
-            #region Professions
-            #region Tailoring
-            #region TBC
-            /*
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Spellfire 3 Piece Bonus",
-                Group = "Set Bonuses",
-                Source = "Spellfire Tailoring",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellDamageFromIntellectPercentage = 0.07f },
-                SetName = "Wrath of Spellfire",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(buff = new Buff()
-            {
-                Name = "Spellstrike 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { },
-                SetName = "Spellstrike Infusion",
-                SetThreshold = 2
-            });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 92 }, 10, 0, 0.05f));
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Primal Mooncloth 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { SpellCombatManaRegeneration = 0.05f },
-                SetName = "Primal Mooncloth",
-                SetThreshold = 3
-            });
- */
-            #endregion
-            #endregion
-            #region Leatherworking
-            #region TBC
-            /*          
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Primalstrike 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { AttackPower = 40 },
-                SetName = "Primal Intent",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Fel Leather 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { DodgeRating = 20 },
-                SetName = "Fel Skin",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Heavy Clefthoof 3 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Strength = 20 },
-                SetName = "Strength of the Clefthoof",
-                SetThreshold = 3
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Windhawk Armor",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Mp5 = 8.0f },
-                SetName = "Windhawk Armor",
-                SetThreshold = 3
-            });
- */
-            #endregion
-            #endregion
-            #endregion
-
             #region Onyxia Drops set bonuses
             {
                 Stats setEffect = new Stats() { SpellPower = 222f };
@@ -4864,8 +4784,73 @@ namespace Rawr
             #endregion
 
             #region Profession Buffs
-            defaultBuffs.Add(new Buff()
-            {
+            #region Tailoring
+            #region TBC
+            /*defaultBuffs.Add(new Buff() {
+                Name = "Spellfire 3 Piece Bonus",
+                Group = "Set Bonuses",
+                Source = "Spellfire Tailoring",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SpellDamageFromIntellectPercentage = 0.07f },
+                SetName = "Wrath of Spellfire",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(buff = new Buff() {
+                Name = "Spellstrike 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { },
+                SetName = "Spellstrike Infusion",
+                SetThreshold = 2
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, new Stats() { SpellPower = 92 }, 10, 0, 0.05f));
+            defaultBuffs.Add(new Buff() {
+                Name = "Primal Mooncloth 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SpellCombatManaRegeneration = 0.05f },
+                SetName = "Primal Mooncloth",
+                SetThreshold = 3
+            });*/
+            #endregion
+            #endregion
+            #region Leatherworking
+            #region TBC
+            /*defaultBuffs.Add(new Buff() {
+                Name = "Primalstrike 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { AttackPower = 40 },
+                SetName = "Primal Intent",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Fel Leather 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DodgeRating = 20 },
+                SetName = "Fel Skin",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Heavy Clefthoof 3 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Strength = 20 },
+                SetName = "Strength of the Clefthoof",
+                SetThreshold = 3
+            });
+            defaultBuffs.Add(new Buff() {
+                Name = "Windhawk Armor",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Mp5 = 8.0f },
+                SetName = "Windhawk Armor",
+                SetThreshold = 3
+            });*/
+            #endregion
+            #endregion
+            defaultBuffs.Add(new Buff() {
                 Name = "Toughness",
                 Group = "Profession Buffs",
                 Source = "Mining [450]",
@@ -4873,8 +4858,7 @@ namespace Rawr
                 Stats = { Stamina = 60f },
                 Professions = new List<Profession>() { Profession.Mining },
             });
-            defaultBuffs.Add(new Buff()
-            {
+            defaultBuffs.Add(new Buff() {
                 Name = "Master of Anatomy",
                 Group = "Profession Buffs",
                 Source = "Skinning [450]",

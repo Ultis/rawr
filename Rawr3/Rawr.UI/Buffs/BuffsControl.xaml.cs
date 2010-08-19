@@ -11,8 +11,8 @@ using System.Collections.Generic;
 
 namespace Rawr.UI
 {
-	public partial class BuffsControl : UserControl
-	{
+    public partial class BuffsControl : UserControl
+    {
 
         private Character character;
         public Character Character
@@ -114,6 +114,19 @@ namespace Rawr.UI
                         checkBox.IsEnabled = false;
                         continue;
                     }
+                }
+                if (!string.IsNullOrEmpty(buff.Group) && buff.Group == "Profession Buffs") {
+                    checkBox.IsEnabled = false;
+                    continue;
+                }
+                if (buff.Name.Contains("Mixology") && !character.HasProfession(Profession.Alchemy)) {
+                    checkBox.IsEnabled = false;
+                    checkBox.Visibility = Visibility.Collapsed;
+                    continue;
+                } else if (buff.Name.Contains("Mixology") && character.HasProfession(Profession.Alchemy)) {
+                    checkBox.IsEnabled = true;
+                    checkBox.Visibility = Visibility.Visible;
+                    continue;
                 }
                 if (!string.IsNullOrEmpty(buff.SetName))
                 {
@@ -304,7 +317,8 @@ namespace Rawr.UI
             {
                 SavedBuffSet newSet = SavedCombo.SelectedItem as SavedBuffSet;
                 Character.ActiveBuffs = newSet.BuffSet;
-                LoadBuffsFromCharacter();
+                LoadBuffsFromCharacter(); // This updates the pane with new checkboxes
+                UpdateCharacterBuffs(); // This updates the character against the boxes actually checked, should fix the double-buff issue seen
                 Character.OnCalculationsInvalidated();
             }
         }

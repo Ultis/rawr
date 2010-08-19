@@ -662,17 +662,17 @@ namespace Rawr
         public virtual void UpdateProfessions(Character character)
         {
             #region Buffs related to Professions to Force Enable
-            // Miners should always have this buff activated
-            if (character.HasProfession(Profession.Mining)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Toughness")))
-            {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
+            // Miners should always have this buff activated, others shouldn't have this buff
+            if (character.HasProfession(Profession.Mining) & !character.ActiveBuffsContains("Toughness")) {
+                character.ActiveBuffsAdd("Toughness");
+            } else if (character.ActiveBuffsContains("Toughness") && !character.HasProfession(Profession.Mining)) {
+                character.ActiveBuffs.Remove(Buff.GetBuffByName("Toughness"));
             }
-            // Skinners should always have this buff activated
-            if (character.HasProfession(Profession.Skinning)
-                && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master of Anatomy")))
-            {
-                character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
+            // Skinners should always have this buff activated, others shouldn't have this buff
+            if (character.HasProfession(Profession.Skinning) & !character.ActiveBuffsContains("Master of Anatomy")) {
+                character.ActiveBuffsAdd("Master of Anatomy");
+            } else if (character.ActiveBuffsContains("Master of Anatomy") && !character.HasProfession(Profession.Skinning)) {
+                character.ActiveBuffs.Remove(Buff.GetBuffByName("Master of Anatomy"));
             }
             // Engineers should always have this buff activated IF the Primary is
             if (character.HasProfession(Profession.Engineering))

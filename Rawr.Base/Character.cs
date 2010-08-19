@@ -571,7 +571,7 @@ namespace Rawr //O O . .
         public List<Buff> ActiveBuffs
         {
             get { return _activeBuffs; }
-            set { _activeBuffs = value; }
+            set { _activeBuffs = value; ValidateActiveBuffs(); }
         }
 
         public void ActiveBuffsAdd(Buff buff)
@@ -599,6 +599,43 @@ namespace Rawr //O O . .
         public bool ActiveBuffsConflictingBuffContains(string conflictingBuff)
         {
             return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
+        }
+
+        /// <summary>
+        /// This function forces any duplicate buffs off the current buff list
+        /// and enforces buffs that should be in there due to race/profession
+        /// </summary>
+        public void ValidateActiveBuffs() {
+            // First let's check for Duplicate Buffs and remove them
+            Buff cur = null;
+            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
+            {
+                cur = ActiveBuffs[i];
+                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
+                int count = 0;
+                foreach (Buff iter in ActiveBuffs) {
+                    if (iter.Name == cur.Name) count++;
+                }
+                if (count > 1) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
+                // At this point, we didn't fail so we can move on to the next one
+                i++;
+            }
+
+            // Next let's check for Heroic Presence. If you are a Draenei and don't have it, you need it
+            if (Race == CharacterRace.Draenei && !ActiveBuffsContains("Heroic Presence")) { ActiveBuffsAdd("Heroic Presence"); }
+            // If you are Horde, you will never have this so let's take it out
+            if (Faction == CharacterFaction.Horde && ActiveBuffsContains("Heroic Presence")) ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
+
+            // Finally, let's check Profession Buffs that should be automatically applied
+            // Toughness buff from Mining
+            if (HasProfession(Profession.Mining) && !ActiveBuffsContains("Toughness")) { ActiveBuffsAdd("Toughness"); }
+            else if (!HasProfession(Profession.Mining) && ActiveBuffsContains("Toughness")) { ActiveBuffs.Remove(Buff.GetBuffByName("Toughness")); }
+            // Master of Anatomy from Skinning
+            if (HasProfession(Profession.Skinning) && !ActiveBuffsContains("Master of Anatomy")) { ActiveBuffsAdd("Master of Anatomy"); }
+            else if (!HasProfession(Profession.Skinning) && ActiveBuffsContains("Master of Anatomy")) { ActiveBuffs.Remove(Buff.GetBuffByName("Master of Anatomy")); }
+
+            // Force a recalc, this will also update the Buffs tab since it's designed to react to that
+            OnCalculationsInvalidated();
         }
 
         #region Items in Slots
@@ -814,6 +851,7 @@ namespace Rawr //O O . .
                 {
                     _primaryProfession = value;
                     Calculations.UpdateProfessions(this);
+                    ValidateActiveBuffs();
                 }
             }
         }
@@ -827,6 +865,7 @@ namespace Rawr //O O . .
                 {
                     _secondaryProfession = value;
                     Calculations.UpdateProfessions(this);
+                    ValidateActiveBuffs();
                 }
             }
         }
