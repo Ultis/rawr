@@ -47,7 +47,6 @@ namespace Rawr.DPSDK
             occurence.BloodStrike = 0f;
             occurence.HeartStrike = 0f;
             occurence.DancingRuneWeapon = 0f;
-            occurence.CurRotationDuration = 0f;
             occurence.Horn = 0f;
             occurence.GargoyleDuration = 30f;
             occurence.DeathStrike = 0f;
@@ -382,7 +381,7 @@ namespace Rawr.DPSDK
                         if (FFGoSS < 3 && FF > 0)
                         {
                             FF += 3000;
-                            BPGoSS++;
+                            FFGoSS++;
                         }
                     }
                 }

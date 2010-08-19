@@ -6,7 +6,7 @@ namespace Rawr.DPSDK
 {
     public class Rotation
     {
-        public Type curRotationType = Type.Blood;
+        public Type curRotationType = Type.Custom;
         
 
         private CalculationOptionsDPSDK.Presence _presence = CalculationOptionsDPSDK.Presence.Blood;
@@ -342,7 +342,54 @@ namespace Rawr.DPSDK
 
         public Rotation()
         {
+
             setRotation(Type.Unholy);
+        }
+
+        public Type GetRotationType(DeathKnightTalents t)
+        {
+            curRotationType = Type.Custom;
+            const int indexBlood = 0; // start index of Blood Talents.
+            const int indexFrost = 28; // start index of Frost Talents.
+            const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
+            int[] TalentCounter = new int[4];
+            int index = indexBlood;
+            foreach (int i in t.Data)
+            {
+                if (i > 0)
+                {
+                    // Blood
+                    if (index < indexFrost)
+                        TalentCounter[(int)Rotation.Type.Blood]++;
+                    // Frost
+                    else if ((indexFrost <= index) && (index < indexUnholy))
+                    {
+                        TalentCounter[(int)Rotation.Type.Frost]++;
+                    }
+                    // Unholy
+                    else if (index >= indexUnholy)
+                    {
+                        TalentCounter[(int)Rotation.Type.Unholy]++;
+                    }
+                }
+                index++;
+            }
+            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Blood
+                curRotationType = Rotation.Type.Blood;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Frost
+                curRotationType = Rotation.Type.Frost;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
+            {
+                // Unholy
+                curRotationType = Rotation.Type.Unholy;
+            }
+            return curRotationType;
         }
 
         public float getMeleeSpecialsPerSecond()

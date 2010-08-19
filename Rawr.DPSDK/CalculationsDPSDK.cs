@@ -322,6 +322,8 @@ namespace Rawr.DPSDK
             calcOpts.rotation.AvgDiseaseMult = calcOpts.rotation.NumDisease * (calcOpts.rotation.DiseaseUptime / 100);
             float commandMult = 0f;
             Rotation r = new Rotation();
+            Rotation.Type rType = r.GetRotationType(talents);
+            r.setRotation(rType);
             r.copyRotation(calcOpts.rotation);
 
 
@@ -415,7 +417,7 @@ namespace Rawr.DPSDK
                     || (calcOpts.GetRefreshForDisplayCalcs ? needsDisplayCalculations : false) 
                     || (calcOpts.GetRefreshForSignificantChange ? significantChange : false))
                 {
-                    if (talents.HeartStrike > 0)
+                    if (rType == Rotation.Type.Blood)
                     {
                         BloodCycle cycle = new BloodCycle(character, combatTable, stats, calcOpts, abilities);
                         Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
@@ -425,7 +427,7 @@ namespace Rawr.DPSDK
                         calcOpts.rotation.copyRotation(rot);
                         r.copyRotation(rot);
                     }
-                    else if (talents.ScourgeStrike > 0)
+                    else if (rType == Rotation.Type.Unholy)
                     {
                         UnholyCycle cycle = new UnholyCycle(character, combatTable, stats, calcOpts, abilities);
                         Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
@@ -435,7 +437,7 @@ namespace Rawr.DPSDK
                         calcOpts.rotation.copyRotation(rot);
                         r.copyRotation(rot);
                     }
-                    else if (talents.FrostStrike > 0)
+                    else if (rType == Rotation.Type.Frost)
                     {
                         FrostCycle primaryCycle = new FrostCycle(character, combatTable, stats, calcOpts, abilities);
                         Rotation rot = primaryCycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
@@ -447,7 +449,6 @@ namespace Rawr.DPSDK
                     }
                     else
                     {
-                        // add something to handle stupid rotations here, that or tell people to go fist themselves.
                         r.copyRotation(calcOpts.rotation);
                     }
                 }
@@ -745,7 +746,6 @@ namespace Rawr.DPSDK
                     dpsOtherFrost * otherFrostMult;
 
                 // TODO: Re-work this to properly evaluate a base rotation and subrotations w/ special strikes.
-                Rotation.Type rType = GetRotationType(talents);
                 // First let's get the common stuff out of the ifs
                 // Diseases & the abilities that cause them
                 calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
@@ -753,6 +753,7 @@ namespace Rawr.DPSDK
                 calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
                 calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
                 calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
+                // RP based
                 calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
 
                 if (rType == Rotation.Type.Frost)
@@ -1115,52 +1116,6 @@ namespace Rawr.DPSDK
                 }
             }
             return (statsTotal);
-        }
-
-        public Rotation.Type GetRotationType(DeathKnightTalents t)
-        {
-            Rotation.Type curRotationType = Rotation.Type.Custom;
-            const int indexBlood = 0; // start index of Blood Talents.
-            const int indexFrost = 28; // start index of Frost Talents.
-            const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
-            int[] TalentCounter = new int[4];
-            int index = indexBlood;
-            foreach (int i in t.Data)
-            {
-                if (i > 0)
-                {
-                    // Blood
-                    if (index < indexFrost)
-                        TalentCounter[(int)Rotation.Type.Blood]++;
-                    // Frost
-                    else if ((indexFrost <= index) && (index < indexUnholy))
-                    {
-                        TalentCounter[(int)Rotation.Type.Frost]++;
-                    }
-                    // Unholy
-                    else if (index >= indexUnholy)
-                    {
-                        TalentCounter[(int)Rotation.Type.Unholy]++;
-                    }
-                }
-                index++;
-            }
-            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
-            {
-                // Blood
-                curRotationType = Rotation.Type.Blood;
-            }
-            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
-            {
-                // Frost
-                curRotationType = Rotation.Type.Frost;
-            }
-            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
-            {
-                // Unholy
-                curRotationType = Rotation.Type.Unholy;
-            }
-            return curRotationType;
         }
 
         #region Custom Charts
