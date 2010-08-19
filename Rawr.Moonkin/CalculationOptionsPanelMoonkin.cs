@@ -27,9 +27,9 @@ namespace Rawr.Moonkin
 			txtLatency.Text = calcOpts.Latency.ToString();
             txtFightLength.Text = calcOpts.FightLength.ToString();
             chkInnervate.Checked = calcOpts.Innervate;
-            chkManaPots.Checked = calcOpts.ManaPots;
-            cmbPotType.SelectedItem = calcOpts.ManaPotType;
-            cmbPotType.Enabled = chkManaPots.Checked;
+            //chkManaPots.Checked = calcOpts.ManaPots;
+            //cmbPotType.SelectedItem = calcOpts.ManaPotType;
+            //cmbPotType.Enabled = chkManaPots.Checked;
             txtInnervateDelay.Text = calcOpts.InnervateDelay.ToString();
             txtInnervateDelay.Enabled = chkInnervate.Checked;
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
@@ -67,7 +67,7 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void chkManaPots_CheckedChanged(object sender, EventArgs e)
+        /*private void chkManaPots_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPots = chkManaPots.Checked;
@@ -80,7 +80,7 @@ namespace Rawr.Moonkin
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPotType = cmbPotType.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
-        }
+        }*/
 
         private void txtInnervateDelay_Leave(object sender, EventArgs e)
         {
