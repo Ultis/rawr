@@ -1500,8 +1500,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				// This happens no matter what:
 				FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
 				// This happens only if there isn't Trueshot Aura available:
-				if (!character.ActiveBuffsContains("Trueshot Aura") && !character.ActiveBuffsContains("Unleashed Rage") && !character.ActiveBuffsContains("Abomination's Might"))
-					FullCharacterStats.BonusAttackPowerMultiplier += (.5f * character.DeathKnightTalents.AbominationsMight);
+                if (!(character.ActiveBuffsContains("Trueshot Aura") || character.ActiveBuffsContains("Unleashed Rage") || character.ActiveBuffsContains("Abomination's Might")))
+                {
+                    FullCharacterStats.BonusAttackPowerMultiplier += (.05f * character.DeathKnightTalents.AbominationsMight);
+                }
 			}
 
 			// Bloodworms
