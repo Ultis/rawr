@@ -340,8 +340,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
         private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 10 : 0)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 10 : 0)),},
         };
         private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
@@ -732,7 +732,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			if (character.DeathKnightTalents.VampiricBlood > 0)
 			{
 				Stats VBStats = new Stats() { Health = (stats.Health * 0.15f), HealingReceivedMultiplier = 0.35f, };
-                float uptime = _SE_VampiricBlood[m_bT9_4PC ? 1 : 0][character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0].GetAverageUptime(0f, 1f);
+                float uptime = _SE_VampiricBlood[character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0][m_bT9_4PC ? 1 : 0].GetAverageUptime(0f, 1f);
                 stats.Accumulate(VBStats, uptime);
 			}
 			#endregion
