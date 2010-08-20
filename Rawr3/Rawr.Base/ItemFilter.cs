@@ -55,6 +55,21 @@ namespace Rawr
             foreach (ItemFilter filter in FilterList)
             {
                 filter.UpdateEnabled(enabled.GetValueOrDefault(false));
+                if (filter.Filters != null && filter.Filters.Count > 0) {
+                    foreach (ItemFilter subFilter in filter.Filters) {
+                        subFilter.UpdateEnabled(enabled.GetValueOrDefault(false));
+                        if (subFilter.Filters != null && subFilter.Filters.Count > 0) {
+                            foreach (ItemFilter subsubFilter in subFilter.Filters) {
+                                subsubFilter.UpdateEnabled(enabled.GetValueOrDefault(false));
+                                if (subsubFilter.Filters != null && subsubFilter.Filters.Count > 0) {
+                                    foreach (ItemFilter subsubsubFilter in subsubFilter.Filters) {
+                                        subsubsubFilter.UpdateEnabled(enabled.GetValueOrDefault(false));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
