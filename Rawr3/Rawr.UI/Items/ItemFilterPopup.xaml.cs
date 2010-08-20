@@ -11,12 +11,12 @@ using System.Windows.Controls.Primitives;
 
 namespace Rawr.UI
 {
-	public partial class ItemFilterPopup : UserControl
-	{
-		public ItemFilterPopup()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+    public partial class ItemFilterPopup : UserControl
+    {
+        public ItemFilterPopup()
+        {
+            // Required to initialize variables
+            InitializeComponent();
             PopupUtilities.RegisterPopup(this, PopupFilter, Toggle, Close);
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
         }
@@ -30,5 +30,5 @@ namespace Rawr.UI
         {
             Close();
         }
-	}
+    }
 }
