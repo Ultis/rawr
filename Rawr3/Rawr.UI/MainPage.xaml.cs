@@ -25,6 +25,8 @@ namespace Rawr.UI
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
 
+        private bool _unsavedChanges = false;
+
         private Status status;
         public Status Status
         {
@@ -123,7 +125,7 @@ namespace Rawr.UI
 
         void character_AvailableItemsChanged(object sender, EventArgs e)
         {
-            //_unsavedChanges = true;
+            _unsavedChanges = true;
         }
 
         #region Batch Tools
@@ -608,6 +610,7 @@ namespace Rawr.UI
         #region File Menu
         private void NewCharacter(object sender, RoutedEventArgs args)
         {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
             Character c = new Character();
             c.CurrentModel = Character.CurrentModel;
             c.Class = Character.Class;
@@ -617,6 +620,7 @@ namespace Rawr.UI
 
         private void OpenCharacter(object sender, RoutedEventArgs args)
         {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "character file (*.xml)|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault(false))
@@ -635,6 +639,13 @@ namespace Rawr.UI
             }
         }
 
+        public void NeedToSaveCharacter() {
+            if (MessageBox.Show("There are unsaved changes to the current character, do you want to save them?\n\nWARNING: Selecting Cancel will lose the unsaved changes.",
+                "Unsaved Changes Detected", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                SaveCharacter(null, null);
+            }
+        }
         private void SaveCharacter(object sender, RoutedEventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -642,6 +653,7 @@ namespace Rawr.UI
             if (sfd.ShowDialog().GetValueOrDefault(false))
             {
                 Character.Save(sfd.OpenFile());
+                _unsavedChanges = false;
             }
         }
 
@@ -661,6 +673,7 @@ namespace Rawr.UI
 
         private void LoadFromArmory(object sender, RoutedEventArgs args)
         {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
             ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
             armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
             armoryLoad.Show();
@@ -668,6 +681,7 @@ namespace Rawr.UI
 
         private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)
         {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
             CharProfLoadDialog charprofLoad = new CharProfLoadDialog();
             charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
             charprofLoad.Show();

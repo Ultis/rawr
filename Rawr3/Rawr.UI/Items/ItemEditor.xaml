@@ -14,7 +14,7 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     x:Class="Rawr.UI.ItemEditor"
     Title="Item Editor"
-    Height="560" Width="539">
+    Height="600" Width="539">
     <basics:ChildWindow.Resources>
         <local:FactionConverter x:Key="FactionConverter" />
     </basics:ChildWindow.Resources>
@@ -56,7 +56,7 @@
             <TextBox x:Name="NameText" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Name}"  HorizontalAlignment="Left" VerticalAlignment="Center" Width="150" Margin="2,2,2,2"/>
             <TextBlock x:Name="LB_iLevel" HorizontalAlignment="Right" Text="Item Level:" Grid.Row="2" VerticalAlignment="Center" Margin="2,2,2,2"/>
             <TextBlock x:Name="LB_Name" Text="Name:"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
-            <TextBox x:Name="SetNameText" Margin="2,2,0,2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=SetName}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
+            <TextBox x:Name="SetNameText" Margin="2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=SetName}" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
             <TextBlock x:Name="LB_SetName" Text="Set Name:" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,2,2,2"/>
             <TextBlock x:Name="LB_Id" Text="ID:" VerticalAlignment="Center" Grid.Row="3" HorizontalAlignment="Right" Margin="2,2,2,2"/>
             <TextBox x:Name="IconPathText" Margin="2,2,0,2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=IconPath}" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Left" Width="130"/>
@@ -75,8 +75,8 @@
             <inputToolkit:NumericUpDown x:Name="IlvlNum" HorizontalAlignment="Left" Margin="2,2,2,2" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Height="22" Width="60" Maximum="500" Value="{Binding Mode=OneWay, Path=ItemLevel}"/>
             <inputToolkit:NumericUpDown x:Name="IdNum" Height="22" HorizontalAlignment="Left" Margin="2,2,0,2" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Width="60" Maximum="100000" Value="{Binding Mode=OneWay, Path=Id}"/>
             <layoutToolkit:Accordion HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="One" Grid.Row="10" Grid.Column="0" Margin="2,2,2,2" Grid.ColumnSpan="2">
-                <layoutToolkit:AccordionItem Header="Sockets" IsSelected="False" HorizontalContentAlignment="Stretch">
-                    <Grid Margin="4" HorizontalAlignment="Center">
+                <layoutToolkit:AccordionItem Header="Sockets" IsSelected="False" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top">
+                    <Grid Margin="4" HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -152,9 +152,9 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="Source:" Grid.Row="0" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" IsEnabled="False" Width="140" Height="60" FontSize="7"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" IsEnabled="False" Height="60" FontSize="7"/>
                         <TextBlock Text="Note:" Grid.Row="1" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-                        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="140" Height="60"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="60"/>
                     </Grid>
                 </layoutToolkit:AccordionItem>
                 <layoutToolkit:AccordionItem Header="Required Classes" HorizontalContentAlignment="Stretch">
@@ -190,7 +190,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <ComboBox Name="CB_Faction" SelectedItem="{Binding Path=Faction, Mode=TwoWay, Converter={StaticResource FactionConverter}}">
+                        <ComboBox Name="CB_Faction" SelectedItem="{Binding Path=Faction, Mode=TwoWay, Converter={StaticResource FactionConverter}}" Margin="2">
                             <System:String>Neutral</System:String>
                             <System:String>Alliance</System:String>
                             <System:String>Horde</System:String>
