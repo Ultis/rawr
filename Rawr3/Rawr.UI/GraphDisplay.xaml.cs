@@ -14,6 +14,8 @@ using System.Windows.Data;
 using System.Reflection;
 using System.Threading;
 using System.Diagnostics;
+using System.Text;
+using System.IO;
 
 namespace Rawr.UI
 {
@@ -1009,6 +1011,123 @@ namespace Rawr.UI
                 cachedColumnWidth = gridLength;
                 grid.ColumnDefinitions[colIndex].Width = splitterWidth;
             }
+        }
+
+        private void CB_Export_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CB_Export == null) { return; }
+            // Ignore it setting back to itself
+            if (CB_Export.SelectedIndex == 0) { return; }
+            // Perform the Specific Action
+            if      (((ComboBoxItem)CB_Export.SelectedItem).Content.ToString() == "Copy Data to Clipboard") {
+                Clipboard.SetText(GetChartDataCSV());
+            }else if(((ComboBoxItem)CB_Export.SelectedItem).Content.ToString() == "Export to Image...") {
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.DefaultExt = ".png";
+                dialog.Filter = "PNG|*.png|GIF|*.gif|JPG|*.jpg|BMP|*.bmp";
+                if (dialog.ShowDialog().GetValueOrDefault(false) /*== DialogResult.OK*/)
+                {
+                    try {
+                        // JOTHAY NOTE TODO: I couldn't find the supported matching class for ImageFormat
+                        /*ImageFormat imgFormat = ImageFormat.Bmp;
+                        if (dialog.SafeFileName.EndsWith(".png")) imgFormat = ImageFormat.Png;
+                        else if (dialog.SafeFileName.EndsWith(".gif")) imgFormat = ImageFormat.Gif;
+                        else if (dialog.SafeFileName.EndsWith(".jpg") || dialog.SafeFileName.EndsWith(".jpeg")) imgFormat = ImageFormat.Jpeg;
+                        ComparisonGraph.PrerenderedGraph.Save(dialog.SafeFileName, imgFormat);*/
+                    } catch (Exception ex) { MessageBox.Show(ex.Message); }
+                }
+                //dialog.Dispose();
+            }else if(((ComboBoxItem)CB_Export.SelectedItem).Content.ToString() == "Export to CSV...") {
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.DefaultExt = ".csv";
+                dialog.Filter = "Comma Separated Values | *.csv";
+                if (dialog.ShowDialog().GetValueOrDefault(false) /*== DialogResult.OK*/)
+                {
+                    try {
+                        using (StreamWriter writer = File.CreateText(dialog.SafeFileName))
+                        {
+                            writer.Write(GetChartDataCSV());
+                            writer.Flush();
+                            writer.Close();
+                            writer.Dispose();
+                        }
+                    } catch (Exception ex) { MessageBox.Show(ex.Message); }
+                }
+                //dialog.Dispose();
+            }
+            // Set back to itself (makes it look like a SplitButton)
+            CB_Export.SelectedIndex = 0;
+        }
+
+        private string GetChartDataCSV()
+        {
+            StringBuilder sb = new StringBuilder("Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,ItemId,GemmedId,Overall");
+            foreach (string subPointName in Calculations.SubPointNameColors.Keys)
+            {
+                sb.AppendFormat(",{0}", subPointName);
+            }
+            sb.AppendLine();
+            foreach (ComparisonCalculationBase comparisonCalculation in _itemCalculations)
+            {
+                ItemInstance itemInstance = comparisonCalculation.ItemInstance;
+                Item item = comparisonCalculation.Item;
+                if (itemInstance != null)
+                {
+                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                        itemInstance.Item.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        itemInstance.Slot,
+                        itemInstance.Gem1 != null ? itemInstance.Gem1.Name : null,
+                        itemInstance.Gem2 != null ? itemInstance.Gem2.Name : null,
+                        itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
+                        itemInstance.Enchant.Name,
+                        itemInstance.Item.LocationInfo[0].Description.Split(',')[0] + (itemInstance.Item.LocationInfo[1]!=null ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : ""),
+                        itemInstance.Id,
+                        itemInstance.GemmedId,
+                        comparisonCalculation.OverallPoints);
+                    foreach (float subPoint in comparisonCalculation.SubPoints)
+                        sb.AppendFormat(",{0}", subPoint);
+                    sb.AppendLine();
+                }
+                else if (item != null)
+                {
+                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                        item.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        item.Slot,
+                        null,
+                        null,
+                        null,
+                        null,
+                        item.LocationInfo[0].Description.Split(',')[0] + (item.LocationInfo[1] != null ? "|" + item.LocationInfo[1].Description.Split(',')[0] : ""),
+                        item.Id,
+                        null,
+                        comparisonCalculation.OverallPoints);
+                    foreach (float subPoint in comparisonCalculation.SubPoints)
+                        sb.AppendFormat(",{0}", subPoint);
+                    sb.AppendLine();
+                }
+                else
+                {
+                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                        comparisonCalculation.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        comparisonCalculation.OverallPoints);
+                    foreach (float subPoint in comparisonCalculation.SubPoints)
+                        sb.AppendFormat(",{0}", subPoint);
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }
