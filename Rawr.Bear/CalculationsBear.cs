@@ -512,21 +512,11 @@ the Threat Scale defined on the Options tab.",
             #region WotLKResistance
             // Call new resistance formula and apply talent damage reduction
             // As for other survival, only use guaranteed reduction (MinimumResist), no luck
-            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(80, targetLevel, stats.NatureResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack))); 
-            calculatedStats.FrostSurvivalPoints  = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(80, targetLevel, stats.FrostResistance,  0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack))); 
-            calculatedStats.FireSurvivalPoints   = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(80, targetLevel, stats.FireResistance,   0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack))); 
-            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(80, targetLevel, stats.ShadowResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack))); 
-            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(80, targetLevel, stats.ArcaneResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
-            #endregion
-
-            #region OldResistance
-            //float cappedResist = targetLevel * 5;
-
-            //calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - (System.Math.Min(cappedResist, stats.NatureResistance) / cappedResist) * .75)));
-            //calculatedStats.FrostSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FrostResistance) / cappedResist) * .75)));
-            //calculatedStats.FireSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.FireResistance) / cappedResist) * .75)));
-            //calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance) / cappedResist) * .75)));
-            //calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance) / cappedResist) * .75)));
+            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.NatureResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
+            calculatedStats.FrostSurvivalPoints  = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FrostResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
+            calculatedStats.FireSurvivalPoints   = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FireResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
+            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ShadowResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
+            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ArcaneResistance, 0)) * (1f - 0.04 * character.DruidTalents.ProtectorOfThePack)));
             #endregion
 
             //Perform Threat calculations
@@ -1742,15 +1732,15 @@ the Threat Scale defined on the Options tab.",
 
             // Changed to not just give a resist rating, but a breakdown of the resulting resist values in the tooltip
             string tipResist = string.Empty;
-            tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.NatureResistance, 0);
+            tipResist = StatConversion.GetResistanceTableString(TargetLevel, 80, BasicStats.NatureResistance, 0);
             dictValues.Add("Nature Resist", BasicStats.NatureResistance.ToString() + "*" + tipResist);
-            tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.ArcaneResistance, 0);
+            tipResist = StatConversion.GetResistanceTableString(TargetLevel, 80, BasicStats.ArcaneResistance, 0);
             dictValues.Add("Arcane Resist", BasicStats.ArcaneResistance.ToString() + "*" + tipResist);
-            tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.FrostResistance, 0);
+            tipResist = StatConversion.GetResistanceTableString(TargetLevel, 80, BasicStats.FrostResistance, 0);
             dictValues.Add("Frost Resist", BasicStats.FrostResistance.ToString() + "*" + tipResist);
-            tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.FireResistance, 0);
+            tipResist = StatConversion.GetResistanceTableString(TargetLevel, 80, BasicStats.FireResistance, 0);
             dictValues.Add("Fire Resist", BasicStats.FireResistance.ToString() + "*" + tipResist);
-            tipResist = StatConversion.GetResistanceTableString(80, TargetLevel, BasicStats.ShadowResistance, 0);
+            tipResist = StatConversion.GetResistanceTableString(TargetLevel, 80, BasicStats.ShadowResistance, 0);
             dictValues.Add("Shadow Resist", BasicStats.ShadowResistance.ToString() + "*" + tipResist);
 
             dictValues.Add("Health", BasicStats.Health.ToString());

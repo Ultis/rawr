@@ -4981,7 +4981,7 @@ namespace Rawr
             {
                 Name = "Improved Lay On Hands",
                 Group = "Temporary Buffs",
-                Stats = { BonusArmorMultiplier = 0.3f },
+                Stats = { PhysicalDamageTakenMultiplier = -0.2f },
                 ConflictingBuffs = new List<string>(new string[] { })
             });
             // Nightmare Seeds no longer drop from Nightmare Vine; Confirmed with Blue Post
