@@ -383,9 +383,9 @@ namespace Rawr.RestoSham
             #region Base Speeds ( Hasted / RTCast / LHWCast / HWCast / CHCast )
             float HasteScale = 1f / (1f + calcStats.SpellHaste);
             float RTHaste = stats.RestoSham2T10 * 0.2f;
-            float RTCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
+            float RTCast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency);
             float RTCD = 6 - stats.RTCDDecrease;
-            float RTCDCast = RTCD + GcdLatency * 2;
+            float RTCDCast = RTCD + GcdLatency;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
             float ELWDuration = stats.Earthliving * 12;
             float HWCastBase = 3.0f - (character.ShamanTalents.ImprovedHealingWave * .1f);
