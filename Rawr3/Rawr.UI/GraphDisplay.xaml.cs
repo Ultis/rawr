@@ -216,7 +216,7 @@ namespace Rawr.UI
             //
             _loading = false;
             UpdateGraph();
-            ButtonExpand_Click(null, null);
+            //ButtonExpand_Click(null, null);
         }
 
         // From Refine Types of Items Listed
