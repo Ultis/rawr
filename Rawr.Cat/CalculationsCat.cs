@@ -12,152 +12,84 @@ namespace Rawr.Cat
 	{
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
-        public override List<GemmingTemplate> DefaultGemmingTemplates
+		public override List<GemmingTemplate> DefaultGemmingTemplates
 		{
 			get
 			{
-				// Relevant Gem IDs for Ferals
+				// Relevant Gem IDs for Cats
 				//Red
-				int[] delicate  = { 39905, 39997, 40112, 42143 }; // AGI
-                int[] fractured = { 39909, 40002, 40117, 42153 }; // ArP
+				int[] delicate  = { 39905, 39997, 40112, 42143 }; // Agi
+				int[] fractured = { 39909, 40002, 40117, 42153 }; // ArP
 
 				//Purple
-				int[] shifting  = { 39935, 40023, 40130, 40130 }; // AGI/STA
-                int[] puissant  = { 39933, 40033, 40140, 40140 }; // ArP/STA
-                int[] forceful  = { 39978, 40091, 40169, 40169 }; // Haste/STA
+				int[] shifting  = { 39935, 40023, 40130, 40130 }; // Agi/Sta
+				int[] puissant  = { 39933, 40033, 40140, 40140 }; // ArP/Sta
+				int[] forceful  = { 39978, 40091, 40169, 40169 }; // Haste/Sta
 
 				//Blue
-				int[] solid     = { 39919, 40008, 40119, 36767 }; // STA
 
 				//Green
 
 				//Yellow
-                int[] quick     = { 39918, 40017, 40128, 42150 }; // Haste
 
 				//Orange
-				int[] glinting = { 39953, 40044, 40148, 40148 }; // AGI/Hit
-				int[] deadly   = { 39952, 40043, 40147, 40147 }; // AGI/Crit
-                int[] deft     = { 39955, 40046, 40150, 40150 };
+				int[] glinting = { 39953, 40044, 40148, 40148 }; // Agi/Hit
+				int[] deadly   = { 39952, 40043, 40147, 40147 }; // Agi/Crit
+				int[] deft     = { 39955, 40046, 40150, 40150 }; // Agi/Haste
 
-                // Prismatic
-                int[] nightmare = { 49110, 49110, 49110, 49110 };
+				// Prismatic
+				int[] nightmare = { 49110, 49110, 49110, 49110 };
 
 				//Meta
 				int relentless = 41398;
 
-				return new List<GemmingTemplate>()
+				List<GemmingTemplate> list = new List<GemmingTemplate>();
+				for (int tier = 0; tier < 4; tier++)
 				{
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max ArP
-						RedId = fractured[0], YellowId = fractured[0], BlueId = fractured[0], PrismaticId = fractured[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //ArP/Crit
-						RedId = fractured[0], YellowId = quick[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //ArP/Haste
-						RedId = fractured[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = fractured[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max Agility
-						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Crit
-						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Haste
-						RedId = delicate[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = delicate[0], MetaId = relentless },
+					list.AddRange(new GemmingTemplate[]
+						{
+							CreateCatGemmingTemplate(tier,	 fractured,	 fractured,	fractured,	fractured,	relentless), //Max ArP
+							CreateCatGemmingTemplate(tier,	 fractured,	 deadly,	puissant,	fractured,	relentless), //ArP/Crit
+							CreateCatGemmingTemplate(tier,	 fractured,	 deft,		puissant,	fractured,	relentless), //ArP/Haste
+							CreateCatGemmingTemplate(tier,	 fractured,	 glinting,	puissant,	fractured,	relentless), //ArP/Hit
+							CreateCatGemmingTemplate(tier,	 fractured,	 deadly,	nightmare,	fractured,	relentless), //ArP/Crit/Nightmare
+							CreateCatGemmingTemplate(tier,	 fractured,	 deft,		nightmare,	fractured,	relentless), //ArP/Haste/Nightmare
+							CreateCatGemmingTemplate(tier,	 fractured,	 glinting,	nightmare,	fractured,	relentless), //ArP/Hit/Nightmare
+							CreateCatGemmingTemplate(tier,	 delicate,	 delicate,	delicate,	delicate,	relentless), //Max Agi
+							CreateCatGemmingTemplate(tier,	 delicate,	 deadly,	shifting,	delicate,	relentless), //Agi/Crit
+							CreateCatGemmingTemplate(tier,	 delicate,	 deft,		shifting,	delicate,	relentless), //Agi/Haste
+							CreateCatGemmingTemplate(tier,	 delicate,	 glinting,	shifting,	delicate,	relentless), //Agi/Hit
+							CreateCatGemmingTemplate(tier,	 delicate,	 deadly,	nightmare,	delicate,	relentless), //Agi/Crit/Nightmare
+							CreateCatGemmingTemplate(tier,	 delicate,	 deft,		nightmare,	delicate,	relentless), //Agi/Haste/Nightmare
+							CreateCatGemmingTemplate(tier,	 delicate,	 glinting,	nightmare,	delicate,	relentless), //Agi/Hit/Nightmare
+						});
+				}
 
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Hit
-					    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max ArP
-						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Crit
-						RedId = fractured[1], YellowId = quick[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Haste
-						RedId = fractured[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max Agility
-						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Crit 
-						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Haste 
-						RedId = delicate[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = delicate[1], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max ArP
-						RedId = fractured[1], YellowId = fractured[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Crit
-						RedId = fractured[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //ArP/Haste
-						RedId = fractured[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Max Agility
-						RedId = delicate[1], YellowId = delicate[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Crit 
-						RedId = delicate[1], YellowId = deadly[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Haste 
-						RedId = delicate[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", //Agi/Hit
-					    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max ArP
-						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Crit
-						RedId = fractured[2], YellowId = quick[2], BlueId = puissant[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Haste
-						RedId = fractured[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max Agility
-						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Crit 
-						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Haste 
-						RedId = delicate[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = delicate[2], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max ArP
-						RedId = fractured[2], YellowId = fractured[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Crit
-						RedId = fractured[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //ArP/Haste
-						RedId = fractured[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Max Agility
-						RedId = delicate[2], YellowId = delicate[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Crit 
-						RedId = delicate[2], YellowId = deadly[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Haste 
-						RedId = delicate[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", Enabled = true, //Agi/Hit
-					    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max ArP
-						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Crit
-						RedId = fractured[3], YellowId = quick[3], BlueId = puissant[2], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Haste
-						RedId = fractured[3], YellowId = quick[3], BlueId = forceful[2], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
-						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Crit
-						RedId = delicate[3], YellowId = quick[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Haste
-						RedId = delicate[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = delicate[3], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max ArP
-						RedId = fractured[3], YellowId = fractured[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Crit
-						RedId = fractured[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //ArP/Haste
-						RedId = fractured[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
-						RedId = delicate[3], YellowId = delicate[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Crit
-						RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agi/Haste
-						RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agility Heavy
-						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
-				};
+				return list;
 			}
-        }
+		}
+
+		private const int DEFAULT_GEMMING_TIER = 2;
+		private GemmingTemplate CreateCatGemmingTemplate(int tier, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+		{
+			return new GemmingTemplate()
+			{
+				Model = "Cat",
+				Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
+				Enabled = (tier == DEFAULT_GEMMING_TIER),
+				RedId = red[tier],
+				YellowId = yellow[tier],
+				BlueId = blue[tier],
+				PrismaticId = prismatic[tier],
+				MetaId = meta
+			};
+		}
 
 #if RAWR3
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+		private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 #endif
 		{
@@ -234,11 +166,11 @@ namespace Rawr.Cat
 					"Custom Rotation DPS",
 					"Health",
 					"Avoided Attacks %",
-                    "Nature Resist",
-                    "Fire Resist",
-                    "Frost Resist",
-                    "Shadow Resist",
-                    "Arcane Resist",
+					"Nature Resist",
+					"Fire Resist",
+					"Frost Resist",
+					"Shadow Resist",
+					"Arcane Resist",
 					};
 				return _optimizableCalculationLabels;
 			}
@@ -255,10 +187,10 @@ namespace Rawr.Cat
 					};
 				return _customChartNames;
 			}
-        }
+		}
 
 #if RAWR3
-        private Dictionary<string, Color> _subPointNameColors = null;
+		private Dictionary<string, Color> _subPointNameColors = null;
 		public override Dictionary<string, Color> SubPointNameColors
 		{
 			get
@@ -323,7 +255,7 @@ namespace Rawr.Cat
 			return calcOpts;
 		}
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
@@ -351,15 +283,15 @@ namespace Rawr.Cat
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
-            float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid);
-            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
+			float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid);
+			float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
 
 			float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
 			float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
+			float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			
 			float glanceMultiplier = 0.7f;
-            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 			float chanceNonAvoided = 1f - chanceAvoided;
 
 			////Crit Chances
@@ -384,7 +316,7 @@ namespace Rawr.Cat
 					+ stats.PhysicalCrit
 					+ StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
 				float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
-				float cpPerCPGTemp = (chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit)) / chanceNonAvoided;
+				float cpPerCPGTemp = chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit);
 
 				//Bite - Identical to Yellow, with higher crit chance
 				float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusFerociousBiteCrit);
@@ -414,7 +346,7 @@ namespace Rawr.Cat
 			}
 			
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
-            calculatedStats.ParriedAttacks = chanceParry * 100f;
+			calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
 
 			float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
@@ -568,7 +500,7 @@ namespace Rawr.Cat
 
 			calculatedStats.AvoidedAttacks = chanceAvoided * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
-            calculatedStats.ParriedAttacks = chanceParry * 100f;
+			calculatedStats.ParriedAttacks = chanceParry * 100f;
 			calculatedStats.MissedAttacks = chanceMiss * 100f;
 			calculatedStats.CritChance = chanceCritYellow * 100f;
 			calculatedStats.AttackSpeed = attackSpeed;
@@ -594,7 +526,7 @@ namespace Rawr.Cat
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
-            int targetLevel = calcOpts.TargetLevel;
+			int targetLevel = calcOpts.TargetLevel;
 
 			
 			
@@ -654,7 +586,7 @@ namespace Rawr.Cat
 			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility + fap + predatoryStrikesAP;
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f+ statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
-            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
+			statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
 			statsTotal.Armor += 2f * statsTotal.Agility;
 			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
@@ -668,16 +600,16 @@ namespace Rawr.Cat
 			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / 3.5f);
 			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
-            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
-            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
+			float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
+			float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel-80] - expertiseBonus);
 			float chanceParry = 0f;// Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
+			float chanceMiss  = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[ targetLevel-80] - hitBonus);
 			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
-            float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
-                                + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid)
-                                + statsTotal.PhysicalCrit
-                                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
+			float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
+								+ StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Druid)
+								+ statsTotal.PhysicalCrit
+								+ StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceHit = 1f - chanceAvoided;
 			bool usesMangle = (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"));
@@ -693,7 +625,7 @@ namespace Rawr.Cat
 			triggerIntervals[Trigger.PhysicalCrit] = meleeHitInterval;
 			triggerIntervals[Trigger.DoTTick] = 1.5f;
 			triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
-            triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to Add Self-Heals
+			triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to Add Self-Heals
 			triggerIntervals[Trigger.RakeTick] = 3f + (float)calcOpts.LagVariance / 3000f;
 			if (usesMangle)
 				triggerIntervals[Trigger.MangleCatHit] = 60f;
@@ -707,29 +639,29 @@ namespace Rawr.Cat
 			triggerChances[Trigger.PhysicalCrit] = Math.Max(0f, chanceCrit);
 			triggerChances[Trigger.DoTTick] = 1f;
 			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
-            triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
+			triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
 			triggerChances[Trigger.RakeTick] = 1f;
 			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
 				triggerChances[Trigger.MangleCatHit] = chanceHit;
 			triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
 			triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
 
-            // Handle Trinket procs
+			// Handle Trinket procs
 			Stats statsProcs = new Stats();
 			foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger)))
 			{
-                // JOTHAY's NOTE: The following is an ugly hack to add Recursive Effects to Cat
-                // so Victor's Call and similar trinkets can be given more appropriate value
-                if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectDataSize == 1
+				// JOTHAY's NOTE: The following is an ugly hack to add Recursive Effects to Cat
+				// so Victor's Call and similar trinkets can be given more appropriate value
+				if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectDataSize == 1
 					&& triggerIntervals.ContainsKey(effect.Stats._rawSpecialEffectData[0].Trigger))
 				{
-                    float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration);
-				    statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(
-                        triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
-                        triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
-                        upTime);
-                }
+					float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger],
+						triggerChances[effect.Trigger], 1f, calcOpts.Duration);
+					statsProcs.Accumulate(effect.Stats._rawSpecialEffectData[0].GetAverageStats(
+						triggerIntervals[effect.Stats._rawSpecialEffectData[0].Trigger],
+						triggerChances[effect.Stats._rawSpecialEffectData[0].Trigger], 1f, calcOpts.Duration),
+						upTime);
+				}
 				else if (effect.Stats.MoteOfAnger > 0)
 				{
 					// When in effect stats, MoteOfAnger is % of melee hits
@@ -739,10 +671,10 @@ namespace Rawr.Cat
 				}
 				else
 				{
-                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration),
-                        effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
-                }
+					statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
+						triggerChances[effect.Trigger], 1f, calcOpts.Duration),
+						effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
+				}
 			}
 
 			statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon + statsProcs.DeathbringerProc;
@@ -786,7 +718,7 @@ namespace Rawr.Cat
 			{ //Only one, add it to
 				SpecialEffect effect = tempCritEffects[0];
 				float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
-				float totalAgi = (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+				float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
 				statsTotal.TemporaryCritRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
 						effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi,
 						CharacterClass.Druid) * StatConversion.RATING_PER_PHYSICALCRIT },
@@ -842,7 +774,7 @@ namespace Rawr.Cat
 			{ //Only one, add it to
 				SpecialEffect effect = tempArPenEffects[0];
 				float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempArPenEffectScales[0];
-				statsTotal.TemporaryArPenRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc },
+				statsTotal.TemporaryArPenRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = effect.Stats.ArmorPenetrationRating },
 					new WeightedStat() { Chance = 1f - uptime, Value = 0f }};
 			}
 			else if (tempArPenEffects.Count > 1)
@@ -894,10 +826,13 @@ namespace Rawr.Cat
 			}
 		}
 
-        public override bool IsItemRelevant(Item item)
+		public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == ItemSlot.OffHand || 
-				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol)) 
+				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol) ||
+				item.Stats.SpellPower > 0) 
+				return false;
+			foreach (var effect in item.Stats.SpecialEffects(s => s.Stats.SpellPower > 0))
 				return false;
 			return base.IsItemRelevant(item);
 		}
@@ -924,7 +859,7 @@ namespace Rawr.Cat
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
 					BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                    BonusHealthMultiplier = stats.BonusHealthMultiplier,
+					BonusHealthMultiplier = stats.BonusHealthMultiplier,
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -945,8 +880,8 @@ namespace Rawr.Cat
 					DeathbringerProc = stats.DeathbringerProc,
 					BonusRakeDuration = stats.BonusRakeDuration,
 					BonusRipCrit = stats.BonusRipCrit,
-                    BonusRakeCrit = stats.BonusRakeCrit,
-                    RipCostReduction = stats.RipCostReduction,
+					BonusRakeCrit = stats.BonusRakeCrit,
+					RipCostReduction = stats.RipCostReduction,
 					MoteOfAnger = stats.MoteOfAnger,
 
 					ArcaneResistance = stats.ArcaneResistance,
@@ -1008,41 +943,41 @@ namespace Rawr.Cat
 			return relevant;
 		}
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsCat calcOpts) {
-            List<Buff> removedBuffs = new List<Buff>();
-            List<Buff> addedBuffs = new List<Buff>();
+		public Stats GetBuffsStats(Character character, CalculationOptionsCat calcOpts) {
+			List<Buff> removedBuffs = new List<Buff>();
+			List<Buff> addedBuffs = new List<Buff>();
 
-            //float hasRelevantBuff;
+			//float hasRelevantBuff;
 
-            #region Passive Ability Auto-Fixing
-            // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-            // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-            // value to relevant talents
-            /*{
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
-            }*/
-            #endregion
+			#region Passive Ability Auto-Fixing
+			// Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
+			// maintaining it yourself. We are now calculating this internally for better accuracy and to provide
+			// value to relevant talents
+			/*{
+				hasRelevantBuff = character.HunterTalents.TrueshotAura;
+				Buff a = Buff.GetBuffByName("Trueshot Aura");
+				Buff b = Buff.GetBuffByName("Unleashed Rage");
+				Buff c = Buff.GetBuffByName("Abomination's Might");
+				if (hasRelevantBuff > 0)
+				{
+					if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
+					if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
+					if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
+				}
+			}*/
+			#endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs) {
-                character.ActiveBuffs.Remove(b);
-            }
+			foreach (Buff b in removedBuffs) {
+				character.ActiveBuffsAdd(b);
+			}
+			foreach (Buff b in addedBuffs) {
+				character.ActiveBuffs.Remove(b);
+			}
 
-            return statsBuffs;
-        }
+			return statsBuffs;
+		}
 		public override void SetDefaults(Character character)
 		{
 			character.ActiveBuffsAdd(("Horn of Winter"));
@@ -1095,14 +1030,14 @@ namespace Rawr.Cat
 			set { _name = value; }
 		}
 
-        private string _desc = string.Empty;
-        public override string Description
-        {
-            get { return _desc; }
-            set { _desc = value; }
-        }
+		private string _desc = string.Empty;
+		public override string Description
+		{
+			get { return _desc; }
+			set { _desc = value; }
+		}
 
-        private float _overallPoints = 0f;
+		private float _overallPoints = 0f;
 		public override float OverallPoints
 		{
 			get { return _overallPoints; }
@@ -1135,12 +1070,12 @@ namespace Rawr.Cat
 			set { _item = value; }
 		}
 
-        private ItemInstance _itemInstance = null;
-        public override ItemInstance ItemInstance
-        {
-            get { return _itemInstance; }
-            set { _itemInstance = value; }
-        }
+		private ItemInstance _itemInstance = null;
+		public override ItemInstance ItemInstance
+		{
+			get { return _itemInstance; }
+			set { _itemInstance = value; }
+		}
 
 		private bool _equipped = false;
 		public override bool Equipped

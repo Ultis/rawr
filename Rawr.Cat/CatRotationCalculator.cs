@@ -246,18 +246,15 @@ namespace Rawr.Cat
 				#region Ferocious Bite
 				float averageBiteCP = ((float)biteCP + 1f) * _chanceExtraCP[biteCP - 1]
 				+ ((float)biteCP) * (1f - _chanceExtraCP[biteCP - 1]);
-				float biteDamageMultiplier = Math.Min(1f, 
-					(BiteStats.DamagePerSwing + BiteStats.DamagePerSwingPerCP * averageBiteCP) /
-					(BiteStats.DamagePerSwing + BiteStats.DamagePerSwingPerCP * 5f));
 				float bitesFromAvailableCP = totalCPAvailable / averageBiteCP;
-				biteCount += bitesFromAvailableCP * biteDamageMultiplier;
+				biteCount += bitesFromAvailableCP;
 				totalCPAvailable = 0;
 				totalEnergyAvailable -= BiteStats.EnergyCost * bitesFromAvailableCP;
 
 				float biteCycleEnergy = (averageBiteCP / CPPerCPG) * cpgEnergy + BiteStats.EnergyCost;
 				float bitesFromNewCP = totalEnergyAvailable / biteCycleEnergy;
 
-				biteCount += bitesFromNewCP * biteDamageMultiplier;
+				biteCount += bitesFromNewCP;
 				cpgCount += bitesFromNewCP * (averageBiteCP / CPPerCPG);
 				totalEnergyAvailable = 0f;
 				#endregion
