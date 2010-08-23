@@ -19,7 +19,7 @@
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
-		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2" Background="#FFFFFFFF" Width="142" MouseLeftButtonUp="NameGrid_MouseLeftButtonUp">
+		<Grid x:Name="NameGrid" Grid.Column="0" Margin="2,2,6,2" Background="#FFFFFFFF" Width="142" MouseLeftButtonDown="NameGrid_MouseLeftButtonUp">
 			<input:ContextMenuService.ContextMenu>
 				<input:ContextMenu x:Name="ContextMenuItem" Opened="ContextMenuItem_Opened">
 					<input:MenuItem x:Name="ContextItemName" IsEnabled="False" Header="Super Cool Item"/>

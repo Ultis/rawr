@@ -75,7 +75,7 @@
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
                 </StackPanel>
-                <Rectangle MouseEnter="item_MouseEnter" MouseLeave="item_MouseLeave" MouseLeftButtonDown="item_Clicked"
+                <Rectangle MouseEnter="item_MouseEnter" MouseLeave="item_MouseLeave" MouseLeftButtonUp="item_Clicked"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      Fill="Transparent" Margin="-2"
 								   />
