@@ -69,6 +69,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SplitButton">
+      <HintPath>..\WpfControls\SplitButton.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
@@ -180,9 +183,6 @@
     </Compile>
     <Compile Include="Dialogs\OptionsDialog.xaml.cs">
       <DependentUpon>OptionsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Items\ItemContextMenu.xaml.cs">
-      <DependentUpon>ItemContextMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Items\ItemEditor.xaml.cs">
       <DependentUpon>ItemEditor.xaml</DependentUpon>
@@ -415,12 +415,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\OptionsDialog.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Items\ItemContextMenu.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

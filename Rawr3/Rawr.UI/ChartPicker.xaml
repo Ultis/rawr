@@ -5,8 +5,8 @@
 		<DataTemplate x:Key="ChartPickerItemTemplatePrimary">
 			<Grid Background="#00000000" HorizontalAlignment="Stretch" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
 				<TextBlock Margin="4" Text="{Binding Header}"/>
-				<Path Fill="#000066" Height="7" Width="12" HorizontalAlignment="Right" VerticalAlignment="Center" Data="M0,0 7,3.5 0,7 z"/>
-			</Grid>
+                <Path Fill="#000066" Margin="4,0,4,0" HorizontalAlignment="Right" VerticalAlignment="Center" Data="M0,0 4,4 0,8 z"/>
+            </Grid>
 		</DataTemplate>
 		<DataTemplate x:Key="ChartPickerItemTemplateSecondary">
 			<Grid Background="#00000000" HorizontalAlignment="Stretch">
@@ -66,7 +66,7 @@
         <ToggleButton x:Name="Toggle" HorizontalAlignment="Left" Margin="4,0,4,0" IsChecked="{Binding IsOpen, ElementName=PopupChartPicker, Mode=TwoWay}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="TextBlockChartButtonPrimary" Margin="3,0,3,0" Text="Gear"/>
-                <Path Fill="#000066" Margin="3,0,3,0" Height="7" Width="7" VerticalAlignment="Center" Data="M0,0 7,3.5 0,7 z"/>
+                <Path Fill="#000066" Margin="4,0,4,0" VerticalAlignment="Center" Data="M0,0 4,4 0,8 z"/>
                 <TextBlock x:Name="TextBlockChartButtonSecondary" Margin="3,0,3,0" Text="Head"/>
             </StackPanel>
         </ToggleButton>

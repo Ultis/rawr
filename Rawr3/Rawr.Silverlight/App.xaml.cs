@@ -96,7 +96,7 @@ namespace Rawr.Silverlight
                         CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), realm.Substring(0, 2), true);
                         realm = realm.Substring(3);
 
-                        _mainPage.LoadFromArmory(characterName, region, realm);
+                        _mainPage.LoadCharacterFromArmory(characterName, region, realm);
                     }
                     else if (Calculations.Models.ContainsKey(bookmark))
                     {
