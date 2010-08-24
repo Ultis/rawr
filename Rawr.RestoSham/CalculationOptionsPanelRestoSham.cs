@@ -126,9 +126,9 @@ namespace Rawr.RestoSham
 			{
 				CalculationOptionsRestoSham options = Character.CalculationOptions as CalculationOptionsRestoSham;
 				Type t = options.GetType();
-				FieldInfo field = t.GetField(szFieldName);
-				if (field != null)
-					return field.GetValue(options);
+                PropertyInfo property = t.GetProperty(szFieldName);
+				if (property != null)
+					return property.GetValue(options, null);
 
 				return null;
 			}
@@ -136,9 +136,9 @@ namespace Rawr.RestoSham
 			{
 				CalculationOptionsRestoSham options = Character.CalculationOptions as CalculationOptionsRestoSham;
 				Type t = options.GetType();
-				FieldInfo field = t.GetField(szFieldName);
-				if (field != null)
-					field.SetValue(options, value);
+                PropertyInfo property = t.GetProperty(szFieldName);
+				if (property != null)
+                    property.SetValue(options, value, null);
 			}
 		}
 		#endregion
