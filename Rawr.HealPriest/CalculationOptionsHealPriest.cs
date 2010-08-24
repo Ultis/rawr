@@ -23,7 +23,7 @@ namespace Rawr.HealPriest
             StringBuilder xml = new StringBuilder();
             System.IO.StringWriter writer = new System.IO.StringWriter(xml);
             serializer.Serialize(writer, this);
-            return xml.ToString().Replace("HolyPriest","HealPriest");
+            return xml.ToString();
         }
 
         private eRole _Role = eRole.AUTO_Tank;
