@@ -1,4 +1,4 @@
-Rawr v2.3.21.0
+Rawr v2.3.22.0
 ------------
 
 We're pleased to announce that, after long last, Rawr3 has entered public beta. You're still welcome to continue using Rawr2 (that's what you're reading the readme for), but we urge you to try out Rawr3, and enjoy all the new features and benefits. Rawr3 is a port of Rawr to Silverlight, which means:
@@ -13,23 +13,22 @@ We're pleased to announce that, after long last, Rawr3 has entered public beta. 
  Please remember that it's still a beta, though, so lots of things are likely to be buggy or incomplete!
    
    
-And now back to Rawr v2.3.21.0.
+And now back to Rawr v2.3.22.0.
    
 Recent Changes:
- - Rawr E-mail: I get a lot of e-mail about Rawr, and occasionally some of it falls through the cracks. In order to separate it from my personal e-mail, and more importantly to get more eyes involved, I've setup a new e-mail account for the Rawr Dev Team: WarcraftRawr@gmail.com. Everyone, please use that e-mail for Rawr related e-mails now. Myself, and several of the other devs have access to it, so you're more likely to get a quick response. Additionally, if you've sent me anything in the last few weeks and haven't gotten a response, go ahead and resend it to WarcraftRawr@gmail.com.
- - Significant performance improvements to many models. Some of them *extremely* significant.
- - Rawr.ShadowPriest: Readded Crypt Fever. Mind Flay no longer benefits from Mental Agility.
- - Rawr.HealingPriest: Renamed Rawr.HolyPriest to Rawr.HealingPriest, to make it more clear that it supports both specs of healing priests. Fix for Binding Heal calculations. Added support for Binding Light/Stone trinket.
- - Rawr.Tree: Updated default gemming templates.
- - Rawr.Hunter: Updated default gemming templates.
- - Rawr.Moonkin: Support for Fetish of Volatile Power and Nevermelting Ice Crystal.
- - Rawr.Rogue: Implemented racial expertise bonuses. Modified how avoided white attack are displayed. Crit caps are now shown in the crit display. Fixes for Filthy Tricks not reducing TotT cost, exp/hit calculations, CQC offhand damage, overly high CPG usage in some cycles, overall crit chance, and AP scaling of Eviscerate.
- - Rawr.Elemental: Adjustments to the calculations for Searing and Magma Totems.
- - Rawr.TankDK: Fix for offhand items granting errant mitigation.
- - Rawr.DPSDK: Fix for how custom graphs are displayed. Fix for an issue with the calculation for Rune of the Fallen Crusader. Fix for value of the ICC buff. There is now a custom graph showing DPS in different presences.
- - Rawr.ProtPaladin: Added % Chance to be Crit Without Holy Shield as an optimizable stat, and removed Defense Skill.
- - Rawr.DPSWarr: Now auto-detects Arms vs Fury based on talents, instead of an option on the Options pane. Fix for execute spam in Arms.
-
+ -Fix for the stats of Imp Lay on Hands.
+ -Fixes to a couple item stats.
+ -Rawr.Bear: Fix for resistance calculations being slightly off.
+ -Rawr.Cat: Fix for combo point generation rate being slightly off due to avoidance. Fix for bite damage being doublely reduced by combo points. Improved default gemming templates. Improved relevancy checking by ignoring items with spellpower. Fix for Idol of the Crying Moon calculations when it was the only crit-affecting special effect.
+ -Rawr.Rogue: Fix for the amount of CPs generated per CPG. Fix for Mutilate being usable with all weapons, and tweak to damage. Fix for the value of 3 points of Vile Poisons. Fix for base offhand damage. Fix for Crit double dipping with Master Poisoner. Fix for Haste calculation.
+ -Rawr.RestoSham: Fix for the duration of GCDs.
+ -Rawr.DPSDK: Slight fix for Glyph of Scourge Strike. Fixed the text of Glyph of Unholy Blight. Better detection of rotation without relying on single key talents.
+ -Rawr.TankDK: Fix for Abom's Might calculation. Fix for a few buffs/procs having no value. Fix for damage taken in Frost Presence.
+ -Rawr.Moonkin: Fix a display issue where spells that are not present in a given rotation would show NaN in the detailed spell breakdown rather than 0.
+ -Rawr.DPSWarr: Tweaks for Sudden Death and the 4T10 for Arms.
+ -Rawr.Elemental: Implemented Fire Elemental modeling.
+ -Rawr.HealPriest: Fix for not being able to load some older character files.
+ -Rawr.Warlock: Fix for not being able to load some older character files.
 
 Instructions
 ------------
@@ -132,6 +131,21 @@ Known Issues:
 
 OLDER VERSION HISTORY
 ---------------------
+v2.3.21.0
+ - Rawr E-mail: I get a lot of e-mail about Rawr, and occasionally some of it falls through the cracks. In order to separate it from my personal e-mail, and more importantly to get more eyes involved, I've setup a new e-mail account for the Rawr Dev Team: WarcraftRawr@gmail.com. Everyone, please use that e-mail for Rawr related e-mails now. Myself, and several of the other devs have access to it, so you're more likely to get a quick response. Additionally, if you've sent me anything in the last few weeks and haven't gotten a response, go ahead and resend it to WarcraftRawr@gmail.com.
+ - Significant performance improvements to many models. Some of them *extremely* significant.
+ - Rawr.ShadowPriest: Readded Crypt Fever. Mind Flay no longer benefits from Mental Agility.
+ - Rawr.HealingPriest: Renamed Rawr.HolyPriest to Rawr.HealingPriest, to make it more clear that it supports both specs of healing priests. Fix for Binding Heal calculations. Added support for Binding Light/Stone trinket.
+ - Rawr.Tree: Updated default gemming templates.
+ - Rawr.Hunter: Updated default gemming templates.
+ - Rawr.Moonkin: Support for Fetish of Volatile Power and Nevermelting Ice Crystal.
+ - Rawr.Rogue: Implemented racial expertise bonuses. Modified how avoided white attack are displayed. Crit caps are now shown in the crit display. Fixes for Filthy Tricks not reducing TotT cost, exp/hit calculations, CQC offhand damage, overly high CPG usage in some cycles, overall crit chance, and AP scaling of Eviscerate.
+ - Rawr.Elemental: Adjustments to the calculations for Searing and Magma Totems.
+ - Rawr.TankDK: Fix for offhand items granting errant mitigation.
+ - Rawr.DPSDK: Fix for how custom graphs are displayed. Fix for an issue with the calculation for Rune of the Fallen Crusader. Fix for value of the ICC buff. There is now a custom graph showing DPS in different presences.
+ - Rawr.ProtPaladin: Added % Chance to be Crit Without Holy Shield as an optimizable stat, and removed Defense Skill.
+ - Rawr.DPSWarr: Now auto-detects Arms vs Fury based on talents, instead of an option on the Options pane. Fix for execute spam in Arms.
+
 v2.3.20.0
  - Fixed a bug with gems in custom gemming templates not being considered available when they should be.
  - Rawr.Bear: Several performance improvements. Fix for editing the custom values for the presetable fields on the Options tab.
