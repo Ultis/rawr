@@ -244,7 +244,7 @@ namespace Rawr.Moonkin
             float movementShare = (bossOpts.MovingTargsDur / 1000) / bossOpts.MovingTargsFreq / (1 + calcs.BasicStats.MovementSpeed);
             float invulnerableShare = bossOpts.TimeBossIsInvuln / bossOpts.BerserkTimer;
 
-            percentTimeInRotation -= movementShare - fearShare - stunShare - invulnerableShare;
+            percentTimeInRotation -= movementShare + fearShare + stunShare + invulnerableShare;
 #endif
 
             float manaGained = manaPool - calcs.BasicStats.Mana;
