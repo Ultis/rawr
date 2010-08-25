@@ -241,8 +241,17 @@ namespace Rawr.Moonkin
 
             float fearShare = (bossOpts.FearingTargsDur / 1000) / bossOpts.FearingTargsFreq;
             float stunShare = (bossOpts.StunningTargsDur / 1000) / bossOpts.StunningTargsFreq;
-            float movementShare = (bossOpts.MovingTargsDur / 1000) / bossOpts.MovingTargsFreq / (1 + calcs.BasicStats.MovementSpeed);
             float invulnerableShare = bossOpts.TimeBossIsInvuln / bossOpts.BerserkTimer;
+
+            List<Attack> attacks = bossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
+            attacks.AddRange(bossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_RANGED));
+            int movementCount = attacks.Count;
+            float assumedMovementDuration = 2.0f;   // Assume 2 seconds per move
+            float accumulatedDurations = 0.0f;
+            foreach (Attack a in attacks)
+                accumulatedDurations += a.AttackSpeed;
+
+            float movementShare = (movementCount == 0 ? 0 : assumedMovementDuration / (accumulatedDurations / movementCount) / (1 + calcs.BasicStats.MovementSpeed));
 
             percentTimeInRotation -= movementShare + fearShare + stunShare + invulnerableShare;
 #endif
