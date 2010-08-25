@@ -235,6 +235,17 @@ namespace Rawr.Moonkin
 
             float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime + faerieFireTime);
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
+#if RAWR3
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) bossOpts = new BossOptions();
+
+            float fearShare = (bossOpts.FearingTargsDur / 1000) / bossOpts.FearingTargsFreq;
+            float stunShare = (bossOpts.StunningTargsDur / 1000) / bossOpts.StunningTargsFreq;
+            float movementShare = (bossOpts.MovingTargsDur / 1000) / bossOpts.MovingTargsFreq / (1 + calcs.BasicStats.MovementSpeed);
+            float invulnerableShare = bossOpts.TimeBossIsInvuln / bossOpts.BerserkTimer;
+
+            percentTimeInRotation -= movementShare - fearShare - stunShare - invulnerableShare;
+#endif
 
             float manaGained = manaPool - calcs.BasicStats.Mana;
 

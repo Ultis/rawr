@@ -354,12 +354,8 @@ namespace Rawr {
                         custom["TargetGroups"] = false; // NYI
                         custom["Attacks"] = false; // NYI
                         custom["Defensive"] = false; // NYI
-                        custom["Moves"] = false; // NYI
-                        custom["Stuns"] = false; // NYI
-                        custom["Fears"] = false; // NYI
                         custom["Roots"] = false; // Not applicable
                         custom["Disarms"] = false; // Not applicable
-                        custom["Invulnerables"] = false; // NYI
                         _MyModelSupportsThis.Add("Moonkin", custom);
                     }
                     #endregion
