@@ -224,7 +224,7 @@ namespace Rawr
                                 break;
                             case CharacterRace.NightElf:
                                 S.Strength = 71;
-                                S.Agility = 186;
+                                S.Agility = 184;
                                 S.Stamina = 127;
                                 S.Intellect = 90;
                                 S.Spirit = 97;

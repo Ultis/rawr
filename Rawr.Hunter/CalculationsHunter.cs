@@ -1345,7 +1345,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Crits
             #region Crit Chance
-            calculatedStats.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility, character.Class));
+            float totalAGI = (float)Math.Ceiling(stats.Agility);
+            float baseAGI = (float)Math.Ceiling(statsRace.Agility * (1f + stats.BonusAgilityMultiplier));
+            calculatedStats.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility/*statsRace.Agility * (1f + stats.BonusAgilityMultiplier)*//*totalAGI - baseAGI*/, character.Class) - 0.01536f);
             calculatedStats.critFromRating = ConstrainCrit(critMOD, StatConversion.GetCritFromRating(stats.CritRating, character.Class));
 
             calculatedStats.critRateOverall = stats.PhysicalCrit;
@@ -2666,8 +2668,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 #endregion
                 #region Crit
                 statsTotal.CritRating += statsTotal.RangedCritRating;
-                statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility, character.Class)
-                                         + -0.0153f
+                statsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(statsTotal.Agility /*- agiBase*/, character.Class)
+                                         + -0.01536f
                                          + StatConversion.GetCritFromRating(Math.Max(0f, statsTotal.CritRating), character.Class);
                 #endregion
                 #region Haste
