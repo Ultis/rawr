@@ -694,43 +694,94 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            float hasRelevantBuff;
-
             List<Buff> buffGroup = new List<Buff>();
+            #region Maintenance Auto-Fixing
+            /*// Removes the Sunder Armor if you are maintaining it yourself
+            // Also removes Acid Spit and Expose Armor
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
+            // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
+            // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
+                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
+                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Icy Touch"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
+            // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
+            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blessing of Might (+Improved)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
+                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Blessing of Might"));
+                buffGroup.Add(Buff.GetBuffByName("Blessing of Might"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
+            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blood Pact (+Improved Imp)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
+                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Imp"));
+                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }*/
+            #endregion
+
             #region Passive Ability Auto-Fixing
             // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
             // value to relevant talents
-            {
-                hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                Buff a = Buff.GetBuffByName("Trueshot Aura");
-                Buff b = Buff.GetBuffByName("Unleashed Rage");
-                Buff c = Buff.GetBuffByName("Abomination's Might");
-                if (hasRelevantBuff > 0)
-                {
-                    if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); removedBuffs.Add(a); }
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); removedBuffs.Add(b); }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); removedBuffs.Add(c); }
-                }
+            if (character.HunterTalents.TrueshotAura > 0) {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Trueshot Aura"));
+                buffGroup.Add(Buff.GetBuffByName("Unleashed Rage"));
+                buffGroup.Add(Buff.GetBuffByName("Abomination's Might"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
+
             // Removes the Hunter's Mark Buff and it's Children 'Glyphed', 'Improved' and 'Both' if you are
             // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
             // value to relevant talents
-            {
-                hasRelevantBuff =  character.HunterTalents.ImprovedHuntersMark
-                                + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0);
-                Buff a = Buff.GetBuffByName("Hunter's Mark");
-                Buff b = Buff.GetBuffByName("Glyphed Hunter's Mark");
-                Buff c = Buff.GetBuffByName("Improved Hunter's Mark");
-                Buff d = Buff.GetBuffByName("Improved and Glyphed Hunter's Mark");
-                // Since we are doing base Hunter's mark ourselves, we still don't want to double-dip
-                if (character.ActiveBuffs.Contains(a)) { character.ActiveBuffs.Remove(a); /*removedBuffs.Add(a);*/ }
-                // If we have an enhanced Hunter's Mark, kill the Buff
-                if (hasRelevantBuff > 0) {
-                    if (character.ActiveBuffs.Contains(b)) { character.ActiveBuffs.Remove(b); /*removedBuffs.Add(b);*/ }
-                    if (character.ActiveBuffs.Contains(c)) { character.ActiveBuffs.Remove(c); /*removedBuffs.Add(c);*/ }
-                    if (character.ActiveBuffs.Contains(d)) { character.ActiveBuffs.Remove(d); /*removedBuffs.Add(c);*/ }
-                }
+            if (character.HunterTalents.ImprovedHuntersMark + (character.HunterTalents.GlyphOfHuntersMark ? 1 : 0) > 0) {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Hunter's Mark"));
+                buffGroup.Add(Buff.GetBuffByName("Glyphed Hunter's Mark"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Hunter's Mark"));
+                buffGroup.Add(Buff.GetBuffByName("Improved and Glyphed Hunter's Mark"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
             }
             /* [More Buffs to Come to this method]
              * Ferocious Inspiration | Sanctified Retribution
@@ -741,14 +792,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs) {
+            foreach (Buff b in removedBuffs)
+            {
                 character.ActiveBuffsAdd(b);
             }
-            foreach (Buff b in addedBuffs) {
+            foreach (Buff b in addedBuffs)
+            {
                 character.ActiveBuffs.Remove(b);
             }
 
             return statsBuffs;
+        }
+        private void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
+            }
         }
         public override void SetDefaults(Character character) { }
         public Stats GetPetBuffsStats(Character character, CalculationOptionsHunter calcOpts)

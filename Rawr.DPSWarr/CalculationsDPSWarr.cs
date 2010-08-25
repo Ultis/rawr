@@ -922,8 +922,7 @@ These numbers to do not include racial bonuses.",
         }
         private void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
         {
-            foreach (Buff b in buffGroup)
-            {
+            foreach (Buff b in buffGroup) {
                 if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
             }
         }
