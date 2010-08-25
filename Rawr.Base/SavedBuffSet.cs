@@ -52,16 +52,15 @@ namespace Rawr
         {
             Name = name;
             if (buffSet != null) {
-                List<Buff> toRemove = new List<Buff>();
+                List<Buff> toSave = new List<Buff>();
                 foreach (Buff b in buffSet) {
                     if (b == null || b.Group == null) continue;
                     // Remove these since they are tied to other stuff and will be auto-enforced by other means
                     // We will also not be looking at them when doing an Equals check
-                    if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { toRemove.Add(b); }
+                    if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toSave.Add(b); }
                 }
-                foreach (Buff r in toRemove) { buffSet.Remove(r); }
-                SetAsString = buffSet.ToString();
-                BuffSet = buffSet;
+                SetAsString = toSave.ToString();
+                BuffSet = toSave;
             }
         }
 
@@ -77,14 +76,12 @@ namespace Rawr
             // Fail on null sets
             if (otherBuffSet == null || SetAsString == null) { return false; }
             // Remove Buffs we don't want to verify in equality: Set Bonuses and Profession Buffs
-            List<Buff> clonedotherBuffSet = new List<Buff>(otherBuffSet.ToArray());
+            List<Buff> clonedotherBuffSet = new List<Buff>();
             List<Buff> toRemove = new List<Buff>();
-            foreach (Buff b in clonedotherBuffSet)
-            {
+            foreach (Buff b in clonedotherBuffSet) {
                 if (b == null || b.Group == null) continue;
-                if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { toRemove.Add(b); }
+                if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toRemove.Add(b); }
             }
-            foreach (Buff r in toRemove) { clonedotherBuffSet.Remove(r); }
             // Fail on not the same array size, this saves us some processing time when we already know it won't match
             if (BuffSet.Count != clonedotherBuffSet.Count) {
                 return false;
@@ -99,8 +96,7 @@ namespace Rawr
                 if (!otherSetAsStrings.Contains(t)) { noMatch = true; break; }
             }
             if (noMatch) return false;
-            foreach (String o in otherSetAsStrings)
-            {
+            foreach (String o in otherSetAsStrings) {
                 // Check this set to see if anything in other set isn't there
                 if (!thisSetAsStrings.Contains(o)) { noMatch = true; break; }
             }
