@@ -820,8 +820,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 ThePetTalentPicker.Character = character;
                 PetBuffs.Character = Character;
-                PopulatePetAbilities();
                 PopulateArmoryPets();
+                PopulatePetAbilities();
                 CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();
                 if (ShotRotationFunctions.ShotRotationIsntSet(CalcOpts)) {
                     _loadingCalculationOptions = false;
@@ -1137,6 +1137,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CalcOpts.petTalents = CalcOpts.PetTalents.ToString();
                 updateTalentDisplay();
             }
+            // Populate the Abilities
+            PopulatePetAbilities();
         }
         private void PopulateArmoryPets() {
             if (Character.ArmoryPets != null && Character.ArmoryPets.Count > 0)
