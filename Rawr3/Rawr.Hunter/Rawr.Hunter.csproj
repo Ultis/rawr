@@ -69,6 +69,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Rawr.UI">
+      <HintPath>..\Rawr.UI\Bin\Debug\Rawr.UI.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
@@ -146,7 +149,6 @@
     <Compile Include="CalculationOptionsPanelHunter.xaml.cs">
       <DependentUpon>CalculationOptionsPanelHunter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pet\GroupBox.cs" />
     <Compile Include="Pet\PetBuffSelector.xaml.cs">
       <DependentUpon>PetBuffSelector.xaml</DependentUpon>
     </Compile>

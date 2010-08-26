@@ -881,9 +881,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             switch (chartName)
             {
+                #region Pet Talents
                 case "Pet Talents":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return GetPetTalentChart(character, calculations);
+                #endregion
+                #region Spammed Shots DPS
                 case "Spammed Shots DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
@@ -905,6 +908,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedDPS(calculations.volley),
                         comparisonFromShotSpammedDPS(calculations.chimeraShot),
                     };
+                #endregion
+                #region Spammed Shots MPS
                 case "Spammed Shots MPS":
                     _subPointNameColors = _subPointNameColorsMPS;
                     return new ComparisonCalculationBase[] {
@@ -929,6 +934,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.readiness),
                         comparisonFromShotSpammedMPS(calculations.bestialWrath),
                     };
+                #endregion
+                #region Rotation DPS
                 case "Rotation DPS":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] {
@@ -957,6 +964,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromDoubles("PetSkills", 0, calculations.petSpecialDPS),
                         comparisonFromDoubles("KillCommand", 0, calculations.petKillCommandDPS),
                     };
+                #endregion
+                #region Rotation MPS
                 case "Rotation MPS":
                     _subPointNameColors = _subPointNameColorsMPS;
                     return new ComparisonCalculationBase[] {
@@ -982,6 +991,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.bestialWrath),
                         comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
                     };
+                #endregion
+                #region Shot Damage per Mana
                 case "Shot Damage per Mana":
                     _subPointNameColors = _subPointNameColorsDPM;
                     return new ComparisonCalculationBase[] {
@@ -1003,6 +1014,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotDPM(calculations.volley),
                         comparisonFromShotDPM(calculations.chimeraShot),
                     };
+                #endregion
+                #region Item Budget
                 case "Item Budget":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
@@ -1016,6 +1029,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
                     };
+                #endregion
             }
 
             return new ComparisonCalculationBase[0];
@@ -1023,14 +1037,51 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
         {
             List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
-#if RAWR3 || SILVERLIGHT
-#else
             Character baseChar = character.Clone(); CalculationOptionsHunter baseCalcOpts = baseChar.CalculationOptions as CalculationOptionsHunter;
             Character newChar = character.Clone(); CalculationOptionsHunter newCalcOpts = newChar.CalculationOptions as CalculationOptionsHunter;
             CharacterCalculationsHunter currentCalc;
             CharacterCalculationsHunter newCalc;
             ComparisonCalculationHunter compare;
             currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
+
+#if RAWR3 || SILVERLIGHT
+            foreach (PropertyInfo pi in baseCalcOpts.PetTalents.GetType().GetProperties())
+            {
+                PetTalentDataAttribute[] petTalentDatas = pi.GetCustomAttributes(typeof(PetTalentDataAttribute), true) as PetTalentDataAttribute[];
+                int orig;
+                if (petTalentDatas.Length > 0) {
+                    PetTalentDataAttribute petTalentData = petTalentDatas[0];
+                    orig = baseCalcOpts.PetTalents.Data[petTalentData.Index];
+                    if (petTalentData.MaxPoints == (int)pi.GetValue(baseCalcOpts.PetTalents, null)) {
+                        newCalcOpts.PetTalents.Data[petTalentData.Index]--;
+                        newCalc = (CharacterCalculationsHunter)GetCharacterCalculations(newChar, null, false, true, false);
+                        compare = (ComparisonCalculationHunter)GetCharacterComparisonCalculations(newCalc, currentCalc, petTalentData.Name, petTalentData.MaxPoints == orig);
+                    } else {
+                        newCalcOpts.PetTalents.Data[petTalentData.Index]++;
+                        newCalc = (CharacterCalculationsHunter)GetCharacterCalculations(newChar, null, false, true, false);
+                        compare = (ComparisonCalculationHunter)GetCharacterComparisonCalculations(currentCalc, newCalc, petTalentData.Name, petTalentData.MaxPoints == orig);
+                    }
+                    string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, petTalentData.MaxPoints);
+                    if (orig == 0) {
+                        // We originally didn't have it, so first rank is next rank
+                        text += "Next Rank:\r\n";
+                        text += petTalentData.Description[0];
+                    } else if (orig >= petTalentData.MaxPoints) {
+                        // We originally were at max, so there isn't a next rank, just show the capped one
+                        text += petTalentData.Description[petTalentData.MaxPoints - 1];
+                    } else {
+                        // We aren't at 0 or MaxPoints originally, so it's just a point in between
+                        text += petTalentData.Description[orig - 1];
+                        text += "\r\n\r\nNext Rank:\r\n";
+                        text += petTalentData.Description[orig];
+                    }
+                    compare.Description = text;
+                    compare.Item = null;
+                    talentCalculations.Add(compare);
+                    newCalcOpts.PetTalents.Data[petTalentData.Index] = orig;
+                }
+            }
+#else
             foreach (PetTalent pi in baseCalcOpts.PetTalents.TalentTree)
             {
                 int Index = pi.ID;
