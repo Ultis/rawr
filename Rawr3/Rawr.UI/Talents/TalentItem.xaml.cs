@@ -116,16 +116,11 @@ namespace Rawr.UI
         public string GetTooltipString()
         {
             string n = talentData.Name + "\r\n";
-            if (Current == 0)
-            {
+            if (Current == 0) {
                 return string.Format(n + "Next Rank:\n{0}", wrapText(talentData.Description[0]));
-            }
-            else if (Current == talentData.MaxPoints)
-            {
+            } else if (Current == talentData.MaxPoints) {
                 return string.Format(n + "Max Points:\n{0}", wrapText(talentData.Description[talentData.MaxPoints - 1]));
-            }
-            else
-            {
+            } else {
                 return string.Format(n + "{0}\n\nNext Rank:\n{1}", wrapText(talentData.Description[Current - 1]), wrapText(talentData.Description[Current]));
             }
         }

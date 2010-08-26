@@ -247,8 +247,7 @@ namespace Rawr.Hunter
         {
             BuildControls();
         }
-        /*
-        public bool HasCustomSets { get; private set; }
+        /*public bool HasCustomSets { get; private set; }
 
         private bool updating;
         private void UpdateSavedSets()

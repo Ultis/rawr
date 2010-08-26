@@ -114,19 +114,25 @@ namespace Rawr.Hunter
 
         public string GetTooltipString()
         {
-            string n = pettalentData.Name + "\r\n";
-            if (Current == 0)
-            {
-                return string.Format(n + "Next Rank:\n{0}", WrapText(pettalentData.Description[0]));
+            int cur = Current, max = pettalentData == null ? -1 : pettalentData.MaxPoints;
+            try {
+                string n = pettalentData.Name + "\r\n";
+                if (Current == 0) {
+                    return string.Format(n + "Next Rank:\n{0}", WrapText(pettalentData.Description[0]));
+                } else if (Current == pettalentData.MaxPoints) {
+                    return string.Format(n + "Max Points:\n{0}", WrapText(pettalentData.Description[pettalentData.MaxPoints - 1]));
+                } else {
+                    return string.Format(n + "{0}\n\nNext Rank:\n{1}", WrapText(pettalentData.Description[Current - 1]), WrapText(pettalentData.Description[Current]));
+                }
+            } catch (Exception ex) {
+                new Rawr.Base.ErrorBox() {
+                    Message = ex.Message, StackTrace = ex.StackTrace,
+                    Title = "Error setting the talents in PetTalentTree",
+                    Function = "PetTalentTree.set_Talents(value)",
+                    Info = string.Format("Talent: {0} [{1}/{2}]", pettalentData == null ? "bad data" : pettalentData.Name, cur, max)
+                }.Show();
             }
-            else if (Current == pettalentData.MaxPoints)
-            {
-                return WrapText(pettalentData.Description[pettalentData.MaxPoints - 1]);
-            }
-            else
-            {
-                return string.Format(n + "{0}\n\nNext Rank:\n{1}", WrapText(pettalentData.Description[Current - 1]), WrapText(pettalentData.Description[Current]));
-            }
+            return "";
         }
 
         public PetTalentItem()

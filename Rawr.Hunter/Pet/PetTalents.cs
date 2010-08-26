@@ -415,12 +415,12 @@ namespace Rawr.Hunter
         // ============================================
 
         /// <summary>A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried.</summary>
-        [PetTalentData(25, "Wolverine Bite", 2, new bool[] { true, false, false }, new int[] { 1, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        [PetTalentData(25, "Wolverine Bite", 1, new bool[] { true, false, false }, new int[] { 1, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
         @"A fierce attack causing 5 damage, modified by pet level, that your pet can use after its target dodges. Cannot be dodged, blocked or parried." }, "ability_druid_lacerate")]
         public int WolverineBite { get { return _data[25]; } set { _data[25] = value; } }
 
         /// <summary>Your pet's inspiring roar restores 30% of your total mana over 9 sec.</summary>
-        [PetTalentData(26, "Roar Of Recovery", 2, new bool[] { true, false, false }, new int[] { 2, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
+        [PetTalentData(26, "Roar Of Recovery", 1, new bool[] { true, false, false }, new int[] { 2, 1, 1 }, new int[] { 5, 1, 1 }, new int[] { -1, -1, -1 }, new string[] {
         @"Your pet's inspiring roar restores 30% of your total mana over 9 sec." }, "ability_druid_mastershapeshifter")]
         public int RoarOfRecovery { get { return _data[26]; } set { _data[26] = value; } }
 

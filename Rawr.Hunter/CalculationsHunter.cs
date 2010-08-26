@@ -792,14 +792,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs)
-            {
-                character.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs)
-            {
-                character.ActiveBuffs.Remove(b);
-            }
+            foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
+            foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
 
             return statsBuffs;
         }
@@ -813,31 +807,24 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         public override void SetDefaults(Character character) { }
         public Stats GetPetBuffsStats(Character character, CalculationOptionsHunter calcOpts)
         {
+            if (calcOpts == null) return new Stats();
             Stats statsBuffs;
-            try
-            {
+            try {
                 List<Buff> removedBuffs = new List<Buff>();
                 List<Buff> addedBuffs = new List<Buff>();
 
-                float hasRelevantBuff;
-
-                List<Buff> Buffs2Acc = new List<Buff>(calcOpts.petActiveBuffs);
+                List<Buff> buffGroup = new List<Buff>();
 
                 #region Passive Ability Auto-Fixing
                 // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
                 // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
                 // value to relevant talents
-                {
-                    hasRelevantBuff = character.HunterTalents.TrueshotAura;
-                    Buff a = Buff.GetBuffByName("Trueshot Aura");
-                    Buff b = Buff.GetBuffByName("Unleashed Rage");
-                    Buff c = Buff.GetBuffByName("Abomination's Might");
-                    if (hasRelevantBuff > 0)
-                    {
-                        if (Buffs2Acc.Contains(a)) { Buffs2Acc.Remove(a); removedBuffs.Add(a); }
-                        if (Buffs2Acc.Contains(b)) { Buffs2Acc.Remove(b); removedBuffs.Add(b); }
-                        if (Buffs2Acc.Contains(c)) { Buffs2Acc.Remove(c); removedBuffs.Add(c); }
-                    }
+                if (character.HunterTalents.TrueshotAura > 0) {
+                    buffGroup.Clear();
+                    buffGroup.Add(Buff.GetBuffByName("Trueshot Aura"));
+                    buffGroup.Add(Buff.GetBuffByName("Unleashed Rage"));
+                    buffGroup.Add(Buff.GetBuffByName("Abomination's Might"));
+                    MaintPetBuffHelper(buffGroup, calcOpts, removedBuffs);
                 }
                 /* [More Buffs to Come to this method]
                  * Ferocious Inspiration | Sanctified Retribution
@@ -846,12 +833,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                  */
                 #endregion
 
-                statsBuffs = GetBuffsStats(Buffs2Acc);
+                statsBuffs = GetBuffsStats(calcOpts.petActiveBuffs);
 
-                foreach (Buff b in removedBuffs) { Buffs2Acc.Add(b); }
-                foreach (Buff b in addedBuffs) { Buffs2Acc.Remove(b); }
-            }
-            catch (Exception ex) {
+                foreach (Buff b in removedBuffs) { calcOpts.petActiveBuffs.Add(b); }
+                foreach (Buff b in addedBuffs) { calcOpts.petActiveBuffs.Remove(b); }
+            } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Generating Pet Buff Stats",
                     ex.Message, "GetPetBuffsStats(...)",
                     "No Additional Info", ex.StackTrace);
@@ -860,6 +846,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             }
 
             return statsBuffs;
+        }
+        private void MaintPetBuffHelper(List<Buff> buffGroup, CalculationOptionsHunter calcOpts, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (calcOpts.petActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
+            }
         }
 
         #endregion
