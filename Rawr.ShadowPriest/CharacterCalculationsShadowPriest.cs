@@ -113,9 +113,9 @@ namespace Rawr.ShadowPriest
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));
 
 #if RAWR3 || SILVERLIGHT
-            float Hit = 100 - (StatConversion.GetSpellMiss(BossOpts.Level - character.Level, false) * 100);
+            float Hit = 100 - (StatConversion.GetSpellMiss(character.Level - BossOpts.Level, false) * 100);
 #else
-            float Hit = 100 - (StatConversion.GetSpellMiss(calcOpts.TargetLevel, false) * 100);
+            float Hit = 100 - (StatConversion.GetSpellMiss(-calcOpts.TargetLevel, false) * 100);
 #endif
             float BonusHit = BasicStats.SpellHit * 100f;
             float RacialHit = 0;

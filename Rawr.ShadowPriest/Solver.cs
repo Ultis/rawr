@@ -153,9 +153,9 @@ namespace Rawr.ShadowPriest
             BossOpts = character.BossOptions;
 
 #if RAWR3 || SILVERLIGHT
-            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(BossOpts.Level - character.Level, false) * 100);
+            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(character.Level - BossOpts.Level, false) * 100);
 #else
-            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(CalcOpts.TargetLevel, false) * 100);
+            HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(-CalcOpts.TargetLevel, false) * 100);
 #endif
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                 HitChance += character.PriestTalents.Misery * 1f;
