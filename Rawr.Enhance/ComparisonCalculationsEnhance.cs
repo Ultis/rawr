@@ -62,6 +62,8 @@ namespace Rawr.Enhance
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override String BaseStat
         {
             get { return " Attack Power"; }

@@ -77,6 +77,8 @@ namespace Rawr.Healadin
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override string ToString()
         {
             return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(ThroughputPoints), Math.Round(LongevityPoints));

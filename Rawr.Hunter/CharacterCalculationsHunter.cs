@@ -424,9 +424,9 @@ namespace Rawr.Hunter
                                                             pet.PetStats.PhysicalHit,
                                                             pet.PetStats.PhysicalCrit,
                                                             pet.PetStats.PhysicalHaste));
-            dictValues.Add("Pet Hit Percentage", petHitTotal.ToString("P2"));
-            dictValues.Add("Pet Dodge Percentage", petTargetDodge.ToString("P2"));
-            dictValues.Add("Pet Melee Crit Percentage", petCritTotalMelee.ToString("P2") + "*includes:\n" +
+            dictValues.Add("Pet Hit %", petHitTotal.ToString("P2"));
+            dictValues.Add("Pet Dodge %", petTargetDodge.ToString("P2"));
+            dictValues.Add("Pet Melee Crit %", petCritTotalMelee.ToString("P2") + "*includes:\n" +
                             petCritFromBase.ToString("P2") + " from base\n" +
                             petCritFromAgility.ToString("P2") + " from agility\n" +
                             petCritFromSpidersBite.ToString("P2") + " from Spider's Bite\n" +
@@ -435,7 +435,7 @@ namespace Rawr.Hunter
                             petCritFromBuffs.ToString("P2") + " from buffs\n" +
                             petCritFromTargetDebuffs.ToString("P2") + " from target debuffs\n" +
                             petCritFromDepression.ToString("P2") + " from depression");
-            dictValues.Add("Pet Specials Crit Percentage", petCritTotalSpecials.ToString("P2") + "*includes:\n" +
+            dictValues.Add("Pet Specials Crit %", petCritTotalSpecials.ToString("P2") + "*includes:\n" +
                             petCritTotalMelee.ToString("P2") + " from melee crit\n" +
                             petCritFromCobraStrikes.ToString("P2") + " from Cobra Strikes");
             dictValues.Add("Pet White DPS", petWhiteDPS.ToString("F2"));

@@ -53,7 +53,8 @@ namespace Rawr.Tree
 			set { _itemInstance = value; }
 		}
         
-        public override bool Equipped { get; set;}
+        public override bool Equipped { get; set; }
+        public override bool PartEquipped { get; set; }
 
         public override string ToString()
         {

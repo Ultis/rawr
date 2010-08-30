@@ -53,6 +53,8 @@ namespace Rawr.Hunter
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override string ToString() {
             return string.Format("{0}: ({1}O {2}HD {3}PD {4}HS {5}PS)",
                 Name, Math.Round(OverallPoints), Math.Round(HunterDPSPoints ), Math.Round(PetDPSPoints ),

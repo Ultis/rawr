@@ -78,9 +78,9 @@ namespace Rawr
             // Remove Buffs we don't want to verify in equality: Set Bonuses and Profession Buffs
             List<Buff> clonedotherBuffSet = new List<Buff>();
             List<Buff> toRemove = new List<Buff>();
-            foreach (Buff b in clonedotherBuffSet) {
+            foreach (Buff b in /*cloned*/otherBuffSet) {
                 if (b == null || b.Group == null) continue;
-                if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toRemove.Add(b); }
+                if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { clonedotherBuffSet/*toRemove*/.Add(b); }
             }
             // Fail on not the same array size, this saves us some processing time when we already know it won't match
             if (BuffSet.Count != clonedotherBuffSet.Count) {

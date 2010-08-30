@@ -146,10 +146,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Basic Stats:Haste",
 
                         "Pet Stats:Pet Attack Power",
-                        "Pet Stats:Pet Hit Percentage",
-                        "Pet Stats:Pet Dodge Percentage",
-                        "Pet Stats:Pet Melee Crit Percentage",
-                        "Pet Stats:Pet Specials Crit Percentage",
+                        "Pet Stats:Pet Hit %",
+                        "Pet Stats:Pet Dodge %",
+                        "Pet Stats:Pet Melee Crit %",
+                        "Pet Stats:Pet Specials Crit %",
                         "Pet Stats:Pet White DPS",
                         "Pet Stats:Pet Kill Command DPS",
                         "Pet Stats:Pet Specials DPS",
@@ -864,6 +864,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
                         "Pet Talents",
+#if RAWR3 || SILVERLIGHT
+                        //"Pet Talent Specs + Armory Pets",
+#endif
+                        //"Pet Buffs",
                         "Spammed Shots DPS",
                         "Spammed Shots MPS",
                         "Rotation DPS",
@@ -885,6 +889,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 case "Pet Talents":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return GetPetTalentChart(character, calculations);
+                #endregion
+                #region Pet Talents
+                /*case "Pet Talent Specs + Armory Pets":
+                    _subPointNameColors = _subPointNameColorsDPS;
+                    return GetPetTalentSpecsChart(character, calculations);*/
+                #endregion
+                #region Pet Buffs
+                case "Pet Buffs":
+                    _subPointNameColors = _subPointNameColorsDPS;
+                    CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+                    return GetPetBuffCalculations(character, calcOpts, calculations, "All").ToArray();
                 #endregion
                 #region Spammed Shots DPS
                 case "Spammed Shots DPS":
@@ -1034,6 +1049,98 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             return new ComparisonCalculationBase[0];
         }
+        public virtual List<ComparisonCalculationBase> GetPetBuffCalculations(Character character, CalculationOptionsHunter calcOpts, CharacterCalculationsBase currentCalcs, string filter)
+        {
+            //ClearCache();
+            List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
+            CharacterCalculationsBase calcsOpposite = null;
+            //CharacterCalculationsBase calcsEquipped = null;
+            //CharacterCalculationsBase calcsUnequipped = null;
+            Character charAutoActivated = character.Clone();
+            foreach (Buff autoBuff in currentCalcs.AutoActivatedBuffs)
+            {
+                if (!charAutoActivated.ActiveBuffs.Contains(autoBuff))
+                {
+                    charAutoActivated.ActiveBuffsAdd(autoBuff);
+                    RemoveConflictingBuffs(charAutoActivated.ActiveBuffs, autoBuff);
+                }
+            }
+            charAutoActivated.DisableBuffAutoActivation = true;
+
+            string[] multiFilter = filter.Split('|');
+
+            List<Buff> relevantBuffs = new List<Buff>();
+            foreach (Buff buff in RelevantPetBuffs)
+            {
+                bool isinMultiFilter = false;
+                if (multiFilter.Length > 0)
+                {
+                    foreach (string mFilter in multiFilter)
+                    {
+                        if (buff.Group.Equals(mFilter, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            isinMultiFilter = true;
+                            break;
+                        }
+                    }
+                }
+                if (filter == null || filter == "All" || filter == "Current"
+                    || buff.Group.Equals(filter, StringComparison.CurrentCultureIgnoreCase)
+                    || isinMultiFilter)
+                {
+                    relevantBuffs.Add(buff);
+                    relevantBuffs.AddRange(buff.Improvements);
+                }
+            }
+
+            foreach (Buff buff in relevantBuffs)
+            {
+                if (!"Current".Equals(filter, StringComparison.CurrentCultureIgnoreCase) || (charAutoActivated.CalculationOptions as CalculationOptionsHunter).petActiveBuffs.Contains(buff))
+                {
+                    Character charOpposite = charAutoActivated.Clone();
+                    //Character charUnequipped = charAutoActivated.Clone();
+                    //Character charEquipped = charAutoActivated.Clone();
+                    CalculationOptionsHunter calcOptsOpposite = charOpposite.CalculationOptions as CalculationOptionsHunter;
+                    //CalculationOptionsHunter calcOptsUnequipped = charUnequipped.CalculationOptions as CalculationOptionsHunter;
+                    //CalculationOptionsHunter calcOptsEquipped = charEquipped.CalculationOptions as CalculationOptionsHunter;
+                    bool which = (charAutoActivated.CalculationOptions as CalculationOptionsHunter).petActiveBuffs.Contains(buff);
+                    charOpposite.DisableBuffAutoActivation = true;
+                    //charUnequipped.DisableBuffAutoActivation = true;
+                    //charEquipped.DisableBuffAutoActivation = true;
+                    if (which) { calcOptsOpposite.petActiveBuffs.Remove(buff); } else { calcOptsOpposite.petActiveBuffs.Add(buff); }
+                    //if (calcOptsUnequipped.petActiveBuffs.Contains(buff)) { calcOptsUnequipped.petActiveBuffs.Remove(buff); }
+                    //if (!calcOptsEquipped.petActiveBuffs.Contains(buff)) { calcOptsEquipped.petActiveBuffs.Add(buff); }
+
+                    RemoveConflictingBuffs(calcOptsOpposite.petActiveBuffs, buff);
+                    //RemoveConflictingBuffs(calcOptsEquipped.petActiveBuffs, buff);
+                    //RemoveConflictingBuffs(calcOptsUnequipped.petActiveBuffs, buff);
+
+                    calcsOpposite = GetCharacterCalculations(charOpposite, null, false, false, false);
+                    //calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                    //calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+
+                    ComparisonCalculationBase buffCalc = CreateNewComparisonCalculation();
+                    buffCalc.Name = buff.Name;
+                    buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
+                    buffCalc.Equipped = which;//(charAutoActivated.CalculationOptions as CalculationOptionsHunter).petActiveBuffs.Contains(buff);
+                    buffCalc.OverallPoints = (which ? currentCalcs.OverallPoints - calcsOpposite.OverallPoints
+                                                    : calcsOpposite.OverallPoints - currentCalcs.OverallPoints);
+                    //buffCalc.OverallPoints = currentCalcs.OverallPoints - (buffCalc.Equipped ? calcsEquipped.OverallPoints : calcsUnequipped.OverallPoints);
+                    float[] subPoints = new float[calcsOpposite.SubPoints.Length];
+                    //float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsOpposite.SubPoints.Length; i++) {
+                        subPoints[i] = (which ? currentCalcs.SubPoints[i] - calcsOpposite.SubPoints[i]
+                                              : calcsOpposite.SubPoints[i] - currentCalcs.SubPoints[i]);
+                    }
+                    //for (int i = 0; i < calcsEquipped.SubPoints.Length; i++) { subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i]; }
+                    buffCalc.SubPoints = subPoints;
+                    buffCalcs.Add(buffCalc);
+                    // Revert, cuz it's evil
+                    if (!which) { calcOptsOpposite.petActiveBuffs.Remove(buff); } else { calcOptsOpposite.petActiveBuffs.Add(buff); }
+                }
+            }
+            return buffCalcs;
+        }
         private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
         {
             List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
@@ -1045,6 +1152,128 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
 
 #if RAWR3 || SILVERLIGHT
+            foreach (PropertyInfo pi in baseCalcOpts.PetTalents.GetType().GetProperties())
+            {
+                PetTalentDataAttribute[] petTalentDatas = pi.GetCustomAttributes(typeof(PetTalentDataAttribute), true) as PetTalentDataAttribute[];
+                int orig;
+                if (petTalentDatas.Length > 0) {
+                    PetTalentDataAttribute petTalentData = petTalentDatas[0];
+                    orig = baseCalcOpts.PetTalents.Data[petTalentData.Index];
+                    if (petTalentData.MaxPoints == (int)pi.GetValue(baseCalcOpts.PetTalents, null)) {
+                        newCalcOpts.PetTalents.Data[petTalentData.Index]--;
+                        newCalc = (CharacterCalculationsHunter)GetCharacterCalculations(newChar, null, false, true, false);
+                        compare = (ComparisonCalculationHunter)GetCharacterComparisonCalculations(newCalc, currentCalc, petTalentData.Name, petTalentData.MaxPoints == orig, orig != 0 && orig != petTalentData.MaxPoints);
+                    } else {
+                        newCalcOpts.PetTalents.Data[petTalentData.Index]++;
+                        newCalc = (CharacterCalculationsHunter)GetCharacterCalculations(newChar, null, false, true, false);
+                        compare = (ComparisonCalculationHunter)GetCharacterComparisonCalculations(currentCalc, newCalc, petTalentData.Name, petTalentData.MaxPoints == orig, orig != 0 && orig != petTalentData.MaxPoints);
+                    }
+                    string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, petTalentData.MaxPoints);
+                    if (orig == 0) {
+                        // We originally didn't have it, so first rank is next rank
+                        text += "Next Rank:\r\n";
+                        text += petTalentData.Description[0];
+                    } else if (orig >= petTalentData.MaxPoints) {
+                        // We originally were at max, so there isn't a next rank, just show the capped one
+                        text += petTalentData.Description[petTalentData.MaxPoints - 1];
+                    } else {
+                        // We aren't at 0 or MaxPoints originally, so it's just a point in between
+                        text += petTalentData.Description[orig - 1];
+                        text += "\r\n\r\nNext Rank:\r\n";
+                        text += petTalentData.Description[orig];
+                    }
+                    compare.Description = text;
+                    compare.Item = null;
+                    talentCalculations.Add(compare);
+                    newCalcOpts.PetTalents.Data[petTalentData.Index] = orig;
+                }
+            }
+#else
+            foreach (PetTalent pi in baseCalcOpts.PetTalents.TalentTree)
+            {
+                int Index = pi.ID;
+                int orig = 0;
+                PetTalent talentData = pi;
+                orig = pi.Value;
+                if (talentData.Max == pi.Value) {
+                    newCalcOpts.PetTalents.TalentTree[Index].Value--;
+                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.Max == orig, orig != 0 && orig != talentData.Max);
+                } else {
+                    newCalcOpts.PetTalents.TalentTree[Index].Value++;
+                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.Max == orig, orig != 0 && orig != talentData.Max);
+                }
+                string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, talentData.Max);
+                if (orig == 0) {
+                    // We originally didn't have it, so first rank is next rank
+                    text += "Next Rank:\r\n";
+                    text += talentData.Desc[0];
+                } else if (orig >= talentData.Max) {
+                    // We originally were at max, so there isn't a next rank, just show the capped one
+                    text += talentData.Desc[talentData.Max];
+                } else {
+                    // We aren't at 0 or MaxPoints originally, so it's just a point in between
+                    text += talentData.Desc[orig];
+                    text += "\r\n\r\nNext Rank:\r\n";
+                    text += talentData.Desc[orig+1];
+                }
+                compare.Description = text;
+                compare.Item = null;
+                talentCalculations.Add(compare);
+                newCalcOpts.PetTalents.TalentTree[Index].Value = orig;
+            }
+#endif
+            return talentCalculations.ToArray();
+        }
+        /*private ComparisonCalculationHunter[] GetPetTalentSpecsChart(Character character, CharacterCalculationsHunter calcs)
+        {
+            List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
+            Character newChar = character.Clone();
+
+            /*PetTalentsBase nothing = character.CurrentTalents.Clone();
+            for (int i = 0; i < nothing.Data.Length; i++) nothing.Data[i] = 0;
+            for (int i = 0; i < nothing.GlyphData.Length; i++) nothing.GlyphData[i] = false;
+            newChar.CurrentTalents = nothing;
+
+            CharacterCalculationsBase baseCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, true);
+            CharacterCalculationsBase newCalc;
+            ComparisonCalculationBase compare;
+
+            bool same, found = false;
+            foreach (SavedTalentSpec sts in SavedTalentSpec.SpecsFor(character.Class))
+            {
+                same = false;
+                if (sts.Equals(character.CurrentTalents)) same = true;
+                newChar.CurrentTalents = sts.TalentSpec();
+                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, true);
+                compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, sts.Name, same);
+                compare.Item = null;
+                compare.Name = sts.ToString();
+                compare.Description = sts.Spec;
+                talentCalculations.Add(compare);
+                found = found || same;
+            }
+            if (!found)
+            {
+                newCalc = Calculations.GetCharacterCalculations(character, null, false, true, true);
+                compare = Calculations.GetCharacterComparisonCalculations(baseCalc, newCalc, "Custom", true);
+                talentCalculations.Add(compare);
+            }
+            //CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            //ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            //ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            //ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
+            return talentCalculations.ToArray();
+
+            /*List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
+            Character baseChar = character.Clone(); CalculationOptionsHunter baseCalcOpts = baseChar.CalculationOptions as CalculationOptionsHunter;
+            Character newChar = character.Clone(); CalculationOptionsHunter newCalcOpts = newChar.CalculationOptions as CalculationOptionsHunter;
+            CharacterCalculationsHunter currentCalc;
+            CharacterCalculationsHunter newCalc;
+            ComparisonCalculationHunter compare;
+            currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
+
             foreach (PropertyInfo pi in baseCalcOpts.PetTalents.GetType().GetProperties())
             {
                 PetTalentDataAttribute[] petTalentDatas = pi.GetCustomAttributes(typeof(PetTalentDataAttribute), true) as PetTalentDataAttribute[];
@@ -1081,44 +1310,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     newCalcOpts.PetTalents.Data[petTalentData.Index] = orig;
                 }
             }
-#else
-            foreach (PetTalent pi in baseCalcOpts.PetTalents.TalentTree)
-            {
-                int Index = pi.ID;
-                int orig = 0;
-                PetTalent talentData = pi;
-                orig = pi.Value;
-                if (talentData.Max == pi.Value) {
-                    newCalcOpts.PetTalents.TalentTree[Index].Value--;
-                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.Max == orig);
-                } else {
-                    newCalcOpts.PetTalents.TalentTree[Index].Value++;
-                    newCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                    compare = (ComparisonCalculationHunter)Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.Max == orig);
-                }
-                string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, talentData.Max);
-                if (orig == 0) {
-                    // We originally didn't have it, so first rank is next rank
-                    text += "Next Rank:\r\n";
-                    text += talentData.Desc[0];
-                } else if (orig >= talentData.Max) {
-                    // We originally were at max, so there isn't a next rank, just show the capped one
-                    text += talentData.Desc[talentData.Max];
-                } else {
-                    // We aren't at 0 or MaxPoints originally, so it's just a point in between
-                    text += talentData.Desc[orig];
-                    text += "\r\n\r\nNext Rank:\r\n";
-                    text += talentData.Desc[orig+1];
-                }
-                compare.Description = text;
-                compare.Item = null;
-                talentCalculations.Add(compare);
-                newCalcOpts.PetTalents.TalentTree[Index].Value = orig;
-            }
-#endif
             return talentCalculations.ToArray();
-        }
+        }*/
         private ComparisonCalculationHunter comparisonFromShotSpammedDPS(ShotData shot)
         {
             ComparisonCalculationHunter comp =  new ComparisonCalculationHunter();

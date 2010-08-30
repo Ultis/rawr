@@ -70,5 +70,7 @@ namespace Rawr.RestoSham
             get { return _bEquipped; }
             set { _bEquipped = value; }
         }
+
+        public override bool PartEquipped { get; set; }
     }
 }

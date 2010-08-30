@@ -215,6 +215,7 @@ namespace Rawr.Optimizer
         public override float[] SubPoints { get; set; }
         public override ItemInstance ItemInstance { get; set; }
         public override bool Equipped { get; set; }
+        public override bool PartEquipped { get; set; }
 
         [XmlIgnore]
         public override Item Item

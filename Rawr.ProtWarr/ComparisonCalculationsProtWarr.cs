@@ -73,6 +73,8 @@ namespace Rawr.ProtWarr
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override string ToString()
         {
             return string.Format("{0}: ({1}O {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints), Math.Round(ThreatPoints));

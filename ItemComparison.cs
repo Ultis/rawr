@@ -397,11 +397,11 @@ namespace Rawr
                     if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) {
                         newChar.CurrentTalents.Data[talentData.Index]--;
                         newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                        compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.MaxPoints == orig);
+                        compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, talentData.Name, talentData.MaxPoints == orig, orig != 0);
                     } else {
                         newChar.CurrentTalents.Data[talentData.Index]++;
                         newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                        compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.MaxPoints == orig);
+                        compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, talentData.Name, talentData.MaxPoints == orig, orig != 0);
                     }
                     string text = string.Format("Current Rank {0}/{1}\r\n\r\n", orig, talentData.MaxPoints);
                     if        (orig == 0) {
@@ -454,13 +454,13 @@ namespace Rawr
                         {
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
                             newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                            compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig);
+                            compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig, false);
                         }
                         else
                         {
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
                             newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
-                            compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig);
+                            compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig, false);
                         }
                         compare.Description = glyphData.Description; // JOTHAY: WTB Tooltips that show info on these charts
                         compare.Item = null;

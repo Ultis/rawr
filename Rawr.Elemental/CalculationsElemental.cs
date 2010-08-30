@@ -867,6 +867,8 @@ namespace Rawr.Elemental
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override string ToString()
         {
             return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));

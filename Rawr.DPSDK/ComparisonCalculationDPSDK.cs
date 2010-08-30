@@ -60,5 +60,6 @@ namespace Rawr.DPSDK
             get { return _equipped; }
             set { _equipped = value; }
         }
+        public override bool PartEquipped { get; set; }
     }
 }

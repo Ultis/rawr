@@ -1083,6 +1083,7 @@ namespace Rawr.Cat
 			get { return _equipped; }
 			set { _equipped = value; }
 		}
+        public override bool PartEquipped { get; set; }
 
 		public override string ToString()
 		{

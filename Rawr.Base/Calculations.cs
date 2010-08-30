@@ -290,9 +290,9 @@ namespace Rawr
             return Instance.GetCharacterComparisonCalculations(calculations, name, equipped);
         }
         public static ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculations,
-            CharacterCalculationsBase newCalculation, string name, bool equipped)
+            CharacterCalculationsBase newCalculation, string name, bool equipped, bool partequipped)
         {
-            return Instance.GetCharacterComparisonCalculations(baseCalculations, newCalculation, name, equipped);
+            return Instance.GetCharacterComparisonCalculations(baseCalculations, newCalculation, name, equipped, partequipped);
         }
         public static ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
@@ -1011,6 +1011,18 @@ namespace Rawr
                     buffCalc.Name = buff.Name;
                     buffCalc.Item = new Item() { Name = buff.Name, Stats = buff.Stats, Quality = ItemQuality.Temp };
                     buffCalc.Equipped = charAutoActivated.ActiveBuffs.Contains(buff);
+                    if (!buffCalc.Equipped && buff.ConflictingBuffs.Count > 0 && buff.ConflictingBuffs[0] != null) {
+                        bool hasConflictingMatch = false;
+                        foreach (String cb in buff.ConflictingBuffs) {
+                            foreach (Buff b in character.ActiveBuffs) {
+                                if (b.Name != buff.Name && b.ConflictingBuffs.Contains(cb)) {
+                                    hasConflictingMatch = true;
+                                    break;
+                                }
+                            }
+                        }
+                        buffCalc.PartEquipped = hasConflictingMatch;
+                    }
                     buffCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
                     float[] subPoints = new float[calcsEquipped.SubPoints.Length];
                     for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
@@ -1060,12 +1072,13 @@ namespace Rawr
         }
 
         public virtual ComparisonCalculationBase GetCharacterComparisonCalculations(CharacterCalculationsBase baseCalculation,
-            CharacterCalculationsBase newCalculation, string name, bool equipped)
+            CharacterCalculationsBase newCalculation, string name, bool equipped, bool partequipped)
         {
             ComparisonCalculationBase comparisonCalculations = CreateNewComparisonCalculation();
             comparisonCalculations.Name = name;
             comparisonCalculations.Item = new Item() { Name = name };
             comparisonCalculations.Equipped = equipped;
+            comparisonCalculations.PartEquipped = partequipped;
             comparisonCalculations.OverallPoints = newCalculation.OverallPoints - baseCalculation.OverallPoints;
             float[] subPoints = new float[newCalculation.SubPoints.Length];
             for (int i = 0; i < newCalculation.SubPoints.Length; i++)
@@ -1769,9 +1782,15 @@ namespace Rawr
 
         /// <summary>
         /// Whether the object being rated is currently equipped by the character. This controls whether
-        /// the item's label is highlighted in light blue on the charts.
+        /// the item's label is highlighted in light green on the charts.
         /// </summary>
         public abstract bool Equipped { get; set; }
+
+        /// <summary>
+        /// Whether the object being rated is currently partially equipped by the character. This controls whether
+        /// the item's label is highlighted in a lighter green on the charts.
+        /// </summary>
+        public abstract bool PartEquipped { get; set; }
 
         /// <summary>
         /// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints

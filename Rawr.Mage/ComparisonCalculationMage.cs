@@ -71,6 +71,8 @@ namespace Rawr.Mage
             set { _equipped = value; }
         }
 
+        public override bool PartEquipped { get; set; }
+
         public override string ToString()
         {
             if (_subPoints.Length == 2)

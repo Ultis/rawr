@@ -98,16 +98,11 @@ namespace Rawr.Moonkin
 		}
 
         bool equipped = false;
-        public override bool Equipped
-        {
-            get
-            {
-                return equipped;
-            }
-            set
-            {
-                equipped = value;
-            }
+        public override bool Equipped {
+            get { return equipped; }
+            set { equipped = value; }
         }
+
+        public override bool PartEquipped { get; set; }
     }
 }
