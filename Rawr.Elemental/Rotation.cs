@@ -370,16 +370,18 @@ namespace Rawr.Elemental
             {
                 if (lastDuration != float.PositiveInfinity)
                     return lastDuration;
-                if(useDpsFireTotem)
-                    for (int i = spells.Count-1; i >= 0; i--)
-                    {
-                        if(spells[i] is Totem) //last dps totem cast
-                        {
-                            Totem t = (Totem)spells[i];
-                            float overTime = GetTime(i) + t.Duration - GetTime();
-                            return lastDuration = GetTime() - t.CastTime * overTime / GetTime(); //substract overtime weigthed cast time
-                        }
-                    }
+                //The weighted totem time was causing an enormous disparity in DPS numbers in favor of not using 4t10.
+                //Leaving this block here regardless for the time being, just commenting it out.
+                //if (useDpsFireTotem)
+                //    for (int i = spells.Count - 1; i >= 0; i--)
+                //    {
+                //        if (spells[i] is Totem) //last dps totem cast
+                //        {
+                //            Totem t = (Totem)spells[i];
+                //            float overTime = GetTime(i) + t.Duration - GetTime();
+                //            return lastDuration = (GetTime() - (t.CastTime * overTime)) / GetTime(); //substract overtime weigthed cast time
+                //        }
+                //    }
                 return lastDuration = GetTime(); 
             }
         }
