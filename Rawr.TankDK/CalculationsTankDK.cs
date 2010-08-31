@@ -2095,7 +2095,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
  
-				// Defect 13301: Integrate 2% Threat increase for Armsmen enchant.
 				ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
 				ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
@@ -2190,7 +2189,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 						effect.Trigger == Trigger.DoTTick ||
 						effect.Trigger == Trigger.MeleeCrit ||
 						effect.Trigger == Trigger.MeleeHit ||
-						effect.Trigger == Trigger.PhysicalCrit ||
+                        effect.Trigger == Trigger.OffHandHit ||
+                        effect.Trigger == Trigger.CurrentHandHit ||
+                        effect.Trigger == Trigger.MainHandHit ||
+                        effect.Trigger == Trigger.PhysicalCrit ||
 						effect.Trigger == Trigger.PhysicalHit ||
 						effect.Trigger == Trigger.Use)
 					{

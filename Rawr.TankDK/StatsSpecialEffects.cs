@@ -42,7 +42,18 @@ namespace Rawr.TankDK
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        trigger = (1f / rRotation.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        trigger = (1f / (rRotation.getMeleeSpecialsPerSecond() * (combatTable.m_bDW ? 2 : 1))) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f);
+                        chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
+                    case Trigger.CurrentHandHit:
+                    case Trigger.MainHandHit:
+                        trigger = (1f / rRotation.getMeleeSpecialsPerSecond()) + (combatTable.MH.hastedSpeed != 0 ? 1f / combatTable.MH.hastedSpeed : 0.5f);
+                        chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
+                        unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
+                        break;
+                    case Trigger.OffHandHit:
+                        trigger = (1f / rRotation.getMeleeSpecialsPerSecond()) + (combatTable.OH.hastedSpeed != 0 ? 1f / combatTable.OH.hastedSpeed : 0.5f);
                         chance = effect.Chance * (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial));
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
