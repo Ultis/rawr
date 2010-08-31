@@ -62,6 +62,8 @@ namespace Rawr
         MainHandHit,
         /// <summary>Hit or Crit with just the off-hand, useful for dual-wielding weapon procs/enchants</summary>
         OffHandHit,
+        /// <summary>Hit or Crit with the hand that has the effect, useful for dual-weilding weapon procs/enchants that are specific to the weapon.</summary>
+        CurrentHandHit,
         #endregion
 
         #region Damage, in or out
@@ -1598,6 +1600,12 @@ namespace Rawr
                         return "on Melee Crit";
                     case Trigger.MeleeHit:
                         return "on Melee Hit";
+                    case Trigger.CurrentHandHit:
+                        return "on Current Hand Melee Hit";
+                    case Trigger.MainHandHit:
+                        return "on Main Hand Melee Hit";
+                    case Trigger.OffHandHit:
+                        return "on Off Hand Melee Hit";
                     case Trigger.MeleeAttack:
                         return "on Melee Attack";
                     case Trigger.SpellCast:
