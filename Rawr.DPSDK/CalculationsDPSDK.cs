@@ -949,7 +949,37 @@ namespace Rawr.DPSDK
                         bFC2Found = true;
                 }
             }
-
+#if false  // Not fleshed out yet.
+            // Iterate through the special effects on Main & off hand items.
+            Stats HandStat = new Stats();
+            if (character.MainHand != null)
+            {
+                HandStat = character.MainHand.GetTotalStats();
+                foreach (SpecialEffect e in HandStat.SpecialEffects())
+                {
+                    if (e.Trigger == Trigger.CurrentHandHit)
+                    {
+                        statsBaseGear.RemoveSpecialEffect(e);
+                        e.Trigger = Trigger.MainHandHit;
+                        statsBaseGear.AddSpecialEffect(e);
+                    }
+                }
+            }
+            // Reuse the stat object.
+            if (character.OffHand != null)
+            {
+                HandStat = character.OffHand.GetTotalStats();
+                foreach (SpecialEffect e in HandStat.SpecialEffects())
+                {
+                    if (e.Trigger == Trigger.CurrentHandHit)
+                    {
+                        statsBaseGear.RemoveSpecialEffect(e);
+                        e.Trigger = Trigger.MainHandHit;
+                        statsBaseGear.AddSpecialEffect(e);
+                    }
+                }
+            }
+#endif
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence);
@@ -983,6 +1013,17 @@ namespace Rawr.DPSDK
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
+            Stats statSE = new Stats();
+            foreach (SpecialEffect e in statsTotal.SpecialEffects())
+            {
+                // There are some multi-level special effects that need to be factored in.
+                foreach (SpecialEffect ee in e.Stats.SpecialEffects())
+                {
+                    e.Stats = se.getSpecialEffects(calcOpts, ee);
+                }
+                statSE.Accumulate(se.getSpecialEffects(calcOpts, e));
+            }
+
             float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
 
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
@@ -1365,6 +1406,9 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.DoTTick ||
                         effect.Trigger == Trigger.MeleeCrit ||
                         effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.CurrentHandHit ||
+                        effect.Trigger == Trigger.MainHandHit ||
+                        effect.Trigger == Trigger.OffHandHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
                         effect.Trigger == Trigger.BloodStrikeHit ||
