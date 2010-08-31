@@ -175,16 +175,28 @@ namespace Rawr.TankDK {
             return RP;
         }
 
-        public float getRotationDuration() { return Math.Max(getGCDTime(), getRuneTime()); }
-        public float getGCDTime() {
-            GCDTime = GetGCDHasted() * (
-                PlagueStrike // U
-                + ScourgeStrike // FU
-                + FrostStrike // RP
-                + Obliterate // FU 
-                + DeathStrike // FU
-                + BloodStrike // B
-                + HeartStrike // B
+        public float getRotationDuration() 
+        {
+            float rotDuration = 20;
+            float GCDTime = getGCDTime();
+            float RuneTime = getRuneTime();
+            float RPTime = getRPTime();
+
+            return Math.Max(GCDTime, RuneTime); 
+        }
+
+        /// <summary>
+        /// Get the total time spent in GCD for the rotation.
+        /// </summary>
+        /// <returns>float of total GCD in seconds</returns>
+        public float getGCDTime() 
+        {
+            // Melee
+            float meleeGCD = 1.5f;
+
+            // Spells / effects
+            float spellGCD = GetGCDHasted();
+            GCDTime = spellGCD * (
                 + DeathCoil // RP
                 + IcyTouch // F
                 + HowlingBlast // FU
@@ -192,6 +204,15 @@ namespace Rawr.TankDK {
                 + DeathNDecay // BFU
                 + BloodBoil // B
                 + Pestilence // B 
+                ) +
+                meleeGCD * (
+                PlagueStrike // U
+                + ScourgeStrike // FU
+                + FrostStrike // RP
+                + Obliterate // FU 
+                + DeathStrike // FU
+                + BloodStrike // B
+                + HeartStrike // B
                 );
             return GCDTime;
         }
@@ -246,6 +267,7 @@ namespace Rawr.TankDK {
 
             float MaxRunes = Math.Max(AbilityCost[(int)DKCostTypes.Frost], AbilityCost[(int)DKCostTypes.Blood]);
             MaxRunes = Math.Max(MaxRunes, AbilityCost[(int)DKCostTypes.UnHoly]);
+            MaxRunes = Math.Max(MaxRunes, AbilityCost[(int)DKCostTypes.Death]);
 
             // Each rune requires 10 secs. But there are 2 of them.
             TimeSpentRuneCDs = (MaxRunes * 10 / 2);
@@ -298,19 +320,41 @@ namespace Rawr.TankDK {
             }
         }
 
+        // How long are the GCDs for RP cost abilities?
+        public float getRPTime()
+        {
+            // Melee
+            float meleeGCD = 1.5f;
+
+            // Spells / effects
+            float spellGCD = GetGCDHasted();
+
+            float GCDTimeforRPAbilties = spellGCD * (
+                + DeathCoil // RP
+                + HornOfWinter // none
+                ) +
+                meleeGCD * (
+                + FrostStrike // RP
+                );
+
+            return GCDTimeforRPAbilties;
+        }
+
         /// <summary>
         /// How fast is the GCD with the current character's stats?
         /// </summary>
         /// <param name="s">Total Stats for the character.</param>
         /// <returns>Duration of the GCD in seconds.</returns>
-        public float GetGCDHasted() {
+        public float GetGCDHasted() 
+        {
             float fNormalGCD = 1.5f;
             float fHastedGCD = Math.Max( 1f, fNormalGCD/(1f + this.m_fPhysicalHaste) );
             return fHastedGCD;
         }
 
         // Rotations set by Skeleton Jack's 3.2 build and rotation notes.
-        public void setRotation(Type t) {
+        public void setRotation(Type t) 
+        {
             curRotationType = t;
             managedRP = false;
             switch (curRotationType) {
@@ -389,7 +433,7 @@ namespace Rawr.TankDK {
         /// <summary>
         /// Get the type of rotation we should be using based on talents.
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">DeathKnight Talents to evaluate.</param>
         public void GetRotationByTalents(DeathKnightTalents t)
         {
             if (curRotationType == Type.Custom)
@@ -421,7 +465,7 @@ namespace Rawr.TankDK {
             const int indexFrost = 28; // start index of Frost Talents.
             const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
             int[] TalentCounter = new int[4];
-            int index = 0;
+            int index = indexBlood;
             foreach (int i in t.Data)
             {
                 if (i > 0)

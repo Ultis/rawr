@@ -117,6 +117,8 @@ namespace Rawr.TankDK
         /// </summary>
         public int[] AbilityCost = new int[(int)DKCostTypes.NumCostTypes];
 
+        // TODO: Apply Damage types.
+        // Maybe Create a Damage object since we have abilities that return 2 types of damage.
         /// <summary>
         /// What min damage does the ability cause?
         /// For DOTs damage is on a per-tick basis.
