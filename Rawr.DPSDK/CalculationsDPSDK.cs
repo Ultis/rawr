@@ -962,7 +962,10 @@ namespace Rawr.DPSDK
                 Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
 
                 //ArmorPenetration = talents.BloodGorged * 2f / 100,
-                PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons
+                // Improved Icy Talons:
+                PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons + 
+                    // IIT does not stack w/ Windfury Totem or Improved Icy Talons from the Buff pane.
+                    ((character.ActiveBuffsContains("Improved Icy Talons")||character.ActiveBuffsContains("Windfury Totem")) ? 0 : .2f )
             };
             if (talents.UnbreakableArmor > 0)
             {
