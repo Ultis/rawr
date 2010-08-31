@@ -22,6 +22,7 @@ namespace Rawr.DPSDK
 
                 //Red
                 int[] bold = { 39900, 39996, 40111, 42142 };
+                int[] fractured = { 39909, 40002, 40117, 42153 };
 
                 //Purple
                 int[] sovereign = { 39934, 40022, 40129 };
@@ -40,6 +41,8 @@ namespace Rawr.DPSDK
 				{
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
 						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
 						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
@@ -47,6 +50,8 @@ namespace Rawr.DPSDK
 						
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
 						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
 						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
@@ -54,6 +59,8 @@ namespace Rawr.DPSDK
 
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
 						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
 					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
 						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
 				};
@@ -1253,78 +1260,91 @@ namespace Rawr.DPSDK
         {
             Stats s = new Stats()
             {
-                Health = stats.Health,
+                // Core stats
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
-                Armor = stats.Armor,
-                BonusArmor = stats.BonusArmor,
-                HighestStat = stats.HighestStat,
-                Paragon = stats.Paragon,
-
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                ExpertiseRating = stats.ExpertiseRating,
                 AttackPower = stats.AttackPower,
+                // Other Base Stats
+                HasteRating = stats.HasteRating,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+
+                // Secondary Stats
+                Health = stats.Health,
                 ArmorPenetration = stats.ArmorPenetration,
-                Expertise = stats.Expertise,
-                ExpertiseRating = stats.ExpertiseRating,
-                HasteRating = stats.HasteRating,
-                WeaponDamage = stats.WeaponDamage,
+                SpellHaste = stats.SpellHaste,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
-                
-                SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
-                SpellHaste = stats.SpellHaste,
+                SpellHit = stats.SpellHit,
 
+                // Damage stats
+                WeaponDamage = stats.WeaponDamage,
+                PhysicalDamage = stats.PhysicalDamage,
+                ShadowDamage = stats.ShadowDamage,
+                ArcaneDamage = stats.ArcaneDamage,
+                FireDamage = stats.FireDamage,
+                FrostDamage = stats.FrostDamage,
+                HolyDamage = stats.HolyDamage,
+                NatureDamage = stats.NatureDamage,
+
+                // Bonus to stat
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+
+                // Bonus to Damage
+                // *Damage
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
-                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-
+                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
+                BonusObliterateMultiplier = stats.BonusObliterateMultiplier,
+                BonusHeartStrikeMultiplier = stats.BonusHeartStrikeMultiplier,
+                BonusScourgeStrikeMultiplier = stats.BonusScourgeStrikeMultiplier,
+                // +Damage
+                BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
+                BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
                 BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
-                BonusDeathCoilDamage = stats.BonusDeathCoilDamage,
-                BonusDeathStrikeDamage = stats.BonusDeathStrikeDamage,
+                BonusDeathCoilDamage = stats.BonusDeathCoilDamage, 
+                BonusDeathStrikeDamage =  stats.BonusDeathStrikeDamage,
                 BonusFrostStrikeDamage = stats.BonusFrostStrikeDamage,
                 BonusHeartStrikeDamage = stats.BonusHeartStrikeDamage,
                 BonusIcyTouchDamage = stats.BonusIcyTouchDamage,
                 BonusObliterateDamage = stats.BonusObliterateDamage,
-                BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
-                DiseasesCanCrit = stats.DiseasesCanCrit,
-
-                BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
-                BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
-                BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
-                BonusObliterateCrit = stats.BonusObliterateCrit,
-                BonusHeartStrikeMultiplier = stats.BonusHeartStrikeMultiplier,
-                BonusScourgeStrikeMultiplier = stats.BonusScourgeStrikeMultiplier,
-                BonusObliterateMultiplier = stats.BonusObliterateMultiplier,
                 BonusPerDiseaseBloodStrikeDamage = stats.BonusPerDiseaseBloodStrikeDamage,
                 BonusPerDiseaseHeartStrikeDamage = stats.BonusPerDiseaseHeartStrikeDamage,
                 BonusPerDiseaseObliterateDamage = stats.BonusPerDiseaseObliterateDamage,
                 BonusPerDiseaseScourgeStrikeDamage = stats.BonusPerDiseaseScourgeStrikeDamage,
+                // Crit
+                BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
+                BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
+                BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
+                BonusObliterateCrit = stats.BonusObliterateCrit,
                 BonusPlagueStrikeCrit = stats.BonusPlagueStrikeCrit,
+                BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
+                // RP
                 BonusRPFromDeathStrike = stats.BonusRPFromDeathStrike,
                 BonusRPFromObliterate = stats.BonusRPFromObliterate,
-                BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike,
-                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
-                BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
-                DeathbringerProc = stats.DeathbringerProc,
+                BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike, 
+                // Other
+                CinderglacierProc = stats.CinderglacierProc,
+                DiseasesCanCrit = stats.DiseasesCanCrit,
+                HighestStat = stats.HighestStat,
+                Paragon = stats.Paragon,
+                DeathbringerProc = stats.DeathbringerProc, 
 
-                BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
-                CinderglacierProc = stats.CinderglacierProc
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1365,6 +1385,7 @@ namespace Rawr.DPSDK
 
         public override bool HasRelevantStats(Stats stats)
         {
+            bool bRelevant = false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (relevantStats(effect.Stats))
@@ -1395,44 +1416,114 @@ namespace Rawr.DPSDK
                     {
                         foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                         {
-                            HasRelevantStats(e.Stats);
+                            if (!bRelevant)
+                                bRelevant = HasRelevantStats(e.Stats);
                         }
-                        return relevantStats(effect.Stats);
+                        if (!bRelevant)
+                            bRelevant = relevantStats(effect.Stats);
                         
                     }
                 }
             }
-            return relevantStats(stats);
+            if (!bRelevant)
+                bRelevant = relevantStats(stats);
+            return bRelevant;
         }
 
         private bool relevantStats(Stats stats)
         {
-            bool bResults = (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetrationRating + stats.ArmorPenetration +
-                stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
-                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.ShadowDamage +
-                stats.BonusShadowDamageMultiplier + stats.SpellHaste
-                + stats.BonusFrostDamageMultiplier + stats.BonusScourgeStrikeDamage + stats.PhysicalCrit + stats.PhysicalHaste
-                + stats.PhysicalHit + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + stats.BonusDiseaseDamageMultiplier
-                + stats.BonusBloodStrikeDamage + stats.BonusDeathCoilDamage + stats.BonusDeathStrikeDamage + stats.BonusFrostStrikeDamage
-                + stats.BonusHeartStrikeDamage + stats.BonusIcyTouchDamage + stats.BonusObliterateDamage + stats.BonusScourgeStrikeDamage
-                + stats.BonusDeathCoilCrit + stats.BonusDeathStrikeCrit + stats.BonusFrostStrikeCrit + stats.BonusObliterateCrit
-                + stats.BonusPerDiseaseBloodStrikeDamage + stats.BonusPerDiseaseHeartStrikeDamage + stats.BonusPerDiseaseObliterateDamage
-                + stats.BonusPerDiseaseScourgeStrikeDamage + stats.BonusPlagueStrikeCrit + stats.BonusRPFromDeathStrike
-                + stats.BonusRPFromObliterate + stats.BonusRPFromScourgeStrike + stats.BonusRuneStrikeMultiplier + stats.BonusScourgeStrikeCrit
-                + stats.ShadowDamage + stats.ArcaneDamage + stats.CinderglacierProc + stats.BonusFrostWeaponDamage + stats.DiseasesCanCrit + 
-                stats.HighestStat + stats.BonusCritMultiplier + stats.Paragon + stats.FireDamage + stats.Armor + stats.BonusArmor
-                + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusObliterateMultiplier +
-                stats.BonusHeartStrikeMultiplier + stats.BonusScourgeStrikeMultiplier + stats.DeathbringerProc + stats.FrostDamage) != 0;
+            bool bResults = false;
+            // Core stats
+            bResults |= (stats.Strength != 0);
+            bResults |= (stats.Agility != 0);
+            bResults |= (stats.Stamina != 0);
+            bResults |= (stats.ArmorPenetrationRating != 0);
+            bResults |= (stats.ExpertiseRating != 0);
+            bResults |= (stats.AttackPower != 0);
+            bool bHasCore = bResults; // if the above stats are 0, lets make sure we're not bringing in caster gear below.
+            // Other Base Stats
+            bResults |= (stats.HasteRating != 0);
+            bResults |= (stats.HitRating != 0);
+            bResults |= (stats.CritRating != 0);
+            bResults |= (stats.Armor != 0);
+            bResults |= (stats.BonusArmor != 0);
+
+            // Secondary Stats
+            bResults |= (stats.Health != 0);
+            bResults |= ( stats.ArmorPenetration != 0);
+            bResults |= (stats.SpellHaste != 0);
+            bResults |= (stats.PhysicalCrit != 0);
+            bResults |= (stats.PhysicalHaste != 0);
+            bResults |= (stats.PhysicalHit != 0);
+            bResults |= (stats.SpellCrit != 0);
+            bResults |= (stats.SpellCritOnTarget != 0);
+            bResults |= (stats.SpellHit != 0);
+            bResults |= (stats.SpellHaste != 0); 
+
+            // Damage stats
+            bResults |= (stats.WeaponDamage != 0);
+            bResults |= (stats.PhysicalDamage != 0);
+            bResults |= (stats.ShadowDamage != 0);
+            bResults |= (stats.ArcaneDamage != 0);
+            bResults |= (stats.FireDamage != 0);
+            bResults |= (stats.FrostDamage) != 0;
+            bResults |= (stats.HolyDamage) != 0;
+            bResults |= (stats.NatureDamage) != 0;
+
+            // Bonus to stat
+            bResults |= (stats.BonusStrengthMultiplier != 0);
+            bResults |= ( stats.BonusStaminaMultiplier != 0);
+            bResults |= ( stats.BonusAgilityMultiplier != 0);
+            bResults |= ( stats.BonusCritMultiplier != 0);
+            bResults |= (stats.BonusAttackPowerMultiplier != 0);
+
+            // Bonus to Damage
+            // *Damage
+            bResults |= (stats.BonusDamageMultiplier != 0);
+            bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
+            bResults |= ( stats.BonusShadowDamageMultiplier != 0);
+            bResults |= ( stats.BonusFrostDamageMultiplier != 0);
+            bResults |= ( stats.BonusDiseaseDamageMultiplier  != 0);
+            bResults |= (stats.BonusRuneStrikeMultiplier != 0);
+            bResults |= (stats.BonusObliterateMultiplier != 0);
+            bResults |= (stats.BonusHeartStrikeMultiplier != 0);
+            bResults |= (stats.BonusScourgeStrikeMultiplier != 0);
+            // +Damage
+            bResults |= (stats.BonusFrostWeaponDamage != 0);
+            bResults |= (stats.BonusScourgeStrikeDamage != 0);
+            bResults |= (stats.BonusBloodStrikeDamage != 0);
+            bResults |= ( stats.BonusDeathCoilDamage != 0); 
+            bResults |= ( stats.BonusDeathStrikeDamage != 0);  
+            bResults |= ( stats.BonusFrostStrikeDamage   != 0); 
+            bResults |= ( stats.BonusHeartStrikeDamage != 0);  
+            bResults |= ( stats.BonusIcyTouchDamage != 0);  
+            bResults |= ( stats.BonusObliterateDamage != 0);
+            bResults |= (stats.BonusPerDiseaseBloodStrikeDamage != 0);
+            bResults |= (stats.BonusPerDiseaseHeartStrikeDamage != 0);
+            bResults |= (stats.BonusPerDiseaseObliterateDamage != 0);
+            bResults |= (stats.BonusPerDiseaseScourgeStrikeDamage != 0);
+            // Crit
+            bResults |= (stats.BonusCritMultiplier != 0);
+            bResults |= (stats.BonusDeathCoilCrit != 0);
+            bResults |= ( stats.BonusDeathStrikeCrit != 0);
+            bResults |= ( stats.BonusFrostStrikeCrit != 0); 
+            bResults |= ( stats.BonusObliterateCrit != 0); 
+            bResults |= ( stats.BonusPlagueStrikeCrit != 0);
+            bResults |= (stats.BonusScourgeStrikeCrit != 0);
+            // RP
+            bResults |= ( stats.BonusRPFromDeathStrike != 0);
+            bResults |= ( stats.BonusRPFromObliterate != 0);
+            bResults |= ( stats.BonusRPFromScourgeStrike != 0); 
+            // Other
+            bResults |= ( stats.CinderglacierProc != 0); 
+            bResults |= ( stats.DiseasesCanCrit != 0); 
+            bResults |= ( stats.HighestStat != 0); 
+            bResults |= ( stats.Paragon != 0); 
+            bResults |= ( stats.DeathbringerProc != 0); 
 
             // Filter out caster gear:
-            if (bResults && 
+            if (!bHasCore & bResults)
                 // Let's make sure that if we've got some stats that may be interesting
-                (stats.Strength == 0 
-                && stats.AttackPower == 0 
-                && stats.ExpertiseRating == 0 
-                && stats.HitRating == 0))
             {
                 bResults = !((stats.Intellect != 0)
                     || (stats.Spirit != 0)
