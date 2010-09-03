@@ -337,7 +337,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
             dictValues.Add("Armor Penetration Rating", armorPenetrationRating.ToString("N0"));
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));
-
+            dictValues.Add("Resilience",        BasicStats.Resilience.ToString("F0"));
 
             dictValues.Add("Weapon Damage",     MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed",      MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
@@ -400,6 +400,9 @@ namespace Rawr.DPSDK
                     return MissedAttacks * 100f;
                 case "Target Dodge %":
                     return DodgedAttacks * 100f;
+                case "Resilience": return BasicStats.Resilience;
+                case "Spell Penetration": return BasicStats.SpellPenetration;
+
             }
             return 0;
         }

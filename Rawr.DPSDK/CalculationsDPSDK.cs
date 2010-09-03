@@ -1317,6 +1317,7 @@ namespace Rawr.DPSDK
                 CritRating = stats.CritRating,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
+                Resilience = stats.Resilience,
 
                 // Secondary Stats
                 Health = stats.Health,
@@ -1328,6 +1329,7 @@ namespace Rawr.DPSDK
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHit = stats.SpellHit,
+                SpellPenetration = stats.SpellPenetration,
 
                 // Damage stats
                 WeaponDamage = stats.WeaponDamage,
@@ -1494,10 +1496,11 @@ namespace Rawr.DPSDK
             bResults |= (stats.CritRating != 0);
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
+            bResults |= (stats.Resilience != 0);
 
             // Secondary Stats
             bResults |= (stats.Health != 0);
-            bResults |= ( stats.ArmorPenetration != 0);
+            bResults |= (stats.ArmorPenetration != 0);
             bResults |= (stats.SpellHaste != 0);
             bResults |= (stats.PhysicalCrit != 0);
             bResults |= (stats.PhysicalHaste != 0);
@@ -1505,7 +1508,8 @@ namespace Rawr.DPSDK
             bResults |= (stats.SpellCrit != 0);
             bResults |= (stats.SpellCritOnTarget != 0);
             bResults |= (stats.SpellHit != 0);
-            bResults |= (stats.SpellHaste != 0); 
+            bResults |= (stats.SpellHaste != 0);
+            bResults |= (stats.SpellPenetration != 0);
 
             // Damage stats
             bResults |= (stats.WeaponDamage != 0);
@@ -1596,7 +1600,9 @@ namespace Rawr.DPSDK
                         "Hit Rating",
                         "Haste Rating",
                         "Target Miss %",
-                        "Target Dodge %"
+                        "Target Dodge %",
+                        "Resilience",
+                        "Spell Penetration"
                     };
 
                 return _optimizableCalculationLabels;

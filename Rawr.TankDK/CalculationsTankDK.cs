@@ -225,10 +225,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 						"Damage Data:Death*[experimental] Number of Runes consumed",
 						"Damage Data:Runic Power*[experimental] Amount of Runic Power consumed.\nNegative values mean more generated than used.",
 
-						"Overall Stats:Overall",
-						"Overall Stats:Modified Survival*Value of Survival modified by the multiplier provided on the options pane.",
-						"Overall Stats:Modified Mitigation",
-						"Overall Stats:Modified Threat*Value of Threat modified by the multiplier provided on the options pane.",
 					});
 					_characterDisplayCalculationLabels = labels.ToArray();
 				}
@@ -281,9 +277,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
 						ItemType.None,
-						// Pulling out Leather & Mail.
-						// While it may be fine for a DPS class to under gear for an instance, the armor value of 
-						// Plate really makes a difference for Tanks.
 						ItemType.Plate,
 						ItemType.Sigil,
 						ItemType.Polearm,
@@ -329,7 +322,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 					"Health",
 					"Hit Rating",
 					"Reaction Time",
-					"Burst Time"
+					"Burst Time",
+                    "Resilience",
+                    "Spell Penetration"
 				}; 
 			} 
 		}
@@ -1183,13 +1178,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 //            {
 			calcs.cType = TDK.opts.cType;
 			if (TDK.opts.cType == CalculationType.Burst)
-				{
-					_subPointNameColors = _subPointNameColors_Burst;
-				}
-				else
-				{
-					_subPointNameColors = _subPointNameColors_SMT;
-				}
+			{
+				_subPointNameColors = _subPointNameColors_Burst;
+			}
+			else
+			{
+				_subPointNameColors = _subPointNameColors_SMT;
+			}
 
 				calcs.BasicStats = sPaperDoll;
 				// The full character data.
@@ -2061,6 +2056,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				Miss = stats.Miss,
 
 				Resilience = stats.Resilience,
+                SpellPenetration = stats.SpellPenetration,
 
 				DamageAbsorbed = stats.DamageAbsorbed,
 				AttackPower = stats.AttackPower,
@@ -2249,6 +2245,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			bResults |= (stats.DamageAbsorbed != 0);
 
 			bResults |= (stats.Resilience != 0);
+            bResults |= (stats.SpellPenetration != 0);
 
 			// Offense stats
 			bResults |= (stats.AttackPower != 0);
