@@ -331,8 +331,6 @@ namespace Rawr.DPSDK
             Rotation r = new Rotation();
             Rotation.Type rType = r.GetRotationType(talents);
             r.setRotation(rType);
-            r.copyRotation(calcOpts.rotation);
-
 
             {
                 float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.083333333f);	//an OH multiplier that is useful sometimes
@@ -420,9 +418,9 @@ namespace Rawr.DPSDK
                 AbilityHandler abilities = new AbilityHandler(stats, combatTable, character, calcOpts);
 
                 // TODO: This gets very expensive.
-                if ((calcOpts.GetRefreshForReferenceCalcs ? referenceCalculation : false)
-                    || (calcOpts.GetRefreshForDisplayCalcs ? needsDisplayCalculations : false) 
-                    || (calcOpts.GetRefreshForSignificantChange ? significantChange : false))
+                if ((calcOpts.GetRefreshForReferenceCalcs && referenceCalculation)
+                    || (calcOpts.GetRefreshForDisplayCalcs && needsDisplayCalculations) 
+                    || (calcOpts.GetRefreshForSignificantChange && significantChange))
                 {
                     if (rType == Rotation.Type.Blood)
                     {
@@ -679,13 +677,18 @@ namespace Rawr.DPSDK
                         {
                             if (stats.CinderglacierProc > 0f && combatTable.MH != null)
                             {
-                                float shadowFrostAbilitiesPerSecond = (float)((r.DeathCoil + r.FrostStrike +
-                                    r.ScourgeStrike + r.IcyTouch + r.HowlingBlast) /
-                                    combatTable.realDuration);
+                                float shadowFrostAbilitiesPerSecond = (float)(
+                                    (r.DeathCoil 
+                                    + r.FrostStrike * (1 + talents.ThreatOfThassarian/3f) // FS hits once for each weapon.
+                                    + r.ScourgeStrike 
+                                    + r.IcyTouch 
+                                    + r.HowlingBlast)
+                                    / combatTable.realDuration);
                                 float CGPercentChance = 1.5f / (60f / combatTable.MH.baseSpeed);
                                 float CGPPM = ((60f / combatTable.MH.hastedSpeed) * CGPercentChance) * 1f - combatTable.totalMHMiss; // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
                                 CGPPM += (1.5f / (60f / combatTable.MH.baseSpeed)) * ((combatTable.totalMeleeAbilities * (1f - combatTable.missedSpecial) + combatTable.totalSpellAbilities * (1f - combatTable.spellResist)) * 60f / combatTable.realDuration);
                                 float ProcsPerAbility = CGPPM / (shadowFrostAbilitiesPerSecond * 60f);
+
                                 CinderglacierMultiplier = 1f + 2f * 0.2f * (ProcsPerAbility);
 
                             }
@@ -695,6 +698,8 @@ namespace Rawr.DPSDK
                         abilities.HB.DamageMod *= CinderglacierMultiplier;
                         abilities.IT.DamageMod *= CinderglacierMultiplier;
                         abilities.FS.DamageMod *= CinderglacierMultiplier;
+                        abilities.SS.DamageMod *= CinderglacierMultiplier;
+
                     }
                     #endregion
 
