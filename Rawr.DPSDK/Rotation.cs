@@ -337,7 +337,7 @@ namespace Rawr.DPSDK
 
         public enum Type
         {            
-            Custom, Blood, Frost, Unholy
+            Custom, Blood, Frost, Unholy, Unknown,
         }
 
         public Rotation()
