@@ -52,7 +52,7 @@ x:Class="Rawr.ProtPaladin.CalculationOptionsPanelProtPaladin"
                         </Grid.RowDefinitions>
                         <TextBlock Margin="2 2 2 10" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontWeight="Bold" Text="Attacker Statistics (Physical)" />
                         <TextBlock Margin="2" Grid.Row="1" Grid.Column="0" Text="Base Attack: *" ToolTipService.ToolTip="Base attacker damage before armor." />
-                        <Slider Margin="2" Grid.Row="1" Grid.Column="1" Minimum="100" Maximum="100000" LargeChange="5000" SmallChange="100" Value="{Binding Mode=TwoWay, Path=BossAttackValue}" />
+                        <Slider Margin="2" Grid.Row="1" Grid.Column="1" Minimum="100" Maximum="300000" LargeChange="5000" SmallChange="100" Value="{Binding Mode=TwoWay, Path=BossAttackValue}" />
                         <Button Margin="2 2 2 10" x:Name="btnResetBossAttackValue" Grid.Row="2" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the base attack to 80000." Click="btnResetBossAttackValue_Click" />
                         <TextBlock Margin="2 2 2 10" Grid.Row="2" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BossAttackValue}" />
                         <TextBlock Margin="2" Grid.Row="3" Grid.Column="0" Text="Attack Speed: *" ToolTipService.ToolTip="How often (in seconds) the boss attacks with the damage above." />
