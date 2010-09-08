@@ -112,6 +112,14 @@ namespace Rawr.DPSDK
             set { _getRefreshForSignificantChange = value; }
         }
 
+
+        private bool _m_bExperimental = false;
+        public bool m_bExperimental
+        {
+            get { return _m_bExperimental; }
+            set { _m_bExperimental = value; }
+        }
+
 		private Rotation _rotation = null;
 		public Rotation rotation
 		{

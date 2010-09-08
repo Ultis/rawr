@@ -32,6 +32,7 @@ namespace Rawr.DPSDK
             cbGhoul.Checked = calcOpts.Ghoul;
             cbRefCalcs.Checked = calcOpts.GetRefreshForReferenceCalcs;
             cbSignificantChange.Checked = calcOpts.GetRefreshForSignificantChange;
+            cbExperimental.Checked = calcOpts.m_bExperimental;
 
             nudTargetArmor.Value = calcOpts.BossArmor;
         }
@@ -62,7 +63,6 @@ namespace Rawr.DPSDK
             }
         }
 
-        // TODO: Update this to the default graphs
         #region StatsGraph
         private Stats[] BuildStatsList()
         {
@@ -94,132 +94,6 @@ namespace Rawr.DPSDK
         }
         #endregion
         
-        /*
-        private void btnGraph_Click(object sender, EventArgs e)
-        {
-            CalculationsDPSDK DKCalc = new CalculationsDPSDK();
-            CharacterCalculationsDPSDK baseCalc = DKCalc.GetCharacterCalculations(Character) as CharacterCalculationsDPSDK;
-            Bitmap _prerenderedGraph = global::Rawr.DPSDK.Properties.Resources.GraphBase;
-            Graphics g = Graphics.FromImage(_prerenderedGraph);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            float graphHeight = 700f, graphStart = 100f;
-            Color[] colors = new Color[] {
-                Color.FromArgb(127,202,180,96), // Strength
-                Color.FromArgb(127,101,225,240), // Agility
-                Color.FromArgb(127,0,4,3), // Attack Power
-                Color.FromArgb(127,123,238,199), // Crit Rating
-                Color.FromArgb(127,45,112,63), // Hit Rating
-                Color.FromArgb(127,121,72,210), //Expertise Rating
-                Color.FromArgb(127,217,100,54), // Haste Rating
-                Color.FromArgb(127,210,72,195), // Armor Penetration
-                // Color.FromArgb(127,206,189,191), // Spell Damage
-            };
-            Stats[] statsList = new Stats[] {
-                new Stats() { Strength = 10 },
-                new Stats() { Agility = 10 },
-                new Stats() { AttackPower = 20 },
-                new Stats() { CritRating = 10 },
-                new Stats() { HitRating = 10 },
-                new Stats() { ExpertiseRating = 10 },
-                new Stats() { HasteRating = 10 },
-                new Stats() { ArmorPenetrationRating = 10 }
-            };
-            #region Graph Ticks
-            float graphWidth = 500f;// this.Width - 150f;
-            float graphEnd = graphStart + graphWidth;
-            //float graphStartY = 16f;
-            float maxScale = 100f;
-            float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
-							(float)Math.Round(graphStart + graphWidth * 0.75f),
-							(float)Math.Round(graphStart + graphWidth * 0.25f),
-							(float)Math.Round(graphStart + graphWidth * 0.125f),
-							(float)Math.Round(graphStart + graphWidth * 0.375f),
-							(float)Math.Round(graphStart + graphWidth * 0.625f),
-							(float)Math.Round(graphStart + graphWidth * 0.875f)};
-            Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
-            Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
-            Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
-            Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
-            Pen black25 = new Pen(Color.FromArgb(25, 0, 0, 0));
-            StringFormat formatTick = new StringFormat();
-            formatTick.LineAlignment = StringAlignment.Far;
-            formatTick.Alignment = StringAlignment.Center;
-            Brush black200brush = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
-            Brush black150brush = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-            Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
-            Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
-            Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
-
-            g.DrawLine(black200, graphStart - 4, 20, graphEnd + 4, 20);
-            g.DrawLine(black200, graphStart, 16, graphStart, _prerenderedGraph.Height - 16);
-            g.DrawLine(black200, graphEnd, 16, graphEnd, 19);
-            g.DrawLine(black200, ticks[0], 16, ticks[0], 19);
-            g.DrawLine(black150, ticks[1], 16, ticks[1], 19);
-            g.DrawLine(black150, ticks[2], 16, ticks[2], 19);
-            g.DrawLine(black75, ticks[3], 16, ticks[3], 19);
-            g.DrawLine(black75, ticks[4], 16, ticks[4], 19);
-            g.DrawLine(black75, ticks[5], 16, ticks[5], 19);
-            g.DrawLine(black75, ticks[6], 16, ticks[6], 19);
-            g.DrawLine(black75, graphEnd, 21, graphEnd, _prerenderedGraph.Height - 4);
-            g.DrawLine(black75, ticks[0], 21, ticks[0], _prerenderedGraph.Height - 4);
-            g.DrawLine(black50, ticks[1], 21, ticks[1], _prerenderedGraph.Height - 4);
-            g.DrawLine(black50, ticks[2], 21, ticks[2], _prerenderedGraph.Height - 4);
-            g.DrawLine(black25, ticks[3], 21, ticks[3], _prerenderedGraph.Height - 4);
-            g.DrawLine(black25, ticks[4], 21, ticks[4], _prerenderedGraph.Height - 4);
-            g.DrawLine(black25, ticks[5], 21, ticks[5], _prerenderedGraph.Height - 4);
-            g.DrawLine(black25, ticks[6], 21, ticks[6], _prerenderedGraph.Height - 4);
-            g.DrawLine(black200, graphStart - 4, _prerenderedGraph.Height - 20, graphEnd + 4, _prerenderedGraph.Height - 20);
-
-            Font tickFont = new Font("Calibri", 11);
-            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart, 16, formatTick);
-            g.DrawString((maxScale).ToString(), tickFont, black200brush, graphEnd, 16, formatTick);
-            g.DrawString((maxScale * 0.5f).ToString(), tickFont, black200brush, ticks[0], 16, formatTick);
-            g.DrawString((maxScale * 0.75f).ToString(), tickFont, black150brush, ticks[1], 16, formatTick);
-            g.DrawString((maxScale * 0.25f).ToString(), tickFont, black150brush, ticks[2], 16, formatTick);
-            g.DrawString((maxScale * 0.125f).ToString(), tickFont, black75brush, ticks[3], 16, formatTick);
-            g.DrawString((maxScale * 0.375f).ToString(), tickFont, black75brush, ticks[4], 16, formatTick);
-            g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], 16, formatTick);
-            g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], 16, formatTick);
-
-            g.DrawString((0f).ToString(), tickFont, black200brush, graphStart, _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale).ToString(), tickFont, black200brush, graphEnd, _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.5f).ToString(), tickFont, black200brush, ticks[0], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.75f).ToString(), tickFont, black150brush, ticks[1], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.25f).ToString(), tickFont, black150brush, ticks[2], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.125f).ToString(), tickFont, black75brush, ticks[3], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.375f).ToString(), tickFont, black75brush, ticks[4], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.625f).ToString(), tickFont, black75brush, ticks[5], _prerenderedGraph.Height - 16, formatTick);
-            g.DrawString((maxScale * 0.875f).ToString(), tickFont, black75brush, ticks[6], _prerenderedGraph.Height - 16, formatTick);
-            #endregion
-
-            Graph graph = new Graph(_prerenderedGraph);
-            graph.Show();
-            for (int index = 0; index < statsList.Length; index++)
-            {
-                Stats newStats = new Stats();
-                Point[] points = new Point[100];
-                for (int count = 0; count < 100; count++)
-                {
-                    newStats = newStats + statsList[index];
-
-                    CharacterCalculationsDPSDK currentCalc = DKCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsDPSDK;
-                    float overallPoints = currentCalc.DPSPoints - baseCalc.DPSPoints;
-
-                    if ((graphHeight - overallPoints) > 16)
-                        points[count] = new Point(Convert.ToInt32(graphStart + count * 5), (Convert.ToInt32(graphHeight - overallPoints)));
-                    else
-                        points[count] = points[count-1];
-
-                }
-                Brush statBrush = new SolidBrush(colors[index]);
-                g.DrawLines(new Pen(statBrush, 3), points);
-            }
-
-            graph.Invalidate();
-            graph.Update();
-        }*/
-
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
@@ -293,9 +167,12 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-       
-
-
+        private void cbExperimental_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            calcOpts.m_bExperimental = cbExperimental.Checked;
+            Character.OnCalculationsInvalidated();
+        }
 
     }
 }

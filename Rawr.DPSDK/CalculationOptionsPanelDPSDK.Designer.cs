@@ -31,6 +31,7 @@
             this.lblTargetLevel = new System.Windows.Forms.Label();
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.gbFightInfo = new System.Windows.Forms.GroupBox();
+            this.nudFightLength = new System.Windows.Forms.NumericUpDown();
             this.lbKMProcUsage = new System.Windows.Forms.Label();
             this.KMProcUsage = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -51,13 +52,13 @@
             this.cbSignificantChange = new System.Windows.Forms.CheckBox();
             this.cbRefCalcs = new System.Windows.Forms.CheckBox();
             this.cbDisplayCalcs = new System.Windows.Forms.CheckBox();
-            this.nudFightLength = new System.Windows.Forms.NumericUpDown();
+            this.cbExperimental = new System.Windows.Forms.CheckBox();
             this.gbFightInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -110,6 +111,29 @@
             this.gbFightInfo.TabIndex = 4;
             this.gbFightInfo.TabStop = false;
             this.gbFightInfo.Text = "Fight Info";
+            // 
+            // nudFightLength
+            // 
+            this.nudFightLength.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.nudFightLength.Location = new System.Drawing.Point(135, 69);
+            this.nudFightLength.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+            this.nudFightLength.Name = "nudFightLength";
+            this.nudFightLength.Size = new System.Drawing.Size(64, 20);
+            this.nudFightLength.TabIndex = 38;
+            this.nudFightLength.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.nudFightLength.ValueChanged += new System.EventHandler(this.nudFightLength_ValueChanged);
             // 
             // lbKMProcUsage
             // 
@@ -342,34 +366,22 @@
             this.cbDisplayCalcs.UseVisualStyleBackColor = true;
             this.cbDisplayCalcs.CheckedChanged += new System.EventHandler(this.cbDisplayCalcs_CheckedChanged);
             // 
-            // nudFightLength
+            // cbExperimental
             // 
-            this.nudFightLength.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.nudFightLength.Location = new System.Drawing.Point(135, 69);
-            this.nudFightLength.Maximum = new decimal(new int[] {
-            15000,
-            0,
-            0,
-            0});
-            this.nudFightLength.Name = "nudFightLength";
-            this.nudFightLength.Size = new System.Drawing.Size(64, 20);
-            this.nudFightLength.TabIndex = 38;
-            this.nudFightLength.Value = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.nudFightLength.ValueChanged += new System.EventHandler(this.nudFightLength_ValueChanged);
+            this.cbExperimental.AutoSize = true;
+            this.cbExperimental.Location = new System.Drawing.Point(13, 496);
+            this.cbExperimental.Name = "cbExperimental";
+            this.cbExperimental.Size = new System.Drawing.Size(150, 17);
+            this.cbExperimental.TabIndex = 77;
+            this.cbExperimental.Text = "Enable Experimental Code";
+            this.cbExperimental.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelDPSDK
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.cbExperimental);
             this.Controls.Add(this.cbDisplayCalcs);
             this.Controls.Add(this.cbRefCalcs);
             this.Controls.Add(this.cbSignificantChange);
@@ -383,11 +395,11 @@
             this.Size = new System.Drawing.Size(243, 523);
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.KMProcUsage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GhoulUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BloodwormUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudFightLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -419,5 +431,6 @@
         private System.Windows.Forms.CheckBox cbRefCalcs;
         private System.Windows.Forms.CheckBox cbDisplayCalcs;
         private System.Windows.Forms.NumericUpDown nudFightLength;
+        private System.Windows.Forms.CheckBox cbExperimental;
     }
 }
