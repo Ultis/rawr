@@ -784,7 +784,7 @@ namespace Rawr
                 Name = "Demonic Pact",
                 Source = "Demo Warlock",
                 Group = "Spell Power",
-                Stats = { BonusSpellPowerDemonicPactMultiplier = 0.1f }
+                Stats = { BonusSpellPowerDemonicPactMultiplier = 0.10f, }
             });
             defaultBuffs.Add(new Buff
             {
@@ -1099,9 +1099,17 @@ namespace Rawr
             #endregion
 
             #region Temp Power Boosts
-            // Hysteria
-            // Power Infusion
-            defaultBuffs.Add(buff = new Buff {
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Hysteria",
+                Source = "Death Knight",
+                Group = "Temp Power Boost",
+                Stats = new Stats(),
+                ConflictingBuffs = new List<string>() { "Hysteria" },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusPhysicalDamageMultiplier = 0.20f, HealthRestoreFromMaxHealth = -0.01f * 30f }, 30f, 3 * 60f));
+            defaultBuffs.Add(buff = new Buff
+            {
                 Name = "Power Infusion",
                 Source = "Disc Priest",
                 Group = "Temp Power Boost",
