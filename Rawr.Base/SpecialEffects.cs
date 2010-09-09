@@ -861,6 +861,13 @@ namespace Rawr {
                     new Stats() { ArcaneDamage = (float)(min + max) / 2f, },
                     0f, 45f, 0.15f));
             }
+            else if ((match = new Regex(@"Delivers a fatal wound for (?<min>\d\d*) damage").Match(line)).Success)
+            {   // Tempered Vis'kag the bloodletter
+                int min = int.Parse(match.Groups["min"].Value);
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CurrentHandHit,
+                    new Stats() { PhysicalDamage = (float)min, },
+                    0f, 0f, 0.05f));
+            }
             #endregion
             #region Spirit
             else if ((match = new Regex(@"Each time you cast a spell you gain (?<amount>\d\d*) Spirit for the next (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)

@@ -524,228 +524,228 @@ namespace Rawr.DPSDK
                 }
                 #endregion
                     
-                    #region Gargoyle
+                #region Gargoyle
+                {
+                    if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
                     {
-                        if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
-                        {
-                            float GargoyleCastTime = 2.0f;  //2.0 second base cast time
-                            GargoyleCastTime *= combatTable.MH.hastedSpeed / combatTable.MH.baseSpeed;
-                            // benefits from all haste effects
+                        float GargoyleCastTime = 2.0f;  //2.0 second base cast time
+                        GargoyleCastTime *= combatTable.MH.hastedSpeed / combatTable.MH.baseSpeed;
+                        // benefits from all haste effects
 
-                            float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
-                            float GargoyleStrikeCount = 30f / GargoyleCastTime;
-                            float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
-                            GargoyleDmg *= 1f + (.5f * .05f);  // crit rate is uninfluenced by stats, but roughly crap
-                            dpsGargoyle = GargoyleDmg / 180f;
-                        }
+                        float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
+                        float GargoyleStrikeCount = 30f / GargoyleCastTime;
+                        float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
+                        GargoyleDmg *= 1f + (.5f * .05f);  // crit rate is uninfluenced by stats, but roughly crap
+                        dpsGargoyle = GargoyleDmg / 180f;
                     }
-                    #endregion
+                }
+                #endregion
 
-                    #region Ghoul
+                #region Ghoul
+                {
+                    if (calcOpts.Ghoul)
                     {
-                        if (calcOpts.Ghoul)
+                        float uptime = 1f;
+                        if (talents.MasterOfGhouls == 0)
                         {
-                            float uptime = 1f;
-                            if (talents.MasterOfGhouls == 0)
-                            {
-                                float timeleft = calcOpts.FightLength * 60;
-                                float numCDs = timeleft / ((4f - .75f * talents.NightOfTheDead) * 60f);
-                                float duration = numCDs * 60f;
+                            float timeleft = calcOpts.FightLength * 60;
+                            float numCDs = timeleft / ((4f - .75f * talents.NightOfTheDead) * 60f);
+                            float duration = numCDs * 60f;
 
-                                uptime = duration / timeleft;
-                            }
-
-                            float GhoulBaseStrength = 331f;
-                            float GhoulBaseStrengthMult = 0.7f;
-                            float GhoulBaseAP = 836f;
-                            float GhoulBaseSpeed = 2f;
-                            float GhoulAPMult = 1f;                 // 1 Str = x AP     
-                            float ClawCD = 4f;
-                            float GhoulWeaponBaseDamage = 101.3f;   // I found these values to be fairly correct after a number of tests (v3.0.8)
-                            float GhoulAPdivisor = 14f;           // 
-
-                            float GlyphofGhoulValue = 0f;
-                            if (talents.GlyphoftheGhoul) GlyphofGhoulValue = 0.4f;
-
-                            float GhoulStrengthMult = GhoulBaseStrengthMult + (GhoulBaseStrengthMult * (0.2f * (float)talents.RavenousDead)) + GlyphofGhoulValue;
-                            float GhoulStrength = GhoulBaseStrength + stats.Strength * GhoulStrengthMult;
-
-                            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-                            GhoulStrength *= 1f + statsBuffs.BonusStrengthMultiplier;
-                            GhoulStrength += statsBuffs.Strength;
-
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder"))) GhoulStrength -= 18f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder (Mixology)"))) GhoulStrength -= 4f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength"))) GhoulStrength -= 50f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength (Mixology)"))) GhoulStrength -= 16f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir"))) GhoulStrength -= 20f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir (Mixology)"))) GhoulStrength -= 6f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Scroll of Strength VIII"))) GhoulStrength -= 30f;
-
-                            float GhoulAP = GhoulBaseAP + GhoulStrength * GhoulAPMult;
-
-                            GhoulAP *= 1f + statsBuffs.BonusAttackPowerMultiplier;
-                            GhoulAP += statsBuffs.AttackPower;
-
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage"))) GhoulAP -= 180f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage (Mixology)"))) GhoulAP -= 64f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir"))) GhoulAP -= 90f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir (Mixology)"))) GhoulAP -= 32f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Attack Power Food"))) GhoulAP -= 80f;
-                            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Fish Feast"))) GhoulAP -= 80f;
-
-                            float GhoulhastedSpeed = 0f;
-                            if (combatTable.MH != null)
-                                GhoulhastedSpeed = ((combatTable.MH.hastedSpeed == 0 ? 1.0f : combatTable.MH.hastedSpeed) / (combatTable.MH.baseSpeed == 0 ? 1.0f : combatTable.MH.baseSpeed)) * GhoulBaseSpeed;
-                            else
-                                GhoulhastedSpeed = GhoulBaseSpeed;
-
-                            if (talents.GhoulFrenzy > 0f)
-                            {
-                                float GhoulFrenzyHaste = (float)(0.25f * (calcOpts.rotation.GhoulFrenzy / combatTable.realDuration) * 30f);
-                                GhoulhastedSpeed /= 1f + GhoulFrenzyHaste;
-                            }
-                            GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
-
-                            float dmgSwing = GhoulWeaponBaseDamage + (GhoulAP / GhoulAPdivisor) * GhoulBaseSpeed;
-                            float dpsSwing = dmgSwing / GhoulhastedSpeed;
-                            float dpsGhoulGlancing = (dpsSwing * 0.24f) * 0.75f;
-
-                            float dpsClaw = (1.5f * dmgSwing) / ClawCD;
-
-                            dpsSwing *= (1f - missedSpecial) - 0.24f;   // the Ghoul only has one weapon || Glancings added further down
-                            dpsClaw *= 1f - missedSpecial;
-
-                            dpsSwing *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
-                            dpsSwing += dpsGhoulGlancing;
-
-                            dpsClaw *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
-
-                            dpsGhoul = dpsSwing + dpsClaw;
-
-                            //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
-                            // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
-                            int targetArmor = calcOpts.BossArmor;
-                            float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                                0f/*stats.ArmorPenetration*/, 0f, 0f * stats.ArmorPenetrationRating);
-
-                            dpsGhoul *= modArmor;
-                            dpsGhoul *= 1f - (.0065f * missedSpecial);	// pet expertise now scales with player hit rating. Hopefully goes off of melee rather than spell hit.
-                            dpsGhoul *= uptime;
+                            uptime = duration / timeleft;
                         }
+
+                        float GhoulBaseStrength = 331f;
+                        float GhoulBaseStrengthMult = 0.7f;
+                        float GhoulBaseAP = 836f;
+                        float GhoulBaseSpeed = 2f;
+                        float GhoulAPMult = 1f;                 // 1 Str = x AP     
+                        float ClawCD = 4f;
+                        float GhoulWeaponBaseDamage = 101.3f;   // I found these values to be fairly correct after a number of tests (v3.0.8)
+                        float GhoulAPdivisor = 14f;           // 
+
+                        float GlyphofGhoulValue = 0f;
+                        if (talents.GlyphoftheGhoul) GlyphofGhoulValue = 0.4f;
+
+                        float GhoulStrengthMult = GhoulBaseStrengthMult + (GhoulBaseStrengthMult * (0.2f * (float)talents.RavenousDead)) + GlyphofGhoulValue;
+                        float GhoulStrength = GhoulBaseStrength + stats.Strength * GhoulStrengthMult;
+
+                        Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+                        GhoulStrength *= 1f + statsBuffs.BonusStrengthMultiplier;
+                        GhoulStrength += statsBuffs.Strength;
+
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder"))) GhoulStrength -= 18f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder (Mixology)"))) GhoulStrength -= 4f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength"))) GhoulStrength -= 50f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength (Mixology)"))) GhoulStrength -= 16f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir"))) GhoulStrength -= 20f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir (Mixology)"))) GhoulStrength -= 6f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Scroll of Strength VIII"))) GhoulStrength -= 30f;
+
+                        float GhoulAP = GhoulBaseAP + GhoulStrength * GhoulAPMult;
+
+                        GhoulAP *= 1f + statsBuffs.BonusAttackPowerMultiplier;
+                        GhoulAP += statsBuffs.AttackPower;
+
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage"))) GhoulAP -= 180f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage (Mixology)"))) GhoulAP -= 64f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir"))) GhoulAP -= 90f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir (Mixology)"))) GhoulAP -= 32f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Attack Power Food"))) GhoulAP -= 80f;
+                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Fish Feast"))) GhoulAP -= 80f;
+
+                        float GhoulhastedSpeed = 0f;
+                        if (combatTable.MH != null)
+                            GhoulhastedSpeed = ((combatTable.MH.hastedSpeed == 0 ? 1.0f : combatTable.MH.hastedSpeed) / (combatTable.MH.baseSpeed == 0 ? 1.0f : combatTable.MH.baseSpeed)) * GhoulBaseSpeed;
                         else
-                            dpsGhoul = 0;
-                    }
-                    #endregion
+                            GhoulhastedSpeed = GhoulBaseSpeed;
 
-                    float BCBMult = 1f;
-                    float DancingRuneWeaponMult = 1f;
-                    float GargoyleMult = 1f + commandMult;
-                    float GhoulMult = 1f + commandMult;
-                    float BloodwormsMult = 1f + commandMult;
-                    float WhiteMult = 1f;
-                    float otherShadowMult = 1f;
-                    float otherArcaneMult = 1f;
-                    float otherFrostMult = 1f;
-
-                    #region Apply Physical Mitigation
-                    {
-                        float physMit = mitigation;
-                        physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
-
-                        dpsBCB *= physMit;
-                        dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, 0f/*stats.ArmorPenetration*/, 0f, 0f);
-
-                        WhiteMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
-                        BCBMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
-                    }
-                    #endregion
-
-                    #region Apply Magical Mitigation
-                    {
-                        // some of this applies to necrosis, I wonder if it is ever accounted for
-                        float magicMit = partialResist /** combatTable.spellResist*/;
-                        // magicMit = 1f - magicMit;
-
-                        otherShadowMult *= spellPowerMult;
-                        otherArcaneMult *= spellPowerMult;
-                        otherFrostMult *= frostSpellPowerMult;
-                    }
-                    #endregion
-
-                    #region Cinderglacier multipliers
-                    {
-                        #region Cinderglacier
+                        if (talents.GhoulFrenzy > 0f)
                         {
-                            if (stats.CinderglacierProc > 0f && combatTable.MH != null)
-                            {
-                                float shadowFrostAbilitiesPerSecond = (float)(
-                                    (r.DeathCoil 
-                                    + r.FrostStrike * (1 + talents.ThreatOfThassarian/3f) // FS hits once for each weapon.
-                                    + r.ScourgeStrike 
-                                    + r.IcyTouch 
-                                    + r.HowlingBlast)
-                                    / combatTable.realDuration);
-                                float CGPercentChance = 1.5f / (60f / combatTable.MH.baseSpeed);
-                                float CGPPM = ((60f / combatTable.MH.hastedSpeed) * CGPercentChance) * 1f - combatTable.totalMHMiss; // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
-                                CGPPM += (1.5f / (60f / combatTable.MH.baseSpeed)) * ((combatTable.totalMeleeAbilities * (1f - combatTable.missedSpecial) + combatTable.totalSpellAbilities * (1f - combatTable.spellResist)) * 60f / combatTable.realDuration);
-                                float ProcsPerAbility = CGPPM / (shadowFrostAbilitiesPerSecond * 60f);
-
-                                CinderglacierMultiplier = 1f + 2f * 0.2f * (ProcsPerAbility);
-
-                            }
+                            float GhoulFrenzyHaste = (float)(0.25f * (calcOpts.rotation.GhoulFrenzy / combatTable.realDuration) * 30f);
+                            GhoulhastedSpeed /= 1f + GhoulFrenzyHaste;
                         }
-                        #endregion
-                        abilities.DC.DamageMod *= CinderglacierMultiplier;
-                        abilities.HB.DamageMod *= CinderglacierMultiplier;
-                        abilities.IT.DamageMod *= CinderglacierMultiplier;
-                        abilities.FS.DamageMod *= CinderglacierMultiplier;
-                        abilities.SS.DamageMod *= CinderglacierMultiplier;
+                        GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
 
+                        float dmgSwing = GhoulWeaponBaseDamage + (GhoulAP / GhoulAPdivisor) * GhoulBaseSpeed;
+                        float dpsSwing = dmgSwing / GhoulhastedSpeed;
+                        float dpsGhoulGlancing = (dpsSwing * 0.24f) * 0.75f;
+
+                        float dpsClaw = (1.5f * dmgSwing) / ClawCD;
+
+                        dpsSwing *= (1f - missedSpecial) - 0.24f;   // the Ghoul only has one weapon || Glancings added further down
+                        dpsClaw *= 1f - missedSpecial;
+
+                        dpsSwing *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
+                        dpsSwing += dpsGhoulGlancing;
+
+                        dpsClaw *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
+
+                        dpsGhoul = dpsSwing + dpsClaw;
+
+                        //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
+                        // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
+                        int targetArmor = calcOpts.BossArmor;
+                        float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+                            0f/*stats.ArmorPenetration*/, 0f, 0f * stats.ArmorPenetrationRating);
+
+                        dpsGhoul *= modArmor;
+                        dpsGhoul *= 1f - (.0065f * missedSpecial);	// pet expertise now scales with player hit rating. Hopefully goes off of melee rather than spell hit.
+                        dpsGhoul *= uptime;
                     }
-                    #endregion
+                    else
+                        dpsGhoul = 0;
+                }
+                #endregion
 
-                    #region Apply Multi-Ability Talent Multipliers
+                float BCBMult = 1f;
+                float DancingRuneWeaponMult = 1f;
+                float GargoyleMult = 1f + commandMult;
+                float GhoulMult = 1f + commandMult;
+                float BloodwormsMult = 1f + commandMult;
+                float WhiteMult = 1f;
+                float otherShadowMult = 1f;
+                float otherArcaneMult = 1f;
+                float otherFrostMult = 1f;
+
+                #region Apply Physical Mitigation
+                {
+                    float physMit = mitigation;
+                    physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
+
+                    dpsBCB *= physMit;
+                    dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, 0f/*stats.ArmorPenetration*/, 0f, 0f);
+
+                    WhiteMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
+                    BCBMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
+                }
+                #endregion
+
+                #region Apply Magical Mitigation
+                {
+                    // some of this applies to necrosis, I wonder if it is ever accounted for
+                    float magicMit = partialResist /** combatTable.spellResist*/;
+                    // magicMit = 1f - magicMit;
+
+                    otherShadowMult *= spellPowerMult;
+                    otherArcaneMult *= spellPowerMult;
+                    otherFrostMult *= frostSpellPowerMult;
+                }
+                #endregion
+
+                #region Cinderglacier multipliers
+                {
+                    #region Cinderglacier
                     {
-                        float BloodyVengeanceMult = .03f * (float)talents.BloodyVengeance;
-                        BCBMult *= 1 + BloodyVengeanceMult;
-                        WhiteMult *= 1 + BloodyVengeanceMult;
-
-                        float HysteriaCoeff = .2f / 6f; // current uptime is 16.666...%
-                        float HysteriaMult = HysteriaCoeff * (float)talents.Hysteria;
-                        BCBMult *= 1 + HysteriaMult;
-                        WhiteMult *= 1 + HysteriaMult;
-
-                        float BlackIceMult = .02f * (float)talents.BlackIce;
-                        otherShadowMult *= 1 + BlackIceMult;
-                        otherFrostMult *= 1 + BlackIceMult;
-
-                        float DesecrationMult = .01f * (float)talents.Desolation;  	// the new desecration is basically a flat 1% per point
-                        BCBMult *= 1 + DesecrationMult;
-                        WhiteMult *= 1 + DesecrationMult;
-                        otherShadowMult *= 1 + DesecrationMult;
-                        otherArcaneMult *= 1 + DesecrationMult;
-                        otherFrostMult *= 1 + DesecrationMult;
-
-                        if ((float)talents.BoneShield >= 1f)
+                        if (stats.CinderglacierProc > 0f && combatTable.MH != null)
                         {
-                            float BoneMult = .02f;
-                            BCBMult *= 1 + BoneMult;
-                            WhiteMult *= 1 + BoneMult;
-                            otherShadowMult *= 1 + BoneMult;
-                            otherArcaneMult *= 1 + BoneMult;
-                            otherFrostMult *= 1 + BoneMult;
+                            float shadowFrostAbilitiesPerSecond = (float)(
+                                (r.DeathCoil 
+                                + r.FrostStrike * (1 + talents.ThreatOfThassarian/3f) // FS hits once for each weapon.
+                                + r.ScourgeStrike 
+                                + r.IcyTouch 
+                                + r.HowlingBlast)
+                                / combatTable.realDuration);
+                            float CGPercentChance = 1.5f / (60f / combatTable.MH.baseSpeed);
+                            float CGPPM = ((60f / combatTable.MH.hastedSpeed) * CGPercentChance) * 1f - combatTable.totalMHMiss; // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
+                            CGPPM += (1.5f / (60f / combatTable.MH.baseSpeed)) * ((combatTable.totalMeleeAbilities * (1f - combatTable.missedSpecial) + combatTable.totalSpellAbilities * (1f - combatTable.spellResist)) * 60f / combatTable.realDuration);
+                            float ProcsPerAbility = CGPPM / (shadowFrostAbilitiesPerSecond * 60f);
+
+                            CinderglacierMultiplier = 1f + 2f * 0.2f * (ProcsPerAbility);
+
                         }
                     }
                     #endregion
+                    abilities.DC.DamageMod *= CinderglacierMultiplier;
+                    abilities.HB.DamageMod *= CinderglacierMultiplier;
+                    abilities.IT.DamageMod *= CinderglacierMultiplier;
+                    abilities.FS.DamageMod *= CinderglacierMultiplier;
+                    abilities.SS.DamageMod *= CinderglacierMultiplier;
 
-                    #region Pet uptime modifiers
+                }
+                #endregion
+
+                #region Apply Multi-Ability Talent Multipliers
+                {
+                    float BloodyVengeanceMult = .03f * (float)talents.BloodyVengeance;
+                    BCBMult *= 1 + BloodyVengeanceMult;
+                    WhiteMult *= 1 + BloodyVengeanceMult;
+
+                    float HysteriaCoeff = .2f / 6f; // current uptime is 16.666...%
+                    float HysteriaMult = HysteriaCoeff * (float)talents.Hysteria;
+                    BCBMult *= 1 + HysteriaMult;
+                    WhiteMult *= 1 + HysteriaMult;
+
+                    float BlackIceMult = .02f * (float)talents.BlackIce;
+                    otherShadowMult *= 1 + BlackIceMult;
+                    otherFrostMult *= 1 + BlackIceMult;
+
+                    float DesecrationMult = .01f * (float)talents.Desolation;  	// the new desecration is basically a flat 1% per point
+                    BCBMult *= 1 + DesecrationMult;
+                    WhiteMult *= 1 + DesecrationMult;
+                    otherShadowMult *= 1 + DesecrationMult;
+                    otherArcaneMult *= 1 + DesecrationMult;
+                    otherFrostMult *= 1 + DesecrationMult;
+
+                    if ((float)talents.BoneShield >= 1f)
                     {
-                        BloodwormsMult *= calcOpts.BloodwormsUptime;
-                        GhoulMult *= calcOpts.GhoulUptime;
+                        float BoneMult = .02f;
+                        BCBMult *= 1 + BoneMult;
+                        WhiteMult *= 1 + BoneMult;
+                        otherShadowMult *= 1 + BoneMult;
+                        otherArcaneMult *= 1 + BoneMult;
+                        otherFrostMult *= 1 + BoneMult;
                     }
-                    #endregion
+                }
+                #endregion
+
+                #region Pet uptime modifiers
+                {
+                    BloodwormsMult *= calcOpts.BloodwormsUptime;
+                    GhoulMult *= calcOpts.GhoulUptime;
+                }
+                #endregion
                 
                 //feed variables for output
                 calcs.BCBDPS = dpsBCB * BCBMult;
@@ -2107,6 +2107,9 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.DoTTick ||
                         effect.Trigger == Trigger.MeleeCrit ||
                         effect.Trigger == Trigger.MeleeHit ||
+                        effect.Trigger == Trigger.CurrentHandHit ||
+                        effect.Trigger == Trigger.MainHandHit ||
+                        effect.Trigger == Trigger.OffHandHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
                         effect.Trigger == Trigger.BloodStrikeHit ||
