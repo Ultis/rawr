@@ -818,12 +818,12 @@ namespace Rawr {
             #endregion
             #region Damaging Procs
             else if ((match = new Regex(@"Sends a shadowy bolt at the enemy causing (?<min>\d\d*) to (?<max>\d\d*) Shadow damage.*").Match(line)).Success)
-            {   // Shadowmourne
+            {   // Raging Deathbringer / Empowered Deathbringer
                 int min = int.Parse(match.Groups["min"].Value);
                 int max = int.Parse(match.Groups["max"].Value);
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.CurrentHandHit,
                     new Stats() { ShadowDamage = (float)(min + max) / 2f, },
-                    0f, 0f, 0.09f));
+                    0f, 0f, 0.05f));  // proc chance is ~5% according to wowhead.  
             }
 
             else if ((match = new Regex(@"Your harmful spells have a chance to strike your enemy, dealing (?<min>\d\d*) to (?<max>\d\d*) shadow damage.*").Match(line)).Success)
