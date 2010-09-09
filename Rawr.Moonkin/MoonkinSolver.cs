@@ -511,7 +511,7 @@ namespace Rawr.Moonkin
                 }
                 float t10StarfallDamage = starfallDamage;
                 // Approximate the effect of the 2T10 set bonus
-                if (tier102PieceBuff != null)
+                if (tier102PieceBuff != null && character.DruidTalents.OmenOfClarity == 1)
                 {
                     Stats.SpecialEffectEnumerator enumerator = tier102PieceBuff.Stats.SpecialEffects();
                     enumerator.MoveNext();
