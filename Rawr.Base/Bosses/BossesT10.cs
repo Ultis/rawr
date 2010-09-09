@@ -23,7 +23,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 4601850f, 15060600f, 0, 0 };
-            BerserkTimer = new int[] { 19 * 60, 19 * 60, 0, 0 };
+            BerserkTimer = new int[] { 5 * 60, 5 * 60, 0, 0 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
@@ -37,7 +37,30 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
+                float frostmultiplierfromwhiteout = ( ( (BerserkTimer[i] - 25f) / 38f ) * .15f ) / 2f;
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                // Frozen Mallet - Applies debuff Frostbite
+                // Frostbite - The Frostbite inflicts 1950 to 2050 Frost damage every 2 sec and reduces move speed by 5% for 20 sec.
+                // Tanks generally take 4 stacks of this debuff
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Frostbite",
+                    DamageType = ItemDamageType.Frost,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = this[i].Min_Tanks,
+                    AttackSpeed = new float[] { (90 / (70 / 2)), (90 / (70 / 2)), (90 / (60 / 2)), (90 / (60 / 2)) }[i],
+
+                    Dodgable = false,
+                    Missable = false,
+                    Parryable = false,
+                    Blockable = false,
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+                });
             }
             #endregion
             #endregion
@@ -82,7 +105,8 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 6972500, 23706500, 10500000, 31400000 };
+            Health = new float[] { 6972500f, 23706500f, 10458750f, 31376250f };
+
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 120, 180, 120, 150 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -96,14 +120,16 @@ namespace Rawr.Bosses
             #endregion
             #region Offensive
             #region Attacks
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 // Melee
-                this[i].Attacks.Add(new Attack() {
+                this[i].Attacks.Add(new Attack()
+                {
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     // Only performs this attack during non-Bone Storm phases
                     AttackSpeed = new float[] { (90 / (70 / 2)), (90 / (70 / 2)), (90 / (60 / 2)), (90 / (60 / 2)) }[i],
@@ -135,7 +161,7 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-                    
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
@@ -256,7 +282,7 @@ namespace Rawr.Bosses
             #region Basics
             // Health = Mana + Health
             // Mana Barrier, have to destroy mana before dps'g boss
-            Health = new float[] { 3346800f + 3000000f, 11000000f + 13400000f, 3346800f + 6000000f, 13900000f + 26800000f };
+            Health = new float[] { 3264800f + 3346800f, 11193600f + 13387200f, 3264800f + 6693600f, 13992000f + 26774400f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 150, 300, 150, 300 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -308,9 +334,9 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 11k in Normal 25 
-                    DamagePerHit = ( ( BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f ) / 1.3f ),
+                    DamagePerHit = ((BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f) / 1.3f),
                     MaxNumTargets = 1f,
-                    AttackSpeed = this[i].BerserkTimer / ( (this[i].BerserkTimer * .5f) / 2f), 
+                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer * .5f) / 2f),
 
                     Dodgable = true,
                     Missable = true,
@@ -321,7 +347,7 @@ namespace Rawr.Bosses
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
                 });
-                
+
                 // Shadow Bolt - Inflicts 7,438 to 9,562 Shadow damage to the current target.
                 this[i].Attacks.Add(new Attack()
                 {
@@ -345,7 +371,7 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer * .5f) / 4f),
                     Interruptable = true,
-                    
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
@@ -477,7 +503,7 @@ namespace Rawr.Bosses
                 {
                     Frequency = 30f,
                     Duration = 7f * 1000,
-                    Chance = new int[]{ 0, 0, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
+                    Chance = new int[] { 0, 0, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
                 });
             }
@@ -492,7 +518,7 @@ namespace Rawr.Bosses
                 this[i].Stuns.Add(new Impedance()
                 {
                     // First dominate mind is after 30 seconds, then every 40 seconds there-after
-                    Frequency = this[i].BerserkTimer / ( (this[i].BerserkTimer - 30f) / 40f),
+                    Frequency = this[i].BerserkTimer / ((this[i].BerserkTimer - 30f) / 40f),
                     Duration = 12f * 1000f,
                     Chance = new int[] { 0, (1 / (this[i].Max_Players - this[i].Min_Tanks)), (1 / (this[i].Max_Players - this[i].Min_Tanks)), (3 / (this[i].Max_Players - this[i].Min_Tanks)) }[i],
                     Breakable = false,
@@ -529,7 +555,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 8785000f, 31860000f, 12300000f, 43930000f };
+            Health = new float[] { 8785350f, 31376250f, 12299490f, 43926752f };
             BerserkTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, };
             SpeedKillTimer = new int[] { 150, 180, 150, 180 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -540,7 +566,8 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 // Melee
                 this[i].Attacks.Add(new Attack
                 {
@@ -548,7 +575,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 1f,
 
@@ -566,28 +593,30 @@ namespace Rawr.Bosses
 
                 // Boiling Blood - Inflicts 5,000 Physical damage every 3 seconds for 24 seconds. 
                 //       Used on a random target. (Same amount in all three versions)
-                this[i].Attacks.Add(new DoT() {
-                   Name = "Boiling Blood",
-                   DamageType = ItemDamageType.Physical,
-                   AttackType = ATTACK_TYPES.AT_RANGED,
-                   TickInterval = 3f,
-                   NumTicks = 8f,
-                   DamagePerTick = 5000f,
-                   MaxNumTargets = new int[] { 1, 3, 1, 3 }[i],
-                   AttackSpeed = 15.5f,
+                this[i].Attacks.Add(new DoT()
+                {
+                    Name = "Boiling Blood",
+                    DamageType = ItemDamageType.Physical,
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    TickInterval = 3f,
+                    NumTicks = 8f,
+                    DamagePerTick = 5000f,
+                    MaxNumTargets = new int[] { 1, 3, 1, 3 }[i],
+                    AttackSpeed = 15.5f,
                 });
                 // Blood Nova - Inflicts 7,600/9,500 to 8,400/10,500 Physical damage 
                 //       to a random target and all players within 12 yards.
-                this[i].Attacks.Add(new Attack {
+                this[i].Attacks.Add(new Attack
+                {
                     Name = "Blood Nova",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_RANGED,
-                    DamagePerHit =  new int[] { (7600 + 8400), (9500 + 10500), (7600 + 8400), (9500 + 10500) }[i] / 2f, // 1 person only assuming everyone is more than 12 yards apart
+                    DamagePerHit = new int[] { (7600 + 8400), (9500 + 10500), (7600 + 8400), (9500 + 10500) }[i] / 2f, // 1 person only assuming everyone is more than 12 yards apart
                     MaxNumTargets = 1f,
                     AttackSpeed = 20f,
                 });
             }
-           #endregion
+            #endregion
             #endregion
             #region Impedances
             //Moves;
@@ -637,7 +666,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 9412000f, 40440000f, 13700000f, 52200000f };
+            Health = new float[] { 9412875f, 40440500f, 13666100f, 52293752f };
             BerserkTimer = new int[] { 5 * 60, 5 * 60, 5 * 60, 5 * 60, };
             SpeedKillTimer = new int[] { 150, 180, 180, 210 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -645,21 +674,22 @@ namespace Rawr.Bosses
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
-            float inhalerotationlength = ( 30f * 4f ) + ( 3.5f * 3f ) + 3f;
-            for (int i = 0; i < 4; i++) {
+            float inhalerotationlength = (30f * 4f) + (3.5f * 3f) + 3f;
+            for (int i = 0; i < 4; i++)
+            {
                 #region Attacks
                 // Inhale rotation consists of 4 x 30 second Gaseous Blight rotations, 3 x 3.5 second Inhale cast times, and 1 x 3 second Pungent Blight cast time
                 // Melee
                 // 0 Inhales
-                this[i].Attacks.Add( new Attack
+                this[i].Attacks.Add(new Attack
                 {
                     Name = "Melee with 0 Inhales",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 11k in 25 man
-                    DamagePerHit =  ( ( BossHandler.StandardMeleePerHit[ (int)this[i].Content ] / 1.3f ) / 1.3f ) ,
+                    DamagePerHit = ((BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f) / 1.3f),
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.1f ) ) ), // hits every 1.8 seconds for 30 seconds
+                    AttackSpeed = (inhalerotationlength / (30f / (2f / 1.1f))), // hits every 1.8 seconds for 30 seconds
 
                     Dodgable = true,
                     Missable = true,
@@ -670,7 +700,7 @@ namespace Rawr.Bosses
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
 
-                    IsTheDefaultMelee = true,                   
+                    IsTheDefaultMelee = true,
                 });
                 // 1 Inhale
                 this[i].Attacks.Add(new Attack
@@ -679,9 +709,9 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 14k in 25 man
-                    DamagePerHit = ( BossHandler.StandardMeleePerHit[ (int)this[i].Content ] / 1.3f ),
+                    DamagePerHit = (BossHandler.StandardMeleePerHit[(int)this[i].Content] / 1.3f),
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.4f ) ) ), // hits every 1.45 seconds for 30 seconds
+                    AttackSpeed = (inhalerotationlength / (30f / (2f / 1.4f))), // hits every 1.45 seconds for 30 seconds
 
                     Dodgable = true,
                     Missable = true,
@@ -699,9 +729,9 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 19k in 25 man
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content  ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / ( 30f / ( 2f / 1.7f ) ) ),  // hits 1.17 seconds for 30 seconds
+                    AttackSpeed = (inhalerotationlength / (30f / (2f / 1.7f))),  // hits 1.17 seconds for 30 seconds
 
                     Dodgable = true,
                     Missable = true,
@@ -719,9 +749,9 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // hits for about 25k in 25 man
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ] * 1.3f,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * 1.3f,
                     MaxNumTargets = 1f,
-                    AttackSpeed = ( inhalerotationlength / 30f ),  // hits every second for 30 seconds
+                    AttackSpeed = (inhalerotationlength / 30f),  // hits every second for 30 seconds
 
                     Dodgable = true,
                     Missable = true,
@@ -740,9 +770,9 @@ namespace Rawr.Bosses
                     Name = "Gaseous Blight with 0 inhales",
                     DamageType = ItemDamageType.Shadow,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    TickInterval = 1f, 
+                    TickInterval = 1f,
                     NumTicks = 33.5f, //lasts 30 seconds + 1st inhale cast time [3.5 seconds]
-                    DamagePerTick = new int[] { (2925 + 3075), (4388 + 4612), (4388 + 4612), (6338 + 6662) }[i] / 2f ,
+                    DamagePerTick = new int[] { (2925 + 3075), (4388 + 4612), (4388 + 4612), (6338 + 6662) }[i] / 2f,
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = inhalerotationlength,
                 });
@@ -892,7 +922,7 @@ namespace Rawr.Bosses
                     Breakable = false,
                 });
             }
-            #endregion
+                #endregion
             #endregion
             #region Impedances
             //Moves;
@@ -918,7 +948,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 7320000f, 36257000f, 10458000f, 47413000f };
+            Health = new float[] { 7321125f, 36257000f, 10458750f, 47413000f };
             // Soft enrage is about 7 minutes in, Hard enrage is after 10 minutes (as shown in the DK soloing video)
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 120, 150, 180, 210 };
@@ -930,14 +960,15 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-             this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -980,7 +1011,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 9761500f, 42000000f, 13670000f, 50200000f };
+            Health = new float[] { 9761500f, 41835000f, 13666100f, 50202000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 240, 270, 300, 330 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -991,14 +1022,15 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-             this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1044,8 +1076,8 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            // Health is shared between the three bosses
-            Health = new float[] { 5620000f, 22500000f, 7624000f, 30497000f };
+            // Health is shared between Prince Valanar, Prince Keleseth, and Prince Taldaram
+            Health = new float[] { 5647725f, 22590900f, 7624429f, 30497716f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 150, 180, 180, 210 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -1056,14 +1088,15 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-             this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -1106,16 +1139,16 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 14200000f, 59400000f, 18900000f, 71300000f };
+            Health = new float[] { 14154175f, 59419644f, 18899660f, 71300784f };
             // 5 minute, 20 second fight
             BerserkTimer = new int[] { 320, 320, 320, 320 };
             SpeedKillTimer = new int[] { 210, 210, 270, 270 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
-            this.InBackPerc_Melee = new double[] { (320 - 12 - 12) /320, (320 - 12 - 12) /320, (320 - 12 - 12) /320, (320 - 12 - 12) /320 };
-            this.InBackPerc_Ranged = new double[] { (320 - 4 - 4) /320, (320 - 4 - 4) /320, (320 - 4 - 4) /320, (320 - 4 - 4) /320 };;
-            
+            this.InBackPerc_Melee = new double[] { (320 - 12 - 12) / 320, (320 - 12 - 12) / 320, (320 - 12 - 12) / 320, (320 - 12 - 12) / 320 };
+            this.InBackPerc_Ranged = new double[] { (320 - 4 - 4) / 320, (320 - 4 - 4) / 320, (320 - 4 - 4) / 320, (320 - 4 - 4) / 320 }; ;
+
             // Assume that by the time by the end of the second Air Phase, guilds should be at 35%
             //Under35Perc = new double[] { (320 - 124 - 100 - 3) / 320, (320 - 127 - 100 - 3) / 320, (320 - 124 - 100 - 3) / 320, (320 - 127 - 100 - 3) / 320 };
             #endregion
@@ -1163,7 +1196,7 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
                     // Heroic increases Lana'thel's damage by 10/5% in 10/25 man respecfully for each application of Essence of the Blood Queen
-                    DamagePerHit = ( 1 + (new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i] ) ) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    DamagePerHit = (1 + (new int[] { 0, avgbitetargets10, 0, avgbitetargets25 }[i] * new float[] { 0f, .10f, 0f, .05f }[i])) * BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
 
@@ -1225,7 +1258,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = new int[] { (8325 + 9675), (10175 + 11825), (8325 + 9675), (10175 + 11825) }[i] / 2f,
-                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets25, avgbitetargets10, avgbitetargets25 }[i], 
+                    MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets25, avgbitetargets10, avgbitetargets25 }[i],
                     // Bites are usable every 75/60 seconds in 10/25 respectfully
                     AttackSpeed = new int[] { 75, 60, 75, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
                     // The OT COULD be targeted but only as a last resourt. The MT should NOT be targeted.
@@ -1316,8 +1349,8 @@ namespace Rawr.Bosses
                     TickInterval = 1f,
                     DamagePerTick = new int[] { 3500, 3500, 3500, 3500 }[i],
                     // Assume half of the raid get hit by by the debuff while people are running to get rid of the debuff
-                    MaxNumTargets = this[i].Max_Players / 2f, 
-                    AttackSpeed = 30.5f, 
+                    MaxNumTargets = this[i].Max_Players / 2f,
+                    AttackSpeed = 30.5f,
                 });
                 this[i].Moves.Add(new Impedance()
                 {
@@ -1390,7 +1423,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health is half her total health, which you HEAL, not dps
-            Health = new float[] { 12000000f / 2f, 35999000f / 2f, 12000000f / 2f, 35999000f / 2f };
+            Health = new float[] { 12000007f / 2f, 36002816f / 2f, 12000007f / 2f, 35999996f / 2f };
             BerserkTimer = new int[] { 7 * 60, 7 * 60, 7 * 60, 7 * 60, };
             SpeedKillTimer = new int[] { 180, 240, 240, 240 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -1401,9 +1434,10 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-                    // Valathria does not actually fight you, you fight a crap load of adds while healers heal Valathria back to full health
-                    // Heroic, Valathria does take damage
+            for (int i = 0; i < 4; i++)
+            {
+                // Valathria does not actually fight you, you fight a crap load of adds while healers heal Valathria back to full health
+                // Heroic, Valathria does take damage
             }
             #endregion
             #endregion
@@ -1431,7 +1465,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 11156000f, 38348000f, 13950000f, 45950000f };
+            Health = new float[] { 11156000f, 38348752f, 13945000f, 46018500f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
             SpeedKillTimer = new int[] { 210, 210, 300, 270 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -1442,15 +1476,16 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
 
@@ -1495,10 +1530,10 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            // You have 15 minutes to bring him down to 10%. After which point it's a free kill with no berserker time.
-            Health = new float[] { 17400000f * .9f, 61300000f * .9f, 29500000f * .9f, 103200000f * .9f };
-            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60, };
-            SpeedKillTimer = new int[] { 9 * 60, 13 * 60, 8 * 60, 14 * 60 };
+            // You have 15 minutes to bring him down to 10.4%. After which point it's a free kill with no berserker time.
+            Health = new float[] { 17431250f * .896f, 61009376f * .896f, 29458812f * .896f, 103151168f * .896f };
+            BerserkTimer = new int[] { 15 * 60, 15 * 60, 15 * 60, 15 * 60 };
+            SpeedKillTimer = new int[] { 8 * 60, 13 * 60, 8 * 60, 13 * 60 };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
@@ -1507,15 +1542,16 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
 
@@ -1563,23 +1599,23 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Normal and Heroic setting provide no difference to his health or abilities
-            Health = new float[] { 3486000f, 11156000f, 3486000f, 11156000f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Health = new float[] { 3486000f, 11156000f, 0f, 0f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 120, 120, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
                 // 300 / (300 * (.5 * .5)) = 300 / 75 = 4
-                int cloneattackspeed10man = (int) ( BerserkTimer[i] / ( BerserkTimer[i] * ( .5f * .5f ) ) );
+                int cloneattackspeed10man = (int)(BerserkTimer[i] / (BerserkTimer[i] * (.5f * .5f)));
                 // 300 / ( ( 300 * (.66 * .5 ) ) + ( 300 * (.33 * .5) ) ) = 300 / ( 99 + 49.5 ) = 300 / 148.5 = 2.020202
-                int cloneattackspeed25man = (int) ( BerserkTimer[i] / ( ( BerserkTimer[i] * ( .66f * .5f ) ) + ( BerserkTimer[i] * ( .33f * .5f ) ) ) );
+                int cloneattackspeed25man = (int)(BerserkTimer[i] / ((BerserkTimer[i] * (.66f * .5f)) + (BerserkTimer[i] * (.33f * .5f))));
 
                 this[i].Attacks.Add(new Attack
                 {
@@ -1616,7 +1652,7 @@ namespace Rawr.Bosses
                     Name = "Cloned Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
-                    DamagePerHit = new int[] { 1, (1 + 2) / 2, 1, (1 + 2) / 2 }[i] * BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    DamagePerHit = new int[] { 1, (1 + 2) / 2, 0, 0 }[i] * BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = new int[] { cloneattackspeed10man, cloneattackspeed25man, cloneattackspeed10man, cloneattackspeed25man }[i],
 
@@ -1754,32 +1790,33 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Normal and Heroic setting provide no difference to her health or abilities
-            Health = new float[] { 4183000f, 13945000f, 4183000f, 13945000f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Health = new float[] { 4183000f, 13945000f, 0f, 0f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 120, 120, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 2; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
-                    
+
                     Missable = true,
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-                    
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
@@ -1792,10 +1829,10 @@ namespace Rawr.Bosses
                 {
                     Name = "Flame Breath",
                     DamageType = ItemDamageType.Fire,
-                    DamagePerHit = new int[] { (24500 + 31500), (33687 + 43312), (24500 + 31500), (33687 + 43312) }[i] / 2f,
+                    DamagePerHit = new int[] { (24500 + 31500), (33687 + 43312), 0, 0 }[i] / 2f,
                     MaxNumTargets = 1f,
                     // First attack is 12 seconds in, and every 25 seconds after
-                    AttackSpeed = (this[i].BerserkTimer / ( (this[i].BerserkTimer - 12f) / 25f ) ),
+                    AttackSpeed = (this[i].BerserkTimer / ((this[i].BerserkTimer - 12f) / 25f)),
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
                     IgnoresMeleeDPS = true,
@@ -1848,7 +1885,7 @@ namespace Rawr.Bosses
                 //    Assume all players are spread out; Can target tanks; Stuns targets for 6 seconds
                 this[i].Stuns.Add(new Impedance()
                 {
-                    Frequency = this[i].BerserkTimer / ( ( this[i].BerserkTimer - 32f ) / 50f ),
+                    Frequency = this[i].BerserkTimer / ((this[i].BerserkTimer - 32f) / 50f),
                     Duration = 6f * 1000f,
                     Chance = new float[] { 2, 5, 2, 5 }[i] / this[i].Max_Players,
                     Breakable = false,
@@ -1876,18 +1913,19 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Normal and Heroic setting provide no difference to his health or abilities
-            Health = new float[] { 11156000f, 43500000f, 15339900f, 58600000f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60, };
-            SpeedKillTimer = new int[] { 120, 120, 120, 120 };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Health = new float[] { 4141000f, 14098395f, 0f, 0f };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 120, 120, 0, 0 };
+            Max_Players = new int[] { 10, 25, 0, 0 };
+            Min_Tanks = new int[] { 2, 2, 0, 0 };
+            Min_Healers = new int[] { 3, 5, 0, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 2; i++)
+            {
                 this[i].Attacks.Add(new Attack
                 {
                     // Melee Attacks
@@ -1895,7 +1933,7 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Physical,
                     AttackType = ATTACK_TYPES.AT_MELEE,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
 
@@ -1927,7 +1965,7 @@ namespace Rawr.Bosses
                     Name = "Blast Nova",
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new int[] { (5688 + 7312), (6563 + 8437), (5688 + 7312), (6563 + 8437) }[i] / 2f,
+                    DamagePerHit = new int[] { (5688 + 7312), (6563 + 8437), 0, 0 }[i] / 2f,
                     MaxNumTargets = this[i].Max_Players,
                     // Averaging Flamecallers frequency by their duration, assume that the normal cast of the spell is every 5 seconds; All devided by the number of targets
                     AttackSpeed = ((this[i].Targets[this[i].Targets.Count - 1].Frequency * 1000f) / (this[i].Targets[this[i].Targets.Count - 1].Duration / 5f)) / this[i].Targets[this[i].Targets.Count - 1].NumTargs,
@@ -1940,12 +1978,12 @@ namespace Rawr.Bosses
                     Name = "Lava Gout",
                     DamageType = ItemDamageType.Fire,
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    DamagePerHit = new int[] { (8483 + 9517), (9897 + 9897), (8483 + 11103), (9897 + 11103) }[i] / 2f,
+                    DamagePerHit = new int[] { (8483 + 9517), (9897 + 9897), 0, 0 }[i] / 2f,
                     MaxNumTargets = this[i].Targets[this[i].Targets.Count - 1].NumTargs,
                     // Averaging Flamecallers frequency by their duration, assume that the normal cast of the spell is every 2 seconds; All devided by the number of targets
                     AttackSpeed = ((this[i].Targets[this[i].Targets.Count - 1].Frequency * 1000f) / (this[i].Targets[this[i].Targets.Count - 1].Duration / 2f)) / this[i].Targets[this[i].Targets.Count - 1].NumTargs,
                     Interruptable = true,
-                    
+
                     Missable = true,
                 });
             }
@@ -1992,7 +2030,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Fight is split into 3 phases, first two everyone is DPSing him together, Phase 3 DPS is split up between live and shadow realm
-            Health = new float[] { 11156000f, 43500000f, 15339900f, 58600000f };
+            Health = new float[] { 11156000f, 40440500f, 15339900f, 58569000f };
             BerserkTimer = new int[] { 8 * 60, 8 * 60, 8 * 60, 8 * 60, };
             SpeedKillTimer = new int[] { 300, 300, 300, 300 };
             Max_Players = new int[] { 10, 25, 10, 25 };
@@ -2003,14 +2041,15 @@ namespace Rawr.Bosses
             //MaxNumTargets = new double[] { 1, 1, 1, 1 };
             //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
             #region Attacks
-            for (int i = 0; i < 4; i++) {
-            this[i].Attacks.Add(new Attack
+            for (int i = 0; i < 4; i++)
             {
+                this[i].Attacks.Add(new Attack
+                {
                     // Melee Attacks
                     Name = "Melee",
                     DamageType = ItemDamageType.Physical,
                     // Hits for about 18k on normal 25
-                    DamagePerHit = BossHandler.StandardMeleePerHit[ (int)this[i].Content ],
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
                     MaxNumTargets = 1f,
                     AttackSpeed = 2f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
@@ -2019,7 +2058,7 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-                    
+
                     IgnoresMeleeDPS = true,
                     IgnoresRangedDPS = true,
                     IgnoresHealers = true,
