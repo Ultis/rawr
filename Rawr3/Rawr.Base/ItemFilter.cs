@@ -158,7 +158,6 @@ namespace Rawr
         }
     }
 
-
     public class ItemFilterRegex : ItemFilter
     {
         public ItemFilterRegex()

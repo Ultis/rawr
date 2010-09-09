@@ -1098,6 +1098,28 @@ namespace Rawr
             });
             #endregion
 
+            #region Temp Power Boosts
+            // Hysteria
+            // Power Infusion
+            defaultBuffs.Add(buff = new Buff {
+                Name = "Power Infusion",
+                Source = "Disc Priest",
+                Group = "Temp Power Boost",
+                Stats = new Stats(),
+                ConflictingBuffs = new List<string>() { "PowerInfusion" },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.20f, ManaCostPerc = -0.20f }, 15f, 2 * 60f));
+            defaultBuffs.Add(buff = new Buff {
+                Name = "Power Infusion (w/ Aspiration)",
+                Source = "Disc Priest",
+                Group = "Temp Power Boost",
+                Stats = new Stats(),
+                ConflictingBuffs = new List<string>() { "PowerInfusion" },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.20f, ManaCostPerc = -0.20f }, 15f, (2 * 60f) * 0.80f));
+
+            #endregion
+
             #endregion
 
             #region Debuffs

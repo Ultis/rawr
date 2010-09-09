@@ -4,16 +4,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Rawr {
-	public static class SpecialEffects {
+    public static class SpecialEffects {
         public static void ProcessMetaGem(string line, Stats stats, bool bisArmory) {
             List<string> gemBonuses = new List<string>();
-			string[] gemBonusStrings = line.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
-			foreach (string gemBonusString in gemBonusStrings) {
+            string[] gemBonusStrings = line.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+            foreach (string gemBonusString in gemBonusStrings) {
                 if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+')) {
                     gemBonuses.Add(gemBonusString.Substring(0, gemBonusString.IndexOf(" +")));
                     gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
                 } else{ gemBonuses.Add(gemBonusString); }
-			}
+            }
             foreach (string gemBonus in gemBonuses) {
                 if (gemBonus == "Spell Damage +6")
                 {
@@ -27,11 +27,11 @@ namespace Rawr {
                 {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 600 }, 0f, 15f, .05f));
                     stats.ManaRestoreOnCast_5_15 = 600; // IED
-				}
-				else if (gemBonus == "2% Increased Armor Value from Items")
-				{
-					stats.BaseArmorMultiplier = 0.02f; // IED
-				}
+                }
+                else if (gemBonus == "2% Increased Armor Value from Items")
+                {
+                    stats.BaseArmorMultiplier = 0.02f; // IED
+                }
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 320 }, 6, 45, 0.15f));
@@ -47,17 +47,17 @@ namespace Rawr {
                 else if (gemBonus == "+2% Mana")
                 {
                     stats.BonusManaMultiplier = 0.02f;
-				}
+                }
                 else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
                 {
                     int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
                     stats.SpellDamageTakenMultiplier = (float)bonus / -100f;
                 }
                 else if (gemBonus == "3% Increased Critical Damage")
-				{
-					stats.BonusCritMultiplier = 0.03f;
-					stats.BonusSpellCritMultiplier = 0.03f;
-				}
+                {
+                    stats.BonusCritMultiplier = 0.03f;
+                    stats.BonusSpellCritMultiplier = 0.03f;
+                }
                 else if (gemBonus == "3% Increased Critical Healing Effect")
                 {
                     stats.BonusCritHealMultiplier = 0.03f;
@@ -214,7 +214,7 @@ namespace Rawr {
             }
         }
 
-		public static void ProcessEquipLine(string line, Stats stats, bool isArmory, int ilvl, int id) {
+        public static void ProcessEquipLine(string line, Stats stats, bool isArmory, int ilvl, int id) {
             Match match;
             #region Prep the line, if it needs it
             while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
@@ -1216,7 +1216,7 @@ namespace Rawr {
                 // Trauma; Procs on Healing Hit and HoTs; Hits up to 7 people
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) * 7f }, 6f, 0f, 0.01f, 0));
             }
-			else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you Blessing of Light, increasing your strength by (?<stramount>\d+) and your healing received by up to (?<healamount>\d+) for 10 sec")).Success)
+            else if ((match = Regex.Match(line, @"Your melee attacks have a chance to grant you Blessing of Light, increasing your strength by (?<stramount>\d+) and your healing received by up to (?<healamount>\d+) for 10 sec")).Success)
             {
                 // Last Word
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellHit, new Stats() { Strength = int.Parse(match.Groups["stramount"].Value), BonusHealingReceived = int.Parse(match.Groups["healamount"].Value) }, 10f, 0f, 0.37f, 1));
@@ -1295,7 +1295,7 @@ namespace Rawr {
             #endregion
             #region 3.3.5 Trinkets
                 // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
-			else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
+            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
             {
                 // Petrified Twilight Scale
                 // Melee attacks which reduce you below 35% health cause you to gain 733 dodge rating for 10 sec.  Cannot occur more than once every 45 sec.
@@ -1544,7 +1544,7 @@ namespace Rawr {
             }
         }
 
-		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
+        public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
             Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)?(<a.*q2.*>) for (?<duration>\d\d*) sec \((?<cooldown>\d\d*) Min Cooldown\)");
             /*#region Prep the line, if it needs it
             while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
@@ -1575,8 +1575,8 @@ namespace Rawr {
                 else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
                 else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
                 else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
-				else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
-				else if (statName.Equals("the block value of your shield", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
+                else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
+                else if (statName.Equals("the block value of your shield", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
                 else if (statName.Equals("master rating", StringComparison.InvariantCultureIgnoreCase)) { s.MasteryRating = amount; }
                 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
@@ -1613,9 +1613,9 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HealthRestore = (float)((val1 + val2) / 2f) }, 0f, 2 * 60));
             }
             // Increases spell power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec"))
+            else if (Regex.IsMatch(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec"))
             {
-				string[] inputs = Regex.Split(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec");
+                string[] inputs = Regex.Split(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec");
                 float spell_power = float.Parse(inputs[1]);
                 float uptime = float.Parse(inputs[2]);
                 // unfortunately for us the cooldown is on the next line
@@ -1624,112 +1624,112 @@ namespace Rawr {
                 if (id == 28040) { cooldown_sec = 90.0f; }
                 // we don't have a stat for this case so do the average
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = spell_power }, uptime, cooldown_sec));
-			}
-			// Increases spell power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your spell power by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your spell power by (\\d{3}) for (\\d{2}) sec");
-				float spell_power = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown is on the next line
-				float cooldown_sec = 2.0f * 60.0f;
-				// Twilight Serpent
-				if (id == 42395) { cooldown_sec = 5.0f * 60.0f; }
-				// Vengeance of the Illidari (tooltip lies!)
-				if (id == 28040) { cooldown_sec = 90.0f; }
-				// we don't have a stat for this case so do the average
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = spell_power }, uptime, cooldown_sec));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases armor penetration rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases armor penetration rating by (\\d{3}) for (\\d{2}) sec");
-				float armor_penetration = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetrationRating = armor_penetration }, uptime, 120f));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your armor penetration rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your armor penetration rating by (\\d{3}) for (\\d{2}) sec");
-				float armor_penetration = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetrationRating = armor_penetration }, uptime, 120f));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases attack power by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases attack power by (\\d{3}) for (\\d{2}) sec");
-				float attack_power = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your attack power by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your attack power by (\\d{3}) for (\\d{2}) sec");
-				float attack_power = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases attack power by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases attack power by (\\d{4}) for (\\d{2}) sec");
-				float attack_power = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
-			}
-			// Increases attack power by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your attack power by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your attack power by (\\d{4}) for (\\d{2}) sec");
-				float attack_power = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
-			}
-			// Increases armor by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases armor by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases armor by (\\d{3}) for (\\d{2}) sec");
-				float armor = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
-			}
-			// Increases armor by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your armor by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your armor by (\\d{3}) for (\\d{2}) sec");
-				float armor = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
-			}
-			// Increases armor by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases armor by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases armor by (\\d{4}) for (\\d{2}) sec");
-				float armor = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
-			}
-			// Increases armor by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your armor by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your armor by (\\d{4}) for (\\d{2}) sec");
-				float armor = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
-			}
+            }
+            // Increases spell power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your spell power by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your spell power by (\\d{3}) for (\\d{2}) sec");
+                float spell_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown is on the next line
+                float cooldown_sec = 2.0f * 60.0f;
+                // Twilight Serpent
+                if (id == 42395) { cooldown_sec = 5.0f * 60.0f; }
+                // Vengeance of the Illidari (tooltip lies!)
+                if (id == 28040) { cooldown_sec = 90.0f; }
+                // we don't have a stat for this case so do the average
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = spell_power }, uptime, cooldown_sec));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases armor penetration rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases armor penetration rating by (\\d{3}) for (\\d{2}) sec");
+                float armor_penetration = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetrationRating = armor_penetration }, uptime, 120f));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your armor penetration rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your armor penetration rating by (\\d{3}) for (\\d{2}) sec");
+                float armor_penetration = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetrationRating = armor_penetration }, uptime, 120f));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases attack power by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases attack power by (\\d{3}) for (\\d{2}) sec");
+                float attack_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your attack power by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your attack power by (\\d{3}) for (\\d{2}) sec");
+                float attack_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases attack power by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases attack power by (\\d{4}) for (\\d{2}) sec");
+                float attack_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
+            }
+            // Increases attack power by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your attack power by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your attack power by (\\d{4}) for (\\d{2}) sec");
+                float attack_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = attack_power }, uptime, 120f));
+            }
+            // Increases armor by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases armor by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases armor by (\\d{3}) for (\\d{2}) sec");
+                float armor = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
+            }
+            // Increases armor by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your armor by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your armor by (\\d{3}) for (\\d{2}) sec");
+                float armor = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
+            }
+            // Increases armor by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases armor by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases armor by (\\d{4}) for (\\d{2}) sec");
+                float armor = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
+            }
+            // Increases armor by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your armor by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your armor by (\\d{4}) for (\\d{2}) sec");
+                float armor = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = armor }, uptime, 120f));
+            }
             // Increases maximum health, shares cooldown with other Battlemaster's trinkets
             else if (line.Contains("Battlemaster\'s trinkets."))
             {
@@ -1752,128 +1752,128 @@ namespace Rawr {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BattlemasterHealth = health }, duration, cooldown));
                 }
             }
-			// Increases maximum health by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases maximum health by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases maximum health by (\\d{3}) for (\\d{2}) sec");
-				float health = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 3min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
-			}
-			// Increases maximum health by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your maximum health by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your maximum health by (\\d{3}) for (\\d{2}) sec");
-				float health = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 3min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
-			}
-			// Increases maximum health by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases maximum health by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases maximum health by (\\d{4}) for (\\d{2}) sec");
-				float health = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 3min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
-			}
-			// Increases maximum health by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your maximum health by (\\d{4}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your maximum health by (\\d{4}) for (\\d{2}) sec");
-				float health = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 3min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
-			}
+            // Increases maximum health by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases maximum health by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases maximum health by (\\d{3}) for (\\d{2}) sec");
+                float health = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 3min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
+            }
+            // Increases maximum health by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your maximum health by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your maximum health by (\\d{3}) for (\\d{2}) sec");
+                float health = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 3min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
+            }
+            // Increases maximum health by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases maximum health by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases maximum health by (\\d{4}) for (\\d{2}) sec");
+                float health = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 3min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
+            }
+            // Increases maximum health by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your maximum health by (\\d{4}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your maximum health by (\\d{4}) for (\\d{2}) sec");
+                float health = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 3min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Health = health }, uptime, 180f));
+            }
             // Increases dodge rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec");
-				float dodge_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				float cooldown_sec = 120f;
-				if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
-			}
-			// Increases dodge rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases dodge rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases dodge rating by (\\d{3}) for (\\d{2}) sec");
-				float dodge_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				float cooldown_sec = 120f;
-				if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
-			}
-			// Increases dodge rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your dodge rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your dodge rating by (\\d{3}) for (\\d{2}) sec");
-				float dodge_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				float cooldown_sec = 120f;
-				if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
-			}
-			// Increases parry rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases parry rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases parry rating by (\\d{3}) for (\\d{2}) sec");
-				float parry_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ParryRating = parry_rating }, uptime, 120f));
-			}
-			// Increases parry rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your parry rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your parry rating by (\\d{3}) for (\\d{2}) sec");
-				float parry_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ParryRating = parry_rating }, uptime, 120f));
-			}
-			// Increases haste rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases haste rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases haste rating by (\\d{3}) for (\\d{2}) sec");
-				float haste_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = haste_rating }, uptime, 120f));
-			}
-			// Increases haste rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases your haste rating by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases your haste rating by (\\d{3}) for (\\d{2}) sec");
-				float haste_rating = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = haste_rating }, uptime, 120f));
-			}
-			// Increases haste rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Increases the block value of your shield by (\\d{3}) for (\\d{2}) sec"))
-			{
-				string[] inputs = Regex.Split(line, "Increases the block value of your shield by (\\d{3}) for (\\d{2}) sec");
-				float block = float.Parse(inputs[1]);
-				float uptime = float.Parse(inputs[2]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = block }, uptime, 120f));
-			}
-			// Increases haste rating by 183 for 20 sec.
-			else if (Regex.IsMatch(line, "Instantly heal your current friendly target for (\\d{4})."))
-			{
-				string[] inputs = Regex.Split(line, "Instantly heal your current friendly target for (\\d{4}).");
-				float heal = float.Parse(inputs[1]);
-				// unfortunately for us the cooldown isn't listed, so guess 2min.
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = heal }, 0, 60f));
-			}
+            else if (Regex.IsMatch(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases dodge by (\\d{3}) for (\\d{2}) sec");
+                float dodge_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                float cooldown_sec = 120f;
+                if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
+            }
+            // Increases dodge rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases dodge rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases dodge rating by (\\d{3}) for (\\d{2}) sec");
+                float dodge_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                float cooldown_sec = 120f;
+                if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
+            }
+            // Increases dodge rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your dodge rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your dodge rating by (\\d{3}) for (\\d{2}) sec");
+                float dodge_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                float cooldown_sec = 120f;
+                if (id == 44063) { cooldown_sec = 60.0f; } //Figurine - Monarch Crab
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DodgeRating = dodge_rating }, uptime, cooldown_sec));
+            }
+            // Increases parry rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases parry rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases parry rating by (\\d{3}) for (\\d{2}) sec");
+                float parry_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ParryRating = parry_rating }, uptime, 120f));
+            }
+            // Increases parry rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your parry rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your parry rating by (\\d{3}) for (\\d{2}) sec");
+                float parry_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ParryRating = parry_rating }, uptime, 120f));
+            }
+            // Increases haste rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases haste rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases haste rating by (\\d{3}) for (\\d{2}) sec");
+                float haste_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = haste_rating }, uptime, 120f));
+            }
+            // Increases haste rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases your haste rating by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases your haste rating by (\\d{3}) for (\\d{2}) sec");
+                float haste_rating = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = haste_rating }, uptime, 120f));
+            }
+            // Increases haste rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Increases the block value of your shield by (\\d{3}) for (\\d{2}) sec"))
+            {
+                string[] inputs = Regex.Split(line, "Increases the block value of your shield by (\\d{3}) for (\\d{2}) sec");
+                float block = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = block }, uptime, 120f));
+            }
+            // Increases haste rating by 183 for 20 sec.
+            else if (Regex.IsMatch(line, "Instantly heal your current friendly target for (\\d{4})."))
+            {
+                string[] inputs = Regex.Split(line, "Instantly heal your current friendly target for (\\d{4}).");
+                float heal = float.Parse(inputs[1]);
+                // unfortunately for us the cooldown isn't listed, so guess 2min.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = heal }, 0, 60f));
+            }
             else if (line.StartsWith("Increases your Spirit by "))
             {
                 // Bangle of Endless Blessings, Earring of Soulful Meditation
@@ -1884,8 +1884,8 @@ namespace Rawr {
                     int spi = int.Parse(m.Groups["spi"].Value);
                     int dur = int.Parse(m.Groups["dur"].Value);
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Spirit = spi }, dur, 120f));
-				}
-			}
+                }
+            }
             else if (line.StartsWith("Increases speed by "))
             {
                 // Figurine - Ruby Hare : "Increases speed by 30% for 6 sec. (3 Min Cooldown)"
@@ -1947,7 +1947,7 @@ namespace Rawr {
             else if (line.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power."))
             {
                 // Shifting Naaru Sliver
-				stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 320 }, 15f, 90.0f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 320 }, 15f, 90.0f));
             }
             else if ((match = Regex.Match(line, @"Each spell cast within 20 seconds will grant a stacking bonus of (?<mp5>\d+) mana regen per 5 sec.? Expires after (?<duration>\d+) seconds.*")).Success)
             {
@@ -2000,48 +2000,48 @@ namespace Rawr {
             // Figurine - Talasite Owl, 5 min cooldown
             else if (line.StartsWith("Restores 900 mana over 12 sec."))
             {
-				//if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
-				//    stats.ManaregenOver12SecOnUse3Min += 900;
-				//else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
-				//    stats.ManaregenOver12SecOnUse5Min += 900;
+                //if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
+                //    stats.ManaregenOver12SecOnUse3Min += 900;
+                //else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
+                //    stats.ManaregenOver12SecOnUse5Min += 900;
             }
             else if ((match = new Regex(@"Increases the block value of your shield by (?<amount>\d\d*) for 20 sec.").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 20.0f, 120.0f));
             }
-			/*else if (line.StartsWith("Your heals each cost "))
-			{
-				// Lower City Prayerbook
-				Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec");
-				Match m = r.Match(line);
-				if (m.Success)
-				{
-					stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
-				}
-			}*/
-			else if (line.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec"))
-			{
-				// The Skull of Gul'dan
+            /*else if (line.StartsWith("Your heals each cost "))
+            {
+                // Lower City Prayerbook
+                Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
+                }
+            }*/
+            else if (line.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec"))
+            {
+                // The Skull of Gul'dan
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 175 }, 20.0f, 120.0f));
-			}
-			else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket.")
+            }
+            else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket.")
                   || line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
-			{
-				//stats.Mp5OnCastFor20SecOnUse2Min += 21;
-			}
-			// Mind Quickening Gem
-			else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec"))
-			{
+            {
+                //stats.Mp5OnCastFor20SecOnUse2Min += 21;
+            }
+            // Mind Quickening Gem
+            else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec"))
+            {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 330 }, 20, 300));
-			}
+            }
 //			else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec"))
 //			{
 //				stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
 //			}
-			else if (line.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
-			{
-				stats.PVPTrinket += 1f;
-			}
+            else if (line.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
+            {
+                stats.PVPTrinket += 1f;
+            }
             else if (line.StartsWith("Increases the damage dealt by your Scourge Strike and Obliterate abilities by 420."))
             {
                 stats.BonusObliterateDamage += 420;
