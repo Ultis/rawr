@@ -37,6 +37,7 @@
             this.CK_UseFeint = new System.Windows.Forms.CheckBox();
             this.trackBarTrinketOffset = new System.Windows.Forms.TrackBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxCustom = new System.Windows.Forms.CheckBox();
             this.checkBoxTotT = new System.Windows.Forms.CheckBox();
             this.comboBoxCPG = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -67,8 +68,6 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxPTR = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBoxCustom = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
@@ -164,7 +163,6 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.checkBoxCustom);
-            this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.checkBoxTotT);
             this.groupBox1.Controls.Add(this.comboBoxCPG);
             this.groupBox1.Controls.Add(this.label12);
@@ -186,6 +184,17 @@
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Rotation";
+            // 
+            // checkBoxCustom
+            // 
+            this.checkBoxCustom.AutoSize = true;
+            this.checkBoxCustom.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxCustom.Name = "checkBoxCustom";
+            this.checkBoxCustom.Size = new System.Drawing.Size(197, 17);
+            this.checkBoxCustom.TabIndex = 12;
+            this.checkBoxCustom.Text = "Optimize using only Custom Rotation";
+            this.checkBoxCustom.UseVisualStyleBackColor = true;
+            this.checkBoxCustom.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // checkBoxTotT
             // 
@@ -563,27 +572,6 @@
             this.checkBoxPTR.UseVisualStyleBackColor = true;
             this.checkBoxPTR.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(100, 95);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(64, 17);
-            this.checkBox1.TabIndex = 11;
-            this.checkBox1.Text = "Rupture";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCustom
-            // 
-            this.checkBoxCustom.AutoSize = true;
-            this.checkBoxCustom.Location = new System.Drawing.Point(6, 19);
-            this.checkBoxCustom.Name = "checkBoxCustom";
-            this.checkBoxCustom.Size = new System.Drawing.Size(197, 17);
-            this.checkBoxCustom.TabIndex = 12;
-            this.checkBoxCustom.Text = "Optimize using only Custom Rotation";
-            this.checkBoxCustom.UseVisualStyleBackColor = true;
-            this.checkBoxCustom.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -664,6 +652,5 @@
         private System.Windows.Forms.CheckBox checkBoxTotT;
         private System.Windows.Forms.CheckBox checkBoxPTR;
         private System.Windows.Forms.CheckBox checkBoxCustom;
-        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
