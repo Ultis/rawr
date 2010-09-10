@@ -670,7 +670,7 @@ namespace Rawr
                                 break;
                             case CharacterRace.Tauren:
                                 S.Strength = 179;
-                                S.Agility = 108;
+                                S.Agility = 109;
                                 S.Stamina = 161;
                                 S.Intellect = 31;
                                 S.Spirit = 61;
