@@ -7,6 +7,7 @@ namespace Rawr.DPSWarr {
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
+            TalentsCata = Char == null || Char.WarriorTalentsCata == null ? new WarriorTalentsCata() : Char.WarriorTalentsCata;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
             BossOpts = (bossOpts == null ? new BossOptions() : bossOpts);
             StatS = stats;
@@ -79,6 +80,7 @@ namespace Rawr.DPSWarr {
         #region Global Variables
         public Stats StatS { get; set; }
         private WarriorTalents Talents;
+        private WarriorTalentsCata TalentsCata;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
         public BossOptions BossOpts { get; private set; }
         public Character Char { get; private set; }

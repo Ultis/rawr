@@ -216,6 +216,7 @@ namespace Rawr
                         {
                             case CharacterClass.Warrior:
                                 character.WarriorTalents = new WarriorTalents(talentCode);
+                                //character.WarriorTalentsCata = new WarriorTalentsCata(talentCode);
                                 if (character.WarriorTalents.Devastate > 0) character.CurrentModel = "ProtWarr";
                                 else character.CurrentModel = "DPSWarr";
                                 break;

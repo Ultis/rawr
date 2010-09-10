@@ -11,6 +11,7 @@ namespace Rawr.ProtWarr
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
         private WarriorTalents Talents;
+        //private WarriorTalentsCata TalentsCata;
         private DefendTable DefendTable;
         private ParryModel ParryModel;
 

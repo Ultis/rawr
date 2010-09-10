@@ -958,7 +958,14 @@ These numbers to do not include racial bonuses.",
                 WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
                 if (talents.TitansGrip > 0) {
                     return true;
-                } else {// if (character.MainHand.Slot != ItemSlot.TwoHand)
+                } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
+                    return base.IncludeOffHandInCalculations(character);
+                }
+            } else if (character.CurrentTalents is WarriorTalentsCata) {
+                WarriorTalentsCata talentsCata = (WarriorTalentsCata)character.CurrentTalentsCata;
+                if (talentsCata.TitansGrip > 0) {
+                    return true;
+                } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
                     return base.IncludeOffHandInCalculations(character);
                 }
             }
@@ -1227,6 +1234,7 @@ These numbers to do not include racial bonuses.",
                 };
 
                 WarriorTalents talents = character.WarriorTalents;
+                WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
                 //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
 
                 /*if (_cachedTalents == null || talents != _cachedTalents) {
@@ -1455,6 +1463,7 @@ These numbers to do not include racial bonuses.",
             if (dpswarchar.bossOpts == null) { dpswarchar.bossOpts = dpswarchar.Char.BossOptions; }
             if (dpswarchar.combatFactors == null) { dpswarchar.combatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.calcOpts, dpswarchar.bossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
+            WarriorTalentsCata talentsCata = dpswarchar.Char.WarriorTalentsCata;
 
             #region From Race
             Stats statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
@@ -1585,6 +1594,7 @@ These numbers to do not include racial bonuses.",
             }
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             WarriorTalents talents = character.WarriorTalents;
+            WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
             Rot.Initialize();
             Rot.MakeRotationandDoDPS(false, false);
             Rot.AddValidatedSpecialEffects(statsTotal, talents);
@@ -1944,8 +1954,8 @@ These numbers to do not include racial bonuses.",
         private Stats IterativeSpecialEffectsStats(DPSWarrCharacter charStruct, List<SpecialEffect> specialEffects, List<SpecialEffect> critEffects,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
             bool iterate, Stats iterateOld, Stats originalStats) {
-
                 WarriorTalents talents = charStruct.Char.WarriorTalents;
+                WarriorTalentsCata talentsCata = charStruct.Char.WarriorTalentsCata;
                 float fightDuration =
 #if RAWR3 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer;

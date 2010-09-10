@@ -77,7 +77,7 @@ namespace Rawr
             if (Spec == null) return null;
             TalentsBase spec;
             if (Class == CharacterClass.DeathKnight) spec = new DeathKnightTalents(Spec);
-            else if (Class == CharacterClass.Warrior) spec = new WarriorTalents(Spec);
+            else if (Class == CharacterClass.Warrior) /*if(CataMode) { spec = new WarriorTalentsCata(Spec); } else {*/spec = new WarriorTalents(Spec);/*}*/
             else if (Class == CharacterClass.Paladin) spec = new PaladinTalents(Spec);
             else if (Class == CharacterClass.Shaman) spec = new ShamanTalents(Spec);
             else if (Class == CharacterClass.Hunter) spec = new HunterTalents(Spec);

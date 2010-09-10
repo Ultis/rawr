@@ -107,14 +107,14 @@ namespace Rawr
         }
 
 #if RAWR3
-		public abstract TalentsBase Clone();
+        public abstract TalentsBase Clone();
 #endif
     }
 
     public partial class WarriorTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -795,10 +795,842 @@ namespace Rawr
         public int Shockwave { get { return _data[84]; } set { _data[84] = value; } }
     }
 
+    public partial class WarriorTalentsCata : TalentsBase
+#if RAWR3
+    {
+        public override TalentsBase Clone()
+#else
+, ICloneable
+    {
+        public WarriorTalentsCata Clone() { return (WarriorTalentsCata)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
+#endif
+        {
+            WarriorTalentsCata clone = (WarriorTalentsCata)MemberwiseClone();
+            clone._data = (int[])_data.Clone();
+            clone._glyphData = (bool[])_glyphData.Clone();
+            return clone;
+        }
+
+        private int[] _data = new int[61];
+        public override int[] Data { get { return _data; } }
+        public WarriorTalentsCata() { }
+        public WarriorTalentsCata(string talents) { LoadString(talents); }
+        public static string[] TreeNames = new[] { @"Arms", @"Fury", @"Protection" };
+        private const int ARMS = 0, FURY = 1, PROT = 2;
+        private const int COL1 = 1, COL2 = 2, COL3 = 3, COL4 = 4;
+        private const int ROW1 = 1, ROW2 = 2, ROW3 = 3, ROW4 = 4, ROW5 = 5, ROW6 = 6, ROW7 = 7;
+
+        #region Arms
+        #region Tier 1
+        /// <summary>
+        /// Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by [5*Pts]%.
+        /// </summary>
+        [TalentData(0, "War Academy", 3, ARMS, COL1, ROW1, -1, new[] {
+@"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 5%.",
+@"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 10%.",
+@"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 15%.",}, "ability_rogue_ambush")]
+        public int WarAcademy { get { return _data[0]; } set { _data[0] = value; } }
+        /// <summary>
+        /// Increases all healing recieved by [3*Pts]%, and the effectiveness of your self-healing abilities by an additional [5*Pts]%.
+        /// </summary>
+        [TalentData(1, "Field Dressing", 2, ARMS, COL2, ROW1, -1, new[] {
+@"Increases all healing recieved by 3%, and the effectiveness of your self-healing abilities by an additional 10%.",
+@"Increases all healing recieved by 6%, and the effectiveness of your self-healing abilities by an additional 20%.",}, "ability_parry")]
+        public int FieldDressing { get { return _data[1]; } set { _data[1] = value; } }
+        /// <summary>
+        /// Your Charge generates [5*Pts] additional rage and stuns an additional [1*Pts] nearby target(s).
+        /// </summary>
+        [TalentData(2, "Blitz", 2, ARMS, COL3, ROW1, -1, new[] {
+@"Your Charge generates 5 additional rage and stuns an additional nearby target.",
+@"Your Charge generates 10 additional rage and stuns an additional 2 nearby targets.",}, "ability_gouge")]
+        public int Blitz { get { return _data[2]; } set { _data[2] = value; } }
+        #endregion
+        #region Tier 2
+        /// <summary>
+        /// You retain up to an additional [5*Pts] of your rage points when you change stances.
+        /// </summary>
+        [TalentData(3, "Tactical Mastery", 2, ARMS, COL1, ROW2, -1, new[] {
+@"You retain up to an additional 25 of your rage when you change stances.",
+@"You retain up to an additional 50 of your rage when you change stances.",}, "spell_nature_enchantarmor")]
+        public int TacticalMastery { get { return _data[3]; } set { _data[3] = value; } }
+        /// <summary>
+        /// Whenever you are struck by a Stun or Immobilize effect you will generate [10*Pts] rage and [5*Pts]% of your total health over 10 sec.
+        /// </summary>
+        [TalentData(4, "Second Wind", 2, ARMS, COL2, ROW2, -1, new[] {
+@"Whenever you are struck by a Stun or Immobilize effect you will generate 10 rage and 5% of your total health over 10 sec.",
+@"Whenever you are struck by a Stun or Immobilize effect you will generate 20 rage and 10% of your total health over 10 sec.",}, "ability_hunter_harass")]
+        public int SecondWind { get { return _data[4]; } set { _data[4] = value; } }
+        /// <summary>
+        /// Your critical strikes cause the opponent to bleed, dealing [16*Pts]% of your melee weapon's average damage over 6 sec.
+        /// </summary>
+        [TalentData(5, "Deep Wounds", 3, ARMS, COL3, ROW2, -1, new[] {
+@"Your critical strikes cause the opponent to bleed, dealing 16% of your melee weapon's average damage over 6 sec.",
+@"Your critical strikes cause the opponent to bleed, dealing 32% of your melee weapon's average damage over 6 sec.",
+@"Your critical strikes cause the opponent to bleed, dealing 48% of your melee weapon's average damage over 6 sec.",}, "ability_backstab")]
+        public int DeepWounds { get { return _data[5]; } set { _data[5] = value; } }
+        /// <summary>
+        /// Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50*Pts]%
+        /// </summary>
+        [TalentData(6, "Drums of War", 2, ARMS, COL4, ROW2, -1, new[] {
+@"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50*Pts]%",
+@"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50*Pts]%",}, "ability_backstab")]
+        public int DrumsofWar { get { return _data[6]; } set { _data[6] = value; } }
+        #endregion
+        #region Tier 3
+        /// <summary>
+        /// Increases your Overpower critical strike chance by 20%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of your Overpower ability for 9 sec. This effect will not occur more than once every 6 sec.
+        /// </summary>
+        [TalentData(7, "Taste for Blood", 3, ARMS, COL1, ROW3, -1, new[] {
+@"Increases your Overpower critical strike chance by 20%. In addition, whenever your Rend ability causes damage, you have a 33% chance of allowing the use of your Overpower ability for 9 sec. This effect will not occur more than once every 6 sec.",
+@"Increases your Overpower critical strike chance by 40%. In addition, whenever your Rend ability causes damage, you have a 66% chance of allowing the use of your Overpower ability for 9 sec. This effect will not occur more than once every 6 sec.",
+@"Increases your Overpower critical strike chance by 60%. In addition, whenever your Rend ability causes damage, you have a 100% chance of allowing the use of your Overpower ability for 9 sec. This effect will not occur more than once every 6 sec.",}, "ability_rogue_hungerforblood")]
+        public int TasteForBlood { get { return _data[7]; } set { _data[7] = value; } }
+        /// <summary>
+        /// Your melee attacks strike an additional nearby opponent. Lasts 10 sec.
+        /// </summary>
+        [TalentData(8, "Sweeping Strikes", 1, ARMS, COL2, ROW3, -1, new[] {
+@"Your melee attacks strike an additional nearby opponent. Lasts 10 sec.",}, "ability_rogue_slicedice")]
+        public int SweepingStrikes { get { return _data[8]; } set { _data[8] = value; } }
+        /// <summary>
+        /// Increases the critical strike damage bonus of your Mortal Strike, Slam and Overpower by [10*Pts]%.
+        /// </summary>
+        [TalentData(9, "Impale", 2, ARMS, COL3, ROW3, 5, new[] {
+@"Increases the critical strike damage bonus of your Mortal Strike, Slam and Overpower by 10%.",
+@"Increases the critical strike damage bonus of your Mortal Strike, Slam and Overpower by 20%.",}, "ability_searingarrow")]
+        public int Impale { get { return _data[9]; } set { _data[9] = value; } }
+        /// <summary>
+        /// When applying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every [1;60|2;30] sec.
+        /// </summary>
+        [TalentData(10, "Improved Hamstring", 2, ARMS, COL4, ROW3, -1, new[] {
+@"When applying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 60 sec.",
+@"When applying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 30 sec.",}, "ability_shockwave")]
+        public int ImprovedHamstring { get { return _data[10]; } set { _data[10] = value; } }
+        #endregion
+        #region Tier 4
+        /// <summary>
+        /// Decreases the swing time of your Slam ability by [0.5 * Pts] sec and increases its damage by [10*Pts]%.
+        /// </summary>
+        [TalentData(11, "Improved Slam", 2, ARMS, COL1, ROW4, -1, new[] {
+@"Decreases the swing time of your Slam ability by 0.5 sec and increases its damage by 10%.",
+@"Decreases the swing time of your Slam ability by 1 sec and increases its damage by 20%.",}, "ability_warrior_decisivestrike")]
+        public int ImprovedSlam { get { return _data[11]; } set { _data[11] = value; } }
+        /// <summary>
+        /// For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.
+        /// </summary>
+        [TalentData(12, "Deadly Calm", 1, ARMS, COL2, ROW4, -1, new[] {
+@"For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.",}, "ability_warrior_decisivestrike")]
+        public int DeadlyCalm { get { return _data[12]; } set { _data[12] = value; } }
+        /// <summary>
+        /// Your bleeds cause targets to take an extra [2*Pts]% physical damage and [15*Pts]% bleed damage. In addition, improves your melee attack speed by [2.5*Pts]%.
+        /// </summary>
+        [TalentData(13, "Blood Frenzy", 2, ARMS, COL3, ROW4, -1, new[] {
+@"Your bleeds cause targets to take an extra 2% physical damage and 15% bleed damage. In addition, improves your melee attack speed by 3%.",
+@"Your bleeds cause targets to take an extra 4% physical damage and 30% bleed damage. In addition, improves your melee attack speed by 5%.",}, "ability_warrior_bloodfrenzy")]
+        public int BloodFrenzy { get { return _data[13]; } set { _data[13] = value; } }
+        #endregion
+        #region Tier 5
+        /// <summary>
+        /// After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause [10*Pts]% more damage.
+        /// </summary>
+        [TalentData(14, "Lambs to the Slaughter", 3, ARMS, COL1, ROW5, -1, new[] {
+@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 10% more damage.",
+@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 20% more damage.",
+@"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 30% more damage.",}, "ability_warrior_charge")]
+        public int LambstotheSlaughter { get { return _data[14]; } set { _data[14] = value; } }
+        /// <summary>
+        /// Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.
+        /// </summary>
+        [TalentData(15, "Juggernaut", 1, ARMS, COL2, ROW5, -1, new[] {
+@"Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.",}, "ability_warrior_bullrush")]
+        public int Juggernaut { get { return _data[15]; } set { _data[15] = value; } }
+        /// <summary>
+        /// Your melee hits have a [5*Pts]% chance of resetting the cooldown on your Colossus Smash and you keep [5*Pts] rage after using Execute.
+        /// </summary>
+        [TalentData(16, "Sudden Death", 2, ARMS, COL4, ROW5, -1, new[] {
+@"Your melee hits have a 5% chance of resetting the cooldown on your Colossus Smash and you keep 5 rage after using Execute.",
+@"Your melee hits have a 10% chance of resetting the cooldown on your Colossus Smash and you keep 10 rage after using Execute.",}, "ability_warrior_improveddisciplines")]
+        public int SuddenDeath { get { return _data[16]; } set { _data[16] = value; } }
+        #endregion
+        #region Tier 6
+        /// <summary>
+        /// Your Mortal Strike critical hits have a [100/3*Pts]% chance to Enrage you, increasing all damage caused by [10/3*Pts]% for 12 sec.
+        /// </summary>
+        [TalentData(17, "Wrecking Crew", 3, ARMS, COL1, ROW6, -1, new[] {
+@"Your Mortal Strike critical hits have a 33% chance to Enrage you, increasing all damage caused by 3% for 12 sec.",
+@"Your Mortal Strike critical hits have a 66% chance to Enrage you, increasing all damage caused by 6% for 12 sec.",
+@"Your Mortal Strike critical hits have a 100% chance to Enrage you, increasing all damage caused by 10% for 12 sec.",}, "ability_warrior_trauma")]
+        public int WreckingCrew { get { return _data[17]; } set { _data[17] = value; } }
+        /// <summary>
+        /// Knocks the target to the ground and stuns it for 5 sec.
+        /// </summary>
+        [TalentData(18, "Throwdown", 1, ARMS, COL3, ROW6, 15, new[] {
+@"Knocks the target to the ground and stuns it for 5 sec.",}, "ability_warrior_trauma")]
+        public int Throwdown { get { return _data[18]; } set { _data[18] = value; } }
+        #endregion
+        #region Tier 7
+        /// <summary>
+        /// Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.
+        /// </summary>
+        [TalentData(19, "Bladestorm", 1, ARMS, COL2, ROW7, 15, new[] {
+@"Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.",}, "ability_warrior_bladestorm")]
+        public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Unused Talents
+        /*/// <summary>
+        /// Increases the amount of rage generated by your Charge ability by [5 * Pts]
+        /// </summary>
+        [TalentData(3, "Improved Charge", 2, 0, 1, 2, -1, new[] {
+@"Increases the amount of rage generated by your Charge ability by 5.",
+@"Increases the amount of rage generated by your Charge ability by 10.",}, "ability_warrior_charge")]
+        public int ImprovedCharge { get { return _data[3]; } set { _data[3] = value; } }
+        /// <summary>
+        /// Reduces the duration of all Stun and Charm effects used against you by [20 / 3 * Pts]%.
+        /// </summary>
+        [TalentData(4, "Iron Will", 3, 0, 2, 2, -1, new[] {
+@"Reduces the duration of all Stun and Charm effects used against you by 7%.",
+@"Reduces the duration of all Stun and Charm effects used against you by 14%.",
+@"Reduces the duration of all Stun and Charm effects used against you by 20%.",}, "spell_magic_magearmor")]
+        public int IronWill { get { return _data[4]; } set { _data[4] = value; } }
+        /// <summary>
+        /// Increases the critical strike chance of your Overpower ability by [25 * Pts]%.
+        /// </summary>
+        [TalentData(6, "Improved Overpower", 2, 0, 1, 3, -1, new[] {
+@"Increases the critical strike chance of your Overpower ability by 25%.",
+@"Increases the critical strike chance of your Overpower ability by 50%.",}, "inv_sword_05")]
+        public int ImprovedOverpower { get { return _data[6]; } set { _data[6] = value; } }
+        /// <summary>
+        /// Generates 1 rage per 3 seconds.
+        /// </summary>
+        [TalentData(7, "Anger Management", 1, 0, 2, 3, -1, new[] {
+@"Generates 1 rage per 3 seconds.",}, "spell_holy_blessingofstamina")]
+        public int AngerManagement { get { return _data[7]; } set { _data[7] = value; } }
+        /// <summary>
+        /// Increases the damage you deal with two-handed melee weapons by [2 * Pts]%.
+        /// </summary>
+        [TalentData(10, "Two-Handed Weapon Specialization", 3, 0, 2, 4, -1, new[] {
+@"Increases the damage you deal with two-handed melee weapons by 2%.",
+@"Increases the damage you deal with two-handed melee weapons by 4%.",
+@"Increases the damage you deal with two-handed melee weapons by 6%.",}, "inv_axe_09")]
+        public int TwoHandedWeaponSpecialization { get { return _data[10]; } set { _data[10] = value; } }
+        /// <summary>
+        /// Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by [1 * Pts]%.
+        /// </summary>
+        [TalentData(12, "Poleaxe Specialization", 5, 0, 1, 5, -1, new[] {
+@"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 1%.",
+@"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 2%.",
+@"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 3%.",
+@"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 4%.",
+@"Increases your chance to get a critical strike and the critical damage caused with Axes and Polearms by 5%.",}, "inv_axe_06")]
+        public int PoleaxeSpecialization { get { return _data[12]; } set { _data[12] = value; } }
+        /// <summary>
+        /// Your attacks with maces ignore up to [3 * Pts]% of your opponent's armor.
+        /// </summary>
+        [TalentData(14, "Mace Specialization", 5, 0, 3, 5, -1, new[] {
+@"Your attacks with maces ignore up to 3% of your opponent's armor.",
+@"Your attacks with maces ignore up to 6% of your opponent's armor.",
+@"Your attacks with maces ignore up to 9% of your opponent's armor.",
+@"Your attacks with maces ignore up to 12% of your opponent's armor.",
+@"Your attacks with maces ignore up to 15% of your opponent's armor.",}, "inv_mace_01")]
+        public int MaceSpecialization { get { return _data[14]; } set { _data[14] = value; } }
+        /// <summary>
+        /// Gives you a [2 * Pts]% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.
+        /// </summary>
+        [TalentData(15, "Sword Specialization", 5, 0, 4, 5, -1, new[] {
+@"Gives you a 2% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.",
+@"Gives you a 4% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.",
+@"Gives you a 6% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.",
+@"Gives you a 8% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.",
+@"Gives you a 10% chance to get an extra attack on the same target after hitting your target with your Sword.  This effect cannot occur more than once every 6 seconds.",}, "inv_sword_27")]
+        public int SwordSpecialization { get { return _data[15]; } set { _data[15] = value; } }
+        /// <summary>
+        /// Reduces the chance for your attacks to be dodged by [1 * Pts]% and reduces the duration of all Disarm effects used against you by [25 * Pts]%.  This does not stack with other Disarm duration reducing effects.
+        /// </summary>
+        [TalentData(16, "Weapon Mastery", 2, 0, 1, 6, -1, new[] {
+@"Reduces the chance for your attacks to be dodged by 1% and reduces the duration of all Disarm effects used against you by 25%.  This does not stack with other Disarm duration reducing effects.",
+@"Reduces the chance for your attacks to be dodged by 2% and reduces the duration of all Disarm effects used against you by 50%.  This does not stack with other Disarm duration reducing effects.",}, "ability_warrior_weaponmastery")]
+        public int WeaponMastery { get { return _data[16]; } set { _data[16] = value; } }
+        /// <summary>
+        /// Your melee critical strikes increase the effectiveness of Bleed effects on the target by [15 * Pts]% for 1 min.
+        /// </summary>
+        [TalentData(18, "Trauma", 2, 0, 4, 6, -1, new[] {
+@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 15% for 1 min.",
+@"Your melee critical strikes increase the effectiveness of Bleed effects on the target by 30% for 1 min.",}, "ability_warrior_bloodnova")]
+        public int Trauma { get { return _data[18]; } set { _data[18] = value; } }
+        /// <summary>
+        /// A vicious strike that deals weapon damage plus 85 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.
+        /// </summary>
+        [TalentData(20, "Mortal Strike", 1, 0, 2, 7, 13, new[] {
+@"A vicious strike that deals weapon damage plus 85 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",}, "ability_warrior_savageblow")]
+        public int MortalStrike { get { return _data[20]; } set { _data[20] = value; } }
+        /// <summary>
+        /// Increases your total Strength and Stamina by [2 * Pts]% and your Expertise by [2 * Pts]
+        /// </summary>
+        [TalentData(21, "Strength of Arms", 2, 0, 3, 7, -1, new[] {
+@"Increases your total Strength and Stamina by 2% and your Expertise by 2.",
+@"Increases your total Strength and Stamina by 4% and your Expertise by 4.",}, "ability_warrior_offensivestance")]
+        public int StrengthOfArms { get { return _data[21]; } set { _data[21] = value; } }
+        /// <summary>
+        /// Increases the damage caused by your Mortal Strike ability by [10 / 3 * Pts]% and reduces the cooldown by [0.3 * Pts] sec.
+        /// </summary>
+        [TalentData(24, "Improved Mortal Strike", 3, 0, 2, 8, 20, new[] {
+@"Increases the damage caused by your Mortal Strike ability by 3% and reduces the cooldown by 0.3 sec.",
+@"Increases the damage caused by your Mortal Strike ability by 6% and reduces the cooldown by 0.7 sec.",
+@"Increases the damage caused by your Mortal Strike ability by 10% and reduces the cooldown by 1 sec.",}, "ability_warrior_savageblow")]
+        public int ImprovedMortalStrike { get { return _data[24]; } set { _data[24] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Overpower and Revenge abilities by [2 * Pts] secs and increases the damage done by both abilities by [10 * Pts]%.  In addition, if you strike a player with Overpower while they are casting, their magical damage and healing will be reduced by [25 * Pts]% for 6 sec.
+        /// </summary>
+        [TalentData(25, "Unrelenting Assault", 2, 0, 3, 8, -1, new[] {
+@"Reduces the cooldown of your Overpower and Revenge abilities by 2 secs and increases the damage done by both abilities by 10%.  In addition, if you strike a player with Overpower while they are casting, their magical damage and healing will be reduced by 25% for 6 sec.",
+@"Reduces the cooldown of your Overpower and Revenge abilities by 4 secs and increases the damage done by both abilities by 20%.  In addition, if you strike a player with Overpower while they are casting, their magical damage and healing will be reduced by 50% for 6 sec.",}, "ability_warrior_unrelentingassault")]
+        public int UnrelentingAssault { get { return _data[25]; } set { _data[25] = value; } }
+        /// <summary>
+        /// You generate 25% more rage from damage dealt.
+        /// </summary>
+        [TalentData(27, "Endless Rage", 1, 0, 2, 9, -1, new[] {
+@"You generate 25% more rage from damage dealt.",}, "ability_warrior_endlessrage")]
+        public int EndlessRage { get { return _data[27]; } set { _data[27] = value; } }*/
+        #endregion
+        #endregion
+        #region Fury
+        #region Tier 1
+        /// <summary>
+        /// After taking any damage, you have a 10% chance to regenerate [2.5*Pts]% of your total Health over 5.
+        /// </summary>
+        [TalentData(20, "Blood Craze", 3, FURY, COL1, ROW1, -1, new[] {
+@"After taking any damage, you have a 10% chance to regenerate 2.5% of your total Health over 5.",
+@"After taking any damage, you have a 10% chance to regenerate 5% of your total Health over 5.",
+@"After taking any damage, you have a 10% chance to regenerate 7.5% of your total Health over 5.",}, "spell_shadow_summonimp")]
+        public int BloodCraze { get { return _data[20]; } set { _data[20] = value; } }
+        /// <summary>
+        /// Your Bloodthirst, Mortal Strike and Shield Slam hits have a [5*Pts]% chance to make your next special attack consume no rage.
+        /// </summary>
+        [TalentData(21, "Battle Trance", 3, FURY, COL2, ROW1, -1, new[] {
+@"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 5% chance to make your next special attack consume no rage.",
+@"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 10% chance to make your next special attack consume no rage.",
+@"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 15% chance to make your next special attack consume no rage.",}, "spell_shadow_summonimp")]
+        public int BattleTrance { get { return _data[21]; } set { _data[21] = value; } }
+        /// <summary>
+        /// Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by [5*Pts]%.
+        /// </summary>
+        [TalentData(22, "Cruelty", 2, FURY, COL3, ROW1, -1, new[] {
+@"Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by 5%.",
+@"Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by 10%.",}, "ability_rogue_eviscerate")]
+        public int Cruelty { get { return _data[22]; } set { _data[22] = value; } }
+        #endregion
+        #region Tier 2
+        /// <summary>
+        /// Your Execute hits have a [50*Pts]% chance to improve your melee attack speed by 5% for 9 sec. This effect stacks up to 5 times.
+        /// </summary>
+        [TalentData(23, "Executioner", 2, FURY, COL1, ROW2, -1, new[] {
+@"Your Execute hits have a 50% chance to improve your melee attack speed by 5% for 9 sec. This effect stacks up to 5 times.",
+@"Your Execute hits have a 100% chance to improve your melee attack speed by 5% for 9 sec. This effect stacks up to 5 times.",}, "inv_sword_48")]
+        public int ImprovedExecute { get { return _data[23]; } set { _data[23] = value; } }
+        /// <summary>
+        /// Reduces the cooldown by [15*Pts] sec and increases the rage generated by [5*Pts] of your Battle Shout and Commanding Shout.
+        /// </summary>
+        [TalentData(24, "Booming Voice", 2, FURY, COL2, ROW2, -1, new[] {
+@"Reduces the cooldown by 15 sec and increases the rage generated by 5 of your Battle Shout and Commanding Shout.",
+@"Reduces the cooldown by 30 sec and increases the rage generated by 10 of your Battle Shout and Commanding Shout.",}, "spell_nature_purge")]
+        public int BoomingVoice { get { return _data[24]; } set { _data[24] = value; } }
+        /// <summary>
+        /// Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for [15*Pts] sec.
+        /// </summary>
+        [TalentData(25, "Rude Interruption", 2, FURY, COL3, ROW2, -1, new[] {
+@"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 15 sec.",
+@"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 30 sec.",}, "spell_nature_purge")]
+        public int RudeInterruption { get { return _data[25]; } set { _data[25] = value; } }
+        /// <summary>
+        /// Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.
+        /// </summary>
+        [TalentData(26, "Piercing Howl", 1, FURY, COL4, ROW2, -1, new[] {
+@"Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.",}, "spell_shadow_deathscream")]
+        public int PiercingHowl { get { return _data[26]; } set { _data[26] = value; } }
+        #endregion
+        #region Tier 3
+        /// <summary>
+        /// Increases your attack speed by [8*Pts]% for your next 3 swings after dealing a melee critical strike.
+        /// </summary>
+        [TalentData(27, "Flurry", 3, FURY, COL1, ROW3, -1, new[] {
+@"Increases your attack speed by 8% for your next 3 swings after dealing a melee critical strike.",
+@"Increases your attack speed by 16% for your next 3 swings after dealing a melee critical strike.",
+@"Increases your attack speed by 25% for your next 3 swings after dealing a melee critical strike.",}, "ability_ghoulfrenzy")]
+        public int Flurry { get { return _data[27]; } set { _data[27] = value; } }
+        /// <summary>
+        /// When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.
+        /// </summary>
+        [TalentData(28, "Death Wish", 1, FURY, COL2, ROW3, -1, new[] {
+@"When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.",}, "spell_shadow_deathpact")]
+        public int DeathWish { get { return _data[28]; } set { _data[28] = value; } }
+        /// <summary>
+        /// Your melee hits have a [3*Pts]% chance to Enrage you, giving you are [10/3*Pts]% damage bonus for 9 sec.
+        /// </summary>
+        [TalentData(29, "Enrage", 3, FURY, COL3, ROW3, -1, new[] {
+@"Your melee hits have a 3% chance to Enrage you, giving you are 3% damage bonus for 9 sec.",
+@"Your melee hits have a 6% chance to Enrage you, giving you are 7% damage bonus for 9 sec.",
+@"Your melee hits have a 9% chance to Enrage you, giving you are 10% damage bonus for 9 sec.",}, "spell_shadow_unholyfrenzy")]
+        public int Enrage { get { return _data[29]; } set { _data[29] = value; } }
+        #endregion
+        #region Tier 4
+        /// <summary>
+        /// Increases your parry chance by 100% for [4*Pts] sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.
+        /// </summary>
+        [TalentData(30, "Die by the Sword", 2, FURY, COL1, ROW4, -1, new[] {
+@"Increases your parry chance by 100% for 4 sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.",
+@"Increases your parry chance by 100% for 8 sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.",}, "spell_shadow_unholyfrenzy")]
+        public int DiebytheSword { get { return _data[30]; } set { _data[30] = value; } }
+        /// <summary>
+        /// Increases your parry chance by 100% for [4*Pts] sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.
+        /// </summary>
+        [TalentData(31, "Raging Blow", 1, FURY, COL2, ROW4, 28, new[] {
+@"A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.",}, "spell_shadow_unholyfrenzy")]
+        public int RagingBlow { get { return _data[31]; } set { _data[31] = value; } }
+        /// <summary>
+        /// Increases ranged and melee critical hit chance of all party and raid members within 100 yds by 5%. In addition, improves your critical strike chance by an addition 2%.
+        /// </summary>
+        [TalentData(32, "Rampage", 1, FURY, COL3, ROW4, 31, new[] {
+@"Increases ranged and melee critical hit chance of all party and raid members within 100 yds by 5%. In addition, improves your critical strike chance by an addition 2%.",}, "ability_warrior_rampage")]
+        public int Rampage { get { return _data[32]; } set { _data[32] = value; } }
+        /// <summary>
+        /// Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.
+        /// </summary>
+        [TalentData(33, "Heroic Fury", 1, FURY, COL4, ROW4, -1, new[] {
+@"Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.",}, "ability_heroicleap")]
+        public int HeroicFury { get { return _data[33]; } set { _data[33] = value; } }
+        #endregion
+        #region Tier 5
+        /// <summary>
+        /// Your autoattacks have a chance to reduce all healing done to the target by 25% for 10 sec.
+        /// </summary>
+        [TalentData(34, "Furious Attacks", 1, FURY, COL1, ROW5, -1, new[] {
+@"Your autoattacks have a chance to reduce all healing done to the target by 25% for 10 sec.",}, "ability_warrior_furiousresolve")]
+        public int FuriousAttacks { get { return _data[34]; } set { _data[34] = value; } }
+        /// <summary>
+        /// Your autoattacks have a chance to reduce all healing done to the target by 25% for 10 sec.
+        /// </summary>
+        [TalentData(35, "Meat Cleaver", 2, FURY, COL3, ROW5, -1, new[] {
+@"Your Cleave and Whirlwind have a 50% chance to increase the damage of your next Cleave or Whirlwind by an additional 10%.",
+@"Your Cleave and Whirlwind have a 100% chance to increase the damage of your next Cleave or Whirlwind by an additional 20%.",}, "ability_warrior_furiousresolve")]
+        public int MeatCleaver { get { return _data[35]; } set { _data[35] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by [10 * Pts]%.
+        /// </summary>
+        [TalentData(36, "Intensify Rage", 2, FURY, COL4, ROW5, -1, new[] {
+@"Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by 10%.",
+@"Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by 20%.",}, "ability_warrior_endlessrage")]
+        public int IntensifyRage { get { return _data[36]; } set { _data[36] = value; } }
+        #endregion
+        #region Tier 6
+        /// <summary>
+        /// Your Bloodthirst hits have a [10*Pts]% chance of making your next Slam instant for 10 sec.
+        /// </summary>
+        [TalentData(37, "Bloodsurge", 3, FURY, COL2, ROW6, 31, new[] {
+@"Your Bloodthirst hits have a 10% chance of making your next Slam instant for 10 sec.",
+@"Your Bloodthirst hits have a 20% chance of making your next Slam instant for 10 sec.",
+@"Your Bloodthirst hits have a 30% chance of making your next Slam instant for 10 sec.",}, "ability_warrior_bloodsurge")]
+        public int Bloodsurge { get { return _data[37]; } set { _data[37] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Intercept by [5*Pts] sec and your Heroic Leap by [15*Pts] sec.
+        /// </summary>
+        [TalentData(38, "Skirmisher", 2, FURY, COL3, ROW6, -1, new[] {
+@"Reduces the cooldown of your Intercept by 5 sec and your Heroic Leap by 15 sec.",
+@"Reduces the cooldown of your Intercept by 10 sec and your Heroic Leap by 30 sec.",}, "ability_warrior_bloodsurge")]
+        public int Skirmisher { get { return _data[38]; } set { _data[38] = value; } }
+        #endregion
+        #region Tier 7
+        /// <summary>
+        /// Allows you to equip two-handed axes, maces and swords in one hand. While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.
+        /// </summary>
+        [TalentData(39, "Titan's Grip", 1, FURY, COL2, ROW7, -1, new[] {
+@"Allows you to equip two-handed axes, maces and swords in one hand. While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.",}, "ability_warrior_titansgrip")]
+        public int TitansGrip { get { return _data[39]; } set { _data[39] = value; } }
+        /// <summary>
+        /// When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.
+        /// </summary>
+        [TalentData(40, "Single-Minded Fury", 1, FURY, COL3, ROW7, -1, new[] {
+@"When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.",}, "ability_warrior_titansgrip")]
+        public int SingleMindedFury { get { return _data[40]; } set { _data[40] = value; } }
+        #endregion
+        #region Unused Talents
+        /*/// <summary>
+        /// Increases your attack power by [1 * Pts] for every 108 armor value you have.
+        /// </summary>
+        [TalentData(31, "Armored to the Teeth", 3, FURY, 1, 1, -1, new[] {
+@"Increases your attack power by 1 for every 108 armor value you have.",
+@"Increases your attack power by 2 for every 108 armor value you have.",
+@"Increases your attack power by 3 for every 108 armor value you have.",}, "inv_shoulder_22")]
+        public int ArmoredToTheTeeth { get { return _data[31]; } set { _data[31] = value; } }
+        /// <summary>
+        /// Increases the melee attack power reduction of your Demoralizing Shout by [8 * Pts]%.
+        /// </summary>
+        [TalentData(34, "Improved Demoralizing Shout", 5, FURY, 2, 2, -1, new[] {
+@"Increases the melee attack power reduction of your Demoralizing Shout by 8%.",
+@"Increases the melee attack power reduction of your Demoralizing Shout by 16%.",
+@"Increases the melee attack power reduction of your Demoralizing Shout by 24%.",
+@"Increases the melee attack power reduction of your Demoralizing Shout by 32%.",
+@"Increases the melee attack power reduction of your Demoralizing Shout by 40%.",}, "ability_warrior_warcry")]
+        public int ImprovedDemoralizingShout { get { return _data[34]; } set { _data[34] = value; } }
+        /// <summary>
+        /// Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 4).
+        /// </summary>
+        [TalentData(35, "Unbridled Wrath", 5, FURY, 3, 2, -1, new[] {
+@"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.",
+@"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 1).",
+@"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 2).",
+@"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 3).",
+@"Gives you a chance to generate an additional rage point when you deal melee damage with a weapon.  Effect occurs more often than Unbridled Wrath (Rank 4).",}, "spell_nature_stoneclawtotem")]
+        public int UnbridledWrath { get { return _data[35]; } set { _data[35] = value; } }
+        /// <summary>
+        /// Increases the bonus damage done by your Cleave ability by [40 * Pts]%.
+        /// </summary>
+        [TalentData(36, "Improved Cleave", 3, FURY, 1, 3, -1, new[] {
+@"Increases the bonus damage done by your Cleave ability by 40%.",
+@"Increases the bonus damage done by your Cleave ability by 80%.",
+@"Increases the bonus damage done by your Cleave ability by 120%.",}, "ability_warrior_cleave")]
+        public int ImprovedCleave { get { return _data[36]; } set { _data[36] = value; } }
+        /// <summary>
+        /// Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by [5 * Pts]%.
+        /// </summary>
+        [TalentData(39, "Commanding Presence", 5, FURY, 4, 3, -1, new[] {
+@"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 5%.",
+@"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 10%.",
+@"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 15%.",
+@"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 20%.",
+@"Increases the melee attack power bonus of your Battle Shout and the health bonus of your Commanding Shout by 25%.",}, "spell_nature_focusedmind")]
+        public int CommandingPresence { get { return _data[39]; } set { _data[39] = value; } }
+        /// <summary>
+        /// Increases the damage done by your offhand weapon by [5 * Pts]%.
+        /// </summary>
+        [TalentData(40, "Dual Wield Specialization", 5, FURY, 1, 4, -1, new[] {
+@"Increases the damage done by your offhand weapon by 5%.",
+@"Increases the damage done by your offhand weapon by 10%.",
+@"Increases the damage done by your offhand weapon by 15%.",
+@"Increases the damage done by your offhand weapon by 20%.",
+@"Increases the damage done by your offhand weapon by 25%.",}, "ability_dualwield")]
+        public int DualWieldSpecialization { get { return _data[40]; } set { _data[40] = value; } }
+        /// <summary>
+        /// Increases your chance to hit with melee weapons by [1 * Pts]%.
+        /// </summary>
+        [TalentData(43, "Precision", 3, FURY, 1, 5, -1, new[] {
+@"Increases your chance to hit with melee weapons by 1%.",
+@"Increases your chance to hit with melee weapons by 2%.",
+@"Increases your chance to hit with melee weapons by 3%.",}, "ability_marksmanship")]
+        public int Precision { get { return _data[43]; } set { _data[43] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Intercept ability by [5 * Pts] sec.
+        /// </summary>
+        [TalentData(45, "Improved Intercept", 2, FURY, 3, 5, -1, new[] {
+@"Reduces the cooldown of your Intercept ability by 5 sec.",
+@"Reduces the cooldown of your Intercept ability by 10 sec.",}, "ability_rogue_sprint")]
+        public int ImprovedIntercept { get { return _data[45]; } set { _data[45] = value; } }
+        /// <summary>
+        /// The Berserker Rage ability will generate [10 * Pts] rage when used.
+        /// </summary>
+        [TalentData(46, "Improved Berserker Rage", 2, FURY, 1, 6, -1, new[] {
+@"The Berserker Rage ability will generate 10 rage when used.",
+@"The Berserker Rage ability will generate 20 rage when used.",}, "spell_nature_ancestralguardian")]
+        public int ImprovedBerserkerRage { get { return _data[46]; } set { _data[46] = value; } }
+        /// <summary>
+        /// Instantly attack the target causing 5 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.
+        /// </summary>
+        [TalentData(49, "Bloodthirst", 1, FURY, 2, 7, 44, new[] {
+@"Instantly attack the target causing 5 damage.  In addition, the next 3 successful melee attacks will restore 1% of max health.  This effect lasts 8 sec.  Damage is based on your attack power.",}, "spell_nature_bloodlust")]
+        public int Bloodthirst { get { return _data[49]; } set { _data[49] = value; } }
+        /// <summary>
+        /// Increases the damage of your Whirlwind ability by [10 * Pts]%.
+        /// </summary>
+        [TalentData(50, "Improved Whirlwind", 2, FURY, 4, 7, -1, new[] {
+@"Increases the damage of your Whirlwind ability by 10%.",
+@"Increases the damage of your Whirlwind ability by 20%.",}, "ability_whirlwind")]
+        public int ImprovedWhirlwind { get { return _data[50]; } set { _data[50] = value; } }
+        /// <summary>
+        /// Increases Strength by [4 * Pts]% and reduces threat caused by [2 * Pts]% while in Berserker Stance.
+        /// </summary>
+        [TalentData(52, "Improved Berserker Stance", 5, FURY, 4, 8, -1, new[] {
+@"Increases Strength by 4% and reduces threat caused by 2% while in Berserker Stance.",
+@"Increases Strength by 8% and reduces threat caused by 4% while in Berserker Stance.",
+@"Increases Strength by 12% and reduces threat caused by 6% while in Berserker Stance.",
+@"Increases Strength by 16% and reduces threat caused by 8% while in Berserker Stance.",
+@"Increases Strength by 20% and reduces threat caused by 10% while in Berserker Stance.",}, "ability_racial_avatar")]
+        public int ImprovedBerserkerStance { get { return _data[52]; } set { _data[52] = value; } }
+        /// <summary>
+        /// Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by [2 * Pts]%.
+        /// </summary>
+        [TalentData(56, "Unending Fury", 5, FURY, 2, 10, -1, new[] {
+@"Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by 2%.",
+@"Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by 4%.",
+@"Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by 6%.",
+@"Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by 8%.",
+@"Increases the damage done by your Slam, Whirlwind and Bloodthirst abilities by 10%.",}, "ability_warrior_intensifyrage")]
+        public int UnendingFury { get { return _data[56]; } set { _data[56] = value; } }*/
+        #endregion
+        #endregion
+        #region Prot
+        #region Tier 1
+        /// <summary>
+        /// Increases the critical strike chance of your Heroic Strikeby [5*Pts]%, and your Heroic Strike critical strikes have a [100/3*Pts]% chance to make your next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.
+        /// </summary>
+        [TalentData(41, "Incite", 3, PROT, COL1, ROW1, -1, new[] {
+@"Increases the critical strike chance of your Heroic Strikeby 5%, and your Heroic Strike critical strikes have a 33% chance to make your next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",
+@"Increases the critical strike chance of your Heroic Strikeby 10%, and your Heroic Strike critical strikes have a 66% chance to make your next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",
+@"Increases the critical strike chance of your Heroic Strikeby 15%, and your Heroic Strike critical strikes have a 100% chance to make your next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",}, "ability_warrior_incite")]
+        public int Incite { get { return _data[41]; } set { _data[41] = value; } }
+        /// <summary>
+        /// Increases your armor value from items by [10/3*Pts]%.
+        /// </summary>
+        [TalentData(42, "Toughness", 3, PROT, COL2, ROW1, -1, new[] {
+@"Increases your armor value from items by 3%.",
+@"Increases your armor value from items by 6%.",
+@"Increases your armor value from items by 10%.",}, "spell_holy_devotion")]
+        public int Toughness { get { return _data[42]; } set { _data[42] = value; } }
+        /// <summary>
+        /// When you Thunder Clap a target affected by your Rend, you have a [50*Pts]% chance to affect every target with Rend.
+        /// </summary>
+        [TalentData(43, "Blood and Thunder", 3, PROT, COL3, ROW1, -1, new[] {
+@"When you Thunder Clap a target affected by your Rend, you have a 50% chance to affect every target with Rend.",
+@"When you Thunder Clap a target affected by your Rend, you have a 100% chance to affect every target with Rend.",}, "spell_holy_devotion")]
+        public int BloodandThunder { get { return _data[43]; } set { _data[43] = value; } }
+        #endregion
+        #region Tier 2
+        /// <summary>
+        /// You generate [5*Pts] extra rage when you block an attack. You generate [20*Pts] extra rage when you Spell Reflect a magic attack.
+        /// </summary>
+        [TalentData(44, "Shield Specialization", 3, PROT, COL1, ROW2, -1, new[] {
+@"You generate 5 extra rage when you block an attack. You generate 20 extra rage when you Spell Reflect a magic attack.",
+@"You generate 10 extra rage when you block an attack. You generate 40 extra rage when you Spell Reflect a magic attack.",
+@"You generate 15 extra rage when you block an attack. You generate 60 extra rage when you Spell Reflect a magic attack.",}, "inv_shield_06")]
+        public int ShieldSpecialization { get { return _data[44]; } set { _data[44] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Shield Block by [10*Pts] sec, your Shield Wall by [60*Pts] sec and your Spell Reflect by [1*Pts] sec.
+        /// </summary>
+        [TalentData(45, "Shield Mastery", 3, PROT, COL2, ROW2, -1, new[] {
+@"Reduces the cooldown of your Shield Block by 10 sec, your Shield Wall by 60 sec and your Spell Reflect by 1 sec.",
+@"Reduces the cooldown of your Shield Block by 20 sec, your Shield Wall by 120 sec and your Spell Reflect by 2 sec.",
+@"Reduces the cooldown of your Shield Block by 30 sec, your Shield Wall by 180 sec and your Spell Reflect by 3 sec.",}, "inv_shield_06")]
+        public int ShieldMastery { get { return _data[45]; } set { _data[45] = value; } }
+        /// <summary>
+        /// Improves your critical strike and critical block chance by 10% for [5*Pts] sec following a successful parry.
+        /// </summary>
+        [TalentData(46, "Hold the Line", 2, PROT, COL3, ROW2, -1, new[] {
+@"Improves your critical strike and critical block chance by 10% for 5 sec following a successful parry.",
+@"Improves your critical strike and critical block chance by 10% for 10 sec following a successful parry.",}, "inv_shield_06")]
+        public int HoldtheLine { get { return _data[46]; } set { _data[46] = value; } }
+        /// <summary>
+        /// Gives your Shield Bash and Heroic Throw abilities a [50*Pts]% chance to silence the target for 3 sec and lowers the cooldown of your Heroic Throw ability by [15*Pts] sec.
+        /// </summary>
+        [TalentData(47, "Gag Order", 2, PROT, COL4, ROW2, -1, new[] {
+@"Gives your Shield Bash and Heroic Throw abilities a 50% chance to silence the target for 3 sec and lowers the cooldown of your Heroic Throw ability by 15 sec.",
+@"Gives your Shield Bash and Heroic Throw abilities a 100% chance to silence the target for 3 sec and lowers the cooldown of your Heroic Throw ability by 30 sec.",}, "ability_warrior_shieldbash")]
+        public int GagOrder { get { return _data[47]; } set { _data[47] = value; } }
+        #endregion
+        #region Tier 3
+        /// <summary>
+        /// Temporarily grants you 30% of your maximum health for 20 sec. After the effect expires, the health is lost.
+        /// </summary>
+        [TalentData(48, "Last Stand", 1, PROT, COL1, ROW3, -1, new[] {
+@"Temporarily grants you 30% of your maximum health for 20 sec. After the effect expires, the health is lost.",}, "spell_holy_ashestoashes")]
+        public int LastStand { get { return _data[48]; } set { _data[48] = value; } }
+        /// <summary>
+        /// Stuns the opponent for 5 sec and deals (38/100*AP) damage (based on attack power).
+        /// </summary>
+        [TalentData(49, "Concussion Blow", 1, PROT, COL2, ROW3, -1, new[] {
+@"Stuns the opponent for 5 sec and deals (38/100*AP) damage (based on attack power).",}, "ability_thunderbolt")]
+        public int ConcussionBlow { get { return _data[49]; } set { _data[49] = value; } }
+        /// <summary>
+        /// Reduces the chance you'll be critically hit by melee attacks by 3% while in Defensive Stance. In addition, when you block, dodge or parry an attack you have a [10*Pts]% chance to become Enraged, increasing physical damage done by [5*Pts]% for 12 sec.
+        /// </summary>
+        [TalentData(50, "Bastion of Defense", 1, PROT, COL3, ROW3, -1, new[] {
+@"Reduces the chance you'll be critically hit by melee attacks by 3% while in Defensive Stance. In addition, when you block, dodge or parry an attack you have a 10% chance to become Enraged, increasing physical damage done by 5% for 12 sec.",
+@"Reduces the chance you'll be critically hit by melee attacks by 3% while in Defensive Stance. In addition, when you block, dodge or parry an attack you have a 20% chance to become Enraged, increasing physical damage done by 10% for 12 sec.",}, "ability_thunderbolt")]
+        public int BastionofDefense { get { return _data[50]; } set { _data[50] = value; } }
+        /// <summary>
+        /// Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.
+        /// </summary>
+        [TalentData(51, "Warbringer", 1, PROT, COL4, ROW3, -1, new[] {
+@"Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.",}, "ability_warrior_warbringer")]
+        public int Warbringer { get { return _data[51]; } set { _data[51] = value; } }
+        #endregion
+        #region Tier 4
+        /// <summary>
+        /// Increases damage of your Revenge ability by [30*Pts]% and causes Revenge to strike an additional target for [50*Pts]% damage.
+        /// </summary>
+        [TalentData(52, "Improved Revenge", 2, PROT, COL1, ROW4, -1, new[] {
+@"Increases damage of your Revenge ability by 30% and causes Revenge to strike an additional target for 50% damage.",
+@"Increases damage of your Revenge ability by 60% and causes Revenge to strike an additional target.",}, "ability_warrior_revenge")]
+        public int ImprovedRevenge { get { return _data[52]; } set { _data[52] = value; } }
+        /// <summary>
+        /// Sunder the target's armor causing the Sunder Armor effect. In addition, causes 120% of weapon damage plus 238 for each application of Sunder Armor on the target. The Sunder Armor effect can stack up to 3 times.
+        /// </summary>
+        [TalentData(53, "Devastate", 1, PROT, COL3, ROW4, -1, new[] {
+@"Sunder the target's armor causing the Sunder Armor effect. In addition, causes 120% of weapon damage plus 238 for each application of Sunder Armor on the target. The Sunder Armor effect can stack up to 3 times.",}, "inv_sword_11")]
+        public int Devastate { get { return _data[53]; } set { _data[53] = value; } }
+        /// <summary>
+        /// Using Devastate on a target with 20% or less health has a [25*Pts]% chance to allow the use of Victory Rush only heals for 5% of your health.
+        /// </summary>
+        [TalentData(54, "Impending Victory", 2, PROT, COL4, ROW4, 53, new[] {
+@"Using Devastate on a target with 20% or less health has a 25% chance to allow the use of Victory Rush only heals for 5% of your health.",
+@"Using Devastate on a target with 20% or less health has a 50% chance to allow the use of Victory Rush only heals for 5% of your health.",}, "inv_sword_11")]
+        public int ImpendingVictory { get { return _data[54]; } set { _data[54] = value; } }
+        #endregion
+        #region Tier 5
+        /// <summary>
+        /// Improves the damage of your Cleave and Thunder Clap by [3*Pts]%. In addition, your Thunder Clap improves the damage of your next Shockwave by [5*Pts]%. Stacks up to 3 times.
+        /// </summary>
+        [TalentData(55, "Thunderstruck", 2, PROT, COL1, ROW5, -1, new[] {
+@"Improves the damage of your Cleave and Thunder Clap by 3%. In addition, your Thunder Clap improves the damage of your next Shockwave by 5%. Stacks up to 3 times.",
+@"Improves the damage of your Cleave and Thunder Clap by 6%. In addition, your Thunder Clap improves the damage of your next Shockwave by 10%. Stacks up to 3 times.",}, "ability_racial_bloodrage")]
+        public int Thunderstruck { get { return _data[55]; } set { _data[55] = value; } }
+        /// <summary>
+        /// Focus your protective gaze on a group or raid target, reducing their damage taken by 3% and transfers 10% of the threat they cause to you. In addition, each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you. Lasts 30 min. This effect can only be on one target at a time.
+        /// </summary>
+        [TalentData(56, "Vigilance", 1, PROT, COL2, ROW5, 49, new[] {
+@"Focus your protective gaze on a group or raid target, reducing their damage taken by 3% and transfers 10% of the threat they cause to you. In addition, each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you. Lasts 30 min. This effect can only be on one target at a time.",}, "ability_warrior_vigilance")]
+        public int Vigilance { get { return _data[56]; } set { _data[56] = value; } }
+        /// <summary>
+        /// While your Shield Block is active, your Shield Slam hits for an additional [50*Pts]% damage.
+        /// </summary>
+        [TalentData(57, "Heavy Repercussions", 2, PROT, COL4, ROW5, -1, new[] {
+@"While your Shield Block is active, your Shield Slam hits for an additional 50% damage.",
+@"While your Shield Block is active, your Shield Slam hits for an additional 100% damage.",}, "ability_racial_bloodrage")]
+        public int HeavyRepercussions { get { return _data[57]; } set { _data[57] = value; } }
+        #endregion
+        #region Tier 6
+        /// <summary>
+        /// Reduces damage taken by the target of your Intervene ability by [15*Pts]% for 6 sec.
+        /// </summary>
+        [TalentData(58, "Safeguard", 2, PROT, COL2, ROW6, -1, new[] {
+@"Reduces damage taken by the target of your Intervene ability by 15% for 6 sec.",
+@"Reduces damage taken by the target of your Intervene ability by 30% for 6 sec.",}, "ability_warrior_safeguard")]
+        public int Safeguard { get { return _data[58]; } set { _data[58] = value; } }
+        /// <summary>
+        /// Increases the critical strike chance of your Devastate ability by [5 * Pts]% and when your Devastate or Revenge ability deals damage it has a [10 * Pts]% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.
+        /// </summary>
+        [TalentData(59, "Sword and Board", 3, PROT, COL3, ROW6, 53, new[] {
+@"Increases the critical strike chance of your Devastate ability by 5% and when your Devastate or Revenge ability deals damage it has a 10% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
+@"Increases the critical strike chance of your Devastate ability by 10% and when your Devastate or Revenge ability deals damage it has a 20% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",
+@"Increases the critical strike chance of your Devastate ability by 15% and when your Devastate or Revenge ability deals damage it has a 30% chance of refreshing the cooldown of your Shield Slam ability and reducing its cost by 100% for 5 sec.",}, "ability_warrior_swordandboard")]
+        public int SwordAndBoard { get { return _data[59]; } set { _data[59] = value; } }
+        #endregion
+        #region Tier 7
+        /// <summary>
+        /// Sends a wave of force in front of the warrior, causing (75/100*AP) damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
+        /// </summary>
+        [TalentData(60, "Shockwave", 1, PROT, COL2, ROW7, -1, new[] {
+@"Sends a wave of force in front of the warrior, causing (75/100*AP) damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",}, "ability_warrior_shockwave")]
+        public int Shockwave { get { return _data[60]; } set { _data[60] = value; } }
+        #endregion
+        #region Unused Talents
+        /*/// <summary>
+        /// Increases the rage generated by your Bloodrage ability by [25 * Pts]%.
+        /// </summary>
+        [TalentData(58, "Improved Bloodrage", 2, PROT, 1, 1, -1, new[] {
+@"Increases the rage generated by your Bloodrage ability by 25%.",
+@"Increases the rage generated by your Bloodrage ability by 50%.",}, "ability_racial_bloodrage")]
+        public int ImprovedBloodrage { get { return _data[58]; } set { _data[58] = value; } }
+        /// <summary>
+        /// Reduces the cost of your Thunder Clap ability by [1 * Pts] rage points and increases the damage by [10 * Pts]% and the slowing effect by an additional [10 / 3 * Pts]%.
+        /// </summary>
+        [TalentData(60, "Improved Thunder Clap", 3, PROT, 3, 1, -1, new[] {
+@"Reduces the cost of your Thunder Clap ability by 1 rage point and increases the damage by 10% and the slowing effect by an additional 4%.",
+@"Reduces the cost of your Thunder Clap ability by 2 rage points and increases the damage by 20% and the slowing effect by an additional 7%.",
+@"Reduces the cost of your Thunder Clap ability by 4 rage points and increases the damage by 30% and the slowing effect by an additional 10%.",}, "ability_thunderclap")]
+        public int ImprovedThunderClap { get { return _data[60]; } set { _data[60] = value; } }
+        /// <summary>
+        /// Increases your Dodge chance by [1 * Pts]%.
+        /// </summary>
+        [TalentData(62, "Anticipation", 5, PROT, 3, 2, -1, new[] {
+@"Increases your Dodge chance by 1%.",
+@"Increases your Dodge chance by 2%.",
+@"Increases your Dodge chance by 3%.",
+@"Increases your Dodge chance by 4%.",
+@"Increases your Dodge chance by 5%.",}, "spell_nature_mirrorimage")]
+        public int Anticipation { get { return _data[62]; } set { _data[62] = value; } }
+        /// <summary>
+        /// Reduces the chance you'll be hit by spells by [2 * Pts]% and when the ability is used it will reflect the first spell cast against the [2 * Pts] closest party members within 20 yards.
+        /// </summary>
+        [TalentData(67, "Improved Spell Reflection", 2, PROT, 1, 4, -1, new[] {
+@"Reduces the chance you'll be hit by spells by 2% and when the ability is used it will reflect the first spell cast against the 2 closest party members within 20 yards.",
+@"Reduces the chance you'll be hit by spells by 4% and when the ability is used it will reflect the first spell cast against the 4 closest party members within 20 yards.",}, "ability_warrior_shieldreflection")]
+        public int ImprovedSpellReflection { get { return _data[67]; } set { _data[67] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Disarm ability by [10 * Pts] sec and causes the target to take an additional [5 * Pts]% damage while disarmed.
+        /// </summary>
+        [TalentData(68, "Improved Disarm", 2, PROT, 2, 4, -1, new[] {
+@"Reduces the cooldown of your Disarm ability by 10 sec and causes the target to take an additional 5% damage while disarmed.",
+@"Reduces the cooldown of your Disarm ability by 20 sec and causes the target to take an additional 10% damage while disarmed.",}, "ability_warrior_disarm")]
+        public int ImprovedDisarm { get { return _data[68]; } set { _data[68] = value; } }
+        /// <summary>
+        /// Reduces the rage cost of your Sunder Armor and Devastate abilities by [1 * Pts]
+        /// </summary>
+        [TalentData(69, "Puncture", 3, PROT, 3, 4, -1, new[] {
+@"Reduces the rage cost of your Sunder Armor and Devastate abilities by 1.",
+@"Reduces the rage cost of your Sunder Armor and Devastate abilities by 2.",
+@"Reduces the rage cost of your Sunder Armor and Devastate abilities by 3.",}, "ability_warrior_sunder")]
+        public int Puncture { get { return _data[69]; } set { _data[69] = value; } }
+        /// <summary>
+        /// Reduces the cooldown of your Shield Wall, Retaliation and Recklessness abilities by [30 * Pts] secs.
+        /// </summary>
+        [TalentData(70, "Improved Disciplines", 2, PROT, 1, 5, -1, new[] {
+@"Reduces the cooldown of your Shield Wall, Retaliation and Recklessness abilities by 30 secs.",
+@"Reduces the cooldown of your Shield Wall, Retaliation and Recklessness abilities by 60 secs.",}, "ability_warrior_shieldwall")]
+        public int ImprovedDisciplines { get { return _data[70]; } set { _data[70] = value; } }
+        /// <summary>
+        /// Increases physical damage you deal when a one-handed melee weapon is equipped by [2 * Pts]%.
+        /// </summary>
+        [TalentData(73, "One-Handed Weapon Specialization", 5, PROT, 3, 6, -1, new[] {
+@"Increases physical damage you deal when a one-handed melee weapon is equipped by 2%.",
+@"Increases physical damage you deal when a one-handed melee weapon is equipped by 4%.",
+@"Increases physical damage you deal when a one-handed melee weapon is equipped by 6%.",
+@"Increases physical damage you deal when a one-handed melee weapon is equipped by 8%.",
+@"Increases physical damage you deal when a one-handed melee weapon is equipped by 10%.",}, "inv_sword_20")]
+        public int OneHandedWeaponSpecialization { get { return _data[73]; } set { _data[73] = value; } }
+        /// <summary>
+        /// While in Defensive Stance all spell damage is reduced by [3 * Pts]% and when you Block, Parry or Dodge an attack you have a [50 * Pts]% chance to become Enraged, increasing Physical damage caused by [5 * Pts]% for 12 sec.
+        /// </summary>
+        [TalentData(74, "Improved Defensive Stance", 2, PROT, 1, 7, -1, new[] {
+@"While in Defensive Stance all spell damage is reduced by 3% and when you Block, Parry or Dodge an attack you have a 50% chance to become Enraged, increasing Physical damage caused by 5% for 12 sec.",
+@"While in Defensive Stance all spell damage is reduced by 6% and when you Block, Parry or Dodge an attack you have a 100% chance to become Enraged, increasing Physical damage caused by 10% for 12 sec.",}, "ability_warrior_defensivestance")]
+        public int ImprovedDefensiveStance { get { return _data[74]; } set { _data[74] = value; } }
+        /// <summary>
+        /// Reduces the rage cost of your offensive abilities by [1 * Pts]
+        /// </summary>
+        [TalentData(76, "Focused Rage", 3, PROT, 3, 7, -1, new[] {
+@"Reduces the rage cost of your offensive abilities by 1.",
+@"Reduces the rage cost of your offensive abilities by 2.",
+@"Reduces the rage cost of your offensive abilities by 3.",}, "ability_warrior_focusedrage")]
+        public int FocusedRage { get { return _data[76]; } set { _data[76] = value; } }
+        /// <summary>
+        /// Increases your total Strength by [2 * Pts]%, Stamina by [3 * Pts]% and your Expertise by [2 * Pts]
+        /// </summary>
+        [TalentData(77, "Vitality", 3, PROT, 2, 8, -1, new[] {
+@"Increases your total Strength by 2%, Stamina by 3% and your Expertise by 2.",
+@"Increases your total Strength by 4%, Stamina by 6% and your Expertise by 4.",
+@"Increases your total Strength by 6%, Stamina by 9% and your Expertise by 6.",}, "inv_helmet_21")]
+        public int Vitality { get { return _data[77]; } set { _data[77] = value; } }
+        /// <summary>
+        /// Your successful blocks have a [20 * Pts]% chance to block double the normal amount and increases your chance to critically hit with your Shield Slam ability by an additional [5 * Pts]%.
+        /// </summary>
+        [TalentData(81, "Critical Block", 3, PROT, 3, 9, -1, new[] {
+@"Your successful blocks have a 20% chance to block double the normal amount and increases your chance to critically hit with your Shield Slam ability by an additional 5%.",
+@"Your successful blocks have a 40% chance to block double the normal amount and increases your chance to critically hit with your Shield Slam ability by an additional 10%.",
+@"Your successful blocks have a 60% chance to block double the normal amount and increases your chance to critically hit with your Shield Slam ability by an additional 15%.",}, "ability_warrior_criticalblock")]
+        public int CriticalBlock { get { return _data[81]; } set { _data[81] = value; } }
+        /// <summary>
+        /// Whenever you take damage from or block a melee attack you cause damage equal to [10 * Pts]% of your block value.
+        /// </summary>
+        [TalentData(83, "Damage Shield", 2, PROT, 3, 10, -1, new[] {
+@"Whenever you take damage from or block a melee attack you cause damage equal to 10% of your block value.",
+@"Whenever you take damage from or block a melee attack you cause damage equal to 20% of your block value.",}, "inv_shield_31")]
+        public int DamageShield { get { return _data[83]; } set { _data[83] = value; } }*/
+        #endregion
+        #endregion
+    }
+
     public partial class PaladinTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -1431,8 +2263,8 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 2 to 2 Holy
 
     public partial class HunterTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -2118,8 +2950,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class RogueTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -2788,8 +3620,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class PriestTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -3449,8 +4281,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class DeathKnightTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -4151,8 +4983,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class ShamanTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -4807,8 +5639,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class MageTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -5496,8 +6328,8 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
 
     public partial class WarlockTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {
@@ -6220,8 +7052,8 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
 
     public partial class DruidTalents : TalentsBase
 #if RAWR3
-	{
-		public override TalentsBase Clone()
+    {
+        public override TalentsBase Clone()
 #else
 , ICloneable
     {

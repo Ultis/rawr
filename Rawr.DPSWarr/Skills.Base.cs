@@ -16,6 +16,7 @@ namespace Rawr.DPSWarr.Skills
             Char = character;
             StatS = stats;
             Talents = Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
+            TalentsCata = Char.WarriorTalentsCata == null ? new WarriorTalentsCata() : Char.WarriorTalentsCata;
             combatFactors = cf;
             CalcOpts = calcOpts;
             BossOpts = bossOpts;
@@ -42,6 +43,7 @@ namespace Rawr.DPSWarr.Skills
         private readonly Character Char;
         private Stats StatS;
         private readonly WarriorTalents Talents;
+        private readonly WarriorTalentsCata TalentsCata;
         private readonly CombatFactors combatFactors;
         private CalculationOptionsDPSWarr CalcOpts;
         private BossOptions BossOpts;
@@ -512,6 +514,7 @@ namespace Rawr.DPSWarr.Skills
         protected bool UseReact { get; set; }
         protected Character Char { get; set; }
         protected WarriorTalents Talents { get { return Char.WarriorTalents; } }
+        protected WarriorTalentsCata TalentsCata { get { return Char.WarriorTalentsCata; } }
         protected Stats StatS { get; set; }
         protected CombatFactors combatFactors { get; set; }
         public virtual CombatTable MHAtkTable { get; protected set; }

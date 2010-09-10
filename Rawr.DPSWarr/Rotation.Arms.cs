@@ -12,6 +12,7 @@ namespace Rawr.DPSWarr {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
+            TalentsCata = Char == null || Char.WarriorTalentsCata == null ? new WarriorTalentsCata() : Char.WarriorTalentsCata;
             CombatFactors = cf;
             CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
             BossOpts = (bo == null ? new BossOptions() : bo);
