@@ -64,6 +64,7 @@ namespace Rawr.Rogue
                 calcOpts.BleedIsUp = checkBoxBleed.Checked;
                 calcOpts.Duration = (int)numericUpDownDuration.Value;
                 calcOpts.LagVariance = (int)numericUpDownLagVariance.Value;
+                calcOpts.ForceCustom = checkBoxCustom.Checked;
                 calcOpts.CustomUseRupt = checkBoxRupt.Checked;
                 calcOpts.CustomUseExpose = checkBoxExpose.Checked;
                 calcOpts.CustomUseTotT = checkBoxTotT.Checked;

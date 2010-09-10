@@ -62,6 +62,12 @@ namespace Rawr.Rogue
             get { return _customCPG; }
             set { if (_customCPG != value) { _customCPG = value; OnPropertyChanged("CustomCPG"); } }
         }
+        private bool _forceCustom = false;
+        public bool ForceCustom
+        {
+            get { return _forceCustom; }
+            set { if (_forceCustom != value) { _forceCustom = value; OnPropertyChanged("ForceCustom"); } }
+        }
         private bool _customUseRupt = false;
         public bool CustomUseRupt
         {

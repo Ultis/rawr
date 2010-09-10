@@ -806,48 +806,49 @@ namespace Rawr.Rogue
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
 
             bool bleedIsUp = calcOpts.BleedIsUp;
-            for (int snDCP = 1; snDCP < 6; snDCP++)
-                for (int finisher = 1; finisher < 3; finisher++)
-                {
-                    if ((finisher == 1 && calcOpts.EnableEvis == false) ||
-                       (finisher == 2 && calcOpts.EnableEnvenom == false)) continue;
-                    for (int finisherCP = 1; finisherCP < 6; finisherCP++)
-                        for (int CPG = 0; CPG < 4; CPG++)
-                        {
-                            if ((CPG == 0 && (calcOpts.EnableMuti == false || mutiStats.DamagePerSwing == 0)) ||
-                                (CPG == 1 && calcOpts.EnableSS == false) ||
-                                (CPG == 2 && (calcOpts.EnableBS == false || backstabStats.DamagePerSwing == 0)) ||
-                                (CPG == 3 && (calcOpts.EnableHemo == false || hemoStats.DamagePerSwing == 0))) continue;
-                            for (int mHPoison = 0; mHPoison < 5; mHPoison++)
+            if (calcOpts.ForceCustom == false)
+                for (int snDCP = 1; snDCP < 6; snDCP++)
+                    for (int finisher = 1; finisher < 3; finisher++)
+                    {
+                        if ((finisher == 1 && calcOpts.EnableEvis == false) ||
+                           (finisher == 2 && calcOpts.EnableEnvenom == false)) continue;
+                        for (int finisherCP = 1; finisherCP < 6; finisherCP++)
+                            for (int CPG = 0; CPG < 4; CPG++)
                             {
-                                if (!targetPoisonable || mainHand == null) break;
-                                if ((mHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
-                                    (mHPoison == 2 && calcOpts.EnableDP == false) ||
-                                    (mHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
-                                for (int oHPoison = 0; oHPoison < 5; oHPoison++)
+                                if ((CPG == 0 && (calcOpts.EnableMuti == false || mutiStats.DamagePerSwing == 0)) ||
+                                    (CPG == 1 && calcOpts.EnableSS == false) ||
+                                    (CPG == 2 && (calcOpts.EnableBS == false || backstabStats.DamagePerSwing == 0)) ||
+                                    (CPG == 3 && (calcOpts.EnableHemo == false || hemoStats.DamagePerSwing == 0))) continue;
+                                for (int mHPoison = 0; mHPoison < 5; mHPoison++)
                                 {
-                                    if (!targetPoisonable || offHand == null) break;
-                                    if ((oHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
-                                        (oHPoison == 2 && calcOpts.EnableDP == false) ||
-                                        (oHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
-                                    for (int useRupt = 0; useRupt < 2; useRupt++)
+                                    if (!targetPoisonable || mainHand == null) break;
+                                    if ((mHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
+                                        (mHPoison == 2 && calcOpts.EnableDP == false) ||
+                                        (mHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
+                                    for (int oHPoison = 0; oHPoison < 5; oHPoison++)
                                     {
-                                        if (useRupt == 1 && calcOpts.EnableRupt == false) continue;
-                                        bool useTotT = stats.BonusToTTEnergy > 0;
-                                        RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                            rotationCalculator.GetRotationCalculations(
-                                            CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, PTRMode);
-                                        if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-                                            rotationCalculationDPS = rotationCalculation;
+                                        if (!targetPoisonable || offHand == null) break;
+                                        if ((oHPoison == 1 && (calcOpts.EnableIP == false || character.RogueTalents.ImprovedPoisons < 4)) ||
+                                            (oHPoison == 2 && calcOpts.EnableDP == false) ||
+                                            (oHPoison == 3 && (calcOpts.EnableWP == false || character.RogueTalents.ImprovedPoisons > 3))) continue;
+                                        for (int useRupt = 0; useRupt < 2; useRupt++)
+                                        {
+                                            if (useRupt == 1 && calcOpts.EnableRupt == false) continue;
+                                            bool useTotT = stats.BonusToTTEnergy > 0;
+                                            RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                                rotationCalculator.GetRotationCalculations(
+                                                CPG, useRupt == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, PTRMode);
+                                            if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                                rotationCalculationDPS = rotationCalculation;
+                                        }
                                     }
                                 }
                             }
-                        }
-                }
+                    }
 
-            calculatedStats.HighestDPSRotation = rotationCalculationDPS;
             calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
                 calcOpts.CustomCPG, calcOpts.CustomUseRupt, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, PTRMode);
+            calculatedStats.HighestDPSRotation = calcOpts.ForceCustom == false ? rotationCalculationDPS : calculatedStats.CustomRotation;
 
             if (character.RogueTalents.GlyphOfBackstab && rotationCalculationDPS.BackstabCount > 0)
             {

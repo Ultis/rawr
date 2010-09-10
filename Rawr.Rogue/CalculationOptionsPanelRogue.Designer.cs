@@ -67,6 +67,8 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.checkBoxPTR = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxCustom = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_TurnTheTablesUptimePerc)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUD_FeintDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTrinketOffset)).BeginInit();
@@ -149,7 +151,7 @@
             // trackBarTrinketOffset
             // 
             this.trackBarTrinketOffset.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarTrinketOffset.Location = new System.Drawing.Point(9, 357);
+            this.trackBarTrinketOffset.Location = new System.Drawing.Point(9, 380);
             this.trackBarTrinketOffset.Maximum = 90;
             this.trackBarTrinketOffset.Name = "trackBarTrinketOffset";
             this.trackBarTrinketOffset.Size = new System.Drawing.Size(259, 45);
@@ -161,6 +163,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.checkBoxCustom);
+            this.groupBox1.Controls.Add(this.checkBox1);
             this.groupBox1.Controls.Add(this.checkBoxTotT);
             this.groupBox1.Controls.Add(this.comboBoxCPG);
             this.groupBox1.Controls.Add(this.label12);
@@ -178,7 +182,7 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Location = new System.Drawing.Point(9, 155);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(265, 183);
+            this.groupBox1.Size = new System.Drawing.Size(265, 206);
             this.groupBox1.TabIndex = 23;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Custom Rotation";
@@ -186,7 +190,7 @@
             // checkBoxTotT
             // 
             this.checkBoxTotT.AutoSize = true;
-            this.checkBoxTotT.Location = new System.Drawing.Point(6, 75);
+            this.checkBoxTotT.Location = new System.Drawing.Point(6, 98);
             this.checkBoxTotT.Name = "checkBoxTotT";
             this.checkBoxTotT.Size = new System.Drawing.Size(49, 17);
             this.checkBoxTotT.TabIndex = 10;
@@ -205,7 +209,7 @@
             "Sinister Strike",
             "Backstab",
             "Hemorrhage"});
-            this.comboBoxCPG.Location = new System.Drawing.Point(166, 19);
+            this.comboBoxCPG.Location = new System.Drawing.Point(166, 42);
             this.comboBoxCPG.Name = "comboBoxCPG";
             this.comboBoxCPG.Size = new System.Drawing.Size(93, 21);
             this.comboBoxCPG.TabIndex = 9;
@@ -214,7 +218,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(102, 22);
+            this.label12.Location = new System.Drawing.Point(102, 45);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(32, 13);
             this.label12.TabIndex = 8;
@@ -232,7 +236,7 @@
             "Deadly",
             "Wound",
             "Anesthetic"});
-            this.comboBoxOHPoison.Location = new System.Drawing.Point(166, 154);
+            this.comboBoxOHPoison.Location = new System.Drawing.Point(166, 177);
             this.comboBoxOHPoison.Name = "comboBoxOHPoison";
             this.comboBoxOHPoison.Size = new System.Drawing.Size(93, 21);
             this.comboBoxOHPoison.TabIndex = 7;
@@ -250,7 +254,7 @@
             "Deadly",
             "Wound",
             "Anesthetic"});
-            this.comboBoxMHPoison.Location = new System.Drawing.Point(166, 127);
+            this.comboBoxMHPoison.Location = new System.Drawing.Point(166, 150);
             this.comboBoxMHPoison.Name = "comboBoxMHPoison";
             this.comboBoxMHPoison.Size = new System.Drawing.Size(93, 21);
             this.comboBoxMHPoison.TabIndex = 5;
@@ -259,7 +263,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(102, 157);
+            this.label10.Location = new System.Drawing.Point(102, 180);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(61, 13);
             this.label10.TabIndex = 6;
@@ -268,7 +272,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(102, 130);
+            this.label9.Location = new System.Drawing.Point(102, 153);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(62, 13);
             this.label9.TabIndex = 4;
@@ -284,7 +288,7 @@
             "None",
             "Eviscerate",
             "Envenom"});
-            this.comboBoxFinisher.Location = new System.Drawing.Point(166, 100);
+            this.comboBoxFinisher.Location = new System.Drawing.Point(166, 123);
             this.comboBoxFinisher.Name = "comboBoxFinisher";
             this.comboBoxFinisher.Size = new System.Drawing.Size(93, 21);
             this.comboBoxFinisher.TabIndex = 3;
@@ -293,7 +297,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(102, 103);
+            this.label8.Location = new System.Drawing.Point(102, 126);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(46, 13);
             this.label8.TabIndex = 2;
@@ -302,7 +306,7 @@
             // checkBoxExpose
             // 
             this.checkBoxExpose.AutoSize = true;
-            this.checkBoxExpose.Location = new System.Drawing.Point(6, 48);
+            this.checkBoxExpose.Location = new System.Drawing.Point(6, 71);
             this.checkBoxExpose.Name = "checkBoxExpose";
             this.checkBoxExpose.Size = new System.Drawing.Size(91, 17);
             this.checkBoxExpose.TabIndex = 1;
@@ -313,7 +317,7 @@
             // checkBoxRupt
             // 
             this.checkBoxRupt.AutoSize = true;
-            this.checkBoxRupt.Location = new System.Drawing.Point(6, 21);
+            this.checkBoxRupt.Location = new System.Drawing.Point(6, 44);
             this.checkBoxRupt.Name = "checkBoxRupt";
             this.checkBoxRupt.Size = new System.Drawing.Size(64, 17);
             this.checkBoxRupt.TabIndex = 1;
@@ -333,7 +337,7 @@
             "3",
             "4",
             "5"});
-            this.comboBoxCPFinisher.Location = new System.Drawing.Point(207, 73);
+            this.comboBoxCPFinisher.Location = new System.Drawing.Point(207, 96);
             this.comboBoxCPFinisher.Name = "comboBoxCPFinisher";
             this.comboBoxCPFinisher.Size = new System.Drawing.Size(52, 21);
             this.comboBoxCPFinisher.TabIndex = 1;
@@ -351,7 +355,7 @@
             "3",
             "4",
             "5"});
-            this.comboBoxSnD.Location = new System.Drawing.Point(207, 46);
+            this.comboBoxSnD.Location = new System.Drawing.Point(207, 69);
             this.comboBoxSnD.Name = "comboBoxSnD";
             this.comboBoxSnD.Size = new System.Drawing.Size(52, 21);
             this.comboBoxSnD.TabIndex = 1;
@@ -360,7 +364,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(102, 49);
+            this.label2.Location = new System.Drawing.Point(102, 72);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(96, 13);
             this.label2.TabIndex = 0;
@@ -369,7 +373,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(102, 76);
+            this.label5.Location = new System.Drawing.Point(102, 99);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(63, 13);
             this.label5.TabIndex = 0;
@@ -443,7 +447,7 @@
             // 
             // labelTrinketOffset
             // 
-            this.labelTrinketOffset.Location = new System.Drawing.Point(14, 341);
+            this.labelTrinketOffset.Location = new System.Drawing.Point(14, 364);
             this.labelTrinketOffset.Name = "labelTrinketOffset";
             this.labelTrinketOffset.Size = new System.Drawing.Size(254, 13);
             this.labelTrinketOffset.TabIndex = 16;
@@ -550,7 +554,7 @@
             // 
             this.checkBoxPTR.AutoSize = true;
             this.checkBoxPTR.Enabled = false;
-            this.checkBoxPTR.Location = new System.Drawing.Point(9, 408);
+            this.checkBoxPTR.Location = new System.Drawing.Point(9, 431);
             this.checkBoxPTR.Name = "checkBoxPTR";
             this.checkBoxPTR.Size = new System.Drawing.Size(82, 17);
             this.checkBoxPTR.TabIndex = 11;
@@ -558,6 +562,27 @@
             this.toolTip1.SetToolTip(this.checkBoxPTR, "Enable the PTR mode (no PTR mode available)");
             this.checkBoxPTR.UseVisualStyleBackColor = true;
             this.checkBoxPTR.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(100, 95);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(64, 17);
+            this.checkBox1.TabIndex = 11;
+            this.checkBox1.Text = "Rupture";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCustom
+            // 
+            this.checkBoxCustom.AutoSize = true;
+            this.checkBoxCustom.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxCustom.Name = "checkBoxCustom";
+            this.checkBoxCustom.Size = new System.Drawing.Size(197, 17);
+            this.checkBoxCustom.TabIndex = 12;
+            this.checkBoxCustom.Text = "Optimize using only Custom Rotation";
+            this.checkBoxCustom.UseVisualStyleBackColor = true;
+            this.checkBoxCustom.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // CalculationOptionsPanelRogue
             // 
@@ -638,5 +663,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox checkBoxTotT;
         private System.Windows.Forms.CheckBox checkBoxPTR;
+        private System.Windows.Forms.CheckBox checkBoxCustom;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
