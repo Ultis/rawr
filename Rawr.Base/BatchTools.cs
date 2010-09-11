@@ -1247,10 +1247,7 @@ namespace Rawr
         /// </summary>
         public void ProgressiveOptimize()
         {
-            if ( CurrentBatchCharacter.Character == null )
-                return;
-
-            if (currentOperation != AsyncOperation.None) return;
+            if (currentOperation != AsyncOperation.None || BatchCharacterList.Count == 0 || BatchCharacterList[0].Character == null) return;
 
             currentOperation = AsyncOperation.ProgressiveOptimize;
             optimizer.OptimizationMethod = OptimizationMethod;
@@ -1305,7 +1302,7 @@ namespace Rawr
         /// </summary>
         public void BuildProgressiveUpgradeList()
         {
-            if (currentOperation != AsyncOperation.None || BatchCharacterList[0].Character == null) return;
+            if (currentOperation != AsyncOperation.None || BatchCharacterList.Count == 0 || BatchCharacterList[0].Character == null) return;
 
             currentOperation = AsyncOperation.BuildProgressiveUpgradeList;
             optimizer.OptimizationMethod = OptimizationMethod;
