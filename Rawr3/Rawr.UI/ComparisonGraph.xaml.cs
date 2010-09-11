@@ -300,6 +300,7 @@ namespace Rawr.UI
                 item.ItemInstance = c.ItemInstance;
                 item.MinScale = minScale;
                 item.MaxScale = maxScale;
+                item.Slot = Slot;
 
                 item.NameGrid.Tag = c;
 
