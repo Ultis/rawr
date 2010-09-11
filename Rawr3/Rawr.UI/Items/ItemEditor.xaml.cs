@@ -219,8 +219,12 @@ namespace Rawr.UI
 
         private void Add_Closed(object sender, EventArgs e)
         {
-            clonedStats.AddSpecialEffect(((SpecialEffectEditor)sender).SpecialEffect);
-            UpdateEffectList();
+            SpecialEffectEditor editor = (SpecialEffectEditor)sender;
+            if (editor.DialogResult.GetValueOrDefault())
+            {
+                clonedStats.AddSpecialEffect(editor.SpecialEffect);
+                UpdateEffectList();
+            }
         }
 
         private void DeleteSpecialButton_Click(object sender, RoutedEventArgs e)
