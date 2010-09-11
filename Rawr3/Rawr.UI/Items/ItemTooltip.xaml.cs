@@ -200,7 +200,8 @@ namespace Rawr.UI
  
             var liTypes = new List<string>();
 
-            if (actualItem != null && actualItem.Type != ItemType.None)
+            if (actualItem != null && (actualItem.Type != ItemType.None || (actualItem.Type == ItemType.None
+                && (actualItem.Slot == ItemSlot.Neck || actualItem.Slot == ItemSlot.Finger || actualItem.Slot == ItemSlot.Trinket))))
             {
                 //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
                 if (actualItem.ItemLevel > 0)
