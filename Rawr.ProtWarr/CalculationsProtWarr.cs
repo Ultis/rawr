@@ -497,7 +497,7 @@ threat and limited threat scaled by the threat scale.",
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtWarr options)
         {
             WarriorTalents talents = character.WarriorTalents;
-            WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
+            //WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
             Stats statsTotal = new Stats();
             
             // Items and Buffs

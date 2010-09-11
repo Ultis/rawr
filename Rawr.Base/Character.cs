@@ -368,8 +368,8 @@ namespace Rawr //O O . .
         #region Talents
         [XmlElement("WarriorTalents")]
         public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } set { WarriorTalents = new WarriorTalents(value); } }
-        [XmlElement("WarriorTalentsCata")]
-        public string SerializableWarriorTalentsCata { get { return WarriorTalentsCata.ToString(); } set { WarriorTalentsCata = new WarriorTalentsCata(value); } }
+        //[XmlElement("WarriorTalentsCata")]
+        //public string SerializableWarriorTalentsCata { get { return WarriorTalentsCata.ToString(); } set { WarriorTalentsCata = new WarriorTalentsCata(value); } }
         [XmlElement("PaladinTalents")]
         public string SerializablePaladinTalents { get { return PaladinTalents.ToString(); } set { PaladinTalents = new PaladinTalents(value); } }
         [XmlElement("HunterTalents")]
@@ -391,8 +391,8 @@ namespace Rawr //O O . .
 
         [XmlIgnore]
         private WarriorTalents _warriorTalents = null;
-        [XmlIgnore]
-        private WarriorTalentsCata _warriorTalentsCata = null;
+        //[XmlIgnore]
+        //private WarriorTalentsCata _warriorTalentsCata = null;
         [XmlIgnore]
         private PaladinTalents _paladinTalents = null;
         [XmlIgnore]
@@ -414,8 +414,8 @@ namespace Rawr //O O . .
 
         [XmlIgnore]
         public WarriorTalents WarriorTalents { get { return _warriorTalents ?? (_warriorTalents = new WarriorTalents()); } set { _warriorTalents = value; } }
-        [XmlIgnore]
-        public WarriorTalentsCata WarriorTalentsCata { get { return _warriorTalentsCata ?? (_warriorTalentsCata = new WarriorTalentsCata()); } set { _warriorTalentsCata = value; } }
+        //[XmlIgnore]
+        //public WarriorTalentsCata WarriorTalentsCata { get { return _warriorTalentsCata ?? (_warriorTalentsCata = new WarriorTalentsCata()); } set { _warriorTalentsCata = value; } }
         [XmlIgnore]
         public PaladinTalents PaladinTalents { get { return _paladinTalents ?? (_paladinTalents = new PaladinTalents()); } set { _paladinTalents = value; } }
         [XmlIgnore]
@@ -483,7 +483,7 @@ namespace Rawr //O O . .
             {
                 switch (Class)
                 {
-                    case CharacterClass.Warrior: return WarriorTalentsCata;
+                    //case CharacterClass.Warrior: return WarriorTalentsCata;
                     case CharacterClass.Paladin: return PaladinTalents;
                     case CharacterClass.Hunter: return HunterTalents;
                     case CharacterClass.Rogue: return RogueTalents;
@@ -500,7 +500,7 @@ namespace Rawr //O O . .
             {
                 switch (Class)
                 {
-                    case CharacterClass.Warrior: WarriorTalentsCata = value as WarriorTalentsCata; break;
+                    //case CharacterClass.Warrior: WarriorTalentsCata = value as WarriorTalentsCata; break;
                     case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
                     case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
                     case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
@@ -1131,7 +1131,7 @@ namespace Rawr //O O . .
             if (clone)
             {
                 WarriorTalents = (WarriorTalents)character.WarriorTalents.Clone();
-                WarriorTalentsCata = (WarriorTalentsCata)character.WarriorTalentsCata.Clone();
+                //WarriorTalentsCata = (WarriorTalentsCata)character.WarriorTalentsCata.Clone();
                 PaladinTalents = (PaladinTalents)character.PaladinTalents.Clone();
                 HunterTalents = (HunterTalents)character.HunterTalents.Clone();
                 RogueTalents = (RogueTalents)character.RogueTalents.Clone();
@@ -1145,7 +1145,7 @@ namespace Rawr //O O . .
             else
             {
                 _warriorTalents = character._warriorTalents;
-                _warriorTalentsCata = character._warriorTalentsCata;
+                //_warriorTalentsCata = character._warriorTalentsCata;
                 _paladinTalents = character._paladinTalents;
                 _hunterTalents = character._hunterTalents;
                 _rogueTalents = character._rogueTalents;

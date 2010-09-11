@@ -483,7 +483,7 @@ namespace Rawr
 				switch (charClass) {
 					case CharacterClass.Warrior:
                         m_character.WarriorTalents = new WarriorTalents();
-                        m_character.WarriorTalentsCata = new WarriorTalentsCata();
+                        //m_character.WarriorTalentsCata = new WarriorTalentsCata();
                         break;
 					case CharacterClass.Paladin: m_character.PaladinTalents = new PaladinTalents(); break;
 					case CharacterClass.Hunter: m_character.HunterTalents = new HunterTalents(); break;
