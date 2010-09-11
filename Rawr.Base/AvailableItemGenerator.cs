@@ -1539,7 +1539,9 @@ namespace Rawr.Optimizer
 				bool isRelevant = false;
 				foreach (CalculationsBase model in models)
 				{
-					if (item != null && ItemFilter.GetRelevantItemTypesList(model).Contains(item.Type))
+                    // have to use the relevant types from the model, so we get types that can be equipped at all
+                    //if (item != null && ItemFilter.GetRelevantItemTypesList(model).Contains(item.Type))
+                    if (item != null && model.RelevantItemTypes.Contains(item.Type))
 					{
 						isRelevant = true;
 						break;
