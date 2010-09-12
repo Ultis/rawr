@@ -18,20 +18,18 @@ namespace Rawr
 		public FormStart(FormMain formMain)
 		{
 			InitializeComponent();
-			labelVersionHistory.Text = @"v2.3.22.0
- -Fix for the stats of Imp Lay on Hands.
- -Fixes to a couple item stats.
- -Rawr.Bear: Fix for resistance calculations being slightly off.
- -Rawr.Cat: Fix for combo point generation rate being slightly off due to avoidance. Fix for bite damage being doublely reduced by combo points. Improved default gemming templates. Improved relevancy checking by ignoring items with spellpower. Fix for Idol of the Crying Moon calculations when it was the only crit-affecting special effect.
- -Rawr.Rogue: Fix for the amount of CPs generated per CPG. Fix for Mutilate being usable with all weapons, and tweak to damage. Fix for the value of 3 points of Vile Poisons. Fix for base offhand damage. Fix for Crit double dipping with Master Poisoner. Fix for Haste calculation.
- -Rawr.RestoSham: Fix for the duration of GCDs.
- -Rawr.DPSDK: Slight fix for Glyph of Scourge Strike. Fixed the text of Glyph of Unholy Blight. Better detection of rotation without relying on single key talents.
- -Rawr.TankDK: Fix for Abom's Might calculation. Fix for a few buffs/procs having no value. Fix for damage taken in Frost Presence.
- -Rawr.Moonkin: Fix a display issue where spells that are not present in a given rotation would show NaN in the detailed spell breakdown rather than 0.
- -Rawr.DPSWarr: Tweaks for Sudden Death and the 4T10 for Arms.
- -Rawr.Elemental: Implemented Fire Elemental modeling.
- -Rawr.HealPriest: Fix for not being able to load some older character files.
- -Rawr.Warlock: Fix for not being able to load some older character files.";
+			labelVersionHistory.Text = @"v2.3.23.0
+ - Fix for default data of a few items.
+ - Added a few buffs and reorganized the grouping of several buffs.
+ - Fix for base agility on taurens being off by 1.
+ - The optimizer will now consider items which have been marked available and are equippable, even if their item type is filtered out.
+ - Rawr.Hunter: Fix for the ability to select Hunter's Mark. Fix for a crash with Pet buffs and talents.
+ - Rawr.ShadowPriest: Fix for the bug with +hit calculations.
+ - Rawr.Elemental: Fix for a bug involving DPS Fire Totems without 4T10.
+ - Rawr.DPSDK: Added some ArPen-based default gemming templates. Improvements to the way the optimal rotation is detected. Fix for nested special effects producing inflated DPS. Added Resilience and Spell Penetration as optimizable stats. Fix for Cinderglacier being overvalued.
+ - Rawr.TankDK: Improvements to the way the optimal rotation is detected. Added Resilience and Spell Penetration as optimizable stats.
+ - Rawr.Moonkin: Fix for 2T10 having value without Omen of Clarity.
+ - Rawr.Rogue: Added an option to only use the Custom Rotation when optiming. This greatly speeds up the optimization for those who know the best rotation.";
 			labelVersionHistory.Height = 460;
 
 			this.DoubleBuffered = true;
