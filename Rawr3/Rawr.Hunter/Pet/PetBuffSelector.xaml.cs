@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-using Rawr.UI;
 
 namespace Rawr.Hunter
 {
@@ -167,19 +166,19 @@ namespace Rawr.Hunter
             else FindParent.Clear();
 
             BuffStack.Children.Clear();
-            Dictionary<string, GroupBox> buffGroups = new Dictionary<string, GroupBox>();
+            Dictionary<string, Grid /*GroupBox*/> buffGroups = new Dictionary<string, Grid/*GroupBox*/>();
             if (CalculationsHunter.RelevantPetBuffs != null)
             {
                 foreach (Buff b in CalculationsHunter.RelevantPetBuffs)
                 {
-                    GroupBox gb;
+                    Grid/*GroupBox*/ gb;
                     if (buffGroups.ContainsKey(b.Group)) gb = buffGroups[b.Group];
                     else
                     {
-                        gb = new GroupBox();
-                        gb.Header = b.Group;
+                        gb = new Grid/*GroupBox*/();
+                        //gb.Header = b.Group;
                         StackPanel sp = new StackPanel();
-                        gb.Content = sp;
+                        gb.Children.Add(/*Content =*/ sp);
                         BuffStack.Children.Add(gb);
                         buffGroups[b.Group] = gb;
                     }
@@ -193,7 +192,7 @@ namespace Rawr.Hunter
                     buffCb.Checked += new RoutedEventHandler(buffCb_CheckedChange);
                     buffCb.Unchecked += new RoutedEventHandler(buffCb_CheckedChange);
                     buffCb.Tag = b;
-                    ((StackPanel)gb.Content).Children.Add(buffCb);
+                    ((StackPanel)gb.Children[0]/*Content*/).Children.Add(buffCb);
                     CheckBoxes[b] = buffCb;
 
                     foreach (Buff i in b.Improvements)
@@ -211,7 +210,7 @@ namespace Rawr.Hunter
                         buffCb.Tag = i;
                         CheckBoxes[i] = buffCb;
                         FindParent[i] = b;
-                        ((StackPanel)gb.Content).Children.Add(buffCb);
+                        ((StackPanel)gb.Children[0]/*Content*/).Children.Add(buffCb);
                     }
                 }
             }
