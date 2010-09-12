@@ -221,20 +221,33 @@ namespace Rawr.UI
         private string ConvertBuffSelector(string buffGroup) {
             switch (buffGroup) {
                 case "Raid Buffs":        {
-                    return "Agility and Strength|Armor|Damage Reduction (Major %)"
-                         + "|Damage Reduction (Minor %)|Healing Received (%)|Attack Power"
-                         + "|Attack Power (%)|Spell Power|Spell Sensitivity|Spirit"
-                         + "|Damage (%)|Haste (%)|Health|Resistance"
-                         + "|Physical Critical Strike Chance|Spell Critical Strike Chance"
-                         + "|Focus Magic, Spell Critical Strike Chance|Spell Haste"
-                         + "|Physical Haste|Stamina|Stat Add|Stat Multiplier"
-                         + "|Melee Hit Chance Reduction|Racial Buffs|Armor (Major)"
-                         + "|Armor (Minor)|Bleed Damage|Critical Strike Chance Taken"
-                         + "|Spell Critical Strike Taken|Physical Vulnerability"
-                         + "|Special Mobs|Intellect|Replenishment|Mana Regeneration"
-                         + "|Ranged Attack Power|Mana Restore|Spell Damage Taken"
-                         + "|Spell Hit Taken|Boss Attack Speed|Class Buffs|Disease Damage Taken"
-                         + "|Burst Mana Regeneration";
+                    return 
+                        // Stats
+                          "Agility and Strength|Intellect|Spirit|Stamina|Stat Add|Stat Multiplier"
+                        + "|Health|Attack Power|Attack Power (%)|Ranged Attack Power|Spell Power|Haste (%)|Spell Haste|Physical Haste"
+                        // Offensive
+                        + "|Damage (%)|Bleed Damage"
+                        + "|Physical Critical Strike Chance|Spell Critical Strike Chance|Focus Magic, Spell Critical Strike Chance"
+                        // Defensive
+                        + "|Armor|Damage Reduction (Major %)|Damage Reduction (Minor %)|Resistance"
+                        // Healing
+                        + "|Healing Received (%)"
+                        // Sustaining
+                        + "|Replenishment|Mana Regeneration|Mana Restore|Burst Mana Regeneration"
+                        // Other
+                        + "|Racial Buffs|Class Buffs"
+                        + "|Temp Power Boost";
+                }
+                case "Raid Debuffs": {
+                    return
+                        // Ailment
+                           "Boss Attack Speed"
+                        // Stat Reduction
+                        + "|Melee Hit Chance Reduction|Spell Hit Taken|Critical Strike Chance Taken|Spell Critical Strike Taken"
+                        + "|Armor (Major)|Armor (Minor)"
+                        // Vulvernability
+                        + "|Physical Vulnerability|Spell Sensitivity"
+                        + "|Disease Damage Taken|Spell Damage Taken";
                 }
                 case "Current": { return "Current"; }
                 default: { return buffGroup; }

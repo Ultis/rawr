@@ -80,7 +80,7 @@
                 </splitButton:MenuButton>
                 <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,3" Margin="2,0" />
             </StackPanel>
-            <TextBox x:Name="TB_LiveFilter" TextWrapping="Wrap" HorizontalAlignment="Stretch"  Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
+            <TextBox x:Name="TB_LiveFilter" HorizontalAlignment="Stretch"  Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
         </toolkitdock:DockPanel>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->

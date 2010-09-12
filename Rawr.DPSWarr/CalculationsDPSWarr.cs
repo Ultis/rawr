@@ -829,6 +829,15 @@ These numbers to do not include racial bonuses.",
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
+            // Removes the Shattering Throw Buff if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_])
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
+                MaintBuffHelper(buffGroup, character, removedBuffs);
+            }
+
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents

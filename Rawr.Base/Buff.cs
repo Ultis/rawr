@@ -372,7 +372,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Inspiration",
-                Source = "Priest",
+                Source = "Holy Priest",
                 Group = "Damage Reduction (Major %)",
                 Stats = { DamageTakenMultiplier = -0.1f }
             });
@@ -477,18 +477,6 @@ namespace Rawr
                 Group = "Damage Reduction (Minor %)",
                 Stats = { DamageTakenMultiplier = -0.03f }
             });
-            #endregion
-
-            #region Heroism/Bloodlust
-            defaultBuffs.Add(buff = new Buff
-            {
-                Name = "Heroism/Bloodlust",
-                Source = "Shaman",
-                Group = "Heroism/Bloodlust",
-                Stats = new Stats(),
-            });
-            SpecialEffect effect = new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.30f, RangedHaste = 0.30f, SpellHaste = 0.30f }, 40f, 10f * 60f);
-            buff.Stats.AddSpecialEffect(effect);
             #endregion
 
             #region Haste (%)
@@ -621,7 +609,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Hunting Party",
-                Source = "Survival Hunter",
+                Source = "SV Hunter",
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
@@ -653,7 +641,6 @@ namespace Rawr
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.002f }
             });
-
             #endregion
 
             #region Mana Regeneration
@@ -1101,6 +1088,42 @@ namespace Rawr
             #region Temp Power Boosts
             defaultBuffs.Add(buff = new Buff
             {
+                Name = "Tricks of the Trade",
+                Source = "Rogue",
+                Group = "Temp Power Boost",
+                ConflictingBuffs = new List<string>() { "Tricks" },
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.15f, }, 6f, 30f));
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Tricks of the Trade (Glyphed)",
+                Source = "Rogue",
+                Group = "Temp Power Boost",
+                ConflictingBuffs = new List<string>() { "Tricks" },
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.15f, }, 6f + 4f, 30f));
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Heroism/Bloodlust",
+                Source = "Shaman",
+                Group = "Temp Power Boost",
+                ConflictingBuffs = new List<string>() { "Heroism" },
+                Stats = new Stats(),
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.30f, RangedHaste = 0.30f, SpellHaste = 0.30f }, 40f, 10f * 60f));
+            defaultBuffs.Add(buff = new Buff
+            {
+                Name = "Shattering Throw",
+                Source = "Arms Warrior",
+                Group = "Temp Power Boost",
+                Stats = new Stats(),
+                ConflictingBuffs = new List<string>() { "Shattering" },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.20f }, 10f, 5 * 60f));
+            defaultBuffs.Add(buff = new Buff
+            {
                 Name = "Hysteria",
                 Source = "Death Knight",
                 Group = "Temp Power Boost",
@@ -1446,16 +1469,6 @@ namespace Rawr
                 Group = "Spell Hit Chance Taken",
                 Stats = { SpellHit = 0.03f },
                 IsTargetDebuff = true,
-            });
-            #endregion
-
-            #region Special Mobs
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Dual Wielding Mob",
-                Group = "Special Mobs",
-                ConflictingBuffs = new List<string>(new string[] { "Dual Wielding Mob" }),
-                Stats = { Miss = 0.2f }
             });
             #endregion
 
@@ -4899,6 +4912,13 @@ namespace Rawr
             #endregion
 
             #region Temporary Buffs
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dual Wielding Mob",
+                Group = "Temporary Buffs",
+                ConflictingBuffs = new List<string>(new string[] { "Dual Wielding Mob" }),
+                Stats = { Miss = 0.2f }
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Unbalancing Strike",

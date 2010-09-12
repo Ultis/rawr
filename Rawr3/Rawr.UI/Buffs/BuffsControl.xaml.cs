@@ -248,6 +248,7 @@ namespace Rawr.UI
             BuildControls();
         }
 
+        #region Saving Buff Sets
         public bool HasCustomSets { get; private set; }
 
         private bool updating;
@@ -320,6 +321,20 @@ namespace Rawr.UI
                 LoadBuffsFromCharacter(); // This updates the pane with new checkboxes
                 UpdateCharacterBuffs(); // This updates the character against the boxes actually checked, should fix the double-buff issue seen
                 Character.OnCalculationsInvalidated();
+            }
+        }
+        #endregion
+
+        private void BT_BuffsByRaidMembers_Click(object sender, RoutedEventArgs e)
+        {
+            DG_BuffsByRaidMembers dialog = new DG_BuffsByRaidMembers();
+            dialog.Closed += new EventHandler(BuffsByRaidMembers_Closed);
+            dialog.Show();
+        }
+        private void BuffsByRaidMembers_Closed(object sender, EventArgs e) {
+            if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
+            {
+                // do something
             }
         }
     }

@@ -9,9 +9,20 @@
     d:DesignWidth="340" d:DesignHeight="580">
 
     <Grid x:Name="LayoutRoot">
-        <ComboBox x:Name="SavedCombo"  Margin="0,0,67,0" Height="22" VerticalAlignment="Top" SelectionChanged="SavedCombo_SelectionChanged" />
-        <Button x:Name="SaveDeleteButton" Content="Delete" HorizontalAlignment="Right" Width="63" Height="22" VerticalAlignment="Top" Click="SaveDelete_Click" />
-        <ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0" Margin="0,23,0,0" Padding="2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <ComboBox x:Name="SavedCombo" Height="22" VerticalAlignment="Top" SelectionChanged="SavedCombo_SelectionChanged" Margin="0,2" />
+        <Button x:Name="SaveDeleteButton" Content="Delete" HorizontalAlignment="Right" Width="63" Height="22" VerticalAlignment="Top" Click="SaveDelete_Click" Grid.Column="1" Margin="2,2,0,2" />
+        <Button x:Name="BT_BuffsByRaidMembers" Content="Apply Buffs By Raid Members" Click="BT_BuffsByRaidMembers_Click" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,2" />
+        <ScrollViewer x:Name="TheScroll" BorderThickness="0,0,0,0" Padding="2" Grid.ColumnSpan="2" Grid.Row="2">
             <StackPanel x:Name="BuffStack" HorizontalAlignment="Stretch" Margin="0,0,0,0" Width="Auto"/>
         </ScrollViewer>
     </Grid>

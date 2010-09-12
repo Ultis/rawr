@@ -235,7 +235,8 @@ namespace Rawr
         ElixirsAndFlasks,
         Scrolls,
         Potions,
-        RaidBuffs
+        RaidBuffs,
+        RaidDeBuffs
     }
 
     public enum Profession

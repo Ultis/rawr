@@ -115,6 +115,9 @@
     <Compile Include="Buffs\BuffsControl.xaml.cs">
       <DependentUpon>BuffsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Buffs\DG_BuffsByRaidMembers.xaml.cs">
+      <DependentUpon>DG_BuffsByRaidMembers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Buffs\SaveBuffSetDialog.xaml.cs">
       <DependentUpon>SaveBuffSetDialog.xaml</DependentUpon>
     </Compile>
@@ -298,6 +301,10 @@
     <Page Include="Buffs\BuffsControl.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Buffs\DG_BuffsByRaidMembers.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
