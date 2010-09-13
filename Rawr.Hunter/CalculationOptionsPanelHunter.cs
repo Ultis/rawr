@@ -270,13 +270,13 @@ namespace Rawr.Hunter
             if (_savedPetTalents == null) { _savedPetTalents = new SavedPetTalentSpecList(10); }
         }
         private void SavePetTalentSpecs() {
-            try {
+            //try {
                 using (StreamWriter writer = new StreamWriter(_SavedFilePath, false, Encoding.UTF8)) {
                     XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
                     serializer.Serialize(writer, _savedPetTalents);
                     writer.Close();
                 }
-            } catch (Exception ex) { Log.Write(ex.Message); Log.Write(ex.StackTrace); }
+            //} catch (Exception ex) { Log.Write(ex.Message); Log.Write(ex.StackTrace); }
         }
 
         private PetTalentTreeData _pettalents = null;
