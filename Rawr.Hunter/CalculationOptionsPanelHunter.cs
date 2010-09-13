@@ -781,8 +781,9 @@ namespace Rawr.Hunter
                 if (form.ShowDialog(this) == DialogResult.OK) {
                     SavedPetTalentSpec spec = form.PetTalentSpec();
                     String specName = form.PetTalentSpecName();
+                    PetFamilyTree specClass = getPetFamilyTree();
                     if (spec == null) {
-                        spec = new SavedPetTalentSpec(specName, _pettalents, spec.Class, _treeCount);
+                        spec = new SavedPetTalentSpec(specName, _pettalents, specClass, _treeCount);
                         _savedPetTalents.Add(spec);
                     }
                     else spec.Spec = PetTalents.ToString();
