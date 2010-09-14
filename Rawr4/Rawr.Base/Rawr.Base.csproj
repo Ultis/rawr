@@ -168,9 +168,6 @@
     <Compile Include="..\..\Rawr.Base\CharacterProfilerData.cs">
       <Link>CharacterProfilerData.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\ClassGlyphs.cs">
-      <Link>ClassGlyphs.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Base\CustomControls\ErrorBox.cs">
       <Link>CustomControls\ErrorBox.cs</Link>
     </Compile>
@@ -298,6 +295,7 @@
     <Compile Include="..\..\Rawr3\Rawr.Base\XMLUtils.cs">
       <Link>XMLUtils.cs</Link>
     </Compile>
+    <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
