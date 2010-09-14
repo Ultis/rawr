@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -245,7 +245,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 		}
 		
 
-#if RAWR3
+#if RAWR3 || RAWR4
 		private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 		{

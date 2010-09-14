@@ -20,7 +20,7 @@ namespace Rawr.ShadowPriest
             return xml.ToString();
         }
 
-#if !RAWR3 && !SILVERLIGHT // Boss Handler Options
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT // Boss Handler Options
         private int _TargetLevel = 3;
         private float _FightLength = 6f;
         public int TargetLevel { get { return _TargetLevel; } set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); } }

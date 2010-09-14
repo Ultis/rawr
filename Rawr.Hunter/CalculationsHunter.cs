@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -116,7 +116,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[
             }
         }
 
-        #if RAWR3 || SILVERLIGHT
+        #if RAWR3 || RAWR4 || SILVERLIGHT
             private ICalculationOptionsPanel calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
@@ -864,7 +864,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
                         "Pet Talents",
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                         //"Pet Talent Specs + Armory Pets",
 #endif
                         //"Pet Buffs",
@@ -1151,7 +1151,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             ComparisonCalculationHunter compare;
             currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             foreach (PropertyInfo pi in baseCalcOpts.PetTalents.GetType().GetProperties())
             {
                 PetTalentDataAttribute[] petTalentDatas = pi.GetCustomAttributes(typeof(PetTalentDataAttribute), true) as PetTalentDataAttribute[];
@@ -1451,7 +1451,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.frostTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.frostTrap.Duration = 30;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (bossOpts.MultiTargs && bossOpts.MultiTargsTime > 0) {
                 // Good to go, now change the cooldown based on the multitargs uptime
                 calculatedStats.volley.Duration = 6f;
@@ -1614,7 +1614,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 //skip all the calculations if there is no ranged weapon
                 return calculatedStats;
             }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int   levelDifI = bossOpts.Level - character.Level;
 #else
             int   levelDifI = calcOpts.TargetLevel - character.Level;
@@ -1873,7 +1873,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calculatedStats.manaRegenHuntingParty = manaRegenReplenishment;
             }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)bossOpts.BerserkTimer;
 #else
             calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)calcOpts.Duration;
@@ -1919,7 +1919,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                   aspectUptimeHawk           = 0f,
                   aspectUptimeViper          = 0f;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (calculatedStats.manaTimeToOOM >= 0f && calculatedStats.manaTimeToOOM < bossOpts.BerserkTimer && calculatedStats.manaRegenViper > 0f)
             {
                 viperTimeNeededToLastFight = (((0f - calculatedStats.manaChangeDuringNormal) * bossOpts.BerserkTimer) - calculatedStats.BasicStats.Mana) / calculatedStats.manaRegenViper;
@@ -2027,7 +2027,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (calculatedStats.priorityRotation.containsShot(Shots.BlackArrow)) {
                 SpecialEffect blackarrow = new SpecialEffect(Trigger.Use,new Stats(),
                                             calculatedStats.blackArrow.Duration, calculatedStats.blackArrow.Freq);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)bossOpts.BerserkTimer);
 #else
                 blackArrowUptime = blackarrow.GetAverageUptime(0f, 1f, calculatedStats.autoShotStaticSpeed, (float)calcOpts.Duration);
@@ -2160,7 +2160,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
                     new Stats() { RangedHaste = quickShotsEffect, },
                     12f, 0f, 0.10f);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, bossOpts.BerserkTimer).RangedHaste;
 #else
                 QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, calcOpts.Duration).RangedHaste;
@@ -2644,7 +2644,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float killShotDPSGain = newKillShotDPS > 0f ? (newKillShotDPS + newSteadyShotDPS) - (oldKillShotDPS + oldSteadyShotDPS) : 0f;
 
             float timeSpentSubTwenty = 0;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (bossOpts.BerserkTimer > 0 && bossOpts.Under20Perc > 0) timeSpentSubTwenty = (float)bossOpts.Under20Perc;
 #else
             if (calcOpts.Duration > 0 && calcOpts.TimeSpentSub20 > 0) timeSpentSubTwenty = (float)calcOpts.TimeSpentSub20 / (float)calcOpts.Duration;
@@ -2676,7 +2676,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float Armor2SurvHunter = (stats.Armor) / 100f;
             float Armor2SurvPet = (calculatedStats.pet.PetStats.Armor) / 100f;
             //float spiritbondcoeff = (talents.SpiritBond * 0.01f * (calcOpts.Duration / 10f));
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float HealsPerSecHunter = ((talents.SpiritBond * 0.01f * stats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
             float HealsPerSecPet = ((talents.SpiritBond * 0.01f * calculatedStats.pet.PetStats.Health) * (bossOpts.BerserkTimer / 10f)) / bossOpts.BerserkTimer;
 #else
@@ -2703,7 +2703,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                            1f,
                                                            autoShotDamageAdjust);
                 SpecialEffect zod = new SpecialEffect(Trigger.RangedHit, new Stats(), 0f, 0f, Chance);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 float numProcs = bossOpts.BerserkTimer * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, bossOpts.BerserkTimer);
                 float totalDamage = numProcs * ProcDamageReal;
                 calculatedStats.BonusAttackProcsDPS = totalDamage / bossOpts.BerserkTimer;
@@ -2724,7 +2724,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (stats._rawSpecialEffectData != null)
             {
                 SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats,
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     bossOpts.Level - character.Level, new List<SpecialEffect>(stats._rawSpecialEffectData),
                     triggerIntervals, triggerChances, bossOpts.BerserkTimer, combatFactors.DamageReduction);
 #else
@@ -2780,7 +2780,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
                 BossOptions bossOpts = character.BossOptions;
                 HunterTalents talents = character.HunterTalents;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 PetTalents petTalents = calcOpts.PetTalents;
                 int levelDif = bossOpts.Level - character.Level;
 #else
@@ -2854,7 +2854,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                     statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
                 }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 if (petTalents.CallOfTheWild > 0) {
 #else
                 if (petTalents.CallOfTheWild.Value > 0) {
@@ -2876,7 +2876,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         10f, cooldown);
                     statsTalents.AddSpecialEffect(WrathBeastWithin);
                 }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 if (petTalents.CullingTheHerd > 0) {
                     float val1 = petTalents.CullingTheHerd * 0.01f;
 #else
@@ -3071,7 +3071,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             CalculationOptionsHunter calcOpts, BossOptions bossOpts,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDif = bossOpts.Level - character.Level;
 #else
             int levelDif = calcOpts.TargetLevel - character.Level;
@@ -3131,7 +3131,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float fightDuration_M = bossOpts.BerserkTimer;
 #else
             float fightDuration_M = calcOpts.Duration;
@@ -3301,14 +3301,14 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float armorReduction;
             float arpenBuffs = 0.0f;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (CalcOpts == null) {
 #else
             if (BossOpts == null) {
 #endif
                 armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
             } else {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
 #else
                 armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));

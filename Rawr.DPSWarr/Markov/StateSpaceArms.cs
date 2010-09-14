@@ -50,7 +50,7 @@ namespace Rawr.DPSWarr.Markov
             get {
                 return (Rot.WhiteAtks.whiteRageGenOverDur
                         * LatentGCD)
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                         / BossOpts.BerserkTimer;
 #else
                         / CalcOpts.Duration;

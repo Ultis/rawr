@@ -23,7 +23,7 @@ namespace Rawr.DPSWarr.Skills
             MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false);
             OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false);
             FightDuration =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.BerserkTimer;
 #else
                     CalcOpts.Duration;
@@ -58,7 +58,7 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 /*if (BossOpts.MultiTargs) {
                     return 1f + (Math.Min((float)BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc + StatS.BonusTargets;
                 }*/
@@ -448,7 +448,7 @@ namespace Rawr.DPSWarr.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     //_AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
                     if (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0)
                     {
@@ -528,7 +528,7 @@ namespace Rawr.DPSWarr.Skills
         protected float FightDuration {
             get {
                 return
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.BerserkTimer;
 #else
                     CalcOpts.Duration;
@@ -554,7 +554,7 @@ namespace Rawr.DPSWarr.Skills
             {
                 validatedSet = false;
             }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
 #else
             else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))

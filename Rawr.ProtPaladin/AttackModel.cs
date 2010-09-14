@@ -9,7 +9,7 @@ namespace Rawr.ProtPaladin
     {
         private Character Character;
         private CalculationOptionsProtPaladin CalcOpts;
-#if (RAWR3)
+#if RAWR3 || RAWR4
         private BossOptions BossOpts;
 #endif
         private Stats Stats;
@@ -128,7 +128,7 @@ namespace Rawr.ProtPaladin
             AttackerHitsPerSecond = attackerHits / modelLength;
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode, CalculationOptionsProtPaladin calcOpts)
@@ -136,11 +136,11 @@ namespace Rawr.ProtPaladin
         {
             Character        = character;
             CalcOpts         = calcOpts;
-#if (RAWR3)
+#if RAWR3 || RAWR4
             BossOpts         = bossOpts;
 #endif
             Stats            = stats;
-#if (RAWR3)
+#if RAWR3 || RAWR4
             DefendTable      = new DefendTable(character, stats, calcOpts, bossOpts, true);
             ParryModel       = new ParryModel(character, stats, calcOpts, bossOpts);
 #else
@@ -149,7 +149,7 @@ namespace Rawr.ProtPaladin
 #endif
             _attackModelMode = attackModelMode;
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             Abilities.Add(Ability.None, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.ShieldOfRighteousness, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.HammerOfTheRighteous, character, stats, calcOpts, bossOpts);

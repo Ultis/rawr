@@ -206,7 +206,7 @@ namespace Rawr {
     }
     #endregion
 
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
     [Serializable]
 #endif
     public partial class BossOptions : BossHandler
@@ -448,7 +448,7 @@ namespace Rawr {
         #endregion
     }
 
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
     [Serializable]
 #endif
     public partial class BossHandler {

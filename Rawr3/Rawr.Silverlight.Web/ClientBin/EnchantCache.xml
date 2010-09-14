@@ -1722,6 +1722,36 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3790</Id>
+    <Name>Black Magic</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <HasteRating>250</HasteRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>35</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>MangleCatOrShredOrInfectedWoundsHit</Trigger>
+          <Stats>
+            <HasteRating>250</HasteRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>35</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3225</Id>
     <Name>Executioner</Name>
     <Slot>OneHand</Slot>
@@ -1751,11 +1781,63 @@
           <Trigger>MeleeHit</Trigger>
           <Stats>
             <Agility>120</Agility>
-            <PhysicalHaste>0.02</PhysicalHaste>
+            <HasteRating>30</HasteRating>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
           <Chance>-1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3870</Id>
+    <Name>Blood Draining</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTaken</Trigger>
+          <Stats>
+            <SpecialEffects>
+              <SpecialEffect>
+                <Trigger>MeleeHit</Trigger>
+                <Stats>
+                  <HealthRestore>400</HealthRestore>
+                </Stats>
+                <Duration>20</Duration>
+                <Cooldown>0</Cooldown>
+                <Chance>1</Chance>
+                <MaxStack>5</MaxStack>
+              </SpecialEffect>
+            </SpecialEffects>
+            <SpecialEffectCount>1</SpecialEffectCount>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3239</Id>
+    <Name>Icebreaker</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <FireDamage>200</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-3</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -2171,7 +2253,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>2986</Id>
+    <Id>3875</Id>
     <Name>Lesser Inscription of the Axe</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2207,7 +2289,7 @@
     </Stats>
   </Enchant>
   <Enchant>
-    <Id>2978</Id>
+    <Id>3876</Id>
     <Name>Lesser Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
@@ -2367,8 +2449,18 @@
           <Chance>-2</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>DamageDone</Trigger>
+          <Stats>
+            <HealthRestoreFromMaxHealth>0.03</HealthRestoreFromMaxHealth>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-2</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2380,12 +2472,12 @@
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
           <Stats>
-            <BonusFrostDamageMultiplier>0.01</BonusFrostDamageMultiplier>
+            <BonusFrostDamageMultiplier>0.02</BonusFrostDamageMultiplier>
           </Stats>
           <Duration>20</Duration>
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
-          <MaxStack>10</MaxStack>
+          <MaxStack>5</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2438,6 +2530,15 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3883</Id>
+    <Name>Rune of the Nerubian Carapace</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <Defense>13</Defense>
+      <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3604</Id>
     <Name>Hyperspeed Accelerators</Name>
     <Slot>Hands</Slot>
@@ -2487,11 +2588,27 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3878</Id>
+    <Name>Mind Amplification Dish</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>45</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3859</Id>
     <Name>Springy Arachnoweave</Name>
     <Slot>Back</Slot>
     <Stats>
       <SpellPower>27</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3605</Id>
+    <Name>Flexweave Underlay</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Agility>23</Agility>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2556,6 +2673,15 @@
     </Stats>
   </Enchant>
   <Enchant>
+    <Id>3873</Id>
+    <Name>Master's Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>30</Stamina>
+      <SpellPower>50</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
     <Id>3850</Id>
     <Name>Major Stamina</Name>
     <Slot>Wrist</Slot>
@@ -2610,98 +2736,6 @@
           <Duration>0</Duration>
           <Cooldown>45</Cooldown>
           <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3878</Id>
-    <Name>Mind Amplification Dish</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3605</Id>
-    <Name>Flexweave Underlay</Name>
-    <Slot>Back</Slot>
-    <Stats>
-      <Agility>23</Agility>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3875</Id>
-    <Name>Lesser Inscription of the Axe</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <AttackPower>30</AttackPower>
-      <CritRating>10</CritRating>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3876</Id>
-    <Name>Lesser Inscription of the Pinnacle</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <DodgeRating>15</DodgeRating>
-      <DefenseRating>10</DefenseRating>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3790</Id>
-    <Name>Black Magic</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>SpellHit</Trigger>
-          <Stats>
-            <HasteRating>250</HasteRating>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>35</Cooldown>
-          <Chance>0.35</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3883</Id>
-    <Name>Rune of the Nerubian Carapace</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <Defense>13</Defense>
-      <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3873</Id>
-    <Name>Master's Spellthread</Name>
-    <Slot>Legs</Slot>
-    <Stats>
-      <Stamina>30</Stamina>
-      <SpellPower>50</SpellPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3239</Id>
-    <Name>Icebreaker</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
-          <Stats>
-            <FireDamage>200</FireDamage>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>-3</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>

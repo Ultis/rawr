@@ -80,7 +80,7 @@ namespace Rawr.Elemental
             Rotation rot;
             float damage;
             Stats procStats;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float FightDuration = bossOpts.BerserkTimer;
 #else
             float FightDuration = calcOpts.FightDuration;

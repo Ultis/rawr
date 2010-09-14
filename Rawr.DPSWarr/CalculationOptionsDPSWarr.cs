@@ -64,7 +64,7 @@ namespace Rawr.DPSWarr {
             Lag = 179f;
             React = 220f;
             // Boss Options
-//#if !RAWR3 && !SILVERLIGHT
+//#if !RAWR3 && !RAWR4 && !SILVERLIGHT
             FilterType = "Content";
             Filter = "All";
             BossName = "Custom";

@@ -21,7 +21,7 @@ namespace Rawr.DPSWarr
         {
             get {
                 return
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     bossOpts.Level
 #else
                     calcOpts.TargetLevel

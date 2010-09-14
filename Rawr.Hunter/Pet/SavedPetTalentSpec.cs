@@ -57,7 +57,7 @@ namespace Rawr.Hunter
             return ret;
         }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         public SavedPetTalentSpec(String name, PetTalentsBase talentSpec, PetFamilyTree tree, int pts)
 #else
         public SavedPetTalentSpec(String name, PetTalentTreeData talentSpec, PetFamilyTree tree, int pts)
@@ -72,7 +72,7 @@ namespace Rawr.Hunter
             }
         }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         public PetTalents TalentSpec() {
             if (Spec == null) return null;
             PetTalents spec = new PetTalents(Spec);
@@ -104,7 +104,7 @@ namespace Rawr.Hunter
             return string.Format("{0} ({1}){2}", Name, Tree, warning);
         }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         public bool Equals(PetTalents talents)
 #else
         public bool Equals(PetTalentTreeData talents)

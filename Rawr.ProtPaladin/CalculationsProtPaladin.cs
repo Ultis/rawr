@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -133,7 +133,7 @@ namespace Rawr.ProtPaladin
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -314,12 +314,12 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
 #endif
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
 #else
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
@@ -329,7 +329,7 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts, true);
             DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, bossOpts, false);
             AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
@@ -342,7 +342,7 @@ focus on Survival Points.",
             calculatedStats.BasicStats = stats;
 
             // Target Info
-#if (RAWR3)
+#if RAWR3 || RAWR4
             calculatedStats.TargetLevel = bossOpts.Level;
             calculatedStats.TargetArmor = bossOpts.Armor;
 #else   
@@ -548,19 +548,19 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
 #endif
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             return GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
 #else   
             return GetCharacterStats(character, additionalItem, calcOpts);            
 #endif
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts)
@@ -647,7 +647,7 @@ focus on Survival Points.",
             // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
 
             // Calculate Procs and Special Effects
-#if (RAWR3)
+#if RAWR3 || RAWR4
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts, bossOpts));
 #else
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts));
@@ -671,7 +671,7 @@ focus on Survival Points.",
             return statsTotal;
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else   
         private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
@@ -687,7 +687,7 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
 #else
             AttackModel am = new AttackModel(character, stats, amm, calcOpts);
@@ -696,7 +696,7 @@ focus on Survival Points.",
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
-#if (RAWR3)
+#if RAWR3 || RAWR4
             int targetLevel = bossOpts.Level;
 #else
             int targetLevel = calcOpts.TargetLevel;

@@ -18,7 +18,7 @@ namespace Rawr.Hunter.Skills
             CalcOpts = calcOpts;
             BossOpts = bossOpts;
             RWAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, false, false);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             FightDuration = BossOpts.BerserkTimer;
 #else
             FightDuration = CalcOpts.Duration;
@@ -48,7 +48,7 @@ namespace Rawr.Hunter.Skills
         private float Targets { get { return TARGETS; } set { TARGETS = value; } }
         private float AvgTargets {
             get {
-#if RAWR3 || SIVLERLIGHT
+#if RAWR3 || RAWR4 || SIVLERLIGHT
                 if (BossOpts.MultiTargs)
 #else
                 if (CalcOpts.MultipleTargets)
@@ -57,7 +57,7 @@ namespace Rawr.Hunter.Skills
                     //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                     return 1f +
                         //(Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f) *
-#if RAWR3 || SIVLERLIGHT
+#if RAWR3 || RAWR4 || SIVLERLIGHT
                         (BossOpts.MultiTargsTime / BossOpts.BerserkTimer)  + StatS.BonusTargets;
 #else
                         CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets;
@@ -298,7 +298,7 @@ namespace Rawr.Hunter.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     _AvgTargets = 1f +
                        (BossOpts.MultiTargs ?
                            StatS.BonusTargets +
@@ -386,7 +386,7 @@ namespace Rawr.Hunter.Skills
         protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
         protected BossOptions BossOpts { get { return BOSSOPTS; } set { BOSSOPTS = value; } }
         public virtual float ManaUseOverDur { get { return (!Validated ? 0f : Activates * ManaCost); } }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         protected float FightDuration { get { return BossOpts.BerserkTimer; } }
 #else
         protected float FightDuration { get { return CalcOpts.Duration; } }

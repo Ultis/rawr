@@ -85,7 +85,7 @@ namespace Rawr.Base
         public void Show()
         {
 #if DEBUG
-#if RAWR3
+#if RAWR3 || RAWR4
             System.Windows.MessageBox.Show(Message = Title + "\r\n\r\n" + buildFullMessage());
 #else
             System.Windows.Forms.MessageBox.Show(buildFullMessage(), Title);

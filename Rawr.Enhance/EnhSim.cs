@@ -195,13 +195,13 @@ namespace Rawr.Enhance
                 Clipboard.SetText(_configText);
 			}
 			catch { }
-            if(Clipboard.Success && _calcOpts.ShowExportMessageBox)
+            if(/*Clipboard.Success && */_calcOpts.ShowExportMessageBox)
                 MessageBox.Show("EnhSim config data copied to clipboard.\n" + 
                     "Use the 'Copy from Clipboard' option in EnhSimGUI v1.9.6.0 or higher, to import it\n" +
                     "Or paste the config data into your EnhSim config file in a decent text editor (not Notepad)!",
                     "Enhance Module", MessageBoxButton.OK);
         }
-#elif RAWR3
+#elif RAWR3 || RAWR4
         public void copyToClipboard()
         {
             try

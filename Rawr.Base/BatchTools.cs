@@ -1002,7 +1002,7 @@ namespace Rawr
             {
                 if (character.Character != null && character.UnsavedChanges)
                 {
-#if !RAWR3
+#if !RAWR3 && !RAWR4
                     character.Character.Save(character.AbsolutePath);
 #else
                     using (Stream stream = new FileStream(character.AbsolutePath, FileMode.Create))
@@ -1027,7 +1027,7 @@ namespace Rawr
                 if (character.Character != null && character.UnsavedChanges)
                 {
                     string copyPath = Path.ChangeExtension(character.AbsolutePath, null) + " " + now.ToString("yyyy-M-d H-m") + ".xml";
-#if !RAWR3
+#if !RAWR3 && !RAWR4
                     character.Character.Save(copyPath);
 #else
                     using (Stream stream = new FileStream(copyPath, FileMode.Create))

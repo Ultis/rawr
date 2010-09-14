@@ -72,7 +72,7 @@ namespace Rawr
             {
                 if (character == null && absolutePath != null)
                 {
-#if !RAWR3
+#if !RAWR3 && !RAWR4
                     character = Character.Load(absolutePath);
 #else
                     using (StreamReader reader = new StreamReader(absolutePath))

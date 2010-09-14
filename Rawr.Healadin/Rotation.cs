@@ -20,7 +20,7 @@ namespace Rawr.Healadin
                 _calcOpts = _character.CalculationOptions as CalculationOptionsHealadin;
                 if (_calcOpts == null) _calcOpts = new CalculationOptionsHealadin();
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
                 _bossOpts = _character.BossOptions;
                 if (_bossOpts == null) _bossOpts = new BossOptions();
 #endif
@@ -37,7 +37,7 @@ namespace Rawr.Healadin
         {
             get { return _calcOpts; }
         }
-#if (RAWR3)
+#if RAWR3 || RAWR4
         private BossOptions _bossOpts;
         public BossOptions BossOpts
         {
@@ -65,7 +65,7 @@ namespace Rawr.Healadin
         public Rotation(Character character, Stats stats)
         {
             Character = character;
-#if (RAWR3)
+#if RAWR3 || RAWR4
             FightLength = BossOpts.BerserkTimer * 60f;
 #else
             FightLength = CalcOpts.Length * 60f;

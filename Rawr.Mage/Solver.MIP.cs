@@ -677,7 +677,7 @@ namespace Rawr.Mage
                 }*/
                 if (heap.Count > maxHeap)
                 {
-#if !RAWR3
+#if !RAWR3 && !RAWR4
                     System.Windows.Forms.MessageBox.Show("SMP algorithm exceeded maximum allowed computation limit. Displaying the last working solution. Increase the limit in options if you would like to compute the correct solution.");
 #endif
                     break;

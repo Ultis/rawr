@@ -421,7 +421,7 @@ namespace Rawr.DPSWarr {
         protected virtual float RageGenOverDur_IncDmg {
             get {
                 // Invalidate bad things
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 List<Attack> aoeAtks = BossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
                 Attack dynAoE = BossOpts.DynamicCompiler_FilteredAttacks(aoeAtks);
                 if (aoeAtks.Count > 0 || dynAoE.AttackSpeed <= 0 || dynAoE.DamagePerHit <= 0) { return 0f; }
@@ -431,13 +431,13 @@ namespace Rawr.DPSWarr {
                 float RageMod = 2.5f / 453.3f;
                 float damagePerSec = 0f;
                 float freq =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     dynAoE.AttackSpeed;
 #else
                     CalcOpts.AoETargetsFreq;
 #endif
                 float dmg =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     dynAoE.DamagePerHit
 #else
                     CalcOpts.AoETargetsDMG
@@ -488,7 +488,7 @@ namespace Rawr.DPSWarr {
         public int FightDuration {
             get {
                 return
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.BerserkTimer;
 #else
                     (int)CalcOpts.Duration;
@@ -573,7 +573,7 @@ namespace Rawr.DPSWarr {
         private float CalculateRoot()
         {
             float percTimeInRoot = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (BossOpts.RootingTargs && BossOpts.Roots.Count > 0)
 #else
             if (CalcOpts.RootingTargets && CalcOpts.Roots.Count > 0)
@@ -591,7 +591,7 @@ namespace Rawr.DPSWarr {
                 float EMOldActs = EM.allNumActivates;
                 TimesRooted = 0f;
                 foreach (Impedance r in
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.Roots
 #else
                     CalcOpts.Roots
@@ -659,7 +659,7 @@ namespace Rawr.DPSWarr {
         private float CalculateStun()
         {
             float percTimeInStun = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (BossOpts.StunningTargs && BossOpts.Stuns.Count > 0)
 #else
             if (CalcOpts.StunningTargets && CalcOpts.Stuns.Count > 0)
@@ -673,7 +673,7 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 foreach (Impedance s in BossOpts.Stuns)
 #else
                 foreach (Impedance s in CalcOpts.Stuns)
@@ -725,7 +725,7 @@ namespace Rawr.DPSWarr {
         private float CalculateFear()
         {
             float percTimeInFear = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (BossOpts.FearingTargs && BossOpts.Fears.Count > 0)
 #else
             if (CalcOpts.FearingTargets && CalcOpts.Fears.Count > 0)
@@ -742,7 +742,7 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 foreach (Impedance f in BossOpts.Fears)
 #else
                 foreach (Impedance f in CalcOpts.Fears)
@@ -808,7 +808,7 @@ namespace Rawr.DPSWarr {
         private float CalculateMovement(Ability MS)
         {
             float percTimeInMovement = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (BossOpts.MovingTargs && BossOpts.Moves.Count > 0)
 #else
             if (CalcOpts.MovingTargets && CalcOpts.Moves.Count > 0)
@@ -860,7 +860,7 @@ namespace Rawr.DPSWarr {
                 float ChargeActualActs = 0f;
                 float timelostwhilemoving = 0f;
                 float moveGCDs = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 foreach (Impedance m in BossOpts.Moves)
 #else
                 foreach (Impedance m in CalcOpts.Moves)

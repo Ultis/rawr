@@ -442,7 +442,7 @@ namespace Rawr.Hunter {
                 return 0;
             }
         }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * BossOpts.BerserkTimer; } }
 #else
         protected virtual float RageGenOverDur_Anger { get { return (Talents.AngerManagement / 3.0f) * CalcOpts.Duration; } }

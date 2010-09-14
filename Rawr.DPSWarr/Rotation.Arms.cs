@@ -20,7 +20,7 @@ namespace Rawr.DPSWarr {
 
             _cachedLatentGCD = 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact;
             _cachedNumGCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             _cachedNumGCDsU20 = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD * (float)BossOpts.Under20Perc) : FightDuration / LatentGCD * (float)BossOpts.Under20Perc;
 #else
             _cachedNumGCDsU20 = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD * CalcOpts.Under20Perc) : FightDuration / LatentGCD * CalcOpts.Under20Perc;
@@ -128,7 +128,7 @@ namespace Rawr.DPSWarr {
             float origAvailRage = preloopAvailRage * percTimeOver20;
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
                 CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
@@ -434,7 +434,7 @@ namespace Rawr.DPSWarr {
 
                     // Assign Rage to each ability
                     float RageForHSCL = availRage * percTimeOver20;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     //RageForCL = clok ? (!hsok ? RageForHSCL : RageForHSCL * ((float)BossOpts.MultiTargsPerc/* / 100f*/)) : 0f;
                     {
                         float time = 0;
@@ -552,7 +552,7 @@ namespace Rawr.DPSWarr {
             float origAvailRage = preloopAvailRage * (/*1f -*/ percTimeUnder20);
             bool hsok = false; // CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 false; // BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
                 //&& CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 #else
@@ -757,7 +757,7 @@ namespace Rawr.DPSWarr {
 
                     // Assign Rage to each ability
                     float RageForHSCL = availRage * percTimeOver20;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     {
                         float time = 0;
                         foreach (TargetGroup tg in BossOpts.Targets)
@@ -873,7 +873,7 @@ namespace Rawr.DPSWarr {
             float PercTimeUnder20 = 0f;
             if(CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_])
             {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 PercTimeUnder20 = (float)BossOpts.Under20Perc;
 #else
                 PercTimeUnder20 = CalcOpts.Under20Perc;

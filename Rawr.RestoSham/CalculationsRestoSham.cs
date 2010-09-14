@@ -1,5 +1,5 @@
 ﻿using System;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -176,8 +176,8 @@ namespace Rawr.RestoSham
         {
             get { return CustomCharts.CustomChartNames; }
         }
-#if !RAWR3
-        // for RAWR3 include all charts in CustomChartNames
+#if !RAWR3 && !RAWR4
+        // for RAWR3 || RAWR4 include all charts in CustomChartNames
         public override string[] CustomRenderedChartNames
         {
             get { return CustomCharts.CustomRenderedChartNames; }
@@ -185,7 +185,7 @@ namespace Rawr.RestoSham
 #endif
         #endregion
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -1018,7 +1018,7 @@ namespace Rawr.RestoSham
         #region Chart data area
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-#if !RAWR3
+#if !RAWR3 && !RAWR4
             ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
             if (chartCalc == null)
                 return new ComparisonCalculationBase[0];
@@ -1032,7 +1032,7 @@ namespace Rawr.RestoSham
 			return new ComparisonCalculationBase[0];
 #endif
         }
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
         {
             string calc = chartName.Substring(0, chartName.IndexOf("Stats Graph") - 1);

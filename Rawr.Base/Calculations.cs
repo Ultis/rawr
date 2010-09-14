@@ -59,7 +59,7 @@ namespace Rawr
                     _modelIcons = new Dictionary<string, string>();
                     _modelClasses = new Dictionary<string, CharacterClass>();
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
                     string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
                     // when running in service the dlls are in relative search path
                     if (AppDomain.CurrentDomain.RelativeSearchPath != null) 
@@ -191,13 +191,13 @@ namespace Rawr
         {
             get { return Instance.CustomChartNames; }
         }
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public static string[] CustomRenderedChartNames
         {
             get { return Instance.CustomRenderedChartNames; }
         }
 #endif
-#if RAWR3
+#if RAWR3 || RAWR4
         public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
 #else
         public static Dictionary<string, System.Drawing.Color> SubPointNameColors
@@ -205,7 +205,7 @@ namespace Rawr
         {
             get { return Instance.SubPointNameColors; }
         }
-#if RAWR3
+#if RAWR3 || RAWR4
         public static ICalculationOptionsPanel CalculationOptionsPanel
 #else
         public static CalculationOptionsPanelBase CalculationOptionsPanel
@@ -217,7 +217,7 @@ namespace Rawr
         {
             get { return Instance.TargetClass; }
         }
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public static StatGraphRenderer StatGraphRenderer
         {
             get { return Instance.StatGraphRenderer; }
@@ -298,7 +298,7 @@ namespace Rawr
         {
             return Instance.GetCustomChartData(character, chartName);
         }
-#if RAWR3
+#if RAWR3 || RAWR4
         public static System.Windows.Controls.Control GetCustomChartControl(string chartName)
         {
             return Instance.GetCustomChartControl(chartName);
@@ -309,7 +309,7 @@ namespace Rawr
             Instance.UpdateCustomChartData(character, chartName, control);
         }
 #endif
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             Instance.RenderChart(character, chartName, g, width, height);
@@ -423,7 +423,7 @@ namespace Rawr
         protected Character _cachedCharacter = null;
         public virtual Character CachedCharacter { get { return _cachedCharacter; } }
         
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         protected StatGraphRenderer _statGraphRenderer = null;
         public StatGraphRenderer StatGraphRenderer
         {
@@ -440,7 +440,7 @@ namespace Rawr
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-#if RAWR3
+#if RAWR3 || RAWR4
         public abstract Dictionary<string, System.Windows.Media.Color> SubPointNameColors { get; }
 #else
         public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
@@ -470,7 +470,7 @@ namespace Rawr
         /// </summary>
         public abstract string[] CustomChartNames { get; }
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         /// <summary>
         /// The names of charts for which the model provides custom rendering.
         /// </summary>
@@ -482,7 +482,7 @@ namespace Rawr
         /// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
         /// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
         /// </summary>
-#if RAWR3
+#if RAWR3 || RAWR4
         public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
 #else
         public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
@@ -581,7 +581,7 @@ namespace Rawr
         /// <returns>The data for the custom chart.</returns>
         public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 
-#if RAWR3
+#if RAWR3 || RAWR4
         /// <summary>
         /// Gets control to use for display of chart data, based on the chart name, as defined in CustomChartNames.
         /// If you return null a default comparison graph will be used and GetCustomChartData will be called to
@@ -605,7 +605,7 @@ namespace Rawr
         }
 #endif
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         /// <summary>
         /// Render a chart, based on the chart name, either Stat Graph, or defined in CustomRenderedChartNames.
         /// </summary>
@@ -1809,7 +1809,7 @@ namespace Rawr
         public virtual bool getBaseStatOption(Character character) { return false; }
     }
 
-#if RAWR3
+#if RAWR3 || RAWR4
     /// <summary>
     /// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
     /// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 

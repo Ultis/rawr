@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #endif
 using System.Text;
@@ -115,7 +115,7 @@ namespace Rawr.Bear
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         /// <summary>
         /// Panel to be placed on the Options tab of the main form
@@ -289,7 +289,7 @@ the Threat Scale defined on the Options tab.",
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<string, Color> _subPointNameColors = null;
         /// <summary>
         /// Names and colors for the SubPoints that Rawr.Bear uses

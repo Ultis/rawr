@@ -8,7 +8,7 @@ namespace Rawr.ProtPaladin
     {
         protected Character Character;
         protected CalculationOptionsProtPaladin CalcOpts;
-#if (RAWR3)
+#if RAWR3 || RAWR4
         protected BossOptions BossOpts;
 #endif
         protected Stats Stats;
@@ -35,7 +35,7 @@ namespace Rawr.ProtPaladin
 
         protected virtual void Calculate() {}
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         protected void Initialize(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else
         protected void Initialize(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts)
@@ -43,7 +43,7 @@ namespace Rawr.ProtPaladin
         {
             Character   = character;
             CalcOpts    = calcOpts;
-#if (RAWR3)
+#if RAWR3 || RAWR4
             BossOpts    = bossOpts;
 #endif
             Stats       = stats;
@@ -66,7 +66,7 @@ namespace Rawr.ProtPaladin
 
             float tableSize = 0.0f;
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             int targetLevel = BossOpts.Level;
 #else
             int targetLevel = CalcOpts.TargetLevel;
@@ -102,14 +102,14 @@ namespace Rawr.ProtPaladin
             }
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
 #else
         public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, bool useHolyShield)
 #endif
         {
             UseHolyShield = useHolyShield;
-#if (RAWR3)
+#if RAWR3 || RAWR4
             Initialize(character, stats, Ability.None, calcOpts, bossOpts);
 #else
             Initialize(character, stats, Ability.None, calcOpts);
@@ -157,7 +157,7 @@ namespace Rawr.ProtPaladin
         {
             float tableSize = 0.0f;
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
             int targetLevel = BossOpts.Level;
 #else
             int targetLevel = CalcOpts.TargetLevel;
@@ -220,26 +220,26 @@ namespace Rawr.ProtPaladin
             }
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else
         public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
 #endif
         {
-#if (RAWR3)
+#if RAWR3 || RAWR4
             Initialize(character, stats, Ability.None, calcOpts, bossOpts);
 #else
             Initialize(character, stats, Ability.None, calcOpts);
 #endif
         }
 
-#if (RAWR3)
+#if RAWR3 || RAWR4
         public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
 #else
         public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts)
 #endif
         {
-#if (RAWR3)
+#if RAWR3 || RAWR4
             Initialize(character, stats, ability, calcOpts, bossOpts);
 #else
             Initialize(character, stats, ability, calcOpts);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Linq;
 #endif
 

@@ -23,7 +23,7 @@ namespace Rawr.Elemental
         [XmlIgnore]
         public CharacterCalculationsElemental calculatedStats = null;
 
-#if !RAWR3 && !SILVERLIGHT // BossHandler Options
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT // BossHandler Options
         private int _FightDuration = 300; //5 Minutes
         public int FightDuration
         {

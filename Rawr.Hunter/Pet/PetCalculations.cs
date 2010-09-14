@@ -12,7 +12,7 @@ namespace Rawr.Hunter
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter CalcOpts;
         BossOptions BossOpts;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         PetTalents PetTalents;
 #else
         PetTalentTreeData PetTalents;
@@ -76,7 +76,7 @@ namespace Rawr.Hunter
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat) / 4f;
 
             float owlsFocusEffect = 0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.OwlsFocus > 0) { owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus * 0.15f) + 1f); }
 #else
             if (PetTalents.OwlsFocus.Value > 0) { owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus.Value * 0.15f) + 1f); }
@@ -106,7 +106,7 @@ namespace Rawr.Hunter
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float fightDuration = BossOpts.BerserkTimer;
 #else
             float fightDuration = CalcOpts.Duration;
@@ -209,7 +209,7 @@ namespace Rawr.Hunter
         public void GenPetStats()
         {
             // Initial Variables
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDiff = BossOpts.Level - character.Level;
 #else
             int levelDiff = CalcOpts.TargetLevel - character.Level;
@@ -217,7 +217,7 @@ namespace Rawr.Hunter
             Stats petStatsBase = BasePetStats;
             #region From Hunter
             Stats petStatsFromHunter = new Stats() {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 AttackPower = HunterStats.RangedAttackPower * 0.22f * (1f + PetTalents.WildHunt * 0.15f),
                 SpellPower = HunterStats.RangedAttackPower * 0.1287f * (1f + PetTalents.WildHunt * 0.15f),
                 Stamina = HunterStats.Stamina * 0.45f * (1f + PetTalents.WildHunt * 0.20f)
@@ -254,7 +254,7 @@ namespace Rawr.Hunter
             #endregion
             #region From Talents (Pet or Hunter)
             Stats petStatsTalents = new Stats() {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 BonusStaminaMultiplier = (1f + PetTalents.BloodOfTheRhino * 0.02f)
                                        * (1f + PetTalents.GreatStamina * 0.04f)
                                        - 1f,
@@ -313,7 +313,7 @@ namespace Rawr.Hunter
                 BonusHealthMultiplier = Talents.EnduranceTraining * 0.02f,
             };
             float LongevityCdAdjust = 1f - Talents.Longevity * 0.10f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.Rabid > 0) {
 #else
             if (PetTalents.Rabid.Value > 0) {
@@ -331,7 +331,7 @@ namespace Rawr.Hunter
                 }
                 petStatsTalents.AddSpecialEffect(frenzy);
             }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.LastStand > 0) {
 #else
             if (PetTalents.LastStand.Value > 0) {
@@ -355,13 +355,13 @@ namespace Rawr.Hunter
                 float freq = priorityRotation.getSkillFrequency(PetAttacks.SerenityDust);
                 SpecialEffect serenitydust = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusAttackPowerMultiplier = 0.10f, },
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     15f, BossOpts.BerserkTimer / freq);
 #else
                     15f, CalcOpts.Duration / freq);
 #endif
                 petStatsOptionsPanel.AddSpecialEffect(serenitydust);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 petStatsOptionsPanel.HealthRestore += (BossOpts.BerserkTimer / freq) * 825f;
 #else
                 petStatsOptionsPanel.HealthRestore += (CalcOpts.Duration / freq) * 825f;
@@ -388,14 +388,14 @@ namespace Rawr.Hunter
             petStatsTotal.Health += StatConversion.GetHealthFromStamina(petStatsTotal.Stamina - petStatsBase.Stamina);
             petStatsTotal.Health *= 1f + petStatsTotal.BonusHealthMultiplier;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.Bloodthirsty > 0) {
 #else
             if (PetTalents.Bloodthirsty.Value > 0) {
 #endif
                 SpecialEffect bloodthirsty = new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { HealthRestore = petStatsTotal.Health * 0.05f },
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     0f, 0f, PetTalents.Bloodthirsty * 0.10f);
 #else
                     0f, 0f, PetTalents.Bloodthirsty.Value * 0.10f);
@@ -689,7 +689,7 @@ namespace Rawr.Hunter
             calculatedStats.manaRegenRoarOfRecovery = 0;
             float roarOfRecoveryFreq = priorityRotation.getSkillFrequency(PetAttacks.RoarOfRecovery);
             if (roarOfRecoveryFreq > 0) {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 float roarOfRecoveryUseCount = (float)Math.Ceiling(BossOpts.BerserkTimer / roarOfRecoveryFreq);
                 float roarOfRecoveryManaRestored = HunterStats.Mana * 0.30f * roarOfRecoveryUseCount; // E129
                 calculatedStats.manaRegenRoarOfRecovery = roarOfRecoveryUseCount > 0 ? roarOfRecoveryManaRestored / BossOpts.BerserkTimer : 0;
@@ -714,7 +714,7 @@ namespace Rawr.Hunter
 
             #region Target Armor Effect
             //31-10-2009 Drizz: added Armor effect
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             double petEffectiveArmor = BossOpts.Armor * (1f - calculatedStats.petArmorDebuffs);
             calculatedStats.petTargetArmorReduction = StatConversion.GetArmorDamageReduction(character.Level, BossOpts.Armor, calculatedStats.petArmorDebuffs, 0, 0);
 #else
@@ -729,7 +729,7 @@ namespace Rawr.Hunter
         {
             if (CalcOpts.PetFamily == PetFamily.None) return;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDifference = BossOpts.Level - character.Level;
 #else
             int levelDifference = CalcOpts.TargetLevel - character.Level;
@@ -752,7 +752,7 @@ namespace Rawr.Hunter
             float fullResistDamageAdjust = 1f - fullResist;
 
             // Partial Resists (Spell Hit)
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float averageResist = (BossOpts.Level - character.Level) * 0.02f;
 #else
             float averageResist = (CalcOpts.TargetLevel - character.Level) * 0.02f;
@@ -772,7 +772,7 @@ namespace Rawr.Hunter
             float damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             float damageAdjustPetFamily = 1.05f;
             float damageAdjustMarkedForDeath = 1f + (Talents.MarkedForDeath * 0.02f);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float damageAdjustCobraReflexes = 1f - (PetTalents.CobraReflexes * 0.075f); // this is a negative effect!
 #else
             float damageAdjustCobraReflexes = 1f - (PetTalents.CobraReflexes.Value * 0.075f); // this is a negative effect!
@@ -780,7 +780,7 @@ namespace Rawr.Hunter
 
             // Feeding Frenzy
             float damageAdjustFeedingFrenzy = 1;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.FeedingFrenzy > 0) {
                 float feedingFrenzyTimeSpent = ((float)BossOpts.Under20Perc + (float)BossOpts.Under35Perc) * BossOpts.BerserkTimer;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / BossOpts.BerserkTimer : 0;
@@ -795,7 +795,7 @@ namespace Rawr.Hunter
 #endif
 
             // Glancing Blows
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float glancingBlowsSkillDiff = (BossOpts.Level * 5) - (CalcOpts.PetLevel * 5); // F55
 #else
             float glancingBlowsSkillDiff = (CalcOpts.TargetLevel * 5) - (CalcOpts.PetLevel * 5); // F55
@@ -874,7 +874,7 @@ namespace Rawr.Hunter
             float damageAdjustMangle = 1f + PetStats.BonusBleedDamageMultiplier;
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
 #else
             float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);

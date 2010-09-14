@@ -152,7 +152,7 @@ namespace Rawr.ShadowPriest
             CalcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
             BossOpts = character.BossOptions;
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(character.Level - BossOpts.Level, false) * 100);
 #else
             HitChance = playerStats.SpellHit * 100f + 100 - (StatConversion.GetSpellMiss(-CalcOpts.TargetLevel, false) * 100);
@@ -928,7 +928,7 @@ namespace Rawr.ShadowPriest
             float hasteProcTimer = 0;
             int sequence = SpellPriority.Count-1;
             List<Spell> CastList = new List<Spell>();
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int FightLength = (int)(BossOpts.BerserkTimer / 60f);
 #else
             int FightLength = (int)CalcOpts.FightLength;
@@ -1372,7 +1372,7 @@ namespace Rawr.ShadowPriest
                     Rotation += "\r\n- Used Dispersion";
             }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             DPS *= (1f - StatConversion.GetAverageResistance(character.Level, BossOpts.Level, 0, 0)); // Level based Partial resists.
 #else
             DPS *= (1f - StatConversion.GetAverageResistance(character.Level, character.Level + CalcOpts.TargetLevel, 0, 0)); // Level based Partial resists.
@@ -1472,7 +1472,7 @@ namespace Rawr.ShadowPriest
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
         {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float fightLen = (int)(SSInfo[0].Solver.BossOpts.BerserkTimer / 60f) * 60f;
 #else
             float fightLen = SSInfo[0].Solver.CalcOpts.FightLength * 60f;
@@ -1575,7 +1575,7 @@ namespace Rawr.ShadowPriest
             float timer = 0;
             int sequence = SpellPriority.Count - 1;
             List<Spell> CastList = new List<Spell>();
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             int FightLength = (int)(BossOpts.BerserkTimer / 60f) * 60;
 #else
             int FightLength = (int)CalcOpts.FightLength;
@@ -1688,7 +1688,7 @@ namespace Rawr.ShadowPriest
                 Rotation += "\r\n- Used Hymn of Hope";
             }
 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             DPS *= (1f - (BossOpts.Level - character.Level) * 0.02f); // Level based Partial resists.
             SustainDPS *= (1f - (BossOpts.Level - character.Level) * 0.02f);
 #else

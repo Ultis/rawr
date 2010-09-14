@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -116,7 +116,7 @@ namespace Rawr.Elemental
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -285,8 +285,8 @@ namespace Rawr.Elemental
             return new ComparisonCalculationBase[0];
         }
 
-#if !RAWR3
-        // for RAWR3 include all charts in CustomChartNames
+#if !RAWR3 && !RAWR4
+        // for RAWR3 || RAWR4 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -301,7 +301,7 @@ namespace Rawr.Elemental
         }
 #endif
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
 

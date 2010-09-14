@@ -42,7 +42,7 @@ namespace Rawr.DPSWarr
             // doIterations();
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
                 CalcOpts.MultipleTargets
@@ -52,7 +52,7 @@ namespace Rawr.DPSWarr
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 //percHS -= (float)BossOpts.MultiTargsPerc;
                 {
                     float time = 0;
@@ -76,7 +76,7 @@ namespace Rawr.DPSWarr
             
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
                 CalcOpts.MultipleTargets
@@ -86,7 +86,7 @@ namespace Rawr.DPSWarr
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 //percHS -= (float)BossOpts.MultiTargsPerc;
                 {
                     float time = 0;
@@ -382,7 +382,7 @@ namespace Rawr.DPSWarr
 
             bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool CLok = 
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
 #else
                 CalcOpts.MultipleTargets

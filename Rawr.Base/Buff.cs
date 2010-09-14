@@ -78,7 +78,7 @@ namespace Rawr
             set { _conflictingBuffs = value; }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(BuffList));

@@ -2509,7 +2509,7 @@ namespace Rawr.Optimizer
             OptimizerCharacter optCharacter = GenerateIndividual(parent.Items, false, recycledIndividual);
             object[] items = optCharacter.Items;
             Character character = optCharacter.Character;
-#if RAWR3
+#if RAWR3 || RAWR4
             TalentsBase talents = ((TalentsBase)items[characterSlots + 3]).Clone();
 #else
             TalentsBase talents = (TalentsBase)((ICloneable)items[characterSlots + 3]).Clone();

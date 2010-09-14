@@ -358,7 +358,7 @@ namespace Rawr.Hunter
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
             float HitPercBonus = BasicStats.PhysicalHit - HitPercent;
             // Hit Soft Cap ratings check, how far from it
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level];
 #else
             float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level];
@@ -543,7 +543,7 @@ namespace Rawr.Hunter
                 case "Haste %": return BasicStats.PhysicalHaste * 100f;
                 case "Attack Power": return BasicStats.AttackPower;
                 case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
 #else
                 case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level] - BasicStats.PhysicalHit) * 100f;

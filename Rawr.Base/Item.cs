@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.ComponentModel;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Linq;
 #else
 using System.Windows.Forms;
@@ -609,7 +609,7 @@ namespace Rawr
 			}
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public static Dictionary<ItemSlot, CharacterSlot> DefaultSlotMap { get; private set; }
 		static Item()
 		{
@@ -646,7 +646,7 @@ namespace Rawr
 			list[ItemSlot.Ranged] = CharacterSlot.Ranged;
 			list[ItemSlot.Projectile] = CharacterSlot.Projectile;
 			list[ItemSlot.ProjectileBag] = CharacterSlot.ProjectileBag;
-#if RAWR3
+#if RAWR3 || RAWR4
             list.OrderBy(kvp => (int)kvp.Key);
 #else
             list.TrimExcess();
@@ -753,7 +753,7 @@ namespace Rawr
 				#region Metagem Requirements
 				volatileRequirements = true;
                 if (character == null
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
                     || !character.EnforceGemRequirements
 #else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
@@ -884,7 +884,7 @@ namespace Rawr
 				{
 					volatileRequirements = true;
 					if (character == null
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
                     || !character.EnforceGemRequirements
 #else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
@@ -897,7 +897,7 @@ namespace Rawr
 				{
 					volatileRequirements = true;
                     if (character == null
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
                     || !character.EnforceGemRequirements
 #else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
@@ -939,7 +939,7 @@ namespace Rawr
             if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
-#if RAWR3
+#if RAWR3 || RAWR4
 				ElitistArmoryService armoryService = new ElitistArmoryService();
 				armoryService.GetItemCompleted += new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
 				armoryService.GetItemAsync(id);
@@ -1050,7 +1050,7 @@ namespace Rawr
 			}
 		}
 
-#if RAWR3
+#if RAWR3 || RAWR4
 		private static void armoryService_GetItemCompleted(object sender, EventArgs<Item> e)
 		{
 			if (e.Value != null)

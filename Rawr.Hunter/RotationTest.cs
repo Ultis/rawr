@@ -49,7 +49,7 @@ namespace Rawr.Hunter
 
         public void RunTest()
         {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float FightDuration = BossOpts.BerserkTimer;
 #else
             float FightDuration = CalcOpts.Duration;
@@ -81,7 +81,7 @@ namespace Rawr.Hunter
             int ISSProcsArcane = 0;
             int ISSProcsChimera = 0;
             float BossHPPercentage = CalcOpts.BossHPPerc * 100;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             float Sub20Time = (BossHPPercentage > 20) ? FightDuration - (float)BossOpts.Under20Perc * FightDuration : 0; // time *until* we hit sub-20
 #else
             float Sub20Time = (BossHPPercentage > 20) ? FightDuration - CalcOpts.TimeSpentSub20 : 0; // time *until* we hit sub-20
@@ -525,7 +525,7 @@ namespace Rawr.Hunter
                         // 091109 Drizz: Removing the Debug.Writeline
                         //Debug.WriteLine(" "+ currentTime + ": " + thisShot + " (" +timeUsed+"/"+castEnd+"/"+onCDUntil + ")");
                         calculatedStats.sequence += String.Format("{0,6:0.00}:{1,-13}" + " : {2,7:0.000}:{3,7:0.000}:{4,7:0.000}", currentTime, thisShot, timeUsed, castEnd, onCDUntil) + Environment.NewLine;
-                        #if !RAWR3 && !SILVERLIGHT
+                        #if !RAWR3 && !RAWR4 && !SILVERLIGHT
                         Debug.Flush();
                         #endif
                     }

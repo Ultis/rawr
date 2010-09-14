@@ -235,7 +235,7 @@ namespace Rawr.Moonkin
 
             float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime + faerieFireTime);
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
-#if RAWR3
+#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
 

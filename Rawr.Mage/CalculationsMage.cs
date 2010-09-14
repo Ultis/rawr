@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -199,7 +199,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-#if RAWR3
+#if RAWR3 || RAWR4
                     _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage", "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
 #else
                     _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage" };
@@ -208,7 +208,7 @@ namespace Rawr.Mage
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
         {
             switch (chartName)
@@ -280,8 +280,8 @@ namespace Rawr.Mage
         }
 #endif
 
-#if !RAWR3
-        // for RAWR3 include all charts in CustomChartNames
+#if !RAWR3 && !RAWR4
+        // for RAWR3 || RAWR4 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -297,7 +297,7 @@ namespace Rawr.Mage
 #endif
 
         private CalculationOptionsPanelMage _calculationOptionsPanel = null;
-#if RAWR3
+#if RAWR3 || RAWR4
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -1174,7 +1174,7 @@ namespace Rawr.Mage
             return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds);
         }
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             Rectangle rectSubPoint;

@@ -531,7 +531,7 @@ namespace Rawr.DPSWarr.Markov
 #endif
                         foreach (KeyValuePair<Skills.Ability, double> kvp in mp2.AbilityWeight)
                         {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                             rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * bo.BerserkTimer / mp2.AverageTransitionDuration);
 #else
                             rageNeededNoHS += kvp.Key.RageCost * (kvp.Value * co.Duration / mp2.AverageTransitionDuration);
@@ -549,7 +549,7 @@ namespace Rawr.DPSWarr.Markov
 
                         double rageNeeded = rageNeededNoHS;
                         Skills.HeroicStrike HS = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability as Skills.HeroicStrike;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                         rageNeeded += HS.FullRageCost * (bo.BerserkTimer / wa.MhEffectiveSpeed * gen.HSPerc);
                         double rageGenerated = wa.MHSwingRage * (bo.BerserkTimer / wa.MhEffectiveSpeed) +
                                                wa.OHSwingRage * (bo.BerserkTimer / wa.OhEffectiveSpeed);
@@ -563,7 +563,7 @@ namespace Rawr.DPSWarr.Markov
                         double HsRage = rageNeeded - rageNeededNoHS;
                         double hsRageNeeded = rageGenerated - rageNeededNoHS;
                         gen.HSPerc = Math.Min((hsRageNeeded / HS.FullRageCost) /
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                                      (bo.BerserkTimer / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates
 #else
                                      (co.Duration / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates

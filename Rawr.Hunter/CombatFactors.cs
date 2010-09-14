@@ -87,7 +87,7 @@ namespace Rawr.Hunter {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs = 0.0f;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
 #else
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
@@ -190,7 +190,7 @@ namespace Rawr.Hunter {
                         + HitPerc;          // Bonus from Hit Rating
             }
         }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         private float WhMissCap { get { return StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
         private float YwMissCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[BossOpts.Level - Char.Level]; } }
 #else
@@ -263,7 +263,7 @@ namespace Rawr.Hunter {
         }
         #endregion
         #region Attackers Stats against you
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         private float LevelModifier { get { return (BossOpts.Level - Char.Level) * 0.002f; } }
         private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, BossOpts.Level)); } }
 #else

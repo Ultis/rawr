@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -246,7 +246,7 @@ namespace Rawr.Rogue
         }
 
         private CalculationOptionsPanelRogue _calculationOptionsPanel = null;
-        #if RAWR3
+        #if RAWR3 || RAWR4
         public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel

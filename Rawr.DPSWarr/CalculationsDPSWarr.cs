@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -207,7 +207,7 @@ namespace Rawr.DPSWarr {
             }
         }
         
-        #if RAWR3
+        #if RAWR3 || RAWR4
             public ICalculationOptionsPanel _calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
@@ -317,7 +317,7 @@ These numbers to do not include racial bonuses.",
                         "Rage Details:Total Generated Rage",
                         "Rage Details:Needed Rage for Abilities",
                         "Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
-#if (!RAWR3 && DEBUG)                        
+#if (!RAWR3 && !RAWR4 && DEBUG)                        
                         "Debug:Calculation Time"
 #endif
                     };
@@ -808,7 +808,7 @@ These numbers to do not include racial bonuses.",
             return retVal;
         }
         public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             , BossOptions bossOpts
 #endif
             )
@@ -1028,7 +1028,7 @@ These numbers to do not include racial bonuses.",
             Character zeClone = character.Clone();
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(zeOriginal) as CharacterCalculationsDPSWarr;
             CalculationOptionsDPSWarr calcOpts = zeOriginal.CalculationOptions as CalculationOptionsDPSWarr;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
             ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = true;
 #endif
             bool[] origMaints = (bool[])calcOpts.Maintenance.Clone();
@@ -1064,7 +1064,7 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.Maintenance = origMaints;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
 #endif
                     return comparisons.ToArray();
@@ -1120,7 +1120,7 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
                     calcOpts.Maintenance = origMaints;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
 #endif
                     return comparisons.ToArray();
@@ -1151,7 +1151,7 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.Maintenance = origMaints;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
 #endif
                     return comparisons.ToArray();
@@ -1192,7 +1192,7 @@ These numbers to do not include racial bonuses.",
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
                     calcOpts.Maintenance = origMaints;
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
 #endif
                     return comparisons.ToArray();
@@ -1207,7 +1207,7 @@ These numbers to do not include racial bonuses.",
 
         //private WarriorTalents _cachedTalents = null;
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-#if (!RAWR3 && DEBUG)
+#if (!RAWR3 && !RAWR4 && DEBUG)
             if (character.Name == "") {
                 DateTime dtEnd = DateTime.Now.AddSeconds(10);
                 int count = 0;
@@ -1277,7 +1277,7 @@ These numbers to do not include racial bonuses.",
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);*/
 
                 calculatedStats.Duration =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     bossOpts.BerserkTimer;
 #else
                     calcOpts.Duration;
@@ -1289,7 +1289,7 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                     calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
                     calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     , bossOpts
 #endif
                         );
@@ -1299,7 +1299,7 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.combatFactors = combatFactors;
                 calculatedStats.Rot = Rot;
                 calculatedStats.TargetLevel =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     bossOpts.Level;
 #else
                     calcOpts.TargetLevel; 
@@ -1355,7 +1355,7 @@ These numbers to do not include racial bonuses.",
                     SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calculatedStats.TargetLevel - character.Level,
                         new List<SpecialEffect>(stats.SpecialEffects()),
                         triggerIntervals, triggerChances,
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                         bossOpts.BerserkTimer,
 #else
                         calcOpts.Duration,
@@ -1376,7 +1376,7 @@ These numbers to do not include racial bonuses.",
                 // Survivability
                 if (stats.HealthRestoreFromMaxHealth > 0) {
                     stats.HealthRestore += stats.HealthRestoreFromMaxHealth / 100f * stats.Health *
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                         bossOpts.BerserkTimer;
 #else
                         calcOpts.Duration;
@@ -1418,7 +1418,7 @@ These numbers to do not include racial bonuses.",
                     ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
-#if (!RAWR3 && DEBUG)
+#if (!RAWR3 && !RAWR4 && DEBUG)
             if (needsDisplayCalculations)
             {
                 sw.Stop();
@@ -1480,7 +1480,7 @@ These numbers to do not include racial bonuses.",
             #region From Gear/Buffs
             Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar.Char,
                 dpswarchar.calcOpts
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 , dpswarchar.bossOpts
 #endif
                 ) : new Stats());
@@ -1617,7 +1617,7 @@ These numbers to do not include racial bonuses.",
             };
 
             float fightDuration =
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 bossOpts.BerserkTimer;
 #else
                 calcOpts.Duration;
@@ -1772,7 +1772,7 @@ These numbers to do not include racial bonuses.",
             { //Only one, add it to
                 SpecialEffect effect = tempArPenEffects[0];
                 float uptime = effect.GetAverageStackSize(tempArPenEffectIntervals[0], tempArPenEffectChances[0], charStruct.combatFactors._c_mhItemSpeed, (charStruct.calcOpts.SE_UseDur ?
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer
 #else
                     charStruct.calcOpts.Duration
@@ -1790,7 +1790,7 @@ These numbers to do not include racial bonuses.",
                 //    offset[0] = calcOpts.TrinketOffset;
                 //}
                 WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), tempArPenEffectIntervals.ToArray(), tempArPenEffectChances.ToArray(), new float[tempArPenEffectChances.Count], tempArPenEffectScales.ToArray(), charStruct.combatFactors._c_mhItemSpeed,
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer,
 #else
                     charStruct.calcOpts.Duration,
@@ -1807,7 +1807,7 @@ These numbers to do not include racial bonuses.",
             {
                 Stats originalStats = charStruct.combatFactors.StatS;
                 int LevelDif =
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.Level
 #else
                     charStruct.calcOpts.TargetLevel
@@ -1846,7 +1846,7 @@ These numbers to do not include racial bonuses.",
             try
             {
                 float fightDuration =
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer;
 #else
                     charStruct.calcOpts.Duration;
@@ -1903,7 +1903,7 @@ These numbers to do not include racial bonuses.",
                 float landedAtksInterval = fightDuration / land;
                 float dmgDoneInterval = fightDuration / (land + bleed);
                 float dmgTakenInterval = fightDuration /
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.AoETargsFreq;
 #else
                     charStruct.calcOpts.AoETargetsFreq;
@@ -1966,7 +1966,7 @@ These numbers to do not include racial bonuses.",
                 WarriorTalents talents = charStruct.Char.WarriorTalents;
                 //WarriorTalentsCata talentsCata = charStruct.Char.WarriorTalentsCata;
                 float fightDuration =
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer;
 #else
                     charStruct.calcOpts.Duration;
@@ -1978,7 +1978,7 @@ These numbers to do not include racial bonuses.",
                 //float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
                 //float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
                 float dmgTakenInterval = fightDuration /
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.AoETargsFreq;
 #else
                     charStruct.calcOpts.AoETargetsFreq;
@@ -1989,7 +1989,7 @@ These numbers to do not include racial bonuses.",
                 float crit = charStruct.Rot.CriticalAtksOverDur;
 
                 int LevelDif =
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.Level
 #else
                     charStruct.calcOpts.TargetLevel
@@ -2063,7 +2063,7 @@ These numbers to do not include racial bonuses.",
                     float interval = triggerIntervals[critEffects[0].Trigger];
                     float chance = triggerChances[critEffects[0].Trigger];
                     float upTime = critEffects[0].GetAverageStackSize(interval, chance, charStruct.combatFactors._c_mhItemSpeed, (charStruct.calcOpts.SE_UseDur ?
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer
 #else
                     charStruct.calcOpts.Duration
@@ -2086,7 +2086,7 @@ These numbers to do not include racial bonuses.",
                     }
 
                     critProcs = SpecialEffect.GetAverageCombinedUptimeCombinations(critEffects.ToArray(), intervals, chances, offset, critWeights.ToArray(), charStruct.combatFactors._c_mhItemSpeed,
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                         charStruct.bossOpts.BerserkTimer,
 #else
                         charStruct.calcOpts.Duration,
@@ -2180,7 +2180,7 @@ These numbers to do not include racial bonuses.",
         private enum SpecialEffectDataType { AverageStats, UpTime };
         private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Stats applyTo) {
             float fightDuration =
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                     charStruct.bossOpts.BerserkTimer;
 #else
                     charStruct.calcOpts.Duration;

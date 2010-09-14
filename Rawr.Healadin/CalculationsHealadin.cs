@@ -194,7 +194,7 @@ namespace Rawr.Healadin
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -274,7 +274,7 @@ namespace Rawr.Healadin
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -361,12 +361,12 @@ namespace Rawr.Healadin
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
             
-#if (RAWR3)
+#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
 #endif
             
-#if (RAWR3)
+#if RAWR3 || RAWR4
             float fightLength = bossOpts.BerserkTimer * 60f;
 #else
             float fightLength = calcOpts.Length * 60f;

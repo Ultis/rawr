@@ -13,7 +13,7 @@ namespace Rawr.Mage.SequenceReconstruction
         public EffectCooldown EffectCooldown { get; set; }
     }
 
-#if RAWR3
+#if RAWR3 || RAWR4
     public class SequenceItem
 #else
     public class SequenceItem : ICloneable
@@ -205,7 +205,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         #region ICloneable Members
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         object ICloneable.Clone()
         {
             return Clone();

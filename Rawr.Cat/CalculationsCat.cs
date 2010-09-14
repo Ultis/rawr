@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #endif
 using System.Text;
@@ -85,7 +85,7 @@ namespace Rawr.Cat
 			};
 		}
 
-#if RAWR3
+#if RAWR3 || RAWR4
 		private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -189,7 +189,7 @@ namespace Rawr.Cat
 			}
 		}
 
-#if RAWR3
+#if RAWR3 || RAWR4
 		private Dictionary<string, Color> _subPointNameColors = null;
 		public override Dictionary<string, Color> SubPointNameColors
 		{

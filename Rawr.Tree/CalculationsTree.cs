@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -395,8 +395,8 @@ applied and result is scaled down by 100)",
             }
         }
 
-#if !RAWR3
-        // for RAWR3 include all charts in CustomChartNames
+#if !RAWR3 && !RAWR4
+        // for RAWR3 || RAWR4 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -423,7 +423,7 @@ applied and result is scaled down by 100)",
                 return _optimizableCalculationLabels;
             }
         }
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -1874,7 +1874,7 @@ applied and result is scaled down by 100)",
             }
         }
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Intellect", "10 Spirit" };

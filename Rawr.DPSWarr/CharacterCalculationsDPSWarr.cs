@@ -28,7 +28,7 @@ namespace Rawr.DPSWarr {
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
         public string floorstring { get; set; }
-#if (!RAWR3 && DEBUG)
+#if (!RAWR3 && !RAWR4 && DEBUG)
         public long calculationTime { get; set; }
 #endif
         #region Attack Table
@@ -528,7 +528,7 @@ namespace Rawr.DPSWarr {
             dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}", WhiteRage + OtherRage, WhiteRage, OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
-#if (!RAWR3 && DEBUG)
+#if (!RAWR3 && !RAWR4 && DEBUG)
             dictValues.Add("Calculation Time", string.Format("{0}", calculationTime));
 #endif
             return dictValues;

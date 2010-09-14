@@ -86,7 +86,7 @@ namespace Rawr
 
         private static EnchantList _allEnchants;
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         private static readonly string _SaveFilePath;
 
         static Enchant()
@@ -268,7 +268,7 @@ namespace Rawr
             ));
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public static void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(EnchantList));

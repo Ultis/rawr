@@ -106,13 +106,13 @@ namespace Rawr
             return CharacterClass.Warrior;
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public abstract TalentsBase Clone();
 #endif
     }
 
     public partial class WarriorTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -796,7 +796,7 @@ namespace Rawr
     }
 
     public partial class WarriorTalentsCata : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -1628,7 +1628,7 @@ namespace Rawr
     }
 
     public partial class PaladinTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -2262,7 +2262,7 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 2 to 2 Holy
     }
 
     public partial class HunterTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -2949,7 +2949,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class RogueTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -3619,7 +3619,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class PriestTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -4280,7 +4280,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class DeathKnightTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -4982,7 +4982,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class ShamanTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -5638,7 +5638,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class MageTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -6327,7 +6327,7 @@ Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare"
     }
 
     public partial class WarlockTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else
@@ -7051,7 +7051,7 @@ Felguard - Increases the Felguard's attack speed by 20% and breaks all stun, sna
     }
 
     public partial class DruidTalents : TalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
 #else

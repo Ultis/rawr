@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -93,7 +93,7 @@ namespace Rawr.DPSDK
             {
                 if (_subPointNameColors == null)
                 {
-#if RAWR3
+#if RAWR3 || RAWR4
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,0,0,255));
 #else
@@ -190,7 +190,7 @@ namespace Rawr.DPSDK
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else

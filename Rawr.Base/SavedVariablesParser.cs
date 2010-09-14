@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Rawr
 {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
     public class InvalidDataException : IOException
     {
         public InvalidDataException(string msg) : base(msg)

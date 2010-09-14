@@ -14,7 +14,7 @@ namespace Rawr.Hunter
     {
         #region Hunter Tab
         // ==== Boss Settings ====
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
         private int _TargetLevel = 83;
         public int TargetLevel
         {
@@ -225,7 +225,7 @@ namespace Rawr.Hunter
             get { return _petHappiness; }
             set { _petHappiness = value; OnPropertyChanged("PetHappinessLevel"); }
         }
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
         [XmlIgnore]
         private PetTalents _PetTalents;
         public PetTalents PetTalents

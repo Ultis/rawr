@@ -8,7 +8,7 @@ namespace Rawr.Enhance
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
     {
-#if RAWR3
+#if RAWR3 || RAWR4
         private string VERSION = "3.0.0.0";
 #endif
         #region Gemming Template
@@ -137,7 +137,7 @@ namespace Rawr.Enhance
         #endregion 
 
         #region Overrides
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
         {
@@ -161,7 +161,7 @@ namespace Rawr.Enhance
         }
 #endif
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
 		{
@@ -635,7 +635,7 @@ namespace Rawr.Enhance
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
             calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
 
-#if RAWR3
+#if RAWR3 || RAWR4
             calculatedStats.Version = VERSION;
 #else
             calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();

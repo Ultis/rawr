@@ -44,7 +44,7 @@ namespace Rawr.DPSDK
             totalSpellAbilities = 0f;
 
 
-/*#if RAWR3
+/*#if RAWR3 || RAWR4
             if (calcOpts.rotation == null)
             {
                 calcOpts.rotation = new Rotation();

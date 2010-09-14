@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Linq;
 #endif
 using System.Xml.Serialization;

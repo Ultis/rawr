@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Linq;
 #endif
 
@@ -51,7 +51,7 @@ namespace Rawr.Optimizer
         private List<List<DirectUpgradeEntry>>[] slotDirectUpgrades = new List<List<DirectUpgradeEntry>>[slotCount];
         private List<Item>[] slotRawItems = new List<Item>[slotCount];
 
-#if RAWR3
+#if RAWR3 || RAWR4
 		private bool ArrayContains<T>(T[] array, Func<T, bool> predicate)
 		{
 			return array.Any(predicate);

@@ -462,7 +462,7 @@ namespace Rawr.Moonkin
         }
 
         public static float BaseMana = 3496.0f;
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> subColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -552,8 +552,8 @@ namespace Rawr.Moonkin
             }
         }
 
-#if !RAWR3
-        // for RAWR3 include all charts in CustomChartNames
+#if !RAWR3 && !RAWR4
+        // for RAWR3 || RAWR4 include all charts in CustomChartNames
         private string[] _customRenderedChartNames = null;
         public override string[] CustomRenderedChartNames
         {
@@ -568,7 +568,7 @@ namespace Rawr.Moonkin
         }
 #endif
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -631,7 +631,7 @@ namespace Rawr.Moonkin
 
             calcs.Latency = calcOpts.Latency;
 
-#if RAWR3
+#if RAWR3 || RAWR4
             BossOptions bossOpts = new BossOptions();
             if (character.BossOptions != null) bossOpts = character.BossOptions;
             calcs.FightLength = bossOpts.BerserkTimer / 60f;
@@ -1010,7 +1010,7 @@ namespace Rawr.Moonkin
             return new ComparisonCalculationBase[0];
         }
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
             string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Hit Rating", "10 Crit Rating", "10 Haste Rating", "10 Intellect", "10 Spirit" };

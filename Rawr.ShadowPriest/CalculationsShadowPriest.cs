@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -325,7 +325,7 @@ namespace Rawr.ShadowPriest
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 #else

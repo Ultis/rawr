@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.Diagnostics;
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
 using System.Windows.Forms;
 #endif
 using System.IO;
@@ -371,7 +371,7 @@ namespace Rawr
 		{
             if (!characterInfo.ContainsKey("Talents"))
             {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 //new ErrorWindow() { Message = "Not yet implemented." }.Show();
 #else
                 MessageBox.Show("Talent data was not found, and must be manually added.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);

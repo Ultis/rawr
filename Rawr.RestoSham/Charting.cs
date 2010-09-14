@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -55,7 +55,7 @@ namespace Rawr.RestoSham
             new CustomChart() { ChartName = "Healing Sequences", ChartCalculatorMethod = ChartCalculators.CalculateSequencesChart }
         };
 
-#if !RAWR3
+#if !RAWR3 && !RAWR4
         public static string[] CustomRenderedChartNames = { 
             "Burst Stats Graph",
             "Sustained Stats Graph",
@@ -84,7 +84,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-#if RAWR3
+#if RAWR3 || RAWR4
                 return new string[0];
 #else
                 if (Charts == null || Charts.Length == 0)

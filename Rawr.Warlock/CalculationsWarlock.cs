@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Windows.Media;
 #else
 using System.Drawing;
@@ -34,7 +34,7 @@ namespace Rawr.Warlock {
         /// <summary>
         /// Panel to be placed on the Options tab of the main form
         /// </summary>
-#if RAWR3
+#if RAWR3 || RAWR4
         public override ICalculationOptionsPanel CalculationOptionsPanel {
 #else
         public override CalculationOptionsPanelBase CalculationOptionsPanel {

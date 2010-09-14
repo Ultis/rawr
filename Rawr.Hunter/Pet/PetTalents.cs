@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-#if !RAWR3 && !SILVERLIGHT
+#if !RAWR3 && !RAWR4 && !SILVERLIGHT
 using System.Data;
 using System.Drawing;
 #endif
@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.Hunter
 {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public sealed class PetTalentDataAttribute : Attribute
     {
@@ -98,13 +98,13 @@ namespace Rawr.Hunter
 
         public CharacterClass GetClass() { return CharacterClass.Hunter; }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public abstract PetTalentsBase Clone();
 #endif
     }
 
     public partial class PetTalents : PetTalentsBase
-#if RAWR3
+#if RAWR3 || RAWR4
     {
         public override PetTalentsBase Clone()
 #else

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml.Serialization;
-#if RAWR3
+#if RAWR3 || RAWR4
 using System.Linq;
 using System.Threading;
 using System.Windows.Threading;
@@ -13,7 +13,7 @@ namespace Rawr
 {
 	public static class ItemCache
 	{
-#if !RAWR3
+#if !RAWR3 && !RAWR4
 		public static readonly string SavedFilePath = 
             Path.Combine(
                 Path.Combine(
@@ -28,7 +28,7 @@ namespace Rawr
 			get { return _instance; }
 			set { _instance = value; }
 		}
-#if RAWR3
+#if RAWR3 || RAWR4
 		public static Dictionary<int, Item> Items { get { return _instance.Items; } }
 #else
         public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
@@ -54,7 +54,7 @@ namespace Rawr
         public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
-#if RAWR3
+#if RAWR3 || RAWR4
         public static void Save(TextWriter writer) { _instance.Save(writer); }
         public static void Load(TextReader reader) { _instance.Load(reader); }
 #else
@@ -73,7 +73,7 @@ namespace Rawr
 		public ItemCacheInstance() {  }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
-#if RAWR3
+#if RAWR3 || RAWR4
 			_items = new Dictionary<int, Item>();
 #else
             _items = new SortedDictionary<int, Item>();
@@ -87,7 +87,7 @@ namespace Rawr
             }
 		}
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<int, Item> _items;
         public Dictionary<int, Item> Items
         {
@@ -147,7 +147,7 @@ namespace Rawr
             return false;
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private bool dirtySinceLastAdd;
 #endif
 
@@ -171,7 +171,7 @@ namespace Rawr
 
             if (raiseEvent)
             {
-#if RAWR3
+#if RAWR3 || RAWR4
                 // when loading a new character we might get a long stream of new items from armory service
                 // if we trigger event for every single one the application becomes more or less unresponsive
                 // this is all happening on the main thread, armory service background worker is pushing things
@@ -494,7 +494,7 @@ namespace Rawr
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         public void Save(TextWriter writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ItemList));

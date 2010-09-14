@@ -88,7 +88,7 @@ namespace Rawr.ProtWarr
 
         #region Variables and Properties
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
 #else
@@ -231,7 +231,7 @@ threat and limited threat scaled by the threat scale.",
             }
         }
 
-#if RAWR3
+#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {

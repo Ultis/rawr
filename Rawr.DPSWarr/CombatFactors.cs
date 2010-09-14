@@ -114,7 +114,7 @@ namespace Rawr.DPSWarr {
         public int levelDif {
             get {
                 return
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.Level
 #else
                     CalcOpts.TargetLevel
@@ -159,7 +159,7 @@ namespace Rawr.DPSWarr {
                         (!FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
-#if RAWR3 || SILVERIGHT
+#if RAWR3 || RAWR4 || SILVERIGHT
                         BossOpts.Armor,
 #else
                         CalcOpts.TargetArmor,
@@ -324,7 +324,7 @@ namespace Rawr.DPSWarr {
         private float MhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
@@ -334,7 +334,7 @@ namespace Rawr.DPSWarr {
         private float OhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior);
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
@@ -351,7 +351,7 @@ namespace Rawr.DPSWarr {
         private float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
         private float MhBlockChance {
             get {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
@@ -360,7 +360,7 @@ namespace Rawr.DPSWarr {
         }
         private float OhBlockChance {
             get {
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
 #else
                 return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
@@ -422,7 +422,7 @@ namespace Rawr.DPSWarr {
             get
             {
                 return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit,
-#if RAWR3 || SILVERLIGHT
+#if RAWR3 || RAWR4 || SILVERLIGHT
                     BossOpts.Level
 #else
                     CalcOpts.TargetLevel
