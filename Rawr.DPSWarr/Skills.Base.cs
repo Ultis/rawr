@@ -43,7 +43,6 @@ namespace Rawr.DPSWarr.Skills
         private readonly Character Char;
         private Stats StatS;
         private readonly WarriorTalents Talents;
-        private readonly WarriorTalentsCata TalentsCata;
         private readonly CombatFactors combatFactors;
         private CalculationOptionsDPSWarr CalcOpts;
         private BossOptions BossOpts;

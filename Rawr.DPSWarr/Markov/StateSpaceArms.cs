@@ -21,7 +21,6 @@ namespace Rawr.DPSWarr.Markov
         public ArmsRotation Rot = null;
         Character Char;
         WarriorTalents Talents;
-        WarriorTalentsCata TalentsCata;
         Stats StatS;
         CombatFactors combatFactors;
         Skills.WhiteAttacks WhiteAtks;

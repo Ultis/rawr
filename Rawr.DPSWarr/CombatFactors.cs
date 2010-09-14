@@ -80,7 +80,6 @@ namespace Rawr.DPSWarr {
         #region Global Variables
         public Stats StatS { get; set; }
         private WarriorTalents Talents;
-        private WarriorTalentsCata TalentsCata;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
         public BossOptions BossOpts { get; private set; }
         public Character Char { get; private set; }

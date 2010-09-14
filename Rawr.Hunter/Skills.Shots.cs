@@ -111,7 +111,9 @@ namespace Rawr.Hunter.Skills
             Name = "Aimed Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.AimedShot;
+#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
@@ -163,7 +165,9 @@ namespace Rawr.Hunter.Skills
             Name = "Arcane Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.AimedShot;
+#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
@@ -173,7 +177,9 @@ namespace Rawr.Hunter.Skills
             ManaCost = 0.05f; // 5% of base mana
             // -20% with a sting active
             DamageBase = StatS.RangedAttackPower * 0.15f + 492f;
+#if !RAWR4
             DamageBonus = 1f + Talents.ImprovedArcaneShot * 0.05f;
+#endif
             //
             Initialize();
         }

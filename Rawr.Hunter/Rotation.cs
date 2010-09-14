@@ -136,7 +136,6 @@ namespace Rawr.Hunter {
         #region Get/Set
         protected Character Char { get; set; }
         protected WarriorTalents Talents { get; set; }
-        protected WarriorTalentsCata TalentsCata { get; set; }
         protected Stats StatS { get; set; }
         protected CombatFactors CombatFactors { get; set; }
         public Skills.WhiteAttacks WhiteAtks { get; protected set; }

@@ -963,22 +963,13 @@ These numbers to do not include racial bonuses.",
 
         public override bool IncludeOffHandInCalculations(Character character) {
             if (character.OffHand == null) { return false; }
-            if (character.CurrentTalents is WarriorTalents) {
-                WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
-                if (talents.TitansGrip > 0) {
-                    return true;
-                } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
-                    return base.IncludeOffHandInCalculations(character);
-                }
-            } else if (character.CurrentTalents is WarriorTalentsCata) {
-                WarriorTalentsCata talentsCata = (WarriorTalentsCata)character.CurrentTalentsCata;
-                if (talentsCata.TitansGrip > 0) {
-                    return true;
-                } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
-                    return base.IncludeOffHandInCalculations(character);
-                }
+            WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
+            if (talents.TitansGrip > 0) {
+                return true;
+            } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
+                return base.IncludeOffHandInCalculations(character);
             }
-            return false;
+            //return false;
         }
 
         #endregion

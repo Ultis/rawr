@@ -106,6 +106,9 @@ namespace Rawr
             return CharacterClass.Warrior;
         }
 
+        protected const int COL1 = 1, COL2 = 2, COL3 = 3, COL4 = 4;
+        protected const int ROW1 = 1, ROW2 = 2, ROW3 = 3, ROW4 = 4, ROW5 = 5, ROW6 = 6, ROW7 = 7;
+
 #if RAWR3 || RAWR4
         public abstract TalentsBase Clone();
 #endif
@@ -134,8 +137,6 @@ namespace Rawr
         public WarriorTalents(string talents) { LoadString(talents); }
         public static string[] TreeNames = new[] { @"Arms", @"Fury", @"Protection" };
         private const int ARMS = 0, FURY = 1, PROT = 2;
-        private const int COL1 = 1, COL2 = 2, COL3 = 3, COL4 = 4;
-        private const int ROW1 = 1, ROW2 = 2, ROW3 = 3, ROW4 = 4, ROW5 = 5, ROW6 = 6, ROW7 = 7;
 
         #region Arms
         #region Tier 1
@@ -1264,76 +1265,194 @@ Unleashing this Seal's energy will judge an enemy, instantly causing 2 to 2 Holy
         private int[] _data = new int[81];
         public override int[] Data { get { return _data; } }
         public HunterTalents() { }
-        public HunterTalents(string talents)
-        {
-            LoadString(talents);
-        }
-        public static string[] TreeNames = new[] {
-@"Beast Mastery",
-@"Marksmanship",
-@"Survival",};
+        public HunterTalents(string talents) { LoadString(talents); }
+        public static string[] TreeNames = new[] { @"Beast Mastery", @"Marksmanship", @"Survival" };
+        private const int BM = 0, MM = 1, SV = 2;
 
-        /// <summary>
-        /// While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by [3 * Pts]% for 12 sec.
-        /// </summary>
-        [TalentData(0, "Improved Aspect of the Hawk", 5, 0, 2, 1, -1, new[] {
+#region BM
+#region Tier 1
+/// <summary>Increases the critical strike chance of your Kill Command by [5*Pts]%</summary>
+[TalentData(0, "Improved Kill Command", 2, BM, COL1, ROW1, -1, new[] {
+@"Increases the critical strike chance of your Kill Command by 5%",
+@"Increases the critical strike chance of your Kill Command by 10%",}, "spell_nature_ravenform")]
+public int ImprovedKillCommand { get { return _data[0]; } set { _data[0] = value; } }
+/// <summary>Increases the attack power bonus of your Aspect of the Hawk by [20*Pts]%, and increases the amount of focus restored by your Aspect of the Fox by [Pts].</summary>
+[TalentData(1, "One with Nature", 3, BM, COL2, ROW1, -1, new[] {
+@"Increases the attack power bonus of your Aspect of the Hawk by 10%, and increases the amount of focus restored by your Aspect of the Fox by 1.",
+@"Increases the attack power bonus of your Aspect of the Hawk by 20%, and increases the amount of focus restored by your Aspect of the Fox by 2.",
+@"Increases the attack power bonus of your Aspect of the Hawk by 30%, and increases the amount of focus restored by your Aspect of the Fox by 3.",}, "spell_nature_ravenform")]
+public int OneWithNature { get { return _data[1]; } set { _data[1] = value; } }
+/// <summary>
+/// Increases the Focus regeneration of your pets by [10*Pts]%.
+/// </summary>
+[TalentData(2, "Bestial Discipline", 3, BM, COL3, ROW1, -1, new[] {
+@"Increases the Focus regeneration of your pets by 10%.",
+@"Increases the Focus regeneration of your pets by 20%.",
+@"Increases the Focus regeneration of your pets by 30%.",}, "spell_nature_abolishmagic")]
+public int BestialDiscipline { get { return _data[2]; } set { _data[2] = value; } }
+#endregion
+#region Tier 2
+/// <summary>
+/// Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by [4*Pts]%, and increases your speed while mounted by [5*Pts]%. The mounted movement speed increase does not stack with other effects.
+/// </summary>
+[TalentData(3, "Pathfinding", 2, BM, COL1, ROW2, -1, new[] {
+@"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 4%, and increases your speed while mounted by 5%. The mounted movement speed increase does not stack with other effects.",
+@"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",}, "ability_mount_jungletiger")]
+public int Pathfinding { get { return _data[3]; } set { _data[3] = value; } }
+/// <summary>
+/// While your pet is active, you and your pet will regenerate [Pts]% of total health every [5*Pts] sec., and increases healing done to you and your pet by [5*Pts]%.
+/// </summary>
+[TalentData(4, "Spirit Bond", 2, BM, COL2, ROW2, -1, new[] {
+@"While your pet is active, you and your pet will regenerate 1% of total health every 10 sec., and increases healing done to you and your pet by 5%.",
+@"While your pet is active, you and your pet will regenerate 2% of total health every 10 sec., and increases healing done to you and your pet by 10%.",}, "ability_druid_demoralizingroar")]
+public int SpiritBond { get { return _data[4]; } set { _data[4] = value; } }
+/// <summary>
+/// Your pet gains [2*Pts]% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.
+/// </summary>
+[TalentData(5, "Frenzy", 3, BM, COL3, ROW2, -1, new[] {
+@"Your pet gains 2% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
+@"Your pet gains 4% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
+@"Your pet gains 6% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",}, "inv_misc_monsterclaw_03")]
+public int Frenzy { get { return _data[5]; } set { _data[5] = value; } }
+/// <summary>
+/// Gives the Mend Pet ability a [25*Pts]% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.
+/// </summary>
+[TalentData(6, "Improved Mend Pet", 2, BM, COL4, ROW2, -1, new[] {
+@"Gives the Mend Pet ability a 25% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",
+@"Gives the Mend Pet ability a 50% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",}, "ability_hunter_mendpet")]
+public int ImprovedMendPet { get { return _data[6]; } set { _data[6] = value; } }
+#endregion
+#region Tier 3
+/// <summary>You have a [5*Pts]% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.</summary>
+[TalentData(7, "Cobra Strikes", 3, BM, COL1, ROW3, -1, new[] {
+@"You have a 5% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.",
+@"You have a 10% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.",
+@"You have a 15% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.",}, "ability_hunter_cobrastrikes")]
+public int CobraStrikes { get { return _data[7]; } set { _data[7] = value; } }
+/// <summary>Instantly restores 50 Focus to you and your pet.</summary>
+[TalentData(8, "Fervor", 1, BM, COL2, ROW3, -1, new[] {
+@"Instantly restores 50 Focus to you and your pet.",}, "ability_hunter_cobrastrikes")]
+public int Fervor { get { return _data[8]; } set { _data[8] = value; } }
+/// <summary>Consumes your Pets Frenzy effect, restoring 10 Focus to your pet and increasing your raged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.</summary>
+[TalentData(9, "Focus Fire", 1, BM, COL3, ROW3, 5, new[] {
+@"Consumes your Pets Frenzy effect, restoring 10 Focus to your pet and increasing your raged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.",}, "ability_hunter_cobrastrikes")]
+public int FocusFire { get { return _data[9]; } set { _data[9] = value; } }
+#endregion
+#region Tier 4
+/// <summary>Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by [10*Pts]%.</summary>
+[TalentData(10, "Longevity", 3, BM, COL1, ROW4, -1, new[] {
+@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 10%.",
+@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 20%.",
+@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 30%.",}, "ability_hunter_longevity")]
+public int Longevity { get { return _data[10]; } set { _data[10] = value; } }
+/// <summary>When you score two Kill Command critical hits in a row, your third will deal [15*Pts]% more damage and have its cost reduced by [5*Pts] focus.</summary>
+[TalentData(11, "Killing Streak", 2, BM, COL3, ROW4, -1, new[] {
+@"When you score two Kill Command critical hits in a row, your third will deal 15% more damage and have its cost reduced by 5 focus.",
+@"When you score two Kill Command critical hits in a row, your third will deal 30% more damage and have its cost reduced by 10 focus.",}, "ability_hunter_longevity")]
+public int KillingStreak { get { return _data[11]; } set { _data[11] = value; } }
+#endregion
+#region Tier 5
+/// <summary>Whenever you are hit by a melee attack, the cooldown of your Disengage is instantly reduced by [2*Pts] sec.
+/// <para>Whenever you are hit by a ranged attack or spell, the cooldown of your Deterrence is instantly reduced by [4*Pts] sec.</para>
+/// <para>These effects have a 2 sec cooldown.</para></summary>
+[TalentData(12, "Crouching Tiger, Hidden Chimera", 2, BM, COL1, ROW5, -1, new[] {
+@"Whenever you are hit by a melee attack, the cooldown of your Disengage is instantly reduced by 2 sec.
+
+Whenever you are hit by a ranged attack or spell, the cooldown of your Deterrence is instantly reduced by 4 sec.
+
+These effects have a 2 sec cooldown.",
+@"Whenever you are hit by a melee attack, the cooldown of your Disengage is instantly reduced by 4 sec.
+
+Whenever you are hit by a ranged attack or spell, the cooldown of your Deterrence is instantly reduced by 8 sec.
+
+These effects have a 2 sec cooldown.",}, "ability_hunter_longevity")]
+public int CrouchingTigerHiddenChimera { get { return _data[11]; } set { _data[11] = value; } }
+/// <summary>Send your pet into a rage causing 50% additional damage for 10 sec. The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.</summary>
+[TalentData(13, "Bestial Wrath", 1, BM, COL2, ROW5, 8, new[] {
+@"Send your pet into a rage causing 50% additional damage for 10 sec. The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.",}, "ability_druid_ferociousbite")]
+public int BestialWrath { get { return _data[13]; } set { _data[13] = value; } }
+/// <summary>All party and raid members have all damage increased by 3% within 100 yards of your pet.</summary>
+[TalentData(14, "Ferocious Inspiration", 1, BM, COL3, ROW5, -1, new[] {
+@"All party and raid members have all damage increased by 3% within 100 yards of your pet.",}, "ability_hunter_ferociousinspiration")]
+public int FerociousInspiration { get { return _data[14]; } set { _data[14] = value; } }
+#endregion
+#region Tier 6
+/// <summary>Increases you and your pets maximum focus by [5*Pts].</summary>
+[TalentData(15, "Kindred Spirits", 2, BM, COL1, ROW6, -1, new[] {
+@"Increases you and your pets maximum focus by 5.",
+@"Increases you and your pets maximum focus by 10.",}, "ability_hunter_separationanxiety")]
+public int KindredSpirits { get { return _data[15]; } set { _data[15] = value; } }
+/// <summary>While your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing focus costs of all shots by 50% for 10 sec.</summary>
+[TalentData(16, "The Beast Within", 1, BM, 2, 9, 13, new[] {
+@"While your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing focus costs of all shots by 50% for 10 sec.",}, "ability_hunter_beastwithin")]
+public int TheBeastWithin { get { return _data[16]; } set { _data[16] = value; } }
+/// <summary>When your pet scores a critical hit with a Basic Attack, you instantly regenerate [3*Pts] focus.</summary>
+[TalentData(17, "Invigoration", 2, BM, COL3, ROW6, 14, new[] {
+@"When your pet scores a critical hit with a Basic Attack, you instantly regenerate 3 focus.",
+@"When your pet scores a critical hit with a Basic Attack, you instantly regenerate 6 focus.",}, "ability_hunter_invigeration")]
+public int Invigoration { get { return _data[17]; } set { _data[17] = value; } }
+#endregion
+#region Tier 7
+/// <summary>You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill Points by 4.</summary>
+[TalentData(18, "Beast Mastery", 1, BM, COL2, ROW7, -1, new[] {
+@"You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill Points by 4.",}, "ability_hunter_beastmastery")]
+public int BeastMastery { get { return _data[18]; } set { _data[18] = value; } }
+#endregion
+#region Unused Talents
+/*/// <summary>
+/// While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by [3 * Pts]% for 12 sec.
+/// </summary>
+[TalentData(0, "Improved Aspect of the Hawk", BM, 0, 2, 1, -1, new[] {
 @"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 3% for 12 sec.",
 @"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 6% for 12 sec.",
 @"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 9% for 12 sec.",
 @"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 12% for 12 sec.",
 @"While Aspect of the Hawk or Dragonhawk is active, all normal ranged attacks have a 10% chance of increasing ranged attack speed by 15% for 12 sec.",}, "spell_nature_ravenform")]
-        public int ImprovedAspectOfTheHawk { get { return _data[0]; } set { _data[0] = value; } }
-        /// <summary>
-        /// Increases the health of your pet by [2 * Pts]% and your total health by [1 * Pts]%.
-        /// </summary>
-        [TalentData(1, "Endurance Training", 5, 0, 3, 1, -1, new[] {
+public int ImprovedAspectOfTheHawk { get { return _data[0]; } set { _data[0] = value; } }
+/// <summary>
+/// Increases the health of your pet by [2 * Pts]% and your total health by [1 * Pts]%.
+/// </summary>
+[TalentData(1, "Endurance Training", 5, BM, 3, 1, -1, new[] {
 @"Increases the health of your pet by 2% and your total health by 1%.",
 @"Increases the health of your pet by 4% and your total health by 2%.",
 @"Increases the health of your pet by 6% and your total health by 3%.",
 @"Increases the health of your pet by 8% and your total health by 4%.",
 @"Increases the health of your pet by 10% and your total health by 5%.",}, "spell_nature_reincarnation")]
-        public int EnduranceTraining { get { return _data[1]; } set { _data[1] = value; } }
-        /// <summary>
-        /// All damage caused by you is increased by [1 * Pts]% while your pet is active and the critical strike chance of your pet's special abilities is increased by [10 * Pts]% while Kill Command is active.
-        /// </summary>
-        [TalentData(2, "Focused Fire", 2, 0, 1, 2, -1, new[] {
+public int EnduranceTraining { get { return _data[1]; } set { _data[1] = value; } }
+/// <summary>
+/// All damage caused by you is increased by [1 * Pts]% while your pet is active and the critical strike chance of your pet's special abilities is increased by [10 * Pts]% while Kill Command is active.
+/// </summary>
+[TalentData(2, "Focused Fire", 2, BM, 1, 2, -1, new[] {
 @"All damage caused by you is increased by 1% while your pet is active and the critical strike chance of your pet's special abilities is increased by 10% while Kill Command is active.",
 @"All damage caused by you is increased by 2% while your pet is active and the critical strike chance of your pet's special abilities is increased by 20% while Kill Command is active.",}, "ability_hunter_silenthunter")]
-        public int FocusedFire { get { return _data[2]; } set { _data[2] = value; } }
-        /// <summary>
-        /// Increases the Dodge bonus of your Aspect of the Monkey and Aspect of the Dragonhawk by [2 * Pts]%.
-        /// </summary>
-        [TalentData(3, "Improved Aspect of the Monkey", 3, 0, 2, 2, -1, new[] {
+public int FocusedFire { get { return _data[2]; } set { _data[2] = value; } }
+/// <summary>
+/// Increases the Dodge bonus of your Aspect of the Monkey and Aspect of the Dragonhawk by [2 * Pts]%.
+/// </summary>
+[TalentData(3, "Improved Aspect of the Monkey", 3, BM, 2, 2, -1, new[] {
 @"Increases the Dodge bonus of your Aspect of the Monkey and Aspect of the Dragonhawk by 2%.",
 @"Increases the Dodge bonus of your Aspect of the Monkey and Aspect of the Dragonhawk by 4%.",
 @"Increases the Dodge bonus of your Aspect of the Monkey and Aspect of the Dragonhawk by 6%.",}, "ability_hunter_aspectofthemonkey")]
-        public int ImprovedAspectOfTheMonkey { get { return _data[3]; } set { _data[3] = value; } }
-        /// <summary>
-        /// Increases the armor rating of your pets by [20 / 3 * Pts]% and your armor contribution from items by [10 / 3 * Pts]%.
-        /// </summary>
-        [TalentData(4, "Thick Hide", 3, 0, 3, 2, -1, new[] {
+public int ImprovedAspectOfTheMonkey { get { return _data[3]; } set { _data[3] = value; } }
+/// <summary>
+/// Increases the armor rating of your pets by [20 / 3 * Pts]% and your armor contribution from items by [10 / 3 * Pts]%.
+/// </summary>
+[TalentData(4, "Thick Hide", 3, BM, 3, 2, -1, new[] {
 @"Increases the armor rating of your pets by 7% and your armor contribution from items by 4%.",
 @"Increases the armor rating of your pets by 14% and your armor contribution from items by 7%.",
 @"Increases the armor rating of your pets by 20% and your armor contribution from items by 10%.",}, "inv_misc_pelt_bear_03")]
-        public int ThickHide { get { return _data[4]; } set { _data[4] = value; } }
-        /// <summary>
-        /// Revive Pet's casting time is reduced by [3 * Pts] sec, mana cost is reduced by [20 * Pts]%, and increases the health your pet returns with by an additional [15 * Pts]%.
-        /// </summary>
-        [TalentData(5, "Improved Revive Pet", 2, 0, 4, 2, -1, new[] {
+public int ThickHide { get { return _data[4]; } set { _data[4] = value; } }
+/// <summary>
+/// Revive Pet's casting time is reduced by [3 * Pts] sec, mana cost is reduced by [20 * Pts]%, and increases the health your pet returns with by an additional [15 * Pts]%.
+/// </summary>
+[TalentData(5, "Improved Revive Pet", 2, BM, 4, 2, -1, new[] {
 @"Revive Pet's casting time is reduced by 3 sec, mana cost is reduced by 20%, and increases the health your pet returns with by an additional 15%.",
 @"Revive Pet's casting time is reduced by 6 sec, mana cost is reduced by 40%, and increases the health your pet returns with by an additional 30%.",}, "ability_hunter_beastsoothe")]
-        public int ImprovedRevivePet { get { return _data[5]; } set { _data[5] = value; } }
-        /// <summary>
-        /// Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by [4 * Pts]%, and increases your speed while mounted by [5 * Pts]%. The mounted movement speed increase does not stack with other effects.
-        /// </summary>
-        [TalentData(6, "Pathfinding", 2, 0, 1, 3, -1, new[] {
-@"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 4%, and increases your speed while mounted by 5%. The mounted movement speed increase does not stack with other effects.",
-@"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",}, "ability_mount_jungletiger")]
-        public int Pathfinding { get { return _data[6]; } set { _data[6] = value; } }
-        /// <summary>
-        /// Aspect of the Viper - Reduces the damage penalty by 10%.<br/><br/>Aspect of the Monkey - Reduces the damage done to you while active by 5%.<br/><br/>Aspect of the Hawk - Increases the attack power bonus by 30%.<br/><br/>Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.
-        /// </summary>
-        [TalentData(7, "Aspect Mastery", 1, 0, 2, 3, -1, new[] {
+public int ImprovedRevivePet { get { return _data[5]; } set { _data[5] = value; } }
+/// <summary>
+/// Aspect of the Viper - Reduces the damage penalty by 10%.<br/><br/>Aspect of the Monkey - Reduces the damage done to you while active by 5%.<br/><br/>Aspect of the Hawk - Increases the attack power bonus by 30%.<br/><br/>Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.
+/// </summary>
+[TalentData(7, "Aspect Mastery", 1, BM, 2, 3, -1, new[] {
 @"Aspect of the Viper - Reduces the damage penalty by 10%.
 
 Aspect of the Monkey - Reduces the damage done to you while active by 5%.
@@ -1341,594 +1460,504 @@ Aspect of the Monkey - Reduces the damage done to you while active by 5%.
 Aspect of the Hawk - Increases the attack power bonus by 30%.
 
 Aspect of the Dragonhawk - Combines the bonuses from Aspect of the Monkey and Hawk.",}, "ability_hunter_aspectmastery")]
-        public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
-        /// <summary>
-        /// Increases the damage done by your pets by [3 * Pts]%.
-        /// </summary>
-        [TalentData(8, "Unleashed Fury", 5, 0, 3, 3, -1, new[] {
+public int AspectMastery { get { return _data[7]; } set { _data[7] = value; } }
+/// <summary>
+/// Increases the damage done by your pets by [3 * Pts]%.
+/// </summary>
+[TalentData(8, "Unleashed Fury", 5, BM, 3, 3, -1, new[] {
 @"Increases the damage done by your pets by 3%.",
 @"Increases the damage done by your pets by 6%.",
 @"Increases the damage done by your pets by 9%.",
 @"Increases the damage done by your pets by 12%.",
 @"Increases the damage done by your pets by 15%.",}, "ability_bullrush")]
-        public int UnleashedFury { get { return _data[8]; } set { _data[8] = value; } }
-        /// <summary>
-        /// Reduces the mana cost of your Mend Pet spell by [10 * Pts]% and gives the Mend Pet spell a [25 * Pts]% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.
-        /// </summary>
-        [TalentData(9, "Improved Mend Pet", 2, 0, 2, 4, -1, new[] {
-@"Reduces the mana cost of your Mend Pet spell by 10% and gives the Mend Pet spell a 25% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",
-@"Reduces the mana cost of your Mend Pet spell by 20% and gives the Mend Pet spell a 50% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.",}, "ability_hunter_mendpet")]
-        public int ImprovedMendPet { get { return _data[9]; } set { _data[9] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of your pet by [2 * Pts]%.
-        /// </summary>
-        [TalentData(10, "Ferocity", 5, 0, 3, 4, -1, new[] {
+public int UnleashedFury { get { return _data[8]; } set { _data[8] = value; } }
+/// <summary>
+/// Increases the critical strike chance of your pet by [2 * Pts]%.
+/// </summary>
+[TalentData(10, "Ferocity", 5, BM, 3, 4, -1, new[] {
 @"Increases the critical strike chance of your pet by 2%.",
 @"Increases the critical strike chance of your pet by 4%.",
 @"Increases the critical strike chance of your pet by 6%.",
 @"Increases the critical strike chance of your pet by 8%.",
 @"Increases the critical strike chance of your pet by 10%.",}, "inv_misc_monsterclaw_04")]
-        public int Ferocity { get { return _data[10]; } set { _data[10] = value; } }
-        /// <summary>
-        /// While your pet is active, you and your pet will regenerate [1 * Pts]% of total health every [5 * Pts] sec., and increases healing done to you and your pet by 10%.
-        /// </summary>
-        [TalentData(11, "Spirit Bond", 2, 0, 1, 5, -1, new[] {
-@"While your pet is active, you and your pet will regenerate 1% of total health every 10 sec., and increases healing done to you and your pet by 5%.",
-@"While your pet is active, you and your pet will regenerate 2% of total health every 10 sec., and increases healing done to you and your pet by 10%.",}, "ability_druid_demoralizingroar")]
-        public int SpiritBond { get { return _data[11]; } set { _data[11] = value; } }
-        /// <summary>
-        /// Command your pet to intimidate the target, causing a high amount of threat and stunning the target for 3 sec. Lasts 15 sec.
-        /// </summary>
-        [TalentData(12, "Intimidation", 1, 0, 2, 5, -1, new[] {
+public int Ferocity { get { return _data[10]; } set { _data[10] = value; } }
+/// <summary>
+/// Command your pet to intimidate the target, causing a high amount of threat and stunning the target for 3 sec. Lasts 15 sec.
+/// </summary>
+[TalentData(12, "Intimidation", 1, BM, 2, 5, -1, new[] {
 @"Command your pet to intimidate the target, causing a high amount of threat and stunning the target for 3 sec. Lasts 15 sec.",}, "ability_devour")]
-        public int Intimidation { get { return _data[12]; } set { _data[12] = value; } }
-        /// <summary>
-        /// Increases the Focus regeneration of your pets by [50 * Pts]%.
-        /// </summary>
-        [TalentData(13, "Bestial Discipline", 2, 0, 4, 5, -1, new[] {
-@"Increases the Focus regeneration of your pets by 50%.",
-@"Increases the Focus regeneration of your pets by 100%.",}, "spell_nature_abolishmagic")]
-        public int BestialDiscipline { get { return _data[13]; } set { _data[13] = value; } }
-        /// <summary>
-        /// Increases your pet's attack power by [5 * Pts]%, and increases the duration of your Master's Call effect by [3 * Pts] sec.
-        /// </summary>
-        [TalentData(14, "Animal Handler", 2, 0, 1, 6, -1, new[] {
+public int Intimidation { get { return _data[12]; } set { _data[12] = value; } }
+/// <summary>
+/// Increases your pet's attack power by [5 * Pts]%, and increases the duration of your Master's Call effect by [3 * Pts] sec.
+/// </summary>
+[TalentData(14, "Animal Handler", 2, BM, 1, 6, -1, new[] {
 @"Increases your pet's attack power by 5%, and increases the duration of your Master's Call effect by 3 sec.",
 @"Increases your pet's attack power by 10%, and increases the duration of your Master's Call effect by 6 sec.",}, "ability_hunter_animalhandler")]
-        public int AnimalHandler { get { return _data[14]; } set { _data[14] = value; } }
-        /// <summary>
-        /// Gives your pet a [20 * Pts]% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.
-        /// </summary>
-        [TalentData(15, "Frenzy", 5, 0, 3, 6, 10, new[] {
-@"Gives your pet a 20% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
-@"Gives your pet a 40% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
-@"Gives your pet a 60% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
-@"Gives your pet a 80% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",
-@"Gives your pet a 100% chance to gain a 30% attack speed increase for 8 sec after dealing a critical strike.",}, "inv_misc_monsterclaw_03")]
-        public int Frenzy { get { return _data[15]; } set { _data[15] = value; } }
-        /// <summary>
-        /// All party and raid members have all damage increased by [1 * Pts]% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by [3 * Pts]%.
-        /// </summary>
-        [TalentData(16, "Ferocious Inspiration", 3, 0, 1, 7, -1, new[] {
-@"All party and raid members have all damage increased by 1% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 3%.",
-@"All party and raid members have all damage increased by 2% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 6%.",
-@"All party and raid members have all damage increased by 3% within 100 yards of your pet. In addition, increases the damage dealt by Arcane Shot and Steady Shot by 9%.",}, "ability_hunter_ferociousinspiration")]
-        public int FerociousInspiration { get { return _data[16]; } set { _data[16] = value; } }
-        /// <summary>
-        /// Send your pet into a rage causing 50% additional damage for 10 sec.  While enraged, the beast does not feel pity or remorse or fear and it cannot be stopped unless killed.
-        /// </summary>
-        [TalentData(17, "Bestial Wrath", 1, 0, 2, 7, 12, new[] {
-@"Send your pet into a rage causing 50% additional damage for 10 sec.  While enraged, the beast does not feel pity or remorse or fear and it cannot be stopped unless killed.",}, "ability_druid_ferociousbite")]
-        public int BestialWrath { get { return _data[17]; } set { _data[17] = value; } }
-        /// <summary>
-        /// Increases your chance to dodge by [1 * Pts]% and your pet's chance to dodge by an additional [3 * Pts]%. In addition, reduces the cooldown of your Kill Command ability by [10 * Pts] sec.
-        /// </summary>
-        [TalentData(18, "Catlike Reflexes", 3, 0, 3, 7, -1, new[] {
+public int AnimalHandler { get { return _data[14]; } set { _data[14] = value; } }
+/// <summary>
+/// Increases your chance to dodge by [1 * Pts]% and your pet's chance to dodge by an additional [3 * Pts]%. In addition, reduces the cooldown of your Kill Command ability by [10 * Pts] sec.
+/// </summary>
+[TalentData(18, "Catlike Reflexes", 3, BM, 3, 7, -1, new[] {
 @"Increases your chance to dodge by 1% and your pet's chance to dodge by an additional 3%. In addition, reduces the cooldown of your Kill Command ability by 10 sec.",
 @"Increases your chance to dodge by 2% and your pet's chance to dodge by an additional 6%. In addition, reduces the cooldown of your Kill Command ability by 20 sec.",
 @"Increases your chance to dodge by 3% and your pet's chance to dodge by an additional 9%. In addition, reduces the cooldown of your Kill Command ability by 30 sec.",}, "ability_hunter_catlikereflexes")]
-        public int CatlikeReflexes { get { return _data[18]; } set { _data[18] = value; } }
-        /// <summary>
-        /// When your pet scores a critical hit with a special ability, you have a [50 * Pts]% chance to instantly regenerate 1% mana.
-        /// </summary>
-        [TalentData(19, "Invigoration", 2, 0, 1, 8, 16, new[] {
-@"When your pet scores a critical hit with a special ability, you have a 50% chance to instantly regenerate 1% mana.",
-@"When your pet scores a critical hit with a special ability, you have a 100% chance to instantly regenerate 1% mana.",}, "ability_hunter_invigeration")]
-        public int Invigoration { get { return _data[19]; } set { _data[19] = value; } }
-        /// <summary>
-        /// Increases ranged combat attack speed by [4 * Pts]% and your pet's melee attack speed by [4 * Pts]%.
-        /// </summary>
-        [TalentData(20, "Serpent's Swiftness", 5, 0, 3, 8, -1, new[] {
+public int CatlikeReflexes { get { return _data[18]; } set { _data[18] = value; } }
+/// <summary>
+/// Increases ranged combat attack speed by [4 * Pts]% and your pet's melee attack speed by [4 * Pts]%.
+/// </summary>
+[TalentData(20, "Serpent's Swiftness", 5, BM, 3, 8, -1, new[] {
 @"Increases ranged combat attack speed by 4% and your pet's melee attack speed by 4%.",
 @"Increases ranged combat attack speed by 8% and your pet's melee attack speed by 8%.",
 @"Increases ranged combat attack speed by 12% and your pet's melee attack speed by 12%.",
 @"Increases ranged combat attack speed by 16% and your pet's melee attack speed by 16%.",
 @"Increases ranged combat attack speed by 20% and your pet's melee attack speed by 20%.",}, "ability_hunter_serpentswiftness")]
-        public int SerpentsSwiftness { get { return _data[20]; } set { _data[20] = value; } }
-        /// <summary>
-        /// Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by [10 * Pts]%.
-        /// </summary>
-        [TalentData(21, "Longevity", 3, 0, 1, 9, -1, new[] {
-@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 10%.",
-@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 20%.",
-@"Reduces the cooldown of your Bestial Wrath, Intimidation and Pet Special Abilities by 30%.",}, "ability_hunter_longevity")]
-        public int Longevity { get { return _data[21]; } set { _data[21] = value; } }
-        /// <summary>
-        /// Increases all damage you deal by 10% and while your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing mana costs of all spells by 50% for 10 sec.  While enraged, you do not feel pity or remorse or fear and you cannot be stopped unless killed.
-        /// </summary>
-        [TalentData(22, "The Beast Within", 1, 0, 2, 9, 17, new[] {
-@"Increases all damage you deal by 10% and while your pet is under the effects of Bestial Wrath, you also go into a rage causing 10% additional damage and reducing mana costs of all spells by 50% for 10 sec.  While enraged, you do not feel pity or remorse or fear and you cannot be stopped unless killed.",}, "ability_hunter_beastwithin")]
-        public int TheBeastWithin { get { return _data[22]; } set { _data[22] = value; } }
-        /// <summary>
-        /// You have a [20 * Pts]% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 2 special attacks to critically hit.
-        /// </summary>
-        [TalentData(23, "Cobra Strikes", 3, 0, 3, 9, 20, new[] {
-@"You have a 20% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 2 special attacks to critically hit.",
-@"You have a 40% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 2 special attacks to critically hit.",
-@"You have a 60% chance when you critically hit with Arcane Shot, Steady Shot or Kill Shot to cause your pet's next 2 special attacks to critically hit.",}, "ability_hunter_cobrastrikes")]
-        public int CobraStrikes { get { return _data[23]; } set { _data[23] = value; } }
-        /// <summary>
-        /// Increases your pet's damage by [4 * Pts]% and you and your pet's movement speed by [2 * Pts]% while your pet is active. This does not stack with other movement speed increasing effects.
-        /// </summary>
-        [TalentData(24, "Kindred Spirits", 5, 0, 2, 10, -1, new[] {
-@"Increases your pet's damage by 4% and you and your pet's movement speed by 2% while your pet is active. This does not stack with other movement speed increasing effects.",
-@"Increases your pet's damage by 8% and you and your pet's movement speed by 4% while your pet is active. This does not stack with other movement speed increasing effects.",
-@"Increases your pet's damage by 12% and you and your pet's movement speed by 6% while your pet is active. This does not stack with other movement speed increasing effects.",
-@"Increases your pet's damage by 16% and you and your pet's movement speed by 8% while your pet is active. This does not stack with other movement speed increasing effects.",
-@"Increases your pet's damage by 20% and you and your pet's movement speed by 10% while your pet is active. This does not stack with other movement speed increasing effects.",}, "ability_hunter_separationanxiety")]
-        public int KindredSpirits { get { return _data[24]; } set { _data[24] = value; } }
-        /// <summary>
-        /// You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill Points by 4.
-        /// </summary>
-        [TalentData(25, "Beast Mastery", 1, 0, 2, 11, -1, new[] {
-@"You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill Points by 4.",}, "ability_hunter_beastmastery")]
-        public int BeastMastery { get { return _data[25]; } set { _data[25] = value; } }
-        /// <summary>
-        /// Increases the duration of your Concussive Shot's daze effect by [1 * Pts] sec.
-        /// </summary>
-        [TalentData(26, "Improved Concussive Shot", 2, 1, 1, 1, -1, new[] {
-@"Increases the duration of your Concussive Shot's daze effect by 1 sec.",
-@"Increases the duration of your Concussive Shot's daze effect by 2 sec.",}, "spell_frost_stun")]
-        public int ImprovedConcussiveShot { get { return _data[26]; } set { _data[26] = value; } }
-        /// <summary>
-        /// Reduces the pushback suffered from damaging attacks while casting Steady Shot by [70 / 3 * Pts]%, and increases your chance to hit by [1 * Pts]%.
-        /// </summary>
-        [TalentData(27, "Focused Aim", 3, 1, 2, 1, -1, new[] {
+public int SerpentsSwiftness { get { return _data[20]; } set { _data[20] = value; } }*/
+#endregion
+#endregion
+#region MM
+#region Tier 1
+/// <summary>Your ranged critical hits cause your pet to generate [5*Pts] Focus.</summary>
+[TalentData(19, "Go for the Throat", 2, MM, COL1, ROW1, -1, new[] {
+@"Your ranged auto-shot critical hits cause your pet to generate 5 Focus.",
+@"Your ranged auto-shot critical hits cause your pet to generate 10 Focus.",}, "ability_hunter_goforthethroat")]
+public int GoForTheThroat { get { return _data[19]; } set { _data[19] = value; } }
+/// <summary>Reduces the focus cost of your Arcane Shot by [Pts], and your Explosive Shot and Chimera Shot by [2*Pts].</summary>
+[TalentData(20, "Efficiency", 3, MM, COL2, ROW1, -1, new[] {
+@"Reduces the focus cost of your Arcane Shot by 1, and your Explosive Shot and Chimera Shot by 2.",
+@"Reduces the focus cost of your Arcane Shot by 2, and your Explosive Shot and Chimera Shot by 4.",
+@"Reduces the focus cost of your Arcane Shot by 3, and your Explosive Shot and Chimera Shot by 6.",}, "spell_frost_wizardmark")]
+public int Efficiency { get { return _data[20]; } set { _data[20] = value; } }
+/// <summary>After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes [10*Pts]% additional damage. Lasts 20 sec.</summary>
+[TalentData(21, "Rapid Killing", 2, MM, COL1, ROW1, -1, new[] {
+@"After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10% additional damage. Lasts 20 sec.",
+@"After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 20% additional damage. Lasts 20 sec.",}, "ability_hunter_rapidkilling")]
+public int RapidKilling { get { return _data[21]; } set { _data[21] = value; } }
+#endregion
+#region Tier 2
+/// <summary>When you critically hit with your Arcane Shot, Kill ommand, Aimed Shot or Explosive Shot the focus of your Pet's next 2 basic attacks are reduced by [50*Pts]% for 12 sec.</summary>
+[TalentData(22, "Sic 'Em!", 2, MM, COL1, ROW2, 19, new[] {
+@"When you critically hit with your Arcane Shot, Kill ommand, Aimed Shot or Explosive Shot the focus of your Pet's next 2 basic attacks are reduced by 50% for 12 sec.",
+@"When you critically hit with your Arcane Shot, Kill ommand, Aimed Shot or Explosive Shot the focus of your Pet's next 2 basic attacks are reduced by 100% for 12 sec.",}, "ability_hunter_goforthethroat")]
+public int SicEm { get { return _data[22]; } set { _data[22] = value; } }
+/// <summary>When you Steady Shot twice in a row, your ranged attack speed will be increased by [5*Pts]% for 8 sec.</summary>
+[TalentData(23, "Improved Steady Shot", 3, MM, COL2, ROW2, -1, new[] {
+@"When you Steady Shot twice in a row, your ranged attack speed will be increased by 5% for 8 sec.",
+@"When you Steady Shot twice in a row, your ranged attack speed will be increased by 10% for 8 sec.",
+@"When you Steady Shot twice in a row, your ranged attack speed will be increased by 15% for 8 sec.",}, "ability_hunter_improvedsteadyshot")]
+public int ImprovedSteadyShot { get { return _data[23]; } set { _data[23] = value; } }
+/// <summary>Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by [30*Pts]% on targets who are above 80% health.</summary>
+[TalentData(24, "Careful Aim", 2, MM, COL3, ROW2, -1, new[] {
+@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30% on targets who are above 80% health.",
+@"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 60% on targets who are above 80% health.",}, "ability_hunter_zenarchery")]
+public int CarefulAim { get { return _data[24]; } set { _data[24] = value; } }
+#endregion
+#region Tier 3
+/// <summary>A shot that silences the target for 3 sec. Non-player victim spellcasting is also interrupted for 3 sec.</summary>
+[TalentData(25, "Silencing Shot", 1, MM, COL1, ROW3, 46, new[] {
+@"A shot that silences the target for 3 sec. Non-player victim spellcasting is also interrupted for 3 sec.",}, "ability_theblackarrow")]
+public int SilencingShot { get { return _data[25]; } set { _data[25] = value; } }
+/// <summary>Your successful Chimera Shot and Multi-Shot attacks have a [50*Pts]% chance to daze the target for 4 sec.</summary>
+[TalentData(26, "Improved Concussive Shot", 2, MM, COL2, ROW3, -1, new[] {
+@"Your successful Chimera Shot and Multi-Shot attacks have a 50% chance to daze the target for 4 sec.",
+@"Your successful Chimera Shot and Multi-Shot attacks have a 100% chance to daze the target for 4 sec.",}, "spell_frost_stun")]
+public int ImprovedConcussiveShot { get { return _data[26]; } set { _data[26] = value; } }
+/// <summary>Your critical Aimed, Steady and Chimera Shots cause the target to bleed for [10 * Pts]% of the damage dealt over 8 sec.</summary>
+[TalentData(27, "Piercing Shots", 3, MM, COL3, ROW3, -1, new[] {
+@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 10% of the damage dealt over 8 sec.",
+@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 20% of the damage dealt over 8 sec.",
+@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 30% of the damage dealt over 8 sec.",}, "ability_hunter_piercingshots")]
+public int PiercingShots { get { return _data[27]; } set { _data[27] = value; } }
+#endregion
+#region Tier 4
+/// <summary>When you critically hit with your multi-shot your next Multi-Shot's focus will be reduced by [25*Pts]%.</summary>
+[TalentData(28, "Bombardment", 2, MM, COL1, ROW4, -1, new[] {
+@"When you critically hit with your multi-shot your next Multi-Shot's focus will be reduced by 25%.",
+@"When you critically hit with your multi-shot your next Multi-Shot's focus will be reduced by 50%.",}, "spell_frost_stun")]
+public int Bombardment { get { return _data[28]; } set { _data[28] = value; } }
+/// <summary>Increases the attack power of party and raid members within 100 yards by 10%.</summary>
+[TalentData(29, "Trueshot Aura", 1, MM, COL2, ROW4, -1, new[] {
+@"Increases the attack power of party and raid members within 100 yards by 10%.",}, "ability_trueshot")]
+public int TrueshotAura { get { return _data[29]; } set { _data[29] = value; } }
+/// <summary>Your Steady Shot and Cobra Shot abilities grant an additional [3*Pts] Focus when dealt on targets at or below 25% health.</summary>
+[TalentData(30, "Termination", 2, MM, COL3, ROW4, -1, new[] {
+@"Your Steady Shot and Cobra Shot abilities grant an additional 3 Focus when dealt on targets at or below 25% health.",
+@"Your Steady Shot and Cobra Shot abilities grant an additional 6 Focus when dealt on targets at or below 25% health.",}, "ability_trueshot")]
+public int Termination { get { return _data[30]; } set { _data[30] = value; } }
+/// <summary>When your marked target attempts to run, flee or move, you have a [4*Pts]% chance to cause your next Kill Command on the marked target within 8 sec to refund the focus cost.</summary>
+[TalentData(31, "Resistance is Futile", 2, MM, COL3, ROW4, -1, new[] {
+@"When your marked target attempts to run, flee or move, you have a 4% chance to cause your next Kill Command on the marked target within 8 sec to refund the focus cost.",
+@"When your marked target attempts to run, flee or move, you have a 8% chance to cause your next Kill Command on the marked target within 8 sec to refund the focus cost.",}, "ability_trueshot")]
+public int ResistanceIsFutile { get { return _data[31]; } set { _data[31] = value; } }
+#endregion
+#region Tier 5
+/// <summary>You gain [6*Pts] focus every 3 sec while under the effect of Rapid Fire, and you gain [25*Pts] focus instantly when you gain Rapid Killing.</summary>
+[TalentData(32, "Rapid Recuperation", 2, MM, COL1, ROW5, -1, new[] {
+@"You gain 6 focus every 3 sec while under the effect of Rapid Fire, and you gain 25 focus instantly when you gain Rapid Killing.",
+@"You gain 12 focus every 3 sec while under the effect of Rapid Fire, and you gain 50 focus instantly when you gain Rapid Killing.",}, "ability_hunter_rapidregeneration")]
+public int RapidRecuperation { get { return _data[32]; } set { _data[32] = value; } }
+/// <summary>You have a [20*Pts]% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec. </summary>
+[TalentData(33, "Master Marksman", 3, MM, COL2, ROW5, -1, new[] {
+@"You have a 20% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 40% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",}, "ability_hunter_mastermarksman")]
+public int MasterMarksman { get { return _data[33]; } set { _data[33] = value; } }
+/// <summary>When activated, this ability immediately finishes the cooldown on your other Hunter abilities except Bestial Wrath.</summary>
+[TalentData(34, "Readiness", 1, MM, COL4, ROW5, -1, new[] {
+@"When activated, this ability immediately finishes the cooldown on your other Hunter abilities except Bestial Wrath.",}, "ability_hunter_readiness")]
+public int Readiness { get { return _data[34]; } set { _data[34] = value; } }
+#endregion
+#region Tier 6
+/// <summary>Reduces the cooldown of your Rapid Fire by [Pts] min, and your movement speed is increased by [15*Pts]% for 4 sec after you use Disengage.</summary>
+[TalentData(35, "Posthaste", 2, MM, COL1, ROW6, -1, new[] {
+@"Reduces the cooldown of your Rapid Fire by 1 min, and your movement speed is increased by 15% for 4 sec after you use Disengage.",
+@"Reduces the cooldown of your Rapid Fire by 2 min, and your movement speed is increased by 30% for 4 sec after you use Disengage.",}, "ability_hunter_rapidregeneration")]
+public int Posthaste { get { return _data[35]; } set { _data[35] = value; } }
+/// <summary>Your Arcane Shot and Chimera Shot have a [50*Pts]% chance to automatically apply your Hunter's Mark ability instantly onto the target.</summary>
+[TalentData(36, "Marked for Death", 2, MM, COL3, ROW6, 33, new[] {
+@"Your Arcane Shot and Chimera Shot have a 50% chance to automatically apply your Hunter's Mark ability instantly onto the target.",
+@"Your Arcane Shot and Chimera Shot have a 100% chance to automatically apply your Hunter's Mark ability instantly onto the target.",}, "ability_hunter_assassinate")]
+public int MarkedForDeath { get { return _data[36]; } set { _data[36] = value; } }
+#endregion
+#region Tier 7
+/// <summary>An instant shot that causes ranged weapon damage plus RAP*0.24+400, refreshing the duration of your Serpent Sting and healing you for 5% of your total health.</summary>
+[TalentData(37, "Chimera Shot", 1, MM, 2, 11, -1, new[] {
+@"An instant shot that causes ranged weapon damage plus RAP*0.24+400, refreshing the duration of your Serpent Sting and healing you for 5% of your total health.",}, "ability_hunter_chimerashot2")]
+public int ChimeraShot { get { return _data[37]; } set { _data[37] = value; } }
+#endregion
+#region Unused Talents
+/*/// <summary>
+/// Reduces the pushback suffered from damaging attacks while casting Steady Shot by [70 / 3 * Pts]%, and increases your chance to hit by [1 * Pts]%.
+/// </summary>
+[TalentData(27, "Focused Aim", 3, MM, 2, 1, -1, new[] {
 @"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 23%, and increases your chance to hit by 1%.",
 @"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 46%, and increases your chance to hit by 2%.",
 @"Reduces the pushback suffered from damaging attacks while casting Steady Shot by 70%, and increases your chance to hit by 3%.",}, "ability_hunter_focusedaim")]
-        public int FocusedAim { get { return _data[27]; } set { _data[27] = value; } }
-        /// <summary>
-        /// Increases your critical strike chance with ranged weapons by [1 * Pts]%.
-        /// </summary>
-        [TalentData(28, "Lethal Shots", 5, 1, 3, 1, -1, new[] {
+public int FocusedAim { get { return _data[27]; } set { _data[27] = value; } }
+/// <summary>
+/// Increases your critical strike chance with ranged weapons by [1 * Pts]%.
+/// </summary>
+[TalentData(28, "Lethal Shots", 5, MM, 3, 1, -1, new[] {
 @"Increases your critical strike chance with ranged weapons by 1%.",
 @"Increases your critical strike chance with ranged weapons by 2%.",
 @"Increases your critical strike chance with ranged weapons by 3%.",
 @"Increases your critical strike chance with ranged weapons by 4%.",
 @"Increases your critical strike chance with ranged weapons by 5%.",}, "ability_searingarrow")]
-        public int LethalShots { get { return _data[28]; } set { _data[28] = value; } }
-        /// <summary>
-        /// Increases your ranged attack power by an amount equal to [100 / 3 * Pts]% of your total Intellect.
-        /// </summary>
-        [TalentData(29, "Careful Aim", 3, 1, 1, 2, -1, new[] {
-@"Increases your ranged attack power by an amount equal to 33% of your total Intellect.",
-@"Increases your ranged attack power by an amount equal to 66% of your total Intellect.",
-@"Increases your ranged attack power by an amount equal to 100% of your total Intellect.",}, "ability_hunter_zenarchery")]
-        public int CarefulAim { get { return _data[29]; } set { _data[29] = value; } }
-        /// <summary>
-        /// Increases the bonus attack power granted by your Hunter's Mark ability by [10 * Pts]%, and reduces the mana cost of your Hunter's Mark ability by [100 / 3 * Pts]%.
-        /// </summary>
-        [TalentData(30, "Improved Hunter's Mark", 3, 1, 2, 2, -1, new[] {
+public int LethalShots { get { return _data[28]; } set { _data[28] = value; } }
+/// <summary>
+/// Increases the bonus attack power granted by your Hunter's Mark ability by [10 * Pts]%, and reduces the mana cost of your Hunter's Mark ability by [100 / 3 * Pts]%.
+/// </summary>
+[TalentData(30, "Improved Hunter's Mark", 3, MM, 2, 2, -1, new[] {
 @"Increases the bonus attack power granted by your Hunter's Mark ability by 10%, and reduces the mana cost of your Hunter's Mark ability by 33%.",
 @"Increases the bonus attack power granted by your Hunter's Mark ability by 20%, and reduces the mana cost of your Hunter's Mark ability by 66%.",
 @"Increases the bonus attack power granted by your Hunter's Mark ability by 30%, and reduces the mana cost of your Hunter's Mark ability by 100%.",}, "ability_hunter_snipershot")]
-        public int ImprovedHuntersMark { get { return _data[30]; } set { _data[30] = value; } }
-        /// <summary>
-        /// Increases the critical strike damage bonus of your ranged abilities by [6 * Pts]%.
-        /// </summary>
-        [TalentData(31, "Mortal Shots", 5, 1, 3, 2, -1, new[] {
+public int ImprovedHuntersMark { get { return _data[30]; } set { _data[30] = value; } }
+/// <summary>
+/// Increases the critical strike damage bonus of your ranged abilities by [6 * Pts]%.
+/// </summary>
+[TalentData(31, "Mortal Shots", 5, MM, 3, 2, -1, new[] {
 @"Increases the critical strike damage bonus of your ranged abilities by 6%.",
 @"Increases the critical strike damage bonus of your ranged abilities by 12%.",
 @"Increases the critical strike damage bonus of your ranged abilities by 18%.",
 @"Increases the critical strike damage bonus of your ranged abilities by 24%.",
 @"Increases the critical strike damage bonus of your ranged abilities by 30%.",}, "ability_piercedamage")]
-        public int MortalShots { get { return _data[31]; } set { _data[31] = value; } }
-        /// <summary>
-        /// Your ranged critical hits cause your pet to generate [25 * Pts] Focus.
-        /// </summary>
-        [TalentData(32, "Go for the Throat", 2, 1, 1, 3, -1, new[] {
-@"Your ranged critical hits cause your pet to generate 25 Focus.",
-@"Your ranged critical hits cause your pet to generate 50 Focus.",}, "ability_hunter_goforthethroat")]
-        public int GoForTheThroat { get { return _data[32]; } set { _data[32] = value; } }
-        /// <summary>
-        /// Increases the damage done by your Arcane Shot by [5 * Pts]%.
-        /// </summary>
-        [TalentData(33, "Improved Arcane Shot", 3, 1, 2, 3, -1, new[] {
+public int MortalShots { get { return _data[31]; } set { _data[31] = value; } }
+/// <summary>
+/// Increases the damage done by your Arcane Shot by [5 * Pts]%.
+/// </summary>
+[TalentData(33, "Improved Arcane Shot", 3, MM, 2, 3, -1, new[] {
 @"Increases the damage done by your Arcane Shot by 5%.",
 @"Increases the damage done by your Arcane Shot by 10%.",
 @"Increases the damage done by your Arcane Shot by 15%.",}, "ability_impalingbolt")]
-        public int ImprovedArcaneShot { get { return _data[33]; } set { _data[33] = value; } }
-        /// <summary>
-        /// An aimed shot that increases ranged damage by 5 and reduces healing done to that target by 50%.  Lasts 10 sec.
-        /// </summary>
-        [TalentData(34, "Aimed Shot", 1, 1, 3, 3, 31, new[] {
+public int ImprovedArcaneShot { get { return _data[33]; } set { _data[33] = value; } }
+/// <summary>
+/// An aimed shot that increases ranged damage by 5 and reduces healing done to that target by 50%.  Lasts 10 sec.
+/// </summary>
+[TalentData(34, "Aimed Shot", MM, 1, 3, 3, 31, new[] {
 @"An aimed shot that increases ranged damage by 5 and reduces healing done to that target by 50%.  Lasts 10 sec.",}, "inv_spear_07")]
-        public int AimedShot { get { return _data[34]; } set { _data[34] = value; } }
-        /// <summary>
-        /// Reduces the cooldown of your Rapid Fire ability by [1 * Pts] min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Chimera Shot causes [10 * Pts]% additional damage.  Lasts 20 sec.
-        /// </summary>
-        [TalentData(35, "Rapid Killing", 2, 1, 4, 3, -1, new[] {
-@"Reduces the cooldown of your Rapid Fire ability by 1 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Chimera Shot causes 10% additional damage.  Lasts 20 sec.",
-@"Reduces the cooldown of your Rapid Fire ability by 2 min.  In addition, after killing an opponent that yields experience or honor, your next Aimed Shot, Arcane Shot or Chimera Shot causes 20% additional damage.  Lasts 20 sec.",}, "ability_hunter_rapidkilling")]
-        public int RapidKilling { get { return _data[35]; } set { _data[35] = value; } }
-        /// <summary>
-        /// Increases the damage done by your Serpent Sting and Wyvern Sting by [10 * Pts]% and the mana drained by your Viper Sting by [10 * Pts]%.  In addition, reduces the chance your Sting damage over time effects will be dispelled by [10 * Pts]%.
-        /// </summary>
-        [TalentData(36, "Improved Stings", 3, 1, 2, 4, -1, new[] {
+public int AimedShot { get { return _data[34]; } set { _data[34] = value; } }
+/// <summary>
+/// Increases the damage done by your Serpent Sting and Wyvern Sting by [10 * Pts]% and the mana drained by your Viper Sting by [10 * Pts]%.  In addition, reduces the chance your Sting damage over time effects will be dispelled by [10 * Pts]%.
+/// </summary>
+[TalentData(36, "Improved Stings", 3, MM, 2, 4, -1, new[] {
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 10% and the mana drained by your Viper Sting by 10%.  In addition, reduces the chance your Sting damage over time effects will be dispelled by 10%.",
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 20% and the mana drained by your Viper Sting by 20%.  In addition, reduces the chance your Sting damage over time effects will be dispelled by 20%.",
 @"Increases the damage done by your Serpent Sting and Wyvern Sting by 30% and the mana drained by your Viper Sting by 30%.  In addition, reduces the chance your Sting damage over time effects will be dispelled by 30%.",}, "ability_hunter_quickshot")]
-        public int ImprovedStings { get { return _data[36]; } set { _data[36] = value; } }
-        /// <summary>
-        /// Reduces the Mana cost of your Shots and Stings by [3 * Pts]%.
-        /// </summary>
-        [TalentData(37, "Efficiency", 5, 1, 3, 4, -1, new[] {
-@"Reduces the Mana cost of your Shots and Stings by 3%.",
-@"Reduces the Mana cost of your Shots and Stings by 6%.",
-@"Reduces the Mana cost of your Shots and Stings by 9%.",
-@"Reduces the Mana cost of your Shots and Stings by 12%.",
-@"Reduces the Mana cost of your Shots and Stings by 15%.",}, "spell_frost_wizardmark")]
-        public int Efficiency { get { return _data[37]; } set { _data[37] = value; } }
-        /// <summary>
-        /// Your successful Chimera Shot and Multi-Shot attacks have a [50 * Pts]% chance to Daze the target for 4 sec.
-        /// </summary>
-        [TalentData(38, "Concussive Barrage", 2, 1, 1, 5, -1, new[] {
-@"Your successful Chimera Shot and Multi-Shot attacks have a 50% chance to Daze the target for 4 sec.",
-@"Your successful Chimera Shot and Multi-Shot attacks have a 100% chance to Daze the target for 4 sec.",}, "spell_arcane_starfire")]
-        public int ConcussiveBarrage { get { return _data[38]; } set { _data[38] = value; } }
-        /// <summary>
-        /// When activated, this ability immediately finishes the cooldown on your other Hunter abilities except Bestial Wrath.
-        /// </summary>
-        [TalentData(39, "Readiness", 1, 1, 2, 5, -1, new[] {
-@"When activated, this ability immediately finishes the cooldown on your other Hunter abilities except Bestial Wrath.",}, "ability_hunter_readiness")]
-        public int Readiness { get { return _data[39]; } set { _data[39] = value; } }
-        /// <summary>
-        /// Increases the damage done by your Multi-Shot, Aimed Shot, and Volley spells by [4 * Pts]%.
-        /// </summary>
-        [TalentData(40, "Barrage", 3, 1, 3, 5, -1, new[] {
+public int ImprovedStings { get { return _data[36]; } set { _data[36] = value; } }
+/// <summary>
+/// Increases the damage done by your Multi-Shot, Aimed Shot, and Volley spells by [4 * Pts]%.
+/// </summary>
+[TalentData(40, "Barrage", 3, MM, 3, 5, -1, new[] {
 @"Increases the damage done by your Multi-Shot, Aimed Shot, and Volley spells by 4%.",
 @"Increases the damage done by your Multi-Shot, Aimed Shot, and Volley spells by 8%.",
 @"Increases the damage done by your Multi-Shot, Aimed Shot, and Volley spells by 12%.",}, "ability_upgrademoonglaive")]
-        public int Barrage { get { return _data[40]; } set { _data[40] = value; } }
-        /// <summary>
-        /// Increases your total Agility and Intellect by [2 * Pts]%.
-        /// </summary>
-        [TalentData(41, "Combat Experience", 2, 1, 1, 6, -1, new[] {
+public int Barrage { get { return _data[40]; } set { _data[40] = value; } }
+/// <summary>
+/// Increases your total Agility and Intellect by [2 * Pts]%.
+/// </summary>
+[TalentData(41, "Combat Experience", 2, MM, 1, 6, -1, new[] {
 @"Increases your total Agility and Intellect by 2%.",
 @"Increases your total Agility and Intellect by 4%.",}, "ability_hunter_combatexperience")]
-        public int CombatExperience { get { return _data[41]; } set { _data[41] = value; } }
-        /// <summary>
-        /// Increases the damage you deal with ranged weapons by [1 * Pts]%.
-        /// </summary>
-        [TalentData(42, "Ranged Weapon Specialization", 3, 1, 4, 6, -1, new[] {
+public int CombatExperience { get { return _data[41]; } set { _data[41] = value; } }
+/// <summary>
+/// Increases the damage you deal with ranged weapons by [1 * Pts]%.
+/// </summary>
+[TalentData(42, "Ranged Weapon Specialization", 3, MM, 4, 6, -1, new[] {
 @"Increases the damage you deal with ranged weapons by 1%.",
 @"Increases the damage you deal with ranged weapons by 3%.",
 @"Increases the damage you deal with ranged weapons by 5%.",}, "inv_weapon_rifle_06")]
-        public int RangedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
-        /// <summary>
-        /// Your critical Aimed, Steady and Chimera Shots cause the target to bleed for [10 * Pts]% of the damage dealt over 8 sec.
-        /// </summary>
-        [TalentData(43, "Piercing Shots", 3, 1, 1, 7, -1, new[] {
-@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 10% of the damage dealt over 8 sec.",
-@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 20% of the damage dealt over 8 sec.",
-@"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 30% of the damage dealt over 8 sec.",}, "ability_hunter_piercingshots")]
-        public int PiercingShots { get { return _data[43]; } set { _data[43] = value; } }
-        /// <summary>
-        /// Increases the attack power of party and raid members within 100 yards by 10%.  Lasts until cancelled.
-        /// </summary>
-        [TalentData(44, "Trueshot Aura", 1, 1, 2, 7, 39, new[] {
-@"Increases the attack power of party and raid members within 100 yards by 10%.  Lasts until cancelled.",}, "ability_trueshot")]
-        public int TrueshotAura { get { return _data[44]; } set { _data[44] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by [4 * Pts]% and reduces the pushback suffered from damaging attacks while channeling Volley by [100 / 3 * Pts]%.
-        /// </summary>
-        [TalentData(45, "Improved Barrage", 3, 1, 3, 7, 40, new[] {
+public int RangedWeaponSpecialization { get { return _data[42]; } set { _data[42] = value; } }
+/// <summary>
+/// Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by [4 * Pts]% and reduces the pushback suffered from damaging attacks while channeling Volley by [100 / 3 * Pts]%.
+/// </summary>
+[TalentData(45, "Improved Barrage", 3, MM, 3, 7, 40, new[] {
 @"Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by 4% and reduces the pushback suffered from damaging attacks while channeling Volley by 33%.",
 @"Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by 8% and reduces the pushback suffered from damaging attacks while channeling Volley by 66%.",
 @"Increases the critical strike chance of your Multi-Shot and Aimed Shot abilities by 12% and reduces the pushback suffered from damaging attacks while channeling Volley by 100%.",}, "ability_upgrademoonglaive")]
-        public int ImprovedBarrage { get { return _data[45]; } set { _data[45] = value; } }
-        /// <summary>
-        /// Increases your critical strike chance by [1 * Pts]%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by [5 * Pts]%.
-        /// </summary>
-        [TalentData(46, "Master Marksman", 5, 1, 2, 8, -1, new[] {
-@"Increases your critical strike chance by 1%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by 5%.",
-@"Increases your critical strike chance by 2%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by 10%.",
-@"Increases your critical strike chance by 3%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by 15%.",
-@"Increases your critical strike chance by 4%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by 20%.",
-@"Increases your critical strike chance by 5%, and reduces the Mana cost of your Steady Shot, Aimed Shot, and Chimera Shot by 25%.",}, "ability_hunter_mastermarksman")]
-        public int MasterMarksman { get { return _data[46]; } set { _data[46] = value; } }
-        /// <summary>
-        /// You gain [2 * Pts]% of your mana every 3 sec while under the effect of Rapid Fire, and you gain [1 * Pts]% of your mana every 2 sec for 6 sec when you gain Rapid Killing.
-        /// </summary>
-        [TalentData(47, "Rapid Recuperation", 2, 1, 3, 8, -1, new[] {
-@"You gain 2% of your mana every 3 sec while under the effect of Rapid Fire, and you gain 1% of your mana every 2 sec for 6 sec when you gain Rapid Killing.",
-@"You gain 4% of your mana every 3 sec while under the effect of Rapid Fire, and you gain 2% of your mana every 2 sec for 6 sec when you gain Rapid Killing.",}, "ability_hunter_rapidregeneration")]
-        public int RapidRecuperation { get { return _data[47]; } set { _data[47] = value; } }
-        /// <summary>
-        /// You have a [4 * Pts]% chance to shoot an additional shot when doing damage with your auto shot, dealing 80% weapon nature damage. Wild Quiver consumes no ammo.
-        /// </summary>
-        [TalentData(48, "Wild Quiver", 3, 1, 1, 9, -1, new[] {
+public int ImprovedBarrage { get { return _data[45]; } set { _data[45] = value; } }
+/// <summary>
+/// You have a [4 * Pts]% chance to shoot an additional shot when doing damage with your auto shot, dealing 80% weapon nature damage. Wild Quiver consumes no ammo.
+/// </summary>
+[TalentData(48, "Wild Quiver", 3, MM, 1, 9, -1, new[] {
 @"You have a 4% chance to shoot an additional shot when doing damage with your auto shot, dealing 80% weapon nature damage. Wild Quiver consumes no ammo.",
 @"You have a 8% chance to shoot an additional shot when doing damage with your auto shot, dealing 80% weapon nature damage. Wild Quiver consumes no ammo.",
 @"You have a 12% chance to shoot an additional shot when doing damage with your auto shot, dealing 80% weapon nature damage. Wild Quiver consumes no ammo.",}, "ability_hunter_wildquiver")]
-        public int WildQuiver { get { return _data[48]; } set { _data[48] = value; } }
-        /// <summary>
-        /// A shot that deals 50% weapon damage and Silences the target for 3 sec.  Non-player victim spellcasting is also interrupted for 3 sec.
-        /// </summary>
-        [TalentData(49, "Silencing Shot", 1, 1, 2, 9, 46, new[] {
-@"A shot that deals 50% weapon damage and Silences the target for 3 sec.  Non-player victim spellcasting is also interrupted for 3 sec.",}, "ability_theblackarrow")]
-        public int SilencingShot { get { return _data[49]; } set { _data[49] = value; } }
-        /// <summary>
-        /// Your Steady Shot hits have a [5 * Pts]% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.
-        /// </summary>
-        [TalentData(50, "Improved Steady Shot", 3, 1, 3, 9, -1, new[] {
-@"Your Steady Shot hits have a 5% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",
-@"Your Steady Shot hits have a 10% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",
-@"Your Steady Shot hits have a 15% chance to increase the damage done by your next Aimed Shot, Arcane Shot or Chimera Shot by 15%, and reduce the mana cost of your next Aimed Shot, Arcane Shot or Chimera Shot by 20%.",}, "ability_hunter_improvedsteadyshot")]
-        public int ImprovedSteadyShot { get { return _data[50]; } set { _data[50] = value; } }
-        /// <summary>
-        /// Increases your damage done by your shots and the damage done by your pet's special abilities by [1 * Pts]% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by [2 * Pts]%.
-        /// </summary>
-        [TalentData(51, "Marked for Death", 5, 1, 2, 10, -1, new[] {
-@"Increases your damage done by your shots and the damage done by your pet's special abilities by 1% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 2%.",
-@"Increases your damage done by your shots and the damage done by your pet's special abilities by 2% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 4%.",
-@"Increases your damage done by your shots and the damage done by your pet's special abilities by 3% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 6%.",
-@"Increases your damage done by your shots and the damage done by your pet's special abilities by 4% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 8%.",
-@"Increases your damage done by your shots and the damage done by your pet's special abilities by 5% on marked targets, and increases the critical strike damage bonus of your Aimed Shot, Arcane Shot, Steady Shot, Kill Shot and Chimera Shot by 10%.",}, "ability_hunter_assassinate")]
-        public int MarkedForDeath { get { return _data[51]; } set { _data[51] = value; } }
-        /// <summary>
-        /// You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:<br/><br/>Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.<br/><br/>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.<br/><br/>Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.
-        /// </summary>
-        [TalentData(52, "Chimera Shot", 1, 1, 2, 11, -1, new[] {
-@"You deal 125% weapon damage, refreshing the current Sting on your target and triggering an effect:
-
-Serpent Sting - Instantly deals 40% of the damage done by your Serpent Sting.
-
-Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.
-
-Scorpid Sting - Attempts to Disarm the target for 10 sec. This effect cannot occur more than once per 1 minute.",}, "ability_hunter_chimerashot2")]
-        public int ChimeraShot { get { return _data[52]; } set { _data[52] = value; } }
-        /// <summary>
-        /// While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by [1 * Pts]%.
-        /// </summary>
-        [TalentData(53, "Improved Tracking", 5, 2, 1, 1, -1, new[] {
-@"While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by 1%.",
-@"While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by 2%.",
-@"While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by 3%.",
-@"While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by 4%.",
-@"While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids and Undead, all damage done to those types by the Hunter is increased by 5%.",}, "ability_hunter_improvedtracking")]
-        public int ImprovedTracking { get { return _data[53]; } set { _data[53] = value; } }
-        /// <summary>
-        /// Increases the range of your ranged weapons by [2 * Pts] yards.
-        /// </summary>
-        [TalentData(54, "Hawk Eye", 3, 2, 2, 1, -1, new[] {
-@"Increases the range of your ranged weapons by 2 yards.",
-@"Increases the range of your ranged weapons by 4 yards.",
-@"Increases the range of your ranged weapons by 6 yards.",}, "ability_townwatch")]
-        public int HawkEye { get { return _data[54]; } set { _data[54] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by [10 * Pts]%.
-        /// </summary>
-        [TalentData(55, "Savage Strikes", 2, 2, 3, 1, -1, new[] {
-@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 10%.",
-@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 20%.",}, "ability_racial_bloodrage")]
-        public int SavageStrikes { get { return _data[55]; } set { _data[55] = value; } }
-        /// <summary>
-        /// Reduces the duration of movement impairing effects by [10 * Pts]%.
-        /// </summary>
-        [TalentData(56, "Surefooted", 3, 2, 1, 2, -1, new[] {
-@"Reduces the duration of movement impairing effects by 10%.",
-@"Reduces the duration of movement impairing effects by 20%.",
-@"Reduces the duration of movement impairing effects by 30%.",}, "ability_kick")]
-        public int Surefooted { get { return _data[56]; } set { _data[56] = value; } }
-        /// <summary>
-        /// When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for [2 * Pts] sec.
-        /// </summary>
-        [TalentData(57, "Entrapment", 3, 2, 2, 2, -1, new[] {
-@"When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 2 sec.",
-@"When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 3 sec.",
-@"When your Frost Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 4 sec.",}, "spell_nature_stranglevines")]
-        public int Entrapment { get { return _data[57]; } set { _data[57] = value; } }
-        /// <summary>
-        /// Frost Trap and Freezing Trap - Increases the duration by [10 * Pts]%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10 * Pts]%.<br/><br/>Snake Trap - Increases the number of snakes summoned by [2 * Pts]
-        /// </summary>
-        [TalentData(58, "Trap Mastery", 3, 2, 3, 2, -1, new[] {
-@"Frost Trap and Freezing Trap - Increases the duration by 10%.
+public int WildQuiver { get { return _data[48]; } set { _data[48] = value; } }*/
+#endregion
+#endregion
+#region SV
+#region Tier 1
+/// <summary>Increases your rotal Stamina by [10/3*Pts]%.</summary>
+[TalentData(38, "Hunter vs. Wild", 3, SV, COL1, ROW1, -1, new[] {
+@"Increases your rotal Stamina by 3%.",
+@"Increases your rotal Stamina by 7%.",
+@"Increases your rotal Stamina by 10%.",}, "ability_hunter_huntervswild")]
+public int HunterVsWild { get { return _data[38]; } set { _data[38] = value; } }
+/// <summary>Increases ranged haste by [Pts]%.</summary>
+[TalentData(39, "Improved Tracking", 3, SV, COL2, ROW1, -1, new[] {
+@"Increases ranged haste by 1%.",
+@"Increases ranged haste by 2%.",
+@"Increases ranged haste by 3%.",}, "ability_hunter_improvedtracking")]
+public int ImprovedTracking { get { return _data[39]; } set { _data[39] = value; } }
+/// <summary>Your Serpent Sting also does instant damage equal to [15*Pts]% of its total periodic effect.</summary>
+[TalentData(40, "Improved Serpent Sting", 3, SV, COL3, ROW1, -1, new[] {
+@"Your Serpent Sting also does instant damage equal to 15% of its total periodic effect.",
+@"Your Serpent Sting also does instant damage equal to 30% of its total periodic effect.",}, "ability_hunter_improvedtracking")]
+public int ImprovedSerpentSting { get { return _data[40]; } set { _data[40] = value; } }
+#endregion
+#region Tier 2
+/// <summary>Reduces the chance your Feign Death ability and all trap spells will be resisted by [2*Pts]%, and reduces the cooldown of your Disengage ability by [2*Pts] sec.</summary>
+[TalentData(41, "Survival Instincts", 2, SV, COL1, ROW2, -1, new[] {
+@"Reduces the chance your Feign Death ability and all trap spells will be resisted by 2%, and reduces the cooldown of your Disengage ability by 2 sec.",
+@"Reduces the chance your Feign Death ability and all trap spells will be resisted by 4%, and reduces the cooldown of your Disengage ability by 4 sec.",}, "ability_hunter_survivalinstincts")]
+public int SurvivalInstincts { get { return _data[41]; } set { _data[41] = value; } }
+/// <summary>Ice Trap and Freezing Trap - Increases the duration by [10*Pts]%.<br/><br/>Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by [10*Pts]%.<br/><br/>Snake Trap - Increases the number of snakes summoned by [2*Pts]</summary>
+[TalentData(42, "Trap Mastery", 3, SV, COL2, ROW2, -1, new[] {
+@"Ice Trap and Freezing Trap - Increases the duration by 10%.
 
 Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 10%.
 
 Snake Trap - Increases the number of snakes summoned by 2.",
-@"Frost Trap and Freezing Trap - Increases the duration by 20%.
+@"Ice Trap and Freezing Trap - Increases the duration by 20%.
 
 Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 20%.
 
 Snake Trap - Increases the number of snakes summoned by 4.",
-@"Frost Trap and Freezing Trap - Increases the duration by 30%.
+@"Ice Trap and Freezing Trap - Increases the duration by 30%.
 
 Immolation Trap, Explosive Trap and Black Arrow - Increases the periodic damage done by 30%.
 
 Snake Trap - Increases the number of snakes summoned by 6.",}, "ability_ensnare")]
-        public int TrapMastery { get { return _data[58]; } set { _data[58] = value; } }
-        /// <summary>
-        /// Reduces all damage taken by [2 * Pts]% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by [2 * Pts]%.
-        /// </summary>
-        [TalentData(59, "Survival Instincts", 2, 2, 4, 2, -1, new[] {
-@"Reduces all damage taken by 2% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by 2%.",
-@"Reduces all damage taken by 4% and increases the critical strike chance of your Arcane Shot, Steady Shot, and Explosive Shot by 4%.",}, "ability_hunter_survivalinstincts")]
-        public int SurvivalInstincts { get { return _data[59]; } set { _data[59] = value; } }
-        /// <summary>
-        /// Increases your Stamina by [2 * Pts]%.
-        /// </summary>
-        [TalentData(60, "Survivalist", 5, 2, 1, 3, -1, new[] {
+public int TrapMastery { get { return _data[42]; } set { _data[42] = value; } }
+/// <summary>When your Ice Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for [2*Pts] sec.</summary>
+[TalentData(43, "Entrapment", 2, SV, COL3, ROW2, -1, new[] {
+@"When your Ice Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 2 sec.",
+@"When your Ice Trap or Snake Trap are triggered you entrap all afflicted targets, preventing them from moving for 4 sec.",}, "spell_nature_stranglevines")]
+public int Entrapment { get { return _data[43]; } set { _data[43] = value; } }
+/// <summary>Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap by [3*Pts]%.</summary>
+[TalentData(44, "Point of No Escape", 2, SV, COL4, ROW2, -1, new[] {
+@"Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap by 3%.",
+@"Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap by 6%.",}, "ability_hunter_pointofnoescape")]
+public int PointOfNoEscape { get { return _data[44]; } set { _data[44] = value; } }
+#endregion
+#region Tier 3
+/// <summary>You have a [5*Pts]% chance when you Arcane Shot, Explosive Shot or Black Arrow you instantly regain 40% of the focus cost of the shot.</summary>
+[TalentData(45, "Thrill of the Hunt", 3, SV, COL1, ROW3, -1, new[] {
+@"You have a 5% chance when you Arcane Shot, Explosive Shot or Black Arrow you instantly regain 40% of the focus cost of the shot.",
+@"You have a 10% chance when you Arcane Shot, Explosive Shot or Black Arrow you instantly regain 40% of the focus cost of the shot.",
+@"You have a 15% chance when you Arcane Shot, Explosive Shot or Black Arrow you instantly regain 40% of the focus cost of the shot.",}, "ability_hunter_thrillofthehunt")]
+public int ThrillOfTheHunt { get { return _data[45]; } set { _data[45] = value; } }
+/// <summary>A strike that becomes active after parrying an opponent's attack. This attack deals AP*0.2+76 damage and immobilizes the target for 5 sec. Counterattack cannot be blocked, dodged, or parried.</summary>
+[TalentData(46, "Counterattack", 1, SV, COL2, ROW3, -1, new[] {
+@"A strike that becomes active after parrying an opponent's attack. This attack deals AP*0.2+76 damage and immobilizes the target for 5 sec. Counterattack cannot be blocked, dodged, or parried.",}, "ability_warrior_challange")]
+public int Counterattack { get { return _data[46]; } set { _data[46] = value; } }
+/// <summary>You have a [50*Pts]% chance when you trap a target with Freezing Trap, Freezing Arrow to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.</summary>
+[TalentData(47, "Lock and Load", 2, SV, COL3, ROW3, -1, new[] {
+@"You have a 50% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.",
+@"You have a 100% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.",}, "ability_hunter_lockandload")]
+public int LockAndLoad { get { return _data[47]; } set { _data[47] = value; } }
+#endregion
+#region Tier 4
+/// <summary>Reduces the cooldown of all traps and Black Arrow by [2*Pts] sec.</summary>
+[TalentData(48, "Resourcefulness", 3, SV, COL1, ROW4, -1, new[] {
+@"Reduces the cooldown of all traps and Black Arrow by 2 sec.",
+@"Reduces the cooldown of all traps and Black Arrow by 4 sec.",
+@"Reduces the cooldown of all traps and Black Arrow by 6 sec.",}, "ability_hunter_resourcefulness")]
+public int Resourcefulness { get { return _data[48]; } set { _data[48] = value; } }
+/// <summary>When attacked by a spell while in Deterrence, you have a [50*Pts]% chance to reflect it back at the attacker.</summary>
+[TalentData(49, "MirroredBlades", 2, SV, COL2, ROW4, -1, new[] {
+@"When attacked by a spell while in Deterrence, you have a 50% chance to reflect it back at the attacker.",
+@"When attacked by a spell while in Deterrence, you have a 100% chance to reflect it back at the attacker.",}, "ability_racial_bloodrage")]
+public int MirroredBlades { get { return _data[49]; } set { _data[49] = value; } }
+/// <summary>When you deal periodic damage with your Immolation Trap, you have a [6*Pts]% chance to trigger Lock and Load.</summary>
+[TalentData(50, "T.N.T.", 2, SV, COL3, ROW4, -1, new[] {
+@"When you deal periodic damage with your Immolation Trap, you have a 6% chance to trigger Lock and Load.",
+@"When you deal periodic damage with your Immolation Trap, you have a 12% chance to trigger Lock and Load.",}, "inv_misc_bomb_05")]
+public int TNT { get { return _data[50]; } set { _data[50] = value; } }
+#endregion
+#region Tier 5
+/// <summary>Increases the periodic critical damage of your Serpent Sting and Black Arrow by [50*Pts]%.</summary>
+[TalentData(51, "Toxicology", 2, SV, COL1, ROW5, -1, new[] {
+@"Increases the periodic critical damage of your Serpent Sting and Black Arrow by 50%.",
+@"Increases the periodic critical damage of your Serpent Sting and Black Arrow by 100%.",}, "ability_racial_bloodrage")]
+public int Toxicology { get { return _data[51]; } set { _data[51] = value; } }
+/// <summary>A stinging shot that puts the target to sleep for 30 sec. Any damage will cancel the effect. When the target wakes up, the Sting causes 2736 Nature damage over 6 sec. Only one Sting per Hunter can be active on the target at a time.</summary>
+[TalentData(52, "Wyvern Sting", 1, SV, COL2, ROW5, -1, new[] {
+@"A stinging shot that puts the target to sleep for 30 sec. Any damage will cancel the effect. When the target wakes up, the Sting causes 2736 Nature damage over 6 sec. Only one Sting per Hunter can be active on the target at a time.",}, "inv_spear_02")]
+public int WyvernSting { get { return _data[52]; } set { _data[52] = value; } }
+/// <summary>Increases your damage done on targets afflicted by your Serpent Sting by 5%. If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting [25*Pts]% of the duration remaining.</summary>
+[TalentData(53, "Noxious Stings", 2, SV, COL3, ROW5, 52, new[] {
+@"Increases your damage done on targets afflicted by your Serpent Sting by 5%. If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 25% of the duration remaining.",
+@"Increases your damage done on targets afflicted by your Serpent Sting by 5%. If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 50% of the duration remaining.",}, "ability_hunter_potentvenom")]
+public int NoxiousStings { get { return _data[53]; } set { _data[53] = value; } }
+/// <summary>Increases your total Agility by an additional 2%, and your Steady Shot and Cobra Shot trigger Replenishment and Ranged and Melee Attack speed when they deal damage.
+/// <summary><para>Ranged and Melee Attack Speed - Increases ranged and melee attack speed by 20%.</para>
+/// <summary><para>Replenishment - Grants up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.</para></summary>
+[TalentData(54, "Hunting Party", 1, SV, COL4, ROW5, -1, new[] {
+@"Increases your total Agility by an additional 2%, and your Steady Shot and Cobra Shot trigger Replenishment and Ranged and Melee Attack speed when they deal damage.
+
+Ranged and Melee Attack Speed - Increases ranged and melee attack speed by 20%.
+
+Replenishment - Grants up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.",}, "ability_hunter_huntingparty")]
+public int HuntingParty { get { return _data[54]; } set { _data[54] = value; } }
+#endregion
+#region Tier 6
+/// <summary>Increases the critical strike chance of your Kill Shot ability by [5*Pts]%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal [4*Pts]% more damage for 15 sec.</summary>
+[TalentData(55, "Sniper Training", 3, SV, COL1, ROW6, -1, new[] {
+@"Increases the critical strike chance of your Kill Shot ability by 5%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2% more damage for 15 sec.",
+@"Increases the critical strike chance of your Kill Shot ability by 10%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 4% more damage for 15 sec.",
+@"Increases the critical strike chance of your Kill Shot ability by 15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 6% more damage for 15 sec.",}, "ability_hunter_longshots")]
+public int SniperTraining { get { return _data[55]; } set { _data[55] = value; } }
+/// <summary>Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to [6|9] sec of its total duration.</summary>
+[TalentData(56, "Serpent Spread", 2, SV, COL3, ROW6, -1, new[] {
+@"Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to 6 sec of its total duration.",
+@"Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to 9 sec of its total duration.",}, "ability_hunter_longshots")]
+public int SerpentSpread { get { return _data[56]; } set { _data[56] = value; } }
+#endregion
+#region Tier 7
+/// <summary>Fires a Black Arrow at the target, dealing (RAP*0.115+616*5) Shadow damage over 15 sec. Black Arrow shares a cooldown with Explosive Trap and Immolation Trap.</summary>
+[TalentData(57, "Black Arrow", 1, SV, COL2, ROW7, 52, new[] {
+@"Fires a Black Arrow at the target, dealing (RAP*0.115+616*5) Shadow damage over 15 sec. Black Arrow shares a cooldown with Explosive Trap and Immolation Trap.",}, "spell_shadow_painspike")]
+public int BlackArrow { get { return _data[57]; } set { _data[57] = value; } }
+#endregion
+#region Unused Talents
+/*/// <summary>
+/// Increases the range of your ranged weapons by [2 * Pts] yards.
+/// </summary>
+[TalentData(54, "Hawk Eye", 3, SV, 2, 1, -1, new[] {
+@"Increases the range of your ranged weapons by 2 yards.",
+@"Increases the range of your ranged weapons by 4 yards.",
+@"Increases the range of your ranged weapons by 6 yards.",}, "ability_townwatch")]
+public int HawkEye { get { return _data[54]; } set { _data[54] = value; } }
+/// <summary>
+/// Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by [10 * Pts]%.
+/// </summary>
+[TalentData(55, "Savage Strikes", 2, SV, 3, 1, -1, new[] {
+@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 10%.",
+@"Increases the critical strike chance of Raptor Strike, Mongoose Bite and Counterattack by 20%.",}, "ability_racial_bloodrage")]
+public int SavageStrikes { get { return _data[55]; } set { _data[55] = value; } }
+/// <summary>
+/// Reduces the duration of movement impairing effects by [10 * Pts]%.
+/// </summary>
+[TalentData(56, "Surefooted", 3, SV, 1, 2, -1, new[] {
+@"Reduces the duration of movement impairing effects by 10%.",
+@"Reduces the duration of movement impairing effects by 20%.",
+@"Reduces the duration of movement impairing effects by 30%.",}, "ability_kick")]
+public int Surefooted { get { return _data[56]; } set { _data[56] = value; } }
+/// <summary>
+/// Increases your Stamina by [2 * Pts]%.
+/// </summary>
+[TalentData(60, "Survivalist", 5, SV, 1, 3, -1, new[] {
 @"Increases your Stamina by 2%.",
 @"Increases your Stamina by 4%.",
 @"Increases your Stamina by 6%.",
 @"Increases your Stamina by 8%.",
 @"Increases your Stamina by 10%.",}, "spell_shadow_twilight")]
-        public int Survivalist { get { return _data[60]; } set { _data[60] = value; } }
-        /// <summary>
-        /// A short-range shot that deals 50% weapon damage and disorients the target for 4 sec.  Any damage caused will remove the effect.  Turns off your attack when used.
-        /// </summary>
-        [TalentData(61, "Scatter Shot", 1, 2, 2, 3, -1, new[] {
+public int Survivalist { get { return _data[60]; } set { _data[60] = value; } }
+/// <summary>
+/// A short-range shot that deals 50% weapon damage and disorients the target for 4 sec.  Any damage caused will remove the effect.  Turns off your attack when used.
+/// </summary>
+[TalentData(61, "Scatter Shot", 1, SV, 2, 3, -1, new[] {
 @"A short-range shot that deals 50% weapon damage and disorients the target for 4 sec.  Any damage caused will remove the effect.  Turns off your attack when used.",}, "ability_golemstormbolt")]
-        public int ScatterShot { get { return _data[61]; } set { _data[61] = value; } }
-        /// <summary>
-        /// Increases your chance to parry by [1 * Pts]%, and reduces the duration of all Disarm effects used against you by [50 / 3 * Pts]%.  This does not stack with other Disarm duration reducing effects.
-        /// </summary>
-        [TalentData(62, "Deflection", 3, 2, 3, 3, -1, new[] {
+public int ScatterShot { get { return _data[61]; } set { _data[61] = value; } }
+/// <summary>
+/// Increases your chance to parry by [1 * Pts]%, and reduces the duration of all Disarm effects used against you by [50 / 3 * Pts]%.  This does not stack with other Disarm duration reducing effects.
+/// </summary>
+[TalentData(62, "Deflection", 3, SV, 3, 3, -1, new[] {
 @"Increases your chance to parry by 1%, and reduces the duration of all Disarm effects used against you by 16%.  This does not stack with other Disarm duration reducing effects.",
 @"Increases your chance to parry by 2%, and reduces the duration of all Disarm effects used against you by 25%.  This does not stack with other Disarm duration reducing effects.",
 @"Increases your chance to parry by 3%, and reduces the duration of all Disarm effects used against you by 50%.  This does not stack with other Disarm duration reducing effects.",}, "ability_parry")]
-        public int Deflection { get { return _data[62]; } set { _data[62] = value; } }
-        /// <summary>
-        /// Reduces the chance your Feign Death ability and all trap spells will be resisted by [2 * Pts]%, and reduces the cooldown of your Disengage ability by [2 * Pts] sec.
-        /// </summary>
-        [TalentData(63, "Survival Tactics", 2, 2, 4, 3, -1, new[] {
+public int Deflection { get { return _data[62]; } set { _data[62] = value; } }
+/// <summary>
+/// Reduces the chance your Feign Death ability and all trap spells will be resisted by [2 * Pts]%, and reduces the cooldown of your Disengage ability by [2 * Pts] sec.
+/// </summary>
+[TalentData(63, "Survival Tactics", 2, SV, 4, 3, -1, new[] {
 @"Reduces the chance your Feign Death ability and all trap spells will be resisted by 2%, and reduces the cooldown of your Disengage ability by 2 sec.",
 @"Reduces the chance your Feign Death ability and all trap spells will be resisted by 4%, and reduces the cooldown of your Disengage ability by 4 sec.",}, "ability_rogue_feigndeath")]
-        public int SurvivalTactics { get { return _data[63]; } set { _data[63] = value; } }
-        /// <summary>
-        /// Increases the damage done by your Explosive Shot,  Explosive Trap, Black Arrow and Immolation Trap by [2 * Pts]%.
-        /// </summary>
-        [TalentData(64, "T.N.T.", 3, 2, 2, 4, -1, new[] {
-@"Increases the damage done by your Explosive Shot,  Explosive Trap, Black Arrow and Immolation Trap by 2%.",
-@"Increases the damage done by your Explosive Shot,  Explosive Trap, Black Arrow and Immolation Trap by 4%.",
-@"Increases the damage done by your Explosive Shot,  Explosive Trap, Black Arrow and Immolation Trap by 6%.",}, "inv_misc_bomb_05")]
-        public int TNT { get { return _data[64]; } set { _data[64] = value; } }
-        /// <summary>
-        /// You have a [100 / 3 * Pts]% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap and a [2 * Pts]% chance when you deal periodic damage with your Immolation Trap, Explosive Trap or Black Arrow to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo. This effect has a 22 sec cooldown.
-        /// </summary>
-        [TalentData(65, "Lock and Load", 3, 2, 4, 4, -1, new[] {
-@"You have a 33% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap and a 2% chance when you deal periodic damage with your Immolation Trap, Explosive Trap or Black Arrow to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo. This effect has a 22 sec cooldown.",
-@"You have a 66% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap and a 4% chance when you deal periodic damage with your Immolation Trap, Explosive Trap or Black Arrow to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo. This effect has a 22 sec cooldown.",
-@"You have a 100% chance when you trap a target with Freezing Trap, Freezing Arrow or Frost Trap and a 6% chance when you deal periodic damage with your Immolation Trap, Explosive Trap or Black Arrow to cause your next 2 Arcane Shot or Explosive Shot spells to trigger no cooldown, cost no mana and consume no ammo. This effect has a 22 sec cooldown.",}, "ability_hunter_lockandload")]
-        public int LockAndLoad { get { return _data[65]; } set { _data[65] = value; } }
-        /// <summary>
-        /// Increases you and your pet's attack power and ranged attack power equal to [10 * Pts]% of your total Stamina.
-        /// </summary>
-        [TalentData(66, "Hunter vs. Wild", 3, 2, 1, 5, 60, new[] {
-@"Increases you and your pet's attack power and ranged attack power equal to 10% of your total Stamina.",
-@"Increases you and your pet's attack power and ranged attack power equal to 20% of your total Stamina.",
-@"Increases you and your pet's attack power and ranged attack power equal to 30% of your total Stamina.",}, "ability_hunter_huntervswild")]
-        public int HunterVsWild { get { return _data[66]; } set { _data[66] = value; } }
-        /// <summary>
-        /// Increases your critical strike chance with all attacks by [1 * Pts]%.
-        /// </summary>
-        [TalentData(67, "Killer Instinct", 3, 2, 2, 5, -1, new[] {
+public int SurvivalTactics { get { return _data[63]; } set { _data[63] = value; } }
+/// <summary>
+/// Increases your critical strike chance with all attacks by [1 * Pts]%.
+/// </summary>
+[TalentData(67, "Killer Instinct", 3, SV, 2, 5, -1, new[] {
 @"Increases your critical strike chance with all attacks by 1%.",
 @"Increases your critical strike chance with all attacks by 2%.",
 @"Increases your critical strike chance with all attacks by 3%.",}, "spell_holy_blessingofstamina")]
-        public int KillerInstinct { get { return _data[67]; } set { _data[67] = value; } }
-        /// <summary>
-        /// A strike that becomes active after parrying an opponent's attack.  This attack deals 50 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
-        /// </summary>
-        [TalentData(68, "Counterattack", 1, 2, 3, 5, 62, new[] {
-@"A strike that becomes active after parrying an opponent's attack.  This attack deals 50 damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",}, "ability_warrior_challange")]
-        public int Counterattack { get { return _data[68]; } set { _data[68] = value; } }
-        /// <summary>
-        /// Increases your Agility by [3 * Pts]%.
-        /// </summary>
-        [TalentData(69, "Lightning Reflexes", 5, 2, 1, 6, -1, new[] {
+public int KillerInstinct { get { return _data[67]; } set { _data[67] = value; } }
+/// <summary>
+/// Increases your Agility by [3 * Pts]%.
+/// </summary>
+[TalentData(69, "Lightning Reflexes", 5, SV, 1, 6, -1, new[] {
 @"Increases your Agility by 3%.",
 @"Increases your Agility by 6%.",
 @"Increases your Agility by 9%.",
 @"Increases your Agility by 12%.",
 @"Increases your Agility by 15%.",}, "spell_nature_invisibilty")]
-        public int LightningReflexes { get { return _data[69]; } set { _data[69] = value; } }
-        /// <summary>
-        /// Reduces the mana cost of all traps, melee abilities and Black Arrow by [20 * Pts]% and reduces the cooldown of all traps and Black Arrow by [2 * Pts] sec.
-        /// </summary>
-        [TalentData(70, "Resourcefulness", 3, 2, 3, 6, -1, new[] {
-@"Reduces the mana cost of all traps, melee abilities and Black Arrow by 20% and reduces the cooldown of all traps and Black Arrow by 2 sec.",
-@"Reduces the mana cost of all traps, melee abilities and Black Arrow by 40% and reduces the cooldown of all traps and Black Arrow by 4 sec.",
-@"Reduces the mana cost of all traps, melee abilities and Black Arrow by 60% and reduces the cooldown of all traps and Black Arrow by 6 sec.",}, "ability_hunter_resourcefulness")]
-        public int Resourcefulness { get { return _data[70]; } set { _data[70] = value; } }
-        /// <summary>
-        /// Your ranged criticals have a [100 / 3 * Pts]% chance to grant you Expose Weakness. Expose Weakness increases your attack power by 25% of your Agility for 7 sec.
-        /// </summary>
-        [TalentData(71, "Expose Weakness", 3, 2, 1, 7, 69, new[] {
+public int LightningReflexes { get { return _data[69]; } set { _data[69] = value; } }
+/// <summary>
+/// Your ranged criticals have a [100 / 3 * Pts]% chance to grant you Expose Weakness. Expose Weakness increases your attack power by 25% of your Agility for 7 sec.
+/// </summary>
+[TalentData(71, "Expose Weakness", 3, SV, 1, 7, 69, new[] {
 @"Your ranged criticals have a 33% chance to grant you Expose Weakness. Expose Weakness increases your attack power by 25% of your Agility for 7 sec.",
 @"Your ranged criticals have a 66% chance to grant you Expose Weakness. Expose Weakness increases your attack power by 25% of your Agility for 7 sec.",
 @"Your ranged criticals have a 100% chance to grant you Expose Weakness. Expose Weakness increases your attack power by 25% of your Agility for 7 sec.",}, "ability_rogue_findweakness")]
-        public int ExposeWeakness { get { return _data[71]; } set { _data[71] = value; } }
-        /// <summary>
-        /// A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 300 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.
-        /// </summary>
-        [TalentData(72, "Wyvern Sting", 1, 2, 2, 7, 67, new[] {
-@"A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 300 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.",}, "inv_spear_02")]
-        public int WyvernSting { get { return _data[72]; } set { _data[72] = value; } }
-        /// <summary>
-        /// Gives you a [100 / 3 * Pts]% chance to regain 40% of the mana cost of any shot when it critically hits.
-        /// </summary>
-        [TalentData(73, "Thrill of the Hunt", 3, 2, 3, 7, -1, new[] {
-@"Gives you a 33% chance to regain 40% of the mana cost of any shot when it critically hits.",
-@"Gives you a 66% chance to regain 40% of the mana cost of any shot when it critically hits.",
-@"Gives you a 100% chance to regain 40% of the mana cost of any shot when it critically hits.",}, "ability_hunter_thrillofthehunt")]
-        public int ThrillOfTheHunt { get { return _data[73]; } set { _data[73] = value; } }
-        /// <summary>
-        /// Your successful ranged attacks have a [2 * Pts]% chance to increase your critical strike chance with all attacks by 10% for 8 sec.
-        /// </summary>
-        [TalentData(74, "Master Tactician", 5, 2, 1, 8, -1, new[] {
+public int ExposeWeakness { get { return _data[71]; } set { _data[71] = value; } }
+/// <summary>
+/// Your successful ranged attacks have a [2 * Pts]% chance to increase your critical strike chance with all attacks by 10% for 8 sec.
+/// </summary>
+[TalentData(74, "Master Tactician", 5, SV, 1, 8, -1, new[] {
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 2% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 4% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 6% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 8% for 8 sec.",
 @"Your successful ranged attacks have a 10% chance to increase your critical strike chance with all attacks by 10% for 8 sec.",}, "ability_hunter_mastertactitian")]
-        public int MasterTactician { get { return _data[74]; } set { _data[74] = value; } }
-        /// <summary>
-        /// If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting [50 / 3 * Pts]% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by [1 * Pts]%.
-        /// </summary>
-        [TalentData(75, "Noxious Stings", 3, 2, 2, 8, 72, new[] {
-@"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 16% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 1%.",
-@"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 25% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 2%.",
-@"If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting lasting 50% of the duration remaining, and increases all damage done by you on targets afflicted by your Serpent Sting by 3%.",}, "ability_hunter_potentvenom")]
-        public int NoxiousStings { get { return _data[75]; } set { _data[75] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap and Freezing Arrow by [3 * Pts]%.
-        /// </summary>
-        [TalentData(76, "Point of No Escape", 2, 2, 1, 9, -1, new[] {
-@"Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap and Freezing Arrow by 3%.",
-@"Increases the critical strike chance of all of your attacks on targets affected by your Frost Trap, Freezing Trap and Freezing Arrow by 6%.",}, "ability_hunter_pointofnoescape")]
-        public int PointOfNoEscape { get { return _data[76]; } set { _data[76] = value; } }
-        /// <summary>
-        /// Fires a Black Arrow at the target, increasing all damage done by you to the target by 6% and dealing 786 Shadow damage over 15 sec. Black Arrow shares a cooldown with Trap spells.
-        /// </summary>
-        [TalentData(77, "Black Arrow", 1, 2, 2, 9, -1, new[] {
-@"Fires a Black Arrow at the target, increasing all damage done by you to the target by 6% and dealing 786 Shadow damage over 15 sec. Black Arrow shares a cooldown with Trap spells.",}, "spell_shadow_painspike")]
-        public int BlackArrow { get { return _data[77]; } set { _data[77] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and while standing still for [2 * Pts] sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 6% for 15 sec.
-        /// </summary>
-        [TalentData(78, "Sniper Training", 3, 2, 4, 9, -1, new[] {
-@"Increases the critical strike chance of your Kill Shot ability by 5%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 2% for 15 sec.",
-@"Increases the critical strike chance of your Kill Shot ability by 10%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 4% for 15 sec.",
-@"Increases the critical strike chance of your Kill Shot ability by 15%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 6% for 15 sec.",}, "ability_hunter_longshots")]
-        public int SniperTraining { get { return _data[78]; } set { _data[78] = value; } }
-        /// <summary>
-        /// Increases your total Agility by an additional [1 * Pts]%, and your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a [100 / 3 * Pts]% chance to grant up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.
-        /// </summary>
-        [TalentData(79, "Hunting Party", 3, 2, 3, 10, 73, new[] {
-@"Increases your total Agility by an additional 1%, and your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 33% chance to grant up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.",
-@"Increases your total Agility by an additional 2%, and your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 66% chance to grant up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.",
-@"Increases your total Agility by an additional 3%, and your Arcane Shot, Explosive Shot and Steady Shot critical strikes have a 100% chance to grant up to 10 party or raid members mana regeneration equal to 1% of the maximum mana per 5 sec. Lasts for 15 sec.",}, "ability_hunter_huntingparty")]
-        public int HuntingParty { get { return _data[79]; } set { _data[79] = value; } }
-        /// <summary>
-        /// You fire an explosive charge into the enemy target, dealing 146-174 Fire damage. The charge will blast the target every second for an additional 2 sec.
-        /// </summary>
-        [TalentData(80, "Explosive Shot", 1, 2, 2, 11, 77, new[] {
+public int MasterTactician { get { return _data[74]; } set { _data[74] = value; } }
+/// <summary>
+/// You fire an explosive charge into the enemy target, dealing 146-174 Fire damage. The charge will blast the target every second for an additional 2 sec.
+/// </summary>
+[TalentData(80, "Explosive Shot", 1, SV, 2, 11, 77, new[] {
 @"You fire an explosive charge into the enemy target, dealing 146-174 Fire damage. The charge will blast the target every second for an additional 2 sec.",}, "ability_hunter_explosiveshot")]
-        public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }
+public int ExplosiveShot { get { return _data[80]; } set { _data[80] = value; } }*/
+#endregion
+#endregion
     }
 
     public partial class RogueTalents : TalentsBase
