@@ -260,10 +260,15 @@ namespace Rawr.Hunter
                                        - 1f,
                 MovementSpeed = PetTalents.BoarsSpeed * 0.30f,
                 PhysicalHaste = (1f + PetTalents.CobraReflexes * 0.15f)
-                              * (1f + Talents.SerpentsSwiftness * 0.04f)
-                              - 1f,
+#if !RAWR4
+                                * (1f + Talents.SerpentsSwiftness * 0.04f)
+#endif
+                                - 1f,
                 PhysicalCrit = PetTalents.SpidersBite * 0.03f
-                             + Talents.Ferocity * 0.02f,
+#if !RAWR4
+                             + Talents.Ferocity * 0.02f
+#endif
+                             ,
                 BaseArmorMultiplier = (1f + PetTalents.NaturalArmor * 0.05f)
                                     * (1f + PetTalents.PetBarding * 0.05f)
                                     - 1f,
@@ -274,9 +279,14 @@ namespace Rawr.Hunter
                 FrostResistance = PetTalents.GreatResistance * 0.05f,
                 FearDurReduc = PetTalents.Lionhearted * 0.15f,
                 StunDurReduc = PetTalents.Lionhearted * 0.15f,
+#if !RAWR4
                 Dodge = Talents.CatlikeReflexes * 0.03f + PetTalents.PetBarding * 0.01f,
-                BonusDamageMultiplier = (1f + Talents.UnleashedFury * 0.03f)
-                                      * (1f + PetTalents.SpikedCollar * 0.03f)
+#endif
+                BonusDamageMultiplier =
+#if !RAWR4
+                                        (1f + Talents.UnleashedFury * 0.03f) *
+#endif
+                                        (1f + PetTalents.SpikedCollar * 0.03f)
                                       * (1f + Talents.KindredSpirits * 0.04f)
                                       * (1f + PetTalents.SharkAttack * 0.03f)
                                       - 1f,
@@ -307,10 +317,15 @@ namespace Rawr.Hunter
                                       * (1f + PetTalents.SharkAttack.Value * 0.03f)
                                       - 1f,
 #endif
-                BonusAttackPowerMultiplier = (1f + Talents.AnimalHandler * 0.05f)
-                                           * (1f + calculatedStats.aspectBonusAPBeast)
+                BonusAttackPowerMultiplier =
+#if !RAWR4
+                                           (1f + Talents.AnimalHandler * 0.05f) *
+#endif
+                                           (1f + calculatedStats.aspectBonusAPBeast)
                                            - 1f,
+#if !RAWR4
                 BonusHealthMultiplier = Talents.EnduranceTraining * 0.02f,
+#endif
             };
             float LongevityCdAdjust = 1f - Talents.Longevity * 0.10f;
 #if RAWR3 || RAWR4 || SILVERLIGHT
@@ -587,7 +602,11 @@ namespace Rawr.Hunter
                 float killCommandManaCost = 0.03f * calculatedStats.baseMana;
 
                 float killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1.0f / 180f : 0f;
-                float killCommandCooldownBase = 1.0f / (60f - Talents.CatlikeReflexes * 10f);
+                float killCommandCooldownBase = 1.0f
+#if !RAWR4
+                    / (60f - Talents.CatlikeReflexes * 10f)
+#endif
+                    ;
 
                 killCommandCooldown = 1.0f / (killCommandCooldownBase + killCommandReadinessFactor);
 
@@ -1011,7 +1030,11 @@ namespace Rawr.Hunter
 
                 float killCommandDPSOverCooldown = killCommandCooldown > 0 ? killCommandBonusDamage / killCommandCooldown : 0;
 
+#if !RAWR4
                 float killCommandFocusedFireCritBonus = character.HunterTalents.FocusedFire * 0.1f;
+#else
+                float killCommandFocusedFireCritBonus = 0f;
+#endif
                 // 31-10-2009 Drizz: Remade the AdjustedBonus Calculation from the one below
                 // float killCommandAdjustedBonus = killCommandFocusedFireCritBonus *  damageAdjustDodge * damageAdjustMitigation;
                 float killCommandAdjustedBonus = killCommandFocusedFireCritBonus

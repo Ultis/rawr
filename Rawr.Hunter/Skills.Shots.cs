@@ -22,7 +22,9 @@ namespace Rawr.Hunter.Skills
             Name = "Explosive Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.ExplosiveShot;
+#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
@@ -200,7 +202,9 @@ namespace Rawr.Hunter.Skills
             Name = "Kill Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.AimedShot;
+#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
@@ -227,7 +231,9 @@ namespace Rawr.Hunter.Skills
             Name = "Silencing Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.ExplosiveShot;
+#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;

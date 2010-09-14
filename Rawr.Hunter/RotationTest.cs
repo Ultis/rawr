@@ -71,7 +71,11 @@ namespace Rawr.Hunter
             int LALfix = 0;
             float AutoShotSpeed = 2; // Speed at which we shoot auto-shots
             //float IAotHEffect = 1 + calculatedStats.quickShotsEffect; // haste increase during IAoTH
-            float IAotHChance = character.HunterTalents.ImprovedAspectOfTheHawk > 0 ? 10 : -1;
+            float IAotHChance =
+#if !RAWR4
+                character.HunterTalents.ImprovedAspectOfTheHawk > 0 ? 10 :
+#endif
+                -1;
             float WaitForESCS = CalcOpts.waitForCooldown;
             bool InterleaveLAL = CalcOpts.interleaveLAL;
             bool ArcAimedPrio = CalcOpts.prioritiseArcAimedOverSteady;
