@@ -600,7 +600,7 @@ namespace Rawr.Moonkin
             calcs.BasicStats = stats;
 
             calcs.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
-            calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + StatConversion.GetSpellHitFromRating(character.DruidTalents.BalanceOfPower / 2f * stats.Spirit) + stats.SpellHit;
+            calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
             calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
 
             // All spells: Damage +(1 * Int)
@@ -718,12 +718,12 @@ namespace Rawr.Moonkin
 
             Stats statsMoonkinForm = new Stats()
             {
-                BaseArmorMultiplier = character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0 ? 1.2f : 0.0f
+                BaseArmorMultiplier = character.DruidTalents.MoonkinForm > 0 ? 1.2f : 0.0f
             };
 
             Stats statsMasterSS = new Stats()
             {
-                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0 && character.ActiveBuffsContains("Moonkin Form")) ?
+                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0) ?
                                             0.04f * character.DruidTalents.MasterShapeshifter : 0.0f
             };
 
@@ -766,6 +766,8 @@ namespace Rawr.Moonkin
             statsTotal.SpellCrit += 0.02f * character.DruidTalents.NaturesMajesty;
             // All spells: Haste% + (0.01 * Nature's Grace)
             statsTotal.SpellHaste += 0.01f * character.DruidTalents.NaturesGrace;
+            // All spells: Hit rating + 0.5f * Balance of Power * Spirit
+            statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * statsTotal.Spirit;
 
             // Mastery -> Eclipse Damage
             statsTotal.EclipseBonus += (statsTotal.MasteryRating / 93.0f + 8.0f) * 0.015f;
