@@ -22,6 +22,7 @@ namespace Rawr.Moonkin
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
         public float FightLength { get; set; }
+        public float EclipseBase = 0.2f;
         private Stats baseStats;
         public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
         public RotationData SelectedRotation { get; set; }
@@ -56,7 +57,7 @@ namespace Rawr.Moonkin
                 baseStats.MasteryRating,
                 baseStats.MasteryRating));
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen * 5.0f));
-            retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0] + SubPoints[1]));
+            retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0]));
             retVal.Add("Selected Rotation", SelectedRotation.Name);
             retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.DPS));
             retVal.Add("Selected Time To OOM", String.Format(SelectedRotation.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", SelectedRotation.TimeToOOM.Minutes, SelectedRotation.TimeToOOM.Seconds));

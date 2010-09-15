@@ -25,6 +25,8 @@ namespace Rawr.Moonkin
             this.CriticalDamageModifier = copy.CriticalDamageModifier;
             this.DotEffect = copy.DotEffect == null ? null : new DotEffect(copy.DotEffect);
             this.SpellDamageModifier = copy.SpellDamageModifier;
+            this.BaseEnergy = copy.BaseEnergy;
+            this.CriticalEnergy = copy.CriticalEnergy;
         }
         public string Name { get; set; }
         public float BaseDamage { get; set; }

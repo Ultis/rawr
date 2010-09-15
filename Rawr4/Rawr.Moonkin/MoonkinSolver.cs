@@ -192,6 +192,7 @@ namespace Rawr.Moonkin
             float baseHit = GetSpellHit(calcs);
             float baseCrit = calcs.SpellCrit;
             float baseHaste = calcs.SpellHaste;
+            float baseMastery = calcs.Mastery;
 
             BuildProcList(calcs);
 
@@ -273,14 +274,6 @@ namespace Rawr.Moonkin
             foreach (SpellRotation rot in rotations)
             {
                 rot.Solver = this;
-                float accumulatedDamage = 0.0f;
-                float totalUpTime = 0.0f;
-                float[] spellDetails = new float[NUM_SPELL_DETAILS];
-                List<ProcEffect> activatedEffects = new List<ProcEffect>();
-                List<ProcEffect> alwaysUpEffects = new List<ProcEffect>();
-
-                // Pre-calculate rotational variables with base stats
-                rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
 
                 // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
@@ -288,6 +281,14 @@ namespace Rawr.Moonkin
                 float currentHaste = baseHaste;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
                 calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
+                float accumulatedDamage = 0.0f;
+                float totalUpTime = 0.0f;
+                float[] spellDetails = new float[NUM_SPELL_DETAILS];
+                List<ProcEffect> activatedEffects = new List<ProcEffect>();
+                List<ProcEffect> alwaysUpEffects = new List<ProcEffect>();
+
+                // Pre-calculate rotational variables with base stats
+                rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery);
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
                 foreach (ProcEffect proc in procEffects)
                 {
@@ -417,7 +418,7 @@ namespace Rawr.Moonkin
                             ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
-                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / rot.RotationData.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / rot.RotationData.Duration;
                         spellDetails[0] = Starfire.DamagePerHit;
                         spellDetails[1] = Wrath.DamagePerHit;
                         spellDetails[2] = Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
@@ -486,7 +487,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste);
+                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.RotationData.Duration;
                 spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
                 spellDetails[1] += (1 - totalUpTime) * Wrath.DamagePerHit;
@@ -718,6 +719,8 @@ namespace Rawr.Moonkin
                                                       + moonfireDotGlyph;
             InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * talents.Genesis
                                                          + insectSwarmGlyph;
+            // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
+            Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond
@@ -736,6 +739,7 @@ namespace Rawr.Moonkin
 
             // Energy bonuses
             Starfire.CriticalEnergy += 4 * talents.Euphoria;
+            Starsurge.CriticalEnergy += 4 * talents.Euphoria;
             Wrath.CriticalEnergy += 2 * talents.Euphoria;
 
             Starsurge.BaseEnergy += 3 * talents.LunarGuidance;
@@ -748,7 +752,6 @@ namespace Rawr.Moonkin
             // 4T7
             Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
             Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
-
         }
 
     }
