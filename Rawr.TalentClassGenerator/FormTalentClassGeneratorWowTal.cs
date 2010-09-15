@@ -269,8 +269,8 @@ namespace Rawr
 				if (string.IsNullOrWhiteSpace(talent.Name) || talent.MaxPoints == 0) continue;
 				string treeID = strTalent.Between("'tab': ", ",");
 				talent.Tree = treeID == classData.TreeIDs[0] ? 0 : (treeID == classData.TreeIDs[1] ? 1 : 2);
-				talent.Row = int.Parse(strTalent.After("'row': "));
-				talent.Column = int.Parse(strTalent.Between("'column': ", ","));
+				talent.Row = int.Parse(strTalent.After("'row': ")) + 1;
+				talent.Column = int.Parse(strTalent.Between("'column': ", ",")) + 1;
 				string strDescription = allDescriptions.First(str => str.Trim().StartsWith(talent.ID + ":")).After("{");
 				if (strDescription.After(": ")[0]=='\'')
 				{ //It's quoted using '
