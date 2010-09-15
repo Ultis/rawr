@@ -611,6 +611,9 @@ namespace Rawr.Moonkin
 
             calcs.Latency = calcOpts.Latency;
 
+            // Mastery from rating
+            calcs.Mastery = 8.0f + stats.MasteryRating / 93.0f;
+
 #if RAWR3 || RAWR4
             BossOptions bossOpts = new BossOptions();
             if (character.BossOptions != null) bossOpts = character.BossOptions;
@@ -769,8 +772,8 @@ namespace Rawr.Moonkin
             // All spells: Hit rating + 0.5f * Balance of Power * Spirit
             statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * statsTotal.Spirit;
 
-            // Mastery -> Eclipse Damage
-            statsTotal.EclipseBonus += (statsTotal.MasteryRating / 93.0f + 8.0f) * 0.015f;
+            // Mastery -> Eclipse bonus
+            statsTotal.EclipseBonus += (8.0f + statsTotal.MasteryRating / 93f) * 0.015f;
 
             return statsTotal;
         }
@@ -1016,6 +1019,7 @@ namespace Rawr.Moonkin
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
                 SpellPower = stats.SpellPower,
+                MasteryRating = stats.MasteryRating,
                 // SpellPenetration = stats.SpellPenetration,
                 Mp5 = stats.Mp5,
                 BonusArmor = stats.BonusArmor,
@@ -1055,7 +1059,6 @@ namespace Rawr.Moonkin
                 BonusNukeCritChance = stats.BonusNukeCritChance,
                 EclipseBonus = stats.EclipseBonus,
                 StarfireProc = stats.StarfireProc,
-                MoonfireDotCrit = stats.MoonfireDotCrit,
                 BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
                 MoonkinT10CritDot = stats.MoonkinT10CritDot,
 
@@ -1144,7 +1147,6 @@ namespace Rawr.Moonkin
                 stats.BonusNukeCritChance > 0 ||
                 stats.EclipseBonus > 0 ||
                 stats.StarfireProc > 0 ||
-                stats.MoonfireDotCrit > 0 ||
                 stats.BonusMoonkinNukeDamage > 0 ||
                 stats.MoonkinT10CritDot > 0 ||
 
@@ -1192,6 +1194,7 @@ namespace Rawr.Moonkin
                 stats.HitRating > 0 ||
                 stats.CritRating > 0 ||
                 stats.Mp5 > 0 ||
+                stats.MasteryRating > 0 ||
 
                 // Buffs / Debuffs
                 stats.ManaRestoreFromBaseManaPPM > 0 ||

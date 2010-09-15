@@ -210,7 +210,7 @@ namespace Rawr.Moonkin
                     RotationData.MoonfireCasts * mf.BaseManaCost +
                     RotationData.InsectSwarmCasts * iSw.BaseManaCost;
 
-                RotationData.ManaGained = 2 * 0.06f * talents.Euphoria * CalculationsMoonkin.BaseMana;
+                RotationData.ManaGained = 2 * 0.06f * talents.Euphoria * calcs.BasicStats.Mana;
 
                 return preSolarDamage + solarDamage + preLunarDamage + lunarDamage + moonfireDamage + insectSwarmDamage + starSurgeDamage;
             }

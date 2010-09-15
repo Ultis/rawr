@@ -52,9 +52,9 @@ namespace Rawr.Moonkin
                 100 * SpellHaste,
                 baseStats.HasteRating,
                 100 * StatConversion.GetSpellHasteFromRating(baseStats.HasteRating)));
-            retVal.Add("Mastery", String.Format("{0:F}*{1:F} Eclipse % {2} Rating",
-                baseStats.MasteryRating,
-                baseStats.MasteryRating,
+            retVal.Add("Mastery", String.Format("{0:F}*{1:F} Eclipse %, {2} Rating",
+                Mastery,
+                Mastery * 1.5f,
                 baseStats.MasteryRating));
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen * 5.0f));
             retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0]));
@@ -77,6 +77,9 @@ namespace Rawr.Moonkin
             sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wrath", 100 * SelectedRotation.WrathAvgHit * SelectedRotation.WrathCount / rotationDamage,
                 SelectedRotation.WrathAvgHit * SelectedRotation.WrathCount,
                 SelectedRotation.WrathCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starsurge", 100 * SelectedRotation.StarSurgeAvgHit * SelectedRotation.StarSurgeCount / rotationDamage,
+                SelectedRotation.StarSurgeAvgHit * SelectedRotation.StarSurgeCount,
+                SelectedRotation.StarSurgeCount));
 
             retVal.Add("Selected Spell Breakdown", sb.ToString());
             retVal.Add("Starfire", String.Format("{0:F2} dps*{1:F2} s avg\n {2:F2} avg hit\n{3:F0} avg energy",

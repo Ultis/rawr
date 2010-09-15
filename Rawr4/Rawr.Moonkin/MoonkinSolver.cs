@@ -506,7 +506,7 @@ namespace Rawr.Moonkin
 
                 float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation;
                 float sustainedDPS = burstDPS;
-                float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.RotationData.Duration;
+                float timeToOOM = (manaPool / (rot.RotationData.ManaUsed - rot.RotationData.ManaGained)) * rot.RotationData.Duration;
                 if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
                 if (timeToOOM < calcs.FightLength * 60.0f)
                 {
@@ -721,6 +721,9 @@ namespace Rawr.Moonkin
                                                          + insectSwarmGlyph;
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
             Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
+            // Starfire, Wrath: Damage +0.04 for 4T9
+            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond
