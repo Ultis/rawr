@@ -87,27 +87,6 @@
     <Compile Include="..\..\Rawr.Moonkin\CalculationOptionsMoonkin.cs">
       <Link>CalculationOptionsMoonkin.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\CalculationsMoonkin.cs">
-      <Link>CalculationsMoonkin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\CharacterCalculationsMoonkin.cs">
-      <Link>CharacterCalculationsMoonkin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\ComparisonCalculationMoonkin.cs">
-      <Link>ComparisonCalculationMoonkin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\MoonkinSolver.cs">
-      <Link>MoonkinSolver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\ProcEffect.cs">
-      <Link>ProcEffect.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\Spell.cs">
-      <Link>Spell.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Moonkin\SpellRotation.cs">
-      <Link>SpellRotation.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Moonkin\CalculationOptionsPanelMoonkin.xaml.cs">
       <Link>CalculationOptionsPanelMoonkin.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
@@ -115,7 +94,15 @@
     <Compile Include="..\..\Rawr3\Rawr.Moonkin\MoonkinConverters.cs">
       <Link>MoonkinConverters.cs</Link>
     </Compile>
+    <Compile Include="CalculationsMoonkin.cs" />
+    <Compile Include="CharacterCalculationsMoonkin.cs" />
+    <Compile Include="ComparisonCalculationMoonkin.cs" />
+    <Compile Include="MoonkinSolver.cs" />
+    <Compile Include="ProcEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleFastMatrix.cs" />
+    <Compile Include="Spell.cs" />
+    <Compile Include="SpellRotation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
