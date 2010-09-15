@@ -154,7 +154,9 @@ namespace Rawr.DPSWarr {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs =
+#if !RAWR4
                         ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
+#endif
                         (!FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
@@ -175,8 +177,12 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Weapon Damage
+#if !RAWR4
         public float OHDamageReduc { get { return 0.5f * (1f + Talents.DualWieldSpecialization * 0.05f); } }
-        public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH)                 : 0f; } }
+#else
+        public float OHDamageReduc { get { return 0.5f/* * (1f + Talents.DualWieldSpecialization * 0.05f)*/; } }
+#endif
+        public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH) : 0f; } }
         public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) { return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage; }
         public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
@@ -189,8 +195,11 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) * 
-                        (1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
+#if !RAWR4
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) *  (1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
+#else
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) * (1f /*+ ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)*/);
+#endif
                 }
                 return _BonusWhiteCritDmg;
             }
@@ -315,8 +324,13 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Dodge
         private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[levelDif]; } }
+#if !RAWR4
         private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
         private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
+#else
+        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
+        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
+#endif
         #endregion
         #region Parry
         private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[levelDif]; } }
@@ -371,30 +385,42 @@ namespace Rawr.DPSWarr {
         private float MhWhCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return StatS.PhysicalCrit + 
-                 ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#if !RAWR4
+                return StatS.PhysicalCrit + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#else
+                return StatS.PhysicalCrit;// +((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#endif
                 //return crit;
             }
         }
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-                return StatS.PhysicalCrit +
-                       ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#if !RAWR4
+                return StatS.PhysicalCrit + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#else
+                return StatS.PhysicalCrit;// +((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#endif
             }
         }
         private float OhWhCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return StatS.PhysicalCrit +
-                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#if !RAWR4
+                return StatS.PhysicalCrit + ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#else
+                return StatS.PhysicalCrit;// +((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#endif
             }
         }
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-                return StatS.PhysicalCrit +
-                ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#if !RAWR4
+                return StatS.PhysicalCrit + ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#else
+                return StatS.PhysicalCrit;// +((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
+#endif
             }
         }
         #endregion

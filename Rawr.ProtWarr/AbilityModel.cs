@@ -45,13 +45,21 @@ namespace Rawr.ProtWarr
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false);
                     break;
                 case Ability.Cleave:
+#if !RAWR4
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) + (222.0f * (1.0f + Talents.ImprovedCleave * 0.4f));
+#else
+                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) + (222.0f * (1.0f /*+ Talents.ImprovedCleave * 0.4f*/));
+#endif
                     break;
                 case Ability.ConcussionBlow:
                     baseDamage = Stats.AttackPower * 0.38f;
                     break;
                 case Ability.DamageShield:
+#if !RAWR4
                     baseDamage = Stats.BlockValue * (Talents.DamageShield * 0.1f);
+#else
+                    baseDamage = Stats.BlockValue/* * (Talents.DamageShield * 0.1f)*/;
+#endif
                     break;
                 case Ability.DeepWounds:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) * (Talents.DeepWounds * 0.16f);
@@ -78,12 +86,20 @@ namespace Rawr.ProtWarr
                     baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, false);
                     if (Talents.GlyphOfRending)
                         baseDamage *= 1.4f;
+#if !RAWR4
                     DamageMultiplier *= (1.0f + Talents.ImprovedRend * 0.2f) * (1.0f + Stats.BonusBleedDamageMultiplier);
+#else
+                    DamageMultiplier *= (1.0f /*+ Talents.ImprovedRend * 0.2f*/) * (1.0f + Stats.BonusBleedDamageMultiplier);
+#endif
                     ArmorReduction = 0.0f;
                     break;
                 case Ability.Revenge:
                     baseDamage = (1816.5f * (1.0f + Talents.ImprovedRevenge * 0.3f)) + (Stats.AttackPower * 0.31f);
+#if !RAWR4
                     DamageMultiplier *= (1.0f + Talents.UnrelentingAssault * 0.1f);
+#else
+                    DamageMultiplier *= (1.0f /*+ Talents.UnrelentingAssault * 0.1f*/);
+#endif
                     break;
                 case Ability.ShieldSlam:
                     float softCap = 24.5f * Character.Level;
@@ -105,7 +121,11 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.ThunderClap:
                     baseDamage = 300.0f + (Stats.AttackPower * 0.12f);
+#if !RAWR4
                     DamageMultiplier *= (1.0f + Talents.ImprovedThunderClap * 0.1f);
+#else
+                    DamageMultiplier *= (1.0f /*+ Talents.ImprovedThunderClap * 0.1f*/);
+#endif
                     break;
                 case Ability.Vigilance:
                     baseDamage = 0.0f;

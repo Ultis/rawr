@@ -10,8 +10,10 @@ namespace Rawr.ProtWarr
         {
             float globalCooldownSpeed = 1.5f;
             
+#if !RAWR4
             if (character.WarriorTalents.UnrelentingAssault == 2)
                 globalCooldownSpeed -= 0.5f;
+#endif
 
             if (withLatency)
                 globalCooldownSpeed += 0.1f;
@@ -27,10 +29,12 @@ namespace Rawr.ProtWarr
         public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
             float ignoreArmor = 0.0f;
+#if !RAWR4
             if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandMace))
                 ignoreArmor += character.WarriorTalents.MaceSpecialization * 0.03f;
+#endif
 
-			return StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, ignoreArmor, stats.ArmorPenetrationRating);
+            return StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, ignoreArmor, stats.ArmorPenetrationRating);
         }
 
         public static float TargetCritChance(Character character, Stats stats, int targetLevel)
@@ -45,7 +49,11 @@ namespace Rawr.ProtWarr
                 case HitResult.Miss:
                     return StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80];
                 case HitResult.Dodge:
-                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 80] - (0.01f * character.WarriorTalents.WeaponMastery);
+                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 80]
+#if !RAWR4
+                        - (0.01f * character.WarriorTalents.WeaponMastery)
+#endif
+                        ;
                 case HitResult.Parry:
                     return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 80];
                 case HitResult.Glance:
@@ -60,7 +68,11 @@ namespace Rawr.ProtWarr
         public static float StanceDamageMultipler(Character character, Stats stats)
         {
             // In Defensive Stance
+#if !RAWR4
             return (0.95f * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f) * (1.0f + stats.BonusDamageMultiplier));
+#else
+            return (0.95f/* * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f)*/ * (1.0f + stats.BonusDamageMultiplier));
+#endif
         }
 
         public static float StanceThreatMultipler(Character character, Stats stats)
@@ -81,6 +93,7 @@ namespace Rawr.ProtWarr
             
             switch (damageType)
             {
+#if !RAWR4
                 case DamageType.Arcane:
                 case DamageType.Fire:
                 case DamageType.Frost:
@@ -88,6 +101,7 @@ namespace Rawr.ProtWarr
                 case DamageType.Shadow:
                 case DamageType.Holy:
                     return damageTaken * (1.0f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
+#endif
                 default:
                     return damageTaken;
             }
@@ -147,8 +161,13 @@ namespace Rawr.ProtWarr
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;
                 case Ability.ShieldSlam:
+#if !RAWR4
                     abilityCritChance += character.WarriorTalents.CriticalBlock * 0.05f;
                     break;
+#else
+                    abilityCritChance = 0;
+                    break;
+#endif
                 case Ability.ThunderClap:
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;

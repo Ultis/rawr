@@ -32,8 +32,13 @@ namespace Rawr.DPSWarr.Skills
             HSOverridesOverDur = 0f;
             CLOverridesOverDur = 0f;
             Slam_ActsOverDur = 0f;
+#if !RAWR4
             _uwProcValue_mh = combatFactors._c_mhItemSpeed * Talents.UnbridledWrath / 20.0f;
             _uwProcValue_oh = combatFactors._c_ohItemSpeed * Talents.UnbridledWrath / 20.0f;
+#else
+            _uwProcValue_mh = combatFactors._c_mhItemSpeed;// *Talents.UnbridledWrath / 20.0f;
+            _uwProcValue_oh = combatFactors._c_ohItemSpeed;// *Talents.UnbridledWrath / 20.0f;
+#endif
         }
         public void InvalidateCache()
         {
@@ -271,10 +276,11 @@ namespace Rawr.DPSWarr.Skills
         private const float c_const = 0.016545334215751158173395102581072f; //7.5f / 453.3f;
         private const float c_const2 = 0.033090668431502316346790205162144f; // 2*c_const
         private const float c_const3 = 0.049636002647253474520185307743216f; // 3*c_const
-        private float RageFormula(float d, float fs)
-        {
-            return (4f + Talents.EndlessRage) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f);
-        }
+#if !RAWR4
+        private float RageFormula(float d, float fs) { return (4f + Talents.EndlessRage) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
+#else
+        private float RageFormula(float d, float fs) { return (4f /*+ Talents.EndlessRage*/) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
+#endif
         // Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
         public float LandedAtksOverDurMH { get { return MhActivates * MHAtkTable.AnyLand; } }

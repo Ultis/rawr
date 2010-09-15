@@ -142,7 +142,11 @@ namespace Rawr.DPSWarr {
             int Iterator = 0;
             #region >20%
             // Run the loop for >20%
+#if !RAWR4
             float MSBaseCd = 6f - Talents.ImprovedMortalStrike / 3f;
+#else
+            float MSBaseCd = 6f;// -Talents.ImprovedMortalStrike / 3f;
+#endif
             float MS_WeightedValue = MS.ability.DamageOnUse + DW.TickSize * MS.ability.MHAtkTable.Crit,
                   SD_WeightedValue = SD.ability.DamageOnUse + DW.TickSize * SD.ability.MHAtkTable.Crit,
                   SL_WeightedValue = SL.ability.DamageOnUse + DW.TickSize * SL.ability.MHAtkTable.Crit;
@@ -173,12 +177,11 @@ namespace Rawr.DPSWarr {
                      Math.Abs(TB.numActivates - oldTBGCDs) > 0.1f ||
                      Math.Abs(SD.numActivates - oldSDGCDs) > 0.1f ||
                      Math.Abs(SL.numActivates - oldSLGCDs) > 0.1f ||
-                     (percTimeUnder20 > 0
-                        && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f) ||
-                     (Talents.SwordSpecialization > 0
-                        && (CombatFactors._c_mhItemType == ItemType.TwoHandSword || CombatFactors._c_mhItemType == ItemType.OneHandSword)
-                        && Math.Abs(SS.numActivates - oldSSActs) > 0.1f)
-                    )
+                     (percTimeUnder20 > 0 && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f)
+#if !RAWR4
+                     || (Talents.SwordSpecialization > 0 && (CombatFactors._c_mhItemType == ItemType.TwoHandSword || CombatFactors._c_mhItemType == ItemType.OneHandSword) && Math.Abs(SS.numActivates - oldSSActs) > 0.1f)
+#endif
+)
                   )
             {
                 // Reset a couple of items so we can keep iterating
@@ -597,12 +600,11 @@ namespace Rawr.DPSWarr {
                      Math.Abs(TB.numActivates - oldTBGCDs) > 0.1f ||
                      Math.Abs(SD.numActivates - oldSDGCDs) > 0.1f ||
                      //Math.Abs(SL.numActivates - oldSLGCDs) > 0.1f ||
-                     (percTimeUnder20 > 0
-                        && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f) ||
-                     (Talents.SwordSpecialization > 0
-                        && (CombatFactors._c_mhItemType == ItemType.TwoHandSword || CombatFactors._c_mhItemType == ItemType.OneHandSword)
-                        && Math.Abs(SS.numActivates - oldSSActs) > 0.1f)
-                    )
+                     (percTimeUnder20 > 0 && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f)
+#if !RAWR4
+                     || (Talents.SwordSpecialization > 0 && (CombatFactors._c_mhItemType == ItemType.TwoHandSword || CombatFactors._c_mhItemType == ItemType.OneHandSword) && Math.Abs(SS.numActivates - oldSSActs) > 0.1f)
+#endif
+)
                   )
             {
                 // Reset a couple of items so we can keep iterating

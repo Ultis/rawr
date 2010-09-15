@@ -2037,7 +2037,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // Focused Fire
 #if !RAWR4
-            float focusFireDamageAdjust 1f + 0.01f * talents.FocusedFire;
+            float focusedFireDamageAdjust = 1f + 0.01f * talents.FocusedFire;
 #else
             float focusedFireDamageAdjust = 1f;
 #endif

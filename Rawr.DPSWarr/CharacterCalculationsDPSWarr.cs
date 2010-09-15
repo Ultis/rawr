@@ -197,15 +197,19 @@ namespace Rawr.DPSWarr {
                 string theFormat = "";
 
                 float[] passiveContrsVals = new float[] {
+#if !RAWR4
                     combatFactors.Char.WarriorTalents.StrengthOfArms * 0.02f,
                     (combatFactors.FuryStance ? combatFactors.Char.WarriorTalents.ImprovedBerserkerStance * 0.04f : 0f),
+#endif
                     BuffsStats.Strength,
                     BuffsStats.BonusStrengthMultiplier,
                 };
 
                 string[] passiveContrs = new string[] {
+#if !RAWR4
                     "Strength of Arms",
                     "Improved Berserker Stance",
+#endif
                     "Buffs : Simple",
                     "Buffs : Multi",
                 };
@@ -214,10 +218,15 @@ namespace Rawr.DPSWarr {
                 theFormat += "The Pane shows Averaged Values";
                 theFormat += "\r\n";
                 theFormat += "\r\n= Your Passive Contributions =";
+#if !RAWR4
                 theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[0]; formIter++;
                 theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
                 theFormat += "\r\n{" + formIter.ToString() + ":0.#} : "   + passiveContrs[2]; formIter++;
                 theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[3]; formIter++;
+#else
+                theFormat += "\r\n{" + formIter.ToString() + ":0.#} : "   + passiveContrs[0]; formIter++;
+                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
+#endif
                 theFormat += "\r\n";
                 theFormat += "\r\n= UnProc'd =";
                 theFormat += "\r\nValue: {" + formIter.ToString() + ":0.#}"; formIter++;
@@ -231,7 +240,10 @@ namespace Rawr.DPSWarr {
                     // Averaged Stats
                     AverageStats.Strength,
                     // Passive Contributions
-                    passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2], passiveContrsVals[3],
+                    passiveContrsVals[0], passiveContrsVals[1],
+#if !RAWR4
+                    passiveContrsVals[2], passiveContrsVals[3],
+#endif
                     // UnProc'd Stats
                     BuffedStats.Strength,
                     BuffedStats.Strength * 2f,

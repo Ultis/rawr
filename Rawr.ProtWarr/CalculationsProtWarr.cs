@@ -514,6 +514,7 @@ threat and limited threat scaled by the threat scale.",
             // Talents
             Stats statsTalents = new Stats()
             {
+#if !RAWR4
                 Parry = talents.Deflection * 0.01f,
                 Dodge = talents.Anticipation * 0.01f,
                 Block = talents.ShieldSpecialization * 0.01f,
@@ -540,7 +541,34 @@ threat and limited threat scaled by the threat scale.",
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalHaste = talents.BloodFrenzy * 0.03f,
                 PhysicalHit = talents.Precision * 0.01f,
-
+#else
+                //Parry = talents.Deflection * 0.01f,
+                //Dodge = talents.Anticipation * 0.01f,
+                Block = talents.ShieldSpecialization * 0.01f,
+                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f + (talents.GlyphOfBlocking ? 0.1f : 0.0f),
+                PhysicalCrit = talents.Cruelty * 0.01f /*+
+                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
+                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f)*/,
+                /*BonusCritMultiplier =
+                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
+                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f),*/
+                /*BonusDamageMultiplier =
+                    ((character.MainHand != null &&
+                        (character.MainHand.Type == ItemType.OneHandAxe ||
+                        character.MainHand.Type == ItemType.OneHandMace ||
+                        character.MainHand.Type == ItemType.OneHandSword ||
+                        character.MainHand.Type == ItemType.Dagger ||
+                        character.MainHand.Type == ItemType.FistWeapon))
+                            ? talents.OneHandedWeaponSpecialization * 0.02f : 0f),*/
+                //BonusStaminaMultiplier = talents.Vitality * 0.03f + talents.StrengthOfArms * 0.02f,
+                //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
+                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
+                BaseArmorMultiplier = talents.Toughness * 0.02f,
+                PhysicalHaste = talents.BloodFrenzy * 0.03f,
+                //PhysicalHit = talents.Precision * 0.01f,
+#endif
             };
             statsTotal.Accumulate(statsTalents);
 
@@ -579,7 +607,9 @@ threat and limited threat scaled by the threat scale.",
                 statsTotal.Agility += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusAgilityMultiplier));
 
             // Final Attack Power
+#if !RAWR4
             statsTotal.AttackPower += statsTotal.Strength * 2.0f + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 108.0f);
+#endif
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1.0f + statsTotal.BonusAttackPowerMultiplier));
 
             return statsTotal;

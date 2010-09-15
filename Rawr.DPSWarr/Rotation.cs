@@ -458,7 +458,11 @@ namespace Rawr.DPSWarr {
         
         protected virtual float RageGenOverDur_Anger {
             get {
+#if !RAWR4
                 return (Talents.AngerManagement / 3.0f) * FightDuration;
+#else
+                return 0f;
+#endif
             }
         }
         
@@ -1084,10 +1088,17 @@ namespace Rawr.DPSWarr {
                     SN = GetWrapper<SunderArmor>().ability,
                     SW = GetWrapper<SweepingStrikes>().ability,
                     RK = GetWrapper<Recklessness>().ability;
+#if !RAWR4
             if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.CommandingPresence][talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
             if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.CommandingPresence][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
             if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.ImprovedDemoralizingShout][talents.BoomingVoice]); }
-            if (ST.Validated) {
+#else
+            if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[0][talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+            if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[0][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+            if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[0][talents.BoomingVoice]); }
+#endif
+            if (ST.Validated)
+            {
                 float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
                 if (!_SE_ShatteringThrow.ContainsKey(value)) {
                     _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
@@ -1104,7 +1115,11 @@ namespace Rawr.DPSWarr {
                         new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 3 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
                     });
                 }
+#if !RAWR4
                 statsTotal.AddSpecialEffect(_SE_ThunderClap[value][talents.ImprovedThunderClap]);
+#else
+                statsTotal.AddSpecialEffect(_SE_ThunderClap[value][0]);
+#endif
             }
             if (SN.Validated) {
                 float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);

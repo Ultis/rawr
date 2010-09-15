@@ -82,7 +82,11 @@ namespace Rawr.DPSWarr.Skills
             Description = "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+#if !RAWR4
             RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
+#else
+            RageCost = 0f;// -(Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
+#endif
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             UseReact = true;
@@ -146,7 +150,11 @@ namespace Rawr.DPSWarr.Skills
             // Rage is actually reversed in the rotation
             RageCost = -(20f // Base
                         + 10f) // Over Time
+#if !RAWR4
                        * (1f + Talents.ImprovedBloodrage * 0.25f); // Talent Bonus
+#else
+                        ;
+#endif
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             Stats Base = BaseStats.GetBaseStats(Char.Level, CharacterClass.Warrior, Char.Race);
             float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);
@@ -275,7 +283,11 @@ namespace Rawr.DPSWarr.Skills
             Name = "Recklessness";
             Description = "Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
+#if !RAWR4
             Cd = (5f * 60f - Talents.ImprovedDisciplines * 30f) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+#else
+            Cd = (5f * 60f /*- Talents.ImprovedDisciplines * 30f*/) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+#endif
             Duration = 12f; // In Seconds
             StanceOkFury = true;
             //Effect = new SpecialEffect(Trigger.Use, new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, }, Duration, Cd);
@@ -308,7 +320,11 @@ namespace Rawr.DPSWarr.Skills
             Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #endif
             Duration = 30f;
+#if !RAWR4
             RageCost = 30f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 30f;// -(Talents.FocusedRage * 1f);
+#endif
             RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
             StanceOkFury = StanceOkArms = true;
             UseHitTable = false;
@@ -401,6 +417,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 6f; // In Seconds
             Duration = 30f; // In Seconds
             float cost = 0f;
+#if !RAWR4
             switch (Talents.ImprovedThunderClap)
             {
                 case 1: { cost = 1f; break; }
@@ -408,10 +425,18 @@ namespace Rawr.DPSWarr.Skills
                 case 3: { cost = 4f; break; }
                 default: { cost = 0f; break; }
             }
-            RageCost = 20f - cost - (Talents.GlyphOfResonatingPower ? 5f : 0f) - (Talents.FocusedRage * 1f);
+#endif
+            RageCost = 20f - cost - (Talents.GlyphOfResonatingPower ? 5f : 0f) 
+#if !RAWR4
+                - (Talents.FocusedRage * 1f);
+#else
+            ;
+#endif
             StanceOkArms = StanceOkDef = true;
             DamageBase = 300f + StatS.AttackPower * 0.12f;
+#if !RAWR4
             DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
+#endif
             BonusCritChance = Talents.Incite * 0.05f;
             UseSpellHit = true;
             CanBeDodged = CanBeParried = false;
@@ -465,7 +490,12 @@ namespace Rawr.DPSWarr.Skills
             Duration = 30f; // In Seconds
             Cd = 1.5f;
             CanCrit = false;
-            RageCost = 15f - (Talents.FocusedRage * 1f) - (Talents.Puncture * 1f);
+            RageCost = 15f
+#if !RAWR4
+                - (Talents.FocusedRage * 1f) - (Talents.Puncture * 1f);
+#else
+                ;
+#endif
             Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f);
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
@@ -520,7 +550,11 @@ namespace Rawr.DPSWarr.Skills
             Cd = 5f * 60f; // In Seconds
             Duration = 10f;
             CastTime = 1.5f; // In Seconds
+#if !RAWR4
             RageCost = 25f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 25f;// -(Talents.FocusedRage * 1f);
+#endif
             StanceOkArms = true;
             DamageBase = 12f + StatS.AttackPower * 0.50f;
             //
@@ -546,7 +580,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = false;
             MaxRange = 10f; // In Yards 
             Duration = 30f * (1f + 0.05f * Talents.BoomingVoice);
+#if !RAWR4
             RageCost = 10f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 10f;// -(Talents.FocusedRage * 1f);
+#endif
             StanceOkArms = StanceOkFury = true;
             UseSpellHit = true;
             //
@@ -599,7 +637,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 15f; // In Seconds
+#if !RAWR4
             RageCost = 10f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 10f;// -(Talents.FocusedRage * 1f);
+#endif
             //Targets += StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
             //Effect = new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 0f, /*TargetMoveSpeedReducPerc = 0.50f,*/ }, Duration, Duration);
@@ -714,8 +756,13 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = 25f + (Talents.GlyphOfCharge ? 5f : 0f); // In Yards 
             Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
             Duration = 1.5f;
+#if !RAWR4
             RageCost = -(15f + (Talents.ImprovedCharge * 5f));
-            if (Talents.Warbringer == 1) {
+#else
+            RageCost = -(15f /*+ (Talents.ImprovedCharge * 5f)*/);
+#endif
+            if (Talents.Warbringer == 1)
+            {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
             } else if (Talents.Juggernaut == 1) {
                 StanceOkArms = true;
@@ -743,9 +790,14 @@ namespace Rawr.DPSWarr.Skills
             Description = "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.";
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
+#if !RAWR4
             Cd = 30f - (Talents.ImprovedIntercept * 5f) - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
-            Duration = 3f;
             RageCost = 10f - Talents.Precision * 1f;
+#else
+            Cd = 30f /*- (Talents.ImprovedIntercept * 5f)*/ - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
+            RageCost = 10f;// -Talents.Precision * 1f;
+#endif
+            Duration = 3f;
             StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
             DamageBase = 380f;
             //
@@ -772,7 +824,11 @@ namespace Rawr.DPSWarr.Skills
             Description = "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.";
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
+#if !RAWR4
             Cd = 30f * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+#else
+            Cd = 30f;// * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+#endif
             RageCost = 10f;
             StanceOkDef = true; StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
             UseHitTable = false;
@@ -801,7 +857,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             ReqMeleeWeap = true;
             //Targets += StatS.BonusTargets;
+#if !RAWR4
             Cd = 5f * 60f - Talents.ImprovedDisciplines * 30f;
+#else
+            Cd = 5f * 60f;// -Talents.ImprovedDisciplines * 30f;
+#endif
             Duration = 12f;
             StackCap = 20f;
             UseHitTable = false;

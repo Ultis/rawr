@@ -73,8 +73,10 @@ namespace Rawr.ProtWarr
                         AttackModelMode = AttackModelMode.DevastateRevenge;
                     else
                         AttackModelMode = AttackModelMode.Devastate;
+#if !RAWR4
                 else if(Talents.UnrelentingAssault == 2)
                     AttackModelMode = AttackModelMode.UnrelentingAssault;
+#endif
                 else
                     AttackModelMode = AttackModelMode.Basic;                   
             }
@@ -227,8 +229,12 @@ namespace Rawr.ProtWarr
             // Misc. Power Gains
             modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 25.0f * 
                 (Talents.ShieldSpecialization * 0.2f);
-            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 1.0f * 
-                Lookup.StanceThreatMultipler(Character, Stats) * (Talents.ImprovedDefensiveStance * 0.5f);
+            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 1.0f * Lookup.StanceThreatMultipler(Character, Stats)
+#if !RAWR4
+                 * (Talents.ImprovedDefensiveStance * 0.5f);
+#else
+                ;
+#endif
 
             // Vigilance, is already calculated as TPS
             if (Options.UseVigilance)

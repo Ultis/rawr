@@ -25,16 +25,21 @@ namespace Rawr.DPSWarr.Skills
             Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.MortalStrike;
+            Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
+            RageCost = 30f - (Talents.FocusedRage * 1f);
+            DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
+#else
+            Cd = 6f;// -(Talents.ImprovedMortalStrike / 3f); // In Seconds
+            RageCost = 30f;// -(Talents.FocusedRage * 1f);
+            DamageBonus = /*(1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * */ (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
+#endif
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
-            RageCost = 30f - (Talents.FocusedRage * 1f);
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
-            DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f)
-                        * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
             BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
             //
             Initialize();
@@ -138,6 +143,7 @@ namespace Rawr.DPSWarr.Skills
             CanBeDodged = false;
             CanBeParried = false;
             CanBeBlocked = false;
+#if !RAWR4
             Cd = 5f - (2f * Talents.UnrelentingAssault); // In Seconds
             GCDTime = Math.Min(1.5f, Cd);
             RageCost = 5f - (Talents.FocusedRage * 1f);
@@ -146,6 +152,16 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
             DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
             BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+#else
+            Cd = 5f;// -(2f * Talents.UnrelentingAssault); // In Seconds
+            GCDTime = Math.Min(1.5f, Cd);
+            RageCost = 5f;// -(Talents.FocusedRage * 1f);
+            //Targets += StatS.BonusTargets;
+            StanceOkArms = true;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg;
+            //DamageBonus = 1f +(0.1f * Talents.UnrelentingAssault);
+            //BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+#endif
             UseReact = true; // can't plan for this
             //
             Initialize();
@@ -204,6 +220,7 @@ namespace Rawr.DPSWarr.Skills
             CanBeDodged = false;
             CanBeParried = false;
             CanBeBlocked = false;
+#if !RAWR4
             GCDTime = Math.Min(1.5f, 5f - (2f * Talents.UnrelentingAssault));
             Cd = 6f; // In Seconds
             RageCost = 5f - (Talents.FocusedRage * 1f);
@@ -211,6 +228,15 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
             DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
             BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+#else
+            GCDTime = Math.Min(1.5f, 5f /*- (2f * Talents.UnrelentingAssault)*/);
+            Cd = 6f; // In Seconds
+            RageCost = 5f;// -(Talents.FocusedRage * 1f);
+            StanceOkArms = true;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg;
+            //DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
+            //BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+#endif
             //UseReact = true; // you can plan for it ahead of time, unlike SD and normal OP
             //
             Initialize();
@@ -258,7 +284,11 @@ namespace Rawr.DPSWarr.Skills
             Targets = WW.Targets; // Handled in WW
             DamageBase = WW.DamageBase;
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
+#if !RAWR4
             RageCost = 25f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 25f;// -(Talents.FocusedRage * 1f);
+#endif
             CastTime = 6f; // In Seconds // Channeled
             GCDTime = CastTime;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -295,7 +325,9 @@ namespace Rawr.DPSWarr.Skills
             Name = "Sword Specialization";
             Description = "Gives a (1*Pts)% chance to get an extra attack on the same target after hitting your target with your Sword. This effect cannot occur more than once every 6 seconds.";
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.SwordSpecialization;
+#endif
             //Targets += StatS.BonusTargets;
             Cd = 6f; // In Seconds
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -332,7 +364,11 @@ namespace Rawr.DPSWarr.Skills
             Whiteattacks.HSOverridesOverDur = heroic;
             Whiteattacks.CLOverridesOverDur = cleave;
             float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
+#if !RAWR4
             float effectActs = _SE_SwordSpec[Talents.SwordSpecialization].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
+#else
+            float effectActs = _SE_SwordSpec[5].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
+#endif
             effectActs *= FightDuration;
             return effectActs;
         }
@@ -394,7 +430,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Cd = 1.5f;
+#if !RAWR4
             RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 15f - (Talents.ImprovedExecute * 2.5f);// -(Talents.FocusedRage * 1f);
+#endif
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
             PercTimeUnder20 = 0.17f;
@@ -450,11 +490,16 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Cd = 1.5f;
+#if !RAWR4
             RageCost = 15f - (Talents.FocusedRage * 1f);
+            DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
+#else
+            RageCost = 15f;// -(Talents.FocusedRage * 1f);
+            DamageBonus = (1f + StatS.BonusWarrior_T7_2P_SlamDamage);// *(1f + Talents.UnendingFury * 0.02f);
+#endif
             CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
             StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.AvgMhWeaponDmgUnhasted + 250f;
-            DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
             BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             //
             Initialize();
@@ -484,10 +529,15 @@ namespace Rawr.DPSWarr.Skills
             Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
+#if !RAWR4
             RageCost = 10f - (Talents.FocusedRage * 1f);
+            DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
+#else
+            RageCost = 10f;// -(Talents.FocusedRage * 1f);
+            //DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
+#endif
             StanceOkArms = StanceOkDef = true;
             DamageBase = 380f;
-            DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
             //
             Initialize();
         }

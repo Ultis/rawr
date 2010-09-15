@@ -887,15 +887,16 @@ These numbers to do not include racial bonuses.",
             #endregion
 
             #region Passive Ability Auto-Fixing
+#if !RAWR4
             // Removes the Trauma Buff and it's equivalent Mangle if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (character.WarriorTalents.Trauma > 0)
-            {
+            if (character.WarriorTalents.Trauma > 0) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Trauma"));
                 buffGroup.Add(Buff.GetBuffByName("Mangle"));
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
+#endif
 
             // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
@@ -1304,7 +1305,9 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior) + stats.Expertise;
                     calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
                     calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
+#if !RAWR4
                     calculatedStats.WeapMastPerc = character.WarriorTalents.WeaponMastery / 100f;
+#endif
                     calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
                     calculatedStats.CritRating = stats.CritRating;
                     calculatedStats.CritPercent = stats.PhysicalCrit;
@@ -1312,9 +1315,11 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
                 } 
                 // Offensive
+#if !RAWR4
                 calculatedStats.TeethBonus = (stats.Armor * talents.ArmoredToTheTeeth / 108f);
-                calculatedStats.BonusCritPercPoleAxeSpec = ((character.MainHand != null && (combatFactors._c_mhItemType == ItemType.TwoHandAxe || combatFactors._c_mhItemType == ItemType.Polearm)) ? character.WarriorTalents.PoleaxeSpecialization * 0.01f : 0.00f);
                 calculatedStats.ArmorPenetrationMaceSpec = ((character.MainHand != null && combatFactors._c_mhItemType == ItemType.TwoHandMace) ? character.WarriorTalents.MaceSpecialization * 0.03f : 0.00f);
+                calculatedStats.BonusCritPercPoleAxeSpec = ((character.MainHand != null && (combatFactors._c_mhItemType == ItemType.TwoHandAxe || combatFactors._c_mhItemType == ItemType.Polearm)) ? character.WarriorTalents.PoleaxeSpecialization * 0.01f : 0.00f);
+#endif
                 calculatedStats.ArmorPenetrationStance = ((!combatFactors.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
                 calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
@@ -1493,6 +1498,7 @@ These numbers to do not include racial bonuses.",
             #region From Options
             Stats statsOptionsPanel = new Stats()
             {
+#if !RAWR4
                 BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
 
@@ -1508,11 +1514,29 @@ These numbers to do not include racial bonuses.",
                 ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 5f : 0f),
                 // Thunder Clap
                 BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f * (1f + talents.ImprovedThunderClap * (10f / 3f)) : 0f),
+#else
+                //BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
+                PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
+
+                DamageTakenMultiplier = (dpswarchar.combatFactors.FuryStance ? 0.05f : 0f),
+
+                // Battle Shout
+                AttackPower = (dpswarchar.calcOpts.M_BattleShout ? (548f/* * (1f + talents.CommandingPresence * 0.05f)*/) : 0f),
+                // Commanding Shout
+                Health = (dpswarchar.calcOpts.M_CommandingShout ? (2255f/* * (1f + talents.CommandingPresence * 0.05f)*/) : 0f),
+                // Demo Shout
+                BossAttackPower = (dpswarchar.calcOpts.M_DemoralizingShout ? (-411f/* * (1f + talents.ImprovedDemoralizingShout * 0.08f)*/) : 0f),
+                // Sunder Armor
+                ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 5f : 0f),
+                // Thunder Clap
+                BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f * (1f/* + talents.ImprovedThunderClap * (10f / 3f)*/) : 0f),
+#endif
             };
             #endregion
             #region From Talents
             Stats statsTalents = new Stats() {
                 // Offensive
+#if !RAWR4
                 BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
                     /* One Handed Weapon Spec  Not using this to prevent any misconceptions
                     ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
@@ -1543,11 +1567,45 @@ These numbers to do not include racial bonuses.",
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
+#else
+                BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
+                    /* One Handed Weapon Spec  Not using this to prevent any misconceptions
+                    ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
+                      */
+                    // Two Handed Weapon Spec
+                                            //((dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
+                                            //*
+                    // Titan's Grip Penalty
+                                            ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                    // Convert it back a simple mod number
+                                            - 1f
+                                         ),
+                BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
+                                                 || talents.DeepWounds > 0 // Have Deep Wounds
+                                                ? talents.BloodFrenzy * 0.02f : 0f),
+                PhysicalCrit = talents.Cruelty * 0.01f,
+                //BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
+                //PhysicalHit = talents.Precision * 0.01f,
+                PhysicalHaste = talents.BloodFrenzy * 0.05f,
+                //StunDurReduc = talents.IronWill / 15f,
+                // Defensive
+                //Parry = talents.Deflection * 0.01f,
+                //Dodge = talents.Anticipation * 0.01f,
+                Block = talents.ShieldSpecialization * 0.01f,
+                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
+                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
+                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
+                BaseArmorMultiplier = talents.Toughness * 0.02f,
+#endif
             };
             // Add Talents that give SpecialEffects
             if (talents.Rampage > 0 && isBuffed) { statsTalents.PhysicalCrit += 0.05f; }
             if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
+#if !RAWR4
             if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_Trauma[talents.Trauma]); }
+#endif
             if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
             #endregion
 
@@ -1806,7 +1864,9 @@ These numbers to do not include racial bonuses.",
                     - charStruct.Char.Level;
 
                 float arpenBuffs =
+#if !RAWR4
                                 ((charStruct.combatFactors._c_mhItemType == ItemType.TwoHandMace) ? charStruct.Char.WarriorTalents.MaceSpecialization * 0.03f : 0.00f) +
+#endif
                                 (!charStruct.combatFactors.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                 float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
@@ -2258,10 +2318,13 @@ These numbers to do not include racial bonuses.",
                 // Since AP is set to (RawAP + 2*STR + A2T + BonusAP)*APMult, and Str/A2T are affected by mults too,
                 // we need to rewind the Str and Armor components out.  We will add them after we've updated Str/Armor, below
                 retVal.AttackPower /= 1f + retVal.BonusAttackPowerMultiplier;
-                retVal.AttackPower -= (retVal.Strength * 2f) +
-                                      (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+                retVal.AttackPower -= (retVal.Strength * 2f)
+#if !RAWR4
+                                      + (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth)
+#endif
+                                    ;
 
-                // This is reversing the Armor = (Armor*BaseMult + Bonus)*BonusMult
+                    // This is reversing the Armor = (Armor*BaseMult + Bonus)*BonusMult
                 retVal.Armor /= 1f + retVal.BonusArmorMultiplier;
                 retVal.Armor -= retVal.BonusArmor;
                 retVal.Armor /= 1f + retVal.BaseArmorMultiplier;
@@ -2318,15 +2381,21 @@ These numbers to do not include racial bonuses.",
 
             #region Attack Power
             // stats to add
-            statsToAdd.AttackPower += (statsToAdd.Strength * 2f) +
-                                  (statsToAdd.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+            statsToAdd.AttackPower += (statsToAdd.Strength * 2f)
+#if !RAWR4
+                                  + (statsToAdd.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth)
+#endif
+;
             statsToAdd.AttackPower *= newAtkMult;
             // reset retval
             if (retVal != null)
             {
                 // already rolled back AP's oldmult, so not combining
-                retVal.AttackPower += (retVal.Strength * 2f) +
-                                  (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth);
+                retVal.AttackPower += (retVal.Strength * 2f)
+#if !RAWR4
+                                    + (retVal.Armor / 108f * character.WarriorTalents.ArmoredToTheTeeth)
+#endif
+                                    ;
                 retVal.AttackPower *= newAtkMult;
             }
             #endregion

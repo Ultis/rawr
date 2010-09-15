@@ -23,16 +23,24 @@ namespace Rawr.DPSWarr.Skills
             Description = "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
             ReqTalent = true;
+#if !RAWR4
             Talent2ChksValue = Talents.Bloodthirst;
+#endif
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             //Targets += StatS.BonusTargets;
             Cd = 4f; // In Seconds
             //Duration = 8f;
-            RageCost = 20f - (Talents.FocusedRage * 1f);
+            RageCost = 20f
+#if !RAWR4
+                - (Talents.FocusedRage * 1f)
+#endif
+;
             StanceOkFury = true;
             DamageBase = StatS.AttackPower * 50f / 100f;
+#if !RAWR4
             DamageBonus = 1f + Talents.UnendingFury * 0.02f;
+#endif
             BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
             HealingBase = StatS.Health / 100.0f * 3f * (Talents.GlyphOfBloodthirst ? 2f : 1f);
             //HealingBonus = 1f;
@@ -64,9 +72,14 @@ namespace Rawr.DPSWarr.Skills
 #else
             Targets += (CalcOpts.MultipleTargets ? 3f : 0f);
 #endif
+#if !RAWR4
             RageCost = 25f - (Talents.FocusedRage * 1f);
-            StanceOkFury = true;
             DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
+#else
+            RageCost = 25f;// -(Talents.FocusedRage * 1f);
+            //DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
+#endif
+            StanceOkFury = true;
             SwingsOffHand = true;
             //
             Initialize();
@@ -163,7 +176,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 5f; // In Seconds
+#if !RAWR4
             RageCost = 15f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 15f;// -(Talents.FocusedRage * 1f);
+#endif
             StanceOkFury = true;
             hsActivates = 0.0f;
             SL = slam;
@@ -256,7 +273,11 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             Cd = /*0f*/(Char.MainHand != null ? Whiteattacks.MhEffectiveSpeed : 0f); // In Seconds
             //Targets += StatS.BonusTargets;
+#if !RAWR4
             RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 15f;// -(Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
+#endif
             CastTime = 0f; // In Seconds // Replaces a white hit
             GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -290,7 +311,11 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
+#if !RAWR4
             RageCost = 20f - (Talents.FocusedRage * 1f);
+#else
+            RageCost = 20f;// -(Talents.FocusedRage * 1f);
+#endif
 #if RAWR3 || RAWR4 || SILVERLIGHT
             Targets += (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
 #else
@@ -299,7 +324,11 @@ namespace Rawr.DPSWarr.Skills
             CastTime = 0f; // In Seconds // Replaces a white hit
             GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
+#if !RAWR4
             DamageBase = Whiteattacks.MhDamage + (222f * (1f + Talents.ImprovedCleave * 0.40f));
+#else
+            DamageBase = Whiteattacks.MhDamage + (222f/* * (1f + Talents.ImprovedCleave * 0.40f)*/);
+#endif
             //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack
             BonusCritChance = Talents.Incite * 0.05f;
             //
