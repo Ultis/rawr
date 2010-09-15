@@ -223,7 +223,7 @@ namespace Rawr
                             case CharacterClass.Paladin:
                                 character.PaladinTalents = new PaladinTalents(talentCode);
                                 if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
-                                else if (character.PaladinTalents.CrusaderStrike > 0) character.CurrentModel = "Retribution";
+                                else if (character.PaladinTalents.Zealotry > 0) character.CurrentModel = "Retribution";
                                 else character.CurrentModel = "Healadin";
                                 break;
                             case CharacterClass.Hunter:
@@ -255,14 +255,14 @@ namespace Rawr
                                 break;
                             case CharacterClass.Druid:
                                 character.DruidTalents = new DruidTalents(talentCode);
-                                if (character.DruidTalents.ProtectorOfThePack > 0) character.CurrentModel = "Bear";
+                                if (character.DruidTalents.NaturalReaction > 0) character.CurrentModel = "Bear";
                                 else if (character.DruidTalents.LeaderOfThePack > 0) character.CurrentModel = "Cat";
                                 else if (character.DruidTalents.MoonkinForm > 0) character.CurrentModel = "Moonkin";
                                 else character.CurrentModel = "Tree";
                                 break;
                             case CharacterClass.DeathKnight:
                                 character.DeathKnightTalents = new DeathKnightTalents(talentCode);
-                                if (character.DeathKnightTalents.Anticipation > 0) character.CurrentModel = "TankDK";
+                                if (character.DeathKnightTalents.VampiricBlood > 0) character.CurrentModel = "TankDK";
                                 else character.CurrentModel = "DPSDK";
                                 break;
                             default:
