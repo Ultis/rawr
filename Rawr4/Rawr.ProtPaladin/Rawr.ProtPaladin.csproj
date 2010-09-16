@@ -87,43 +87,20 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.ProtPaladin\AbilityModel.cs">
-      <Link>AbilityModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\AttackModel.cs">
-      <Link>AttackModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\CalculationOptionsProtPaladin.cs">
-      <Link>CalculationOptionsProtPaladin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\CalculationsProtPaladin.cs">
-      <Link>CalculationsProtPaladin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\CharacterCalculationsProtPaladin.cs">
-      <Link>CharacterCalculationsProtPaladin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\ComparisonCalculationProtPaladin.cs">
-      <Link>ComparisonCalculationProtPaladin.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\DefendModel.cs">
-      <Link>DefendModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\Enum.cs">
-      <Link>Enum.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\Lookup.cs">
-      <Link>Lookup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ProtPaladin\ParryModel.cs">
-      <Link>ParryModel.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.ProtPaladin\CalculationOptionsPanelProtPaladin.xaml.cs">
-      <Link>CalculationOptionsPanelProtPaladin.xaml.cs</Link>
+    <Compile Include="AbilityModel.cs" />
+    <Compile Include="AttackModel.cs" />
+    <Compile Include="CalculationOptionsPanelProtPaladin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelProtPaladin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsProtPaladin.cs" />
+    <Compile Include="CalculationsProtPaladin.cs" />
+    <Compile Include="CharacterCalculationsProtPaladin.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationProtPaladin.cs" />
+    <Compile Include="DefendModel.cs" />
+    <Compile Include="Enum.cs" />
+    <Compile Include="Lookup.cs" />
+    <Compile Include="ParryModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,8 +127,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.ProtPaladin\CalculationOptionsPanelProtPaladin.xaml">
-      <Link>CalculationOptionsPanelProtPaladin.xaml</Link>
+    <Page Include="CalculationOptionsPanelProtPaladin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
