@@ -665,6 +665,42 @@ namespace Rawr.Moonkin
             ResetSpellList();
 
             rotations = new List<SpellRotation>();
+            rotations.Add(new SpellRotation()
+                {
+                    RotationData = new RotationData()
+                    {
+                        Name = "2-Eclipse Stretched",
+                        SolarEclipseMode = EclipseMode.Stretched,
+                        LunarEclipseMode = EclipseMode.Stretched,
+                        MoonfireRefreshMode = DotMode.Always,
+                        InsectSwarmRefreshMode = DotMode.Always,
+                        StarsurgeCastMode = StarsurgeMode.OnCooldown
+                    }
+                });
+            rotations.Add(new SpellRotation()
+            {
+                RotationData = new RotationData()
+                {
+                    Name = "Lunar Only Stretched",
+                    SolarEclipseMode = EclipseMode.Unused,
+                    LunarEclipseMode = EclipseMode.Stretched,
+                    MoonfireRefreshMode = DotMode.Always,
+                    InsectSwarmRefreshMode = DotMode.Always,
+                    StarsurgeCastMode = StarsurgeMode.OnCooldown
+                }
+            });
+            rotations.Add(new SpellRotation()
+            {
+                RotationData = new RotationData()
+                {
+                    Name = "Solar Only Stretched",
+                    SolarEclipseMode = EclipseMode.Stretched,
+                    LunarEclipseMode = EclipseMode.Unused,
+                    MoonfireRefreshMode = DotMode.Always,
+                    InsectSwarmRefreshMode = DotMode.Always,
+                    StarsurgeCastMode = StarsurgeMode.OnCooldown
+                }
+            });
             for (int mfMode = 0; mfMode < 4; ++mfMode)
             {
                 for (int isMode = 0; isMode < 4; ++isMode)
@@ -736,6 +772,8 @@ namespace Rawr.Moonkin
             // Starfire, Wrath: Damage +0.04 for 4T9
             Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
             Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            // Moonfire: 9 seconds extra duration for glyph of Starfire
+            Moonfire.DotEffect.Duration += talents.GlyphOfStarfire ? 9 : 0;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond

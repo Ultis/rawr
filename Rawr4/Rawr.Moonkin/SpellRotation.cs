@@ -153,92 +153,141 @@ namespace Rawr.Moonkin
             float lunarStarsurgeEnergyRate = lunarSS.AverageEnergy / starSurgeCD;
             float solarStarsurgeEnergyRate = solarSS.AverageEnergy / starSurgeCD;
 
-            float preLunarCasts = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + (RotationData.SolarEclipseMode == EclipseMode.Unused ? sf.AverageEnergy / 2 : -w.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? lunarSS.AverageEnergy : 0)) / w.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / wrathEnergyRate) + (RotationData.SolarEclipseMode == EclipseMode.Unused ? 1 : 0);
-            float preLunarTime = preLunarCasts * w.CastTime;
-            float preLunarDamage = preLunarCasts * w.DamagePerHit;
+            float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
+            float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
+            float starSurgeRatio = solarSS.CastTime / starSurgeCD;
+            float mainNukeRatio = (1 - moonfireRatio) * (1 - insectSwarmRatio) * (1 - starSurgeRatio);
+            float sfRatioAtZeroEnergy = wrathEnergyRate / (wrathEnergyRate + starfireEnergyRate);
 
-            float lunarCasts = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseSF.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? lunarSS.AverageEnergy : 0)) / eclipseSF.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / starfireEnergyRate) + 1;
-            float lunarTime = lunarCasts * eclipseSF.CastTime;
-            float lunarDamage = lunarCasts * eclipseSF.DamagePerHit;
+            float preLunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 2 : (barHalfSize + (RotationData.SolarEclipseMode == EclipseMode.Unused ? sf.AverageEnergy / 2 : -w.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? lunarSS.AverageEnergy : 0)) / w.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / wrathEnergyRate) + (RotationData.SolarEclipseMode == EclipseMode.Unused ? 1 : 0)) * w.CastTime;
 
-            float preSolarCasts = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + (RotationData.LunarEclipseMode == EclipseMode.Unused ? w.AverageEnergy / 2f : -sf.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? solarSS.AverageEnergy : 0)) / sf.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / starfireEnergyRate) - (RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : 1);
-            float preSolarTime = preSolarCasts * sf.CastTime;
-            float preSolarDamage = preSolarCasts * sf.DamagePerHit;
+            float lunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseSF.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? lunarSS.AverageEnergy : 0)) / eclipseSF.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / starfireEnergyRate) + 1 * eclipseSF.CastTime;
 
-            float solarCasts = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseW.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? solarSS.AverageEnergy : 0)) / eclipseW.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / wrathEnergyRate);
-            float solarTime = solarCasts * eclipseW.CastTime;
-            float solarDamage = solarCasts * eclipseW.DamagePerHit;
+            float remainingLunarTime = 45f * mainNukeRatio - lunarTime - (RotationData.SolarEclipseMode == EclipseMode.Unused ? preLunarTime : 0);
+            float addedLunarTime = remainingLunarTime * (sfRatioAtZeroEnergy + lunarStarsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
+            float addedPreLunarTime = remainingLunarTime - addedLunarTime;
+            if (RotationData.LunarEclipseMode == EclipseMode.Stretched)
+            {
+                preLunarTime += addedPreLunarTime;
+                lunarTime += addedLunarTime;
+            }
+
+            float preSolarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 1 : (barHalfSize + (RotationData.LunarEclipseMode == EclipseMode.Unused ? w.AverageEnergy / 2f : -sf.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? solarSS.AverageEnergy : 0)) / sf.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / starfireEnergyRate) - (RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : 1)) * sf.CastTime;
+
+            float solarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseW.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? solarSS.AverageEnergy : 0)) / eclipseW.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / wrathEnergyRate) * eclipseW.CastTime;
+
+            float remainingSolarTime = 45f * mainNukeRatio - solarTime - (RotationData.LunarEclipseMode == EclipseMode.Unused ? preSolarTime : 0);
+            float addedSolarTime = remainingSolarTime * (1 - sfRatioAtZeroEnergy + solarStarsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
+            float addedPreSolarTime = remainingSolarTime - addedSolarTime;
+
+            if (RotationData.SolarEclipseMode == EclipseMode.Stretched)
+            {
+                preSolarTime += addedPreSolarTime;
+                solarTime += addedSolarTime;
+            }
 
             RotationData.WrathAvgCast = w.CastTime;
             RotationData.WrathAvgEnergy = w.AverageEnergy;
-            RotationData.WrathCount = solarCasts + preLunarCasts;
-            RotationData.WrathAvgHit = (solarDamage + preLunarDamage) / RotationData.WrathCount;
 
             RotationData.StarfireAvgCast = sf.CastTime;
             RotationData.StarfireAvgEnergy = sf.AverageEnergy;
-            RotationData.StarfireCount = lunarCasts + preSolarCasts;
-            RotationData.StarfireAvgHit = (lunarDamage + preSolarDamage) / RotationData.StarfireCount;
 
-            float mainNukeTime = preLunarTime + preSolarTime + lunarTime + solarTime;
-            float moonfireTime = 0, insectSwarmTime = 0;
+            float accumulatedDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
 
+            float moonfireTime = 0f;
             switch (RotationData.MoonfireRefreshMode)
             {
                 case DotMode.Always:
-                    float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
-                    moonfireTime = moonfireRatio * mainNukeTime / (1 - moonfireRatio);
+                    moonfireTime = moonfireRatio * accumulatedDuration / (1 - moonfireRatio);
+                    RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
                     break;
                 case DotMode.Once:
-                    moonfireTime = mf.CastTime;
+                    accumulatedDuration += mf.CastTime;
+                    RotationData.MoonfireCasts = 1;
                     break;
                 case DotMode.Twice:
-                    moonfireTime = 2 * mf.CastTime;
+                    accumulatedDuration += 2 * mf.CastTime;
+                    RotationData.MoonfireCasts = 2;
                     break;
                 case DotMode.Unused:
                     break;
             }
-            RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
-            RotationData.MoonfireAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * RotationData.MoonfireCasts;
             RotationData.MoonfireTicks = RotationData.MoonfireCasts * mf.DotEffect.NumberOfTicks;
             RotationData.MoonfireDuration = mf.DotEffect.Duration;
             RotationData.AverageInstantCast = mf.CastTime;
-            float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
 
+            float insectSwarmTime = 0f;
             switch (RotationData.InsectSwarmRefreshMode)
             {
                 case DotMode.Always:
-                    float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
-                    insectSwarmTime = insectSwarmRatio * mainNukeTime / (1 - insectSwarmRatio);
+                    insectSwarmTime = insectSwarmRatio * accumulatedDuration / (1 - insectSwarmRatio);
+                    RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
                     break;
                 case DotMode.Once:
-                    insectSwarmTime = iSw.CastTime;
+                    accumulatedDuration += iSw.CastTime;
+                    RotationData.InsectSwarmCasts = 1;
                     break;
                 case DotMode.Twice:
-                    insectSwarmTime = 2 * iSw.CastTime;
+                    accumulatedDuration += 2 * iSw.CastTime;
+                    RotationData.InsectSwarmCasts = 2;
                     break;
                 case DotMode.Unused:
                     break;
             }
-            RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
-            RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * RotationData.InsectSwarmCasts;
             RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
             RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;
-            float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
+            float insectSwarmUptime = RotationData.InsectSwarmCasts * iSw.DotEffect.Duration / accumulatedDuration;
 
-            float starSurgeRatio = solarSS.CastTime / starSurgeCD;
-            float starSurgeTime = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ?
-                starSurgeRatio * mainNukeTime / (1 - starSurgeRatio) :
-                solarSS.CastTime * (RotationData.StarsurgeCastMode == StarsurgeMode.Unused ? 0 : 2);
-            RotationData.StarSurgeCount = starSurgeTime / solarSS.CastTime;
+            float starSurgeTime = 0f;
+            switch (RotationData.StarsurgeCastMode)
+            {
+                case StarsurgeMode.OnCooldown:
+                    starSurgeTime = starSurgeRatio * accumulatedDuration / (1 - starSurgeRatio);
+                    RotationData.StarSurgeCount = starSurgeTime / solarSS.CastTime;
+                    break;
+                case StarsurgeMode.InEclipse:
+                case StarsurgeMode.OutOfEclipse:
+                    accumulatedDuration += solarSS.CastTime * 2;
+                    RotationData.StarSurgeCount = 2;
+                    break;
+                case StarsurgeMode.Unused:
+                    break;
+            }
+
+            float solarUptime = (solarTime + (RotationData.SolarEclipseMode == EclipseMode.Stretched ? preSolarTime : 0)) / accumulatedDuration;
+            float lunarUptime = (lunarTime + (RotationData.LunarEclipseMode == EclipseMode.Stretched ? preLunarTime : 0)) / accumulatedDuration;
+
+            float timeInSolar = (preSolarTime + solarTime) / accumulatedDuration;
+            float timeInLunar = (preLunarTime + lunarTime) / accumulatedDuration;
+
             RotationData.StarSurgeAvgCast = solarSS.CastTime;
-            RotationData.StarSurgeAvgEnergy = (lunarSS.AverageEnergy + solarSS.AverageEnergy) / 2f;
-            RotationData.StarSurgeAvgHit = (eclipseSolarSS.DamagePerHit + eclipseLunarSS.DamagePerHit + solarSS.DamagePerHit + lunarSS.DamagePerHit) / 4f;
+            RotationData.StarSurgeAvgEnergy = solarSS.AverageEnergy * timeInSolar + lunarSS.AverageEnergy * timeInLunar;
+            RotationData.StarSurgeAvgHit = timeInLunar * lunarSS.DamagePerHit + timeInSolar * solarSS.DamagePerHit + (1 - timeInLunar - timeInSolar) * solarSS.DamagePerHit;
             float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
+
+            float preLunarCasts = preLunarTime / w.CastTime;
+            float lunarCasts = lunarTime / eclipseSF.CastTime;
+            float preSolarCasts = preSolarTime / sf.CastTime;
+            float solarCasts = solarTime / eclipseW.CastTime;
+            float preLunarDamage = preLunarCasts * w.DamagePerHit * (talents.GlyphOfWrath ? 1 + insectSwarmUptime * 0.1f : 1f);
+            float lunarDamage = lunarCasts * eclipseSF.DamagePerHit;
+            float preSolarDamage = preSolarCasts * sf.DamagePerHit;
+            float solarDamage = solarCasts * eclipseW.DamagePerHit * (talents.GlyphOfWrath ? 1 + insectSwarmUptime * 0.1f : 1f);
+
+            RotationData.StarfireCount = lunarCasts + preSolarCasts;
+            RotationData.StarfireAvgHit = (lunarDamage + preSolarDamage) / RotationData.StarfireCount;
+            RotationData.WrathCount = solarCasts + preLunarCasts;
+            RotationData.WrathAvgHit = (solarDamage + preLunarDamage) / RotationData.WrathCount;
+
+            RotationData.MoonfireAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * (1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus) * lunarUptime;
+            float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
+            RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * (1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus) * solarUptime;
+            float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
 
             RotationData.CastCount = RotationData.WrathCount + RotationData.StarfireCount + RotationData.StarSurgeCount +
                 RotationData.MoonfireCasts + RotationData.InsectSwarmCasts;
             RotationData.DotTicks = RotationData.InsectSwarmTicks + RotationData.MoonfireTicks;
-            RotationData.Duration = mainNukeTime + moonfireTime + insectSwarmTime + starSurgeTime;
+            RotationData.Duration = accumulatedDuration + insectSwarmTime + moonfireTime + starSurgeTime;
             RotationData.ManaUsed = RotationData.WrathCount * w.BaseManaCost +
                 RotationData.StarfireCount * sf.BaseManaCost +
                 RotationData.StarSurgeCount * solarSS.BaseManaCost +
