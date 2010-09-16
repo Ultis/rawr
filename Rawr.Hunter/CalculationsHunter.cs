@@ -1665,7 +1665,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 0f;
 #endif
             // Survival instincts
+#if !RAWR4
             float survivalInstinctsCritModifier = 0.02f * talents.SurvivalInstincts;
+#else
+            float survivalInstinctsCritModifier = 0;
+#endif
             // Explosive Shot Glyph
             float glyphOfExplosiveShotCritModifier = talents.GlyphOfExplosiveShot ? 0.04f : 0;
             // Sniper Training
@@ -2919,7 +2923,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     //Dodge = talents.CatlikeReflexes * 0.01f,
                     //Parry = talents.Deflection * 0.01f,
                     //BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
-                    DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
+                    //DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
                 };
                 /*if (talents.MasterTactician > 0) {
                     SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
