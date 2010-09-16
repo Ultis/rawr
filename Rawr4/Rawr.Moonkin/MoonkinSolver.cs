@@ -664,23 +664,35 @@ namespace Rawr.Moonkin
         {
             ResetSpellList();
 
-            rotations = new List<SpellRotation>()
+            rotations = new List<SpellRotation>();
+            for (int mfMode = 0; mfMode < 4; ++mfMode)
             {
-                new SpellRotation()
+                for (int isMode = 0; isMode < 4; ++isMode)
                 {
-                    RotationData = new RotationData()
+                    for (int ssMode = 0; ssMode < 3; ++ssMode)
                     {
-                        Name = "Maintain Solar"
-                    }
-                },
-                new SpellRotation()
-                {
-                    RotationData = new RotationData()
-                    {
-                        Name = "Proc Alternating"
+                        DotMode mfModeEnum = (DotMode)mfMode;
+                        DotMode isModeEnum = (DotMode)isMode;
+                        StarsurgeMode ssModeEnum = (StarsurgeMode)ssMode;
+                        string name = String.Format("2-Eclipse MF {0} IS {1} SS {2}",
+                            mfModeEnum.ToString(),
+                            isModeEnum.ToString(),
+                            ssModeEnum.ToString());
+                        rotations.Add(new SpellRotation()
+                        {
+                            RotationData = new RotationData()
+                            {
+                                Name = name,
+                                LunarEclipseMode = EclipseMode.Standard,
+                                SolarEclipseMode = EclipseMode.Standard,
+                                MoonfireRefreshMode = mfModeEnum,
+                                InsectSwarmRefreshMode = isModeEnum,
+                                StarsurgeCastMode = ssModeEnum
+                            }
+                        });
                     }
                 }
-            };
+            }
 
             UpdateSpells(talents, ref calcs);
         }

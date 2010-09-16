@@ -58,7 +58,7 @@ namespace Rawr.Moonkin
                 baseStats.MasteryRating));
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen * 5.0f));
             retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0]));
-            retVal.Add("Selected Rotation", SelectedRotation.Name);
+            retVal.Add("Selected Rotation", String.Format("*{0}", SelectedRotation.Name));
             retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.DPS));
             retVal.Add("Selected Time To OOM", String.Format(SelectedRotation.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", SelectedRotation.TimeToOOM.Minutes, SelectedRotation.TimeToOOM.Seconds));
             retVal.Add("Selected Cycle Length", String.Format("{0:F1} s", SelectedRotation.Duration));
