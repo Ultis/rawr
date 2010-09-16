@@ -39,21 +39,12 @@ namespace Rawr.ProtPaladin {
             }
         }
 
-#if RAWR3 || RAWR4
         public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts) {
-#else
-        public ParryModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts) {
-#endif
             Character   = character;
             Stats       = stats;
             CalcOpts    = calcOpts;
-#if RAWR3 || RAWR4
             AttackTable = new AttackTable(character, stats, calcOpts, bossOpts);
             DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, true);
-#else
-            AttackTable = new AttackTable(character, stats, calcOpts);
-            DefendTable = new DefendTable(character, stats, calcOpts, true);
-#endif
             Calculate();
         }
     }

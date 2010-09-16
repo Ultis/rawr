@@ -8,9 +8,7 @@ namespace Rawr.ProtPaladin
     {
         private Character Character;
         private CalculationOptionsProtPaladin CalcOpts;
-#if RAWR3 || RAWR4
         private BossOptions BossOpts;
-#endif
         private Stats Stats;
 
         public readonly ParryModel ParryModel;
@@ -33,11 +31,7 @@ namespace Rawr.ProtPaladin
         public void Calculate()
         {
             float attackSpeed           = ParryModel.BossAttackSpeed; // Options.BossAttackSpeed;
-#if RAWR3 || RAWR4
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, BossOpts.Level));
-#else
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, CalcOpts.TargetLevel));
-#endif
             float baseDamagePerSecond   = CalcOpts.BossAttackValue / CalcOpts.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
             float absorbed = Stats.DamageAbsorbed;
@@ -84,26 +78,15 @@ namespace Rawr.ProtPaladin
             */
         }
 
-#if RAWR3 || RAWR4
         public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
-#else
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, bool useHolyShield)
-#endif
         {
             Character   = character;
             Stats       = stats;
             CalcOpts    = calcOpts;
-#if RAWR3 || RAWR4
             BossOpts    = bossOpts;
-#endif
 
-#if RAWR3 || RAWR4
             ParryModel = new ParryModel(character, stats, calcOpts, bossOpts);
             DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, useHolyShield);
-#else
-            ParryModel = new ParryModel(character, stats, calcOpts);
-            DefendTable = new DefendTable(character, stats, calcOpts, useHolyShield); 
-#endif
             Calculate();
         }
     }

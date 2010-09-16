@@ -85,7 +85,6 @@ namespace Rawr.ProtPaladin
 
             float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier);
             //Talents
-            damageTaken *= (1f - talents.ImprovedRighteousFury * 0.02f) * (1f - talents.ShieldOfTheTemplar * 0.01f);
             if (talents.GlyphOfDivinePlea) { damageTaken *= (1f - 0.03f); }
             			
             switch (damageType) {

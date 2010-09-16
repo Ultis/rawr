@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Xml.Serialization;
 
 namespace Rawr.ProtPaladin
@@ -133,13 +129,8 @@ namespace Rawr.ProtPaladin
             }
         }
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get {
                 if (_calculationOptionsPanel == null) {
@@ -314,41 +305,24 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
 
-#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
-#endif
 
-#if RAWR3 || RAWR4
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
-#else
-            Stats stats = GetCharacterStats(character, additionalItem, calcOpts);
-#endif
 
             AttackModelMode amm = AttackModelMode.BasicSoV;            
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-#if RAWR3 || RAWR4
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts, true);
             DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, bossOpts, false);
             AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
-#else
-            DefendModel dm = new DefendModel(character, stats, calcOpts, true);
-            DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, false);
-            AttackModel am = new AttackModel(character, stats, amm, calcOpts);
-#endif
 
             calculatedStats.BasicStats = stats;
 
             // Target Info
-#if RAWR3 || RAWR4
             calculatedStats.TargetLevel = bossOpts.Level;
             calculatedStats.TargetArmor = bossOpts.Armor;
-#else   
-            calculatedStats.TargetLevel = calcOpts.TargetLevel;
-            calculatedStats.TargetArmor = calcOpts.TargetArmor;
-#endif
             calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
             calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calculatedStats.TargetArmor);
             calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
@@ -548,23 +522,13 @@ focus on Survival Points.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
 
-#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
-#endif
 
-#if RAWR3 || RAWR4
             return GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
-#else   
-            return GetCharacterStats(character, additionalItem, calcOpts);            
-#endif
         }
 
-#if RAWR3 || RAWR4
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
-#else
-        public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtPaladin calcOpts)
-#endif
         {
             PaladinTalents talents = character.PaladinTalents;
 
@@ -574,23 +538,7 @@ focus on Survival Points.",
             Stats statsItems = GetItemStats(character, additionalItem, calcOpts);
             Stats statsTalents = new Stats()
             {
-                Parry = talents.Deflection * 0.01f,
-                Dodge = talents.Anticipation * 0.01f,
-                Block = (calcOpts.UseHolyShield ? talents.HolyShield * 0.30f : 0.0f),
-                BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
-                BonusDamageMultiplier = (1.0f + talents.Crusade * 0.01f) *
-                    (talents.OneHandedWeaponSpecialization > 0 ? 1.0f + talents.OneHandedWeaponSpecialization * .03f + .01f : 1.0f) - 1.0f,
-                BonusStaminaMultiplier = (1.0f + talents.SacredDuty * 0.02f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f,
-                BonusIntellectMultiplier = talents.DivineIntellect * 0.03f,
-                Expertise = talents.CombatExpertise * 2.0f,
-                BaseArmorMultiplier = talents.Toughness * 0.02f,
-                PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
-                // PhysicalCrit += ((character.ActiveBuffsConflictingBuffContains("Critical Strike Chance Taken") ? 0 : talents.HeartOfTheCrusader * 0.01f)),
-                SpellCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
-                // SpellCrit += ((character.ActiveBuffsConflictingBuffContains("Critical Strike Chance Taken") ? 0 : talents.HeartOfTheCrusader * 0.01f)),
-                BonusStrengthMultiplier = talents.DivineStrength * 0.03f,
-                // BossAttackSpeedMultiplier = ((character.ActiveBuffsConflictingBuffContains("Boss Attack Speed") ? 0 : talents.JudgementsOfTheJust * -0.1f)), 
-                // BonusArmor = (character.ActiveBuffsContains("Improved Devotion Aura (Armor)") ? 0 : (talents.ImprovedDevotionAura == 3 ? 0.5f : (talents.ImprovedDevotionAura * 0.17f))) * 1250f,
+                BaseArmorMultiplier = talents.Toughness * 0.03f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
@@ -626,7 +574,6 @@ focus on Survival Points.",
 
             statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.SpellPower += (float)Math.Floor(statsTotal.Strength * talents.TouchedByTheLight * 0.2f);
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
@@ -647,11 +594,7 @@ focus on Survival Points.",
             // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
 
             // Calculate Procs and Special Effects
-#if RAWR3 || RAWR4
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts, bossOpts));
-#else
-            statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts));
-#endif
 
             if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
             {
@@ -671,11 +614,7 @@ focus on Survival Points.",
             return statsTotal;
         }
 
-#if RAWR3 || RAWR4
         private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
-#else   
-        private Stats GetSpecialEffectStats(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
-#endif
         {
             Stats statsSpecialEffects = new Stats();
 
@@ -687,20 +626,12 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-#if RAWR3 || RAWR4
             AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
-#else
-            AttackModel am = new AttackModel(character, stats, amm, calcOpts);
-#endif
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
-#if RAWR3 || RAWR4
             int targetLevel = bossOpts.Level;
-#else
-            int targetLevel = calcOpts.TargetLevel;
-#endif
             float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - targetLevel, false) - hitBonusSpell);
             float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonusPhysical);
             float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
@@ -728,7 +659,7 @@ focus on Survival Points.",
             float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spell casts in 18 seconds.
             float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
             float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
-            float intervalJudgement = (10.0f - character.PaladinTalents.ImprovedJudgements * 1.0f);
+            float intervalJudgement = 8f;
             float intervalShoR = 6.0f;
             float intervalHotR = 6.0f;
             float intervalHolyShield = 9.0f;

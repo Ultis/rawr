@@ -11,9 +11,7 @@ namespace Rawr.ProtPaladin {
         private Stats Stats;
         private PaladinTalents Talents;
         private CalculationOptionsProtPaladin CalcOpts;
-#if RAWR3 || RAWR4
         private BossOptions BossOpts;
-#endif
 
         public readonly AttackTable AttackTable;
 
@@ -31,11 +29,7 @@ namespace Rawr.ProtPaladin {
             float AP = Stats.AttackPower;
             float SP = Stats.SpellPower;
 
-#if RAWR3 || RAWR4
             int targetLevel = BossOpts.Level;
-#else
-            int targetLevel = CalcOpts.TargetLevel;
-#endif
 
             #region Ability Base Damage
             switch (Ability) {
@@ -182,8 +176,7 @@ namespace Rawr.ProtPaladin {
                 case Ability.RetributionAura:
                     baseDamage        = 112f + (SP * 0.0666f);
 
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + Talents.SanctifiedRetribution * 0.5f);
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
 
                     critMultiplier    = 0.0f;
                     break;
@@ -266,32 +259,18 @@ namespace Rawr.ProtPaladin {
             Threat = abilityThreat;
         }
 
-#if RAWR3 || RAWR4
         public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts) {
-#else   
-        public AbilityModel(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts) {
-#endif
             Character   = character;
             Stats       = stats;
             Ability     = ability;
             CalcOpts    = calcOpts;
-#if RAWR3 || RAWR4
             BossOpts    = bossOpts;
-#endif
             
             Talents     = Character.PaladinTalents;
-#if RAWR3 || RAWR4
             AttackTable = new AttackTable(character, stats, ability, CalcOpts, BossOpts);
-#else
-            AttackTable = new AttackTable(character, stats, ability, CalcOpts);
-#endif
 
             if (!Lookup.IsSpell(Ability))
-#if RAWR3 || RAWR4
                 ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, BossOpts.Armor, BossOpts.Level);
-#else
-                ArmorReduction  = Lookup.EffectiveTargetArmorReduction(Character, Stats, CalcOpts.TargetArmor, CalcOpts.TargetLevel);
-#endif
 
             Name                = Lookup.Name(Ability);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
@@ -304,17 +283,9 @@ namespace Rawr.ProtPaladin {
 
     public class AbilityModelList : Dictionary<Ability, AbilityModel>
     {
-#if RAWR3 || RAWR4
         public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
-#else
-        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtPaladin calcOpts)
-#endif
         {
-#if RAWR3 || RAWR4
             this.Add(ability, new AbilityModel(character, stats, ability, calcOpts, bossOpts));
-#else
-            this.Add(ability, new AbilityModel(character, stats, ability, calcOpts));
-#endif
         }
     }
 }
