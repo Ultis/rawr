@@ -323,7 +323,11 @@ namespace Rawr.Cat
 				float chanceHitBiteTemp = 1f - chanceCritBiteTemp;
 
 				//Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
+#if !RAWR4
 				float chanceCritBleedTemp = character.DruidTalents.PrimalGore > 0 ? chanceCritYellowTemp : 0f;
+#else
+				float chanceCritBleedTemp = chanceCritYellowTemp;
+#endif
 				float chanceCritRipTemp = Math.Min(1f, chanceCritBleedTemp > 0f ? chanceCritBleedTemp + stats.BonusRipCrit : 0f);
 				float chanceCritRakeTemp = stats.BonusRakeCrit > 0 ? chanceCritBleedTemp : 0;
 
@@ -466,7 +470,12 @@ namespace Rawr.Cat
 
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-				maintainMangle, berserkDuration, attackSpeed, character.DruidTalents.OmenOfClarity > 0, 
+				maintainMangle, berserkDuration, attackSpeed, 
+#if RAWR4
+				true,
+#else
+				character.DruidTalents.OmenOfClarity > 0,
+#endif
 				character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCritYellow * stats.BonusCPOnCrit,
 				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeStats, mangleStats, shredStats,
 				rakeStats, ripStats, biteStats, roarStats);
@@ -536,6 +545,7 @@ namespace Rawr.Cat
 			DruidTalents talents = character.DruidTalents;
 			StatsCat statsTotal = new StatsCat()
 			{
+#if !RAWR4
 				PhysicalCrit = 0.02f * talents.SharpenedClaws
 							 + 0.02f * talents.MasterShapeshifter
 							 + ((character.ActiveBuffsContains("Leader of the Pack") ||
@@ -563,6 +573,7 @@ namespace Rawr.Cat
 				BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f),
 				BonusFerociousBiteDamageMultiplier = 0.03f * talents.FeralAggression,
 				BonusRipDuration = talents.GlyphOfRip ? 4f : 0f,
+#endif
 			};
 			statsTotal.Accumulate(BaseStats.GetBaseStats(80, character.Class, character.Race, BaseStats.DruidForm.Cat));
 			statsTotal.Accumulate(statsItems);
@@ -612,7 +623,12 @@ namespace Rawr.Cat
 								+ StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceHit = 1f - chanceAvoided;
-			bool usesMangle = (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"));
+#if RAWR4
+			bool usesMangle = (true
+#else
+			bool usesMangle = (talents.Mangle > 0
+#endif
+				&& !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"));
 			
 
 			Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
@@ -641,7 +657,7 @@ namespace Rawr.Cat
 			triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
 			triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to Add Self-Heals
 			triggerChances[Trigger.RakeTick] = 1f;
-			if (talents.Mangle > 0 && !character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma"))
+			if (usesMangle)
 				triggerChances[Trigger.MangleCatHit] = chanceHit;
 			triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
 			triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
@@ -1083,7 +1099,7 @@ namespace Rawr.Cat
 			get { return _equipped; }
 			set { _equipped = value; }
 		}
-        public override bool PartEquipped { get; set; }
+		public override bool PartEquipped { get; set; }
 
 		public override string ToString()
 		{
