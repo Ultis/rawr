@@ -194,13 +194,8 @@ namespace Rawr.Healadin
             }
         }
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get
             {
@@ -274,7 +269,6 @@ namespace Rawr.Healadin
             }
         }
 
-#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -289,22 +283,6 @@ namespace Rawr.Healadin
                 return _subPointNameColors;
             }
         }
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Fight Healing", System.Drawing.Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Burst Healing", System.Drawing.Color.CornflowerBlue);
-                }
-                return _subPointNameColors;
-            }
-        }
-#endif
 
         public override CharacterClass TargetClass { get { return CharacterClass.Paladin; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
@@ -361,16 +339,10 @@ namespace Rawr.Healadin
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
             
-#if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
-#endif
             
-#if RAWR3 || RAWR4
             float fightLength = bossOpts.BerserkTimer * 60f;
-#else
-            float fightLength = calcOpts.Length * 60f;
-#endif
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);

@@ -87,18 +87,14 @@ namespace Rawr.Healadin
             set {
                 burstScale = value;
                 OnPropertyChanged("BurstScale");
-#if RAWR3 || RAWR4
                 OnPropertyChanged("BurstScaleText");
-#endif
             }
         }
 
-#if RAWR3 || RAWR4
         public string BurstScaleText
         {
             get { return string.Format("{0:P0} Burst, {1:P0} Fight", BurstScale, 1f - BurstScale).Replace(" %", "%"); }
         }
-#endif
 
         private float gHL_Targets;
         public float GHL_Targets
@@ -121,17 +117,13 @@ namespace Rawr.Healadin
             set {
                 ioLHolyLight = value;
                 OnPropertyChanged("IoLHolyLight");
-#if RAWR3 || RAWR4
                 OnPropertyChanged("IoLHolyLightText");
-#endif
             }
         }
 
-#if RAWR3 || RAWR4
         public string IoLHolyLightText {
             get { return string.Format("{0:P0} Holy Light, {1:P0} Flash of Light", IoLHolyLight, 1f - IoLHolyLight).Replace(" %", "%"); }
         }
-#endif
 
         private bool jotP;
         public bool JotP
