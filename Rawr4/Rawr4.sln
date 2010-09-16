@@ -38,6 +38,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\Rawr.TankDK.csproj", "{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}"
 	ProjectSection(ProjectDependencies) = postProject
 		{48170BE2-2CF6-4068-B36C-189072D49093} = {48170BE2-2CF6-4068-B36C-189072D49093}
+		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F} = {513A87FD-FA64-49FD-9C34-50B8D52FBB5F}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental", "Rawr.Elemental\Rawr.Elemental.csproj", "{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}"
@@ -59,10 +60,10 @@ Global
 		SccNumberOfProjects = 25
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
-		SccProjectUniqueName0 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
-		SccProjectName0 = Rawr.Silverlight.Web
-		SccLocalPath0 = Rawr.Silverlight.Web
-		SccLocalPath1 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
+		SccProjectName1 = Rawr.Silverlight.Web
+		SccLocalPath1 = Rawr.Silverlight.Web
 		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
 		SccProjectName2 = Rawr.Base
 		SccLocalPath2 = Rawr.Base

@@ -2987,7 +2987,8 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 		public int Dispersion { get { return _data[60]; } set { _data[60] = value; } }
 	}
 
-	public partial class DeathKnightTalents : TalentsBase
+    #region Death Knight
+    public partial class DeathKnightTalents : TalentsBase
 #if RAWR3 || RAWR4
 	{
 		public override TalentsBase Clone()
@@ -3004,7 +3005,9 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 			return clone;
 		}
 
-		private int[] _data = new int[58];
+        // Blood count + Frost count + Unholy count
+        public static int[] _TreeCount = { 19, 20, 19 };
+        private int[] _data = new int[_TreeCount[0] + _TreeCount[1] + _TreeCount[2]];
 		public override int[] Data { get { return _data; } }
 		public DeathKnightTalents() { }
 		public DeathKnightTalents(string talents)
@@ -3016,6 +3019,7 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 @"Frost",
 @"Unholy",};
 
+        #region Blood
 		/// <summary>
 		/// Whenever you kill an enemy that grants experience or honor, you generate up to [10 * Pts] runic power.  In addition, you generate [1 * Pts] runic power per 5 sec while in combat.
 		/// </summary>
@@ -3187,7 +3191,9 @@ Temporarily grants the Death Knight 15% of maximum health and increases the amou
 1 min cooldown - Instant cast
 Requires Melee Weapon - Summons a second rune weapon that fights on its own for 12 sec, doing the same attacks as the Death Knight but for 50% reduced damage.  The rune weapon also assists in defense of its master, granting an additional 20% parry chance while active.",})]
 		public int DancingRuneWeapon { get { return _data[18]; } set { _data[18] = value; } }
-		/// <summary>
+        #endregion
+        #region Frost
+        /// <summary>
 		/// Increases your maximum Runic Power by [10 * Pts]
 		/// </summary>
 		[TalentData(index: 19, name: "Runic Power Mastery", maxPoints: 3, icon: "spell_arcane_arcane01",
@@ -3363,7 +3369,9 @@ Purges the earth around the Death Knight of all heat.  Enemies within 10 yards a
 Instant cast
 Blast the target with a frigid wind dealing [((198+214)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.",})]
 		public int HowlingBlast { get { return _data[38]; } set { _data[38] = value; } }
-		/// <summary>
+        #endregion
+        #region Unholy
+        /// <summary>
 		/// Reduces the cooldown of your Death Grip ability by [5 * Pts] sec.
 		/// </summary>
 		[TalentData(index: 39, name: "Unholy Command", maxPoints: 2, icon: "spell_deathknight_strangulate",
@@ -3534,9 +3542,11 @@ Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerf
 3 min cooldown - Instant cast
 A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.",})]
 		public int SummonGargoyle { get { return _data[57]; } set { _data[57] = value; } }
-	}
+        #endregion
+    }
+    #endregion
 
-	public partial class ShamanTalents : TalentsBase
+    public partial class ShamanTalents : TalentsBase
 #if RAWR3 || RAWR4
 	{
 		public override TalentsBase Clone()
