@@ -450,10 +450,9 @@ namespace Rawr.Healadin
             // TODO: However this doesn't help to deal with pure temporary intellect procs (if there are any).
             // NOTE: If we add highest stat to intellect after we calculate mana, the only visible change
             // will be the displayed intellect for the character.
-            stats.Intellect *= (1f + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
-            stats.HighestStat *= (1f + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
+            stats.Intellect *= (1f + stats.BonusIntellectMultiplier);
+            stats.HighestStat *= (1f + stats.BonusIntellectMultiplier);
 
-            stats.SpellPower += 0.04f * (stats.Intellect + stats.HighestStat) * talents.HolyGuidance;
             stats.SpellCrit = stats.SpellCrit + 
                 StatConversion.GetSpellCritFromIntellect(
                     stats.Intellect + stats.HighestStat, 

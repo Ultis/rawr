@@ -37,8 +37,7 @@ namespace Rawr.Healadin
         public float AverageCost()
         {
             return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
-                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)))
-                - BaseMana * .06f * Talents.Illumination * ChanceToCrit();
+                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)));
         }
 
         public float AverageHealed()
@@ -57,7 +56,6 @@ namespace Rawr.Healadin
             heal *= 1f - Rotation.DivinePleas * 15f / Rotation.FightLength * .5f;
             heal *= 1f + .01f * Talents.Divinity;
             heal *= AbilityHealedMultiplier();
-            heal *= (1f + Talents.HealingLight * .04f);
             heal *= (1f + Stats.BonusHealingDoneMultiplier);
             if (DivineIllumination) {
                 heal *= (1f + Stats.DivineIlluminationHealingMultiplier);
@@ -68,7 +66,7 @@ namespace Rawr.Healadin
 
         public float ChanceToCrit()
         {
-            return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.HolyPower * .01f));
+            return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.DivineFavor * .2f));
         }
         public float CostReduction() { return Stats.SpellsManaReduction + AbilityCostReduction(); }
 
@@ -174,11 +172,6 @@ namespace Rawr.Healadin
         public override float BaseMana { get { return 1274f; } }
         public bool CastTimeReductionFromHolyShock { get; set; }
 
-        protected override float AbilityCritChance()
-        {
-            return Talents.SanctifiedLight * .02f + Stats.HolyLightCrit;
-        }
-
         protected override float AbilityCostReduction()
         {
             return Stats.HolyLightManaCostReduction;
@@ -187,11 +180,6 @@ namespace Rawr.Healadin
         protected override float AbilityCostMultiplier()
         {
             return 1f - Stats.HolyLightPercentManaReduction;
-        }
-
-        protected override float AbilityCastTimeReduction()
-        {
-            return .5f / 3 * Talents.LightsGrace;
         }
 
         protected override float AbilityHealed()
@@ -215,16 +203,6 @@ namespace Rawr.Healadin
 
         public override float BaseCastTime { get { return 1.5f; } }
         public override float BaseMana { get { return 790f; } }
-
-        protected override float AbilityCritChance()
-        {
-            return Talents.SanctifiedLight * .02f + Stats.HolyShockCrit;
-        }
-
-        protected override float AbilityCostMultiplier()
-        {
-            return 1f - .02f * Talents.Benediction;
-        }
 
         protected override float AbilityHealed()
         {
@@ -296,7 +274,7 @@ namespace Rawr.Healadin
 
         public float Cost()
         {
-            return (BaseCost - Stats.SpellsManaReduction) * (1f - .02f * Talents.Benediction);
+            return (BaseCost - Stats.SpellsManaReduction);
         }
 
         public float Casts()

@@ -157,16 +157,6 @@ namespace Rawr.Healadin
             calc.UsageHS = hs.Usage();
             #endregion
 
-            #region Divine Illumination
-            if (Talents.DivineIllumination > 0)
-            {
-                DivineIllumination di = new DivineIllumination(this);
-                calc.RotationHL += di.Time();
-                calc.UsageHL += di.Usage();
-                calc.HealedHL += di.Healed();
-            }
-            #endregion
-
             #region Divine Favor
             if (Talents.DivineFavor > 0)
             {
