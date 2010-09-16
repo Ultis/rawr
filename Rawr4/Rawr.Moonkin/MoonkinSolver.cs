@@ -419,18 +419,18 @@ namespace Rawr.Moonkin
                             activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
                         float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / rot.RotationData.Duration;
-                        spellDetails[0] = Starfire.DamagePerHit;
-                        spellDetails[1] = Wrath.DamagePerHit;
-                        spellDetails[2] = Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
-                        spellDetails[3] = InsectSwarm.DotEffect.DamagePerHit;
-                        spellDetails[4] = Starsurge.DamagePerHit;
-                        spellDetails[5] = Starfire.CastTime;
-                        spellDetails[6] = Wrath.CastTime;
-                        spellDetails[7] = Starsurge.CastTime;
-                        spellDetails[8] = Moonfire.CastTime;
-                        spellDetails[9] = Starfire.AverageEnergy;
-                        spellDetails[10] = Wrath.AverageEnergy;
-                        spellDetails[11] = Starsurge.AverageEnergy;
+                        spellDetails[0] = rot.RotationData.StarfireAvgHit;
+                        spellDetails[1] = rot.RotationData.WrathAvgHit;
+                        spellDetails[2] = rot.RotationData.MoonfireAvgHit;
+                        spellDetails[3] = rot.RotationData.InsectSwarmAvgHit;
+                        spellDetails[4] = rot.RotationData.StarSurgeAvgHit;
+                        spellDetails[5] = rot.RotationData.StarfireAvgCast;
+                        spellDetails[6] = rot.RotationData.WrathAvgCast;
+                        spellDetails[7] = rot.RotationData.StarSurgeAvgCast;
+                        spellDetails[8] = rot.RotationData.AverageInstantCast;
+                        spellDetails[9] = rot.RotationData.StarfireAvgEnergy;
+                        spellDetails[10] = rot.RotationData.WrathAvgEnergy;
+                        spellDetails[11] = rot.RotationData.StarSurgeAvgEnergy;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -489,18 +489,18 @@ namespace Rawr.Moonkin
                 }
                 float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.RotationData.Duration;
-                spellDetails[0] += (1 - totalUpTime) * Starfire.DamagePerHit;
-                spellDetails[1] += (1 - totalUpTime) * Wrath.DamagePerHit;
-                spellDetails[2] += (1 - totalUpTime) * Moonfire.DamagePerHit + Moonfire.DotEffect.DamagePerHit;
-                spellDetails[3] += (1 - totalUpTime) * InsectSwarm.DotEffect.DamagePerHit;
-                spellDetails[4] += (1 - totalUpTime) * Starsurge.DamagePerHit;
-                spellDetails[5] += (1 - totalUpTime) * Starfire.CastTime;
-                spellDetails[6] += (1 - totalUpTime) * Wrath.CastTime;
-                spellDetails[7] += (1 - totalUpTime) * Starsurge.CastTime;
-                spellDetails[8] += (1 - totalUpTime) * Moonfire.CastTime;
-                spellDetails[9] += (1 - totalUpTime) * Starfire.AverageEnergy;
-                spellDetails[10] += (1 - totalUpTime) * Wrath.AverageEnergy;
-                spellDetails[11] += (1 - totalUpTime) * Starsurge.AverageEnergy;
+                spellDetails[0] += (1 - totalUpTime) * rot.RotationData.StarfireAvgHit;
+                spellDetails[1] += (1 - totalUpTime) * rot.RotationData.WrathAvgHit;
+                spellDetails[2] += (1 - totalUpTime) * rot.RotationData.MoonfireAvgHit;
+                spellDetails[3] += (1 - totalUpTime) * rot.RotationData.InsectSwarmAvgHit;
+                spellDetails[4] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgHit;
+                spellDetails[5] += (1 - totalUpTime) * rot.RotationData.StarfireAvgCast;
+                spellDetails[6] += (1 - totalUpTime) * rot.RotationData.WrathAvgCast;
+                spellDetails[7] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgCast;
+                spellDetails[8] += (1 - totalUpTime) * rot.RotationData.AverageInstantCast;
+                spellDetails[9] += (1 - totalUpTime) * rot.RotationData.StarfireAvgEnergy;
+                spellDetails[10] += (1 - totalUpTime) * rot.RotationData.WrathAvgEnergy;
+                spellDetails[11] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgEnergy;
 
                 accumulatedDamage += accumulatedDPS * rot.RotationData.Duration;
 

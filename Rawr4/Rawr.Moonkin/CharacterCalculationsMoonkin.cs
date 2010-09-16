@@ -9,7 +9,7 @@ namespace Rawr.Moonkin
         private float overallPoints = 0f;
         public override float OverallPoints { get { return overallPoints; } set { overallPoints = value; } }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f };
 
         public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
 

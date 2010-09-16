@@ -721,7 +721,9 @@ namespace Rawr.Moonkin
 
             Stats statsMoonkinForm = new Stats()
             {
-                BaseArmorMultiplier = character.DruidTalents.MoonkinForm > 0 ? 1.2f : 0.0f
+                BaseArmorMultiplier = 1.2f * character.DruidTalents.MoonkinForm,
+                BonusArcaneDamageMultiplier = 0.01f * character.DruidTalents.MoonkinForm,
+                BonusNatureDamageMultiplier = 0.01f * character.DruidTalents.MoonkinForm
             };
 
             Stats statsMasterSS = new Stats()

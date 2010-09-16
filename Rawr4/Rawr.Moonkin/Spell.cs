@@ -12,7 +12,7 @@ namespace Rawr.Moonkin
     }
     public class Spell
     {
-        public Spell() { AllDamageModifier = 1.25f; CriticalDamageModifier = 2.0f; }
+        public Spell() { AllDamageModifier = 1f; CriticalDamageModifier = 1.5f; }
         public Spell(Spell copy)
         {
             this.Name = copy.Name;
@@ -47,7 +47,7 @@ namespace Rawr.Moonkin
     }
     public class DotEffect
     {
-        public DotEffect() { AllDamageModifier = 1.25f;  }
+        public DotEffect() { AllDamageModifier = 1f;  }
         public DotEffect(DotEffect copy)
         {
             this.AllDamageModifier = copy.AllDamageModifier;
