@@ -187,21 +187,17 @@ namespace Rawr.Moonkin
                 case DotMode.Always:
                     float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
                     moonfireTime = moonfireRatio * mainNukeTime / (1 - moonfireRatio);
-                    RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
                     break;
                 case DotMode.Once:
-                    RotationData.MoonfireCasts = 1;
-                    mainNukeTime += mf.CastTime;
                     moonfireTime = mf.CastTime;
                     break;
                 case DotMode.Twice:
-                    RotationData.MoonfireCasts = 2;
-                    mainNukeTime += 2 * mf.CastTime;
                     moonfireTime = 2 * mf.CastTime;
                     break;
                 case DotMode.Unused:
                     break;
             }
+            RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
             RotationData.MoonfireAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * RotationData.MoonfireCasts;
             RotationData.MoonfireTicks = RotationData.MoonfireCasts * mf.DotEffect.NumberOfTicks;
             RotationData.MoonfireDuration = mf.DotEffect.Duration;
@@ -213,21 +209,17 @@ namespace Rawr.Moonkin
                 case DotMode.Always:
                     float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
                     insectSwarmTime = insectSwarmRatio * mainNukeTime / (1 - insectSwarmRatio);
-                    RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
                     break;
                 case DotMode.Once:
-                    RotationData.InsectSwarmCasts = 1;
-                    mainNukeTime += iSw.CastTime;
                     insectSwarmTime = iSw.CastTime;
                     break;
                 case DotMode.Twice:
-                    RotationData.InsectSwarmCasts = 2;
-                    mainNukeTime += 2 * iSw.CastTime;
                     insectSwarmTime = 2 * iSw.CastTime;
                     break;
                 case DotMode.Unused:
                     break;
             }
+            RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
             RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * RotationData.InsectSwarmCasts;
             RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
             RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;

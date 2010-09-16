@@ -100,7 +100,6 @@
     <Compile Include="MoonkinSolver.cs" />
     <Compile Include="ProcEffect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleFastMatrix.cs" />
     <Compile Include="Spell.cs" />
     <Compile Include="SpellRotation.cs" />
   </ItemGroup>
