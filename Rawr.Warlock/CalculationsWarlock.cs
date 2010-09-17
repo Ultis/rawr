@@ -658,6 +658,7 @@ namespace Rawr.Warlock {
                 || stats.PhysicalCrit > 0
                 || stats.PhysicalHaste > 0
                 || stats.ArmorPenetration > 0
+                || stats.TargetArmorReduction > 0
                 || stats.BonusPhysicalDamageMultiplier > 0;
         }
 
@@ -738,7 +739,7 @@ namespace Rawr.Warlock {
                 //ignore items with any of these stats
                 + stats.Resilience
                 + stats.Armor + stats.BonusArmor + stats.Agility
-                + stats.ArmorPenetration + stats.ArmorPenetrationRating
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction
                 + stats.Strength + stats.AttackPower
                 + stats.Expertise + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating

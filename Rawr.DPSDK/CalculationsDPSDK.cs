@@ -40,32 +40,32 @@ namespace Rawr.DPSDK
                 int relentless = 41398;
 
                 return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
-						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
-						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
+                {
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
+                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
+                        RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
+                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
+                        
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
+                        RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
+                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
+                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
 
-					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
-						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
-						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
-				};
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
+                        RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
+                        RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
+                };
             }
         }
         public float BonusMaxRunicPower = 0f;
@@ -129,20 +129,20 @@ namespace Rawr.DPSDK
                 if (_characterDisplayCalculationLabels == null) {
                     List<string> labels = new List<string>(new string[] {
                         "Basic Stats:Health",
-					    "Basic Stats:Strength",
-					    "Basic Stats:Agility",
-					    "Basic Stats:Attack Power",
-					    "Basic Stats:Crit Rating",
-					    "Basic Stats:Hit Rating",
-					    "Basic Stats:Expertise",
-					    "Basic Stats:Haste Rating",
-					    "Basic Stats:Armor Penetration Rating",
+                        "Basic Stats:Strength",
+                        "Basic Stats:Agility",
+                        "Basic Stats:Attack Power",
+                        "Basic Stats:Crit Rating",
+                        "Basic Stats:Hit Rating",
+                        "Basic Stats:Expertise",
+                        "Basic Stats:Haste Rating",
+                        "Basic Stats:Armor Penetration Rating",
                         "Basic Stats:Armor",
-					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
-					    "Advanced Stats:Attack Speed",
-					    "Advanced Stats:Crit Chance",
-					    "Advanced Stats:Avoided Attacks",
-					    "Advanced Stats:Enemy Mitigation",
+                        "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
+                        "Advanced Stats:Attack Speed",
+                        "Advanced Stats:Crit Chance",
+                        "Advanced Stats:Avoided Attacks",
+                        "Advanced Stats:Enemy Mitigation",
                         "DPS Breakdown:White",
                         "DPS Breakdown:BCB*Blood Caked Blade",
                         "DPS Breakdown:Necrosis",
@@ -205,7 +205,7 @@ namespace Rawr.DPSDK
         public override List<ItemType> RelevantItemTypes {
             get {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[] {
-						ItemType.None,
+                        ItemType.None,
                         ItemType.Leather,
                         ItemType.Mail,
                         ItemType.Plate,
@@ -217,7 +217,7 @@ namespace Rawr.DPSDK
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword
-					}));
+                    }));
             }
         }
 
@@ -374,10 +374,10 @@ namespace Rawr.DPSDK
                 {
                     float targetArmor = calcOpts.BossArmor;
 
-                    float arpenBuffs = talents.BloodGorged * 2f / 100;
+                    float arpenBuffs = talents.BloodGorged * 0.02f;
 
                     mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                                        stats.ArmorPenetration, arpenBuffs, Math.Max(0, stats.ArmorPenetrationRating));
+                                        stats.TargetArmorReduction, arpenBuffs, Math.Max(0, stats.ArmorPenetrationRating));
 
                     calcs.EnemyMitigation = 1f - mitigation;
                     calcs.EffectiveArmor = mitigation;
@@ -627,8 +627,9 @@ namespace Rawr.DPSDK
                         //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
                         // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
                         int targetArmor = calcOpts.BossArmor;
+                        // Debuffs count since they are on the target. Buffs, Bonuses and Ratings don't get passed to the pet
                         float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                            0f/*stats.ArmorPenetration*/, 0f, 0f * stats.ArmorPenetrationRating);
+                            stats.TargetArmorReduction, 0f/*stats.ArmorPenetration*/, 0f/*stats.ArmorPenetrationRating*/);
 
                         dpsGhoul *= modArmor;
                         dpsGhoul *= 1f - (.0065f * missedSpecial);	// pet expertise now scales with player hit rating. Hopefully goes off of melee rather than spell hit.
@@ -655,7 +656,9 @@ namespace Rawr.DPSDK
                     physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
 
                     dpsBCB *= physMit;
-                    dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, 0f/*stats.ArmorPenetration*/, 0f, 0f);
+                    // Debuffs count since they are on the target. Buffs, Bonuses and Ratings don't get passed to the pet
+                    dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor,
+                                                stats.TargetArmorReduction, 0f/*stats.ArmorPenetration*/, 0f/*stats.ArmorPenetrationRating*/);
 
                     WhiteMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
                     BCBMult *= physPowerMult * (1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f));
@@ -1979,6 +1982,7 @@ namespace Rawr.DPSDK
                 // Secondary Stats
                 Health = stats.Health,
                 ArmorPenetration = stats.ArmorPenetration,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 SpellHaste = stats.SpellHaste,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
@@ -2161,6 +2165,7 @@ namespace Rawr.DPSDK
             // Secondary Stats
             bResults |= (stats.Health != 0);
             bResults |= (stats.ArmorPenetration != 0);
+            bResults |= (stats.TargetArmorReduction != 0);
             bResults |= (stats.SpellHaste != 0);
             bResults |= (stats.PhysicalCrit != 0);
             bResults |= (stats.PhysicalHaste != 0);

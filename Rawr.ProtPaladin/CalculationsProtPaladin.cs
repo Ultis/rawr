@@ -349,10 +349,11 @@ focus on Survival Points.",
             calculatedStats.TargetLevel = calcOpts.TargetLevel;
             calculatedStats.TargetArmor = calcOpts.TargetArmor;
 #endif
-            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, stats.TargetArmorReduction, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calculatedStats.TargetArmor);
             calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
-            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calculatedStats.TargetLevel, calculatedStats.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calculatedStats.TargetLevel, calculatedStats.TargetArmor,
+                stats.TargetArmorReduction, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
@@ -633,6 +634,7 @@ focus on Survival Points.",
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
             statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength,CharacterClass.Paladin) - 10f);
+            statsTotal.TargetArmorReduction = statsBase.TargetArmorReduction + statsGearEnchantsBuffs.TargetArmorReduction;
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
             statsTotal.ArmorPenetration = statsBase.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
@@ -1313,6 +1315,7 @@ focus on Survival Points.",
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1372,6 +1375,7 @@ focus on Survival Points.",
                 // Threat Stats
                 stats.ArmorPenetration +
                 stats.ArmorPenetrationRating +
+                stats.TargetArmorReduction +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +

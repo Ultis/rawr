@@ -1265,6 +1265,7 @@ namespace Rawr.Moonkin
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
                 ArmorPenetration = stats.ArmorPenetration,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -1407,15 +1408,16 @@ namespace Rawr.Moonkin
                 stats.ManaRestore > 0 ||
                 stats.ShadowDamage > 0 ||
                 stats.NatureDamage > 0 ||
-               stats.FireDamage > 0 ||
+                stats.FireDamage > 0 ||
                 stats.ValkyrDamage > 0 ||
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
                 stats.ArmorPenetration > 0 ||       // benefits trees
+                stats.TargetArmorReduction > 0 ||
                 stats.BonusManaMultiplier > 0 ||
                 stats.BonusCritMultiplier > 0 ||
-               stats.BonusDamageMultiplier > 0 ||
+                stats.BonusDamageMultiplier > 0 ||
 
                 // -- NoStackStats
                 stats.MovementSpeed > 0 ||

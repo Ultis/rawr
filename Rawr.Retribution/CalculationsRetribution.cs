@@ -982,6 +982,7 @@ namespace Rawr.Retribution
                 CritRating = stats.CritRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
@@ -1062,6 +1063,7 @@ namespace Rawr.Retribution
                                 stats.Agility > 0 ||
                                 stats.AttackPower > 0 ||
                                 stats.ArmorPenetration > 0 ||
+                                stats.TargetArmorReduction > 0 ||
                                 stats.Expertise > 0 ||//?
                                 // Combat ratings
                                 stats.ArmorPenetrationRating > 0 ||

@@ -433,7 +433,7 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
             RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
 #else
-            RageCost = 15f - (Talents.ImprovedExecute * 2.5f);// -(Talents.FocusedRage * 1f);
+            RageCost = 15f;// -(Talents.ImprovedExecute * 2.5f);// -(Talents.FocusedRage * 1f);
 #endif
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;

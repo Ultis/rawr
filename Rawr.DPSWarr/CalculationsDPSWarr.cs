@@ -555,6 +555,7 @@ These numbers to do not include racial bonuses.",
                 BonusArmor = stats.BonusArmor,
                 WeaponDamage = stats.WeaponDamage,
                 ArmorPenetration = stats.ArmorPenetration,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
@@ -648,6 +649,7 @@ These numbers to do not include racial bonuses.",
                 stats.BonusArmor +
                 stats.WeaponDamage +
                 stats.ArmorPenetration +
+                stats.TargetArmorReduction +
                 stats.PhysicalCrit +
                 stats.PhysicalHaste +
                 stats.PhysicalHit +
@@ -743,7 +745,7 @@ These numbers to do not include racial bonuses.",
                                     + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
                                     + stats.SpellPenetration + stats.BonusManaMultiplier
                                     : 0f)
-                // Remove Defensive Stuff (until we do that special modelling)
+                // Remove Defensive Stuff (until we do that special modeling)
                 + (HidingBadStuff_Def ? stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                                       + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
                                       : 0f)
@@ -1511,7 +1513,7 @@ These numbers to do not include racial bonuses.",
                 // Demo Shout
                 BossAttackPower = (dpswarchar.calcOpts.M_DemoralizingShout ? (-411f * (1f + talents.ImprovedDemoralizingShout * 0.08f)) : 0f),
                 // Sunder Armor
-                ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 5f : 0f),
+                TargetArmorReduction = (dpswarchar.calcOpts.M_SunderArmor ? 0.20f : 0f),
                 // Thunder Clap
                 BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f * (1f + talents.ImprovedThunderClap * (10f / 3f)) : 0f),
 #else
@@ -1870,20 +1872,18 @@ These numbers to do not include racial bonuses.",
                                 (!charStruct.combatFactors.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                 float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.ArmorPenetration, arpenBuffs, originalStats.ArmorPenetrationRating);
+                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating));
                 float ProccedArmorReduction = 0f;
                 for (int i = 0; i < tempArPenRatings.Count; i++)
                 {
                     ProccedArmorReduction += tempArPenRatingUptimes[i] *
-                                StatConversion.GetArmorDamageReduction(charStruct.Char.Level,
-                                (int)StatConversion.NPC_ARMOR[LevelDif],
-                                originalStats.ArmorPenetration, arpenBuffs,
-                                originalStats.ArmorPenetrationRating + tempArPenRatings[i]);
+                                StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
+                                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating + tempArPenRatings[i]));
                 }
                 Stats dummyStats = new Stats();
                 
                 float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.ArmorPenetration, arpenBuffs, ProccedArmorReduction);
+                    originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);
                 originalStats.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);                
             }
 
@@ -2242,7 +2242,7 @@ These numbers to do not include racial bonuses.",
 
             float upTime = 0f;
             //float avgStack = 1f;
-            if (effect.Stats.ArmorPenetration > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
+            if (effect.Stats.TargetArmorReduction > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
                 //int j = 0;
             }
             if (effect.Trigger == Trigger.Use)

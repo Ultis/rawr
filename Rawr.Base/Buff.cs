@@ -1121,7 +1121,7 @@ namespace Rawr
                 Stats = new Stats(),
                 ConflictingBuffs = new List<string>() { "Shattering" },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.20f }, 10f, 5 * 60f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f }, 10f, 5 * 60f));
             defaultBuffs.Add(buff = new Buff
             {
                 Name = "Hysteria",
@@ -1161,7 +1161,7 @@ namespace Rawr
                 Name = "Acid Spit",
                 Source = "BM Hunter (Worm pet)",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 0.2f },
+                Stats = { TargetArmorReduction = 0.20f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1169,7 +1169,7 @@ namespace Rawr
                 Name = "Expose Armor",
                 Source = "Rogue",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 0.2f },
+                Stats = { TargetArmorReduction = 0.20f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1177,7 +1177,7 @@ namespace Rawr
                 Name = "Sunder Armor",
                 Source = "Warrior",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 0.2f },
+                Stats = { TargetArmorReduction = 0.20f },
                 IsTargetDebuff = true,
             });
             #endregion
@@ -1188,7 +1188,7 @@ namespace Rawr
                 Name = "Curse of Weakness",
                 Source = "Warlock",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 0.05f },
+                Stats = { TargetArmorReduction = 0.05f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1196,7 +1196,7 @@ namespace Rawr
                 Name = "Faerie Fire",
                 Source = "Druid",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 0.05f },
+                Stats = { TargetArmorReduction = 0.05f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff
@@ -1204,7 +1204,7 @@ namespace Rawr
                 Name = "Sting",
                 Source = "BM Hunter (Wasp pet)",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 0.05f },
+                Stats = { TargetArmorReduction = 0.05f },
                 IsTargetDebuff = true,
             });
             #endregion

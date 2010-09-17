@@ -32,13 +32,14 @@ namespace Rawr.ProtPaladin
         public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
             float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
+                stats.TargetArmorReduction, stats.ArmorPenetration, Math.Max(0f, stats.ArmorPenetrationRating)); 
             return damageReduction;
         }
 
         public static float EffectiveTargetArmorReduction(Character character, Stats stats, int targetArmor, int targetLevel)
         {
-            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor,
+                stats.TargetArmorReduction, stats.ArmorPenetration, Math.Max(0f, stats.ArmorPenetrationRating));
             float damageReduction = StatConversion.GetArmorDamageReduction(targetLevel, effectiveTargetArmor, 0f, 0f, 0f); 
             
             return damageReduction;

@@ -223,7 +223,11 @@ namespace Rawr
                             case CharacterClass.Paladin:
                                 character.PaladinTalents = new PaladinTalents(talentCode);
                                 if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
+#if !RAWR4
+                                else if (character.PaladinTalents.RighteousVengeance > 0) character.CurrentModel = "Retribution";
+#else
                                 else if (character.PaladinTalents.Zealotry > 0) character.CurrentModel = "Retribution";
+#endif
                                 else character.CurrentModel = "Healadin";
                                 break;
                             case CharacterClass.Hunter:

@@ -1924,7 +1924,7 @@ namespace Rawr.Mage
         {
             bool mageStats = HasMageStats(stats);
             float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier + stats.MasteryRating;
-            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.ArmorPenetrationRating;
+            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + +stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.MaxStack == 1)
@@ -2005,7 +2005,7 @@ namespace Rawr.Mage
                         return true;
                     }
                 }
-                ignoreStats += effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.DefenseRating + effect.Stats.Defense + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.BlockValue + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.ArmorPenetrationRating;
+                ignoreStats += effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.DefenseRating + effect.Stats.Defense + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.BlockValue + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.ArmorPenetrationRating + effect.Stats.TargetArmorReduction;
             }
             return (mageStats || (commonStats > 0 && ignoreStats == 0.0f));
         }

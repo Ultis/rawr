@@ -38,7 +38,8 @@ namespace Rawr.DPSDK
 
             int targetLevel = calcOpts.TargetLevel;
             float arpBuffs = talents.BloodGorged * 2f / 100;
-            float mitigation = StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, arpBuffs, stats.ArmorPenetrationRating);
+            float mitigation = StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor,
+                stats.TargetArmorReduction, arpBuffs, stats.ArmorPenetrationRating);
             mitigation = 1 - mitigation;
             float MHDPS = 0f, OHDPS = 0f;
 

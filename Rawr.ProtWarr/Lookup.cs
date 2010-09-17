@@ -34,7 +34,8 @@ namespace Rawr.ProtWarr
                 ignoreArmor += character.WarriorTalents.MaceSpecialization * 0.03f;
 #endif
 
-            return StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, ignoreArmor, stats.ArmorPenetrationRating);
+            return StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
+                stats.TargetArmorReduction, ignoreArmor, Math.Max(0f, stats.ArmorPenetrationRating));
         }
 
         public static float TargetCritChance(Character character, Stats stats, int targetLevel)
@@ -225,7 +226,7 @@ namespace Rawr.ProtWarr
 
         public static float ArmorReduction(Character character, Stats stats, int targetLevel)
         {
-            return StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0.0f, 0.0f, 0.0f);
+            return StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0f, 0f, 0f);
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)

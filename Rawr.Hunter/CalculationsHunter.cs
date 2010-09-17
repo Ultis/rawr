@@ -341,6 +341,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ArmorPenetration = stats.ArmorPenetration,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 Miss = stats.Miss,
                 ScopeDamage = stats.ScopeDamage,
 
@@ -454,6 +455,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.HitRating   + stats.RangedHitRating +
                 // Bonuses
                 stats.ArmorPenetration +
+                stats.TargetArmorReduction +
                 stats.PhysicalCrit +
                 stats.RangedHaste +
                 stats.PhysicalHit +
@@ -674,7 +676,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (buff.Stats.PhysicalHaste != 0) return true;
 
             // Sunder Armor, Sting
-            if (buff.Stats.ArmorPenetration != 0) return true;
+            if (buff.Stats.TargetArmorReduction != 0) return true;
 
             // Ret Aura & Feroc. Insp.
             if (buff.Stats.BonusDamageMultiplier != 0) return true;
@@ -1703,7 +1705,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #region Target Debuffs
             // The pet debuffs deal with stacking correctly themselves
             float targetDebuffsArmor = 1f - (1f - calculatedStats.petArmorDebuffs)
-                                          * (1f - statsBuffs.ArmorPenetration); // Buffs!G77
+                                          * (1f - statsBuffs.TargetArmorReduction); // Buffs!G77
 
             float targetDebuffsMP5JudgmentOfWisdom = 0;
             if (stats.ManaRestoreFromBaseManaPPM > 0)
@@ -3400,16 +3402,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float arpenBuffs = 0.0f;
 
 #if RAWR3 || RAWR4 || SILVERLIGHT
-            if (CalcOpts == null) {
-#else
             if (BossOpts == null) {
+#else
+            if (CalcOpts == null) {
 #endif
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
             } else {
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating));
 #else
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating));
 #endif
             }
 

@@ -430,14 +430,14 @@ namespace Rawr.TankDK
                 float targetArmor = calcOpts.BossArmor;
                 float totalArP = stats.ArmorPenetration;
 
-                mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, 0f, 0f);
+                mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.TargetArmorReduction, stats.ArmorPenetration, 0f);// why isn't arp rating going in here?
                 mitigation = Math.Max(0, mitigation);
 //                calcs.EnemyMitigation = 1f - mitigation;
 //                calcs.EffectiveArmor = mitigation;
             }
             #endregion
 
-            // These white damage values need to carry forward beyond just the individaul white damage attacks.
+            // These white damage values need to carry forward beyond just the individual white damage attacks.
             // BCB matters.
             float MHDam = 0f, OHDam = 0f;
             #region White Dmg

@@ -1088,6 +1088,7 @@ threat and limited threat scaled by the threat scale.",
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1147,7 +1148,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.BlockValue +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
-                    stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.WeaponDamage +
+                    stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction + stats.WeaponDamage +
                     stats.BonusCritMultiplier + 
                     stats.BonusDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 

@@ -14,19 +14,19 @@ namespace Rawr
     // float GetPhysicalMitigation(int TargetLevel)
 
 /*
-	public static class ArmorCalculations
-	{
-		//Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
-		//don't know exactly how, quite yet.
-		public static float GetDamageReduction(int attackerLevel, float targetArmor, 
-			float attackerArmorPenetration, float attackerArmorPenetrationRating)
-		{
-			float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating * 1.25f / 1539.529991f);
-			float reducedArmor = (float)targetArmor * (armorReductionPercent);
-			float damageReduction = (reducedArmor / ((467.5f * attackerLevel) + reducedArmor - 22167.5f));
-			return damageReduction;
-		}
-	}
+    public static class ArmorCalculations
+    {
+        //Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
+        //don't know exactly how, quite yet.
+        public static float GetDamageReduction(int attackerLevel, float targetArmor, 
+            float attackerArmorPenetration, float attackerArmorPenetrationRating)
+        {
+            float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating * 1.25f / 1539.529991f);
+            float reducedArmor = (float)targetArmor * (armorReductionPercent);
+            float damageReduction = (reducedArmor / ((467.5f * attackerLevel) + reducedArmor - 22167.5f));
+            return damageReduction;
+        }
+    }
 */
     public static class StatConversion
     {   // Class only works for Level 80 Characters
@@ -40,7 +40,7 @@ namespace Rawr
         public const float RATING_PER_DEFENSE = 4.918498039f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
         public const float RATING_PER_DODGE = 4525.018692f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_EXPERTISE = 8.1974969f; // 2.5f * LEVEL_80_COMBATRATING_MODIFIER;
-		public const float RATING_PER_PARRY = 4525.018692f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_PARRY = 4525.018692f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_PHYSICALCRIT = 4590.598679f;
         public const float RATING_PER_PHYSICALHASTE = 3278.998947f;
         public const float RATING_PER_PHYSICALHIT = 3278.998947f;
@@ -502,48 +502,48 @@ namespace Rawr
 
         #region Functions for More complex things.
 
-		// http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
-		// Ghostcrawler vs theorycraft.
-		/// <summary>
-		/// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
-		/// </summary>
-		/// <param name="AttackerLevel">Level of Attacker</param>
-		/// <param name="TargetLevel">Level of Target</param>
-		/// <param name="TargetArmor">Armor of Target</param>
-		/// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
-		/// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
-		/// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
-		/// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
-		public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
-			float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
-		{
-			return GetArmorDamageReduction(AttackerLevel, 83, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs, ArmorPenetrationRating);
-		}
+        // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
+        // Ghostcrawler vs theorycraft.
+        /// <summary>
+        /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
+        /// </summary>
+        /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetLevel">Level of Target</param>
+        /// <param name="TargetArmor">Armor of Target</param>
+        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
+        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
+        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
+        /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
+        public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+        {
+            return GetArmorDamageReduction(AttackerLevel, 83, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs, ArmorPenetrationRating);
+        }
 
-		// http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
-		// Ghostcrawler vs theorycraft.
-		/// <summary>
-		/// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
-		/// </summary>
-		/// <param name="AttackerLevel">Level of Attacker</param>
-		/// <param name="TargetLevel">Level of Target</param>
-		/// <param name="TargetArmor">Armor of Target</param>
-		/// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
-		/// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
-		/// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
-		/// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
-		public static float GetArmorDamageReduction(int AttackerLevel, int TargetLevel, float TargetArmor,
-			float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
-		{
-			float ArmorConstant = 400 + 85 * TargetLevel + 4.5f * 85 * (TargetLevel - 59);
-			TargetArmor *= (1f - ArmorIgnoreDebuffs);
-			float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-			TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating) + ArmorIgnoreBuffs);
+        // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
+        // Ghostcrawler vs theorycraft.
+        /// <summary>
+        /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
+        /// </summary>
+        /// <param name="AttackerLevel">Level of Attacker</param>
+        /// <param name="TargetLevel">Level of Target</param>
+        /// <param name="TargetArmor">Armor of Target</param>
+        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
+        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
+        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
+        /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
+        public static float GetArmorDamageReduction(int AttackerLevel, int TargetLevel, float TargetArmor,
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+        {
+            float ArmorConstant = 400 + 85 * TargetLevel + 4.5f * 85 * (TargetLevel - 59);
+            TargetArmor *= (1f - ArmorIgnoreDebuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+            TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating) + ArmorIgnoreBuffs);
 
-			return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
-		}
+            return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
+        }
 
-		/// <summary>
+        /// <summary>
         /// Returns how much Armor Penetration rating gets you to a given Armor Reduction (inverse of GetArmorDamageReduction).
         /// For use with GrimToll-style procs
         /// </summary>

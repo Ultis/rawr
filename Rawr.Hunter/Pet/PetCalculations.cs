@@ -894,9 +894,9 @@ namespace Rawr.Hunter
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
 #if RAWR3 || RAWR4 || SILVERLIGHT
-            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, StatsPetBuffs.TargetArmorReduction, 0f, 0f);
 #else
-            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.ArmorPenetration, 0f, 0f);
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.TargetArmorReduction, 0f, 0f);
 #endif
 
             float damageAdjustBase = 1f

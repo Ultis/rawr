@@ -71,7 +71,8 @@ namespace Rawr.Retribution
 
             float targetArmor = StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - 80];
 
-            float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor, Stats.ArmorPenetration, 0f, Stats.ArmorPenetrationRating);
+            float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor,
+                    Stats.TargetArmorReduction, Stats.ArmorPenetration, Stats.ArmorPenetrationRating);
             float drAW = dr * ((1 - awUptime) + (1 - .25f * _talents.SanctifiedWrath) * awUptime);
             float drNoAW = dr;
             ArmorReduction = 1f - drAW;

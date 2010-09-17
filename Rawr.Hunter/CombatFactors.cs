@@ -88,9 +88,9 @@ namespace Rawr.Hunter {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs = 0.0f;
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.TargetArmorReduction, arpenBuffs, Math.Max(0f, StatS.ArmorPenetrationRating)));
 #else
-                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.ArmorPenetration, arpenBuffs, StatS.ArmorPenetrationRating));
+                    _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.TargetArmorReduction, arpenBuffs, Math.Max(0f, StatS.ArmorPenetrationRating)));
 #endif
                 }
                 return _DamageReduction;

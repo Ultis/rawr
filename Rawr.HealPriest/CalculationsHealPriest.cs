@@ -901,7 +901,7 @@ namespace Rawr.HealPriest
 
             bool No = (
                 stats.Strength + stats.AttackPower
-                + stats.ArmorPenetration + stats.ArmorPenetrationRating
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction
                 + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating
                 + stats.Parry + stats.ParryRating

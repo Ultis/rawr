@@ -1101,7 +1101,7 @@ namespace Rawr.DPSWarr {
             {
                 float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
                 if (!_SE_ShatteringThrow.ContainsKey(value)) {
-                    _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                    _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
                 }
                 statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
             }
@@ -1124,7 +1124,7 @@ namespace Rawr.DPSWarr {
             if (SN.Validated) {
                 float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
                 if (!_SE_SunderArmor.ContainsKey(value)) {
-                    _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { ArmorPenetration = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                    _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
                 }
                 statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
             }

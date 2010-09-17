@@ -879,6 +879,7 @@ namespace Rawr.Enhance
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                    TargetArmorReduction = stats.TargetArmorReduction,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -1000,7 +1001,7 @@ namespace Rawr.Enhance
         {
             return (stats.Agility + stats.Intellect + stats.Stamina + stats.Strength + stats.Spirit +
                 stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage + stats.Health +
-                stats.ArmorPenetration + stats.ArmorPenetrationRating +
+                stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction +
                 stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
                 stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 

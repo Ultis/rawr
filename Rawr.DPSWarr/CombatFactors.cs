@@ -165,7 +165,7 @@ namespace Rawr.DPSWarr {
 #else
                         CalcOpts.TargetArmor,
 #endif
-                        StatS.ArmorPenetration, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
+                        StatS.TargetArmorReduction, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
                 }
                 return _DamageReduction;
             }
