@@ -106,24 +106,33 @@ namespace Rawr.Rogue
             APStats = aPStats;
 
             #region Talent bonuses
+#if !RAWR4
             BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
             BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
             BonusEnergyRegenMultiplier = 0.08f * Char.RogueTalents.Vitality;
             BonusHemoDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks + 0.02f * Char.RogueTalents.SinisterCalling;
             BonusIPFrequencyMultiplier = 0.1f * Char.RogueTalents.ImprovedPoisons;
+            
             BonusMaxEnergy = (10 + (Char.RogueTalents.GlyphOfVigor ? 10 : 0)) * Char.RogueTalents.Vigor;
+#endif
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
+#if !RAWR4
             ChanceOnCPOnSSCrit = Char.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f;
             ChanceOnEnergyOnCrit = 2f * (Char.RogueTalents.FocusedAttacks > 2 ? 1f : (0.33f * Char.RogueTalents.FocusedAttacks));
+#endif
             ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
             ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
+#if !RAWR4
             ChanceOnMHAttackOnSwordAxeHit = 0.01f * Char.RogueTalents.HackAndSlash;
+#endif
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner == 3 ? 1f : (0.33f * Char.RogueTalents.MasterPoisoner);
             ChanceOnSnDResetOnEnvenom = 0.2f * Char.RogueTalents.CutToTheChase;
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
+#if !RAWR4
             FlurryCostReduction = Char.RogueTalents.GlyphOfBladeFlurry ? 25 : 0;
             ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
             ToTTCostReduction = 5 * Char.RogueTalents.FilthyTricks;
+#endif
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
             #endregion
 
@@ -297,7 +306,11 @@ namespace Rawr.Rogue
             float wPCount = 0f;
             float aPCount = 0f;
             float iPProcRate = 0.2f * (1f + BonusIPFrequencyMultiplier) / 1.4f;
+#if RAWR4
+            float dPApplyChance = 0.3f;
+#else
             float dPApplyChance = 0.3f + 0.04f * Char.RogueTalents.ImprovedPoisons;
+#endif
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
@@ -358,7 +371,11 @@ namespace Rawr.Rogue
             float kSDmgBonus = 1.2f;
             if (Char.RogueTalents.KillingSpree > 0)
             {
+#if RAWR4
+                float kSCount = Duration / (120f);
+#else
                 float kSCount = Duration / (120f - (Char.RogueTalents.GlyphOfKillingSpree ? 45f : 0f));
+#endif
                 kSDuration = kSCount * 2.5f;
                 kSAttacks = 5f * kSCount;
             }
@@ -387,7 +404,11 @@ namespace Rawr.Rogue
 
             float damageTotal = mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + 
                                   mutiDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal + anestheticPoisonTotal;
+#if RAWR4
+            //if (Char.RogueTalents.HungerForBlood > 0 && !CalcOpts.BleedIsUp && ruptCount == 0) damageTotal /= 1.05f + 0.03f * (Char.RogueTalents.GlyphOfHungerforBlood ? 1 : 0);
+#else
             if (Char.RogueTalents.HungerForBlood > 0 && !CalcOpts.BleedIsUp && ruptCount == 0) damageTotal /= 1.05f + 0.03f * (Char.RogueTalents.GlyphOfHungerforBlood ? 1 : 0);
+#endif
             #endregion
 
             return new RogueRotationCalculation()

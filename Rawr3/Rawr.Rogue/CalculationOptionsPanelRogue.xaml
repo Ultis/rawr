@@ -73,63 +73,66 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Combo Point Generator: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="0" SelectedIndex="{Binding CustomCPG, Mode=TwoWay}">
+                <TextBlock Text="Optimize using only Custom Rotation: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" />
+                <CheckBox Grid.Column="1" Grid.Row="0" Margin="2" IsChecked="{Binding CustomUseRupt, Mode=TwoWay}" />
+                <TextBlock Text="Combo Point Generator: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="1" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedIndex="{Binding CustomCPG, Mode=TwoWay}">
                     <ComboBoxItem Content="Mutilate"/>
                     <ComboBoxItem Content="Sinister Strike"/>
                     <ComboBoxItem Content="Backstab"/>
                     <ComboBoxItem Content="Hemorrhage"/>
                 </ComboBox>
-                <TextBlock Text="Slice and Dice CP: " VerticalAlignment="Center" Margin="2" Grid.Row="1" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedItem="{Binding CustomCPSnD, Mode=TwoWay}">
+                <TextBlock Text="Slice and Dice CP: " VerticalAlignment="Center" Margin="2" Grid.Row="2" Grid.Column="0" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" SelectedItem="{Binding CustomCPSnD, Mode=TwoWay}">
                     <System:Int32>1</System:Int32>
                     <System:Int32>2</System:Int32>
                     <System:Int32>3</System:Int32>
                     <System:Int32>4</System:Int32>
                     <System:Int32>5</System:Int32>
                 </ComboBox>
-                <TextBlock Text="Finisher: " VerticalAlignment="Center" Margin="2" Grid.Row="2" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="2" SelectedIndex="{Binding CustomFinisher, Mode=TwoWay, NotifyOnValidationError=True, BindsDirectlyToSource=True}">
+                <TextBlock Text="Finisher: " VerticalAlignment="Center" Margin="2" Grid.Row="3" Grid.Column="0" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="3" SelectedIndex="{Binding CustomFinisher, Mode=TwoWay, NotifyOnValidationError=True, BindsDirectlyToSource=True}">
                     <ComboBoxItem Content="None"/>
                     <ComboBoxItem Content="Eviscerate"/>
                     <ComboBoxItem Content="Envenom"/>
                 </ComboBox>
-                <TextBlock Text="Finisher CP: " VerticalAlignment="Center" Margin="2" Grid.Row="3" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="3" SelectedItem="{Binding CustomCPFinisher, Mode=TwoWay}">
+                <TextBlock Text="Finisher CP: " VerticalAlignment="Center" Margin="2" Grid.Row="4" Grid.Column="0" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="4" SelectedItem="{Binding CustomCPFinisher, Mode=TwoWay}">
                     <System:Int32>1</System:Int32>
                     <System:Int32>2</System:Int32>
                     <System:Int32>3</System:Int32>
                     <System:Int32>4</System:Int32>
                     <System:Int32>5</System:Int32>
                 </ComboBox>
-                <TextBlock Text="Mainhand Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="4" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="4" SelectedIndex="{Binding CustomMHPoison, Mode=TwoWay}">
+                <TextBlock Text="Mainhand Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="5" Grid.Column="0" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="5" SelectedIndex="{Binding CustomMHPoison, Mode=TwoWay}">
                     <ComboBoxItem Content="None / Other"/>
                     <ComboBoxItem Content="Instant"/>
                     <ComboBoxItem Content="Deadly"/>
                     <ComboBoxItem Content="Wound"/>
                     <ComboBoxItem Content="Anesthetic"/>
                 </ComboBox>
-                <TextBlock Text="Offhand Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="5" Grid.Column="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="5" SelectedIndex="{Binding CustomOHPoison, Mode=TwoWay}">
+                <TextBlock Text="Offhand Poison: " VerticalAlignment="Center" Margin="2" Grid.Row="6" Grid.Column="0" />
+                <ComboBox Margin="2" Grid.Column="1" Grid.Row="6" SelectedIndex="{Binding CustomOHPoison, Mode=TwoWay}">
                     <ComboBoxItem Content="None / Other"/>
                     <ComboBoxItem Content="Instant"/>
                     <ComboBoxItem Content="Deadly"/>
                     <ComboBoxItem Content="Wound"/>
                     <ComboBoxItem Content="Anesthetic"/>
                 </ComboBox>
-                <TextBlock Text="Use Rupture: " VerticalAlignment="Center" Margin="2" Grid.Row="6" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="6" Margin="2" IsChecked="{Binding CustomUseRupt, Mode=TwoWay}" />
-                <TextBlock Text="Use Tricks of the Trade: " VerticalAlignment="Center" Margin="2" Grid.Row="7" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="7" Margin="2" IsChecked="{Binding CustomUseTotT, Mode=TwoWay}" />
-                <TextBlock Text="Use Expose Armor: " VerticalAlignment="Center" Margin="2" Grid.Row="8" Grid.Column="0" />
-                <CheckBox Grid.Column="1" Grid.Row="8" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" IsEnabled="False" />
+                <TextBlock Text="Use Rupture: " VerticalAlignment="Center" Margin="2" Grid.Row="7" Grid.Column="0" />
+                <CheckBox Grid.Column="1" Grid.Row="7" Margin="2" IsChecked="{Binding CustomUseRupt, Mode=TwoWay}" />
+                <TextBlock Text="Use Tricks of the Trade: " VerticalAlignment="Center" Margin="2" Grid.Row="8" Grid.Column="0" />
+                <CheckBox Grid.Column="1" Grid.Row="8" Margin="2" IsChecked="{Binding CustomUseTotT, Mode=TwoWay}" />
+                <TextBlock Text="Use Expose Armor: " VerticalAlignment="Center" Margin="2" Grid.Row="9" Grid.Column="0" />
+                <CheckBox Grid.Column="1" Grid.Row="9" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" IsEnabled="False" />
             </Grid>
         </layoutToolkit:AccordionItem>
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" IsSelected="True">
