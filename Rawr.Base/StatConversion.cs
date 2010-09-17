@@ -508,7 +508,6 @@ namespace Rawr
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// </summary>
         /// <param name="AttackerLevel">Level of Attacker</param>
-        /// <param name="TargetLevel">Level of Target</param>
         /// <param name="TargetArmor">Armor of Target</param>
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>

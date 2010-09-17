@@ -1325,9 +1325,9 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.ArmorPenetrationStance = ((!combatFactors.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
                 calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
-                calculatedStats.ArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
+                calculatedStats.ArmorPenetration = Math.Min(1f, calculatedStats.ArmorPenetrationMaceSpec
                     + calculatedStats.ArmorPenetrationStance
-                    + calculatedStats.ArmorPenetrationRating2Perc;
+                    + calculatedStats.ArmorPenetrationRating2Perc);
                 calculatedStats.HasteRating = stats.HasteRating;
                 calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
                 
@@ -1748,6 +1748,7 @@ These numbers to do not include racial bonuses.",
 
             #region ArPen Lists
             List<float> tempArPenRatings = new List<float>();
+            List<float> tempArPenRatingsCapLimited = new List<float>();
             List<float> tempArPenRatingUptimes = new List<float>();
             List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
             List<float> tempArPenEffectIntervals = new List<float>();
@@ -1857,13 +1858,11 @@ These numbers to do not include racial bonuses.",
             if (tempArPenRatings.Count > 0f)
             {
                 Stats originalStats = charStruct.combatFactors.StatS;
-                int LevelDif =
 #if RAWR3 || RAWR4 || SILVERIGHT
-                    charStruct.bossOpts.Level
+                int LevelDif = charStruct.bossOpts.Level- charStruct.Char.Level;
 #else
-                    charStruct.calcOpts.TargetLevel
+                int LevelDif = charStruct.calcOpts.TargetLevel - charStruct.Char.Level;
 #endif
-                    - charStruct.Char.Level;
 
                 float arpenBuffs =
 #if !RAWR4
@@ -1871,20 +1870,23 @@ These numbers to do not include racial bonuses.",
 #endif
                                 (!charStruct.combatFactors.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
-                float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating));
-                float ProccedArmorReduction = 0f;
+                /*float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
+                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating));*/
+                float AverageArmorPenRatingsFromProcs = 0f;
+                float tempCap = StatConversion.RATING_PER_ARMORPENETRATION - StatConversion.GetRatingFromArmorPenetration(arpenBuffs);
+
                 for (int i = 0; i < tempArPenRatings.Count; i++)
                 {
-                    ProccedArmorReduction += tempArPenRatingUptimes[i] *
-                                StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating + tempArPenRatings[i]));
+                    tempArPenRatingsCapLimited.Add(Math.Max(0f, Math.Min(tempCap - originalStats.ArmorPenetrationRating, tempArPenRatings[i])));
+                    /*float bah = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
+                                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating + tempArPenRatingsCapLimited[i]));*/
+                    AverageArmorPenRatingsFromProcs += tempArPenRatingUptimes[i] * tempArPenRatingsCapLimited[i];
                 }
                 Stats dummyStats = new Stats();
                 
-                float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);
-                originalStats.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);                
+                /*float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
+                    originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);*/
+                originalStats.ArmorPenetrationRating += AverageArmorPenRatingsFromProcs;//(procArp - originalStats.ArmorPenetrationRating);                
             }
 
             IterativeSpecialEffectsStats(charStruct, firstPass, critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
