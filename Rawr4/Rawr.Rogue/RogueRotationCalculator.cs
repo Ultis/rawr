@@ -111,7 +111,7 @@ namespace Rawr.Rogue
             ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;//??
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
             ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
-            //??EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;
+            EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;//??
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
             ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
             ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
