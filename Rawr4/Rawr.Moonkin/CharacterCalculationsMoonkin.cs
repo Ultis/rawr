@@ -22,7 +22,7 @@ namespace Rawr.Moonkin
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
         public float FightLength { get; set; }
-        public float EclipseBase = 0.2f;
+        public float EclipseBase = 0.25f;
         private Stats baseStats;
         public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
         public RotationData SelectedRotation { get; set; }
