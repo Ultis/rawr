@@ -80,9 +80,9 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Optimize using only Custom Rotation: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" />
+                <TextBlock Text="Don't optimize rotation: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="0" />
                 <CheckBox Grid.Column="1" Grid.Row="0" Margin="2" IsChecked="{Binding CustomUseRupt, Mode=TwoWay}" />
-                <TextBlock Text="Combo Point Generator: " VerticalAlignment="Center" Margin="2" Grid.Row="0" Grid.Column="1" />
+                <TextBlock Text="Combo Point Generator: " VerticalAlignment="Center" Margin="2" Grid.Row="1" Grid.Column="0" />
                 <ComboBox Margin="2" Grid.Column="1" Grid.Row="1" SelectedIndex="{Binding CustomCPG, Mode=TwoWay}">
                     <ComboBoxItem Content="Mutilate"/>
                     <ComboBoxItem Content="Sinister Strike"/>

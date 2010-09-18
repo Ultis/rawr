@@ -1285,6 +1285,7 @@ namespace Rawr
                 Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f },
                 IsTargetDebuff = true,
             });
+#if !RAWR4
             defaultBuffs.Add(new Buff
             {
                 Name = "Master Poisoner",
@@ -1293,6 +1294,7 @@ namespace Rawr
                 Stats = { PhysicalCrit = 0.03f, SpellCritOnTarget = 0.03f },
                 IsTargetDebuff = true,
             });
+#endif
             defaultBuffs.Add(new Buff
             {
                 Name = "Totem of Wrath",
@@ -1380,6 +1382,24 @@ namespace Rawr
             #endregion
 
             #region Spell Damage Taken
+#if RAWR4
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Master Poisoner",
+                Source = "Rogue",
+                Group = "Spell Damage Taken",
+                Stats =
+                {
+                    BonusFireDamageMultiplier = 0.08f,
+                    BonusFrostDamageMultiplier = 0.08f,
+                    BonusArcaneDamageMultiplier = 0.08f,
+                    BonusShadowDamageMultiplier = 0.08f,
+                    BonusHolyDamageMultiplier = 0.08f,
+                    BonusNatureDamageMultiplier = 0.08f
+                },
+                IsTargetDebuff = true,
+            });
+#endif
             defaultBuffs.Add(new Buff
             {
                 Name = "Curse of the Elements",

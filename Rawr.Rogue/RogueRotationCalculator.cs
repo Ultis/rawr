@@ -49,12 +49,14 @@ namespace Rawr.Rogue
         public float BonusStealthEnergyRegen { get; set; }
         public float ChanceOnCPOnSSCrit { get; set; }
         public float ChanceOnEnergyOnCrit { get; set; }
+        public float ChanceOnEnergyOnGarrRuptTick { get; set; }
         public float ChanceOnEnergyOnOHAttack { get; set; }
         public float ChanceOnEnergyPerCPFinisher { get; set; }
         public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
         public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
-        public float ChanceOnSnDResetOnEnvenom { get; set; }
+        public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPOnFinisher { get; set; }
+        public float EnergyOnBelow35BS { get; set; }
         public float FlurryCostReduction { get; set; }
         public float ToTTCDReduction { get; set; }
         public float ToTTCostReduction { get; set; }
@@ -106,33 +108,31 @@ namespace Rawr.Rogue
             APStats = aPStats;
 
             #region Talent bonuses
-#if !RAWR4
+#if RAWR4
+            ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;//??
+            ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
+            ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
+            //??EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;
+#else
             BonusFlurryHaste = 0.2f * Char.RogueTalents.BladeFlurry;
             BonusEnergyRegen = (15 + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * Char.RogueTalents.AdrenalineRush;
             BonusEnergyRegenMultiplier = 0.08f * Char.RogueTalents.Vitality;
             BonusHemoDamageMultiplier = 0.1f * Char.RogueTalents.SurpriseAttacks + 0.02f * Char.RogueTalents.SinisterCalling;
             BonusIPFrequencyMultiplier = 0.1f * Char.RogueTalents.ImprovedPoisons;
-            
             BonusMaxEnergy = (10 + (Char.RogueTalents.GlyphOfVigor ? 10 : 0)) * Char.RogueTalents.Vigor;
-#endif
-            BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
-#if !RAWR4
             ChanceOnCPOnSSCrit = Char.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f;
             ChanceOnEnergyOnCrit = 2f * (Char.RogueTalents.FocusedAttacks > 2 ? 1f : (0.33f * Char.RogueTalents.FocusedAttacks));
-#endif
-            ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
-            ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
-#if !RAWR4
             ChanceOnMHAttackOnSwordAxeHit = 0.01f * Char.RogueTalents.HackAndSlash;
-#endif
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner == 3 ? 1f : (0.33f * Char.RogueTalents.MasterPoisoner);
-            ChanceOnSnDResetOnEnvenom = 0.2f * Char.RogueTalents.CutToTheChase;
-            CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
-#if !RAWR4
+            ChanceOnSnDResetOnEvisEnv = 0.2f * Char.RogueTalents.CutToTheChase;
             FlurryCostReduction = Char.RogueTalents.GlyphOfBladeFlurry ? 25 : 0;
             ToTTCDReduction = 5 * Char.RogueTalents.FilthyTricks;
             ToTTCostReduction = 5 * Char.RogueTalents.FilthyTricks;
 #endif
+            BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
+            ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
+            ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
+            CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
             #endregion
 
@@ -174,6 +174,9 @@ namespace Rawr.Rogue
                                          ((Duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
                                          (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCostReduction)) * (Duration - 5f) / (30f - ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (Duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
+#if RAWR4
+                                         25 * Char.RogueTalents.ColdBlood * Duration / 120f +
+#endif
                                          energyRegen * 2f * BonusEnergyRegen * (Duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * Duration / 120f : 0f);
             float averageGCD = 1f / (1f - AvoidedMHAttacks);
@@ -205,7 +208,7 @@ namespace Rawr.Rogue
             float snDDuration = SnDStats.DurationAverage + 3f * Math.Min(5f, averageSnDCP)
                                 - snDRuptConflict;
             float snDCount = Duration / snDDuration;
-            snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - ChanceOnSnDResetOnEnvenom): snDCount));
+            snDCount = Math.Max(1f, (finisher == 2 ?  snDCount * (1f - ChanceOnSnDResetOnEvisEnv): snDCount));
             float snDTotalEnergy = snDCount * (SnDStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageSnDCP));
             float snDCPRequired = snDCount * (averageSnDCP - CPOnFinisher);
             float cpgToUse = snDCPRequired / CPPerCPG;
@@ -440,7 +443,7 @@ namespace Rawr.Rogue
                 OHPoison = oHPoison,
 
                 UseTotT = useTotT,
-                CutToTheChase = ChanceOnSnDResetOnEnvenom,
+                CutToTheChase = ChanceOnSnDResetOnEvisEnv,
             };
         }
 
@@ -489,6 +492,8 @@ namespace Rawr.Rogue
 
                 if (EnvenomCount > 0 && CutToTheChase == 1) rotation.AppendFormat("*Use {0}cp Slice and Dice, kept up with Envenom.\r\n", SnDCP);
                 else if (EnvenomCount > 0 && CutToTheChase > 0) rotation.AppendFormat("*Use {0}cp Slice and Dice, partially kept up with Envenom.\r\n", SnDCP);
+                else if (EvisCount > 0 && CutToTheChase == 1) rotation.AppendFormat("*Use {0}cp Slice and Dice, kept up with Eviscerate.\r\n", SnDCP);
+                else if (EvisCount > 0 && CutToTheChase > 0) rotation.AppendFormat("*Use {0}cp Slice and Dice, partially kept up with Eviscerate.\r\n", SnDCP);
                 else rotation.AppendFormat("*Keep {0}cp Slice and Dice up.\r\n", SnDCP);
                 if (RuptCount > 0) rotation.Append("Keep 5cp Rupture up.\r\n");
                 if (EvisCount > 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points.\r\n", FinisherCP);
