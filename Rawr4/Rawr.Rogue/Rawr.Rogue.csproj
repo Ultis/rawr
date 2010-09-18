@@ -87,18 +87,14 @@
     <Compile Include="..\..\Rawr.Rogue\CalculationOptionsRogue.cs">
       <Link>CalculationOptionsRogue.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Rogue\CalculationsRogue.cs">
-      <Link>CalculationsRogue.cs</Link>
-    </Compile>
+    <Compile Include="CalculationsRogue.cs" />
     <Compile Include="..\..\Rawr.Rogue\CharacterCalculationsRogue.cs">
       <Link>CharacterCalculationsRogue.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Rogue\RogueAbilityStats.cs">
       <Link>RogueAbilityStats.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Rogue\RogueRotationCalculator.cs">
-      <Link>RogueRotationCalculator.cs</Link>
-    </Compile>
+    <Compile Include="RogueRotationCalculator.cs" />
     <Compile Include="..\..\Rawr3\Rawr.Rogue\CalculationOptionsPanelRogue.xaml.cs">
       <Link>CalculationOptionsPanelRogue.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelRogue.xaml</DependentUpon>
