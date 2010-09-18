@@ -81,7 +81,7 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Spellstorm,
-                            BaseEnergy = 10,
+                            BaseEnergy = 15,
                             CriticalDamageModifier = 1.5f
                         }
                     };
@@ -604,6 +604,17 @@ namespace Rawr.Moonkin
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
             int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
             float totalInnervateMana = numInnervates * calcs.BasicStats.Mana * (0.2f * (character.DruidTalents.GlyphOfInnervate ? 1.5f : 1.0f));
+            switch (character.DruidTalents.Dreamstate)
+            {
+                case 1:
+                    totalInnervateMana *= 1.1f;
+                    break;
+                case 2:
+                    totalInnervateMana *= 1.3f;
+                    break;
+                default:
+                    break;
+            }
 
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
@@ -741,14 +752,14 @@ namespace Rawr.Moonkin
             switch (talents.StarlightWrath)
             {
                 case 1:
-                    Starfire.BaseCastTime -= 0.15f;
-                    Wrath.BaseCastTime -= 0.15f;
-                    Starsurge.BaseCastTime -= 0.15f;
+                    Starfire.BaseCastTime -= 0.1f;
+                    Wrath.BaseCastTime -= 0.1f;
+                    Starsurge.BaseCastTime -= 0.1f;
                     break;
                 case 2:
-                    Starfire.BaseCastTime -= 0.25f;
-                    Wrath.BaseCastTime -= 0.25f;
-                    Starsurge.BaseCastTime -= 0.25f;
+                    Starfire.BaseCastTime -= 0.2f;
+                    Wrath.BaseCastTime -= 0.2f;
+                    Starsurge.BaseCastTime -= 0.2f;
                     break;
                 case 3:
                     Starfire.BaseCastTime -= 0.5f;
@@ -762,11 +773,9 @@ namespace Rawr.Moonkin
             float moonfireDotGlyph = talents.GlyphOfMoonfire ? 0.2f : 0.0f;
             float insectSwarmGlyph = talents.GlyphOfInsectSwarm ? 0.3f : 0.0f;
             // Add spell-specific damage
-            // Moonfire, Insect Swarm: Dot Damage +(0.02 * Genesis) (Additive with Genesis/Glyph/Set bonus)
-            Moonfire.DotEffect.AllDamageModifier *= 1 + 0.02f * talents.Genesis
-                                                      + moonfireDotGlyph;
-            InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * talents.Genesis
-                                                         + insectSwarmGlyph;
+            // Moonfire, Insect Swarm: glyphs
+            Moonfire.DotEffect.AllDamageModifier *= 1 + moonfireDotGlyph;
+            InsectSwarm.DotEffect.AllDamageModifier *= 1 + insectSwarmGlyph;
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
             Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
             // Starfire, Wrath: Damage +0.04 for 4T9
@@ -774,6 +783,9 @@ namespace Rawr.Moonkin
             Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
             // Moonfire: 9 seconds extra duration for glyph of Starfire
             Moonfire.DotEffect.Duration += talents.GlyphOfStarfire ? 9 : 0;
+            // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
+            Moonfire.DotEffect.Duration += 0.2f * talents.Genesis;
+            InsectSwarm.DotEffect.Duration += 0.2f * talents.Genesis;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond
@@ -789,13 +801,6 @@ namespace Rawr.Moonkin
             Wrath.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             InsectSwarm.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Starsurge.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
-
-            // Energy bonuses
-            Starfire.CriticalEnergy += 4 * talents.Euphoria;
-            Starsurge.CriticalEnergy += 4 * talents.Euphoria;
-            Wrath.CriticalEnergy += 2 * talents.Euphoria;
-
-            Starsurge.BaseEnergy += 3 * talents.LunarGuidance;
 
             // Add set bonuses
             // 2T6

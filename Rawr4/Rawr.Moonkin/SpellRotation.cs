@@ -106,64 +106,62 @@ namespace Rawr.Moonkin
         public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste, float masteryPoints)
         {
             Spell sf = new Spell(Solver.Starfire);
-            Spell solarSS = new Spell(Solver.Starsurge);
-            Spell lunarSS = new Spell(Solver.Starsurge);
+            Spell ss = new Spell(Solver.Starsurge);
             Spell w = new Spell(Solver.Wrath);
             Spell mf = new Spell(Solver.Moonfire);
             Spell iSw = new Spell(Solver.InsectSwarm);
-
-            // Lunar-directed Starsurge generates lunar energy, thus changing the energy generation rate with Euphoria
-            lunarSS.CriticalEnergy = 2 * talents.Euphoria;
+            Spell sUf = new Spell(Solver.Moonfire);
+            sUf.School = SpellSchool.Nature;
 
             Spell eclipseSF = new Spell(Solver.Starfire);
             Spell eclipseW = new Spell(Solver.Wrath);
             Spell eclipseMF = new Spell(Solver.Moonfire);
             Spell eclipseIS = new Spell(Solver.InsectSwarm);
-            Spell eclipseSolarSS = new Spell(Solver.Starsurge);
-            Spell eclipseLunarSS = new Spell(Solver.Starsurge);
+            Spell eclipseSS = new Spell(Solver.Starsurge);
+            Spell eclipseSuF = new Spell(sUf);
 
             float eclipseBonus = 1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus;
 
             eclipseSF.AllDamageModifier *= eclipseBonus;
             eclipseW.AllDamageModifier *= eclipseBonus;
-            eclipseSolarSS.AllDamageModifier *= eclipseBonus;
-            eclipseLunarSS.AllDamageModifier *= eclipseBonus;
+            eclipseSS.AllDamageModifier *= eclipseBonus;
             eclipseMF.AllDamageModifier *= eclipseBonus;
             eclipseMF.DotEffect.AllDamageModifier *= eclipseBonus;
             eclipseIS.DotEffect.AllDamageModifier *= eclipseBonus;
+            eclipseSuF.AllDamageModifier *= eclipseBonus;
+            eclipseSuF.DotEffect.AllDamageModifier *= eclipseBonus;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(calcs, ref eclipseSF, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref solarSS, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref lunarSS, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref eclipseSolarSS, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref eclipseLunarSS, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(calcs, ref eclipseSS, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste);
             DoMainNuke(calcs, ref eclipseW, spellPower, spellHit, spellCrit, spellHaste);
             DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste);
             DoDotSpell(calcs, ref eclipseMF, spellPower, spellHit, spellCrit, spellHaste);
+            DoDotSpell(calcs, ref sUf, spellPower, spellHit, spellCrit, spellHaste);
+            DoDotSpell(calcs, ref eclipseSuF, spellPower, spellHit, spellCrit, spellHaste);
             DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste);
             DoDotSpell(calcs, ref eclipseIS, spellPower, spellHit, spellCrit, spellHaste);
 
             float barHalfSize = 100f;
-            float starSurgeCD = 15.0f + solarSS.CastTime;
+            float starSurgeCD = 15.0f + ss.CastTime;
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
-            float lunarStarsurgeEnergyRate = lunarSS.AverageEnergy / starSurgeCD;
-            float solarStarsurgeEnergyRate = solarSS.AverageEnergy / starSurgeCD;
+            float starsurgeEnergyRate = ss.AverageEnergy / starSurgeCD;
 
             float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
             float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
-            float starSurgeRatio = solarSS.CastTime / starSurgeCD;
+            float starSurgeRatio = ss.CastTime / starSurgeCD;
             float mainNukeRatio = (1 - moonfireRatio) * (1 - insectSwarmRatio) * (1 - starSurgeRatio);
             float sfRatioAtZeroEnergy = wrathEnergyRate / (wrathEnergyRate + starfireEnergyRate);
 
-            float preLunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 2 : (barHalfSize + (RotationData.SolarEclipseMode == EclipseMode.Unused ? sf.AverageEnergy / 2 : -w.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? lunarSS.AverageEnergy : 0)) / w.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / wrathEnergyRate) + (RotationData.SolarEclipseMode == EclipseMode.Unused ? 1 : 0)) * w.CastTime;
+            float preLunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 2 : (barHalfSize + (RotationData.SolarEclipseMode == EclipseMode.Unused ? sf.AverageEnergy / 2 : -w.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? ss.AverageEnergy : 0)) / w.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / wrathEnergyRate) + (RotationData.SolarEclipseMode == EclipseMode.Unused ? 1 : 0)) * w.CastTime;
 
-            float lunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseSF.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? lunarSS.AverageEnergy : 0)) / eclipseSF.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? lunarStarsurgeEnergyRate : 0) / starfireEnergyRate) + 1 * eclipseSF.CastTime;
+            float lunarTime = RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseSF.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? ss.AverageEnergy : 0)) / eclipseSF.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / starfireEnergyRate) + 1 * eclipseSF.CastTime;
 
             float remainingLunarTime = 45f * mainNukeRatio - lunarTime - (RotationData.SolarEclipseMode == EclipseMode.Unused ? preLunarTime : 0);
-            float addedLunarTime = remainingLunarTime * (sfRatioAtZeroEnergy + lunarStarsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
+            float addedLunarTime = remainingLunarTime * (sfRatioAtZeroEnergy + starsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
             float addedPreLunarTime = remainingLunarTime - addedLunarTime;
             if (RotationData.LunarEclipseMode == EclipseMode.Stretched)
             {
@@ -171,12 +169,12 @@ namespace Rawr.Moonkin
                 lunarTime += addedLunarTime;
             }
 
-            float preSolarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 1 : (barHalfSize + (RotationData.LunarEclipseMode == EclipseMode.Unused ? w.AverageEnergy / 2f : -sf.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? solarSS.AverageEnergy : 0)) / sf.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / starfireEnergyRate) - (RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : 1)) * sf.CastTime;
+            float preSolarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (RotationData.LunarEclipseMode == EclipseMode.Stretched ? 1 : (barHalfSize + (RotationData.LunarEclipseMode == EclipseMode.Unused ? w.AverageEnergy / 2f : -sf.AverageEnergy / 2f) - (RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse ? ss.AverageEnergy : 0)) / sf.AverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / starfireEnergyRate) - (RotationData.LunarEclipseMode == EclipseMode.Unused ? 0 : 1)) * sf.CastTime;
 
-            float solarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseW.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? solarSS.AverageEnergy : 0)) / eclipseW.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? solarStarsurgeEnergyRate : 0) / wrathEnergyRate) * eclipseW.CastTime;
+            float solarTime = RotationData.SolarEclipseMode == EclipseMode.Unused ? 0 : (barHalfSize + eclipseW.AverageEnergy / 2f + (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse ? ss.AverageEnergy : 0)) / eclipseW.AverageEnergy * (1 + (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / wrathEnergyRate) * eclipseW.CastTime;
 
             float remainingSolarTime = 45f * mainNukeRatio - solarTime - (RotationData.LunarEclipseMode == EclipseMode.Unused ? preSolarTime : 0);
-            float addedSolarTime = remainingSolarTime * (1 - sfRatioAtZeroEnergy + solarStarsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
+            float addedSolarTime = remainingSolarTime * (1 - sfRatioAtZeroEnergy + starsurgeEnergyRate / (wrathEnergyRate + starfireEnergyRate));
             float addedPreSolarTime = remainingSolarTime - addedSolarTime;
 
             if (RotationData.SolarEclipseMode == EclipseMode.Stretched)
@@ -242,11 +240,11 @@ namespace Rawr.Moonkin
             {
                 case StarsurgeMode.OnCooldown:
                     starSurgeTime = starSurgeRatio * accumulatedDuration / (1 - starSurgeRatio);
-                    RotationData.StarSurgeCount = starSurgeTime / solarSS.CastTime;
+                    RotationData.StarSurgeCount = starSurgeTime / ss.CastTime;
                     break;
                 case StarsurgeMode.InEclipse:
                 case StarsurgeMode.OutOfEclipse:
-                    accumulatedDuration += solarSS.CastTime * 2;
+                    accumulatedDuration += ss.CastTime * 2;
                     RotationData.StarSurgeCount = 2;
                     break;
                 case StarsurgeMode.Unused:
@@ -259,9 +257,9 @@ namespace Rawr.Moonkin
             float timeInSolar = (preSolarTime + solarTime) / accumulatedDuration;
             float timeInLunar = (preLunarTime + lunarTime) / accumulatedDuration;
 
-            RotationData.StarSurgeAvgCast = solarSS.CastTime;
-            RotationData.StarSurgeAvgEnergy = solarSS.AverageEnergy * timeInSolar + lunarSS.AverageEnergy * timeInLunar;
-            RotationData.StarSurgeAvgHit = solarUptime * eclipseSolarSS.DamagePerHit + lunarUptime * eclipseLunarSS.DamagePerHit + (1 - solarUptime - lunarUptime) * solarSS.DamagePerHit;
+            RotationData.StarSurgeAvgCast = ss.CastTime;
+            RotationData.StarSurgeAvgEnergy = ss.AverageEnergy * timeInSolar + ss.AverageEnergy * timeInLunar;
+            RotationData.StarSurgeAvgHit = (solarTime + lunarUptime) * eclipseSS.DamagePerHit + (1 - solarUptime - lunarUptime) * ss.DamagePerHit;
             float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
 
             float preLunarCasts = preLunarTime / w.CastTime;
@@ -289,7 +287,7 @@ namespace Rawr.Moonkin
             RotationData.Duration = accumulatedDuration + insectSwarmTime + moonfireTime + starSurgeTime;
             RotationData.ManaUsed = RotationData.WrathCount * w.BaseManaCost +
                 RotationData.StarfireCount * sf.BaseManaCost +
-                RotationData.StarSurgeCount * solarSS.BaseManaCost +
+                RotationData.StarSurgeCount * ss.BaseManaCost +
                 RotationData.MoonfireCasts * mf.BaseManaCost +
                 RotationData.InsectSwarmCasts * iSw.BaseManaCost;
 
