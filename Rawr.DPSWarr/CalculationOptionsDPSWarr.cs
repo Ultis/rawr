@@ -13,12 +13,10 @@ namespace Rawr.DPSWarr {
         #region Constructors
         public CalculationOptionsDPSWarr()
         {
-            //FuryStance = true;
             AllowFlooring = false;
             SE_UseDur = true;
             UseMarkov = false;
             PTRMode = false;
-            //HideBadItems = true;
             HideBadItems_Def = true;
             HideBadItems_Spl = true;
             HideBadItems_PvP = true;
@@ -54,6 +52,9 @@ namespace Rawr.DPSWarr {
                         true,  // Overpower
                         true,  // Taste for Blood
                         true,  // Sudden Death
+#if RAWR4
+                        true,  // Colossus Smash
+#endif
                         true,  // Slam
                     true,  // <20% Execute Spamming
                 true,  // == Rage Dumps ==
@@ -64,7 +65,7 @@ namespace Rawr.DPSWarr {
             Lag = 179f;
             React = 220f;
             // Boss Options
-//#if !RAWR3 && !RAWR4 && !SILVERLIGHT
+#if !RAWR4
             FilterType = "Content";
             Filter = "All";
             BossName = "Custom";
@@ -82,17 +83,11 @@ namespace Rawr.DPSWarr {
             RootingTargets   = false; 
             DisarmingTargets = false; // nonfunctional
             AoETargets       = false; AoETargetsFreq       =  20; AoETargetsDMG       = 5000;
-//#endif
+#endif
         }
         #endregion
         #region Variables
         #region Basics
-        /*private bool _FuryStance;
-        public bool FuryStance
-        {
-            get { return _FuryStance; }
-            set { _FuryStance = value; OnPropertyChanged("FuryStance"); }
-        }*/
         private bool _AllowFlooring;
         public bool AllowFlooring
         {
@@ -195,6 +190,9 @@ namespace Rawr.DPSWarr {
             Overpower_,
             TasteForBlood_,
             SuddenDeath_,
+#if RAWR4
+            ColossusSmash_,
+#endif
             Slam_,
             ExecuteSpam_,
             _RageDumps__,
@@ -235,6 +233,7 @@ namespace Rawr.DPSWarr {
                                 true,  // Overpower
                                 true,  // Taste for Blood
                                 true,  // Sudden Death
+                                true,  // Colossus Smash
                                 true,  // Slam
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
@@ -376,6 +375,14 @@ namespace Rawr.DPSWarr {
             get { return Maintenance[(int)Maintenances.SuddenDeath_]; }
             set { Maintenance[(int)Maintenances.SuddenDeath_] = value; OnPropertyChanged("M_SuddenDeath"); }
         }
+#if RAWR4
+        [XmlIgnore]
+        public bool M_ColossusSmash
+        {
+            get { return Maintenance[(int)Maintenances.ColossusSmash_]; }
+            set { Maintenance[(int)Maintenances.ColossusSmash_] = value; OnPropertyChanged("M_ColossusSmash"); }
+        }
+#endif
         [XmlIgnore]
         public bool M_Slam
         {
@@ -423,6 +430,7 @@ namespace Rawr.DPSWarr {
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
         #region Boss Options
+#if !RAWR4
         private string _FilterType;
         public string FilterType
         {
@@ -579,6 +587,7 @@ namespace Rawr.DPSWarr {
             get { return _disarms ?? (_disarms = new List<Impedance>()); }
             set { _disarms = value; OnPropertyChanged("Disarms"); }
         }
+#endif
         #endregion
         #endregion
         #region Functions

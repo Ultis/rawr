@@ -56,6 +56,13 @@ namespace Rawr.DPSWarr {
             _loadingCalculationOptions = true;
             try {
                 InitializeComponent();
+                //
+#if RAWR4
+                CK_M_A_SD.Visibility = Visibility.Collapsed;
+#else
+                CK_M_A_CS.Visibility = Visibility.Collapsed;
+#endif
+                //
                 SetUpFAQ();
                 SetUpPatchNotes();
                 SetUpOther();
@@ -1014,32 +1021,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         // Tooltips
         private AbilityTooltip tooltip = new AbilityTooltip();
-        private string wrapText(string toWrap) {
-            int wrapWidth = 63;
-            if (toWrap.Length <= wrapWidth) { return toWrap; } // Don't bother wrapping
-
-            string retVal = toWrap;
-            bool eos = false;
-            bool foundspace = false;
-            int i = wrapWidth;
-
-            while (!eos)
-            {
-                while (!foundspace && i >= 0)
-                {
-                    if (retVal[i] == ' ') { foundspace = true; break; }
-                    i--; // didn't find a space so backtrack a char
-                }
-                if (foundspace) {
-                    retVal = retVal.Insert(i + 1, "\r\n"); // +1 because we want it after the space
-                    i++; foundspace = false;
-                }
-                // Continue to next part of string unless we're at or close to the end
-                if (i + wrapWidth >= retVal.Length - 1) { eos = true; } else { i += wrapWidth; }
-            }
-
-            return retVal;
-        }
         private void settooltip(DependencyObject element)
         {
             if (element.GetType() == typeof(CheckBox))
@@ -1062,6 +1043,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_A_OP);
             settooltip(CK_M_A_TB);
             settooltip(CK_M_A_SD);
+#if RAWR4
+            settooltip(CK_M_A_CS);
+#endif
             settooltip(CK_M_A_SL);
             //
             settooltip(CK_M_A_TH);
@@ -1115,6 +1099,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == CK_M_A_SD) tooltip.Setup("Sudden Death",
                 "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.",
                 "A GCD is consumed and Damage is put out.");
+#if RAWR4
+            else if (sender == CK_M_A_CS) tooltip.Setup("Colossus Smash",
+                "Smashes a target for weapon damage plus 120 and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec.",
+                "A GCD is consumed and Damage is put out.");
+#endif
             else if (sender == CK_M_A_SL) tooltip.Setup("Slam",
                 "Slams the opponent, causing weapon damage plus x.",
                 "A GCD is consumed and Damage is put out.");
@@ -1231,6 +1220,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                                 true,  // Overpower
                                 true,  // Taste for Blood
                                 true,  // Sudden Death
+#if RAWR4
+                                true,  // Colossus Smash
+#endif
                                 true,  // Slam
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
@@ -1267,6 +1259,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_A_OP.IsChecked = Checked;
                 CK_M_A_TB.IsChecked = Checked;
                 CK_M_A_SD.IsChecked = Checked;
+#if RAWR4
+                CK_M_A_CS.IsChecked = Checked;
+#endif
                 CK_M_A_SL.IsChecked = Checked;
                 // Arms Special
                 CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && Checked;

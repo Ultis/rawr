@@ -52,80 +52,81 @@ x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr"
         </controls:TabItem>
         <controls:TabItem x:Name="Page_02_Maintenance" Header="Rotation">
             <Grid x:Name="Page_02_Layout">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                 <StackPanel x:Name="LO_Info" Margin="0" Grid.ColumnSpan="2">
-                	<TextBlock x:Name="LB_Info1" Margin="0" TextWrapping="Wrap" Text="Below you will select the various abilities you will utilize in your toon's rotation." TextAlignment="Center"/>
-                	<TextBlock x:Name="LB_Info2" Text="Mouse over any selection for more information." TextWrapping="Wrap" TextAlignment="Center"/>
+                    <TextBlock x:Name="LB_Info1" Margin="0" TextWrapping="Wrap" Text="Below you will select the various abilities you will utilize in your toon's rotation." TextAlignment="Center"/>
+                    <TextBlock x:Name="LB_Info2" Text="Mouse over any selection for more information." TextWrapping="Wrap" TextAlignment="Center"/>
                 </StackPanel>
-            	<TextBlock x:Name="LB_Primaries" Margin="4" Grid.Row="1" Text="Primary Abilities" FontWeight="Bold" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="14" Foreground="Red"/>
-            	<StackPanel x:Name="LO_PrimaryArms" Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="2">
-            		<TextBlock x:Name="RB_StanceArms" Margin="4,2,0,2" Text="Arms" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
-            		<CheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_SD" Content="Sudden Death" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<TextBlock TextWrapping="Wrap" Height="17"/>
-            		<CheckBox x:Name="CK_M_A_TH" Content="Thunder Clap" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            		<CheckBox x:Name="CK_M_A_ST" Content="Shattering Throw" Margin="0" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-            		<CheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-            	</StackPanel>
-            	<StackPanel x:Name="LO_PrimaryFury" Margin="2,4,4,4" Grid.Row="2" Grid.Column="1">
-            		<TextBlock x:Name="RB_StanceFury" Margin="4,2,0,2" RenderTransformOrigin="0.467,0.412" Text="Fury" d:LayoutOverrides="HorizontalAlignment, GridBox" FontWeight="Bold"/>
-            		<CheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
-            		<CheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            		<CheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            		<TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
-            		<TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
-            		<TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
-            		<TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
-            		<TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
-            		<CheckBox x:Name="CK_M_F_DW" Content="Death Wish" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            		<CheckBox x:Name="CK_M_F_RK" Content="Recklessness" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            	</StackPanel>
-            	<TextBlock x:Name="LB_Shared" Margin="4" Grid.Row="3" Text="Shared Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
-            	<StackPanel x:Name="LO_RageGens" Margin="4,4,2,4" Grid.Row="4">
-            		<TextBlock x:Name="LB_RageGens" FontWeight="Bold" Text="Rage Generation" TextWrapping="Wrap"/>
-            		<CheckBox x:Name="CK_Zerker" Content="Berserker Rage" Margin="0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
-            		<CheckBox x:Name="CK_BloodRage" Content="Bloodrage" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-            	</StackPanel>
-            	<StackPanel x:Name="LO_RageDumps" Margin="2,4,4,4" Grid.Column="1" Grid.Row="4">
-            		<TextBlock x:Name="LB_RageDumps" FontWeight="Bold" Text="Rage Dumps" TextWrapping="Wrap"/>
-            		<CheckBox x:Name="CK_Cleave" Content="Cleave" Margin="0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-            		<CheckBox x:Name="CK_HeroicStrike" Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-            	</StackPanel>
-            	<StackPanel x:Name="LO_Shouts" Margin="4,4,2,4" Grid.Row="5">
-            		<TextBlock x:Name="LB_Shouts" Text="Shouts" TextWrapping="Wrap" FontWeight="Bold"/>
-            		<RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
-            		<RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-            		<RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
-            	</StackPanel>
-            	<StackPanel x:Name="LO_DeBuffs" Margin="2,4,4,4" Grid.Row="5" Grid.Column="1">
-            		<TextBlock x:Name="LB_DeBuffs" Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>
-            		<CheckBox x:Name="CK_DemoShout" Content="Demoralizing Shout" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            		<CheckBox x:Name="CK_Sunder" Content="Sunder Armor" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-            		<CheckBox x:Name="CK_Hamstring" Content="Hamstring" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-            	</StackPanel>
-            	<StackPanel x:Name="LO_OtherStuff" Margin="4" Grid.Row="6" Grid.ColumnSpan="2">
-            		<TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
-            		<CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-            		<CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" ToolTipService.ToolTip="This presently doesn't work due to calculational issues. Rest assured, Execute Spamming at &lt;20% target health is still a good idea."/>
-            		<CheckBox x:Name="CK_Flooring" Height="19" Margin="0" Content="Allow Flooring *" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-            	</StackPanel>
+                <TextBlock x:Name="LB_Primaries" Margin="4" Grid.Row="1" Text="Primary Abilities" FontWeight="Bold" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="14" Foreground="Red"/>
+                <StackPanel x:Name="LO_PrimaryArms" Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="2">
+                    <TextBlock x:Name="RB_StanceArms" Margin="4,2,0,2" Text="Arms" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
+                    <CheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_SD" Content="Sudden Death" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_CS" Content="Colossus Smash" IsChecked="{Binding M_ColossusSmash, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <TextBlock TextWrapping="Wrap" Height="17"/>
+                    <CheckBox x:Name="CK_M_A_TH" Content="Thunder Clap" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <CheckBox x:Name="CK_M_A_ST" Content="Shattering Throw" Margin="0" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                    <CheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                </StackPanel>
+                <StackPanel x:Name="LO_PrimaryFury" Margin="2,4,4,4" Grid.Row="2" Grid.Column="1">
+                    <TextBlock x:Name="RB_StanceFury" Margin="4,2,0,2" RenderTransformOrigin="0.467,0.412" Text="Fury" d:LayoutOverrides="HorizontalAlignment, GridBox" FontWeight="Bold"/>
+                    <CheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
+                    <CheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    <CheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    <TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
+                    <TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
+                    <TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
+                    <TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
+                    <TextBlock Height="17" TextWrapping="Wrap" Margin="0,0,-1,0"/>
+                    <CheckBox x:Name="CK_M_F_DW" Content="Death Wish" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    <CheckBox x:Name="CK_M_F_RK" Content="Recklessness" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                </StackPanel>
+                <TextBlock x:Name="LB_Shared" Margin="4" Grid.Row="3" Text="Shared Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
+                <StackPanel x:Name="LO_RageGens" Margin="4,4,2,4" Grid.Row="4">
+                    <TextBlock x:Name="LB_RageGens" FontWeight="Bold" Text="Rage Generation" TextWrapping="Wrap"/>
+                    <CheckBox x:Name="CK_Zerker" Content="Berserker Rage" Margin="0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
+                    <CheckBox x:Name="CK_BloodRage" Content="Bloodrage" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                </StackPanel>
+                <StackPanel x:Name="LO_RageDumps" Margin="2,4,4,4" Grid.Column="1" Grid.Row="4">
+                    <TextBlock x:Name="LB_RageDumps" FontWeight="Bold" Text="Rage Dumps" TextWrapping="Wrap"/>
+                    <CheckBox x:Name="CK_Cleave" Content="Cleave" Margin="0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                    <CheckBox x:Name="CK_HeroicStrike" Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                </StackPanel>
+                <StackPanel x:Name="LO_Shouts" Margin="4,4,2,4" Grid.Row="5">
+                    <TextBlock x:Name="LB_Shouts" Text="Shouts" TextWrapping="Wrap" FontWeight="Bold"/>
+                    <RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
+                    <RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                    <RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
+                </StackPanel>
+                <StackPanel x:Name="LO_DeBuffs" Margin="2,4,4,4" Grid.Row="5" Grid.Column="1">
+                    <TextBlock x:Name="LB_DeBuffs" Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>
+                    <CheckBox x:Name="CK_DemoShout" Content="Demoralizing Shout" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    <CheckBox x:Name="CK_Sunder" Content="Sunder Armor" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                    <CheckBox x:Name="CK_Hamstring" Content="Hamstring" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                </StackPanel>
+                <StackPanel x:Name="LO_OtherStuff" Margin="4" Grid.Row="6" Grid.ColumnSpan="2">
+                    <TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
+                    <CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                    <CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" ToolTipService.ToolTip="This presently doesn't work due to calculational issues. Rest assured, Execute Spamming at &lt;20% target health is still a good idea."/>
+                    <CheckBox x:Name="CK_Flooring" Height="19" Margin="0" Content="Allow Flooring *" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                </StackPanel>
             </Grid>
         </controls:TabItem>
         <controls:TabItem x:Name="Page_04_Misc" Header="Misc">

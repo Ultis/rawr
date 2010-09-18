@@ -510,7 +510,9 @@ namespace Rawr.DPSWarr {
             get {
                 float rage = 0f;
                 foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage > 0f) { rage += aw.allRage; } }
+#if RAWR4
                 if (Talents.DeadlyCalm > 0) { rage *= 1f - 10/120; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+#endif
                 return rage;
             }
         }

@@ -33,11 +33,15 @@ namespace Rawr.DPSWarr {
                 //                rare    epic  jewel
                 //Red slots
                 int[] red_str = { 39996, 40111, 42142 };
+#if !RAWR4
                 int[] red_arp = { 40002, 40117, 42153 };
+#endif
                 int[] red_exp = { 40003, 40118, 42154 };
                 //Blue slots -- All the stat+sta, No haste because str or arp should always be better
                 int[] blu_str = { 40022, 40129, 40129 };
+#if !RAWR4
                 int[] blu_arp = { 40033, 40140, 40140 };
+#endif
                 int[] blu_exp = { 40034, 40141, 40141 };
                 int[] blu_hit = { 40088, 40166, 40166 };
                 //Yellow slots
@@ -60,12 +64,14 @@ namespace Rawr.DPSWarr {
                 #endregion
 
                 #region Armor Pen
+#if !RAWR4
                 enabled = true;
                 group = "ArPen";
                 // Straight
                 AddTemplates(templates, red_arp, red_arp, red_arp, red_arp, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates, red_arp, blu_arp, ylw_str, red_arp, group, enabled);
+#endif
                 #endregion
 
                 #region Hit/Exp-gemming
@@ -78,8 +84,10 @@ namespace Rawr.DPSWarr {
                     AddTemplates(templates, ylw_hit[k], ylw_hit[k], ylw_hit[k], ylw_hit[k], group, enabled);
                     // Socket Bonus w/Str
                     AddTemplates(templates, red_str, blu_hit, ylw_hit[k], red_str, group, enabled);
+#if !RAWR4
                     // Socket Bonus w/Arp
                     AddTemplates(templates, red_arp, blu_hit, ylw_hit[k], red_arp, group, enabled);
+#endif
                 }
                 // Exp
                 group = "Expertise";
@@ -95,8 +103,10 @@ namespace Rawr.DPSWarr {
                 enabled = false;                
                 // Strength
                 AddTemplates(templates, red_str, blu_str, ylw_has, red_str, group, enabled);
+#if !RAWR4
                 // ArP
                 AddTemplates(templates, red_arp, blu_arp, ylw_has, red_arp, group, enabled);
+#endif
                 #endregion
 
                 templates.Sort(new Comparison<GemmingTemplate>(
@@ -119,7 +129,9 @@ namespace Rawr.DPSWarr {
                                 // str > arp > hit > exp > crit-capped
                                 switch (group1[1]) {
                                     case "Strength": return -1;
+#if !RAWR4
                                     case "ArPen": return (group2[1] == "Strength" ? 1 : -1);
+#endif
                                     case "Hit": return (group2[1] == "Strength" || group2[1] == "ArPen" ? 1 : -1);
                                     case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
                                     default: return 1;
@@ -298,9 +310,15 @@ These numbers to do not include racial bonuses.",
                         "DPS Breakdown (Arms):Rend",
                         "DPS Breakdown (Arms):Overpower",
                         "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
+#if RAWR4
+                        "DPS Breakdown (Arms):Colossus Smash",
+#else
                         "DPS Breakdown (Arms):Sudden Death*Perform an Execute",
+#endif
                         "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
+#if !RAWR4
                         "DPS Breakdown (Arms):Sword Specialization",
+#endif
 
                         "DPS Breakdown (Maintenance):Thunder Clap",
                         "DPS Breakdown (Maintenance):Shattering Throw",
@@ -338,7 +356,9 @@ These numbers to do not include racial bonuses.",
                         "Agility",
                         "Crit %",
                         "Haste %",
+#if !RAWR4
                         "ArP %",
+#endif
                         "% Chance to Miss (White)",
                         "% Chance to Miss (Yellow)",
                         "% Chance to be Dodged",
@@ -423,6 +443,13 @@ These numbers to do not include racial bonuses.",
                 && enchant.Slot == ItemSlot.TwoHand
                 && slot == ItemSlot.OffHand) {
                 return true;
+#if RAWR4
+            } else  if (character != null
+                && character.WarriorTalents.SingleMindedFury > 0
+                && enchant.Slot == ItemSlot.OneHand
+                && slot == ItemSlot.OffHand) {
+                return true;
+#endif
             } else if (character != null
                 && character.WarriorTalents.TitansGrip == 0
                 && (enchant.Slot == ItemSlot.TwoHand || enchant.Slot == ItemSlot.OneHand)
@@ -454,6 +481,13 @@ These numbers to do not include racial bonuses.",
                 // Else, if it's a 2h weapon it can go in OH or MH
                 if (item.Slot == ItemSlot.TwoHand && (slot == CharacterSlot.OffHand || slot == CharacterSlot.MainHand)) return true;
             }
+
+#if RAWR4
+            if (character.WarriorTalents.SingleMindedFury > 0) {
+                // If it's a 1h weapon it can go in OH or MH
+                if (item.Slot == ItemSlot.OneHand && (slot == CharacterSlot.OffHand || slot == CharacterSlot.MainHand)) return true;
+            }
+#endif
 
             // Not TG, so can't dual-wield with a 2H in the MH
             if (slot == CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand) {
@@ -972,7 +1006,11 @@ These numbers to do not include racial bonuses.",
         public override bool IncludeOffHandInCalculations(Character character) {
             if (character.OffHand == null) { return false; }
             WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
+#if RAWR4
+            if (talents.TitansGrip > 0 || talents.SingleMindedFury > 0) {
+#else
             if (talents.TitansGrip > 0) {
+#endif
                 return true;
             } else { // if (character.MainHand.Slot != ItemSlot.TwoHand)
                 return base.IncludeOffHandInCalculations(character);
@@ -1611,8 +1649,9 @@ These numbers to do not include racial bonuses.",
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
             if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
+#if RAWR4
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_]) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
-#if !RAWR4
+#else
             if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_Trauma[talents.Trauma]); }
 #endif
             #endregion
@@ -2030,10 +2069,12 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
 
+#if RAWR4
                 float MSCritChance = 0f, MSActs = 0f;
                 foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.BonusCritChance; break; } }
                 triggerIntervals[Trigger.MortalStrikeCrit] = MSActs / fightDuration; // need to verify this worked
                 triggerChances[Trigger.MortalStrikeCrit] = critRate + MSCritChance;
+#endif
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
                 new ErrorBox("Error Calculating Triggers", ex.Message, "CalculateTriggers(...)", addInfo, ex.StackTrace);

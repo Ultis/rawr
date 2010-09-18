@@ -36,18 +36,6 @@ namespace Rawr.DPSWarr {
             base.Initialize(calcs);
             calcs.FW = FW;
         }
-        /*protected override void initAbilities() {
-            base.initAbilities();
-            WW = new Skills.WhirlWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            BLS = new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, WW);
-            MS = new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            RD = new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            OP = new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, SS);
-            TB = new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-            SD = new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, EX);
-            FW = new Skills.FakeWhite(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
-        }*/
         #endregion
         #region Rage Calcs
         /*protected override float RageNeededOverDur {
@@ -227,6 +215,7 @@ namespace Rawr.DPSWarr {
                 float RDspace, BLSspace, MSspace, TFBspace, OPspace, CSspace, /*EXspace,*/ SLspace, HSspace, CLspace;
 #endif
                 // ==== Primary Ability Priorities ====
+#if RAWR4
                 // Colossus Smash
                 if (CS.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, CS.ability.Activates * percTimeInDPSAndOver20);
@@ -236,6 +225,7 @@ namespace Rawr.DPSWarr {
                     availRage -= CS.Rage;
                 }
                 CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
+#endif
 
                 // Rend
                 if (RD.ability.Validated) {
@@ -739,6 +729,7 @@ namespace Rawr.DPSWarr {
                 float CSspace, RDspace, BLSspace, /*MSspace,*/ TFBspace, OPspace, EXspace/*, SLspace*/, HSspace, CLspace;
 #endif
                 // ==== Primary Ability Priorities ====
+#if RAWR4
                 // Colossus Smash
                 if (CS.ability.Validated)
                 {
@@ -749,6 +740,7 @@ namespace Rawr.DPSWarr {
                     availRage -= CS.Rage;
                 }
                 CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
+#endif
 
                 // Rend
                 if (RD.ability.Validated)
