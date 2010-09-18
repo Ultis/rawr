@@ -412,11 +412,11 @@ namespace Rawr.Rogue
             float ChanceOnGarrRuptTickBonusDamage = 0.3f * character.RogueTalents.VenomousWounds;//??
             float CPGCritDamageMultiplier = 0.1f * character.RogueTalents.Lethality;
             float expCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;//??
-            float evisEnvDamageMultiplier = (character.RogueTalents.CoupDeGrace == 3 ? 0.2f : 0.07f * character.RogueTalents.CoupDeGrace);//??
+            float evisEnvDamageMultiplier = (character.RogueTalents.CoupDeGrace == 3 ? 0.2f : 0.07f * character.RogueTalents.CoupDeGrace);
 #else
             float bonusBackstabDamageMultiplier = 0.03f * character.RogueTalents.Aggression + 0.05f * character.RogueTalents.BladeTwisting + 0.1f * character.RogueTalents.SurpriseAttacks + 0.1f * character.RogueTalents.Opportunity + 0.02f * character.RogueTalents.SinisterCalling;
             float bonusCPGCrit = 0.02f * character.RogueTalents.TurnTheTables;
-            float bonusCPGCritDamageMultiplier = 0.06f * character.RogueTalents.Lethality;
+            float CPGCritDamageMultiplier = 0.06f * character.RogueTalents.Lethality;
             float bonusEnvenomDamageMultiplier = character.RogueTalents.VilePoisons == 3 ? 0.2f : 0.07f * character.RogueTalents.VilePoisons;
             float bonusEvisDamageMultiplier = (character.RogueTalents.ImprovedEviscerate == 3 ? 0.2f : 0.07f * character.RogueTalents.ImprovedEviscerate) + 0.03f * character.RogueTalents.Aggression;
             float bonusFlurryHaste = 0.2f * character.RogueTalents.BladeFlurry;
@@ -453,7 +453,7 @@ namespace Rawr.Rogue
 #if RAWR4
                 modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 #else
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, (1f - (1f - armorReduction) * (mainHand.Type == ItemType.OneHandMace ? 1f - bonusMaceArP : 1), stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, (1f - (1f - armorReduction) * (mainHand.Type == ItemType.OneHandMace ? 1f - bonusMaceArP : 1)), stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 #endif
             }
             float mainHandModArmor = 1f - modArmor;
@@ -463,7 +463,7 @@ namespace Rawr.Rogue
 #if RAWR4
                 modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 #else
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, (1f - (1f - armorReduction) * (mainHand.Type ==  ItemType.OneHandMace ? 1f - bonusMaceArP : 1), 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, (1f - (1f - armorReduction) * (mainHand.Type ==  ItemType.OneHandMace ? 1f - bonusMaceArP : 1)), 0f, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
 #endif
             }
             float offHandModArmor = 1f - modArmor;
