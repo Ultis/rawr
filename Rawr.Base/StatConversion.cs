@@ -4,36 +4,12 @@ using System.Text;
 
 namespace Rawr
 {
-    // To be done:
-    // Physical Combat:
-    // float GetPhysicalMiss(int LevelDelta, bool DualWield)
-    // float GetPhysicalDodge(int LevelDelta)
-    // float GetPhysicalParry(int LevelDelta)
-    // float GetPhysicalGlancing(int LevelDelta)
-    // float[??] GetPhysicalCombatTable(int LevelDelta, float Hit, float Expertise, float Block)
-    // float GetPhysicalMitigation(int TargetLevel)
-
-/*
-    public static class ArmorCalculations
-    {
-        //Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
-        //don't know exactly how, quite yet.
-        public static float GetDamageReduction(int attackerLevel, float targetArmor, 
-            float attackerArmorPenetration, float attackerArmorPenetrationRating)
-        {
-            float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating * 1.25f / 1539.529991f);
-            float reducedArmor = (float)targetArmor * (armorReductionPercent);
-            float damageReduction = (reducedArmor / ((467.5f * attackerLevel) + reducedArmor - 22167.5f));
-            return damageReduction;
-        }
-    }
-*/
     public static class StatConversion
     {   // Class only works for Level 80 Characters
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
 
         #region Character Constants
-
+#if !RAWR4
         public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
         public const float RATING_PER_ARMORPENETRATION = 1399.572614f; // 4.69512177f / (1.1/1.25f) * LEVEL_80_COMBATRATING_MODIFIER * 100f;
         public const float RATING_PER_BLOCK = 1639.499474f;
@@ -217,6 +193,227 @@ namespace Rawr
             0.0f, // Empty 10
             0f,   // Druid 11
         };
+#else
+        /*  Here are the values data-mined from build 12942 and imported into SimulationCraft:
+
+            Base Chance to Melee Crit%: 2.9219999909401%
+            Base Chance to Spell Crit%: 2.2010000422597%
+
+            Spell Scaling Multiplier: 1004.489990234375000 (level 80 value is 900.120300292968750. i.e. Level 85 base damage of abilities is 1004.49/900.12 or *1.12 more than at level 80 and so is the damage range.)
+            Agi to +Melee Crit%: 0.0030780898669%
+            Int to +Spell Crit%: 0.0015410500055%
+            Int/Spirit regen coefficient: 0.003345000091940
+
+            Ratings:
+
+            Dodge: 176.718994140625000
+            Parry: 176.718994140625000
+            Block: 88.359397888183594
+            Melee Hit: 120.109001159667969
+            Ranged Hit: 120.109001159667969
+            Spell Hit: 102.445999145507812
+            Melee Crit: 179.279998779296875
+            Ranged Crit: 179.279998779296875
+            Spell Crit: 179.279998779296875
+            Melee Haste: 128.057006835937500
+            Ranged Haste: 128.057006835937500
+            Spell Haste: 128.057006835937500
+            Expertise: 30.027200698852539
+            Mastery: 179.279998779296875
+
+            The following is from in-game testing:
+            Chance to Dodge Base%: 1.67%
+            
+         */
+
+        // These are set based on the values above
+        public const float RATING_PER_DODGE         = 176.718994140625000f;
+        public const float RATING_PER_PARRY         = 176.718994140625000f;
+        public const float RATING_PER_BLOCK         =  88.359397888183594f;
+        public const float RATING_PER_PHYSICALHIT   = 120.109001159667969f;
+        public const float RATING_PER_SPELLHIT      = 102.445999145507812f;
+        public const float RATING_PER_PHYSICALCRIT  = 128.057006835937500f;
+        public const float RATING_PER_SPELLCRIT     = 128.057006835937500f;
+        public const float RATING_PER_PHYSICALHASTE = 128.057006835937500f;
+        public const float RATING_PER_SPELLHASTE    = 128.057006835937500f;
+        public const float RATING_PER_EXPERTISE     =  30.027200698852539f;
+        public const float RATING_PER_MASTERY       = 179.279998779296875f;
+        // These shouldn't be changing
+        public const float RATING_PER_ARMOR         = 2.00f; //2 Armor per 1 AGI;
+        public const float RATING_PER_HEALTH        = 10.00f; //10 Health per 1 STA;
+        public const float RATING_PER_MANA          = 15.00f; //15 Mana per 1 INT;
+        public const float BLOCKVALUE_PER_STR       = 2.0f;
+        // These have not been provided Cata values yet, some could be removed as no longer valid
+        public const float LEVEL_85_COMBATRATING_MODIFIER      = 3.2789987789987789987789987789988f;
+        public const float RATING_PER_ARMORPENETRATION         = 1399.572614f;
+        public const float RATING_PER_DEFENSE                  = 4.918498039f;
+        public const float RATING_PER_RESILIENCE               = 9427.122498f;
+        public const float RATING_PER_DODGEPARRYREDUC          = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
+        public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
+
+        // Attack Table for players attacking mobs                                           85       86        87      88
+        public static readonly float[] WHITE_MISS_CHANCE_CAP                = new float[] { 0.0500f, 0.0520f, 0.0540f, 0.0800f };
+        public static readonly float[] WHITE_MISS_CHANCE_CAP_DW             = new float[] { 0.2400f, 0.2420f, 0.2440f, 0.2700f }; //  WHITE_MISS_CHANCE_CAP + 19%
+        //public static readonly float[] WHITE_MISS_CHANCE_CAP_BEHIND       = WHITE_MISS_CHANCE_CAP;
+        //public static readonly float[] WHITE_MISS_CHANCE_CAP_DW_BEHIND    = WHITE_MISS_CHANCE_CAP_DW;
+        public static readonly float[] YELLOW_MISS_CHANCE_CAP               = WHITE_MISS_CHANCE_CAP;
+        //public static readonly float[] YELLOW_MISS_CHANCE_CAP_BEHIND      = WHITE_MISS_CHANCE_CAP_BEHIND;
+
+        public static readonly float[] WHITE_DODGE_CHANCE_CAP               = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.0650f }; //  6.5%
+        //public static readonly float[] WHITE_DODGE_CHANCE_CAP_BEHIND      = WHITE_DODGE_CHANCE_CAP; // 6.5% Attacks from behind *can* be dodged
+        public static readonly float[] YELLOW_DODGE_CHANCE_CAP              = WHITE_DODGE_CHANCE_CAP;
+        //public static readonly float[] YELLOW_DODGE_CHANCE_CAP_BEHIND     = WHITE_DODGE_CHANCE_CAP_BEHIND;
+
+        public static readonly float[] WHITE_PARRY_CHANCE_CAP               = new float[] { 0.0500f, 0.0550f, 0.0600f, 0.14f }; // 14%
+        //public static readonly float[] WHITE_PARRY_CHANCE_CAP_BEHIND      = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Attacks from behind can't be parried
+        public static readonly float[] YELLOW_PARRY_CHANCE_CAP              = WHITE_PARRY_CHANCE_CAP;
+        //public static readonly float[] YELLOW_PARRY_CHANCE_CAP_BEHIND     = WHITE_PARRY_CHANCE_CAP_BEHIND;
+
+        public static readonly float[] WHITE_GLANCE_CHANCE_CAP              = new float[] { 0.1000f, 0.1500f, 0.2000f, 0.2400f }; // 25%
+        //public static readonly float[] WHITE_GLANCE_CHANCE_CAP_BEHIND     = WHITE_GLANCE_CHANCE_CAP;
+        public static readonly float[] YELLOW_GLANCE_CHANCE_CAP             = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Yellows don't glance
+        //public static readonly float[] YELLOW_GLANCE_CHANCE_CAP_BEHIND    = YELLOW_GLANCE_CHANCE_CAP;
+
+        public static readonly float[] WHITE_BLOCK_CHANCE_CAP               = new float[] { 0.0500f, 0.0520f, 0.0540f, 0.0650f }; //  6.5%
+        //public static readonly float[] WHITE_BLOCK_CHANCE_CAP_BEHIND      = new float[] { 0.0000f, 0.0000f, 0.0000f, 0.0000f }; //  0% Attacks from behind can't be blocked
+        public static readonly float[] YELLOW_BLOCK_CHANCE_CAP              = WHITE_BLOCK_CHANCE_CAP;
+        //public static readonly float[] YELLOW_BLOCK_CHANCE_CAP_BEHIND     = WHITE_BLOCK_CHANCE_CAP_BEHIND;
+
+        /// <summary>
+        /// You need to *add* this to your current crit value as it's a negative number.
+        /// [85: 0, 86: -0.006, 87: -0.012, 88: -0.048]
+        /// </summary>
+        public static readonly float[] NPC_LEVEL_CRIT_MOD                   = new float[] { -0.0000f, -0.0060f, -0.0120f, -0.0480f }; //  -4.8%
+
+        public static readonly float[] NPC_ARMOR                            = new float[] { 9729f, 10034f, 10338f, 10643f };
+
+        // Same for all classes
+        public const float INT_PER_SPELLCRIT = 166.66667f;
+        public const float REGEN_CONSTANT = 0.003345f;
+
+        // Sigh, depends on class.
+        public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1
+            62.500f,  // Warrior 1
+            52.083f,  // Paladin 2
+            83.333f,  // Hunter 3
+            83.333f,  // Rogue 4
+            52.083f,  // Priest 5
+            62.500f,  // Death Knight 6
+            83.333f,  // Shaman 7
+            51.0204f, // Mage 8
+            50.505f,  // Warlock 9
+             0.000f,  // Empty 10
+            83.333f,  // Druid 11
+        };
+
+        public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
+            84.74576271f, // Warrior 1
+            59.88023952f, // Paladin 2
+            86.20689655f, // Hunter 3
+            47.84688995f, // Rogue 4
+            59.88023952f, // Priest 5
+            84.74576271f, // Death Knight 6
+            59.88023952f, // Shaman 7
+            58.82352941f, // Mage 8
+            59.88023952f, // Warlock 9
+             0.0f,        // Empty 10
+            47.84688995f, // Druid 11
+        };
+
+        public static float[] DR_COEFFIENT = { 0.0f, // Starts at 0
+            0.9560f, // Warrior 1
+            0.9560f, // Paladin 2
+            0.9880f, // Hunter 3
+            0.9880f, // Rogue 4
+            0.9530f, // Priest 5
+            0.9560f, // Death Knight 6
+            0.9880f, // Shaman 7
+            0.9530f, // Mage 8
+            0.9530f, // Warlock 9
+            0.0f,    // Empty 10
+            0.9720f, // Druid 11
+        };
+
+        // This is the cap value for DODGE PERCENTAGE.
+        public static float[] CAP_DODGE = { 0.0f, // Starts at 0
+            88.129021f,  // Warrior 1
+            88.129021f,  // Paladin 2
+            145.560408f, // Hunter 3
+            145.560408f, // Rogue 4
+            150.375940f, // Priest 5
+            88.129021f,  // Death Knight 6
+            145.560408f, // Shaman 7
+            150.375940f, // Mage 8
+            150.375940f, // Warlock 9
+            0.0f,        // Empty 10
+            116.890707f, // Druid 11
+        };
+
+        /// <summary>
+        /// This is the 1/CAP_DODGE to cut down the ammount of math going on.
+        /// </summary>
+        public static float[] CAP_DODGE_INV = { 0.0f, // Starts at 0
+            0.011347f, // Warrior 1
+            0.011347f, // Paladin 2
+            0.006870f, // Hunter 3
+            0.006870f, // Rogue 4
+            0.006650f, // Priest 5
+            0.011347f, // Death Knight 6
+            0.006870f, // Shaman 7
+            0.006650f, // Mage 8
+            0.006650f, // Warlock 9
+            0.0f,      // Empty 10
+            0.008555f, // Druid 11
+        };
+
+        // This is the cap value for PARRY PERCENTAGE.
+        public static float[] CAP_PARRY = { 0.0f, // Starts at 0
+            47.003525f,  // Warrior 1
+            47.003525f,  // Paladin 2
+            145.560408f, // Hunter 3
+            145.560408f, // Rogue 4
+            0f,          // Priest 5
+            47.003525f,  // Death Knight 6
+            145.560408f, // Shaman 7
+            0f,          // Mage 8
+            0f,          // Warlock 9
+            0.0f,        // Empty 10
+            0f,          // Druid 11
+        };
+
+        /// <summary>
+        /// This is the 1/CAP_PARRY to cut down the amount of math going on.
+        /// And prevent divide by 0 errors.
+        /// </summary>
+        public static float[] CAP_PARRY_INV = { 0.0f, // Starts at 0
+            0.021275f, // Warrior 1
+            0.021275f, // Paladin 2
+            0.006870f, // Hunter 3
+            0.006870f, // Rogue 4
+            0f,        // Priest 5
+            0.021275f, // Death Knight 6
+            0.006870f, // Shaman 7
+            0f,        // Mage 8
+            0f,        // Warlock 9
+            0.0f,      // Empty 10
+            0f,        // Druid 11
+        };
+
+        //This is the cap value for MISS PERCENTAGE
+        public static float[] CAP_MISSED = { 0.0f, // Starts at 0
+            16f,  // Warrior 1
+            16f,  // Paladin 2
+            0f,   // Hunter 3
+            0f,   // Rogue 4
+            0f,   // Priest 5
+            16f,  // Death Knight 6
+            0f,   // Shaman 7
+            0f,   // Mage 8
+            0f,   // Warlock 9
+            0.0f, // Empty 10
+            0f,   // Druid 11
+        };
+#endif
 
         #endregion
 
@@ -516,7 +713,7 @@ namespace Rawr
         public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
             float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
         {
-            return GetArmorDamageReduction(AttackerLevel, 83, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs, ArmorPenetrationRating);
+            return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs, ArmorPenetrationRating);
         }
 
         // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
@@ -581,7 +778,7 @@ namespace Rawr
 
             float ArpFromRating = (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a));
             //if (/*first*/(  x  )/*br*/ - /*second*/(  (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a))  ) <= 0.1)) return 0f;
-            return (float)Math.Round(ArpFromRating * RATING_PER_ARMORPENETRATION,3);
+            return (float)Math.Round(ArpFromRating * RATING_PER_ARMORPENETRATION, 3);
         }
 
         /// <summary>
@@ -628,7 +825,8 @@ namespace Rawr
             float TargetResistance, float AttackerSpellPenetration)
         {
             float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
-            return ActualResistance / (AttackerLevel * 5f + AttackerResistancePenalty(AttackerLevel - TargetLevel) + ActualResistance) + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
+            return ActualResistance / (AttackerLevel * 5f + AttackerResistancePenalty(AttackerLevel - TargetLevel) + ActualResistance)
+                   + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
         }
 
         /// <summary>
