@@ -379,7 +379,7 @@ These numbers to do not include racial bonuses.",
 
         #endregion
 
-        #region Relavancy
+        #region Relevancy
 
         public override CharacterClass TargetClass { get { return CharacterClass.Warrior; } }
 
@@ -901,12 +901,17 @@ These numbers to do not include racial bonuses.",
 #endif
 
             // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
+            // Cata also has BF giving what Trauma used to
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (character.WarriorTalents.BloodFrenzy > 0)
             {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
                 buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
+#if RAWR4
+                buffGroup.Add(Buff.GetBuffByName("Trauma"));
+                buffGroup.Add(Buff.GetBuffByName("Mangle"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
@@ -1442,20 +1447,42 @@ These numbers to do not include racial bonuses.",
 
         #region Talents That are handled as SpecialEffects
         // We need these to be static so they aren't re-created 50 bajillion times
+
         private static SpecialEffect[] _SE_WreckingCrew = {
             null,
+#if !RAWR4
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 1 * 0.02f, }, 12, 0),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 2 * 0.02f, }, 12, 0),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 3 * 0.02f, }, 12, 0),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 4 * 0.02f, }, 12, 0),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusDamageMultiplier = 5 * 0.02f, }, 12, 0),
+#else
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 1 * (0.10f/3f), }, 12, 0, 1 * (1/3)),
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 2 * (0.10f/3f), }, 12, 0, 2 * (1/3)),
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 3 * (0.10f/3f), }, 12, 0, 3 * (1/3)),
+#endif
         };
 
+        private static SpecialEffect[] _SE_LambsToTheSlaughter = {
+            null,
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 0, 6),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 0, 6),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 0, 6),
+        };
+
+#if !RAWR4
         private static SpecialEffect[] _SE_Trauma = {
             null,
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = 1 * 0.15f, }, 15, 0),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusBleedDamageMultiplier = 2 * 0.15f, }, 15, 0),
         };
+#else
+        /*private static SpecialEffect[] _SE_BloodFrenzy = { // Cata has BF take over Trauma's job
+            null,
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = 1 * 0.02f, BonusBleedDamageMultiplier = 1 * 0.15f, }, 15, 0),
+            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = 2 * 0.02f, BonusBleedDamageMultiplier = 2 * 0.15f, }, 15, 0),
+        };*/
+#endif
 
         private static SpecialEffect[] _SE_DeathWish = {
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 0)),
@@ -1483,19 +1510,6 @@ These numbers to do not include racial bonuses.",
 #endif
                 ) : new Stats());
             Stats statsItems = GetItemStats(dpswarchar.Char, additionalItem);
-            /*if (statsItems._rawSpecialEffectData != null) {
-                foreach (SpecialEffect effect in statsItems._rawSpecialEffectData) {
-                    if (effect != null && effect.Stats != null && effect.Stats.DeathbringerProc > 0)
-                    {
-                        statsItems.RemoveSpecialEffect(effect);
-                        List<SpecialEffect> new2add = SpecialEffects.GetDeathBringerEffects(character.Class, effect.Stats.DeathbringerProc);
-                        foreach (SpecialEffect e in new2add) {
-                            e.Stats.DeathbringerProc = 1;
-                            statsItems.AddSpecialEffect(e);
-                        }
-                    }
-                }
-            }*/
             #endregion
             #region From Options
             Stats statsOptionsPanel = new Stats()
@@ -1540,21 +1554,18 @@ These numbers to do not include racial bonuses.",
                 // Offensive
 #if !RAWR4
                 BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
-                    /* One Handed Weapon Spec  Not using this to prevent any misconceptions
-                    ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
-                      */
+                    // One Handed Weapon Spec  Not using this to prevent any misconceptions
+                    //((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
                     // Two Handed Weapon Spec
-                                            ((dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
-                                            *
+                    ((dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
                     // Titan's Grip Penalty
-                                            ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                    * ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
                     // Convert it back a simple mod number
-                                            - 1f
-                                         ),
+                    - 1f),
                 BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
-                PhysicalCrit = talents.Cruelty * 0.01f,
+                PhysicalCrit = talents.Cruelty * 0.01f + (talents.Rampage > 0 && isBuffed ? 0.05f : 0f),
                 BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
@@ -1571,45 +1582,53 @@ These numbers to do not include racial bonuses.",
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
 #else
                 BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
-                    /* One Handed Weapon Spec  Not using this to prevent any misconceptions
-                    ((character.MainHand.Slot == ItemSlot.OneHand) ? 1f + talents.OneHandedWeaponSpecialization * 0.02f : 1f)
-                      */
-                    // Two Handed Weapon Spec
-                                            //((dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1f + talents.TwoHandedWeaponSpecialization * 0.02f : 1f)
-                                            //*
+                    // Two Handed Weapon Spec // NEW! 2H Weap Spec is a passive Arms Spec Bonus in Cata
+                    ((!dpswarchar.combatFactors.FuryStance && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1.10f : 1.00f)
                     // Titan's Grip Penalty
-                                            ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                    * ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
                     // Convert it back a simple mod number
-                                            - 1f
-                                         ),
+                    - 1f),
                 BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
-                PhysicalCrit = talents.Cruelty * 0.01f,
+                BonusBleedDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
+                                                 || talents.DeepWounds > 0 // Have Deep Wounds
+                                                ? talents.BloodFrenzy * 0.15f : 0f),
+                PhysicalHaste = talents.BloodFrenzy * 0.025f,
+                PhysicalCrit = talents.Cruelty * 0.01f + (talents.Rampage > 0 && isBuffed ? 0.05f : 0f),
                 //BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 //PhysicalHit = talents.Precision * 0.01f,
-                PhysicalHaste = talents.BloodFrenzy * 0.05f,
                 //StunDurReduc = talents.IronWill / 15f,
                 // Defensive
                 //Parry = talents.Deflection * 0.01f,
                 //Dodge = talents.Anticipation * 0.01f,
-                Block = talents.ShieldSpecialization * 0.01f,
-                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
-                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
-                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
+                BonusHealingReceived = talents.FieldDressing * 0.03f,
 #endif
             };
             // Add Talents that give SpecialEffects
-            if (talents.Rampage > 0 && isBuffed) { statsTalents.PhysicalCrit += 0.05f; }
             if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
+            if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_]) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
 #if !RAWR4
             if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_Trauma[talents.Trauma]); }
 #endif
-            if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
             #endregion
+#if RAWR4
+            #region Mastery Related
+            float MasteryValue = 0f;
+            Stats statsMastery = new Stats() { };
+            if(!dpswarchar.combatFactors.FuryStance) {
+                SpecialEffect StrikesOfOpportunity = new SpecialEffect(
+                    Trigger.MeleeAttack,
+                    new Stats() { BonusTargets = 0.50f, },
+                    0f, 0f, 0.16f + MasteryValue * 0.02f);
+                statsMastery.AddSpecialEffect(StrikesOfOpportunity);
+            }
+            #endregion
+#endif
 
             /*Stats statsGearEnchantsBuffs = new Stats();
             statsGearEnchantsBuffs.Accumulate(statsItems);
@@ -1620,6 +1639,9 @@ These numbers to do not include racial bonuses.",
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
             statsTotal.Accumulate(statsOptionsPanel);
+#if RAWR4
+            statsTotal.Accumulate(statsMastery);
+#endif
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             //Stats statsProcs = new Stats();
 
@@ -2007,6 +2029,11 @@ These numbers to do not include racial bonuses.",
 
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
+
+                float MSCritChance = 0f, MSActs = 0f;
+                foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.BonusCritChance; break; } }
+                triggerIntervals[Trigger.MortalStrikeCrit] = MSActs / fightDuration; // need to verify this worked
+                triggerChances[Trigger.MortalStrikeCrit] = critRate + MSCritChance;
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
                 new ErrorBox("Error Calculating Triggers", ex.Message, "CalculateTriggers(...)", addInfo, ex.StackTrace);
@@ -2176,12 +2203,13 @@ These numbers to do not include racial bonuses.",
                     {
                         if (aw.ability.CanCrit && aw.allNumActivates > 0f)
                         {
-                            if (aw.ability is Skills.OnAttack)
-                            {
+#if !RAWR4
+                            if (aw.ability is Skills.OnAttack) {
                                 float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, numFlurryHits * mhPerc * aw.allNumActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
                                 flurryUptime *= tempFactor;
                             }
                             else
+#endif
                             {
                                 float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
                                 flurryUptime *= tempFactor;

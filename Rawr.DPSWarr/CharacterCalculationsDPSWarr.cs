@@ -423,7 +423,7 @@ namespace Rawr.DPSWarr {
                     }
                 }
                 float[] passiveContrsVals = new float[] {
-                    combatFactors.Char.WarriorTalents.BloodFrenzy * 0.05f,
+                    combatFactors.Char.WarriorTalents.BloodFrenzy * 0.025f,
                     BuffsStats.PhysicalHaste,
                     heroism,
                 };

@@ -115,6 +115,9 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 15f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
+#if RAWR4
+            HealingBonus = 1f + Talents.FieldDressing * 0.10f;
+#endif
             UseHitTable = false;
             UseReact = true;
             //
@@ -319,11 +322,13 @@ namespace Rawr.DPSWarr.Skills
 #else
             Cd = CalcOpts.MultipleTargetsPerc != 0 ? 30f / (CalcOpts.MultipleTargetsPerc / 100f) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
 #endif
-            Duration = 30f;
 #if !RAWR4
             RageCost = 30f - (Talents.FocusedRage * 1f);
+            Duration = 30f;
 #else
-            RageCost = 30f;// -(Talents.FocusedRage * 1f);
+            RageCost = 30f;
+            Duration = 10f;
+            if (Cd < 60) Cd = 60;
 #endif
             RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
             StanceOkFury = StanceOkArms = true;
@@ -356,6 +361,9 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -10f * Talents.SecondWind;
             StanceOkDef = StanceOkFury = StanceOkArms = true;
             HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
+#if RAWR4
+            HealingBonus = 1f + Talents.FieldDressing * 0.10f;
+#endif
             UseHitTable = false;
             UsesGCD = false;
             //
@@ -583,7 +591,8 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
             RageCost = 10f - (Talents.FocusedRage * 1f);
 #else
-            RageCost = 10f;// -(Talents.FocusedRage * 1f);
+            RageCost = 10f;
+            RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
 #endif
             StanceOkArms = StanceOkFury = true;
             UseSpellHit = true;
@@ -759,10 +768,9 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
             RageCost = -(15f + (Talents.ImprovedCharge * 5f));
 #else
-            RageCost = -(15f /*+ (Talents.ImprovedCharge * 5f)*/);
+            RageCost = -(15f + (Talents.Blitz * 5f));
 #endif
-            if (Talents.Warbringer == 1)
-            {
+            if (Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
             } else if (Talents.Juggernaut == 1) {
                 StanceOkArms = true;

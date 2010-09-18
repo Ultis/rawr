@@ -142,7 +142,11 @@ namespace Rawr //O O . .
         public string _currentModel;
         [XmlElement("EnforceMetagemRequirements")]
         public bool _enforceMetagemRequirements = false;
+#if !RAWR4
         public int Level { get { return 80; } }
+#else
+        public int Level { get { return 85; } }
+#endif
 
         #region Gemming Templates
         public List<GemmingTemplate> CustomGemmingTemplates { get; set; }

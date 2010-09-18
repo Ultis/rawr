@@ -144,8 +144,13 @@ namespace Rawr.DPSWarr
                 BloodSurge BS = GetWrapper<BloodSurge>().ability as BloodSurge;
                 AbilWrapper HS = GetWrapper<HeroicStrike>();
                 AbilWrapper CL = GetWrapper<Cleave>();
+#if !RAWR4
                 OnAttack _HS = HS.ability as OnAttack;
                 OnAttack _CL = CL.ability as OnAttack;
+#else
+                Ability _HS = HS.ability as Ability;
+                Ability _CL = CL.ability as Ability;
+#endif
 
                 float ovdRage, hsRageUsed, clRageUsed;
                 float oldBS, oldHS, oldCL;
@@ -158,10 +163,12 @@ namespace Rawr.DPSWarr
                     ovdRage = FreeRageOverDur;
                     hsRageUsed = ovdRage * percHS;
                     clRageUsed = ovdRage * percCL;
+#if !RAWR4
                     WhiteAtks.HSOverridesOverDur = HS.numActivates = Math.Min(hsRageUsed / _HS.FullRageCost, WhiteAtks.MhActivatesNoHS);
                     WhiteAtks.CLOverridesOverDur = CL.numActivates = Math.Min(clRageUsed / _CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
                     BS.hsActivates = HS.allNumActivates;
-                } while (Math.Abs(1f - (BS.Activates        != 0 ? oldBS / BS.Activates        : 1f)) > 0.005f ||
+#endif
+                } while (Math.Abs(1f - (BS.Activates       != 0 ? oldBS / BS.Activates       : 1f)) > 0.005f ||
                          Math.Abs(1f - (HS.allNumActivates <= 0 ? oldHS / HS.allNumActivates : 1f)) > 0.005f ||
                          Math.Abs(1f - (CL.allNumActivates <= 0 ? oldCL / CL.allNumActivates : 1f)) > 0.005f);
 

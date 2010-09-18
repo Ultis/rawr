@@ -204,7 +204,11 @@ namespace Rawr.DPSWarr {
                 return _BonusWhiteCritDmg;
             }
         }
+#if !RAWR4
         public float BonusYellowCritDmg { get { return BonusWhiteCritDmg * (1f + Talents.Impale * 0.1f); } }
+#else
+        public float BonusYellowCritDmg { get { return BonusWhiteCritDmg; } } // Cata: Impale only affects MS, SL, OP(TFB)
+#endif
         #endregion
         #region Weapon Blocked Damage
         public float ReducWhBlockedDmg {

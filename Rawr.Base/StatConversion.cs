@@ -5,7 +5,7 @@ using System.Text;
 namespace Rawr
 {
     public static class StatConversion
-    {   // Class only works for Level 80 Characters
+    {   // Class only works for Level 80 Characters (Level 85 if you are in the Rawr4 projects)
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
 
         #region Character Constants

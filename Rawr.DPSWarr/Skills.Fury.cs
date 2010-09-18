@@ -182,7 +182,9 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 15f;// -(Talents.FocusedRage * 1f);
 #endif
             StanceOkFury = true;
+#if !RAWR4
             hsActivates = 0.0f;
+#endif
             SL = slam;
             WW = whirlwind;
             BT = bloodthirst;
@@ -191,7 +193,9 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         #region Variables
+#if !RAWR4
         public float hsActivates;
+#endif
         public float maintainActs;
         public Ability SL;
         public Ability WW;
@@ -241,7 +245,11 @@ namespace Rawr.DPSWarr.Skills
                 float chanceMhHitLands = (1f - MHAtkTable.Miss - MHAtkTable.Dodge);
                 float chanceOhHitLands = (1f - OHAtkTable.Miss - OHAtkTable.Dodge);
 
+#if !RAWR4
                 float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, hsActivates, chance);
+#else
+                float procs3 = BasicFuryRotation(chanceMhHitLands, chanceOhHitLands, 0, chance);
+#endif
 
                 procs3 = (maintainActs > procs3) ? 0f : procs3 - maintainActs;
 
@@ -254,7 +262,12 @@ namespace Rawr.DPSWarr.Skills
     }
     #endregion
     #region OnAttacks
-    public class HeroicStrike : OnAttack
+    public class HeroicStrike :
+#if !RAWR4
+        OnAttack
+#else
+        Ability
+#endif
     {
         /// <summary>
         /// A strong attack that increases melee damage by 495 and causes a high amount of
@@ -271,21 +284,26 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
-            Cd = /*0f*/(Char.MainHand != null ? Whiteattacks.MhEffectiveSpeed : 0f); // In Seconds
-            //Targets += StatS.BonusTargets;
 #if !RAWR4
+            Cd = /*0f*/(Char.MainHand != null ? Whiteattacks.MhEffectiveSpeed : 0f); // In Seconds
             RageCost = 15f - (Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
 #else
-            RageCost = 15f;// -(Talents.ImprovedHeroicStrike * 1f) - (Talents.FocusedRage * 1f);
+            Cd = 3f; // In Seconds
+            RageCost = 30f;
 #endif
             CastTime = 0f; // In Seconds // Replaces a white hit
             GCDTime = 0f;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = Whiteattacks.MhDamage + 495f;
+#if RAWR4
+            // 8 + AP*0.6 Base Damage in Cata?
+            DamageBonus = Talents.WarAcademy * 0.05f;
+#endif
             BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             //
             Initialize();
         }
+#if !RAWR4
         public override float FullRageCost
         {
             get
@@ -294,8 +312,14 @@ namespace Rawr.DPSWarr.Skills
                 return base.FullRageCost - (Talents.GlyphOfHeroicStrike ? 10.0f * MHAtkTable.Crit : 0f);
             }
         }
+#endif
     }
-    public class Cleave : OnAttack
+    public class Cleave : 
+#if !RAWR4
+        OnAttack
+#else
+        Ability
+#endif
     {
         /// <summary>
         /// A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.
@@ -328,6 +352,7 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = Whiteattacks.MhDamage + (222f * (1f + Talents.ImprovedCleave * 0.40f));
 #else
             DamageBase = Whiteattacks.MhDamage + (222f/* * (1f + Talents.ImprovedCleave * 0.40f)*/);
+            DamageBonus = Talents.WarAcademy * 0.05f;
 #endif
             //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack
             BonusCritChance = Talents.Incite * 0.05f;
@@ -347,6 +372,7 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting></TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
         ///  - (Talents.FocusedRage * 1f)
+        ///  RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
     }
     #endregion
 }

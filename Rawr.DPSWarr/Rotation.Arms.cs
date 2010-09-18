@@ -99,13 +99,20 @@ namespace Rawr.DPSWarr {
             float origNumGCDs = (CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD) * percTimeOver20,
                   origavailGCDs = preloopAvailGCDs * percTimeOver20,
                   origGCDsused = preloopGCDsUsed * percTimeOver20;
-            float oldBLSGCDs = 0f, oldMSGCDs = 0f,
-                  oldRDGCDs = 0f,    oldOPGCDs = 0f,  oldTBGCDs = 0f,
-                  oldSDGCDs = 0f,    oldEXGCDs = 0f,  oldSLGCDs = 0f,
-                  oldSSActs = 0f;
+            float oldBLSGCDs = 0f, oldMSGCDs = 0f, oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f, oldEXGCDs = 0f, oldSLGCDs = 0f,
+#if !RAWR4
+                  oldSDGCDs = 0f, oldSSActs = 0f;
+#else
+                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f;
+#endif
 
             AbilWrapper SL = GetWrapper<Slam>();
+#if !RAWR4
             AbilWrapper SD = GetWrapper<Suddendeath>();
+            AbilWrapper SS = GetWrapper<Swordspec>();
+#else
+            AbilWrapper CS = GetWrapper<ColossusSmash>();
+#endif
             AbilWrapper EX = GetWrapper<Execute>();
             AbilWrapper HS = GetWrapper<HeroicStrike>();
             AbilWrapper CL = GetWrapper<Cleave>();
@@ -114,17 +121,22 @@ namespace Rawr.DPSWarr {
             AbilWrapper BLS = GetWrapper<Bladestorm>();
             AbilWrapper RD = GetWrapper<Rend>();
             AbilWrapper TB = GetWrapper<TasteForBlood>();
-            AbilWrapper SS = GetWrapper<Swordspec>();
 
             Execute EX_ability = EX.ability as Execute;
+#if !RAWR4
             Suddendeath SD_ability = SD.ability as Suddendeath;
+#endif
             
             SL.numActivates = origavailGCDs;
             WhiteAtks.Slam_ActsOverDur = SL.numActivates;
+#if !RAWR4
             SD_ability.FreeRage = SD_ability.RageCost;
+#endif
             EX_ability.FreeRage = EX_ability.RageCost;
+#if !RAWR4
             float oldHSActivates = 0f, RageForHS = 0f, newHSActivates = HS.numActivates = WhiteAtks.HSOverridesOverDur = 0f;
             float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.numActivates = WhiteAtks.CLOverridesOverDur = 0f;
+#endif
             float origAvailRage = preloopAvailRage * percTimeOver20;
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
@@ -145,10 +157,12 @@ namespace Rawr.DPSWarr {
 #if !RAWR4
             float MSBaseCd = 6f - Talents.ImprovedMortalStrike / 3f;
 #else
-            float MSBaseCd = 6f;// -Talents.ImprovedMortalStrike / 3f;
+            float MSBaseCd = 6f;
 #endif
             float MS_WeightedValue = MS.ability.DamageOnUse + DW.TickSize * MS.ability.MHAtkTable.Crit,
+#if !RAWR4
                   SD_WeightedValue = SD.ability.DamageOnUse + DW.TickSize * SD.ability.MHAtkTable.Crit,
+#endif
                   SL_WeightedValue = SL.ability.DamageOnUse + DW.TickSize * SL.ability.MHAtkTable.Crit;
             float OnePt5Plus1 = LatentGCD + (OP.ability.Cd + CalcOpts.AllowedReact),
                   Two1pt5 = LatentGCD * 2f,
@@ -175,7 +189,13 @@ namespace Rawr.DPSWarr {
                      Math.Abs(RD.numActivates - oldRDGCDs) > 0.1f ||
                      Math.Abs(OP.numActivates - oldOPGCDs) > 0.1f ||
                      Math.Abs(TB.numActivates - oldTBGCDs) > 0.1f ||
+#if !RAWR4
                      Math.Abs(SD.numActivates - oldSDGCDs) > 0.1f ||
+#else
+                     Math.Abs(CS.numActivates - oldCSGCDs) > 0.1f ||
+                     Math.Abs(HS.numActivates - oldHSGCDs) > 0.1f ||
+                     Math.Abs(CL.numActivates - oldCLGCDs) > 0.1f ||
+#endif
                      Math.Abs(SL.numActivates - oldSLGCDs) > 0.1f ||
                      (percTimeUnder20 > 0 && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f)
 #if !RAWR4
@@ -188,15 +208,35 @@ namespace Rawr.DPSWarr {
                 //availGCDs = origavailGCDs;
                 WhiteAtks.Slam_ActsOverDur = SL.numActivates;
                 oldBLSGCDs = BLS.numActivates; oldMSGCDs = MS.numActivates; oldRDGCDs = RD.numActivates; oldOPGCDs = OP.numActivates; oldTBGCDs = TB.numActivates;
-                oldSDGCDs = SD.numActivates; oldEXGCDs = EX.numActivates; oldSLGCDs = SL.numActivates; oldSSActs = SS.numActivates;
+                oldEXGCDs = EX.numActivates; oldSLGCDs = SL.numActivates;
+#if !RAWR4
+                oldSDGCDs = SD.numActivates; oldSSActs = SS.numActivates;
                 BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = SD.numActivates = EX.numActivates = SL.numActivates = 0;
+#else
+                oldCSGCDs = CS.numActivates;
+                BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = CS.numActivates = EX.numActivates = SL.numActivates = 0;
+#endif
                 availRage = origAvailRage;
                 availRage += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * percTimeOver20;
 
                 float acts;
                 float Abil_GCDs;
+#if !RAWR4
                 float RDspace, BLSspace, MSspace, TFBspace, OPspace, SDspace, /*EXspace,*/ SLspace;
+#else
+                float RDspace, BLSspace, MSspace, TFBspace, OPspace, CSspace, /*EXspace,*/ SLspace, HSspace, CLspace;
+#endif
                 // ==== Primary Ability Priorities ====
+                // Colossus Smash
+                if (CS.ability.Validated) {
+                    acts = Math.Min(GCDsAvailable, CS.ability.Activates * percTimeInDPSAndOver20);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    CS.numActivates = Abil_GCDs;
+                    //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= CS.Rage;
+                }
+                CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
+
                 // Rend
                 if (RD.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, RD.ability.Activates * percTimeInDPSAndOver20);
@@ -226,6 +266,7 @@ namespace Rawr.DPSWarr {
                 if (MS.ability.Validated) {
                     // TODO: THIS WAS ADDED TO FIX A BUG, JOTHAY'S UNAVAILABLE FOR COMMENT
                     acts = Math.Min(GCDsAvailable, MS.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
+#if !RAWR4
                     #region Mortal Strike Delays
                     /* ===== Delays in MS from Slam or Execute =====
                      * This is a test for MS Delays (idea coming from Landsoul's sheet 2.502)
@@ -238,10 +279,17 @@ namespace Rawr.DPSWarr {
 
                         // In-Between MS is: 3.50 seconds
                         // moved up out of the loop
+#if !RAWR4
                         //use exe if MS more than 0.320164 sec
                         useExeifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SD_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
                         //use slam if MS more than 0.413178 sec
                         useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (SD_WeightedValue - SL_WeightedValue)) + MS_WeightedValue);
+#else
+                        //use exe if MS more than 0.320164 sec
+                        useExeifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (/*SD_WeightedValue*/0f / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (0f/*SD_WeightedValue*/ - SL_WeightedValue)) + MS_WeightedValue);
+                        //use slam if MS more than 0.413178 sec
+                        useSlamifMSHasMoreThan = LatentGCD * MS_WeightedValue / (MSBaseCd * (SL_WeightedValue / LatentGCD + 0.03f * Talents.SuddenDeath * HPS * (0/*SD_WeightedValue - SL_WeightedValue*/)) + MS_WeightedValue);
+#endif
 
                         //1.5 and 1.0 global is 2.60 seconds
                         // moved out of the loop
@@ -285,7 +333,11 @@ namespace Rawr.DPSWarr {
                         msNormally3 = (canUse3 == "exe or slam" ? lengthFor3 : MSBaseCd + CalcOpts.AllowedReact);
                         //Extended length is 100.00% of the time
 
+#if !RAWR4
                         float Abilities = ((BLS.numActivates + RD.numActivates + SL.numActivates + acts + oldHSActivates + WhiteAtks.MhActivates + SD.numActivates) / FightDuration);
+#else
+                        float Abilities = ((BLS.numActivates + RD.numActivates + SL.numActivates + acts + WhiteAtks.MhActivates + CS.numActivates + HS.numActivates + CL.numActivates) / FightDuration);
+#endif
 
                         OnePt5Plus1_Occurs = 0f;
                         Two1PtZero_Occurs = TasteForBloodMOD
@@ -326,6 +378,7 @@ namespace Rawr.DPSWarr {
                     }
                     #endregion
                     acts = Math.Min(GCDsAvailable, MS.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
+#endif
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     MS.numActivates = (1f - BLSspace) * Abil_GCDs;
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
@@ -346,7 +399,11 @@ namespace Rawr.DPSWarr {
                 // Overpower
                 if (OP.ability.Validated) {
                     OverPower _OP = OP.ability as OverPower;
+#if !RAWR4
                     acts = Math.Min(GCDsAvailable, _OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, SS.numActivates) * percTimeInDPSAndOver20 * PercFailRage);
+#else
+                    acts = Math.Min(GCDsAvailable, _OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur) * percTimeInDPSAndOver20 * PercFailRage);
+#endif
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     OP.numActivates = Abil_GCDs * (1f - TFBspace - RDspace - BLSspace - MSspace);
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
@@ -354,6 +411,7 @@ namespace Rawr.DPSWarr {
                 }
                 OPspace = OP.numActivates / NumGCDs * OP.ability.UseTime / LatentGCD;
                
+#if !RAWR4
                 // Sudden Death
                 // the atleast (1 to 3) comes from MS Delays, this does already factor talent rate in
                 if (SD.ability.Validated) {
@@ -388,6 +446,23 @@ namespace Rawr.DPSWarr {
                     availRage -= SD.Rage;
                 }
                 SDspace = (SD.numActivates / NumGCDs) * (SD.ability.UseTime / LatentGCD);
+#endif
+
+#if RAWR4
+                // Heroic Strike/Cleave now that they are on GCDs. These should be rage dumps
+                // Computing them together as you use HS for single, CL for Multiple
+                if (PercFailRage == 1f && (HS.ability.Validated || CL.ability.Validated))
+                {
+                    acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndOver20);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
+                    HS.numActivates = Abil_GCDs - CL.numActivates;
+                    //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= HS.Rage + CL.Rage;
+                }
+                HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
+                CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
+#endif
 
                 // Slam for remainder of GCDs
                 if (SL.ability.Validated && PercFailRage == 1f)
@@ -402,19 +477,27 @@ namespace Rawr.DPSWarr {
                 WhiteAtks.Slam_ActsOverDur = SL.numActivates;
                 SLspace = SL.numActivates / NumGCDs * SL.ability.UseTime / LatentGCD;
 
+#if !RAWR4
                 // Sword Spec Procs
                 if (SS.ability.Validated) {
                     Swordspec _SS = SS.ability as Swordspec;
                     SS.numActivates = _SS.GetActivates(LandedYellowsOverDur, WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur) * percTimeOver20;
                     availRage -= SS.Rage;
                 }
+#endif
 
+#if !RAWR4
                 float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + SDspace + SLspace);
+#else
+                float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace);
+#endif
                 repassAvailRage = availRage; // check for not enough rage to maintain rotation
                 InvalidateCache();
                 Iterator++;
             }
             #endregion
+            // Cataclysm doesn't have OnAttack abilities anymore. HS/CL become normal GCD Rage Dumps
+#if !RAWR4
             #region OnAttacks
             if (availRage > 0f && PercFailRage == 1f && (hsok || clok))
             { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lack of rage
@@ -478,8 +561,9 @@ namespace Rawr.DPSWarr {
                         (SS.ability.Validated && Math.Abs(newSSActivates - oldSSActivates) > 0.01f)));
             }
             #endregion
+#endif
             #endregion
-          
+
             float DPS_TTL = 0f;
             float rageNeeded = 0f, rageGenOther = 0f;
             foreach (AbilWrapper aw in GetAbilityList())
@@ -528,11 +612,20 @@ namespace Rawr.DPSWarr {
                   origGCDsused = preloopGCDsUsed * (/*1f -*/ percTimeUnder20);
             float oldBLSGCDs = 0f, //oldMSGCDs = 0f,
                   oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f,
-                  oldSDGCDs = 0f, oldEXGCDs = 0f, //oldSLGCDs = 0f,
-                  oldSSActs = 0f;
+                  oldEXGCDs = 0f, //oldSLGCDs = 0f,
+#if !RAWR4
+                  oldSDGCDs = 0f, oldSSActs = 0f;
+#else
+                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f;
+#endif
 
             AbilWrapper SL = GetWrapper<Slam>();
+#if !RAWR4
             AbilWrapper SD = GetWrapper<Suddendeath>();
+            AbilWrapper SS = GetWrapper<Swordspec>();
+#else
+            AbilWrapper CS = GetWrapper<ColossusSmash>();
+#endif
             AbilWrapper EX = GetWrapper<Execute>();
             AbilWrapper HS = GetWrapper<HeroicStrike>();
             AbilWrapper CL = GetWrapper<Cleave>();
@@ -541,18 +634,27 @@ namespace Rawr.DPSWarr {
             AbilWrapper BLS = GetWrapper<Bladestorm>();
             AbilWrapper RD = GetWrapper<Rend>();
             AbilWrapper TB = GetWrapper<TasteForBlood>();
-            AbilWrapper SS = GetWrapper<Swordspec>();
 
             Execute EX_ability = EX.ability as Execute;
+#if !RAWR4
             Suddendeath SD_ability = SD.ability as Suddendeath;
+#endif
 
             EX.numActivatesU20 = origavailGCDs;
             WhiteAtks.Slam_ActsOverDur = 0f;// SL.numActivates;
+#if !RAWR4
             SD_ability.FreeRage = SD_ability.RageCost;
+#endif
             EX_ability.FreeRage = EX_ability.RageCost;
-            float oldHSActivates = 0f, RageForHS = 0f, newHSActivates = HS.numActivatesU20 /*= WhiteAtks.HSOverridesOverDur*/ = 0f;
-            float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.numActivatesU20 /*= WhiteAtks.CLOverridesOverDur*/ = 0f;
+#if !RAWR4
+            float oldHSActivates = 0f, RageForHS = 0f, newHSActivates = HS.numActivatesU20 = 0f;
+            float oldCLActivates = 0f, RageForCL = 0f, newCLActivates = CL.numActivatesU20 = 0f;
+#else
+            float newHSActs = HS.numActivatesU20 = 0f;
+            float newCLActs = CL.numActivatesU20 = 0f;
+#endif
             float origAvailRage = preloopAvailRage * (/*1f -*/ percTimeUnder20);
+#if !RAWR4
             bool hsok = false; // CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
 #if RAWR3 || RAWR4 || SILVERLIGHT
@@ -561,6 +663,7 @@ namespace Rawr.DPSWarr {
 #else
                 CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc > 0
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+#endif
 #endif
             availRage += WhiteAtks.whiteRageGenOverDurNoHS * percTimeInDPS * (/*1f -*/ percTimeUnder20);
             availRage -= EX.RageU20;
@@ -598,7 +701,13 @@ namespace Rawr.DPSWarr {
                      Math.Abs(RD.numActivates - oldRDGCDs) > 0.1f ||
                      Math.Abs(OP.numActivates - oldOPGCDs) > 0.1f ||
                      Math.Abs(TB.numActivates - oldTBGCDs) > 0.1f ||
+#if !RAWR4
                      Math.Abs(SD.numActivates - oldSDGCDs) > 0.1f ||
+#else
+                     Math.Abs(CS.numActivates - oldCSGCDs) > 0.1f ||
+                     Math.Abs(HS.numActivates - oldHSGCDs) > 0.1f ||
+                     Math.Abs(CL.numActivates - oldCLGCDs) > 0.1f ||
+#endif
                      //Math.Abs(SL.numActivates - oldSLGCDs) > 0.1f ||
                      (percTimeUnder20 > 0 && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f)
 #if !RAWR4
@@ -611,15 +720,36 @@ namespace Rawr.DPSWarr {
                 //availGCDs = origavailGCDs;
                 //WhiteAtks.Slam_Freq = SL.numActivates;
                 oldBLSGCDs = BLS.numActivatesU20; /*oldMSGCDs = MS.numActivates;*/ oldRDGCDs = RD.numActivatesU20; oldOPGCDs = OP.numActivatesU20; oldTBGCDs = TB.numActivatesU20;
-                oldSDGCDs = SD.numActivatesU20; oldEXGCDs = EX.numActivatesU20; /*oldSLGCDs = SL.numActivatesU20;*/ oldSSActs = SS.numActivatesU20;
+                oldEXGCDs = EX.numActivatesU20; /*oldSLGCDs = SL.numActivatesU20;*/
+#if !RAWR4
+                oldSDGCDs = SD.numActivatesU20; oldSSActs = SS.numActivatesU20;
                 BLS.numActivatesU20 = /*MS.numActivatesU20 =*/ RD.numActivatesU20 = OP.numActivatesU20 = TB.numActivatesU20 = SD.numActivatesU20 = EX.numActivatesU20 = SL.numActivatesU20 = 0;
+#else
+                oldCSGCDs = CS.numActivatesU20;
+                BLS.numActivatesU20 = /*MS.numActivatesU20 =*/ RD.numActivatesU20 = OP.numActivatesU20 = TB.numActivatesU20 = CS.numActivatesU20 = EX.numActivatesU20 = SL.numActivatesU20 = HS.numActivatesU20 = CL.numActivatesU20 = 0;
+#endif
                 availRage = origAvailRage;
                 availRage += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * (/*1f -*/ percTimeUnder20);
 
                 float acts;
                 float Abil_GCDs;
+#if !RAWR4
                 float RDspace, BLSspace, /*MSspace,*/ TFBspace, OPspace, SDspace, EXspace/*, SLspace*/;
+#else
+                float CSspace, RDspace, BLSspace, /*MSspace,*/ TFBspace, OPspace, EXspace/*, SLspace*/, HSspace, CLspace;
+#endif
                 // ==== Primary Ability Priorities ====
+                // Colossus Smash
+                if (CS.ability.Validated)
+                {
+                    acts = Math.Min(GCDsAvailable, CS.ability.Activates * percTimeInDPSAndUnder20);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    CS.numActivates = Abil_GCDs;
+                    //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= CS.Rage;
+                }
+                CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
+
                 // Rend
                 if (RD.ability.Validated)
                 {
@@ -665,7 +795,11 @@ namespace Rawr.DPSWarr {
                 if (OP.ability.Validated)
                 {
                     OverPower _OP = OP.ability as OverPower;
+#if !RAWR4
                     acts = Math.Min(GCDsAvailableU20, _OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur, SS.numActivatesU20) * percTimeInDPSAndUnder20 * PercFailRageUnder20);
+#else
+                    acts = Math.Min(GCDsAvailableU20, _OP.GetActivates(DodgedYellowsOverDur, ParriedYellowsOverDur) * percTimeInDPSAndUnder20 * PercFailRageUnder20);
+#endif
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     OP.numActivatesU20 = Abil_GCDs * (1f - TFBspace - RDspace - BLSspace /*- MSspace*/);
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
@@ -673,6 +807,7 @@ namespace Rawr.DPSWarr {
                 }
                 OPspace = OP.numActivatesU20 / NumGCDs * OP.ability.UseTime / LatentGCD;
 
+#if !RAWR4
                 // Sudden Death
                 // the atleast (1 to 3) comes from MS Delays, this does already factor talent rate in
                 if (SD.ability.Validated)
@@ -708,6 +843,23 @@ namespace Rawr.DPSWarr {
                     availRage -= SD.RageU20;
                 }
                 SDspace = (SD.numActivatesU20 / NumGCDs) * (SD.ability.UseTime / LatentGCD);
+#endif
+
+#if RAWR4
+                // Heroic Strike/Cleave now that they are on GCDs. These should be rage dumps
+                // Computing them together as you use HS for single, CL for Multiple
+                if (HS.ability.Validated || CL.ability.Validated)
+                {
+                    acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndUnder20);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
+                    HS.numActivates = Abil_GCDs - CL.numActivates;
+                    //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= HS.Rage + CL.Rage;
+                }
+                HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
+                CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
+#endif
 
                 // Execute for remainder of GCDs
                 if (EX.ability.Validated /*&& PercFailRage == 1f*/)
@@ -722,6 +874,7 @@ namespace Rawr.DPSWarr {
                 else { EX.numActivatesU20 = 0f; }
                 EXspace = EX.numActivatesU20 / NumGCDs * EX.ability.UseTime / LatentGCD;
 
+#if !RAWR4
                 // Sword Spec Procs
                 if (SS.ability.Validated)
                 {
@@ -729,13 +882,19 @@ namespace Rawr.DPSWarr {
                     SS.numActivatesU20 = _SS.GetActivates(LandedYellowsOverDur, WhiteAtks.HSOverridesOverDur, WhiteAtks.CLOverridesOverDur) * percTimeUnder20;
                     availRage -= SS.RageU20;
                 }
+#endif
 
+#if !RAWR4
                 float TotalSpace = (RDspace + BLSspace /*+ MSspace*/ + OPspace + TFBspace + SDspace /*+ SLspace*/ + EXspace);
+#else
+                float TotalSpace = (CSspace + RDspace + BLSspace /*+ MSspace*/ + OPspace + TFBspace /*+ SLspace*/ + EXspace + HSspace + CLspace);
+#endif
                 repassAvailRage = availRage; // check for not enough rage to maintain rotation
                 InvalidateCache();
                 Iterator++;
             }
             #endregion
+#if !RAWR4
             #region OnAttacks
             if (false && availRage > 0f && PercFailRageUnder20 == 1f && (hsok || clok))
             { // We need extra rage beyond the rotation to HS/CL and we don't HS/CL when parts of our rotation were failing for lack of rage
@@ -799,6 +958,7 @@ namespace Rawr.DPSWarr {
                         (SS.ability.Validated && Math.Abs(newSSActivates - oldSSActivates) > 0.01f)));
             }
             #endregion
+#endif
             #endregion
 
             float DPS_TTL = 0f;

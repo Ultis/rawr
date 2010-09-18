@@ -463,6 +463,7 @@ namespace Rawr {
         BonusDevastateDamage,
         BonusShockwaveDamage,
         BonusWarrior_T7_2P_SlamDamage,
+        BonusExecOPMSDamageMultiplier,
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
@@ -2272,11 +2273,20 @@ namespace Rawr {
         }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Warrior")]
-        [DisplayName("Bonus Rage Generated")]
+        [DisplayName("Bonus Rage Gen")]
         public float BonusRageGen
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageGen]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageGen] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Bonus Exec/OP/MS Damage")]
+        public float BonusExecOPMSDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier] = value; }
         }
         #endregion
         #region Added by Rawr.Mage

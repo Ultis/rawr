@@ -29,10 +29,10 @@ namespace Rawr.DPSWarr.Skills
                     CalcOpts.Duration;
 #endif
             //
-            HSOverridesOverDur = 0f;
-            CLOverridesOverDur = 0f;
             Slam_ActsOverDur = 0f;
 #if !RAWR4
+            HSOverridesOverDur = 0f;
+            CLOverridesOverDur = 0f;
             _uwProcValue_mh = combatFactors._c_mhItemSpeed * Talents.UnbridledWrath / 20.0f;
             _uwProcValue_oh = combatFactors._c_ohItemSpeed * Talents.UnbridledWrath / 20.0f;
 #else
@@ -83,8 +83,10 @@ namespace Rawr.DPSWarr.Skills
             }
         }
         // Get/Set
+#if !RAWR4
         public float HSOverridesOverDur { get; set; }
         public float CLOverridesOverDur { get; set; }
+#endif
         public float Slam_ActsOverDur;
         #endregion
         // bah
@@ -140,7 +142,11 @@ namespace Rawr.DPSWarr.Skills
                 {
                     // floating point arithmetic fail, need to do it this way or we get negative numbers at 100% override
                     float f = FightDuration / MhEffectiveSpeed;
+#if !RAWR4
                     return f - HSOverridesOverDur - CLOverridesOverDur;
+#else
+                    return f;
+#endif
                 }
                 else return 0f;
             }
@@ -428,6 +434,7 @@ namespace Rawr.DPSWarr.Skills
             HealingBase = 0f;
             HealingBonus = 1f;
             BonusCritChance = 0.00f;
+            BonusCritDamage = 1f;
             UseSpellHit = false;
             UseHitTable = true;
             validatedSet = false;
@@ -509,10 +516,11 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         public float DamageBase { get; set; }
         /// <summary>Percentage Based Damage Bonus (1.5 = 150% damage)</summary>
-        protected float DamageBonus { get; set; }
+        public float DamageBonus { get; set; }
         protected float HealingBase { get; set; }
         protected float HealingBonus { get; set; }
         public float BonusCritChance { get; set; }
+        public float BonusCritDamage { get; set; }
         protected bool StanceOkFury { get; set; }
         protected bool StanceOkArms { get; set; }
         protected bool StanceOkDef { get; set; }
@@ -627,7 +635,7 @@ namespace Rawr.DPSWarr.Skills
 
                 float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = dmg * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                float dmgCrit = dmg * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus   Damage when critting
 
                 dmg *= dmgDrop;
 
@@ -772,6 +780,7 @@ namespace Rawr.DPSWarr.Skills
         public override float Activates { get { return 0; } }
         public override float GetDPS(float acts) { return 0; }
     }
+#if !RAWR4
     public class OnAttack : Ability
     {
         // Constructors
@@ -791,6 +800,7 @@ namespace Rawr.DPSWarr.Skills
         }
         public float DPS { get { return DamageOnUse * ActivatesOverride / FightDuration; } }
     };
+#endif
     public class DoT : Ability
     {
         // Constructors
@@ -853,6 +863,22 @@ namespace Rawr.DPSWarr.Skills
         /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
         /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
         /// </GlyphsAffecting>
+        public VictoryRush(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Name = "Heroic Strike";
+            Description = "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.";
+            //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
+            ReqMeleeWeap = true;
+            ReqMeleeRange = true;
+            //
+#if RAWR4
+            DamageBonus = Talents.WarAcademy * 0.05f;
+#endif
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            //
+            Initialize();
+        }
     }
     public class HeroicThrow : Ability
     {

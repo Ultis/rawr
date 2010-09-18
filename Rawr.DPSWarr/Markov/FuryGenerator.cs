@@ -550,7 +550,11 @@ namespace Rawr.DPSWarr.Markov
                         double rageNeeded = rageNeededNoHS;
                         Skills.HeroicStrike HS = gen.Rot.GetWrapper<Skills.HeroicStrike>().ability as Skills.HeroicStrike;
 #if RAWR3 || RAWR4 || SILVERLIGHT
+#if !RAWR4
                         rageNeeded += HS.FullRageCost * (bo.BerserkTimer / wa.MhEffectiveSpeed * gen.HSPerc);
+#else
+                        rageNeeded += HS.RageCost * (bo.BerserkTimer / wa.MhEffectiveSpeed * gen.HSPerc);
+#endif
                         double rageGenerated = wa.MHSwingRage * (bo.BerserkTimer / wa.MhEffectiveSpeed) +
                                                wa.OHSwingRage * (bo.BerserkTimer / wa.OhEffectiveSpeed);
 #else
@@ -562,7 +566,11 @@ namespace Rawr.DPSWarr.Markov
 
                         double HsRage = rageNeeded - rageNeededNoHS;
                         double hsRageNeeded = rageGenerated - rageNeededNoHS;
+#if !RAWR4
                         gen.HSPerc = Math.Min((hsRageNeeded / HS.FullRageCost) /
+#else
+                        gen.HSPerc = Math.Min((hsRageNeeded / HS.RageCost) /
+#endif
 #if RAWR3 || RAWR4 || SILVERLIGHT
                                      (bo.BerserkTimer / wa.MhEffectiveSpeed), 1); // Needed HS Activates / White activates
 #else

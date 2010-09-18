@@ -24,8 +24,8 @@ namespace Rawr.DPSWarr.Skills
             Name = "Mortal Strike";
             Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
-            ReqTalent = true;
 #if !RAWR4
+            ReqTalent = true;
             Talent2ChksValue = Talents.MortalStrike;
             Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
             RageCost = 30f - (Talents.FocusedRage * 1f);
@@ -40,11 +40,61 @@ namespace Rawr.DPSWarr.Skills
             //Targets += StatS.BonusTargets;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
+            DamageBonus *= 1f + StatS.BonusExecOPMSDamageMultiplier;
             BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
+#if RAWR4
+            BonusCritDamage = 1f + Talents.Impale * 0.1f;
+#endif
             //
             Initialize();
         }
     }
+#if RAWR4
+    public class ColossusSmash : Ability
+    {
+        // Constructors
+        /// <summary>
+        /// Smashes a target for weapon damage plus 120 and weakens their defenses,
+        /// allowing your attacks to entirely bypass their armor for 6 sec.
+        /// </summary>
+        /// <TalentsAffecting>Sudden Death (Requires Talent) [(5*Pts)% chance on melee hit to reset the cd, keep 5*Pts rage after Exec]</TalentsAffecting>
+        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <SetsAffecting></SetsAffecting>
+        public ColossusSmash(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Name = "Sudden Death";
+            Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
+            ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
+            RageCost = 30;
+            Cd = 20;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg + 120f;
+            UseReact = true;
+            //
+            Initialize();
+        }
+        // Variables
+        private static readonly SpecialEffect[/*Talents.SuddenDeath*/] _buff = {
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 0 * 0.05f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 1 * 0.05f),
+            new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 2 * 0.05f),
+        };
+        protected SpecialEffect Buff { get { return _buff[Talents.SuddenDeath]; } }
+        // Functions
+        public float GetActivates(float landedatksoverdur)
+        {
+            if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
+            float acts = 0f;
+            float actsUnderSD = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f/*MHAtkTable.AnyLand*/, combatFactors._c_mhItemSpeed, FightDuration);
+            float actsNormal = FightDuration / Cd;
+            acts = Math.Min(actsUnderSD, actsNormal);
+
+            return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost));
+        }
+    }
+#else
     public class Suddendeath : Ability
     {
         // Constructors
@@ -70,6 +120,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
             Exec = ex as Execute;
             RageCost = Exec.RageCost;
+            DamageBonus = Exec.DamageBonus;
             ReqTalent = true;
             Talent2ChksValue = Talents.SuddenDeath;
             ReqMeleeWeap = Exec.GetReqMeleeWeap();
@@ -120,6 +171,7 @@ namespace Rawr.DPSWarr.Skills
         private float[] _SDRageReduc = { 0, 3, 7, 10 };
         private float[] SDRageReduc { get{ return _SDRageReduc; } }
     }
+#endif
     public class OverPower : Ability
     {
         // Constructors
@@ -130,14 +182,20 @@ namespace Rawr.DPSWarr.Skills
         /// <TalentsAffecting>Improved Overpower [+(25*Pts)% Crit Chance],
         /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Overpower [Can proc when parried]</GlyphsAffecting>
+#if !RAWR4
         public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ss)
+#else
+        public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+#endif
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Overpower";
             Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+#if !RAWR4
             SS = ss;
+#endif
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             CanBeDodged = false;
@@ -159,15 +217,21 @@ namespace Rawr.DPSWarr.Skills
             //Targets += StatS.BonusTargets;
             StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
+            DamageBonus *= 1f + StatS.BonusExecOPMSDamageMultiplier;
             //DamageBonus = 1f +(0.1f * Talents.UnrelentingAssault);
-            //BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+            BonusCritChance = 0.20f * Talents.TasteForBlood;
+            BonusCritDamage = 1f + Talents.Impale * 0.1f;
 #endif
             UseReact = true; // can't plan for this
             //
             Initialize();
         }
+#if !RAWR4
         private Ability SS;
         public float GetActivates(float YellowAttacksThatDodgeOverDur, float YellowAttacksThatParryOverDur, float ssActs)
+#else
+        public float GetActivates(float YellowAttacksThatDodgeOverDur, float YellowAttacksThatParryOverDur)
+#endif
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
 
@@ -182,7 +246,10 @@ namespace Rawr.DPSWarr.Skills
             {
                 float WhtHitsOverDur = FightDuration / Whiteattacks.MhEffectiveSpeed
               + (combatFactors.useOH ? FightDuration / Whiteattacks.OhEffectiveSpeed : 0f)
-                                       + ssActs;
+#if !RAWR4
+                                       + ssActs
+#endif
+                                        ;
 
                 float dodgesoverDur = 0f
                     + WhtHitsOverDur * (dodge + parry)
@@ -234,8 +301,10 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;// -(Talents.FocusedRage * 1f);
             StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
+            DamageBonus *= 1f + StatS.BonusExecOPMSDamageMultiplier;
             //DamageBonus = 1f + (0.1f * Talents.UnrelentingAssault);
-            //BonusCritChance = 0.25f * Talents.ImprovedOverpower;
+            BonusCritChance = 0.20f * Talents.TasteForBlood;
+            BonusCritDamage = 1f + Talents.Impale * 0.1f;
 #endif
             //UseReact = true; // you can plan for it ahead of time, unlike SD and normal OP
             //
@@ -283,10 +352,11 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = WW.MaxRange; // In Yards
             Targets = WW.Targets; // Handled in WW
             DamageBase = WW.DamageBase;
-            Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
 #if !RAWR4
+            Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f - (Talents.FocusedRage * 1f);
 #else
+            Cd = 60f;// -(Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f;// -(Talents.FocusedRage * 1f);
 #endif
             CastTime = 6f; // In Seconds // Channeled
@@ -310,6 +380,7 @@ namespace Rawr.DPSWarr.Skills
             }
         }
     }
+#if !RAWR4
     public class Swordspec : Ability
     {
         /// <summary>
@@ -361,8 +432,10 @@ namespace Rawr.DPSWarr.Skills
         {
             if (combatFactors._c_mhItemType != ItemType.TwoHandSword && combatFactors._c_mhItemType != ItemType.OneHandSword) { return 0.0f; }
             // This attack doesnt consume GCDs and doesn't affect the swing timer
+#if !RAWR4
             Whiteattacks.HSOverridesOverDur = heroic;
             Whiteattacks.CLOverridesOverDur = cleave;
+#endif
             float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
 #if !RAWR4
             float effectActs = _SE_SwordSpec[Talents.SwordSpecialization].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
@@ -410,6 +483,7 @@ namespace Rawr.DPSWarr.Skills
             return tooltip;
         }
     }
+#endif
     public class Execute : Ability
     {
         // Constructors
@@ -434,6 +508,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 15f - (Talents.ImprovedExecute * 2.5f) - (Talents.FocusedRage * 1f);
 #else
             RageCost = 15f;// -(Talents.ImprovedExecute * 2.5f);// -(Talents.FocusedRage * 1f);
+            DamageBonus *= 1f + StatS.BonusExecOPMSDamageMultiplier;
 #endif
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
@@ -495,7 +570,10 @@ namespace Rawr.DPSWarr.Skills
             DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
 #else
             RageCost = 15f;// -(Talents.FocusedRage * 1f);
-            DamageBonus = (1f + StatS.BonusWarrior_T7_2P_SlamDamage);// *(1f + Talents.UnendingFury * 0.02f);
+            DamageBonus  = 1f + StatS.BonusWarrior_T7_2P_SlamDamage;
+            DamageBonus *= 1f + Talents.WarAcademy * 0.05f;
+            DamageBonus *= 1f + Talents.ImprovedSlam * 0.10f;
+            BonusCritDamage = 1f + Talents.Impale * 0.1f;
 #endif
             CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
             StanceOkArms = StanceOkDef = true;

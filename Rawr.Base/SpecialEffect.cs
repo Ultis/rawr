@@ -68,7 +68,7 @@ namespace Rawr
 
         #region Damage, in or out
         /// <summary>Any damage taken, regardless of type</summary>
-		DamageTaken,
+        DamageTaken,
         /// <summary>The player blocks, parries or dodges a melee attack</summary>
         DamageAvoided,
         /// <summary>The player deals any form of damage, regardless of where it comes from</summary>
@@ -106,11 +106,11 @@ namespace Rawr
         RejuvenationTick,
         MangleCatHit,
         MangleBearHit,
-		SwipeBearOrLacerateHit,
-		MangleCatOrShredHit,
-		MangleCatOrShredOrInfectedWoundsHit,
-		RakeTick,
-		LacerateTick,
+        SwipeBearOrLacerateHit,
+        MangleCatOrShredHit,
+        MangleCatOrShredOrInfectedWoundsHit,
+        RakeTick,
+        LacerateTick,
         #endregion
         #region Added by Hunter
         /// <summary>The Hunter's Auto Shot lands on the target (hit or crit)</summary>
@@ -150,6 +150,10 @@ namespace Rawr
         HSorSLHit,
         /// <summary>The Warrior's Deep Wounds ability ticks on the target</summary>
         DeepWoundsTick,
+#if RAWR4
+        /// <summary>The Warrior crits with a Mortal Strike</summary>
+        MortalStrikeCrit,
+#endif
         #endregion
         #region Added by Warlock
         /// <summary>The Warlock's Corruption DoT ticks</summary>

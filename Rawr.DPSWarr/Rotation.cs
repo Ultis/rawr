@@ -252,12 +252,20 @@ namespace Rawr.DPSWarr {
             AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, WW)));
             AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+#if !RAWR4
             Skills.Ability SS = new Skills.Swordspec(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(SS));
             AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SS)));
+#else
+            AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+#endif
             AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+#if !RAWR4
             AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, EX)));
-            
+#else
+            AddAbility(new AbilWrapper(new Skills.ColossusSmash(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+#endif
+
             // Fury abilities
             Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(BT));
@@ -459,9 +467,9 @@ namespace Rawr.DPSWarr {
         protected virtual float RageGenOverDur_Anger {
             get {
 #if !RAWR4
-                return (Talents.AngerManagement / 3.0f) * FightDuration;
+                return (Talents.AngerManagement / 3.0f) * FightDuration; // Anger Management is an Arms Talent in WotLK
 #else
-                return 0f;
+                return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDuration; // Anger Management is an Arms Spec Bonus in Cata
 #endif
             }
         }
@@ -501,11 +509,8 @@ namespace Rawr.DPSWarr {
         protected float RageNeededOverDur {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in GetAbilityList())
-                {
-                    if (aw.allRage > 0f) 
-                        rage += aw.allRage;
-                }
+                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage > 0f) { rage += aw.allRage; } }
+                if (Talents.DeadlyCalm > 0) { rage *= 1f - 10/120; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
                 return rage;
             }
         }
