@@ -769,8 +769,6 @@ namespace Rawr.Moonkin
             // Application order: Stats, Talents, Gear
             // All spells: Crit% + (0.02 * Nature's Majesty)
             statsTotal.SpellCrit += 0.02f * character.DruidTalents.NaturesMajesty;
-            // All spells: Haste% + (0.01 * Nature's Grace)
-            statsTotal.SpellHaste += 0.01f * character.DruidTalents.NaturesGrace;
             // All spells: Hit rating + 0.5f * Balance of Power * Spirit
             statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * statsTotal.Spirit;
 
