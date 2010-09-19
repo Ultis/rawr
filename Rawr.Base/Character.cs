@@ -1851,11 +1851,15 @@ namespace Rawr //O O . .
             for (int slot = 0; slot < _item.Length; slot++)
             {
                 ItemInstance item = _item[slot];
-                if ((object)item != null && !string.IsNullOrEmpty(item.Item.SetName))
+                if ((object)item != null)
                 {
-                    int count;
-                    SetBonusCount.TryGetValue(item.Item.SetName, out count);
-                    SetBonusCount[item.Item.SetName] = count + 1;
+                    Item i = item.Item;
+                    if (i != null && !string.IsNullOrEmpty(i.SetName))
+                    {
+                        int count;
+                        SetBonusCount.TryGetValue(i.SetName, out count);
+                        SetBonusCount[i.SetName] = count + 1;
+                    }
                 }
             }
 

@@ -1044,7 +1044,7 @@ namespace Rawr.Mage
                         s = Solver.ArcaneMissilesTemplate.GetSpell(this, true, 4);
                         break;
                     case SpellId.ArcaneMissilesNoProc:
-                        s = Solver.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0, 5);
+                        s = Solver.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0);
                         break;
                     case SpellId.Frostbolt:
                         s = Solver.FrostboltTemplate.GetSpell(this);

@@ -451,12 +451,12 @@ namespace Rawr.Mage
             }
             float averageTicks = Ticks;
             float castTime = baseCastTime / castingSpeed;
-            if (calculationOptions.Beta && Channeled)
+            /*if (calculationOptions.Beta && Channeled)
             {
                 float tickCastTime = castTime / Ticks;
                 averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                 castTime = averageTicks * tickCastTime;
-            }
+            }*/
             if (InterruptFactor > 0)
             {
                 castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
@@ -499,11 +499,11 @@ namespace Rawr.Mage
                         float speed = rootCastingSpeed * (1 + (spellHasteRating + procHaste) * hasteFactor);
                         float gcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / speed);
                         float cast = baseCastTime / speed;
-                        if (calculationOptions.Beta && Channeled)
+                        /*if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = cast / Ticks;
                             cast = (float)Math.Floor(baseCastTime / tickCastTime) * tickCastTime;
-                        }
+                        }*/
                         if (InterruptFactor > 0)
                         {
                             cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
@@ -534,12 +534,12 @@ namespace Rawr.Mage
 
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                         castTime = baseCastTime / castingSpeed;
-                        if (calculationOptions.Beta && Channeled)
+                        /*if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = castTime / Ticks;
                             averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = averageTicks * tickCastTime;
-                        }
+                        }*/
                         if (InterruptFactor > 0)
                         {
                             castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
@@ -557,12 +557,12 @@ namespace Rawr.Mage
                         float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
                         float proccedCastTime = baseCastTime / proccedSpeed;
                         float proccedTicks = averageTicks;
-                        if (calculationOptions.Beta && Channeled)
+                        /*if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = proccedCastTime / Ticks;
                             proccedTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = proccedTicks * tickCastTime;
-                        }
+                        }*/
                         if (InterruptFactor > 0)
                         {
                             proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
@@ -577,12 +577,12 @@ namespace Rawr.Mage
                         castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                         castTime = baseCastTime / castingSpeed;
-                        if (calculationOptions.Beta && Channeled)
+                        /*if (calculationOptions.Beta && Channeled)
                         {
                             float tickCastTime = castTime / Ticks;
                             averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                             castTime = averageTicks * tickCastTime;
-                        }
+                        }*/
                         if (InterruptFactor > 0)
                         {
                             castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + latency) * maxPushback * InterruptFactor;
@@ -639,12 +639,12 @@ namespace Rawr.Mage
 
                                 globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
                                 castTime = baseCastTime / castingSpeed;
-                                if (calculationOptions.Beta && Channeled)
+                                /*if (calculationOptions.Beta && Channeled)
                                 {
                                     float tickCastTime = castTime / Ticks;
                                     averageTicks = (float)Math.Floor(baseCastTime / tickCastTime);
                                     castTime = averageTicks * tickCastTime;
-                                }
+                                }*/
                                 if (InterruptFactor > 0)
                                 {
                                     castTime = castTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f) * maxPushback * InterruptFactor;
@@ -657,10 +657,10 @@ namespace Rawr.Mage
                 }
             }
 
-            if (Channeled && calculationOptions.Beta)
+            /*if (Channeled && calculationOptions.Beta)
             {
                 channelReduction = 1 - averageTicks / Ticks;
-            }
+            }*/
 
             // channeled pushback
             if (Channeled && InterruptFactor > 0)
@@ -676,11 +676,11 @@ namespace Rawr.Mage
                     tickFactor += InterruptFactor * castTime / averageTicks * (i + 1) / averageTicks;
                 }
                 tickFactor += InterruptFactor * (averageTicks - maxLostTicks) * castTime / averageTicks * maxLostTicks / averageTicks;
-                if (calculationOptions.Beta)
+                /*if (calculationOptions.Beta)
                 {
                     channelReduction = 1 - averageTicks * (1 - tickFactor) / Ticks;
                 }
-                else
+                else*/
                 {
                     channelReduction = tickFactor;
                 }

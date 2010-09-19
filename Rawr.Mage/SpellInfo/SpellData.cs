@@ -737,7 +737,10 @@ namespace Rawr.Mage
             BaseSpellModifier *= /*(1 + solver.BaseStats.BonusMageNukeMultiplier) * */(1 + 0.01f * solver.MageTalents.ChilledToTheBone);
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
-            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            if (!solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
             NukeProcs = 1;
             Dirty = false;
         }
@@ -885,7 +888,10 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * solver.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
-            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            if (!solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             NukeProcs = 1;
             Dirty = false;
@@ -959,7 +965,10 @@ namespace Rawr.Mage
                 BaseDirectDamageModifier *= 1.02f;
             }
             BaseCritRate += 0.01f * solver.MageTalents.ImprovedScorch + 0.05f * solver.BaseStats.Mage4T9;
-            tormentFactor = 0.04f * solver.MageTalents.TormentTheWeak;
+            if (!solver.CalculationOptions.Beta)
+            {
+                tormentFactor = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
             BaseSpellModifier *= (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
             DotDuration = 9;
@@ -1036,7 +1045,10 @@ namespace Rawr.Mage
             DotDuration = 12;
             DotTickInterval = 3;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
-            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            if (!solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
             DotDamageCoefficient += 4 * 0.05f * solver.MageTalents.EmpoweredFire;
             Dirty = false;
@@ -1295,12 +1307,12 @@ namespace Rawr.Mage
         };
         public static readonly SpellData[] SpellDataBeta = new SpellData[]
         {
-            new SpellData() { Cost = (int)(0.18 * BaseMana[80]), MinDamage = 821, MaxDamage = 1003, SpellDamageCoefficient = 2.5f / 3.5f },
-            new SpellData() { Cost = (int)(0.18 * BaseMana[81]), MinDamage = 840, MaxDamage = 1026, SpellDamageCoefficient = 2.5f / 3.5f },
-            new SpellData() { Cost = (int)(0.18 * BaseMana[82]), MinDamage = 821, MaxDamage = 1049, SpellDamageCoefficient = 2.5f / 3.5f },
-            new SpellData() { Cost = (int)(0.18 * BaseMana[83]), MinDamage = 859, MaxDamage = 1072, SpellDamageCoefficient = 2.5f / 3.5f },
-            new SpellData() { Cost = (int)(0.18 * BaseMana[84]), MinDamage = 878, MaxDamage = 1095, SpellDamageCoefficient = 2.5f / 3.5f },
-            new SpellData() { Cost = (int)(0.18 * BaseMana[85]), MinDamage = 897, MaxDamage = 1118, SpellDamageCoefficient = 2.5f / 3.5f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[80]), MinDamage = 821, MaxDamage = 1003, SpellDamageCoefficient = 0.712f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[81]), MinDamage = 840, MaxDamage = 1026, SpellDamageCoefficient = 0.712f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[82]), MinDamage = 874, MaxDamage = 1068, SpellDamageCoefficient = 0.712f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[83]), MinDamage = 859, MaxDamage = 1072, SpellDamageCoefficient = 0.712f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[84]), MinDamage = 878, MaxDamage = 1095, SpellDamageCoefficient = 0.712f },
+            new SpellData() { Cost = (int)(0.18 * BaseMana[85]), MinDamage = 897, MaxDamage = 1118, SpellDamageCoefficient = 0.712f },
         };
 
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
@@ -1333,8 +1345,22 @@ namespace Rawr.Mage
             Name = "Arcane Barrage";
             InitializeCastTime(false, true, 0, 3);
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
-            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            if (solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            }
+            else
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
+            if (solver.CalculationOptions.Beta)
+            {
+                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
+            }
+            else
+            {
+                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            }
             if (solver.MageTalents.GlyphOfArcaneBarrage)
             {
                 BaseCostAmplifier *= 0.8f; // TODO is it additive or multiplicative?
@@ -1438,7 +1464,7 @@ namespace Rawr.Mage
             cycle.DamageProcs += weight * rawSpell.HitProcs;
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
-            cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
+            cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
@@ -1463,7 +1489,7 @@ namespace Rawr.Mage
             cycle.DamageProcs += weight * rawSpell.HitProcs;
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
-            cycle.costPerSecond += (1 - 0.02f * mageTalents.ArcaneConcentration) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
+            cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
@@ -1486,9 +1512,23 @@ namespace Rawr.Mage
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
-            arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            if (solver.CalculationOptions.Beta)
+            {
+                arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
+            }
+            else
+            {
+                arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            }
             BaseAdditiveSpellModifier += /*baseStats.ArcaneBlastBonus + */0.02f * mageTalents.SpellImpact;
-            tormentTheWeak = 0.04f * mageTalents.TormentTheWeak;
+            if (solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            }
+            else
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
             NukeProcs = 1;
@@ -1604,12 +1644,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.31 * BaseMana[78]), MinDamage = 324.8f * 5, MaxDamage = 324.8f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.31 * BaseMana[79]), MinDamage = 360.0f * 5, MaxDamage = 360.0f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.31 * BaseMana[80]), MinDamage = 361.9f * 5, MaxDamage = 361.9f * 5, SpellDamageCoefficient = 5f / 3.5f };
-            SpellData[0] = new SpellData() { Cost = (int)(0.00 * BaseMana[80]), MinDamage = 310.0f * 5, MaxDamage = 310.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
-            SpellData[1] = new SpellData() { Cost = (int)(0.00 * BaseMana[81]), MinDamage = 318.0f * 5, MaxDamage = 318.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
-            SpellData[2] = new SpellData() { Cost = (int)(0.00 * BaseMana[82]), MinDamage = 325.0f * 5, MaxDamage = 325.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
-            SpellData[3] = new SpellData() { Cost = (int)(0.00 * BaseMana[83]), MinDamage = 334.0f * 5, MaxDamage = 334.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
-            SpellData[4] = new SpellData() { Cost = (int)(0.00 * BaseMana[84]), MinDamage = 342.0f * 5, MaxDamage = 342.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
-            SpellData[5] = new SpellData() { Cost = (int)(0.00 * BaseMana[85]), MinDamage = 350.0f * 5, MaxDamage = 350.0f * 5, SpellDamageCoefficient = 5 * 0.286f };
+            SpellData[0] = new SpellData() { Cost = (int)(0.00 * BaseMana[80]), MinDamage = 310.0f * 5, MaxDamage = 310.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.00 * BaseMana[81]), MinDamage = 318.0f * 5, MaxDamage = 318.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.00 * BaseMana[82]), MinDamage = 316.0f * 5, MaxDamage = 316.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.00 * BaseMana[83]), MinDamage = 334.0f * 5, MaxDamage = 334.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.00 * BaseMana[84]), MinDamage = 342.0f * 5, MaxDamage = 342.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.00 * BaseMana[85]), MinDamage = 350.0f * 5, MaxDamage = 350.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
@@ -1623,12 +1663,12 @@ namespace Rawr.Mage
             }
         }
 
-        public Spell GetSpell(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff, float ticks)
+        public Spell GetSpell(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             spell.CalculateManualClearcasting(true, clearcastingAveraged, clearcastingActive);
-            spell.BaseCastTime = ticks;
+            //spell.BaseCastTime = ticks;
             if (barrage)
             {
                 spell.BaseCastTime *= 0.5f;
@@ -1636,22 +1676,22 @@ namespace Rawr.Mage
             }
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
-            spell.SpellModifier *= ticks / 5.0f;
+            //spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
             spell.CalculateManualClearcastingCost(castingState.Solver, false, true, clearcastingAveraged, clearcastingActive);
             return spell;
         }
 
-        public Spell GetSpell(CastingState castingState, bool barrage, int arcaneBlastDebuff)
+        /*public Spell GetSpell(CastingState castingState, bool barrage, int arcaneBlastDebuff)
         {
             return GetSpell(castingState, barrage, arcaneBlastDebuff, 5);
-        }
+        }*/
 
-        public Spell GetSpell(CastingState castingState, bool barrage, int arcaneBlastDebuff, int ticks)
+        public Spell GetSpell(CastingState castingState, bool barrage, int arcaneBlastDebuff)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.BaseCastTime = ticks;
+            //spell.BaseCastTime = ticks;
             if (barrage)
             {
                 spell.BaseCastTime *= 0.5f;
@@ -1659,7 +1699,7 @@ namespace Rawr.Mage
             }
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
-            spell.SpellModifier *= ticks / 5.0f;
+            //spell.SpellModifier *= ticks / 5.0f;
             spell.CalculateDerivedStats(castingState);
             return spell;
         }
@@ -1690,13 +1730,31 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Arcane Missiles";
-            InitializeCastTime(true, false, 5, 0);
             if (solver.CalculationOptions.Beta)
             {
-                InitializeDamage(solver, false, 35, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), 5, 6, 0);
+                float castTime = 0.75f;
+                if (solver.MageTalents.MissileBarrage == 1)
+                {
+                    castTime = 0.6f;
+                }
+                else if (solver.MageTalents.MissileBarrage == 2)
+                {
+                    castTime = 0.5f;
+                }
+#if RAWR4
+                int missiles = 3 + solver.MageTalents.ImprovedArcaneMissiles;
+#else
+                int missiles = 3;
+#endif
+                InitializeCastTime(true, false, castTime * missiles, 0);
+                InitializeDamage(solver, false, 35, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), missiles, missiles + 1, 0);
+                BaseMinDamage *= missiles / 5f;
+                BaseMaxDamage *= missiles / 5f;
+                SpellDamageCoefficient *= missiles / 5f;
             }
             else
             {
+                InitializeCastTime(true, false, 5, 0);
                 InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), 5, 6, 0);
             }
             CastProcs2 = 1;
@@ -1705,13 +1763,27 @@ namespace Rawr.Mage
                 CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * solver.MageTalents.SpellPower + 0.1f * solver.MageTalents.Burnout + solver.BaseStats.CritBonusDamage + 0.25f));
             }
             SpellDamageCoefficient += 0.15f * solver.MageTalents.ArcaneEmpowerment;
-            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            if (solver.CalculationOptions.Beta)
+            {
+                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            }
+            else
+            {
+                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            }
+            if (solver.CalculationOptions.Beta)
+            {
+                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
+            }
+            else
+            {
+                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+            }
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             BaseInterruptProtection += 0.2f * solver.MageTalents.ArcaneStability;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             // Arcane Potency bug
-            BaseCritRate -= 0.8f * 0.15f * 0.02f * solver.MageTalents.ArcaneConcentration * solver.MageTalents.ArcanePotency;
+            BaseCritRate -= 0.8f * 0.15f * solver.ClearcastingChance * solver.MageTalents.ArcanePotency;
             Dirty = false;
         }
     }
@@ -1733,12 +1805,12 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.22 * BaseMana[78]), MinDamage = 485, MaxDamage = 523, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.22 * BaseMana[79]), MinDamage = 487, MaxDamage = 525, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 538, MaxDamage = 582, SpellDamageCoefficient = 1.5f / 3.5f * 0.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 171, MaxDamage = 185, SpellDamageCoefficient = 0.097f };
-            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.22 * BaseMana[81]), MinDamage = 175, MaxDamage = 189, SpellDamageCoefficient = 0.097f };
-            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.22 * BaseMana[82]), MinDamage = 179, MaxDamage = 193, SpellDamageCoefficient = 0.097f };
-            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.22 * BaseMana[83]), MinDamage = 183, MaxDamage = 197, SpellDamageCoefficient = 0.097f };
-            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.22 * BaseMana[84]), MinDamage = 187, MaxDamage = 201, SpellDamageCoefficient = 0.097f };
-            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.22 * BaseMana[85]), MinDamage = 191, MaxDamage = 205, SpellDamageCoefficient = 0.097f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.22 * BaseMana[80]), MinDamage = 171, MaxDamage = 185, SpellDamageCoefficient = 0.143f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.22 * BaseMana[81]), MinDamage = 175, MaxDamage = 189, SpellDamageCoefficient = 0.143f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.22 * BaseMana[82]), MinDamage = 239, MaxDamage = 257, SpellDamageCoefficient = 0.143f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.22 * BaseMana[83]), MinDamage = 183, MaxDamage = 197, SpellDamageCoefficient = 0.143f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.22 * BaseMana[84]), MinDamage = 187, MaxDamage = 201, SpellDamageCoefficient = 0.143f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.22 * BaseMana[85]), MinDamage = 191, MaxDamage = 205, SpellDamageCoefficient = 0.143f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {

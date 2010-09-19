@@ -946,6 +946,15 @@ namespace Rawr.Mage
             {
                 statsRaceBonusSpiritMultiplier = 0.03f;
             }
+
+            float statsWizardryBonusIntellectMultiplier = 0.0f;
+            if (calculationOptions.Beta)
+            {
+                if (calculationOptions.PlayerLevel >= 50)
+                {
+                    statsWizardryBonusIntellectMultiplier = 0.05f;
+                }
+            }
         
             Stats statsTotal = rawStats;
 
@@ -960,7 +969,7 @@ namespace Rawr.Mage
             }
             statsTotal.Strength = (float)Math.Round((statsRaceStrength + statsTotal.Strength) * (1 + statsTotal.BonusStrengthMultiplier) - 0.00001);
             statsTotal.Agility = (float)Math.Round((statsRaceAgility + statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier) - 0.00001);
-            statsTotal.Intellect = (float)Math.Round((Math.Floor(0.00001 + statsRaceIntellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier)) + Math.Floor(0.00001 + statsTotal.Intellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier))) * (1 + statsTotal.BonusIntellectMultiplier) - 0.00001);
+            statsTotal.Intellect = (float)Math.Round((Math.Floor(0.00001 + statsRaceIntellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsWizardryBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier)) + Math.Floor(0.00001 + statsTotal.Intellect * (1 + statsRaceBonusIntellectMultiplier) * (1 + statsWizardryBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier))) * (1 + statsTotal.BonusIntellectMultiplier) - 0.00001);
             statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier) - 0.00001);
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
@@ -1039,6 +1048,11 @@ namespace Rawr.Mage
             }
 
             if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
+
+            if (calculationOptions.Beta)
+            {
+                statsTotal.SpellCombatManaRegeneration = 0.0f;
+            }
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 

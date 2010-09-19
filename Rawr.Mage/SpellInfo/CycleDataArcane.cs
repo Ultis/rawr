@@ -3952,8 +3952,8 @@ m = remaining movement time";
             {
                 for (int t = 0; t < 5; t++)
                 {
-                    AMT[ab, t] = castingState.Solver.ArcaneMissilesTemplate.GetSpell(castingState, false, ab, t);
-                    MBAMT[ab, t] = castingState.Solver.ArcaneMissilesTemplate.GetSpell(castingState, true, ab, t);
+                    AMT[ab, t] = castingState.Solver.ArcaneMissilesTemplate.GetSpell(castingState, false, ab);
+                    MBAMT[ab, t] = castingState.Solver.ArcaneMissilesTemplate.GetSpell(castingState, true, ab);
                 }
             }
             ABNull = new Spell(castingState.Solver.ArcaneBlastTemplate);

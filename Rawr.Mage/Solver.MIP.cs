@@ -722,12 +722,12 @@ namespace Rawr.Mage
                     evoBaseState = BaseState.Tier10TwoPieceState;
                 }
 
-                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / evoBaseState.CastingSpeed)) return false;
+                if (evocationAvailable && !ValidateIntegralConsumableOverall(VariableType.Evocation, EvocationDuration / 4)) return false;
                 if (CalculationOptions.EnableHastedEvocation)
                 {
-                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, 2.0 / evoBaseState.CastingSpeed / 1.2)) return false;
-                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, 2.0 / evoBaseState.CastingSpeed / 1.3)) return false;
-                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, 2.0 / evoBaseState.CastingSpeed / 1.2 / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, EvocationDuration / 4 / 1.2)) return false;
+                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, EvocationDuration / 4 / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, EvocationDuration / 4 / 1.2 / 1.3)) return false;
                 }
                 if (conjureManaGem && !ValidateIntegralConsumableOverall(VariableType.ConjureManaGem, ConjureManaGem.CastTime)) return false;
             }

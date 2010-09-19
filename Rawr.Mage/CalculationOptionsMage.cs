@@ -50,7 +50,8 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(7f / 41f, (playerLevel - 80) / 5f));
+                    //levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(7f / 41f, (playerLevel - 80) / 5f));                    
+                    levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(0.2561350976370563f, (playerLevel - 80) / 5f));
                 }
                 OnPropertyChanged("PlayerLevel");
             }

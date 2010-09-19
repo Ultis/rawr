@@ -1468,6 +1468,10 @@ namespace Rawr
                 }
                 return cachedTotalStats;
             }
+            if (item == null)
+            {
+                return null;
+            }
             Item g1 = Gem1;
             Item g2 = Gem2;
             Item g3 = Gem3;
