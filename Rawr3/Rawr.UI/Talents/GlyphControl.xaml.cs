@@ -14,7 +14,6 @@ namespace Rawr.UI
 {
     public partial class GlyphControl : UserControl
     {
-
         public EventHandler TalentsChanged;
 
         private TalentsBase talents;

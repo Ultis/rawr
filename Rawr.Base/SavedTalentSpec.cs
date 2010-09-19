@@ -94,7 +94,11 @@ namespace Rawr
             //return string.Format("{0} ({1}/{2}/{3})", Name, Tree1, Tree2, Tree3);
             string warning = "";
             // TODO: That 71 shouldn't be hard-coded, but I don't have a Character.Level here.
+#if RAWR4
+            int pointsleft = 41 - (Tree1 + Tree2 + Tree3);
+#else
             int pointsleft = 71 - (Tree1 + Tree2 + Tree3);
+#endif
 
             if (pointsleft > 0)
                 warning = string.Format(" ({0} Points Left)", pointsleft);

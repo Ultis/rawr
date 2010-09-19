@@ -13,16 +13,21 @@ using System.Windows.Media.Imaging;
 
 namespace Rawr.UI
 {
-	public partial class TalentTree : UserControl
-	{
-		public TalentTree()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+    public partial class TalentTree : UserControl
+    {
+        public TalentTree()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+#if RAWR4
+            // Losing 4 rows
+            for (int i=8; i<12; i++) { GridPanel.RowDefinitions[i].Height = new GridLength(0, GridUnitType.Pixel); }
+            MinHeight = 465;
+#endif
             talentAttributes = new Dictionary<int, TalentDataAttribute>();
             prereqArrows = new Dictionary<int, Image>();
             belowRow = new Dictionary<int, int>();
-		}
+        }
 
         public EventHandler TalentsChanged;
 
@@ -329,5 +334,5 @@ namespace Rawr.UI
             }
         }
 
-	}
+    }
 }
