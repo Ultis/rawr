@@ -38,6 +38,7 @@ namespace Rawr
         int itemIndex;
         ItemInstance optimizedItemInstance;
         Character workingCharacter;
+        bool considerMultipleNewItems;
 
         // optimize state
         int optimizerRound;
@@ -196,6 +197,7 @@ namespace Rawr
         public bool TemplateGemsEnabled { get; set; }
         public OptimizationMethod OptimizationMethod {get;set;}
         public GreedyOptimizationMethod GreedyOptimizationMethod { get; set; }
+        public bool ConsiderMultipleNewItems { get; set; }
 
         void _optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
         {
@@ -584,7 +586,14 @@ namespace Rawr
                             // regularize character with current item restrictions
                             itemGenerator.RegularizeCharacter(workingCharacter);
                             optimizer.InitializeItemCache(workingCharacter, CurrentBatchCharacter.Model, itemGenerator);
-                            optimizer.OptimizeCharacterAsync(workingCharacter, _thoroughness, true);
+                            if (ConsiderMultipleNewItems)
+                            {
+                                optimizer.ComputeUpgradesAsync(workingCharacter, _thoroughness, itemList[itemIndex]);
+                            }
+                            else
+                            {
+                                optimizer.OptimizeCharacterAsync(workingCharacter, _thoroughness, true);
+                            }
                         }
                     }
                     else
