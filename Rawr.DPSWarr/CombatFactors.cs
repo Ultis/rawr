@@ -23,10 +23,16 @@ namespace Rawr.DPSWarr {
                 if (_FuryStance == null) {
                     if (Talents == null) { return false; } // wait till there is one
                     int armsCounter = 0, furyCounter = 0;
-                    for (int i =  0; i <= 30; i++) { armsCounter += int.Parse(Talents.ToString()[i].ToString()); }
-                    for (int i = 31; i <= 57; i++) { furyCounter += int.Parse(Talents.ToString()[i].ToString()); }
-                    if(armsCounter >= furyCounter) _FuryStance = false;
-                    else if(armsCounter < furyCounter) _FuryStance = true;
+                    int[] talentData = Talents.Data;
+#if !RAWR4
+                    for (int i =  0; i <= 30; i++) { armsCounter += talentData[i]; }
+                    for (int i = 31; i <= 57; i++) { furyCounter += talentData[i]; }
+#else
+                    for (int i =  0; i <= 19; i++) { armsCounter += talentData[i]; }
+                    for (int i = 20; i <= 40; i++) { furyCounter += talentData[i]; }
+#endif
+                    if (armsCounter >= furyCounter) _FuryStance = false;
+                    else if(armsCounter <  furyCounter) _FuryStance = true;
                 }
                 return (bool)_FuryStance;
             }

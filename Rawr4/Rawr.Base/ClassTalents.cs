@@ -116,10 +116,10 @@ namespace Rawr
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             WarriorTalents clone = (WarriorTalents)MemberwiseClone();
@@ -741,10 +741,10 @@ Sends a wave of force in front of you, causing [75/100*AP] damage (based on atta
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public PaladinTalents Clone() { return (PaladinTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public PaladinTalents Clone() { return (PaladinTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             PaladinTalents clone = (PaladinTalents)MemberwiseClone();
@@ -1332,10 +1332,10 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public HunterTalents Clone() { return (HunterTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public HunterTalents Clone() { return (HunterTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             HunterTalents clone = (HunterTalents)MemberwiseClone();
@@ -1892,10 +1892,10 @@ Requires Ranged Weapon - Fires a Black Arrow at the target, dealing [RAP*0.115+1
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public RogueTalents Clone() { return (RogueTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public RogueTalents Clone() { return (RogueTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             RogueTalents clone = (RogueTalents)MemberwiseClone();
@@ -2417,10 +2417,10 @@ Enter the Shadow Dance for 6 sec, allowing the use of Sap, Garrote, Ambush, Chea
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public PriestTalents Clone() { return (PriestTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public PriestTalents Clone() { return (PriestTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             PriestTalents clone = (PriestTalents)MemberwiseClone();
@@ -3047,10 +3047,10 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public DeathKnightTalents Clone() { return (DeathKnightTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public DeathKnightTalents Clone() { return (DeathKnightTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             DeathKnightTalents clone = (DeathKnightTalents)MemberwiseClone();
@@ -3595,10 +3595,10 @@ A Gargoyle flies into the area and bombards the target with Nature damage modifi
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public ShamanTalents Clone() { return (ShamanTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public ShamanTalents Clone() { return (ShamanTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             ShamanTalents clone = (ShamanTalents)MemberwiseClone();
@@ -4115,10 +4115,10 @@ Heals a friendly target for 639 to 691 and another 665 over 15 sec.  Your next C
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public MageTalents Clone() { return (MageTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public MageTalents Clone() { return (MageTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             MageTalents clone = (MageTalents)MemberwiseClone();
@@ -4676,10 +4676,10 @@ Stuns the target for 5 sec.  Only usable on Frozen targets.  Deals 1469 to 1741 
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public WarlockTalents Clone() { return (WarlockTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public WarlockTalents Clone() { return (WarlockTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             WarlockTalents clone = (WarlockTalents)MemberwiseClone();
@@ -5305,10 +5305,10 @@ Sends a bolt of chaotic fire at the enemy, dealing 837 to 1061 Fire damage. Chao
     {
         public override TalentsBase Clone()
 #else
-		, ICloneable 
-	{
-		public DruidTalents Clone() { return (DruidTalents)((ICloneable)this).Clone(); }
-		object ICloneable.Clone()
+        , ICloneable 
+    {
+        public DruidTalents Clone() { return (DruidTalents)((ICloneable)this).Clone(); }
+        object ICloneable.Clone()
 #endif
         {
             DruidTalents clone = (DruidTalents)MemberwiseClone();

@@ -12,8 +12,8 @@ using System.Windows.Shapes;
 
 namespace Rawr.UI
 {
-	public partial class GlyphControl : UserControl
-	{
+    public partial class GlyphControl : UserControl
+    {
 
         public EventHandler TalentsChanged;
 
@@ -46,7 +46,12 @@ namespace Rawr.UI
                             cb.IsChecked = talents.GlyphData[glyphData.Index];
                             cb.Checked += new RoutedEventHandler(cb_Checked);
                             cb.Unchecked += new RoutedEventHandler(cb_Checked);
+#if !RAWR4
                             if (glyphData.Major) MajorStack.Children.Add(cb);
+#else
+                            if (glyphData.Type == GlyphType.Prime) PrimeStack.Children.Add(cb);
+                            else if (glyphData.Type == GlyphType.Major) MajorStack.Children.Add(cb);
+#endif
                             else MinorStack.Children.Add(cb);
                         }
                     }
@@ -61,11 +66,14 @@ namespace Rawr.UI
             if (TalentsChanged != null) TalentsChanged.Invoke(this, EventArgs.Empty);
         }
 
-		public GlyphControl()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+        public GlyphControl()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+#if !RAWR4
+            GB_Primes.Visibility = Visibility.Collapsed;
+#endif
             TheScroll.SetIsMouseWheelScrollingEnabled(true);
-		}
-	}
+        }
+    }
 }

@@ -536,7 +536,11 @@ namespace Rawr.DPSWarr.Skills
             get
             {
                 //UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
+#if !RAWR4
                 float executeRage = UsedExtraRage + (Talents.GlyphOfExecution ? 10.00f : 0.00f);
+#else
+                float executeRage = UsedExtraRage;
+#endif
 
                 float Damage = 1456f + StatS.AttackPower * 0.2f + executeRage * 38f;
 
@@ -604,16 +608,16 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             CanCrit = false;
-            Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
-            Cd = Duration + 3f;
-            TimeBtwnTicks = 3f; // In Seconds
 #if !RAWR4
+            Duration = 15f + (Talents.GlyphOfRending ? 6f : 0f); // In Seconds
             RageCost = 10f - (Talents.FocusedRage * 1f);
             DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
 #else
-            RageCost = 10f;// -(Talents.FocusedRage * 1f);
-            //DamageBonus = (1f + 0.10f * Talents.ImprovedRend);// *(1f + 0.15f * Talents.Trauma);
+            Duration = 15f; // In Seconds
+            RageCost = 10f;
 #endif
+            Cd = Duration + 3f;
+            TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
             DamageBase = 380f;
             //
@@ -656,7 +660,11 @@ namespace Rawr.DPSWarr.Skills
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
                              * (1f + StatS.BonusDamageMultiplier)
                              * DamageBonus;
+#if !RAWR4
                 float GlyphMOD = Talents.GlyphOfRending ? 7f / 5f : 1f;
+#else
+                float GlyphMOD = 1f;
+#endif
 
                 float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
                 float damageOver75 = (DamageBase + DmgBonusBase) * DmgBonusO75;

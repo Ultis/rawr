@@ -114,8 +114,10 @@ namespace Rawr.DPSWarr.Skills
             Cd = 3f * 60f; // In Seconds
             RageCost = 15f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
+#if !RAWR4
             HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
-#if RAWR4
+#else
+            HealingBase = StatS.Health * 0.30f;
             HealingBonus = 1f + Talents.FieldDressing * 0.10f;
 #endif
             UseHitTable = false;
@@ -162,7 +164,9 @@ namespace Rawr.DPSWarr.Skills
             Stats Base = BaseStats.GetBaseStats(Char.Level, CharacterClass.Warrior, Char.Race);
             float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);
             HealingBase = -1f * (float)Math.Floor(baseHealth) * 0.16f;
+#if !RAWR4
             HealingBonus = (Talents.GlyphOfBloodrage ? 0f : 1f);
+#endif
             UseHitTable = false;
             UsesGCD = false;
             UseReact = true;
@@ -762,7 +766,11 @@ namespace Rawr.DPSWarr.Skills
             Name = "Charge";
             Description = "Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat.";
             MinRange = 8f;
+#if !RAWR4
             MaxRange = 25f + (Talents.GlyphOfCharge ? 5f : 0f); // In Yards 
+#else
+            MaxRange = 25f + (Talents.GlyphOfLongCharge ? 5f : 0f); // In Yards 
+#endif
             Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
             Duration = 1.5f;
 #if !RAWR4

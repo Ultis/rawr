@@ -232,17 +232,17 @@ namespace Rawr
         public const float RATING_PER_BLOCK         =  88.359397888183594f;
         public const float RATING_PER_PHYSICALHIT   = 120.109001159667969f;
         public const float RATING_PER_SPELLHIT      = 102.445999145507812f;
-        public const float RATING_PER_PHYSICALCRIT  = 128.057006835937500f;
-        public const float RATING_PER_SPELLCRIT     = 128.057006835937500f;
-        public const float RATING_PER_PHYSICALHASTE = 128.057006835937500f;
-        public const float RATING_PER_SPELLHASTE    = 128.057006835937500f;
+        public const float RATING_PER_PHYSICALCRIT  = 128.057006835937500f * 10f; // I multiplied these by 10 because that
+        public const float RATING_PER_SPELLCRIT     = 128.057006835937500f * 10f; // low ass number was just ridiculous 
+        public const float RATING_PER_PHYSICALHASTE = 128.057006835937500f * 10f; // and you can't do any testing with them
+        public const float RATING_PER_SPELLHASTE    = 128.057006835937500f * 10f; // 
         public const float RATING_PER_EXPERTISE     =  30.027200698852539f;
         public const float RATING_PER_MASTERY       = 179.279998779296875f;
         // These shouldn't be changing
-        public const float RATING_PER_ARMOR         = 2.00f; //2 Armor per 1 AGI;
+        public const float RATING_PER_ARMOR         =  2.00f; //2 Armor per 1 AGI;
         public const float RATING_PER_HEALTH        = 10.00f; //10 Health per 1 STA;
         public const float RATING_PER_MANA          = 15.00f; //15 Mana per 1 INT;
-        public const float BLOCKVALUE_PER_STR       = 2.0f;
+        public const float BLOCKVALUE_PER_STR       =  2.00f;
         // These have not been provided Cata values yet, some could be removed as no longer valid
         public const float LEVEL_85_COMBATRATING_MODIFIER      = 3.2789987789987789987789987789988f;
         public const float RATING_PER_ARMORPENETRATION         = 1399.572614f;

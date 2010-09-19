@@ -66,16 +66,17 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             MaxRange = 8f; // In Yards
-            Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
 #if RAWR3 || RAWR4 || SILVERLIGHT
             Targets += (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ? 3f : 0f);
 #else
             Targets += (CalcOpts.MultipleTargets ? 3f : 0f);
 #endif
 #if !RAWR4
+            Cd = 10f - (Talents.GlyphOfWhirlwind ? 2f : 0f); // In Seconds
             RageCost = 25f - (Talents.FocusedRage * 1f);
             DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
 #else
+            Cd = 10f; // In Seconds
             RageCost = 25f;// -(Talents.FocusedRage * 1f);
             //DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
 #endif

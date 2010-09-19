@@ -159,15 +159,17 @@ namespace Rawr.DPSWarr {
             float OtherMOD = (MSBaseCd + CalcOpts.Latency);
             float SDMOD = 1f - 0.03f * Talents.SuddenDeath;
             float avoid = (1f - CombatFactors._c_mhdodge - CombatFactors._c_ymiss);
+#if !RAWR4
             float atleast1=0f, atleast2=0f, atleast3=0f, extLength1, extLength2, extLength3, averageTimeBetween,
                   OnePt5Plus1_Occurs, Two1pt5_Occurs, Two1PtZero_Occurs;
             float LeavingUntilNextMS_1, MSatExtra1, msNormally1, lengthFor1;
             float LeavingUntilNextMS_2, MSatExtra2, msNormally2, lengthFor2;
             float LeavingUntilNextMS_3, MSatExtra3, msNormally3, lengthFor3;
-            float timeInBetween = MSBaseCd - 1.5f;
             float useExeifMSHasMoreThan, useSlamifMSHasMoreThan;
             string canUse1, canUse2, canUse3;
             float HPS;
+#endif
+            float timeInBetween = MSBaseCd - 1.5f;
             #region Abilities
             while (
                     Iterator < 50 &&
@@ -252,6 +254,7 @@ namespace Rawr.DPSWarr {
                     availRage -= BLS.Rage;
                 }
                 BLSspace = BLS.numActivates / NumGCDs * BLS.ability.UseTime / LatentGCD;
+
                 // Mortal Strike
                 if (MS.ability.Validated) {
                     // TODO: THIS WAS ADDED TO FIX A BUG, JOTHAY'S UNAVAILABLE FOR COMMENT
@@ -733,13 +736,13 @@ namespace Rawr.DPSWarr {
                 // Colossus Smash
                 if (CS.ability.Validated)
                 {
-                    acts = Math.Min(GCDsAvailable, CS.ability.Activates * percTimeInDPSAndUnder20);
+                    acts = Math.Min(GCDsAvailableU20, CS.ability.Activates * percTimeInDPSAndUnder20);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                    CS.numActivates = Abil_GCDs;
+                    CS.numActivatesU20 = Abil_GCDs;
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
-                    availRage -= CS.Rage;
+                    availRage -= CS.RageU20;
                 }
-                CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
+                CSspace = CS.numActivatesU20 / NumGCDs * CS.ability.UseTime / LatentGCD;
 #endif
 
                 // Rend
@@ -772,6 +775,7 @@ namespace Rawr.DPSWarr {
                     availRage -= BLS.RageU20;
                 }
                 BLSspace = BLS.numActivatesU20 / NumGCDs * BLS.ability.UseTime / LatentGCD;
+
                 // Taste for Blood
                 float OPGCDReduc = (OP.ability.Cd < LatentGCD ? (OP.ability.Cd + CalcOpts.Latency) / LatentGCD : 1f);
                 if (TB.ability.Validated)
@@ -844,13 +848,13 @@ namespace Rawr.DPSWarr {
                 {
                     acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndUnder20);
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                    CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
-                    HS.numActivates = Abil_GCDs - CL.numActivates;
+                    CL.numActivatesU20 = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
+                    HS.numActivatesU20 = Abil_GCDs - CL.numActivatesU20;
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
-                    availRage -= HS.Rage + CL.Rage;
+                    availRage -= HS.RageU20 + CL.RageU20;
                 }
-                HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
-                CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
+                HSspace = HS.numActivatesU20 / NumGCDs * HS.ability.UseTime / LatentGCD;
+                CLspace = CL.numActivatesU20 / NumGCDs * CL.ability.UseTime / LatentGCD;
 #endif
 
                 // Execute for remainder of GCDs

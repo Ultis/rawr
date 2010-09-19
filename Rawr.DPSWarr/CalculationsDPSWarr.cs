@@ -501,6 +501,7 @@ These numbers to do not include racial bonuses.",
         public override List<string> GetRelevantGlyphs() {
             if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>() {
+#if !RAWR4
                     // ===== MAJOR GLYPHS =====
                     "Glyph of Bladestorm",
                     "Glyph of Bloodthirst",
@@ -539,6 +540,44 @@ These numbers to do not include racial bonuses.",
                     "Glyph of Command",
                     /* The following Glyphs have been disabled as they are solely Defensive in nature.
                     //"Glyph of Mocking Blow",*/
+#else
+                    #region Prime
+                    "Glyph of Cleaving", //@"Increases the number of targets your Cleave hits by 1.")]
+                    "Glyph of Hamstring", //@"Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.")]
+                    "Glyph of Heroic Throw", //@"Your Heroic Throw applies a stack of Sunder Armor.")]
+                    "Glyph of Long Charge", //@"Increases the range of your Charge ability by 5 yards.")]
+                    "Glyph of Rapid Charge", //@"Reduces the cooldown of your Charge ability by 7%.")]
+                    "Glyph of Resonating Power", //@"Reduces the rage cost of your Thunder Clap ability by 5.")]
+                    //"Glyph of Shield Wall", //@"Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.")]
+                    //"Glyph of Shockwave", //@"Reduces the cooldown on Shockwave by 3 sec.")]
+                    //"Glyph of Spell Reflection", //@"Reduces the cooldown on Spell Reflection by 1 sec.")]
+                    //"Glyph of Sunder Armor", //@"Your Sunder Armor ability effects a second nearby target.")]
+                    "Glyph of Sweeping Strikes", //@"Reduces the rage cost of Sweeping Strikes ability by 100%.")]
+                    "Glyph of Thunder Clap", //@"Increases the radius of your Thunder Clap ability by 2 yards.")]
+                    "Glyph of Victory Rush", //@"Increases the total healing provided by your Victory Rush by 50%.")]
+                    #endregion
+                    #region Major
+                    "Glyph of Bladestorm", //@"Reduces the cooldown on Bladestorm by 15 sec.")]
+                    "Glyph of Bloodthirst", //@"Increases the healing your recieve from Bloodthirst ability by 100%.")]
+                    //"Glyph of Devastate", //@"Your Devastate ability now applies two stacks of Sunder Armor.")]
+                    "Glyph of Mortal Strike", //@"Increases the damage of your Mortal Strike ability by 10%.")]
+                    "Glyph of Overpower", //@"Adds a 100% chance to enable your Overpower when your attacks are parried.")]
+                    "Glyph of Raging Blow", //@"Increases the critical strike chance of Raging Blow by 5%.")]
+                    //"Glyph of Revenge", //@"After using Revenge, your next Heroic Strike costs no rage.")]
+                    //"Glyph of Shield Slam", //@"Increases the damage of your Shield Slam by 10%.")]
+                    "Glyph of Slam", //@"Increases the critical strike chance of Slam by 5%.")]
+                    #endregion
+                    #region Minor
+                    "Glyph of Battle", //@"Increases the duration of your Battle Shout by 2 min.")]
+                    "Glyph of Berserker Rage", //@"Berserker Rage generates 5 rage when used.")]
+                    "Glyph of Bloody Healing", //@"Increases the healing your recieve from your Bloodthirst ability by 100%.")]
+                    "Glyph of Command", //@"Increases the duration by 2 min and the area of effect by 50% of your Commanding Shout.")]
+                    "Glyph of Demoralizing Shout", //@"Increases the duration by 15 sec and area of effect 50% of your Demoralizing Shout.")]
+                    "Glyph of Enduring Victory", //@"Increases the window of opportunity in which you can use Victory Rush by 5 sec.")]
+                    "Glyph of Furious Sundering", //@"Reduces the cost of Sunder Armor by 50%.")]
+                    "Glyph of Intimidating Shout", //@"Targets of your Intimidating Shout no longer move faster when feared.")]
+                    #endregion
+#endif
                 };
             }
             return _relevantGlyphs;
