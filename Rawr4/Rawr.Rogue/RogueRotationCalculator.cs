@@ -43,7 +43,6 @@ namespace Rawr.Rogue
 
         public float BonusDamageMultiplierHFB { get; set; }
         public float BonusEnergyRegen { get; set; }
-        public float BonusEnergyRegenMultiplier { get; set; }
         public float BonusFlurryHaste { get; set; }
         public float BonusHemoDamageMultiplier { get; set; }
         public float IPFrequencyMultiplier { get; set; }
@@ -53,13 +52,15 @@ namespace Rawr.Rogue
         public float ChanceOnCPOnSSCrit { get; set; }
         public float ChanceOnEnergyOnCrit { get; set; }
         public float ChanceOnEnergyOnGarrRuptTick { get; set; }
-        public float ChanceOnEnergyOnOHAttack { get; set; }
         public float ChanceOnEnergyPerCPFinisher { get; set; }
         public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
         public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
+        public float ChanceOnOHAttackOnMHAttack { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPOnFinisher { get; set; }
         public float EnergyOnBelow35BS { get; set; }
+        public float EnergyOnOHAttack { get; set; }
+        public float EnergyRegenMultiplier { get; set; }
         public float EACPCostReduction { get; set; }
         public float FlurryCostReduction { get; set; }
         public float ToTTCDReduction { get; set; }
@@ -115,15 +116,17 @@ namespace Rawr.Rogue
 
             #region Talent/Mastery bonuses
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? 20f : 0f;
-            ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;//??
+            ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
+            ChanceOnOHAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * stats.MasteryRating / 93f : 0f;
             ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
             DPFrequencyMultiplier = spec == 0 ? 0.2f : 0f;
-            EACPCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;//??
-            EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;//??
+            EACPCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;
+            EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;
+            EnergyOnOHAttack = 0.2f * 5f * character.RogueTalents.CombatPotency;
+            EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + 15f / 180f * character.RogueTalents.AdrenalineRush;
             IPFrequencyMultiplier = spec == 0 ? 0.5f : 0f;
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
-            ChanceOnEnergyOnOHAttack = 3 * 0.2f * Char.RogueTalents.CombatPotency;
             ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
@@ -162,7 +165,7 @@ namespace Rawr.Rogue
         public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, bool useRupt, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
 		{
             float duration = Duration * durationMultiplier;
-            float energyRegen = 10f * (1f + BonusEnergyRegenMultiplier);
+            float energyRegen = 10f * (1f + EnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + BonusMaxEnergy +
                                          energyRegen * duration +
                                          ((duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
@@ -180,8 +183,8 @@ namespace Rawr.Rogue
 			
 			#region Melee
 			float whiteMHAttacks = duration / MainHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
-            float whiteOHAttacks = duration / OffHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
-            totalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * ChanceOnEnergyOnOHAttack +
+            float whiteOHAttacks = duration / OffHandSpeed + ChanceOnOHAttackOnMHAttack * whiteMHAttacks + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
+            totalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack +
                                     ChanceOnEnergyOnCrit * whiteMHAttacks * MainHandStats.CritChance +
                                     ChanceOnEnergyOnCrit * whiteOHAttacks * OffHandStats.CritChance;
 			#endregion

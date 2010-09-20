@@ -412,9 +412,9 @@ namespace Rawr.Rogue
             #region Constants from talents
             float ChanceOnGarrRuptTickBonusDamage = 0.3f * character.RogueTalents.VenomousWounds;
             float CPGCritDamageMultiplier = 0.1f * character.RogueTalents.Lethality;
-            float evisEnvDamageMultiplier = (character.RogueTalents.CoupDeGrace == 3 ? 0.2f : 0.07f * character.RogueTalents.CoupDeGrace);
             float ambushBackstabCostReduction = 4 * character.RogueTalents.SlaughterFromTheShadows;
             float armorReduction = 0.03f * character.RogueTalents.SerratedBlades;
+            float BSDamageMultiplier = 0.05f * character.RogueTalents.Aggression;
             float bonusBackstabCrit = 0.1f * character.RogueTalents.PuncturingWounds;
             float bonusEvisCrit = character.RogueTalents.GlyphOfEviscerate ? 0.1f : 0f;
             float bonusMutiCrit = 0.05f * character.RogueTalents.PuncturingWounds;
@@ -423,11 +423,15 @@ namespace Rawr.Rogue
             float bonusEADuration = character.RogueTalents.GlyphOfExposeArmor ? 12f : 0;
             float bonusSnDDurationMultiplier = 0.25f * character.RogueTalents.ImprovedSliceAndDice;
             float CPonCPGCrit = 0.5f * character.RogueTalents.SealFate;
-            float hemoCostReduction = 1 * character.RogueTalents.SlaughterFromTheShadows;
+            float evisDamageMultiplier = 0.05f * character.RogueTalents.Aggression + (character.RogueTalents.CoupDeGrace == 3 ? 0.2f : 0.07f * character.RogueTalents.CoupDeGrace);
+            float envDamageMultiplier = (character.RogueTalents.CoupDeGrace == 3 ? 0.2f : 0.07f * character.RogueTalents.CoupDeGrace);
+            float hemoCostReduction = 1f * character.RogueTalents.SlaughterFromTheShadows;
             float meleeDamageMultiplier = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? 0.15f : 0f;
             float mutiCostReduction = character.RogueTalents.GlyphOfMutilate ? 5f : 0;
+            float offhandDamageMultiplier = spec == 1 ? 0.5f : 0f;
             float poisonDamageMultiplier = (spec == 0 ? 0.2f + 0.025f * stats.MasteryRating / 93 : 0f) + (character.RogueTalents.VilePoisons == 3 ? 0.2f : 0.07f * character.RogueTalents.VilePoisons);
-            float sStrikeCostReduction = 3 * character.RogueTalents.ImprovedSinisterStrike;
+            float sStrikeCostReduction = 2f * character.RogueTalents.ImprovedSinisterStrike;
+            float sStrikeDamageMultiplier = 0.02f * character.RogueTalents.ImprovedSinisterStrike + 0.05f * character.RogueTalents.Aggression;
             #endregion
 
             float modArmor = 0f;
@@ -607,16 +611,16 @@ namespace Rawr.Rogue
             #region Attack Damages
             float baseDamage = (mainHand == null ? 0f : mainHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
             float baseDamageNorm = mainHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * (0.5f);
-            float baseOffDamageNorm = (offHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f);
+            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * (0.5f) * (1f + offhandDamageMultiplier);
+            float baseOffDamageNorm = (offHandSpeedNorm * stats.AttackPower / 14f + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (0.5f) * (1f + offhandDamageMultiplier);
             float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * mainHandModArmor;
             float meleeOffDamageRaw = baseOffDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + meleeDamageMultiplier) * offHandModArmor;
-            float backstabDamageRaw = (baseDamageNorm * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f) * mainHandModArmor;
+            float backstabDamageRaw = (baseDamageNorm * 1.5f + 465f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + BSDamageMultiplier) * mainHandModArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
             float hemoDamageRaw = (baseDamageNorm * 1.1f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f) * mainHandModArmor;
             hemoDamageRaw *= (mainHand._type == ItemType.Dagger ? 1.6f / 1.1f : 1f);
             hemoDamageRaw *= character.RogueTalents.Hemorrhage > 0 ? 1f : 0f;
-            float sStrikeDamageRaw = (baseDamageNorm * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * mainHandModArmor;
+            float sStrikeDamageRaw = (baseDamageNorm * 1f + 180f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + sStrikeDamageMultiplier) * mainHandModArmor;
             float mutiDamageMainRaw = (baseDamageNorm * 1f + 181f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * mainHandModArmor;
             float mutiDamageOffRaw = (baseOffDamageNorm * 1f + 181f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * offHandModArmor;
             mutiDamageMainRaw *= (spec == 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger ? 1f : 0f);
@@ -624,10 +628,10 @@ namespace Rawr.Rogue
             float mutiDamageRaw = mutiDamageMainRaw + mutiDamageOffRaw;
             float ruptDamageRaw = (127f + 18f * 5f + 0.06f * stats.AttackPower * 5f / (3f + 5f)) * (3f + 5f + bonusRuptDuration / 2f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) +
                  ChanceOnGarrRuptTickBonusDamage * 403f * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
-            float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + evisEnvDamageMultiplier) * mainHandModArmor;
-            float evisCPDamageRaw = (370f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + evisEnvDamageMultiplier) * mainHandModArmor;
+            float evisBaseDamageRaw = (127f + 381f) / 2f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + evisDamageMultiplier) * mainHandModArmor;
+            float evisCPDamageRaw = (370f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + evisDamageMultiplier) * mainHandModArmor;
             float envenomBaseDamageRaw = 0f;
-            float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + evisEnvDamageMultiplier);
+            float envenomCPDamageRaw = (215f + stats.AttackPower * 0.09f) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + envDamageMultiplier);
             float iPDamageRaw = ((300f + 400f) / 2f + stats.AttackPower * 0.09f) * (1f + poisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float dPDamageRaw = (296f + stats.AttackPower * 0.108f) * (1f + poisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) / 4;
             float wPDamageRaw = ((78f + 231f) / 2f + stats.AttackPower * 0.036f) * (1f + poisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
@@ -671,7 +675,6 @@ namespace Rawr.Rogue
             float sStrikeEnergyRaw = 45f - sStrikeCostReduction;
             float mutiEnergyRaw = 60f - mutiCostReduction;
             float ruptEnergyRaw = 25f;
-            float expEnergyRaw = 25f;
             float evisEnergyRaw = 35f;
             float envenomEnergyRaw = 35f;
             float snDEnergyRaw = 25f;
@@ -947,11 +950,12 @@ namespace Rawr.Rogue
 
             Stats statsTalents = new Stats()
             {
-                BonusAttackPowerMultiplier = (1f + 0.02f * talents.SavageCombat) - 1f,
+                BonusAttackPowerMultiplier = 0.02f * talents.SavageCombat,
                 BonusDamageMultiplier = 1f + 0.01f * talents.SlaughterFromTheShadows + 0.2f * talents.Vendetta * 30f / 120f,
+                BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : 0.02f * talents.SavageCombat,
                 Dodge = 0.02f * talents.LightningReflexes,
                 PhysicalHit = 0.01f * talents.Precision,
-                PhysicalHaste = (talents.LightningReflexes == 1 ? 0.04f : (talents.LightningReflexes == 2 ? 0.07f : (talents.LightningReflexes == 3 ? 0.1f : 0))),
+                PhysicalHaste = 0.02f * talents.LightningReflexes + 0.2f * 15f / 180f * talents.AdrenalineRush,
                 SpellHit = 0.01f * talents.Precision,
             };
 
