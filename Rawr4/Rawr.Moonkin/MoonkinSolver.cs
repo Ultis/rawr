@@ -54,7 +54,7 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.14f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
-                            BaseEnergy = 13
+                            BaseEnergy = 13+1/3
                         },
                         new Spell()
                         {
@@ -290,11 +290,13 @@ namespace Rawr.Moonkin
                 // Pre-calculate rotational variables with base stats
                 rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery);
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
+                // Add spell crit effects here as well, since they no longer affect timing
                 foreach (ProcEffect proc in procEffects)
                 {
-                    if (proc.Effect.Stats.SpellPower > 0)
+                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0)
                     {
                         float procSpellPower = proc.Effect.Stats.SpellPower;
+                        float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating);
 
                         float triggerInterval = 0.0f, triggerChance = 1.0f;
                         switch (proc.Effect.Trigger)
@@ -336,8 +338,12 @@ namespace Rawr.Moonkin
                                 break;
                         }
                         if (triggerChance > 0)
+                        {
                             currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
                             proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellPower;
+                            currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellCrit;
+                        }
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
@@ -365,10 +371,19 @@ namespace Rawr.Moonkin
                         {
                             currentHaste += StatConversion.GetSpellHasteFromRating(childEffect.Stats.HasteRating * childEffect.GetAverageStackSize(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, proc.Effect.Duration) * proc.Effect.GetAverageUptime(0f, 1f));
                         }
+                        // 4T11
+                        else if (childEffect.Stats.SpellCrit != 0)
+                        {
+                            float maxStack = proc.Effect.Stats.SpellCrit;
+                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseCrit, 3.0f, proc.Effect.Duration);
+                            float averageNegativeValue = childEffect.Stats.SpellCrit * numNegativeStacks;
+                            float averageCrit = maxStack + averageNegativeValue;
+                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration * (1 - rot.RotationData.SolarUptime - rot.RotationData.LunarUptime) / 2f, 1f);
+                        }
                     }
                 }
                 // Calculate damage and mana contributions for non-stat-boosting trinkets
-                // Separate stat-boosting proc trinkets into their own list
+                // Separate timing-altering proc trinkets into their own list
                 foreach (ProcEffect proc in procEffects)
                 {
                     if (proc.CalculateDPS != null)
@@ -602,7 +617,7 @@ namespace Rawr.Moonkin
             // Innervate calculations
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
             int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
-            float totalInnervateMana = numInnervates * calcs.BasicStats.Mana * (0.2f * (character.DruidTalents.GlyphOfInnervate ? 1.5f : 1.0f));
+            float totalInnervateMana = numInnervates * calcs.BasicStats.Mana;
             switch (character.DruidTalents.Dreamstate)
             {
                 case 1:

@@ -26,7 +26,6 @@ namespace Rawr.Moonkin
             this.DotEffect = copy.DotEffect == null ? null : new DotEffect(copy.DotEffect);
             this.SpellDamageModifier = copy.SpellDamageModifier;
             this.BaseEnergy = copy.BaseEnergy;
-            this.CriticalEnergy = copy.CriticalEnergy;
         }
         public string Name { get; set; }
         public float BaseDamage { get; set; }
@@ -39,7 +38,6 @@ namespace Rawr.Moonkin
         public float BaseManaCost { get; set; }
         public DotEffect DotEffect { get; set; }
         public float BaseEnergy { get; set; }
-        public float CriticalEnergy { get; set; }
         // Section for variables which get filled in during rotation calcs
         public float DamagePerHit { get; set; }
         public float CastTime { get; set; }
@@ -51,11 +49,9 @@ namespace Rawr.Moonkin
         public DotEffect(DotEffect copy)
         {
             this.AllDamageModifier = copy.AllDamageModifier;
-            this.BaseDamage = copy.BaseDamage;
             this.Duration = copy.Duration;
             this.TickDamage = copy.TickDamage;
             this.BaseTickLength = copy.BaseTickLength;
-
             this.SpellDamageModifierPerTick = copy.SpellDamageModifierPerTick;
         }
         public float Duration { get; set; }
@@ -66,11 +62,11 @@ namespace Rawr.Moonkin
         {
             get
             {
-                return SpellDamageModifierPerTick * NumberOfTicks;
+                return SpellDamageModifierPerTick * Duration / BaseTickLength;
             }
             set
             {
-                SpellDamageModifierPerTick += value / NumberOfTicks;
+                SpellDamageModifierPerTick += value / Duration / BaseTickLength;
             }
         }
         public float AllDamageModifier { get; set; }
@@ -82,17 +78,6 @@ namespace Rawr.Moonkin
             }
         }
         public float SpellDamageModifierPerTick { get; set; }
-        public float BaseDamage
-        {
-            get
-            {
-                return NumberOfTicks * TickDamage;
-            }
-            set
-            {
-                TickDamage += value / NumberOfTicks;
-            }
-        }
         // Section for variables which get filled in during rotation calcs
         public float DamagePerHit { get; set; }
     }

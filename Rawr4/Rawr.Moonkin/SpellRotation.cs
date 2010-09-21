@@ -42,6 +42,8 @@ namespace Rawr.Moonkin
         public float StarfallDamage { get; set; }
         public float StarfallStars { get; set; }
         public float TreantDamage { get; set; }
+        public float SolarUptime { get; set; }
+        public float LunarUptime { get; set; }
         public DotMode MoonfireRefreshMode { get; set; }
         public DotMode InsectSwarmRefreshMode { get; set; }
         public StarsurgeMode StarsurgeCastMode { get; set; }
@@ -73,7 +75,7 @@ namespace Rawr.Moonkin
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * spellPower) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
-            mainNuke.AverageEnergy = totalCritChance * (mainNuke.BaseEnergy + mainNuke.CriticalEnergy) + (1 - totalCritChance) * mainNuke.BaseEnergy;
+            mainNuke.AverageEnergy = mainNuke.BaseEnergy;
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
@@ -90,7 +92,7 @@ namespace Rawr.Moonkin
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
-            dotSpell.CastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste), instantCast);
+            dotSpell.CastTime = instantCast;
 
             dotSpell.DotEffect.TickLength = dotSpell.DotEffect.BaseTickLength / (1 + spellHaste);
 
@@ -148,8 +150,12 @@ namespace Rawr.Moonkin
 
             float barHalfSize = 100f;
             float starSurgeCD = 15.0f + ss.CastTime;
+            w.AverageEnergy *= 1 + 0.12f * talents.Euphoria;
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
+            float wrathEclipseEnergyRate = eclipseW.AverageEnergy / eclipseW.CastTime;
+            sf.AverageEnergy *= 1 + 0.12f * talents.Euphoria;
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
+            float starfireEclipseEnergyRate = eclipseSF.AverageEnergy / eclipseSF.CastTime;
             float starsurgeEnergyRate = ss.AverageEnergy / starSurgeCD;
 
             float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
@@ -253,15 +259,15 @@ namespace Rawr.Moonkin
                     break;
             }
 
-            float solarUptime = (solarTime + (RotationData.SolarEclipseMode == EclipseMode.Stretched ? preSolarTime : 0)) / accumulatedDuration;
-            float lunarUptime = (lunarTime + (RotationData.LunarEclipseMode == EclipseMode.Stretched ? preLunarTime : 0)) / accumulatedDuration;
+            RotationData.SolarUptime = (solarTime + (RotationData.SolarEclipseMode == EclipseMode.Stretched ? preSolarTime : 0)) / accumulatedDuration;
+            RotationData.LunarUptime = (lunarTime + (RotationData.LunarEclipseMode == EclipseMode.Stretched ? preLunarTime : 0)) / accumulatedDuration;
 
             float timeInSolar = (preSolarTime + solarTime) / accumulatedDuration;
             float timeInLunar = (preLunarTime + lunarTime) / accumulatedDuration;
 
             RotationData.StarSurgeAvgCast = ss.CastTime;
             RotationData.StarSurgeAvgEnergy = ss.AverageEnergy * timeInSolar + ss.AverageEnergy * timeInLunar;
-            RotationData.StarSurgeAvgHit = (solarTime + lunarUptime) * eclipseSS.DamagePerHit + (1 - solarUptime - lunarUptime) * ss.DamagePerHit;
+            RotationData.StarSurgeAvgHit = (solarTime + RotationData.LunarUptime) * eclipseSS.DamagePerHit + (1 - RotationData.SolarUptime - RotationData.LunarUptime) * ss.DamagePerHit;
             float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
 
             float preLunarCasts = preLunarTime / w.CastTime;
@@ -278,9 +284,9 @@ namespace Rawr.Moonkin
             RotationData.WrathCount = solarCasts + preLunarCasts;
             RotationData.WrathAvgHit = (solarDamage + preLunarDamage) / RotationData.WrathCount;
 
-            RotationData.MoonfireAvgHit = lunarUptime * (eclipseMF.DamagePerHit + eclipseMF.DotEffect.DamagePerHit) + (1 - lunarUptime) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
+            RotationData.MoonfireAvgHit = RotationData.LunarUptime * (eclipseMF.DamagePerHit + eclipseMF.DotEffect.DamagePerHit) + (1 - RotationData.LunarUptime) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
-            RotationData.InsectSwarmAvgHit = solarUptime * eclipseIS.DotEffect.DamagePerHit + (1 - solarUptime) * iSw.DotEffect.DamagePerHit;
+            RotationData.InsectSwarmAvgHit = RotationData.SolarUptime * eclipseIS.DotEffect.DamagePerHit + (1 - RotationData.SolarUptime) * iSw.DotEffect.DamagePerHit;
             float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
 
             RotationData.CastCount = RotationData.WrathCount + RotationData.StarfireCount + RotationData.StarSurgeCount +

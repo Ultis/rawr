@@ -953,10 +953,10 @@ namespace Rawr.Moonkin
                             Trigger.DoTTick,
                             Trigger.DamageDone,
                             Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
-                            Trigger.InsectSwarmOrMoonfireTick,
                             Trigger.InsectSwarmTick,
                             Trigger.MoonfireTick,
                             Trigger.MoonfireCast,
+                            Trigger.EclipseProc,
                         });
             }
             //set { _RelevantTriggers = value; }
@@ -1061,6 +1061,7 @@ namespace Rawr.Moonkin
                 StarfireProc = stats.StarfireProc,
                 BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
                 MoonkinT10CritDot = stats.MoonkinT10CritDot,
+                BonusDotCritChance = stats.BonusDotCritChance,
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
@@ -1149,6 +1150,7 @@ namespace Rawr.Moonkin
                 stats.StarfireProc > 0 ||
                 stats.BonusMoonkinNukeDamage > 0 ||
                 stats.MoonkinT10CritDot > 0 ||
+                stats.BonusDotCritChance > 0 ||
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs

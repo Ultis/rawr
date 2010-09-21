@@ -133,13 +133,11 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.SpellMiss ||
                 Effect.Trigger == Trigger.Use ||
                 Effect.Trigger == Trigger.MoonfireCast ||
-                Effect.Trigger == Trigger.InsectSwarmOrMoonfireTick ||
                 Effect.Trigger == Trigger.MoonfireTick ||
                 Effect.Trigger == Trigger.InsectSwarmTick ||
 				Effect.Trigger == Trigger.DoTTick) &&
                 (Effect.Stats.HasteRating > 0 ||
                 Effect.Stats.SpellHaste > 0  ||
-                Effect.Stats.CritRating > 0 ||
                 Effect.Stats.HighestStat > 0))
             {
                 Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
@@ -147,15 +145,11 @@ namespace Rawr.Moonkin
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
                     Stats st = e.Stats;
-                    float critRating = st.CritRating;
-                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
                     float highestStat = st.HighestStat;
 
-                    if (critRating > 0)
-                        sc += spellCrit;
                     if (spellHaste > 0)
                         sHa += spellHaste;
                     if (highestStat > 0)
@@ -185,15 +179,11 @@ namespace Rawr.Moonkin
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
                     Stats st = e.Stats;
-                    float critRating = st.CritRating;
-                    float spellCrit = StatConversion.GetSpellCritFromRating(critRating * maxStack);
                     float hasteRating = st.HasteRating;
                     float spellHaste = StatConversion.GetSpellHasteFromRating(hasteRating * maxStack);
                     spellHaste += st.SpellHaste;
                     float highestStat = st.HighestStat;
 
-                    if (critRating > 0)
-                        sc -= spellCrit;
                     if (spellHaste > 0)
                         sHa -= spellHaste;
                     if (highestStat > 0)
@@ -225,9 +215,6 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.MoonfireCast:
                             upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireCasts, 1f);
-                            break;
-                        case Trigger.InsectSwarmOrMoonfireTick:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.InsectSwarmTicks + r.RotationData.MoonfireTicks), 1f);
                             break;
                         case Trigger.MoonfireTick:
                             upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireTicks, 1f);
