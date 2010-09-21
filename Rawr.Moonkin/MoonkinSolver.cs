@@ -315,7 +315,6 @@ namespace Rawr.Moonkin
                                 triggerInterval = rot.Duration / rot.MoonfireCasts;
                                 break;
                             case Trigger.DoTTick:
-                            case Trigger.InsectSwarmOrMoonfireTick:
                                 triggerInterval = rot.Duration / (rot.InsectSwarmTicks + rot.MoonfireTicks);
                                 break;
                             case Trigger.MoonfireTick:

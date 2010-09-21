@@ -1153,7 +1153,6 @@ namespace Rawr.Moonkin
                             Trigger.DoTTick,
                             Trigger.DamageDone,
                             Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
-                            Trigger.InsectSwarmOrMoonfireTick,
                             Trigger.InsectSwarmTick,
                             Trigger.MoonfireTick,
                             Trigger.MoonfireCast,
