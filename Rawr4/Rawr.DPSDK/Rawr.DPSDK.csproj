@@ -119,7 +119,6 @@
     <Compile Include="FrostCycle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
-    <Compile Include="RotationGene.cs" />
     <Compile Include="StatsSpecialEffects.cs" />
     <Compile Include="UnholyCycle.cs" />
     <Compile Include="Weapon.cs" />

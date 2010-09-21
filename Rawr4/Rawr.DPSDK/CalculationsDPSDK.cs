@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Xml.Serialization;
 using Rawr.DK;
 
@@ -14,9 +10,53 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-        private Rotation.Type _rTypeOld = Rotation.Type.Unknown;
+        public float BonusMaxRunicPower = 0f;
 
-        public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
+        enum ability
+        {
+            // Basic
+            White,
+            // Melee abilities
+            BCB,
+            BloodStrike,
+            DeathStrike,
+            FesteringStrike,
+            FrostStrike,
+            HeartStrike,
+            NecroticStrike,
+            Obliterate,
+            PlagueStrike,
+            RuneStrike,
+            ScourgeStrike,
+            // Ranged/AOE abilities
+            BloodBoil,
+            DeathCoil,
+            DeathNDecay,
+            HowlingBlast,
+            IcyTouch,
+            // Others
+            BloodParasite,
+            BloodPlague,
+            DRW,
+            FrostFever,
+            Gargoyle,
+            Ghoul,
+            UnholyBlight,
+            WanderingPlague,
+            OtherPhysical,
+            OtherHoly,
+            OtherArcane,
+            OtherFire,
+            OtherFrost,
+            OtherNature,
+            OtherShadow,
+        }
+        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(ability))];
+        public float Mastery { get; set; }
+        public float BonusRPMultiplier { get; set; }
+        public float BonusRuneRegeneration { get; set; }
+
+        //public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -69,14 +109,12 @@ namespace Rawr.DPSDK
 				};
             }
         }
-        public float BonusMaxRunicPower = 0f;
 
         public static float AddStatMultiplierStat(float statMultiplier, float newValue)
         {
             float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
             return updatedStatModifier;
         }
-
         
         private Dictionary<string, Color> _subPointNameColors = null;
         /// <summary>
@@ -94,13 +132,8 @@ namespace Rawr.DPSDK
             {
                 if (_subPointNameColors == null)
                 {
-#if RAWR3 || RAWR4
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255,0,0,255));
-#else
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(255, 0, 0, 255));
-#endif
                 }
                 return _subPointNameColors;
             }
@@ -137,8 +170,8 @@ namespace Rawr.DPSDK
 					    "Basic Stats:Hit Rating",
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
-					    "Basic Stats:Armor Penetration Rating",
                         "Basic Stats:Armor",
+                        "Basic Stats:Mastery",
 					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
 					    "Advanced Stats:Attack Speed",
 					    "Advanced Stats:Crit Chance",
@@ -164,7 +197,7 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
                         "DPS Breakdown:Ghoul",
-                        "DPS Breakdown:Bloodworms",
+                        "DPS Breakdown:Bloodparasite",
                         "DPS Breakdown:Other",
                         "DPS Breakdown:Total DPS",
                     });
@@ -191,13 +224,8 @@ namespace Rawr.DPSDK
             }
         }
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSDK()); }
         }
@@ -224,9 +252,7 @@ namespace Rawr.DPSDK
 
         public override CharacterClass TargetClass { get { return CharacterClass.DeathKnight; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationDPSDK(); }
-
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSDK(); }
-
         public override ICalculationOptionBase DeserializeDataObject(string xml) {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
             System.IO.StringReader reader = new System.IO.StringReader(xml);
@@ -249,602 +275,24 @@ namespace Rawr.DPSDK
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-
-//            if (calcOpts.m_bExperimental)
-//                return GetCharacterCalculationsExp(character, additionalItem, referenceCalculation, significantChange, needsDisplayCalculations);
-
-            int targetLevel = calcOpts.TargetLevel;
-
             Stats stats = new Stats();
-
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
+            DeathKnightTalents talents = character.DeathKnightTalents;
+
+            // Setup initial Boss data.
+            // Get Boss from BossOptions data.
+            BossOptions hBossOptions = new BossOptions();
+            int targetLevel = hBossOptions.Level;
+
             stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
-            calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-            calcs.Talents = character.DeathKnightTalents;
 
-            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts/*, additionalItem*/);
-            
-            //DPS Subgroups
-            float dpsWhite = 0f;
-            float dpsBCB = 0f;
-            float dpsDancingRuneWeapon = 0f;
-            float dpsGargoyle = 0f;
-            float dpsGhoul = 0f;
-            float dpsOtherShadow = 0f;
-            float dpsOtherArcane = 0f;
-            float dpsOtherFrost = 0f;
-            float dpsOtherFire = 0f;
-            float dpsBloodworms = 0f;
+            CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts/*, additionalItem*/);
 
-            //shared variables
-            DeathKnightTalents talents = character.DeathKnightTalents;
-            bool DW = combatTable.DW;
-            float missedSpecial = 0f;
-
-            float dpsWhiteBeforeArmor = 0f;
-            float dpsWhiteMinusGlancing = 0f;
-            float fightDuration = calcOpts.FightLength * 60;
-            float mitigation;
-            //float KMProcsPerRotation = 0f;
-            float CinderglacierMultiplier = 1f;
-
-            float MHExpertise = stats.Expertise;
-            float OHExpertise = stats.Expertise;
-
-            //damage multipliers
-            float spellPowerMult = stats.BonusSpellPowerMultiplier;
-            float frostSpellPowerMult = stats.BonusSpellPowerMultiplier + Math.Max((stats.BonusFrostDamageMultiplier - stats.BonusShadowDamageMultiplier), 0f);
-
-            float physPowerMult = stats.BonusPhysicalDamageMultiplier;
-            // Covers all % physical damage increases.  Blood Frenzy, FI.
-            float partialResist = 0.94f; // Average of 6% damage lost to partial resists on spells
-            physPowerMult *= 1f + stats.BonusDamageMultiplier;
-            spellPowerMult *= 1f + stats.BonusDamageMultiplier;
-            frostSpellPowerMult *= 1f + stats.BonusDamageMultiplier;
-
-            // The Bonus Damage Multiplier needs to get applied to the stats object that gets passed into the Ability Handler.
-            stats.BonusPhysicalDamageMultiplier = physPowerMult;
-            stats.BonusSpellPowerMultiplier = spellPowerMult;
-            stats.BonusFrostDamageMultiplier = frostSpellPowerMult;
-
-            //spell AP multipliers, for diseases its per tick
-            float HowlingBlastAPMult = 0.2f;
-            float IcyTouchAPMult = 0.1f;
-            float FrostFeverAPMult = 0.055f;
-            float BloodPlagueAPMult = 0.055f;
-            float DeathCoilAPMult = 0.15f;
-            float UnholyBlightAPMult = 0.013f;
-            float GargoyleAPMult = 0.4f;   // pre 3.0.8 == 0.42f...now probably ~0.3f
-                                            // TESTED on june 27th 2009 and found to be 0.40f
-            float BloodwormsAPMult = 0.006f;
-
-            //for estimating rotation pushback
-
-            calcOpts.rotation.AvgDiseaseMult = calcOpts.rotation.NumDisease * (calcOpts.rotation.DiseaseUptime / 100);
-            float commandMult = 0f;
-            Rotation r = new Rotation();
-            bool bChangeRotation = false;
-            Rotation.Type rType = r.GetRotationType(talents);
-            if (rType != _rTypeOld)
-                bChangeRotation = true;
-            r.setRotation(rType);
-
-            {
-                float OHMult = 0.5f * (1f + (float)talents.NervesOfColdSteel * 0.083333333f);	//an OH multiplier that is useful sometimes
-                //Boolean PTR = false; // enable and disable PTR things here
-
-
-                #region racials
-                {
-                    if (character.Race == CharacterRace.Orc) { commandMult += .05f; }
-                }
-                #endregion
-
-               /* #region Killing Machine
-                {
-                    float KMPpM = (1f * talents.KillingMachine) * (1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1f + stats.PhysicalHaste); // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
-                    KMPpM *= calcOpts.KMProcUsage;
-                    KMPpM *= 1f - combatTable.totalMHMiss;
-                    KMPpM += talents.Deathchill / 2f;
-
-                    double KMPpR = KMPpM / (60f / temp.CurRotationDuration);
-                    float totalAbilities = (float)(temp.FrostStrike + temp.IcyTouch + temp.HowlingBlast);
-                    KMProcsPerRotation = (float)KMPpR;
-                }
-                #endregion*/
-
-                
-
-                #region Mitigation
-                {
-                    float targetArmor = calcOpts.BossArmor;
-
-                    float arpenBuffs = 0;
-
-                    mitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                                        stats.ArmorPenetration, arpenBuffs, Math.Max(0, stats.ArmorPenetrationRating));
-
-                    calcs.EnemyMitigation = 1f - mitigation;
-                    calcs.EffectiveArmor = mitigation;
-                }
-                #endregion
-
-                #region White Dmg
-                {
-                    float MHDPS = 0f, OHDPS = 0f;
-                    #region Main Hand
-                    {
-                        float dpsMHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.MH.DPS) * 0.7f;
-                        float dpsMHBeforeArmor = ((combatTable.MH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsMHglancing;
-                        dpsWhiteMinusGlancing = dpsMHBeforeArmor - dpsMHglancing;
-                        dpsWhiteBeforeArmor = dpsMHBeforeArmor;
-                        MHDPS = dpsMHBeforeArmor * mitigation;
-                    }
-                    #endregion
-
-                    #region Off Hand
-                    if (DW || (character.MainHand == null && character.OffHand != null))
-                    {
-                        float dpsOHglancing = (StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80] * combatTable.OH.DPS) * 0.7f;
-                        float dpsOHBeforeArmor = ((combatTable.OH.DPS * (1f - calcs.AvoidedAttacks - StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80])) * (1f + combatTable.physCrits)) + dpsOHglancing;
-                        dpsOHBeforeArmor *= OHMult;
-                        dpsWhiteMinusGlancing += dpsOHBeforeArmor - dpsOHglancing;
-                        dpsWhiteBeforeArmor += dpsOHBeforeArmor;
-                        OHDPS = dpsOHBeforeArmor * mitigation;
-
-                    }
-                    #endregion
-
-                    dpsWhite = MHDPS + OHDPS;
-                }
-                #endregion
-
-                AbilityHandler abilities = new AbilityHandler(stats, combatTable, character, calcOpts);
-
-                if ((calcOpts.GetRefreshForReferenceCalcs && referenceCalculation)
-                    || (calcOpts.GetRefreshForDisplayCalcs && needsDisplayCalculations) 
-                    || (calcOpts.GetRefreshForSignificantChange && significantChange)
-                    || bChangeRotation)
-                {
-                    // TODO: This gets very expensive.
-                    if (rType == Rotation.Type.Blood)
-                    {
-                        BloodCycle cycle = new BloodCycle(character, combatTable, stats, calcOpts, abilities);
-                        Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                        rot.AvgDiseaseMult = 2;
-                        rot.NumDisease = 2;
-                        rot.CurRotationDuration = calcOpts.FightLength * 60;
-                        calcOpts.rotation.copyRotation(rot);
-                        r.copyRotation(rot);
-                    }
-                    else if (rType == Rotation.Type.Unholy)
-                    {
-                        UnholyCycle cycle = new UnholyCycle(character, combatTable, stats, calcOpts, abilities);
-                        Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                        rot.AvgDiseaseMult = 3;
-                        rot.NumDisease = 3;
-                        rot.CurRotationDuration = calcOpts.FightLength * 60;
-                        calcOpts.rotation.copyRotation(rot);
-                        r.copyRotation(rot);
-                    }
-                    else if (rType == Rotation.Type.Frost)
-                    {
-                        FrostCycle cycle = new FrostCycle(character, combatTable, stats, calcOpts, abilities);
-                        Rotation rot = cycle.GetDamage((int)(calcOpts.FightLength * 60 * 1000));
-                        rot.AvgDiseaseMult = 2;
-                        rot.NumDisease = 2;
-                        rot.CurRotationDuration = calcOpts.FightLength * 60;
-                        calcOpts.rotation.copyRotation(rot);
-                        r.copyRotation(rot);
-                    }
-                    else
-                    {
-                        r.copyRotation(calcOpts.rotation);
-                    }
-                }
-                else
-                {
-                    r.copyRotation(calcOpts.rotation);
-                }
-
-                _rTypeOld = rType; 
-
-                #region Blood Caked Blade
-                {
-                    float dpsMHBCB = 0f;
-                    float dpsOHBCB = 0f;
-                    if ((combatTable.OH.damage != 0) && (DW || combatTable.MH.damage == 0))
-                    {
-                        float OHBCBDmg = (float)(combatTable.OH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult));
-                        dpsOHBCB = OHBCBDmg / combatTable.OH.hastedSpeed;
-                        dpsOHBCB *= OHMult;
-                    }
-                    if (combatTable.MH.damage != 0)
-                    {
-                        float MHBCBDmg = (float)(combatTable.MH.damage * (.25f + .125f * calcOpts.rotation.AvgDiseaseMult));
-                        dpsMHBCB = MHBCBDmg / combatTable.MH.hastedSpeed;
-                    }
-                    dpsBCB = dpsMHBCB + dpsOHBCB;
-                    dpsBCB *= .1f * (float)talents.BloodCakedBlade;
-                }
-                #endregion
-                #region Blood Parasite
-                {
-                    if (talents.BloodParasite > 0)
-                    {
-                        float BloodwormSwing = 50f + BloodwormsAPMult * stats.AttackPower;
-                        float BloodwormSwingDPS = BloodwormSwing / 2.0f;    // any haste benefits?
-                        float TotalBloodworms = ((fightDuration / combatTable.MH.hastedSpeed) + calcOpts.rotation.getMeleeSpecialsPerSecond() * fightDuration)
-                            * (0.03f * talents.BloodParasite)
-                            * 3f; // 3 bloodworms per proc
-                        dpsBloodworms = ((TotalBloodworms * BloodwormSwingDPS * 20f) / fightDuration);
-                    }
-                }
-                #endregion
-
-                #region Trinket direct-damage procs, razorice damage, etc
-                {
-                    dpsOtherArcane = stats.ArcaneDamage;
-                    dpsOtherShadow = stats.ShadowDamage;
-                    dpsOtherFire = stats.FireDamage;
-                    dpsOtherFrost = stats.FrostDamage;
-
-                    // TODO: Differentiate between MH razorice and OH razorice. Hardly matters though, since razorice hits only based off of base damage
-                    if (combatTable.MH.baseDamage != 0 && combatTable.MH.hastedSpeed != 0)
-                    {
-                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.MH.baseDamage / combatTable.MH.hastedSpeed;
-                    }
-                    if (combatTable.OH.baseDamage != 0 && combatTable.OH.hastedSpeed != 0)
-                    {
-                        dpsOtherFrost += stats.BonusFrostWeaponDamage * combatTable.OH.baseDamage / combatTable.OH.hastedSpeed;
-                    }
-                    if (DW) dpsOtherFrost /= 2f; //razorice only actually effects the weapon its on, not both. this is closer than it would be otherwise.
-
-                    float OtherCritDmgMult = .5f * (1f + stats.BonusCritMultiplier);
-                    float OtherCrit = 1f + ((combatTable.spellCrits) * OtherCritDmgMult);
-                    dpsOtherArcane *= OtherCrit;
-                    //dpsOtherShadow *= OtherCrit;
-                    dpsOtherFire *= OtherCrit;
-                    //dpsOtherFrost *= OtherCrit;
-                }
-                #endregion
-                    
-                #region Gargoyle
-                {
-                    if (calcOpts.rotation.GargoyleDuration > 0f && talents.SummonGargoyle > 0f)
-                    {
-                        float GargoyleCastTime = 2.0f;  //2.0 second base cast time
-                        GargoyleCastTime *= combatTable.MH.hastedSpeed / combatTable.MH.baseSpeed;
-                        // benefits from all haste effects
-
-                        float GargoyleStrike = 120f + GargoyleAPMult * stats.AttackPower;
-                        float GargoyleStrikeCount = 30f / GargoyleCastTime;
-                        float GargoyleDmg = GargoyleStrike * GargoyleStrikeCount;
-                        GargoyleDmg *= 1f + (.5f * .05f);  // crit rate is uninfluenced by stats, but roughly crap
-                        dpsGargoyle = GargoyleDmg / 180f;
-                    }
-                }
-                #endregion
-
-                #region Ghoul
-                {
-                    if (calcOpts.Ghoul)
-                    {
-                        float uptime = 1f;
-                        if (true)
-                        {
-                            float timeleft = calcOpts.FightLength * 60;
-                            float numCDs = timeleft / ((4f - .75f * 0) * 60f);
-                            float duration = numCDs * 60f;
-
-                            uptime = duration / timeleft;
-                        }
-
-                        float GhoulBaseStrength = 331f;
-                        float GhoulBaseStrengthMult = 0.7f;
-                        float GhoulBaseAP = 836f;
-                        float GhoulBaseSpeed = 2f;
-                        float GhoulAPMult = 1f;                 // 1 Str = x AP     
-                        float ClawCD = 4f;
-                        float GhoulWeaponBaseDamage = 101.3f;   // I found these values to be fairly correct after a number of tests (v3.0.8)
-                        float GhoulAPdivisor = 14f;           // 
-
-                        float GlyphofGhoulValue = 0f;
-                        if (talents.GlyphoftheGhoul) GlyphofGhoulValue = 0.4f;
-
-                        float GhoulStrengthMult = GhoulBaseStrengthMult + (GhoulBaseStrengthMult ) + GlyphofGhoulValue;
-                        float GhoulStrength = GhoulBaseStrength + stats.Strength * GhoulStrengthMult;
-
-                        Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-                        GhoulStrength *= 1f + statsBuffs.BonusStrengthMultiplier;
-                        GhoulStrength += statsBuffs.Strength;
-
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder"))) GhoulStrength -= 18f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Chromatic Wonder (Mixology)"))) GhoulStrength -= 4f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength"))) GhoulStrength -= 50f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Elixir of Mighty Strength (Mixology)"))) GhoulStrength -= 16f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir"))) GhoulStrength -= 20f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Guru's Elixir (Mixology)"))) GhoulStrength -= 6f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Scroll of Strength VIII"))) GhoulStrength -= 30f;
-
-                        float GhoulAP = GhoulBaseAP + GhoulStrength * GhoulAPMult;
-
-                        GhoulAP *= 1f + statsBuffs.BonusAttackPowerMultiplier;
-                        GhoulAP += statsBuffs.AttackPower;
-
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage"))) GhoulAP -= 180f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Flask of Endless Rage (Mixology)"))) GhoulAP -= 64f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir"))) GhoulAP -= 90f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Wrath Elixir (Mixology)"))) GhoulAP -= 32f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Attack Power Food"))) GhoulAP -= 80f;
-                        if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Fish Feast"))) GhoulAP -= 80f;
-
-                        float GhoulhastedSpeed = 0f;
-                        if (combatTable.MH != null)
-                            GhoulhastedSpeed = ((combatTable.MH.hastedSpeed == 0 ? 1.0f : combatTable.MH.hastedSpeed) / (combatTable.MH.baseSpeed == 0 ? 1.0f : combatTable.MH.baseSpeed)) * GhoulBaseSpeed;
-                        else
-                            GhoulhastedSpeed = GhoulBaseSpeed;
-
-                        GhoulhastedSpeed /= 1f + statsBuffs.PhysicalHaste;
-
-                        float dmgSwing = GhoulWeaponBaseDamage + (GhoulAP / GhoulAPdivisor) * GhoulBaseSpeed;
-                        float dpsSwing = dmgSwing / GhoulhastedSpeed;
-                        float dpsGhoulGlancing = (dpsSwing * 0.24f) * 0.75f;
-
-                        float dpsClaw = (1.5f * dmgSwing) / ClawCD;
-
-                        dpsSwing *= (1f - missedSpecial) - 0.24f;   // the Ghoul only has one weapon || Glancings added further down
-                        dpsClaw *= 1f - missedSpecial;
-
-                        dpsSwing *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
-                        dpsSwing += dpsGhoulGlancing;
-
-                        dpsClaw *= 1f + .054f;// + stats.LotPCritRating / 4591f; // needs other crit modifiers, but doesn't inherit crit from master
-
-                        dpsGhoul = dpsSwing + dpsClaw;
-
-                        //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
-                        // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
-                        int targetArmor = calcOpts.BossArmor;
-                        float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                            0f/*stats.ArmorPenetration*/, 0f, 0f * stats.ArmorPenetrationRating);
-
-                        dpsGhoul *= modArmor;
-                        dpsGhoul *= 1f - (.0065f * missedSpecial);	// pet expertise now scales with player hit rating. Hopefully goes off of melee rather than spell hit.
-                        dpsGhoul *= uptime;
-                    }
-                    else
-                        dpsGhoul = 0;
-                }
-                #endregion
-
-                float BCBMult = 1f;
-                float DancingRuneWeaponMult = 1f;
-                float GargoyleMult = 1f + commandMult;
-                float GhoulMult = 1f + commandMult;
-                float BloodwormsMult = 1f + commandMult;
-                float WhiteMult = 1f;
-                float otherShadowMult = 1f;
-                float otherArcaneMult = 1f;
-                float otherFrostMult = 1f;
-
-                #region Apply Physical Mitigation
-                {
-                    float physMit = mitigation;
-                    physMit *= 1f;
-
-                    dpsBCB *= physMit;
-                    dpsBloodworms *= 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, 0f/*stats.ArmorPenetration*/, 0f, 0f);
-
-                    WhiteMult *= physPowerMult;
-                    BCBMult *= physPowerMult;
-                }
-                #endregion
-
-                #region Apply Magical Mitigation
-                {
-                    // some of this applies to necrosis, I wonder if it is ever accounted for
-                    float magicMit = partialResist /** combatTable.spellResist*/;
-                    // magicMit = 1f - magicMit;
-
-                    otherShadowMult *= spellPowerMult;
-                    otherArcaneMult *= spellPowerMult;
-                    otherFrostMult *= frostSpellPowerMult;
-                }
-                #endregion
-
-                #region Cinderglacier multipliers
-                {
-                    #region Cinderglacier
-                    {
-                        if (stats.CinderglacierProc > 0f && combatTable.MH != null)
-                        {
-                            float shadowFrostAbilitiesPerSecond = (float)(
-                                (r.DeathCoil 
-                                + r.FrostStrike * (1 + talents.ThreatOfThassarian/3f) // FS hits once for each weapon.
-                                + r.ScourgeStrike 
-                                + r.IcyTouch 
-                                + r.HowlingBlast)
-                                / combatTable.realDuration);
-                            float CGPercentChance = 1.5f / (60f / combatTable.MH.baseSpeed);
-                            float CGPPM = ((60f / combatTable.MH.hastedSpeed) * CGPercentChance) * 1f - combatTable.totalMHMiss; // KM Procs per Minute (Defined "1 per point" by Blizzard) influenced by Phys. Haste
-                            CGPPM += (1.5f / (60f / combatTable.MH.baseSpeed)) * ((combatTable.totalMeleeAbilities * (1f - combatTable.missedSpecial) + combatTable.totalSpellAbilities * (1f - combatTable.spellResist)) * 60f / combatTable.realDuration);
-                            float ProcsPerAbility = CGPPM / (shadowFrostAbilitiesPerSecond * 60f);
-
-                            CinderglacierMultiplier = 1f + 2f * 0.2f * (ProcsPerAbility);
-
-                        }
-                    }
-                    #endregion
-/*                    abilities.DC.DamageMod *= CinderglacierMultiplier;
-                    abilities.HB.DamageMod *= CinderglacierMultiplier;
-                    abilities.IT.DamageMod *= CinderglacierMultiplier;
-                    abilities.FS.DamageMod *= CinderglacierMultiplier;
-                    abilities.SS.DamageMod *= CinderglacierMultiplier;
-                    */
-                }
-                #endregion
-
-                #region Apply Multi-Ability Talent Multipliers
-                {
-
-                    if ((float)talents.BoneShield >= 1f)
-                    {
-                        float BoneMult = .02f;
-                        BCBMult *= 1 + BoneMult;
-                        WhiteMult *= 1 + BoneMult;
-                        otherShadowMult *= 1 + BoneMult;
-                        otherArcaneMult *= 1 + BoneMult;
-                        otherFrostMult *= 1 + BoneMult;
-                    }
-                }
-                #endregion
-
-                #region Pet uptime modifiers
-                {
-                    BloodwormsMult *= calcOpts.BloodwormsUptime;
-                    GhoulMult *= calcOpts.GhoulUptime;
-                }
-                #endregion
-                
-                //feed variables for output
-                calcs.BCBDPS = dpsBCB * BCBMult;
-                calcs.DRWDPS = dpsDancingRuneWeapon * DancingRuneWeaponMult;
-                calcs.GargoyleDPS = dpsGargoyle * GargoyleMult;
-                calcs.GhoulDPS = dpsGhoul * GhoulMult;
-                calcs.BloodwormsDPS = dpsBloodworms * BloodwormsMult;
-                calcs.NecrosisDPS = dpsWhite * (.04f * talents.Necrosis);
-                calcs.WhiteDPS = dpsWhite * WhiteMult;
-                calcs.OtherDPS = dpsOtherShadow * otherShadowMult +
-                    dpsOtherArcane * otherArcaneMult +
-                    dpsOtherFire * otherArcaneMult +
-                    dpsOtherFrost * otherFrostMult;
-
-                // TODO: Re-work this to properly evaluate a base rotation and subrotations w/ special strikes.
-                // First let's get the common stuff out of the ifs
-                // Diseases & the abilities that cause them
-                /*                calcs.PlagueStrikeDPS = (float)((abilities.PS.Damage * r.PlagueStrike) / (calcOpts.FightLength * 60));
-                                calcs.BloodPlagueDPS = (float)((abilities.BP.Damage * r.BPTick) / (calcOpts.FightLength * 60));
-                                calcs.IcyTouchDPS = (float)((abilities.IT.Damage * r.IcyTouch) / (calcOpts.FightLength * 60));
-                                calcs.FrostFeverDPS = (float)((abilities.FF.Damage * r.FFTick) / (calcOpts.FightLength * 60));
-                                calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
-                                // RP based
-                                calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-                                if (rType == Rotation.Type.Frost)
-                                {
-                                    calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
-                                    if ( talents.FrostStrike > 0 )
-                                        calcs.FrostStrikeDPS = (float)((abilities.FS.Damage * r.FrostStrike + abilities.FS.SecondaryDamage * r.KMFS) / (calcOpts.FightLength * 60));
-                                    else
-                                        calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-
-                                    if (talents.HowlingBlast > 0)
-                                        calcs.HowlingBlastDPS = (float)((abilities.HB.Damage * r.HowlingBlast + abilities.HB.SecondaryDamage * r.KMRime) / (calcOpts.FightLength * 60));
-                                    calcs.ObliterateDPS = (float)((abilities.OB.Damage * r.Obliterate) / (calcOpts.FightLength * 60));
-                                }
-
-                                else if (rType == Rotation.Type.Blood)
-                                {
-                                    if (talents.HeartStrike > 0 )
-                                        calcs.HeartStrikeDPS = (float)((abilities.HS.Damage * r.HeartStrike) / (calcOpts.FightLength * 60));
-                                    else
-                                        calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
-                                    calcs.DeathStrikeDPS = (float)((abilities.DS.Damage * r.DeathStrike) / (calcOpts.FightLength * 60));
-                                    calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-                                }
-
-                                else if (rType == Rotation.Type.Unholy)
-                                {
-                                    if (talents.ScourgeStrike > 0)
-                                        calcs.ScourgeStrikeDPS = (float)(((abilities.SS.Damage + abilities.SS.SecondaryDamage) * r.ScourgeStrike) / (calcOpts.FightLength * 60));
-                                    else
-                                        calcs.ObliterateDPS = (float)((abilities.OB.Damage * r.Obliterate) / (calcOpts.FightLength * 60));
-                                    calcs.BloodStrikeDPS = (float)((abilities.BS.Damage * r.BloodStrike) / (calcOpts.FightLength * 60));
-                                    calcs.DeathCoilDPS = (float)((abilities.DC.Damage * r.DeathCoil) / (calcOpts.FightLength * 60));
-                                    if (talents.UnholyBlight > 0)
-                                    {
-                                        float modifier = (0.1f * (talents.GlyphofUnholyBlight ? 1.4f : 1));
-                                        calcs.UnholyBlightDPS = calcs.DeathCoilDPS * modifier;
-                                    }
-                                }
-
-                                     */
-
-                calcs.DPSPoints = calcs.BCBDPS + calcs.BloodPlagueDPS + calcs.BloodStrikeDPS + calcs.DeathCoilDPS + calcs.FrostFeverDPS + calcs.FrostStrikeDPS +
-                                  calcs.GargoyleDPS + calcs.GhoulDPS + calcs.WanderingPlagueDPS + calcs.HeartStrikeDPS + calcs.HowlingBlastDPS + calcs.IcyTouchDPS +
-                                  calcs.NecrosisDPS + calcs.ObliterateDPS + calcs.DeathStrikeDPS + calcs.PlagueStrikeDPS + calcs.ScourgeStrikeDPS + calcs.UnholyBlightDPS +
-                                  calcs.WhiteDPS + calcs.OtherDPS + calcs.BloodwormsDPS;
-
-                #region Dancing Rune Weapon
-                {
-                    if (talents.DancingRuneWeapon > 0)
-                    {
-                        float dpsDRWMaximum = 0f;
-                        String effectsStats = "";
-                        Stats maxStats = GetCharacterStatsMaximum(character, additionalItem, 90f);
-                        DRW drw;
-                        Stats tempStats;
-
-                        foreach (SpecialEffect effect in maxStats.SpecialEffects())
-                        {
-                            if (effect.Trigger != Trigger.Use)
-                            {
-                                tempStats = new Stats();
-                                tempStats += maxStats;
-                                tempStats += effect.Stats;
-
-
-
-                                tempStats.Strength += tempStats.HighestStat + tempStats.Paragon;
-
-                                tempStats.Agility = (float)Math.Floor(tempStats.Agility * (1 + tempStats.BonusAgilityMultiplier));
-                                tempStats.Strength = (float)Math.Floor(tempStats.Strength * (1 + tempStats.BonusStrengthMultiplier));
-                                tempStats.Stamina = (float)Math.Floor(tempStats.Stamina * (1 + tempStats.BonusStaminaMultiplier));
-                                tempStats.Intellect = (float)Math.Floor(tempStats.Intellect * (1 + tempStats.BonusIntellectMultiplier));
-                                tempStats.Spirit = (float)Math.Floor(tempStats.Spirit * (1 + tempStats.BonusSpiritMultiplier));
-                                tempStats.Health = (float)Math.Floor(tempStats.Health + (tempStats.Stamina * 10f));
-                                tempStats.Mana = (float)Math.Floor(tempStats.Mana + (tempStats.Intellect * 15f));
-                                tempStats.AttackPower = (float)Math.Floor(tempStats.AttackPower + tempStats.Strength * 2);
-                                // Copy from TankDK.
-                                // tempStats.Armor = (float)Math.Floor((tempStats.Armor + tempStats.BonusArmor + 2f * tempStats.Agility) * 1f);
-                                tempStats.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(tempStats.Agility) +
-                                                    StatConversion.ApplyMultiplier(tempStats.Armor, tempStats.BaseArmorMultiplier) +
-                                                    StatConversion.ApplyMultiplier(tempStats.BonusArmor, tempStats.BonusArmorMultiplier));
-
-                                tempStats.AttackPower += (tempStats.Armor / 180f) * (float)talents.BladedArmor;
-
-                                tempStats.BonusSpellPowerMultiplier = tempStats.BonusShadowDamageMultiplier;
-
-                                tempStats.AttackPower *= 1f + tempStats.BonusAttackPowerMultiplier;
-
-                                drw = new DRW(combatTable, calcs, calcOpts, tempStats, character, talents);
-                                if (drw.dpsDancingRuneWeapon > dpsDRWMaximum)
-                                {
-                                    dpsDRWMaximum = drw.dpsDancingRuneWeapon;
-                                    effectsStats = effect.ToString();
-                                }
-                            }
-
-                        }
-                        dpsDancingRuneWeapon = dpsDRWMaximum;
-                        float DRWUptime = (12f + (talents.GlyphofDancingRuneWeapon ? 5f : 0f)) / 90f;
-                        dpsDancingRuneWeapon /= 90f;
-                        calcs.DPSPoints += dpsDancingRuneWeapon;
-                        calcs.DRWDPS = dpsDancingRuneWeapon;
-                        calcs.DRWStats = effectsStats;
-                    }
-                }
-                #endregion
-
-                calcs.OverallPoints = calcs.DPSPoints;
-
-                // TODO: Display rotation data:
-
-            }
+            calcs.OverallPoints = calcs.DPSPoints;
 
             return calcs;
         }
@@ -858,12 +306,11 @@ namespace Rawr.DPSDK
             Stats stats = new Stats();
 
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
-
-            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts);
-
             // Build up Character Stats to do math
 
             // Perform the calculations
+            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts);
+
 
             // Output the results.
 
@@ -875,30 +322,53 @@ namespace Rawr.DPSDK
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
         }
 
-        private Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p)
+        public Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p,  DeathKnightTalents t)
         {
+            BonusRPMultiplier = 0;
+            BonusRuneRegeneration = 0f;
             Stats PresenceStats = new Stats();
             switch(p)
             {
                 case CalculationOptionsDPSDK.Presence.Blood:
                 {
-                    PresenceStats.BonusPhysicalDamageMultiplier = .15f;
-                    PresenceStats.BonusSpellPowerMultiplier = .15f;
-                    PresenceStats.BonusShadowDamageMultiplier = .15f;
-                    PresenceStats.BonusFrostDamageMultiplier = .15f;
-                    break;
-                }
-                case CalculationOptionsDPSDK.Presence.Unholy:
-                {
-                    PresenceStats.PhysicalHaste = 0.15f;
-                    PresenceStats.SpellHaste = 0.15f;
+                    if (t.ImprovedBloodPresence > 0)
+                        PresenceStats.CritChanceReduction -= 0.03f * t.ImprovedBloodPresence;
+                    else if (t.ImprovedFrostPresence > 0)
+                        BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
+                    else if (t.ImprovedUnholyPresence == 1)
+                        PresenceStats.MovementSpeed += .08f;
+                    else if (t.ImprovedUnholyPresence == 2)
+                        PresenceStats.MovementSpeed += .15f;
+                    PresenceStats.BonusStaminaMultiplier += 0.08f;
+                    PresenceStats.BaseArmorMultiplier += 0.6f;
+                    PresenceStats.DamageTakenMultiplier -= 0.08f;
+                    // Threat bonus.
+                    PresenceStats.ThreatIncreaseMultiplier += 2f; // TODO: NOT VERIFIED AT ALL
                     break;
                 }
                 case CalculationOptionsDPSDK.Presence.Frost:
                 {
-                    PresenceStats.BonusStaminaMultiplier = 0.08f;
-                    PresenceStats.BaseArmorMultiplier = .60f;
-                    PresenceStats.DamageTakenMultiplier = -.08f;
+                    if (t.ImprovedBloodPresence > 0)
+                        PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
+                    else if (t.ImprovedUnholyPresence == 1)
+                        PresenceStats.MovementSpeed += .08f;
+                    else if (t.ImprovedUnholyPresence == 2)
+                        PresenceStats.MovementSpeed += .15f;
+                    PresenceStats.BonusDamageMultiplier += 0.1f;
+                    BonusRPMultiplier += 0.1f;  // TODO: Put this into a stats object or something.
+                    PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
+                    break;
+                }
+                case CalculationOptionsDPSDK.Presence.Unholy:
+                {
+                    if (t.ImprovedBloodPresence > 0)
+                        PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
+                    else if (t.ImprovedFrostPresence > 0)
+                        BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
+                    PresenceStats.PhysicalHaste += .1f;
+                    BonusRuneRegeneration += .1f;
+                    PresenceStats.MovementSpeed += .15f;
+                    PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
                 }
             }
@@ -924,7 +394,7 @@ namespace Rawr.DPSDK
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
 
-            // Filter out the duplicate Runes:
+            // Filter out the duplicate non-stacking Rune Enchants:
             if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
                 && character.MainHandEnchant == character.OffHandEnchant)
             {
@@ -945,34 +415,8 @@ namespace Rawr.DPSDK
             }
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence);
-            Stats statsTalents;
-            if (calcOpts.m_bExperimental)
-            {
-                statsTalents = GetTalentStats(talents, character);
-            }
-            else
-            {
-                statsTalents = new Stats()
-                {
-                    // TODO: Expand this since I know in TankDK this was a much broader set of Talent->Stat adjustments.
-//                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
-                    BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-//                    BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
-//                    Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
-
-                    //ArmorPenetration = talents.BloodGorged * 2f / 100,
-                    // Improved Icy Talons:
-//                    PhysicalHaste = 0.04f * talents.IcyTalons + .05f * talents.ImprovedIcyTalons +
-                        // IIT does not stack w/ Windfury Totem or Improved Icy Talons from the Buff pane.
-  //                      ((character.ActiveBuffsContains("Improved Icy Talons") || character.ActiveBuffsContains("Windfury Totem")) ? 0 : .2f)
-                };
-//                if (talents.UnbreakableArmor > 0)
-                {
-                    statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.2f }, 20f, 60f));
-                }
-            }
-
+            Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence, talents);
+            Stats statsTalents = GetTalentStats(character);
 
             Stats statsTotal = new Stats();
             statsTotal.Accumulate(statsBaseGear);
@@ -996,27 +440,12 @@ namespace Rawr.DPSDK
                 statSE.Accumulate(se.getSpecialEffects(calcOpts, e));
             }
 
-            float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
-
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    // TODO: This code is very expensive for some reason.  
-                    // Need to isolate and fix what's going on here to improve performance
-                    if (effect.Stats.ArmorPenetrationRating > 0f
-                        && ((effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating) > tempCap))
-                    {
-                        SpecialEffect tempEffect = new SpecialEffect(effect.Trigger, effect.Stats.Clone(), effect.Duration, effect.Cooldown, effect.Chance, effect.MaxStack);
-                        tempEffect.Stats.ArmorPenetrationRating = Math.Max(tempCap - statsTotal.ArmorPenetrationRating, 0f);
-                        se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-                        statsTotal.Accumulate(se.getSpecialEffects(calcOpts, tempEffect));
-                    }
-                    else
-                    {
-                        se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-                        statsTotal.Accumulate(se.getSpecialEffects(calcOpts, effect));
-                    }
+                    se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
+                    statsTotal.Accumulate(se.getSpecialEffects(calcOpts, effect));
                 }
             }
 
@@ -1036,8 +465,6 @@ namespace Rawr.DPSDK
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
 
-            statsTotal.AttackPower += (statsTotal.Armor / 180f) * (float)talents.BladedArmor;
-
             statsTotal.BonusSpellPowerMultiplier++;
             statsTotal.BonusFrostDamageMultiplier++;
             statsTotal.BonusShadowDamageMultiplier++;
@@ -1046,22 +473,10 @@ namespace Rawr.DPSDK
 
             statsTotal.BonusPhysicalDamageMultiplier++;
 
-            if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
-            {
-                statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
-                statsTotal.BonusSpellPowerMultiplier *= 1.15f;
-                statsTotal.BonusShadowDamageMultiplier *= 1.15f;
-                statsTotal.BonusFrostDamageMultiplier *= 1.15f;
-            }
-            else if (calcOpts.CurrentPresence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
-            {
-                statsTotal.PhysicalHaste += 0.15f;
-                statsTotal.SpellHaste += 0.15f;
-            }
-
             return (statsTotal);
         }
 
+        /*
         public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
@@ -1069,27 +484,8 @@ namespace Rawr.DPSDK
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTalents;
-            if (calcOpts.m_bExperimental)
-            {
-                statsTalents = GetTalentStats(talents, character);
-            }
-            else
-            {
-                statsTalents = new Stats()
-                {
-//                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
-//                    BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-//                    BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
-//                    Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
-//                    BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
-//                    BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
-                };
-//                if (talents.UnbreakableArmor > 0)
-                {
-                    statsTalents.AddSpecialEffect(_SE_UnbreakableArmor[character.DeathKnightTalents.GlyphofUnbreakableArmor ? 1 : 0][0]);
-                }
-            }
+            Stats statsTalents = GetTalentStats(character);
+
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
 
@@ -1105,7 +501,6 @@ namespace Rawr.DPSDK
             {
                 statsTemp.AddSpecialEffect(effect);
             }
-            Stats tempStats;
             foreach (SpecialEffect effect in statsTemp.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
@@ -1123,19 +518,6 @@ namespace Rawr.DPSDK
                                 }
                             }
                             uptimeMult /= calcOpts.FightLength * 60f / abilityCooldown;
-                        }
-                        float tempCap = StatConversion.RATING_PER_ARMORPENETRATION * (1f - statsTotal.ArmorPenetration);
-                        if (effect.Stats.ArmorPenetrationRating > 0f
-                            && effect.Stats.ArmorPenetrationRating + statsTotal.ArmorPenetrationRating > tempCap)
-                        {
-                            tempStats = new Stats();
-                            tempStats += effect.Stats;
-                            tempStats.ArmorPenetrationRating =
-                                (tempCap - statsTotal.ArmorPenetrationRating > 0f ? tempCap - statsTotal.ArmorPenetrationRating : 0f);
-                            statsTotal += tempStats * uptimeMult;
-                        }
-                        else
-                        {
                             statsTotal += effect.Stats * uptimeMult;
                         }
                     }
@@ -1148,10 +530,11 @@ namespace Rawr.DPSDK
             }
             return (statsTotal);
         }
+        */
 
-        public Stats GetTalentStats(DeathKnightTalents talents, Character c)
+        public Stats GetTalentStats(Character c)
         {
-            // TODO: THis will eventually be in the common area.
+            // TODO: This will eventually be in the common area.
             Stats TalentStats = new Stats();
 
             AccumulateTalents(TalentStats, c);
@@ -1159,193 +542,295 @@ namespace Rawr.DPSDK
             return TalentStats;
         }
 
-        /// <summary>Build the talent special effects.</summary>
+        public Rotation.Type TalentFocus(DeathKnightTalents t)
+        {
+            Rotation.Type curRotationType = Rotation.Type.Custom;
+            const int indexBlood = 0; // start index of Blood Talents.
+            const int indexFrost = 19; // start index of Frost Talents.
+            const int indexUnholy = indexFrost + 19; // start index of Unholy Talents.
+            //const int sizeUnholy = 20;
+            int[] TalentCounter = new int[4];
+            int index = indexBlood;
+            foreach (int i in t.Data)
+            {
+                if (i > 0)
+                {
+                    // Blood
+                    if (index < indexFrost)
+                        TalentCounter[(int)Rotation.Type.Blood] += i;
+                    // Frost
+                    else if ((indexFrost <= index) && (index < indexUnholy))
+                    {
+                        TalentCounter[(int)Rotation.Type.Frost] += i;
+                    }
+                    // Unholy
+                    else if (index >= indexUnholy)
+                    {
+                        TalentCounter[(int)Rotation.Type.Unholy] += i;
+                    }
+                }
+                index++;
+            }
+            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Blood
+                curRotationType = Rotation.Type.Blood;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
+            {
+                // Frost
+                curRotationType = Rotation.Type.Frost;
+            }
+            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
+            {
+                // Unholy
+                curRotationType = Rotation.Type.Unholy;
+            }
+            return curRotationType;
+        }
+
+        /// <summary>Build the talent effects.</summary>
         private void AccumulateTalents(Stats FullCharacterStats, Character character)
         {
             Stats newStats = new Stats();
-            float fDamageDone = 0f;
+
+            // Which talent tree focus?
+            #region Talent Speciality
+            Rotation.Type r = TalentFocus(character.DeathKnightTalents);
+            switch (r)
+            {
+                case Rotation.Type.Blood:
+                    {
+                        // Special abilities for being blood
+                        // Heart Strike
+                        // Veteran of the third war
+                        // Stamina +9%
+                        FullCharacterStats.BonusStaminaMultiplier += .09f;
+                        // Expertise +6
+                        FullCharacterStats.Expertise += 6;
+                        // Blood Rites
+                        // Whenever you hit with Death Strike or Obliterate, the Frost and Unholy Runes 
+                        // will become Death Runes when they activate.  Death Runes count as a Blood, Frost or Unholy Rune.
+                        // Vengence
+                        // Each time you take damage, you gain 5% of the damage taken as attack power, up to a maximum of 10% of your health.
+                        // Mastery: Blood Shield
+                        // Each Time you heal yourself w/ DS you gain a shield worth 50% of the amount healed
+                        // Each Point of Mastery increases the shield by 6.25%
+                        break;
+                    }
+                case Rotation.Type.Frost:
+                    {
+                        // Special abilities for being Frost
+                        // Frost Strike
+                        // Icy Talons
+                        // Melee Attack speed +20%
+                        FullCharacterStats.PhysicalHaste += .2f;
+                        // Blood of the North
+                        // Whenever you hit with Blood Strike or Pest, your blood rune will become a death rune.
+                        // Mastery: Frozen Heart
+                        // Increases all frost damage by 16%.  
+                        FullCharacterStats.BonusFrostDamageMultiplier += .16f;
+                        // Each point of mastery increases frost damage by an additional 2.0%
+                        break;
+                    }
+                case Rotation.Type.Unholy:
+                    {
+                        // Special abilities for being Unholy
+                        // Scourge Strike
+                        // Master of Ghouls
+                        // Reduces the CD on Raise dead by 60 sec.
+                        // The ghoul summoned is considered your pet w/o a limited duration.
+                        // Reaping
+                        // Whenever you hit with Blood strike, pestilence, or Festering strike, the runes spent will 
+                        // become death runes when they activate.
+                        // Unholy Might
+                        // Str +15%
+                        FullCharacterStats.BonusStrengthMultiplier += .15f;
+                        // Mastery: Blightcaller.
+                        // Increases the damage done by your diseases by 32%.
+                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f;
+                        // Each point of mastery increases disease damage by an additional 4.0%
+                        break;
+                    }
+            }
+            #endregion
 
             #region Blood Talents
             // Butchery
             // 1RPp5 per Point
-            // TODO: Implement Runic Regen info.
             if (character.DeathKnightTalents.Butchery > 0)
             {
                 FullCharacterStats.RPp5 += 1 * character.DeathKnightTalents.Butchery;
             }
 
             // Blade Barrier
-            // Reduce damage by 1% per point for 10 sec.
+            // Reduce damage by 2% per point for 10 sec.
             if (character.DeathKnightTalents.BladeBarrier > 0)
             {
                 // If you don't have your Blood Runes on CD, you're doing it wrong. 
-                FullCharacterStats.DamageTakenMultiplier -= (.01f * character.DeathKnightTalents.BladeBarrier);
+                FullCharacterStats.DamageTakenMultiplier -= (.02f * character.DeathKnightTalents.BladeBarrier);
             }
 
             // Bladed Armor
-            // 1 AP per point per 180 Armor
-            // Implmented after Frost Presence above.
+            // 2 AP per point per 180 Armor
+            if (character.DeathKnightTalents.BladedArmor > 0)
+            {
+                // If you don't have your Blood Runes on CD, you're doing it wrong. 
+                FullCharacterStats.AttackPower += (2 * character.DeathKnightTalents.BladedArmor) * (FullCharacterStats.Armor / 180);
+            }
 
+            // Blood-Caked Blade
+            // 10% chance per point to cause Blood-Caked strike
+            
             // Scent of Blood
-            // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 5 runic power.
+            // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 10 runic power.
             // TODO: setup RP gains.
 
-            // 2H weapon spec.
-            // 2% per point increased damage
-            // Implmented in weapon section above.
-
-            // Rune Tap
-            // Convert 1 BR to 10% health.
-            /*
-            if (character.DeathKnightTalents.RuneTap > 0)
+            if (r == Rotation.Type.Blood)
             {
-                newStats = new Stats();
-                float fCD = 60f;
-                newStats.Healed = (GetCurrentHealth(FullCharacterStats) * .1f);
-                // Improved Rune Tap.
-                // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-                fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                newStats.Healed += (newStats.Healed * (character.DeathKnightTalents.ImprovedRuneTap / 3f));
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
-            }
-            */
-
-            // Death Rune Mastery
-            // Create death runes out of Frost & Unholy for each oblit/DS.
-            // Implemented Death Runes in new CombatTable/Ability/Rotation
-
-            // Spell Deflection
-            // Parry chance of taking 15% less damage per point from direct damage spell
-            // Implmented after Parry calc above.
-
-            // Vendetta
-            // Heals you for up to 2% per point on killing blow
-            // Not important for tanking
-
-            // Bloody Strikes
-            // increases damage of BS and HS by 15% per point
-            // increases damage of BB by 10% per point
-            // Implemented in Combattable.cs
-
-            // Mark of blood
-            // Cast on the enemy
-            // buff that lasts 20 secs or 20 hits
-            // heals the target for 4% of max health for each damage dealing hit from that enemy to the target of that enemy.
-            // Implemented in Mitigation section above.
-
-            // Abominations Might
-            // increase AP by 5%/10% of raid.
-            // 1% per point increase to str.
-            if (character.DeathKnightTalents.AbominationsMight > 0)
-            {
-                // This happens no matter what:
-                FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
-                // This happens only if there isn't Trueshot Aura available:
-                if (!(character.ActiveBuffsContains("Trueshot Aura") || character.ActiveBuffsContains("Unleashed Rage") || character.ActiveBuffsContains("Abomination's Might")))
+                // Abominations Might
+                // increase AP by 5%/10% of raid.
+                // 1% per point increase to str.
+                if (character.DeathKnightTalents.AbominationsMight > 0)
                 {
-                    FullCharacterStats.BonusAttackPowerMultiplier += (.05f * character.DeathKnightTalents.AbominationsMight);
+                    // This happens no matter what:
+                    FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
+                    // This happens only if there isn't Trueshot Aura/Unleashed Rage/Abom's might  available:
+                    if (!(character.ActiveBuffsContains("Trueshot Aura") || character.ActiveBuffsContains("Unleashed Rage") || character.ActiveBuffsContains("Abomination's Might")))
+                    {
+                        FullCharacterStats.BonusAttackPowerMultiplier += (.05f * character.DeathKnightTalents.AbominationsMight);
+                    }
                 }
-            }
 
-            // Bloodworms
-            // 3% chance per point per hit to cause the target to spawn 2-4 blood worms
-            // Healing you 150% of the damage they do for 20 sec.
-            if (character.DeathKnightTalents.BloodParasite > 0)
-            {
-                // TODO: figure out how much damage the worms do.
-                fDamageDone = 100f;
-                float fBWAttackSpeed = 2f;
-                float fBWDuration = 20f;
-                float key = (fDamageDone * fBWDuration / fBWAttackSpeed);
-                // note, while this only creates one Dictionary entry and may seem like a waste
-                // I left it open like this so that your above TODO for figuring out how much damage the worms do will make this part dynamic
-                if (!_SE_Bloodworms.ContainsKey(key))
+                // Bone Shield
+                // 3 Bones 
+                // Takes 20% less damage from all sources
+                // Does 2% more damage to target
+                // Each damaging attack consumes a bone.
+                // Lasts 5 mins
+
+                // Toughness
+                // Increases Armor Value from items by 3% per point.
+                if (character.DeathKnightTalents.Toughness > 0)
                 {
-                    _SE_Bloodworms.Add(key, new SpecialEffect[] {
-                        null,
-                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 1),
-                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 2),
-                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .03f * 3),
-                    });
+                    FullCharacterStats.BaseArmorMultiplier = AddStatMultiplierStat(FullCharacterStats.BaseArmorMultiplier, (.03f * character.DeathKnightTalents.Toughness));
                 }
-                FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[key][character.DeathKnightTalents.BloodParasite]);
-            }
 
-            // Improved Blood Presence
-            // while in frost or unholy, you retain the 2% per point healing from blood presence
-            // Healing done to you is increased by 5% per point
-            // Implemented above.
+                // Hand of Doom
+                // Reduces the CD for Strangulate by 30/60 sec.
 
-            // Improved Death Strike
-            // increase damage of DS by 15% per point 
-            // increase crit chance of DS by 3% per point
-            // Implemented in CombatTable.cs
+                // Sanguine Fortitude
+                // Buff's IBF:
+                // While Active, your IBF reduces Damage taken by 15/30% and costs 50/100% less RP to activate.
+                // CD duration? 3min suggested on pwnwear.
+                // Cost?  This is a CD stacker.
+                // TODO: look into CD stacking code./max v average values.
 
-            // Sudden Doom
-            // BS & HS have a 5% per point chance to launch a DC at target
-            if (character.DeathKnightTalents.SuddenDoom > 0)
-            {
-                // Implmented in CombatTable.cs
-            }
-
-            // Vampiric Blood
-            // temp 15% of max health and
-            // increases health generated by 35% for 10 sec.
-            // 1 min CD. as of 3.2.2
-            /*
-            if (character.DeathKnightTalents.VampiricBlood > 0)
-            {
-                // Also copy above, but it's commented out.
-                newStats = new Stats();
-                newStats.Health = (GetCurrentHealth(FullCharacterStats) * 0.15f);
-                newStats.HealingReceivedMultiplier += 0.35f;
-
-                float fVBCD = 60f;
-                if (m_bT9_4PC) fVBCD -= 10f;
-                float fVBDur = 10f;
-                if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
+                // Blood Parasite
+                // Melee Attacks have 5% chance of spawning a blood worm.
+                // Blood worm attacks your enemies, gorging itself on blood
+                // until it bursts to heal nearby allies. Lasts 20 sec.
+                if (character.DeathKnightTalents.BloodParasite > 0)
                 {
-                    fVBDur += 5f;
+                    // TODO: figure out how much damage the worms do.
+                    // TODO: figure out how much healing the worms do.
+                    float fDamageDone = 100f;
+                    float fBWAttackSpeed = 2f;
+                    float fBWDuration = 20f;
+                    float key = (fDamageDone * fBWDuration / fBWAttackSpeed);
+                    // note, while this only creates one Dictionary entry and may seem like a waste
+                    // I left it open like this so that your above TODO for figuring out how much damage the worms do will make this part dynamic
+                    if (!_SE_Bloodworms.ContainsKey(key))
+                    {
+                        _SE_Bloodworms.Add(key, new SpecialEffect[] {
+                            null,
+                            new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .05f * 1),
+                            new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .05f * 2),
+                        });
+                    }
+                    FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[key][character.DeathKnightTalents.BloodParasite]);
                 }
-                FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
+
+                // Improved Blood Presence
+                // Reduces chance to be critically hit while in blood presence by 3/6%
+                // In addition while in Frost or Unholy, retain the 2/4% Damage reduction. 
+                // Implemented in GetPresenceStats()
+
+                // Will of the Necropolis
+                // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
+                if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
+                {
+                    // Need to factor in the damage taken aspect of the trigger.
+                    // Using the assumption that the tank will be at < 35% health about that % of the time.
+                    FullCharacterStats.AddSpecialEffect(_SE_WillOfTheNecropolis[character.DeathKnightTalents.WillOfTheNecropolis]);
+                }
+
+                // Rune Tap
+                // Convert 1 BR to 10% health.
+                /*
+                if (character.DeathKnightTalents.RuneTap > 0)
+                {
+                    newStats = new Stats();
+                    float fCD = 60f;
+                    newStats.Healed = (GetCurrentHealth(FullCharacterStats) * .1f);
+                    // Improved Rune Tap.
+                    // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
+                    fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
+                    newStats.Healed += (newStats.Healed * (character.DeathKnightTalents.ImprovedRuneTap / 3f));
+                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
+                }
+                */
+
+                // Vampiric Blood
+                // temp 15% of max health and
+                // increases health generated by 35% for 10 sec.
+                // 1 min CD. as of 3.2.2
+                /*
+                if (character.DeathKnightTalents.VampiricBlood > 0)
+                {
+                    // Also copy above, but it's commented out.
+                    newStats = new Stats();
+                    newStats.Health = (GetCurrentHealth(FullCharacterStats) * 0.15f);
+                    newStats.HealingReceivedMultiplier += 0.35f;
+
+                    float fVBCD = 60f;
+                    if (m_bT9_4PC) fVBCD -= 10f;
+                    float fVBDur = 10f;
+                    if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
+                    {
+                        fVBDur += 5f;
+                    }
+                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
+                }
+                */
+
+                // Improved Death Strike
+                if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
+                {
+                    FullCharacterStats.BonusDeathStrikeCrit += (.03f * character.DeathKnightTalents.ImprovedDeathStrike);
+                    FullCharacterStats.BonusDeathStrikeDamage += (.15f * character.DeathKnightTalents.ImprovedDeathStrike);
+                }
+
+                // Crimson Scourge 
+                // Increases the damage dealt by your Blood Boil by 20/40%, and when you Plague Strike a target that is already
+                // infected with your Blood Plague, there is a 50/100% chance that your next Blood Boil will consume no runes.
+                if (character.DeathKnightTalents.CrimsonScourge > 0)
+                {
+                    // TODO: Implement in Combat Table.
+                }
+
+                // Dancing Rune Weapon
+                // TODO: Re-Implement this.
             }
-            */
-            // Will of the Necropolis
-            // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
-            if (character.DeathKnightTalents.WillOfTheNecropolis > 0)
-            {
-                // Need to factor in the damage taken aspect of the trigger.
-                // Using the assumption that the tank will be at < 35% health about that % of the time.
-                FullCharacterStats.AddSpecialEffect(_SE_WillOfTheNecropolis[character.DeathKnightTalents.WillOfTheNecropolis]);
-            }
-
-            // Heart Strike
-            // 3.2.2: Secondary targets of HS take 1/2 as much damage
-            // Implemented in CombatTable.cs
-
-            // Might of Mograine
-            // increase crit damage of BB, BS, DS, and HS by 15% per point
-            // Implemented in CombatTable.cs
-
-            // Dancing Rune Weapon
-            // not impl
             #endregion
 
             #region Frost Talents
 
             // Runic Power Mastery
-            // Increases Max RP by 15 per point
+            // Increases Max RP by 10 per point
             if (character.DeathKnightTalents.RunicPowerMastery > 0)
             {
-                BonusMaxRunicPower += 5 * character.DeathKnightTalents.RunicPowerMastery;
-            }
-
-            // Toughness
-            // Patch 3.2: Increases Armor Value from items by 2% per point.
-            // Reducing duration of all slowing effects by 6% per point.  
-            if (character.DeathKnightTalents.Toughness > 0)
-            {
-                FullCharacterStats.BaseArmorMultiplier = AddStatMultiplierStat(FullCharacterStats.BaseArmorMultiplier, (.02f * character.DeathKnightTalents.Toughness)); // Patch 3.2
+                BonusMaxRunicPower += 10 * character.DeathKnightTalents.RunicPowerMastery;
             }
 
             // Icy Reach
@@ -1356,245 +841,202 @@ namespace Rawr.DPSDK
             // Increase damage done by off hand weapons by 8/16/25% per point
             // Implement in combat shot roation
 
+            // Annihilation
+            // +15% Oblit damage per point.
+            if (character.DeathKnightTalents.Annihilation > 0)
+            {
+                FullCharacterStats.BonusObliterateMultiplier += (0.15f * character.DeathKnightTalents.Annihilation);
+            }
+            
             // Lichborne
             // for 10 sec, immune to charm, fear, sleep
             // CD 2 Mins
 
-            // Threat of Thassarian: 
-            // New 3-point talent. When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
-            // Blood Strikes and Frost Strikes and Rune Strike (as of 3.2.2) have a 30/60/100% chance 
-            // to also deal damage with your  off-hand weapon. Off-hand strikes are roughly one half the effect of the original strike. 
-
-            // Annihilation
-            // +1 % per point melee Crit chance 
-            // 33% per point that oblit will not consume diseases
-            if (character.DeathKnightTalents.Annihilation > 0)
-            {
-                FullCharacterStats.PhysicalCrit += (0.01f * character.DeathKnightTalents.Annihilation);
-            }
-
-            // Killing Machine
-            // Melee attacks have a chance to make IT, HB, or FS a crit.
-            // increased proc per point.
-
-            // Chill of the Grave
-            // CoI, HB, IT and Oblit generate 2.5 RP per point.
+            // On a Pale Horse
+            // Reduce dur of Movement slowing effects by 15% per point
+            // increase mount speed by 10% per point
+            if (character.DeathKnightTalents.OnAPaleHorse > 0)
+            { }
 
             // Endless Winter
-            // removes FF from COI
             // Mind Freeze RP cost is reduced by 50% per point.
             if (character.DeathKnightTalents.EndlessWinter > 0)
-            {
-                FullCharacterStats.BonusStrengthMultiplier += (.02f * character.DeathKnightTalents.EndlessWinter);
-            }
+            { }
 
-            // Deathchill
-            // when active IT, HB, FS, Oblit will crit.
-
-            // Improved Icy Talons
-            // increases the melee haste of the group/raid by 20%
-            // increases your haste by 5% all the time.
-            if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
+            if (r == Rotation.Type.Frost)
             {
-                FullCharacterStats.PhysicalHaste += 0.05f;
-                // TODO: Factor in raid utility by improving raid haste by 20%
-                // As per Blue Post Effect *does* stack w/ existing IcyTalons.
-                // However, it will not stack if already included on Buffs tab.
-                // Now passive - no longer procs.
-                if (character.ActiveBuffsContains("Improved Icy Talons") != true
-                    && !character.ActiveBuffsContains("Windfury Totem"))
+                // Merciless Combat
+                // addtional 6% per point damage for IT, HB, Oblit, and FS
+                // on targets of less than 35% health.
+
+                // Chill of the Grave
+                // CoI, HB, IT and Oblit generate 5 RP per point.
+
+                // Killing Machine
+                // Melee attacks have a chance to make IT, OB, or FS a crit.
+                // increased proc per point.
+
+                // Rime
+                // Oblit has a 15% per point your next IT or HB consumes no runes
+
+                // Pillar of Frost
+                // 1 min CD, 20 sec dur
+                // Str +20%
+                if (character.DeathKnightTalents.PillarOfFrost > 0)
+                    FullCharacterStats.AddSpecialEffect( _SE_PillarOfFrost );
+
+                // Improved Icy Talons
+                // increases the melee haste of the group/raid by 20%
+                // increases your haste by 5% all the time.
+                if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
                 {
-                    FullCharacterStats.PhysicalHaste += .2f;
+                    FullCharacterStats.PhysicalHaste += 0.05f;
+                    if (!character.ActiveBuffsContains("Improved Icy Talons")
+                        && !character.ActiveBuffsContains("Windfury Totem"))
+                    {
+                        FullCharacterStats.PhysicalHaste += .2f;
+                    }
                 }
+
+                // Brittle Bones:
+                // Str +2% per point
+                // FF chills the bones of its victims increasing damage taken by 2% per point.
+                if (character.DeathKnightTalents.BrittleBones > 0)
+                {
+                    FullCharacterStats.BonusStrengthMultiplier += .02f * character.DeathKnightTalents.BrittleBones;
+                    FullCharacterStats.BonusDamageMultiplier += .02f * character.DeathKnightTalents.BrittleBones;
+                }
+
+                // Chilblains
+                // FF victimes are movement reduced 25% per point
+
+                // Hungering Cold
+                // Spell that freezes all enemies w/ 10 yards.
+
+
+                // Improved Frost Presence
+                // Increases your bonus damage while in Frost Presence by an additional 2% per point.  
+                // In addition, while in Blood Presence or Unholy Presence, you retain 2% per point increased runic power generation from Frost Presence.
+                if (character.DeathKnightTalents.ImprovedFrostPresence > 0)
+                {
+                    FullCharacterStats.BonusDamageMultiplier += (0.02f * character.DeathKnightTalents.ImprovedFrostPresence);
+                }
+
+                // Threat of Thassarian: 
+                // When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
+                // Blood Strikes and Frost Strikes and Rune Strike (as of 3.2.2) have a 30/60/100% chance 
+                // to also deal damage with your off-hand weapon. 
+
+                // Might of the Frozen Wastes
+                // When wielding a two-handed weapon, your autoattacks have a 15% chance to generate 10 Runic Power.
+
+                // Howling Blast.
             }
-
-            // Merciless Combat
-            // addtional 6% per point damage for IT, HB, Oblit, and FS
-            // on targets of less than 35% health.
-
-            // Rime
-            // increases crit chance of IT and Oblit by 5% per point
-            // Oblit has a 5% per point to reset CD of HB and HB consumes no runes
-
-            // Chilblains
-            // FF victimes are movement reduced 15, 30, 50%
-
-            // Hungering Cold
-            // Spell that freezes all enemies w/ 10 yards.
-
-            // Improved Frost Presence
-            // retain the health bonus 5% per point when in non-Frost presence
-            // Decrease damage done to you by 1% per point.
-            if (character.DeathKnightTalents.ImprovedFrostPresence > 0)
-            {
-                FullCharacterStats.DamageTakenMultiplier -= (0.01f * character.DeathKnightTalents.ImprovedFrostPresence);
-            }
-
-            // Howling Blast.
-
             #endregion
 
             #region UnHoly Talents
-            // Vicious Strikes
-            // Increases Crit chance by 3% per point of PS and SS
-            // Increases Crit Strike Damage by 15% per point of PS and SS
+            // Unholy Command
+            // reduces CD of DG by 5 sec per point
 
             // Virulence
             // Increases Spell hit +1% per point
             if (character.DeathKnightTalents.Virulence > 0)
             {
-                FullCharacterStats.SpellHit += 0.01f * character.DeathKnightTalents.Virulence;
+                FullCharacterStats.SpellHit += 0.02f * character.DeathKnightTalents.Virulence;
             }
 
             // Epidemic
-            // Increases Duration of BP and FF by 3 sec per point
-
-            // Morbidity
-            // increases dam & healing of DC by 5% per point
-            // Decreases CD of DnD by 5 sec per point
-
-            // Unholy Command
-            // reduces CD of DG by 5 sec per point
-
-
-            // Outbreak
-            // increases dam of PS by 10% per point
-            // increases dam of SS by 7% per point
-
-            // Necrosis
-            // Autoattacks deal additional 4% shadow
-
-            // Corpse Explosion
-            // Does damage by blowing up a corpse to all targets in 10 yards
-
-            // On a Pale Horse
-            // Reduce dur of stun and fear by 10% per point
-            // increase mount speed byh 10% per point
-
-            // Blood-Caked Blade
-            // 10% chance per point to cause Blood-Caked strike
-
-            // Night of the Dead
-            // Reduces CD of Raise Dead by 45 sec per point
-            // Reduces CD of Army of the dead by 5 min per point
-
-            // Unholy Blight
-            // Shadow Damage done to all targets in 10 yards for 20 sec.
-
-            // Impurity
-            // Attack Power bonus to spells increased by 4% per point.
-
-            // Dirge
-            // DS, PS and SS generate 2.5 more runic power per point.
-
-            // Magic Suppression
-            // 2% per point less damage from all magic.
-            // AMS absorbs additional 8, 16, 25% of spell damage.
-            if (character.DeathKnightTalents.MagicSuppression > 0)
-            {
-                FullCharacterStats.SpellDamageTakenMultiplier -= 0.02f * character.DeathKnightTalents.MagicSuppression;
-                // AMS modification factored in above.
-            }
-
-            // Reaping 
-            // BS or Pest convert to DR.
-
-            // Master of Ghouls
-            // Reduces CD on Raise Dead by 60 sec.
-            // Ghoul summoned is perm (pet). 
+            // Increases Duration of BP and FF by 4 sec per point
 
             // Desecration
             // PS and SS cause Desecrated Ground effect.
-            // Targets are slowed by 10% per point
-            // Patch 3.2: You don't cause 1% more damage 
-            // Lasts 12 sec.
-            /* Patch 3.2
-            if (character.DeathKnightTalents.Desecration > 0)
+            // Targets are slowed by 25% per point
+            
+            // Resilient Infection
+            // When your diseases are dispelled you have a 50/100% to activate a 
+            // Frost rune if FF was dispelled
+            // Unholy rune if BP was dispelled
+
+            // Morbidity
+            // increases dam & healing of DC by 5% per point
+            // increases dam of DnD by 10% sec per point
+
+            if (r == Rotation.Type.Unholy)
             {
-                newStats = new Stats();
-                newStats.BonusDamageMultiplier += 0.01f * character.DeathKnightTalents.Desecration;
-                // Gonna use an average CD of a rune at 10sec per rune divided by 2 runes == 5 sec.
-                sReturn.AddSpecialEffect(new SpecialEffect(Trigger.SpellHit, newStats, 12f, 5f));
-            }
-            */
+                // Runic Corruption
+                // Reduces the cost of your Death Coil by 3 per point, and causes 
+                // your Runic Empowerment ability to no longer refresh a depleted 
+                // rune, but instead to increase your rune regeneration rate by 50/100% for 3 sec.
 
-            // AntiMagic Zone
-            // Creates a zone where party/raid members take 75% less spell damage
-            // Lasts 10 secs or X damage.  
-            if (character.DeathKnightTalents.AntiMagicZone > 0)
-            {
-                FullCharacterStats.AddSpecialEffect(_SE_AntiMagicZone);
-            }
+                // Unholy Frenzy
+                // Induces a friendly unit into a killing frenzy for 30 sec.  
+                // The target is Enraged, which increases their melee and ranged haste by 20%, 
+                // but causes them to lose health equal to 2% of their maximum health every 3 sec.
 
-            // Improved Unholy Presence
-            // in Blood or Frost, retain movement speed (8%, 15%).
-            // Runes finish CD 5% per point faster.
+                // Contagion
+                // Increases the damage of your diseases spread via Pestilence by 50/100%.
+                if (character.DeathKnightTalents.Contagion > 0)
+                    FullCharacterStats.BonusDiseaseDamageMultiplier += .5f * character.DeathKnightTalents.Contagion;
 
-            // Ghoul Frenzy
-            // Grants pet 25% haste for 30 sec and heals it for 60% health.
+                // Shadow Infusion
+                // When you cast Death Coil, you have a 33% per point chance to empower your active Ghoul, 
+                // increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.
 
-            // Crypt Fever
-            // CF increases disease damage taken by target by 10% per point
+                // Magic Suppression
+                // AMS absorbs additional 8, 16, 25% of spell damage.
 
-            // Bone Shield
-            // 3 Bones as of 3.2.2
-            // Takes 20% less dmage from all sources
-            // Does 2% more damage to target
-            // Each damaging attack consumes a bone.
-            // Lasts 5 mins
+                // Rage of Rivendare
+                // Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 15% per point.
 
-            // Ebon Plaguebringer
-            // CF becomes EP - increases magic damage taken by targets 4, 9, 13% in addition to disease damage
-            // Increases crit strike chance by 1% per point
-            if (character.DeathKnightTalents.EbonPlaguebringer > 0)
-            {
-                FullCharacterStats.PhysicalCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
-                FullCharacterStats.SpellCrit += 0.01f * character.DeathKnightTalents.EbonPlaguebringer;
-                if (!character.ActiveBuffsContains("Earth and Moon")
-                    && !character.ActiveBuffsContains("Curse of the Elements")
-                    && !character.ActiveBuffsContains("Ebon Plaguebringer"))
+                // Unholy Blight
+                // Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, 
+                // taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
+
+                // AntiMagic Zone
+                // Creates a zone where party/raid members take 75% less spell damage
+                // Lasts 10 secs or X damage.  
+                if (character.DeathKnightTalents.AntiMagicZone > 0)
                 {
-                    float fBonus = 0f;
-                    switch (character.DeathKnightTalents.EbonPlaguebringer)
-                    {
-                        case 1:
-                            fBonus = .04f;
-                            break;
-                        case 2:
-                            fBonus = .09f;
-                            break;
-                        case 3:
-                            fBonus = .13f;
-                            break;
-                        default:
-                            break;
-                    }
-                    FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
-                    FullCharacterStats.BonusFireDamageMultiplier += fBonus;
-                    FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
-                    FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
-                    FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
-                    FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
+                    FullCharacterStats.AddSpecialEffect(_SE_AntiMagicZone);
                 }
+
+                // Improved Unholy Presence
+                // Grants you an additional 2% haste while in Unholy Presence.  
+                // In addition, while in Blood Presence or Frost Presence, you retain 8% increased movement speed from Unholy Presence.
+                if (character.DeathKnightTalents.ImprovedUnholyPresence > 0)
+                    FullCharacterStats.PhysicalHaste += .025f * character.DeathKnightTalents.ImprovedUnholyPresence;
+
+                // Dark Transformation
+                // Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful 
+                // undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new 
+                // functions while the transformation is active.
+
+                // Ebon Plaguebringer
+                // Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect 
+                // their target with Ebon Plague, which increases damage taken from your diseases 
+                // by 15/30% and all magic damage taken by an additional 8%.
+                if (character.DeathKnightTalents.EbonPlaguebringer > 0)
+                {
+                    if (!character.ActiveBuffsContains("Earth and Moon")
+                        && !character.ActiveBuffsContains("Curse of the Elements")
+                        && !character.ActiveBuffsContains("Ebon Plaguebringer"))
+                    {
+                        float fBonus = .08f;
+                        FullCharacterStats.BonusArcaneDamageMultiplier += fBonus;
+                        FullCharacterStats.BonusFireDamageMultiplier += fBonus;
+                        FullCharacterStats.BonusFrostDamageMultiplier += fBonus;
+                        FullCharacterStats.BonusHolyDamageMultiplier += fBonus;
+                        FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
+                        FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
+                    }
+                }
+
+                // Sudden Doom
+                // Your auto attacks have a 5% per point chance to make your next Death Coil cost no runic power.
+
+                // Summon Gargoyle
             }
-
-            // Sourge Strike
-
-            // Rage of Rivendare
-            // 2% per point more damage to targets w/ BP
-            // Expertise +1 per point
-            if (character.DeathKnightTalents.RageOfRivendare > 0)
-            {
-                FullCharacterStats.Expertise += character.DeathKnightTalents.RageOfRivendare;
-                // Assuming BP is always on.
-                FullCharacterStats.BonusDamageMultiplier += 0.02f * character.DeathKnightTalents.RageOfRivendare;
-            }
-
-            // Summon Gargoyle
-
             #endregion
-
-            //            return sReturn;
         }
 
         #region Custom Charts
@@ -1617,7 +1059,7 @@ namespace Rawr.DPSDK
                 "Hit Rating",
                 "Expertise Rating",
                 "Haste Rating",
-                "Armor Penetration Rating",
+                "Mastery Rating",
             };
 
             switch (chartName)
@@ -1695,7 +1137,7 @@ namespace Rawr.DPSDK
                 new Item() { Stats = new Stats() { HitRating = 10 * fMultiplier } },
                 new Item() { Stats = new Stats() { ExpertiseRating = 10 * fMultiplier } },
                 new Item() { Stats = new Stats() { HasteRating = 10 * fMultiplier } },
-                new Item() { Stats = new Stats() { ArmorPenetrationRating = 10 * fMultiplier } },
+                new Item() { Stats = new Stats() { MasteryRating = 10 * fMultiplier } },
             };
             // Do the math.
             for (int index = 0; index < itemList.Length; index++)
@@ -1736,9 +1178,9 @@ namespace Rawr.DPSDK
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 AttackPower = stats.AttackPower,
+                MasteryRating = stats.MasteryRating,
                 // Other Base Stats
                 HasteRating = stats.HasteRating,
                 HitRating = stats.HitRating,
@@ -1746,10 +1188,10 @@ namespace Rawr.DPSDK
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Resilience = stats.Resilience,
+//                Mastery = stats.Mastery,
 
                 // Secondary Stats
                 Health = stats.Health,
-                ArmorPenetration = stats.ArmorPenetration,
                 SpellHaste = stats.SpellHaste,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
@@ -1818,7 +1260,6 @@ namespace Rawr.DPSDK
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc, 
-
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1917,9 +1358,9 @@ namespace Rawr.DPSDK
             bResults |= (stats.Strength != 0);
             bResults |= (stats.Agility != 0);
             bResults |= (stats.Stamina != 0);
-            bResults |= (stats.ArmorPenetrationRating != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.AttackPower != 0);
+            bResults |= (stats.MasteryRating != 0);
             bool bHasCore = bResults; // if the above stats are 0, lets make sure we're not bringing in caster gear below.
             // Other Base Stats
             bResults |= (stats.HasteRating != 0);
@@ -1928,10 +1369,10 @@ namespace Rawr.DPSDK
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.Resilience != 0);
+//            bResults |= (Mastery != 0); // TODO: May update the stats object to include this.
 
             // Secondary Stats
             bResults |= (stats.Health != 0);
-            bResults |= (stats.ArmorPenetration != 0);
             bResults |= (stats.SpellHaste != 0);
             bResults |= (stats.PhysicalCrit != 0);
             bResults |= (stats.PhysicalHaste != 0);
@@ -2041,20 +1482,25 @@ namespace Rawr.DPSDK
         }
 
         #region Static SpecialEffects
+        // Talent: Spell Deflection
         private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
+        // Gear: T10 4P
         private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
+        // Enchant: Rune of Fallen Crusader
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
         private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
         };
+        // Talent: Rune Tap
         private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
         };
+        // Talent Bloody Vengence.
         private static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
@@ -2072,19 +1518,11 @@ namespace Rawr.DPSDK
         private static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
         private static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 1) }, 0, 0, 0.35f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 2) }, 0, 0, 0.35f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 3) }, 0, 0, 0.35f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 1) }, 0, 0, 0.45f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 2) }, 0, 0, 0.45f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 3) }, 0, 0, 0.45f),
         };
-        private static readonly SpecialEffect[] _SE_IcyTalons = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 1) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 2) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 3) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 4) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 5) }, 20f, 0f),
-        };
-        private static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
+        public static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
             new SpecialEffect[] {
                     new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 0 * 10f),
                     new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 0 * 10f),
@@ -2094,13 +1532,9 @@ namespace Rawr.DPSDK
                     new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 1 * 10f),
             },
         };
-        private static readonly SpecialEffect[] _SE_Acclimation = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 1), 3),
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 2), 3),
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 3), 3),
-        };
-        private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        public static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+
+        public static readonly SpecialEffect _SE_PillarOfFrost = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = .2f }, 20f, 60);
         #endregion
     }
 }

@@ -119,61 +119,57 @@ namespace Rawr.DK
 
         public int m_iRSState = (int)RSState.Good;
 
-
+        public bool DW { get; set; }
 
         #endregion
         #endregion
 
         public CombatTable2(Character c, Stats stats, CharacterCalculationsDPSDK calcs, CalculationOptionsDPSDK calcOpts)
         {
-
-            if (calcOpts.m_bExperimental)
+            this.m_CState = new CombatState();
+            if (c != null)
             {
-                this.m_CState = new CombatState();
-                if (c != null)
-                {
-                    if (c.DeathKnightTalents == null)
-                        c.DeathKnightTalents = new DeathKnightTalents();
-                    this.m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
-                }
-                this.m_CState.m_Stats = stats.Clone();
-                m_Calcs = calcs;
-                m_Opts = calcOpts;
-                //this.m_CState.m_NumberOfTargets = (float)m_Opts.uNumberTargets;
-                //m_Rotation = calcOpts.m_Rotation;
-
-                //TODO: Handle Expertise
-                if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
-                {
-                    //m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, 0);
-                    m_CState.OH = null;
-                    if (c.MainHand.Slot != ItemSlot.TwoHand)
-                    {
-                        //if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
-                            //m_CState.OH = new Weapon(c.OffHand.Item, this.m_CState.m_Stats, m_Opts, 0);
-                    }
-                }
-                else
-                {
-                    m_CState.MH = null;
-                    m_CState.OH = null;
-                }
-
-                // Checking the rotation:
-                //if (m_Rotation.IcyTouch == 0
-                //    && m_Rotation.PlagueStrike == 0
-                //    && m_Rotation.BloodStrike == 0)
-                {
-                    // Then this is probably a null rotation, and
-                    // so let's build one?
-                   // m_Rotation = new Rotation(this.m_CState.m_Talents);
-                }
-
-                BuildRotation();
-
-                // TODO: move this out of the constructor
-                //CompileRotation(m_Rotation);
+                if (c.DeathKnightTalents == null)
+                    c.DeathKnightTalents = new DeathKnightTalents();
+                this.m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
             }
+            this.m_CState.m_Stats = stats.Clone();
+            m_Calcs = calcs;
+            m_Opts = calcOpts;
+            //this.m_CState.m_NumberOfTargets = (float)m_Opts.uNumberTargets;
+            //m_Rotation = calcOpts.m_Rotation;
+
+            //TODO: Handle Expertise
+            if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
+            {
+                //m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, 0);
+                m_CState.OH = null;
+                if (c.MainHand.Slot != ItemSlot.TwoHand)
+                {
+                    //if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
+                        //m_CState.OH = new Weapon(c.OffHand.Item, this.m_CState.m_Stats, m_Opts, 0);
+                }
+            }
+            else
+            {
+                m_CState.MH = null;
+                m_CState.OH = null;
+            }
+
+            // Checking the rotation:
+            //if (m_Rotation.IcyTouch == 0
+            //    && m_Rotation.PlagueStrike == 0
+            //    && m_Rotation.BloodStrike == 0)
+            {
+                // Then this is probably a null rotation, and
+                // so let's build one?
+                // m_Rotation = new Rotation(this.m_CState.m_Talents);
+            }
+
+            BuildRotation();
+
+            // TODO: move this out of the constructor
+            //CompileRotation(m_Rotation);
         }
 
         /// <summary>

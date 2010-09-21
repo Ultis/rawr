@@ -75,11 +75,6 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            #region Necrosis
-            {
-                dpsNecrosis = dpsWhiteMinusGlancing * (.04f * (float)talents.Necrosis); // doesn't proc off Glancings
-            }
-            #endregion
 
             #region Blood Caked Blade
             {

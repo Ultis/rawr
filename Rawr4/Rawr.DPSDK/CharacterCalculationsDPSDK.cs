@@ -304,27 +304,11 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
-        private DeathKnightTalents _talents;
-        public DeathKnightTalents Talents
-        {
-            get { return _talents; }
-            set { _talents = value; }
-        }
-
-
-        public List<Buff> ActiveBuffs { get; set; }
-
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             float critRating = BasicStats.CritRating;
-
             float hitRating = BasicStats.HitRating;
-
-            float armorPenetrationRating = BasicStats.ArmorPenetrationRating;
-
             float attackPower = BasicStats.AttackPower;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
-                attackPower -= 110f * (1f + BasicStats.BonusAttackPowerMultiplier);
 
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health",            BasicStats.Health.ToString("N0"));
@@ -335,7 +319,6 @@ namespace Rawr.DPSDK
             dictValues.Add("Hit Rating",        string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, StatConversion.GetPhysicalHitFromRating(hitRating, CharacterClass.DeathKnight), StatConversion.GetSpellHitFromRating(hitRating,CharacterClass.DeathKnight)));
             dictValues.Add("Expertise",         string.Format("{0:0.00} / {1:0.00}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, StatConversion.GetDodgeParryReducFromExpertise(MHExpertise), StatConversion.GetDodgeParryReducFromExpertise(OHExpertise)));
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
-            dictValues.Add("Armor Penetration Rating", armorPenetrationRating.ToString("N0"));
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));
             dictValues.Add("Resilience",        BasicStats.Resilience.ToString("F0"));
 
@@ -368,7 +351,6 @@ namespace Rawr.DPSDK
             dictValues.Add("Bloodworms",        string.Format("{0:N2}*{1:P}", BloodwormsDPS, (float)BloodwormsDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
             dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
-
 
             return dictValues;
         }
