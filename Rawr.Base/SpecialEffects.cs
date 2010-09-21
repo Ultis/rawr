@@ -299,7 +299,7 @@ namespace Rawr {
             #region Added by Druid: Moonkin
             else if ((match = new Regex(@"The periodic damage from your Insect Swarm and Moonfire spells grants (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Idol of the Lunar Eclipse
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.InsectSwarmOrMoonfireTick,
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
                     new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value), },
                     (float)int.Parse(match.Groups["dur"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
             }

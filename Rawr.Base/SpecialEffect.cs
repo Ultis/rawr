@@ -99,10 +99,12 @@ namespace Rawr
         FrostFeverHit,
         #endregion
         #region Added by Druid
+        InsectSwarmCast,
         InsectSwarmTick,
         MoonfireCast,
         MoonfireTick,
-        InsectSwarmOrMoonfireTick,
+        InsectSwarmOrMoonfireCast,
+        EclipseProc,
         RejuvenationTick,
         MangleCatHit,
         MangleBearHit,

@@ -105,8 +105,6 @@ namespace Rawr {
         BonusFerociousBiteCrit,
         BonusRipCrit,
         BonusRakeCrit,
-        BonusInsectSwarmDamage,
-        BonusNukeCritChance,
         TigersFuryCooldownReduction,
         SpellReflectChance,
         MoteOfAnger,
@@ -270,6 +268,9 @@ namespace Rawr {
         MoonfireDotCrit,
         BonusMoonkinNukeDamage,
         MoonkinT10CritDot,
+        BonusInsectSwarmDamage,
+        BonusNukeCritChance,
+        BonusDotCritChance,
         #endregion
         #region Added by Rawr.DPSWarr
         BonusTargets,
@@ -3466,6 +3467,17 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot]; }
             set { _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot] = value; }
+        }
+
+        // Moonkin 2-piece T11 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% IS/MF Crit")]
+        [Percentage]
+        [Category("Moonkin")]
+        public float BonusDotCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusDotCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusDotCritChance] = value; }
         }
         #endregion
         #endregion

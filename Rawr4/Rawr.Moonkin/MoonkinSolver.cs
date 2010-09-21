@@ -39,7 +39,7 @@ namespace Rawr.Moonkin
                             DotEffect = new DotEffect()
                                 {
                                     Duration = 12.0f,
-                                    TickLength = 3.0f,
+                                    BaseTickLength = 2.0f,
                                     TickDamage = 84.0f,
                                     SpellDamageModifierPerTick = 0.18f
                                 },
@@ -66,7 +66,7 @@ namespace Rawr.Moonkin
                             DotEffect = new DotEffect()
                             {
                                 Duration = 12.0f,
-                                TickLength = 2.0f,
+                                BaseTickLength = 2.0f,
                                 TickDamage = 244.0f,
                                 SpellDamageModifierPerTick = 0.26f
                             },
@@ -323,7 +323,6 @@ namespace Rawr.Moonkin
                                 triggerInterval = rot.RotationData.Duration / rot.RotationData.MoonfireCasts;
                                 break;
                             case Trigger.DoTTick:
-                            case Trigger.InsectSwarmOrMoonfireTick:
                                 triggerInterval = rot.RotationData.Duration / (rot.RotationData.InsectSwarmTicks + rot.RotationData.MoonfireTicks);
                                 break;
                             case Trigger.MoonfireTick:
@@ -778,11 +777,6 @@ namespace Rawr.Moonkin
             InsectSwarm.DotEffect.AllDamageModifier *= 1 + insectSwarmGlyph;
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
             Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
-            // Starfire, Wrath: Damage +0.04 for 4T9
-            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            // Moonfire: 9 seconds extra duration for glyph of Starfire
-            Moonfire.DotEffect.Duration += talents.GlyphOfStarfire ? 9 : 0;
             // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
             Moonfire.DotEffect.Duration += 0.2f * talents.Genesis;
             InsectSwarm.DotEffect.Duration += 0.2f * talents.Genesis;
@@ -810,6 +804,12 @@ namespace Rawr.Moonkin
             // 4T7
             Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
             Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
+            // 4T9
+            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
+            // 2T11
+            InsectSwarm.CriticalChanceModifier += stats.BonusDotCritChance;
+            Moonfire.CriticalChanceModifier += stats.BonusDotCritChance;
         }
 
     }

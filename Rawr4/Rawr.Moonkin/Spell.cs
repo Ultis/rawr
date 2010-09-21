@@ -54,11 +54,12 @@ namespace Rawr.Moonkin
             this.BaseDamage = copy.BaseDamage;
             this.Duration = copy.Duration;
             this.TickDamage = copy.TickDamage;
-            this.TickLength = copy.TickLength;
+            this.BaseTickLength = copy.BaseTickLength;
 
             this.SpellDamageModifierPerTick = copy.SpellDamageModifierPerTick;
         }
         public float Duration { get; set; }
+        public float BaseTickLength { get; set; }
         public float TickLength { get; set; }
         public float TickDamage { get; set; }
         public float SpellDamageModifier
@@ -73,11 +74,11 @@ namespace Rawr.Moonkin
             }
         }
         public float AllDamageModifier { get; set; }
-        public float NumberOfTicks
+        public int NumberOfTicks
         {
             get
             {
-                return Duration / TickLength;
+                return (int)Math.Floor(Duration / TickLength);
             }
         }
         public float SpellDamageModifierPerTick { get; set; }

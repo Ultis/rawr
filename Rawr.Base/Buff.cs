@@ -2993,6 +2993,33 @@ namespace Rawr
             #endregion
             #endregion
             #endregion
+            #region Cataclysm
+            #region Tier 11 | Stormrider's
+            #region Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Stormrider's Regalia (T11) 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { BonusDotCritChance = 0.05f },
+                SetName = "Stormrider's Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Stormrider's Regalia (T11) 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Stormrider's Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.EclipseProc, new Stats() { SpellCrit = 0.99f }, 8.0f, 0f, 1f, 1));
+            buff.Stats._rawSpecialEffectData[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { SpellCrit = -0.33f }, float.PositiveInfinity, 0.0f, 1f, 3));
+            #endregion
+            #endregion
+            #endregion
             #region PvP
             defaultBuffs.Add(new Buff()
             {

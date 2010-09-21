@@ -92,6 +92,8 @@ namespace Rawr.Moonkin
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
             dotSpell.CastTime = (float)Math.Max(dotSpell.CastTime / (1 + spellHaste), instantCast);
 
+            dotSpell.DotEffect.TickLength = dotSpell.DotEffect.BaseTickLength / (1 + spellHaste);
+
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * spellPower) * overallDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
