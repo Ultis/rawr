@@ -32,9 +32,20 @@ public class ChainLightning : Spell, ILightningOverload
             // jumps
             if (additionalTargets < 0)
                 additionalTargets = 0;
+            
+            spellPower += args.Stats.SpellNatureDamageRating;
+            lightningSpellpower += args.Stats.LightningSpellPower;
+            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
+
+#if RAWR4
+            if (additionalTargets > 4)
+                additionalTargets = 4;
+            if (!args.Talents.GlyphofChainLightning && additionalTargets > 2)
+                additionalTargets = 2;
+            totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
+#else
             if (additionalTargets > 3)
                 additionalTargets = 3;
-            shortName = "CL" + (1 + additionalTargets);
             if (!args.Talents.GlyphofChainLightning && additionalTargets > 2)
                 additionalTargets = 2;
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
@@ -47,11 +58,11 @@ public class ChainLightning : Spell, ILightningOverload
             castTime -= .1f * args.Talents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[args.Talents.StormEarthAndFire];
             crit += .01f * args.Talents.TidalMastery;
-            spellPower += args.Stats.SpellNatureDamageRating;
-            lightningSpellpower += args.Stats.LightningSpellPower;
-            totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
-
+            
             lightningOverload = args.Talents.LightningOverload;
+#endif
+
+            shortName = "CL" + (1 + additionalTargets);
 
             base.Initialize(args);
         }

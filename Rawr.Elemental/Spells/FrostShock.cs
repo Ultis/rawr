@@ -22,12 +22,15 @@ public class FrostShock : Shock
 
         public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * args.Talents.Concussion;
+#if RAWR4
+#else
             spCoef *= 1f + .1f * args.Talents.BoomingEchoes;
-            manaCost *= 1 - .02f * args.Talents.Convection;
             manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
-            cooldown -= .2f * args.Talents.Reverberation;
             cooldown -= 1f * args.Talents.BoomingEchoes;
+#endif
+            totalCoef += .01f * args.Talents.Concussion;
+            manaCost *= 1 - .02f * args.Talents.Convection;
+            cooldown -= .2f * args.Talents.Reverberation;
             spellPower += args.Stats.SpellFrostDamageRating;
             totalCoef *= 1 + args.Stats.BonusFrostDamageMultiplier;
             if (args.Talents.GlyphofShocking)

@@ -453,7 +453,7 @@ namespace Rawr.Elemental
             if (lastWeightedCritchance != float.PositiveInfinity)
                 return lastWeightedCritchance;
             float critLB = LB.CritChance;
-            float critCL = LB.CritChance * (1f + .11f * Talents.LightningOverload);
+            //float critCL = LB.CritChance * (1f + .11f * Talents.LightningOverload);
             float critchance = 0f;
             foreach (Spell s in Casts)
                 critchance += s.HitChance * s.CCCritChance;

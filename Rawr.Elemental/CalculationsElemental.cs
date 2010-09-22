@@ -136,6 +136,8 @@ namespace Rawr.Elemental
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
+#if RAWR4
+#else
             if (
                     slot == CharacterSlot.OffHand
                     && character.ShamanTalents.DualWield < 1
@@ -149,6 +151,8 @@ namespace Rawr.Elemental
                 )
             { return false; }
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
+#endif
+            return true;
         }
 
         private string[] _characterDisplayCalculationLabels = null;
@@ -370,12 +374,19 @@ namespace Rawr.Elemental
                 SpellHit = .01f * talents.ElementalPrecision,
                 #endregion
                 #region Enhancement
+#if RAWR4
+#else
                 BonusIntellectMultiplier = .02f * talents.AncestralKnowledge,
                 PhysicalCrit = .01f * talents.ThunderingStrikes,
                 SpellCrit =0.01f * talents.ThunderingStrikes,
+#endif
+
                 #endregion
                 #region Glyphs
+#if RAWR4
+#else
                 SpellPower = talents.GlyphofTotemofWrath ? talents.TotemOfWrath * 84 : 0
+#endif
                 #endregion
             };
             return statsTalents;
@@ -417,7 +428,6 @@ namespace Rawr.Elemental
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
 
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
-            statsTotal.SpellPower += (float)Math.Round(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness);
 
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
@@ -425,12 +435,16 @@ namespace Rawr.Elemental
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusHealthMultiplier);
 
-            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * .04f * character.ShamanTalents.UnrelentingStorm);
-
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+
+#if RAWR4
+#else
+            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * .04f * character.ShamanTalents.UnrelentingStorm);
+            statsTotal.SpellPower += (float)Math.Round(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness);
+#endif
 
             // Flametongue weapon assumed
             statsTotal.SpellPower += (float)Math.Floor(211 * (1f + character.ShamanTalents.ElementalWeapons * .1f));

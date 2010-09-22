@@ -23,9 +23,12 @@ public class Thunderstorm : Spell
 
         public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * args.Talents.Concussion;
+#if RAWR4
+#else
             crit += .05f * args.Talents.CallOfThunder;
             crit += .01f * args.Talents.TidalMastery;
+#endif
+            totalCoef += .01f * args.Talents.Concussion;
             spellPower += args.Stats.SpellNatureDamageRating;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
 

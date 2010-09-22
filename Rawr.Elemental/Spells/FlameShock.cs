@@ -28,17 +28,19 @@ public class FlameShock : Shock
         {
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
-
-            totalCoef += .01f * args.Talents.Concussion;
+#if RAWR4
+#else
             directCoefBonus += .1f * args.Talents.BoomingEchoes;
-            manaCost *= 1 - .02f * args.Talents.Convection;
             dotBaseCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
             dotSpCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
+            cooldown -= 1f * args.Talents.BoomingEchoes;
+            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
+#endif
+            totalCoef += .01f * args.Talents.Concussion;
+            manaCost *= 1 - .02f * args.Talents.Convection;
             dotBaseCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
             dotSpCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
-            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
             cooldown -= .2f * args.Talents.Reverberation;
-            cooldown -= 1f * args.Talents.BoomingEchoes;
             spellPower += args.Stats.SpellFireDamageRating;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
             periodicTicks += args.Stats.BonusFlameShockDuration / periodicTickTime; // t9 2 piece

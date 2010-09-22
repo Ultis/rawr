@@ -21,9 +21,12 @@ public class EarthShock : Shock
 
         public override void Initialize(ISpellArgs args)
         {
+#if RAWR4
+#else
+            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
+#endif
             totalCoef += .01f * args.Talents.Concussion;
             manaCost *= 1 - .02f * args.Talents.Convection;
-            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
             cooldown -= .2f * args.Talents.Reverberation;
             spellPower += args.Stats.SpellNatureDamageRating;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;

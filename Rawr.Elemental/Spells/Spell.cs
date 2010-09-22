@@ -290,14 +290,17 @@ namespace Rawr.Elemental.Spells
 
         public virtual void Initialize(ISpellArgs args)
         {
+#if RAWR4
+#else
+            critModifier += .2f * args.Talents.ElementalFury;
+            dotCritModifier += .2f * args.Talents.ElementalFury;
+#endif
             float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
             latencyGcd = args.LatencyGCD;
             latencyCast = args.LatencyCast;
-            critModifier += .2f * args.Talents.ElementalFury;
             critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
-            dotCritModifier += .2f * args.Talents.ElementalFury;
             dotCritModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;

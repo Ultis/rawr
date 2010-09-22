@@ -26,13 +26,17 @@ namespace Rawr.Elemental.Spells
 
         public override void Initialize(ISpellArgs args)
         {
+#if RAWR4
+#else
             castTime -= .1f * args.Talents.LightningMastery;
-            manaCost *= 1f - .02f * args.Talents.Convection;
-            totalCoef += .01f * args.Talents.Concussion;
             crit += .05f * args.Talents.CallOfThunder;
             spCoef += .04f * args.Talents.Shamanism;
             loCoef += .04f * args.Talents.Shamanism;
             crit += .05f * args.Talents.TidalMastery;
+            lightningOverload = args.Talents.LightningOverload;
+#endif
+            manaCost *= 1f - .02f * args.Talents.Convection;
+            totalCoef += .01f * args.Talents.Concussion;
             manaCost *= 1 - args.Stats.LightningBoltCostReduction / 100f; // T7 2 piece
             spellPower += args.Stats.SpellNatureDamageRating; // Nature SP
             lightningSpellpower += args.Stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
@@ -40,7 +44,6 @@ namespace Rawr.Elemental.Spells
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + args.Stats.LightningBoltDamageModifier / 100f; // T6 4 piece
 
-            lightningOverload = args.Talents.LightningOverload;
 
             base.Initialize(args);
             critModifier *= 1 + args.Stats.LightningBoltCritDamageModifier; // T8 4 piece
