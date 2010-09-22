@@ -11,10 +11,10 @@ using System.Windows.Threading;
 
 namespace Rawr
 {
-	public static class ItemCache
-	{
+    public static class ItemCache
+    {
 #if !RAWR3 && !RAWR4
-		public static readonly string SavedFilePath = 
+        public static readonly string SavedFilePath = 
             Path.Combine(
                 Path.Combine(
                     Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), 
@@ -22,59 +22,59 @@ namespace Rawr
                 "ItemCache.xml");
 #endif
 
-		private static ItemCacheInstance _instance = new ItemCacheInstance();
-		public static ItemCacheInstance Instance
-		{
-			get { return _instance; }
-			set { _instance = value; }
-		}
+        private static ItemCacheInstance _instance = new ItemCacheInstance();
+        public static ItemCacheInstance Instance
+        {
+            get { return _instance; }
+            set { _instance = value; }
+        }
 #if RAWR3 || RAWR4
-		public static Dictionary<int, Item> Items { get { return _instance.Items; } }
+        public static Dictionary<int, Item> Items { get { return _instance.Items; } }
 #else
         public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
 #endif
 
         public static void InvalidateCachedStats() { Instance.InvalidateCachedStats(); }
-	
-		public static Item FindItemById(int id) { return _instance.FindItemById(id); }
+    
+        public static Item FindItemById(int id) { return _instance.FindItemById(id); }
         public static bool ContainsItemId(int id) { return _instance.ContainsItemId(id); }
 
-		public static Item AddItem(Item item) { return _instance.AddItem(item); }
-		public static Item AddItem(Item item, bool raiseEvent) { return _instance.AddItem(item, raiseEvent); }
+        public static Item AddItem(Item item) { return _instance.AddItem(item); }
+        public static Item AddItem(Item item, bool raiseEvent) { return _instance.AddItem(item, raiseEvent); }
 
-		public static void DeleteItem(Item item) { _instance.DeleteItem(item); }
-		public static void DeleteItem(Item item, bool raiseEvent) { _instance.DeleteItem(item, raiseEvent); }
+        public static void DeleteItem(Item item) { _instance.DeleteItem(item); }
+        public static void DeleteItem(Item item, bool raiseEvent) { _instance.DeleteItem(item, raiseEvent); }
 
-		public static Item[] AllItems { get { return _instance.AllItems; } }
-		public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
+        public static Item[] AllItems { get { return _instance.AllItems; } }
+        public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
 
         public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
         public static Item[] GetRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetRelevantItems(model, race); }
 
         public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
 
-		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
+        public static void OnItemsChanged() { _instance.OnItemsChanged(); }
 #if RAWR3 || RAWR4
         public static void Save(TextWriter writer) { _instance.Save(writer); }
         public static void Load(TextReader reader) { _instance.Load(reader); }
 #else
-		public static void Save() { _instance.Save(); }
-		public static void Load() { _instance.Load(); }
+        public static void Save() { _instance.Save(); }
+        public static void Load() { _instance.Load(); }
 #endif
 
         public static void SaveItemCost(TextWriter writer) { _instance.SaveItemCost(writer); }
         public static void LoadItemCost(TextReader reader) { _instance.LoadItemCost(reader); }
         public static void ResetItemCost() { _instance.ResetItemCost(); }
         public static void LoadTokenItemCost(string token) { _instance.LoadTokenItemCost(token); }
-	}
+    }
 
-	public class ItemCacheInstance
-	{
-		public ItemCacheInstance() {  }
-		public ItemCacheInstance(ItemCacheInstance instanceToClone)
-		{
+    public class ItemCacheInstance
+    {
+        public ItemCacheInstance() {  }
+        public ItemCacheInstance(ItemCacheInstance instanceToClone)
+        {
 #if RAWR3 || RAWR4
-			_items = new Dictionary<int, Item>();
+            _items = new Dictionary<int, Item>();
 #else
             _items = new SortedDictionary<int, Item>();
 #endif
@@ -85,7 +85,7 @@ namespace Rawr
                     _items[kvp.Key] = kvp.Value;
                 }
             }
-		}
+        }
 
 #if RAWR3 || RAWR4
         private Dictionary<int, Item> _items;
@@ -100,14 +100,14 @@ namespace Rawr
 #else
         private SortedDictionary<int, Item> _items;
         public SortedDictionary<int, Item> Items
-		{
-			get
-			{
-				if (_items == null)
-					Load();
-				return _items;
-			}
-		}
+        {
+            get
+            {
+                if (_items == null)
+                    Load();
+                return _items;
+            }
+        }
 #endif
 
         public void InvalidateCachedStats()
@@ -121,19 +121,19 @@ namespace Rawr
             }
         }
 
-		public Item FindItemById(int id)
-		{
-			if (id > 0)
-			{
-				Item item;
+        public Item FindItemById(int id)
+        {
+            if (id > 0)
+            {
+                Item item;
                 lock (Items)
                 {
                     Items.TryGetValue(id, out item);
                 }
-				return item;
-			}
-			return null;
-		}
+                return item;
+            }
+            return null;
+        }
 
         public bool ContainsItemId(int id)
         {
@@ -151,11 +151,11 @@ namespace Rawr
         private bool dirtySinceLastAdd;
 #endif
 
-		public Item AddItem(Item item) { return AddItem(item, true); }
-		public Item AddItem(Item item, bool raiseEvent)
-		{
-			if (item == null) return null;
-			//Chasing the lies no one believed...
+        public Item AddItem(Item item) { return AddItem(item, true); }
+        public Item AddItem(Item item, bool raiseEvent)
+        {
+            if (item == null) return null;
+            //Chasing the lies no one believed...
 
             Item cachedItem;
             lock (Items)
@@ -200,14 +200,14 @@ namespace Rawr
                 OnItemsChanged();
 #endif
             }
-			return item;
-		}
+            return item;
+        }
 
-		public void DeleteItem(Item item) { DeleteItem(item, true); }
-		public void DeleteItem(Item item, bool raiseEvent)
-		{
-			if (item != null)
-			{
+        public void DeleteItem(Item item) { DeleteItem(item, true); }
+        public void DeleteItem(Item item, bool raiseEvent)
+        {
+            if (item != null)
+            {
                 lock (Items)
                 {
                     Item cachedItem;
@@ -217,38 +217,38 @@ namespace Rawr
                         Items.Remove(item.Id);
                     }
                 }
-			}
-			if (raiseEvent) OnItemsChanged();
-		}
+            }
+            if (raiseEvent) OnItemsChanged();
+        }
 
-		private Item[] _allItems = null;
-		public Item[] AllItems
-		{
-			get
-			{
-				if (_allItems == null)
-				{
+        private Item[] _allItems = null;
+        public Item[] AllItems
+        {
+            get
+            {
+                if (_allItems == null)
+                {
                     lock (Items)
                     {
                         _allItems = new List<Item>(Items.Values).ToArray();
                     }
-				}
-				return _allItems;
-			}
-		}
+                }
+                return _allItems;
+            }
+        }
 
-		private Item[] _relevantItems = null;
-		public Item[] RelevantItems
-		{
-			get
-			{
-				if (_relevantItems == null)
-				{
-					_relevantItems = GetRelevantItemsInternal(Calculations.Instance);
-				}
-				return _relevantItems;
-			}
-		}
+        private Item[] _relevantItems = null;
+        public Item[] RelevantItems
+        {
+            get
+            {
+                if (_relevantItems == null)
+                {
+                    _relevantItems = GetRelevantItemsInternal(Calculations.Instance);
+                }
+                return _relevantItems;
+            }
+        }
 
         public Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race)
         {
@@ -296,14 +296,14 @@ namespace Rawr
             return itemList.ToArray();
         }
 
-		public event EventHandler ItemsChanged;
-		public void OnItemsChanged()
-		{
-			_allItems = null;
-			_relevantItems = null;
+        public event EventHandler ItemsChanged;
+        public void OnItemsChanged()
+        {
+            _allItems = null;
+            _relevantItems = null;
             cachedRelevantItems = null;
-			if (ItemsChanged != null) ItemsChanged(null, null);
-		}
+            if (ItemsChanged != null) ItemsChanged(null, null);
+        }
 
         // load/save of item cost data
         public void LoadItemCost(TextReader reader)
@@ -512,7 +512,14 @@ namespace Rawr
                 listItems = (List<Item>)serializer.Deserialize(reader);
                 reader.Close();
             }
-            catch { }
+            catch (Exception ex) {
+                new Rawr.Base.ErrorBox() {
+                    Title = "Error Deserializing the Item Cache",
+                    Function = "ItemCache.Load(...)",
+                    Message = ex.Message,
+                    StackTrace = ex.StackTrace
+                };
+            }
 
             if (listItems != null)
             {
@@ -524,8 +531,8 @@ namespace Rawr
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
         }
 #else
-		public void Save()
-		{
+        public void Save()
+        {
 #if !AGGREGATE_ITEMS
             using (StreamWriter writer = new StreamWriter(ItemCache.SavedFilePath, false, Encoding.UTF8))
             {
@@ -534,8 +541,8 @@ namespace Rawr
                 writer.Close();
             }
 
-			LocationFactory.Save(Path.Combine("Data", "ItemSource.xml"));
-			ItemFilter.Save(Path.Combine("Data", "ItemFilter.xml"));
+            LocationFactory.Save(Path.Combine("Data", "ItemSource.xml"));
+            ItemFilter.Save(Path.Combine("Data", "ItemFilter.xml"));
 #else
             //this is handy for debugging
             foreach (Item item in AllItems)
@@ -558,46 +565,46 @@ namespace Rawr
 #endif
         }
 
-		public void Load()
-		{
-			_items = new SortedDictionary<int, Item>();
-			List<Item> listItems = new List<Item>();
-			if (File.Exists(ItemCache.SavedFilePath)) {
-				try {
-					string xml = System.IO.File.ReadAllText(ItemCache.SavedFilePath).Replace("/images/icons/", "");
-					xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>TwoHand</Slot>").Replace("<Slot>Idol</Slot", "<Slot>Ranged</Slot>").Replace("<Slot>Robe</Slot", "<Slot>Chest</Slot>");
-					System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemList));
-					System.IO.StringReader reader = new System.IO.StringReader(xml);
-					listItems = (List<Item>)serializer.Deserialize(reader);
-					reader.Close();
-				} catch (Exception) {
-					Log.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
-				}
-			}
-			foreach (Item item in listItems) {
-				//item.Stats.ConvertStatsToWotLKEquivalents();
+        public void Load()
+        {
+            _items = new SortedDictionary<int, Item>();
+            List<Item> listItems = new List<Item>();
+            if (File.Exists(ItemCache.SavedFilePath)) {
+                try {
+                    string xml = System.IO.File.ReadAllText(ItemCache.SavedFilePath).Replace("/images/icons/", "");
+                    xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>TwoHand</Slot>").Replace("<Slot>Idol</Slot", "<Slot>Ranged</Slot>").Replace("<Slot>Robe</Slot", "<Slot>Chest</Slot>");
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemList));
+                    System.IO.StringReader reader = new System.IO.StringReader(xml);
+                    listItems = (List<Item>)serializer.Deserialize(reader);
+                    reader.Close();
+                } catch (Exception) {
+                    Log.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
+                }
+            }
+            foreach (Item item in listItems) {
+                //item.Stats.ConvertStatsToWotLKEquivalents();
                 //item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
-				//if (item.Type == ItemType.Leather) UpdateArmorFromWowhead(item);
-				AddItem(item, false);
-			}
+                //if (item.Type == ItemType.Leather) UpdateArmorFromWowhead(item);
+                AddItem(item, false);
+            }
 
-			LocationFactory.Load(Path.Combine("Data", "ItemSource.xml"));
-			ItemFilter.Load(Path.Combine("Data", "ItemFilter.xml"));
-			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-		}
+            LocationFactory.Load(Path.Combine("Data", "ItemSource.xml"));
+            ItemFilter.Load(Path.Combine("Data", "ItemFilter.xml"));
+            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+        }
 #endif
-		void Calculations_ModelChanged(object sender, EventArgs e)
-		{
-			_relevantItems = null;
+        void Calculations_ModelChanged(object sender, EventArgs e)
+        {
+            _relevantItems = null;
         }
 
-		//private void UpdateArmorFromWowhead(Item item)
-		//{
-		//    WebRequestWrapper wrw = new WebRequestWrapper();
-		//    string wowheadXml = wrw.DownloadText(string.Format("http://wotlk.wowhead.com/?item={0}&xml", item.Id));
-		//    wowheadXml = wowheadXml.Substring(0, wowheadXml.LastIndexOf(" Armor<"));
-		//    wowheadXml = wowheadXml.Substring(wowheadXml.LastIndexOf('>')+1);
-		//    item.Stats.Armor = int.Parse(wowheadXml);
-		//}
-	}
+        //private void UpdateArmorFromWowhead(Item item)
+        //{
+        //    WebRequestWrapper wrw = new WebRequestWrapper();
+        //    string wowheadXml = wrw.DownloadText(string.Format("http://wotlk.wowhead.com/?item={0}&xml", item.Id));
+        //    wowheadXml = wowheadXml.Substring(0, wowheadXml.LastIndexOf(" Armor<"));
+        //    wowheadXml = wowheadXml.Substring(wowheadXml.LastIndexOf('>')+1);
+        //    item.Stats.Armor = int.Parse(wowheadXml);
+        //}
+    }
 }

@@ -103,7 +103,7 @@ namespace Rawr
         InsectSwarmTick,
         MoonfireCast,
         MoonfireTick,
-        InsectSwarmOrMoonfireCast,
+        InsectSwarmOrMoonfireCast, InsectSwarmOrMoonfireTick,
         EclipseProc,
         RejuvenationTick,
         MangleCatHit,

@@ -15,8 +15,8 @@ using System.Text;
 
 namespace Rawr.UI
 {
-	public partial class LoadScreen : UserControl
-	{
+    public partial class LoadScreen : UserControl
+    {
         private event EventHandler LoadFinished;
 
         private static Dictionary<string, Type> Classes;
@@ -24,16 +24,16 @@ namespace Rawr.UI
         static LoadScreen()
         {
             Classes = new Dictionary<string, Type>();
-            Classes["Talents.xml"] = typeof(SavedTalentSpec);
-            Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
+            Classes["BuffCache.xml"] = typeof(Buff);
             Classes["BuffSets.xml"] = typeof(SavedBuffSet);
             Classes["EnchantCache.xml"] = typeof(Enchant);
-            Classes["ItemCache.xml"] = typeof(ItemCache);
-            Classes["BuffCache.xml"] = typeof(Buff);
-            Classes["ItemSource.xml"] = typeof(LocationFactory);
-            Classes["ItemFilter.xml"] = typeof(ItemFilter);
             //Classes["GemmingTemplates.xml"] = typeof(GemmingTemplate);
+            Classes["ItemCache.xml"] = typeof(ItemCache);
+            Classes["ItemFilter.xml"] = typeof(ItemFilter);
+            Classes["ItemSource.xml"] = typeof(LocationFactory);
+            Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["Settings.xml"] = typeof(Settings);
+            Classes["Talents.xml"] = typeof(SavedTalentSpec);
         }
 
         public LoadScreen()
@@ -52,7 +52,6 @@ namespace Rawr.UI
         {
             foreach (KeyValuePair<string, Type> kvp in Classes)
             {
-
                 MethodInfo info = kvp.Value.GetMethod("Save");
                 if (info != null)
                 {
@@ -138,8 +137,8 @@ namespace Rawr.UI
             {
                 new ErrorWindow()
                 {
-                    Message = "Rawr will not work if you do not allow it to increase its available"
-                        + " storage size. Please referesh this page and accept to continue."
+                    Message = "Rawr will not work if you do not allow it to increase its available "
+                            + "storage size. Please refresh this page and accept to continue."
                 }.Show();
             }
         }
@@ -164,5 +163,5 @@ namespace Rawr.UI
             }
             if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
         }
-	}
+    }
 }
