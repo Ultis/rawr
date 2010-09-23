@@ -15,8 +15,6 @@ namespace Rawr.DK
         CastTime, // How long does it cost to activate the ability?
         CooldownTime, // How long until we can use the ability again.  This is ability specific CD.  Not counting Rune CD. Whatever solver we use will have to keep track of Rune CDs.
         DurationTime, // How long does the ability last?
-
-        NumCostTypes
     }
 
     /// <summary>
@@ -104,9 +102,7 @@ namespace Rawr.DK
         /// </summary>
         public AbilityDK_Base m_TriggeredAbility;
 
-        /// <summary>
-        ///  Name of the ability.
-        /// </summary>
+        /// <summary>Name of the ability.</summary>
         public string szName { get; set; }
         
         /// <summary>
@@ -115,7 +111,7 @@ namespace Rawr.DK
         /// Use enum (int)DKCostTypes for placement.
         /// Negative costs mean they grant that item.
         /// </summary>
-        public int[] AbilityCost = new int[(int)DKCostTypes.NumCostTypes];
+        public int[] AbilityCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
 
         // TODO: Apply Damage types.
         // Maybe Create a Damage object since we have abilities that return 2 types of damage.
@@ -367,7 +363,7 @@ namespace Rawr.DK
         {
             get
             {
-                return (StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier) * THREAT_FROST_PRESENCE;
+                return (StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier);
             }
             set
             {
@@ -443,10 +439,10 @@ namespace Rawr.DK
             return ic;
         }
 
-        public static int CompareByTotalThreat(AbilityDK_Base a, AbilityDK_Base b)
-        {
-            return CompareByThreatPerCost(a, b, DKCostTypes.NumCostTypes);            
-        }
+//        public static int CompareByTotalThreat(AbilityDK_Base a, AbilityDK_Base b)
+//        {
+//            return CompareByThreatPerCost(a, b, null);            
+//        }
 
         public static int CompareThreatByCooldown(AbilityDK_Base a, AbilityDK_Base b)
         {

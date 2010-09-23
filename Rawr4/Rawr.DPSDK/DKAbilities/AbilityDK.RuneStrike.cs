@@ -17,11 +17,10 @@ namespace Rawr.DK
             this.wOH = CS.OH;
             this.szName = "Rune Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 20;
-            this.uBaseDamage = 736; // May need to adjust this.
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1.5f;
-            this.DamageAdditiveModifer = 150 * (int)CState.m_Stats.AttackPower * 10 / 10000;
-            this.bTriggersGCD = false;
+            this.fWeaponDamageModifier = 2f;
+            this.DamageAdditiveModifer = 2 * (int)CState.m_Stats.AttackPower * 10 / 10000;
+            this.bTriggersGCD = true;
             this.Cooldown = 0;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
         }
@@ -59,5 +58,22 @@ namespace Rawr.DK
                 uMaxDamage = uMinDamage = value;
             }
         }
+
+        private int _DamageAdditiveModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = //(2 *  AP * 10 / 100)
+                return (int)(this.CState.m_Stats.AttackPower * 2.1);
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
+        }   
     }
 }

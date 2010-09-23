@@ -17,7 +17,6 @@ namespace Rawr.DK
         public DeathKnightTalents m_Talents;
         public Weapon MH, OH;
         public float m_NumberOfTargets;
-
-
+        public uint m_uDiseaseCount;
     }
 }

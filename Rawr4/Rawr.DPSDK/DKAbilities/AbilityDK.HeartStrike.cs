@@ -17,13 +17,32 @@ namespace Rawr.DK
             this.szName = "Heart Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uBaseDamage = 736; // May need to adjust this.
+            this.DamageAdditiveModifer = 819;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .5f;
+            this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
             this.bAOE = true;
-            // TODO: Multi Target spell - need to add in the damage for the 2nd target.
-            // Override Damage method.
+        }
+
+        private float _DamageMultiplierModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                float multiplier = (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer;
+                if (CState.m_NumberOfTargets > 1)
+                { multiplier *= 1.75f; }
+                if (CState.m_NumberOfTargets > 2)
+                { multiplier *= 1.75f; }
+                return multiplier;
+            }
+            set
+            {
+                _DamageMultiplierModifer = value;
+            }
         }
     }
 }

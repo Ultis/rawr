@@ -10,12 +10,14 @@ namespace Rawr.DPSDK
         public Character character;
         public Stats stats;
         public CombatTable combatTable;
+        private BossOptions bo;
 
         public StatsSpecialEffects(Character c, Stats s, CombatTable t)
         {
             character = c;
             stats = s;
             combatTable = t;
+            bo = new BossOptions();
         }
 
 
@@ -131,8 +133,8 @@ namespace Rawr.DPSDK
  #endif                
                 if (effect.MaxStack > 1)
                 {
-                    float timeToMax = (float)Math.Min(calcOpts.FightLength * 60, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
-                    float buffDuration = calcOpts.FightLength * 60f;
+                    float timeToMax = (float)Math.Min(bo.BerserkTimer, effect.GetChance(unhastedAttackSpeed) * trigger * effect.MaxStack);
+                    float buffDuration = bo.BerserkTimer;
                     if (effect.Stats.AttackPower == 250f || effect.Stats.AttackPower == 215f || effect.Stats.HasteRating == 57f || effect.Stats.HasteRating == 64f)
                     {
                         buffDuration = 20f;
@@ -145,7 +147,7 @@ namespace Rawr.DPSDK
                 }
                 else
                 {
-                    effect.AccumulateAverageStats(statsAverage, (float)trigger, chance, unhastedAttackSpeed, calcOpts.FightLength * 60);
+                    effect.AccumulateAverageStats(statsAverage, (float)trigger, chance, unhastedAttackSpeed, bo.BerserkTimer);
                 }
             }
         

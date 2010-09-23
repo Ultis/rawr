@@ -37,7 +37,8 @@ namespace Rawr.DPSDK
 
             float OHMult = 0.5f;
 
-            int targetLevel = calcOpts.TargetLevel;
+            BossOptions bo = new BossOptions();
+            int targetLevel = bo.Level;
 //            float arpBuffs = talents.BloodGorged * 2f / 100;
             float mitigation = 0;
 //                StatConversion.GetArmorDamageReduction(character.Level, calcOpts.BossArmor, stats.ArmorPenetration, arpBuffs, stats.ArmorPenetrationRating);

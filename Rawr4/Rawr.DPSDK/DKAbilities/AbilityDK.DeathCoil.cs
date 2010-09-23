@@ -14,10 +14,27 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Death Coil";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
-            this.uBaseDamage = 443;
+            this.uBaseDamage = 985;
             this.bWeaponRequired = false;
             this.bTriggersGCD = true;
             this.uRange = 30;
+        }
+
+        private int _DamageAdditiveModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = [AP * 0.3]
+                return (int)(this.CState.m_Stats.AttackPower * .3) + this._DamageAdditiveModifer;
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
         }
     }
 }

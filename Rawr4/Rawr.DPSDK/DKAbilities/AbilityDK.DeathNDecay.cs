@@ -13,12 +13,9 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Death N Decay";
-            this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
-            this.AbilityCost[(int)DKCostTypes.Blood] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uMinDamage = 62;
-            this.uMaxDamage = 62;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.uBaseDamage = 46;
             this.tDamageType = ItemDamageType.Shadow;
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 0;
@@ -31,5 +28,23 @@ namespace Rawr.DK
             this.bAOE = true;
 
         }
+
+        private int _DamageAdditiveModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = [AP * 0.064]
+                return (int)(this.CState.m_Stats.AttackPower * .064) + this._DamageAdditiveModifer;
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
+        }
+    
     }
 }

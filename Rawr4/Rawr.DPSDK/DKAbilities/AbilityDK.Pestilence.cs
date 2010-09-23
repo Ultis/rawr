@@ -6,6 +6,8 @@ namespace Rawr.DK
 {
     /// <summary>
     /// This class is the implmentation of the Howling Blast Ability based on the AbilityDK_Base class.
+    /// Spreads existing Blood Plague and Frost Fever infections from your target to all other enemies within 10 yards.  
+    /// Diseases spread this way deal 50% of normal damage.
     /// </summary>
     class AbilityDK_Pestilence : AbilityDK_Base
     {

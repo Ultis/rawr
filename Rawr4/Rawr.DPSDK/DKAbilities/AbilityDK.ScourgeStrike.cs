@@ -15,15 +15,29 @@ namespace Rawr.DK
             this.wMH = CS.MH;
             this.wOH = CS.OH;
             this.szName = "Scourge Strike";
-            this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uBaseDamage = 400;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.uBaseDamage = 624;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .5f;
+            this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
             // TODO: Physical Damage * .25 * # diseases on target as shadow.
         }
 
+        private float _DamageMultiplierModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                return CState.m_uDiseaseCount * .12f;
+            }
+            set
+            {
+                _DamageMultiplierModifer = value;
+            }
+        }
     }
 }

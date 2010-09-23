@@ -17,16 +17,15 @@ namespace Rawr.DK
             this.szName = "Blood Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uBaseDamage = 306;
-            this.fWeaponDamageModifier = 0.4f;
+            this.uBaseDamage = (uint)Math.Floor(850 * .8);
+            this.fWeaponDamageModifier = 0.8f;
             this.bWeaponRequired = true;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
 
         }
 
-        // TODO: Damage increased by 12.5% per disease on target.
-        private float _DamageMultiplierModifer;
+        private float _DamageMultiplierModifer = 0;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
@@ -34,8 +33,7 @@ namespace Rawr.DK
         {
             get
             {
-//                return .125 * uNumDiseases;
-                return _DamageMultiplierModifer;
+                return (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer;
             }
             set
             {

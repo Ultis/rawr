@@ -7,7 +7,6 @@ namespace Rawr.DPSDK
     public class Rotation
     {
         public Type curRotationType = Type.Custom;
-        
 
         private CalculationOptionsDPSDK.Presence _presence = CalculationOptionsDPSDK.Presence.Blood;
         public CalculationOptionsDPSDK.Presence presence

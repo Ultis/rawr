@@ -10,7 +10,7 @@ namespace Rawr.DK
     class AbilityDK_FrostFever : AbilityDK_Base
     {
         /// <summary>
-        /// A disease dealing [0 + AP * 0.055 * 1.15] Frost damage every 3 sec and reducing the target's melee and ranged attack speed by 14% for 15 sec.  Caused by Icy Touch and other spells.
+        /// A disease dealing [0 + AP * 0.055 * 1.15] Frost damage every 3 sec and reducing the target's melee and ranged attack speed by 20% for 21 sec.  Caused by Icy Touch and other spells.
         /// Base damage 0
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
@@ -20,11 +20,11 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Frost Fever";
             this.tDamageType = ItemDamageType.Frost;
-            if (CS.m_Talents.Epidemic >= 3)
+            if (CS.m_Talents.Epidemic > 3)
                 // error
-                this.uDuration = 15000;
+                this.uDuration = 21000;
             else
-                this.uDuration = 15000 + ((uint)CS.m_Talents.Epidemic * 3000);
+                this.uDuration = 21 * 1000 + ((uint)CS.m_Talents.Epidemic * 4000);
             this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;

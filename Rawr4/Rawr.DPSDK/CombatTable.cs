@@ -75,12 +75,11 @@ namespace Rawr.DK
                 // xx.x% crit
                 // remaining = hit
 
-                float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+                BossOptions bo = new BossOptions();
+
+                float targetArmor = bo.Armor;
 
 //                float arpBuffs = talents.BloodGorged * 2f / 100;
-
-//                physicalMitigation = 1f - StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-//                    stats.ArmorPenetration, arpBuffs, stats.ArmorPenetrationRating);
 
                 calcs.EnemyMitigation = 1f - physicalMitigation;
                 calcs.EffectiveArmor = physicalMitigation;
@@ -95,7 +94,7 @@ namespace Rawr.DK
 
                 float chanceAvoided = 0.335f;
 
-                float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80];
+                float chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[bo.Level-85];
 
                 calcs.DodgedMHAttacks = MH.chanceDodged;
                 calcs.DodgedOHAttacks = OH.chanceDodged;
@@ -116,7 +115,7 @@ namespace Rawr.DK
 
                 calcs.DodgedAttacks = chanceDodged;
                 // Process White hits:
-                float chanceMiss = DW ? StatConversion.WHITE_MISS_CHANCE_CAP_DW[calcOpts.TargetLevel - 80] : StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80];
+                float chanceMiss = DW ? StatConversion.WHITE_MISS_CHANCE_CAP_DW[bo.Level - 85] : StatConversion.WHITE_MISS_CHANCE_CAP[bo.Level - 85];
                 chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;
@@ -128,7 +127,7 @@ namespace Rawr.DK
                 calcs.AvoidedAttacks = chanceDodged + chanceMiss;
 
                 // Process Yellow hits
-                chanceMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80];
+                chanceMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[bo.Level - 85];
                 chanceMiss -= StatConversion.GetPhysicalHitFromRating(stats.HitRating);
                 chanceMiss -= hitBonus;
                 chanceMiss -= stats.PhysicalHit;

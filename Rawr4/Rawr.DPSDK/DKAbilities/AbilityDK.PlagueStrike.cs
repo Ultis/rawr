@@ -17,7 +17,7 @@ namespace Rawr.DK
             this.szName = "Plague Strike";
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uBaseDamage = 189;
+            this.uBaseDamage = 420;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = .5f;
             this.bTriggersGCD = true;

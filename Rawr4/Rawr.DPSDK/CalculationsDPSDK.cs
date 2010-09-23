@@ -17,7 +17,6 @@ namespace Rawr.DPSDK
             // Basic
             White,
             // Melee abilities
-            BCB,
             BloodStrike,
             DeathStrike,
             FesteringStrike,
@@ -288,32 +287,11 @@ namespace Rawr.DPSDK
             int targetLevel = hBossOptions.Level;
 
             stats = GetCharacterStats(character, additionalItem);
-            calcs.BasicStats = stats;
+            calcs.BasicStats = stats.Clone();
 
             CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts/*, additionalItem*/);
 
-            calcs.OverallPoints = calcs.DPSPoints;
-
-            return calcs;
-        }
-
-        public CharacterCalculationsBase GetCharacterCalculationsExp(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
-        {
-            // Setup what we need.
-            CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            int targetLevel = calcOpts.TargetLevel; // This needs to get from BossHandler.
-
-            Stats stats = new Stats();
-
-            CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
-            // Build up Character Stats to do math
-
-            // Perform the calculations
-            CombatTable combatTable = new CombatTable(character, calcs, stats, calcOpts);
-
-
-            // Output the results.
-
+            calcs.OverallPoints = calcs.DPSPoints = combatTable.m_DPS; 
             return calcs;
         }
 

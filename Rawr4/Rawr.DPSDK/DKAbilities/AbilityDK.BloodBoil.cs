@@ -15,8 +15,7 @@ namespace Rawr.DK
             this.szName = "Blood Boil";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uMinDamage = 180;
-            this.uMaxDamage = 220;
+            this.uBaseDamage = 297;
             this.tDamageType = ItemDamageType.Shadow;
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 0;
@@ -35,10 +34,11 @@ namespace Rawr.DK
             get
             {
                 // AP Scaling
-                int AdditionalDamage = (int)(this.CState.m_Stats.AttackPower * 0.04);
-                // TODO: Additional Disease Damage:
-                // if (uNumDiseases > 0): 95 + (0.035 × Attack Power).
-                return (int)(this.CState.m_Stats.AttackPower * 0.035) + this._DamageAdditiveModifer + AdditionalDamage;
+                int AdditionalDamage = (int)(this.CState.m_Stats.AttackPower * 0.08);
+                // Additional Disease Damage:
+                if (CState.m_uDiseaseCount > 0)
+                    AdditionalDamage += (int)(this.CState.m_Stats.AttackPower * 0.035);
+                return AdditionalDamage + _DamageAdditiveModifer;
             }
             set
             {

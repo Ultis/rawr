@@ -10,7 +10,7 @@ namespace Rawr.DK
     class AbilityDK_BloodPlague : AbilityDK_Base
     {
         /// <summary>
-        /// A disease dealing [0 + AP * 0.055 * 1.15] Shadow damage every 3 sec for 15 sec.  Caused by Plague Strike and other abilities.
+        /// A disease dealing [0 + AP * 0.055 * 1.15] Shadow damage every 3 sec for 21 sec.  Caused by Plague Strike and other abilities.
         /// Base damage 0
         /// Bonus from attack power [AP * 0.055 * 1.15]
         /// </summary>
@@ -19,17 +19,16 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Blood Plague";
             this.tDamageType = ItemDamageType.Shadow;
-            if (CState.m_Talents.Epidemic >= 3)
+            if (CState.m_Talents.Epidemic > 3)
                 // error
-                this.uDuration = 15000;
+                this.uDuration = 21000;
             else
-                this.uDuration = 15000 + ((uint)CState.m_Talents.Epidemic * 3000);
+                this.uDuration = (21 * 1000) + ((uint)CState.m_Talents.Epidemic * 4000);
             this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
             this.CastTime = 0;
             this.Cooldown = 0;
-
         }
 
         private int _DamageAdditiveModifer = 0;

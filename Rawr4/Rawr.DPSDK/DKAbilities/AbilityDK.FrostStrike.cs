@@ -15,11 +15,12 @@ namespace Rawr.DK
             this.wMH = CS.MH;
             this.wOH = CS.OH;
             this.szName = "Frost Strike";
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
-            this.uMinDamage = 137;
-            this.uMaxDamage = 138;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = (40 - (CState.m_Talents.GlyphofFrostStrike ? 8 : 0));
+            this.uBaseDamage = 0;
+            this.DamageAdditiveModifer = (277 * 110 / 100);
+            this.tDamageType = ItemDamageType.Frost;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .55f;
+            this.fWeaponDamageModifier = 1.1f;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
         }

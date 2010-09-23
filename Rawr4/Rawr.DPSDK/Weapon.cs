@@ -18,7 +18,9 @@ namespace Rawr.DK {
             }
 
             effectiveExpertise = expertise;
-            float fightDuration = calcOpts.FightLength * 60;
+            BossOptions bo = new BossOptions();
+
+            float fightDuration = bo.BerserkTimer;
 
             if (i == null) { return; }
 
@@ -35,7 +37,7 @@ namespace Rawr.DK {
 
             #region Dodge
             {
-                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[calcOpts.TargetLevel-80];
+                chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[bo.Level-85];
                 chanceDodged -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
                 if (chanceDodged < 0f) { chanceDodged = 0f; }
             }

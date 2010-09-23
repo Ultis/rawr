@@ -6,9 +6,12 @@ namespace Rawr.DK
 {
     /// <summary>
     /// This class is the implmentation of the Death Strike Ability based on the AbilityDK_Base class.
+    /// A deadly attack that deals 150% weapon damage plus (((330  * 150 / 100))), healing you for 30% 
+    /// of the damage you have sustained during the preceding 5 sec (minimum of at least 10% of your maximum health).
     /// </summary>
     class AbilityDK_DeathStrike : AbilityDK_Base
     {
+        private int m_iToT = 0;
         public AbilityDK_DeathStrike(CombatState CS)
         {
             this.CState = CS;
@@ -18,17 +21,13 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uBaseDamage = 223;
+            this.DamageAdditiveModifer = (330 * 150 / 100);
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .75f;
+            this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
-            // TODO: # diseases on Target.
-            this.CState.m_Stats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
+//            this.CState.m_Stats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
             m_iToT = CState.m_Talents.ThreatOfThassarian;
-
         }
-
-        private int m_iToT = 0;
 
         /// <summary>
         /// Get the average value between Max and Min damage

@@ -18,9 +18,9 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uBaseDamage = (uint)(584 * .8f);
+            this.uBaseDamage = 650 * 160 / 100;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .8f;
+            this.fWeaponDamageModifier = 1.6f;
             this.bTriggersGCD = true;
             // Physical Damage * .125 * # diseases on target may consume the diseases.
             m_iToT = CState.m_Talents.ThreatOfThassarian;
@@ -60,5 +60,23 @@ namespace Rawr.DK
                 uMaxDamage = uMinDamage = value;
             }
         }
+
+        private float _DamageMultiplierModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                float multiplier = (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer;
+                return multiplier;
+            }
+            set
+            {
+                _DamageMultiplierModifer = value;
+            }
+        }
+    
     }
 }

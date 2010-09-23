@@ -63,34 +63,15 @@ namespace Rawr.DPSDK
 			set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
 		}
 		
-		private bool _EnforceMetagemRequirements = false;
+/*
+ * private bool _EnforceMetagemRequirements = false;
 		public bool EnforceMetagemRequirements
 		{
 			get {return _EnforceMetagemRequirements; }
 			set { _EnforceMetagemRequirements = value; OnPropertyChanged("EnforceMetagemRequirements"); }
 		}
-		
-		private float _FightLength = 6;
-		public float FightLength
-		{
-			get {return _FightLength; }
-			set { _FightLength = value; OnPropertyChanged("FightLength"); }
-		}
-		
-		private int _TargetLevel = 83;
-        public int TargetLevel
-        {
-            get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
-        }
-		
-		private int _BossArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
-		public int BossArmor
-		{
-			get {return _BossArmor; }
-			set { _BossArmor = value; OnPropertyChanged("BossArmor"); }
-		}
-		
+*/		
+
         private bool _getRefreshForReferenceCalcs = true;
         public bool GetRefreshForReferenceCalcs
         {
@@ -112,12 +93,11 @@ namespace Rawr.DPSDK
             set { _getRefreshForSignificantChange = value; }
         }
 
-
         private bool _m_bExperimental = false;
         public bool m_bExperimental
         {
             get { return _m_bExperimental; }
-            set { _m_bExperimental = value; }
+            set { _m_bExperimental = value; OnPropertyChanged("m_bExperimental"); }
         }
 
 		private Rotation _rotation = null;
@@ -126,35 +106,10 @@ namespace Rawr.DPSDK
             get { if (_rotation == null) _rotation = new Rotation(); return _rotation; }
             set
             {
-                if (_rotation == null) _rotation = new Rotation();
-                _rotation.ManagedRP = value.ManagedRP;
-                _rotation.AvgDiseaseMult = value.AvgDiseaseMult;
-                _rotation.BloodPlague = value.BloodPlague;
-                _rotation.BloodStrike = value.BloodStrike;
-                _rotation.CurRotationDuration = value.CurRotationDuration;
-                _rotation.curRotationType = value.curRotationType;
-                _rotation.DancingRuneWeapon = value.DancingRuneWeapon;
-                _rotation.DeathCoil = value.DeathCoil;
-                _rotation.DeathStrike = value.DeathStrike;
-                _rotation.DiseaseUptime = value.DiseaseUptime;
-                _rotation.FrostFever = value.FrostFever;
-                _rotation.FrostStrike = value.FrostStrike;
-                _rotation.GargoyleDuration = value.GargoyleDuration;
-                _rotation.GCDTime = value.GCDTime;
-                _rotation.GhoulFrenzy = value.GhoulFrenzy;
-                _rotation.HeartStrike = value.HeartStrike;
-                _rotation.Horn = value.Horn;
-                _rotation.HowlingBlast = value.HowlingBlast;
-                _rotation.IcyTouch = value.IcyTouch;
-                _rotation.NumDisease = value.NumDisease;
-                _rotation.Obliterate = value.Obliterate;
-                _rotation.Pestilence = value.Pestilence;
-                _rotation.PlagueStrike = value.PlagueStrike;
-                _rotation.presence = value.presence;
-                _rotation.PTRCalcs = value.PTRCalcs;
-                _rotation.RP = value.RP;
-                _rotation.ScourgeStrike = value.ScourgeStrike;
-                OnPropertyChanged("rotation"); }
+                if (_rotation == null) 
+                    _rotation = new Rotation();
+                _rotation = value; OnPropertyChanged("rotation"); 
+            }
 		}
 		
 		private bool _TalentsSaved = false;

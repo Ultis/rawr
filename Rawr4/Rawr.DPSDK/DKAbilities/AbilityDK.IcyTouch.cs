@@ -20,14 +20,29 @@ namespace Rawr.DK
             this.szName = "Icy Touch";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uMaxDamage = 245;
-            this.uMinDamage = 227;
+            this.uMaxDamage = 505 / 2;
+            this.uMinDamage = 547 / 2;
             this.uRange = 20;
             this.tDamageType = ItemDamageType.Frost;
             this.bTriggersGCD = true;
-            // 3.3.3 IT now hits alot harder for threat.
-            this.ThreatMultiplier = 7;
             this.m_TriggeredAbility = new AbilityDK_FrostFever(CS);
+        }
+
+        private int _DamageAdditiveModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public int DamageAdditiveModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
+                return (int)(this.CState.m_Stats.AttackPower * .2);
+            }
+            set
+            {
+                _DamageAdditiveModifer = value;
+            }
         }
     }
 }
