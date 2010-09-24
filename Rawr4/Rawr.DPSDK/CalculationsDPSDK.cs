@@ -864,7 +864,7 @@ namespace Rawr.DPSDK
                     FullCharacterStats.AddSpecialEffect( _SE_PillarOfFrost );
 
                 // Improved Icy Talons
-                // increases the melee haste of the group/raid by 20%
+                // increases the melee haste of the group/raid by 10%
                 // increases your haste by 5% all the time.
                 if (character.DeathKnightTalents.ImprovedIcyTalons > 0)
                 {
@@ -872,7 +872,8 @@ namespace Rawr.DPSDK
                     if (!character.ActiveBuffsContains("Improved Icy Talons")
                         && !character.ActiveBuffsContains("Windfury Totem"))
                     {
-                        FullCharacterStats.PhysicalHaste += .2f;
+                        FullCharacterStats.PhysicalHaste += .1f;
+                        FullCharacterStats.RangedHaste += .1f;
                     }
                 }
 

@@ -143,8 +143,7 @@ namespace Rawr.DPSDK
             #region Frost Fever
             {
                 if (calcOpts.rotation.IcyTouch > 0f ||
-                (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f) ||
-                (talents.GlyphofDisease && calcOpts.rotation.Pestilence > 0f))
+                (talents.GlyphofHowlingBlast && calcOpts.rotation.HowlingBlast > 0f))
                 {
                     float FFDmg = FrostFeverAPMult * stats.AttackPower + 25.6f;
                     dpsFrostFever = FFDmg;
@@ -156,7 +155,7 @@ namespace Rawr.DPSDK
 
             #region Blood Plague
             {
-                if (calcOpts.rotation.PlagueStrike > 0f || talents.GlyphofDisease)
+                if (calcOpts.rotation.PlagueStrike > 0f )
                 {
                     float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
                     dpsBloodPlague = BPDmg;

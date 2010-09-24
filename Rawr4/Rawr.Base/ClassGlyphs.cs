@@ -459,76 +459,83 @@ namespace Rawr
 
     public partial class DeathKnightTalents
     {
-        private bool[] _glyphData = new bool[33];
+        private bool[] _glyphData = new bool[11 + 12 + 6]; // Prime + Major + Minor
         public override bool[] GlyphData { get { return _glyphData; } }
-        //Major
-        [GlyphData(0, "Glyph of Anti-Magic Shell", GlyphType.Major, @"Increases the duration of your Anti-Magic Shell by 2 sec.")]
-        public bool GlyphofAntiMagicShell { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-        [GlyphData(1, "Glyph of Blood Strike", GlyphType.Major, @"Your Blood Strike causes an additional 20% damage to snared targets.")]
-        public bool GlyphofBloodStrike { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        [GlyphData(2, "Glyph of Bone Shield", GlyphType.Major, @"Adds 2 additional charges to your Bone Shield.")]
-        public bool GlyphofBoneShield { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        [GlyphData(3, "Glyph of Chains of Ice", GlyphType.Major, @"Your Chains of Ice also causes 144 to 156 Frost damage, increased by your attack power.")]
-        public bool GlyphofChainsofIce { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
-        [GlyphData(4, "Glyph of Dancing Rune Weapon", GlyphType.Major, @"Increases the duration of Dancing Rune Weapon by 5 sec.")]
-        public bool GlyphofDancingRuneWeapon { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
-        [GlyphData(5, "Glyph of Dark Command", GlyphType.Major, @"Increases the chance for your Dark Command ability to work successfully by 8%.")]
-        public bool GlyphofDarkCommand { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
-        [GlyphData(6, "Glyph of Dark Death", GlyphType.Major, @"Increases the damage done by Death Coil by 15%.")]
-        public bool GlyphofDarkDeath { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Death and Decay", GlyphType.Major, @"Damage of your Death and Decay spell increased by 20%.")]
-        public bool GlyphofDeathandDecay { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
-        [GlyphData(8, "Glyph of Death Grip", GlyphType.Major, @"When you deal a killing blow that grants honor or experience, the cooldown of your Death Grip is refreshed.")]
-        public bool GlyphofDeathGrip { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
-        [GlyphData(9, "Glyph of Death Strike", GlyphType.Major, @"Increases your Death Strike's damage by 2% for every 2 runic power you currently have (up to a maximum of 25%).  The runic power is not consumed by this effect.")]
-        public bool GlyphofDeathStrike { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
-        [GlyphData(10, "Glyph of Disease", GlyphType.Major, @"Your Pestilence ability now refreshes disease durations on your primary target back to their maximum duration.")]
-        public bool GlyphofDisease { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
-        [GlyphData(11, "Glyph of Frost Strike", GlyphType.Major, @"Reduces the cost of your Frost Strike by 8 Runic Power.")]
-        public bool GlyphofFrostStrike { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
-        [GlyphData(12, "Glyph of Heart Strike", GlyphType.Major, @"Your Heart Strike also reduces the movement speed of your target by 50% for 10 sec.")]
-        public bool GlyphofHeartStrike { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Howling Blast", GlyphType.Major, @"Your Howling Blast ability now infects your targets with Frost Fever.")]
-        public bool GlyphofHowlingBlast { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
-        [GlyphData(14, "Glyph of Hungering Cold", GlyphType.Major, @"Reduces the cost of Hungering Cold by 40 runic power.")]
-        public bool GlyphofHungeringCold { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
-        [GlyphData(15, "Glyph of Icebound Fortitude", GlyphType.Major, @"Your Icebound Fortitude now always grants at least 30% damage reduction, regardless of your defense skill.")]
-        public bool GlyphofIceboundFortitude { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-        [GlyphData(16, "Glyph of Icy Touch", GlyphType.Major, @"Your Frost Fever disease deals 20% additional damage.")]
-        public bool GlyphofIcyTouch { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
-        [GlyphData(17, "Glyph of Obliterate", GlyphType.Major, @"Increases the damage of your Obliterate ability by 20%.")]
-        public bool GlyphofObliterate { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
-        [GlyphData(18, "Glyph of Plague Strike", GlyphType.Major, @"Your Plague Strike does 20% additional damage.")]
-        public bool GlyphofPlagueStrike { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
-        [GlyphData(19, "Glyph of Rune Strike", GlyphType.Major, @"Increases the critical strike chance of your Rune Strike by 10%.")]
-        public bool GlyphofRuneStrike { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
-        [GlyphData(20, "Glyph of Rune Tap", GlyphType.Major, @"Your Rune Tap heals yourself for an additional 10% of the effect, and also heals your party for 10% of their maximum health.")]
+        #region Prime
+        //* Death Coil - Increases the damage or healing done by Death Coil by 15%.
+        [GlyphData(0, "Glyph of Death Coil", GlyphType.Prime, @"Increases the damage or healing done by Death Coil by 15%.")]
+        public bool GlyphofDeathCoil { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
+        //* Death Strike - Increases your Death Strike's damage by 2% for every 5 runic power you currently have (up to a maximum of 40%). The runic power is not consumed by this effect.
+        [GlyphData(1, "Glyph of Death Strike", GlyphType.Prime, @"Increases your Death Strike's damage by 2% for every 5 runic power you currently have (up to a maximum of 40%). The runic power is not consumed by this effect.")]
+        public bool GlyphofDeathStrike { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
+        //* Death and Decay - Increases the duration of your Death and Decay spell by 50%.
+        [GlyphData(2, "Glyph of Death and Decay", GlyphType.Prime, @"Increases the duration of your Death and Decay spell by 50%.")]
+        public bool GlyphofDeathandDecay { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        //* Frost Strike - Reduces the cost of your Frost Strike by 8 Runic Power.
+        [GlyphData(3, "Glyph of Frost Strike", GlyphType.Prime, @"Reduces the cost of your Frost Strike by 8 Runic Power.")]
+        public bool GlyphofFrostStrike { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        //* Heart Strike - Increases the damage of your Heart Strike ability by 30%.
+        [GlyphData(4, "Glyph of Heart Strike", GlyphType.Prime, @"Increases the damage of your Heart Strike ability by 30%.")]
+        public bool GlyphofHeartStrike { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        //* Howling Blast - Your Howling Blast ability now infects your targets with Frost Fever.
+        [GlyphData(5, "Glyph of Howling Blast", GlyphType.Prime, @"Your Howling Blast ability now infects your targets with Frost Fever.")]
+        public bool GlyphofHowlingBlast { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        //* Icy Touch - Your Frost Fever disease deals 20% additional damage.
+        [GlyphData(6, "Glyph of Icy Touch", GlyphType.Prime, @"Your Frost Fever disease deals 20% additional damage.")]
+        public bool GlyphofIcyTouch { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        //* Obliterate - Increases the damage of your Obliterate ability by 20%.
+        [GlyphData(7, "Glyph of Obliterate", GlyphType.Prime, @"Increases the damage of your Obliterate ability by 20%.")]
+        public bool GlyphofObliterate { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        //* Raise Dead - Your Ghoul receives an additional 40% of your Strength and 40% of your Stamina.
+        [GlyphData(8, "Glyph of Raise Dead", GlyphType.Prime, @"Your Ghoul receives an additional 40% of your Strength and 40% of your Stamina.")]
+        public bool GlyphofRaiseDead { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        //* Rune Strike - Increases the critical strike chance of your Rune Strike by 10%.
+        [GlyphData(9, "Glyph of Rune Strike", GlyphType.Prime, @"Increases the critical strike chance of your Rune Strike by 10%.")]
+        public bool GlyphofRuneStrike { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        //* Scourge Strike - Increases the Shadow damage portion of your Scourge Strike by 30%.
+        [GlyphData(10, "Glyph of Scourge Strike", GlyphType.Prime, @"Increases the Shadow damage portion of your Scourge Strike by 30%.")]
+        public bool GlyphofScourgeStrike { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        #endregion
+        #region Major
+        [GlyphData(11, "Glyph of Anti-Magic Shell", GlyphType.Major, @"Increases the duration of your Anti-Magic Shell by 2 sec.")]
+        public bool GlyphofAntiMagicShell { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        [GlyphData(12, "Glyph of Blood Boil", GlyphType.Major, @"Increases the radius of your Blood Boil ability by 50%.")]
+        public bool GlyphofBloodBoil { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
+        [GlyphData(13, "Glyph of Bone Shield", GlyphType.Major, @"Increases your movement speed by 15% while Bone Shield is active. This does not stack with other movement-speed increasing effects.")]
+        public bool GlyphofBoneShield { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(14, "Glyph of Chains of Ice", GlyphType.Major, @"Your Chains of Ice also causes 144 to 156 Frost damage, increased by your attack power.")]
+        public bool GlyphofChainsofIce { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(15, "Glyph of Dancing Rune Weapon", GlyphType.Major, @"Increases your threat generation by 50% while your Dancing Rune Weapon is active.")]
+        public bool GlyphofDancingRuneWeapon { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(16, "Glyph of Death Grip", GlyphType.Major, @"Increases the range of your Death Grip ability by 5 yards.")]
+        public bool GlyphofDeathGrip { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(17, "Glyph of Hungering Cold", GlyphType.Major, @"Your Hungering Cold ability no longer costs runic power.")]
+        public bool GlyphofHungeringCold { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Pestilence", GlyphType.Major, @"Increases the radius of your Pestilence effect by 5 yards.")]
+        public bool GlyphofPestilence { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(19, "Glyph of Pillar of Frost", GlyphType.Major, @"Empowers your Pillar of Frost, making you immune to all effects that cause loss of control of your character, but also freezing you in place while the ability is active.")]
+        public bool GlyphofPillarofFrost { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        [GlyphData(20, "Glyph of Rune Tap", GlyphType.Major, @"Your Rune Tap also heals your party for 10% of their maximum health.")]
         public bool GlyphofRuneTap { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
-        [GlyphData(21, "Glyph of Scourge Strike", GlyphType.Major, @"Your Scourge Strike increases the duration of your diseases on the target by 3 sec, up to a maximum of 9 additional seconds.")]
-        public bool GlyphofScourgeStrike { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
-        [GlyphData(22, "Glyph of Strangulate", GlyphType.Major, @"Reduces the cooldown of your Strangulate by 20 sec.")]
-        public bool GlyphofStrangulate { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
-        [GlyphData(23, "Glyph of the Ghoul", GlyphType.Major, @"Your Ghoul receives an additional 40% of your Strength and 40% of your Stamina.")]
-        public bool GlyphoftheGhoul { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
-        [GlyphData(24, "Glyph of Unbreakable Armor", GlyphType.Major, @"Increases the armor granted by Unbreakable Armor by 20%.")]
-        public bool GlyphofUnbreakableArmor { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
-        [GlyphData(25, "Glyph of Unholy Blight", GlyphType.Major, @"Increases the damage done by Unholy Blight by 40%.")]
-        public bool GlyphofUnholyBlight { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
-        [GlyphData(26, "Glyph of Vampiric Blood", GlyphType.Major, @"Increases  the duration of your Vampiric Blood by 10 sec.")]
-        public bool GlyphofVampiricBlood { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
-        //Minor
-        [GlyphData(27, "Glyph of Blood Tap", GlyphType.Minor, @"Your Blood Tap no longer causes damage to you.")]
-        public bool GlyphofBloodTap { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
-        [GlyphData(28, "Glyph of Corpse Explosion", GlyphType.Minor, @"Any target killed by your Corpse Explosion ability will also explode.  Only affects targets within range of your Corpse Explosion ability, and cannot happen more than once every 6 seconds.")]
-        public bool GlyphofCorpseExplosion { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
-        [GlyphData(29, "Glyph of Death's Embrace", GlyphType.Minor, @"Your Death Coil refunds 20 runic power when used to heal.")]
-        public bool GlyphofDeathsEmbrace { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
-        [GlyphData(30, "Glyph of Horn of Winter", GlyphType.Minor, @"Increases the duration of your Horn of Winter ability by 1 min.")]
-        public bool GlyphofHornofWinter { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
-        [GlyphData(31, "Glyph of Pestilence", GlyphType.Minor, @"Increases the radius of your Pestilence effect by 5 yards.")]
-        public bool GlyphofPestilence { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
-        [GlyphData(32, "Glyph of Raise Dead", GlyphType.Minor, @"Your Raise Dead spell no longer requires a reagent.")]
-        public bool GlyphofRaiseDead { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        [GlyphData(21, "Glyph of Strangulate", GlyphType.Major, @"Increases the Silence duration of your Strangulate ability by 2 sec when used on a target who is casting a spell.")]
+        public bool GlyphofStrangulate { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(22, "Glyph of Vampiric Blood", GlyphType.Major, @"Increases the bonus healing received while your Vampiric Blood is active by an additional 15%, but your Vampiric Blood no longer grants you health.")]
+        public bool GlyphofVampiricBlood { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
+        #endregion
+        #region Minor
+        [GlyphData(23, "Glyph of Blood Tap", GlyphType.Minor, @"Your Blood Tap no longer causes damage to you.")]
+        public bool GlyphofBloodTap { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Death's Embrace", GlyphType.Minor, @"Your Death Coil refunds 20 runic power when used to heal.")]
+        public bool GlyphofDeathsEmbrace { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        [GlyphData(25, "Glyph of Horn of Winter", GlyphType.Minor, @"Increases the duration of your Horn of Winter ability by 1 min.")]
+        public bool GlyphofHornofWinter { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(26, "Glyph of Path of Frost", GlyphType.Minor, @"Your Path of Frost ability allows you to fall from a greater distance without suffering damage.")]
+        public bool GlyphofPathofFrost { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
+        [GlyphData(27, "Glyph of Raise Ally", GlyphType.Minor, @"Increases the health of your Risen Ally by 25% and its run speed by 15%.c")]
+        public bool GlyphofRaiseAlly { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of Resilient Grip", GlyphType.Minor, @"When your Death Grip ability fails because its target is immune, its cooldown is reset.")]
+        public bool GlyphofResilientGrip { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
+        #endregion
     } 
 
     public partial class WarlockTalents

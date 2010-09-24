@@ -108,67 +108,7 @@ namespace Rawr.DPSDK
                 #region Priority Queue
                 if (GCDTime <= 0)
                 {
-                    if (talents.GlyphofDisease)
-                    {
-                        #region GoD
-                        if (((FF < meleeGCD * PhysicalGCDMultiplier || BP < meleeGCD * PhysicalGCDMultiplier) ||
-                            (FF < BloodRune1 && FF < BloodRune2 && FF < DeathRune1 && FF > DeathRune2) ||
-                            (FF < BloodRune1 && FF < BloodRune2 && FF > DeathRune1 && FF < DeathRune2) ||
-                            (FF < BloodRune1 && FF > BloodRune2 && FF < DeathRune1 && FF < DeathRune2) ||
-                            (FF > BloodRune1 && FF < BloodRune2 && FF < DeathRune1 && FF < DeathRune2) ||
-
-                            (BP < BloodRune1 && BP < BloodRune2 && BP < DeathRune1 && BP > DeathRune2) ||
-                            (BP < BloodRune1 && BP < BloodRune2 && BP > DeathRune1 && BP < DeathRune2) ||
-                            (BP < BloodRune1 && BP > BloodRune2 && BP < DeathRune1 && BP < DeathRune2) ||
-                            (BP > BloodRune1 && BP < BloodRune2 && BP < DeathRune1 && BP < DeathRune2))
-                            && (FF > 0 && BP > 0))
-                        {
-                            if (BloodRune1 < 0)
-                            {
-                                BloodRune1 += 10000;
-//                                if (talents.BloodOfTheNorth == 5)
-                                {
-                                    DeathRune1 = BloodRune1;
-                                    BloodRune1 = fightDuration;
-                                }
-                                pest = true;
-                            }
-                            else if (BloodRune2 < 0)
-                            {
-                                BloodRune2 += 10000;
-//                                if (talents.BloodOfTheNorth == 5)
-                                {
-                                    DeathRune2 = BloodRune2;
-                                    BloodRune2 = fightDuration;
-                                }
-                                pest = true;
-                            }
-                            else if (DeathRune1 < 0)
-                            {
-                                BloodRune1 += 10000;
-                                DeathRune1 = fightDuration + 1;
-//                                if (talents.BloodOfTheNorth == 5)
-                                {
-                                    DeathRune1 = BloodRune1;
-                                    BloodRune1 = fightDuration;
-                                }
-                                pest = true;
-                            }
-                            else if (DeathRune2 < 0)
-                            {
-                                BloodRune2 += 10000;
-                                DeathRune2 = fightDuration + 1;
-//                                if (talents.BloodOfTheNorth == 5)
-                                {
-                                    DeathRune2 = BloodRune2;
-                                    BloodRune2 = fightDuration;
-                                }
-                                pest = true;
-                            }
-                        }
-                        #endregion
-                    }
-
+                    
                     if (RimeApplicationProbability > 0.5 && KMApplicationProbability > 0.5)
                     {
                         #region KMRIME

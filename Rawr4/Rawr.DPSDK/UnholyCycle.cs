@@ -107,68 +107,6 @@ namespace Rawr.DPSDK
                 if (GCDTime <= 0)
                 {
                     
-                    if (talents.GlyphofDisease)
-                    {
-                        #region GoD
-                        if (((FF < meleeGCD * PhysicalGCDMultiplier || BP < meleeGCD * PhysicalGCDMultiplier) ||
-                            (FF < BloodRune1 && FF < BloodRune2 && FF < DeathRune1 && FF > DeathRune2) ||
-                            (FF < BloodRune1 && FF < BloodRune2 && FF > DeathRune1 && FF < DeathRune2) ||
-                            (FF < BloodRune1 && FF > BloodRune2 && FF < DeathRune1 && FF < DeathRune2) ||
-                            (FF > BloodRune1 && FF < BloodRune2 && FF < DeathRune1 && FF < DeathRune2) ||
-
-                            (BP < BloodRune1 && BP < BloodRune2 && BP < DeathRune1 && BP > DeathRune2) ||
-                            (BP < BloodRune1 && BP < BloodRune2 && BP > DeathRune1 && BP < DeathRune2) ||
-                            (BP < BloodRune1 && BP > BloodRune2 && BP < DeathRune1 && BP < DeathRune2) ||
-                            (BP > BloodRune1 && BP < BloodRune2 && BP < DeathRune1 && BP < DeathRune2))
-                            && (FF > 0 && BP > 0))
-                        {
-                            if (BloodRune1 < 0)
-                            {
-                                    BloodRune1 = RuneCD + BloodRune1;
-                                    if (true /*talents.Reaping == 3*/)
-                                    {
-                                        DeathRune1 = BloodRune1;
-                                        BloodRune1 = fightDuration;
-                                    }
-                                pest = true;
-                            }
-                            else if (BloodRune2 < 0)
-                            {
-                                BloodRune2 += RuneCD;
-                                if (true /*talents.Reaping == 3*/)
-                                {
-                                    DeathRune2 = BloodRune2;
-                                    BloodRune2 = fightDuration;                                    
-                                }
-                                pest = true;
-                            }
-                            else if (DeathRune1 < 0)
-                            {
-                                BloodRune1 = RuneCD + DeathRune1;
-                                DeathRune1 = fightDuration + 1;
-                                if (true /*talents.Reaping == 3*/)
-                                {
-                                    DeathRune1 = BloodRune1;
-                                    BloodRune1 = fightDuration;
-                                    
-                                }
-                                pest = true;
-                            }
-                            else if (DeathRune2 < 0)
-                            {
-                                BloodRune2 = DeathRune2 + RuneCD;
-                                DeathRune2 = fightDuration + 1;
-                                if (true /*talents.Reaping == 3*/)
-                                {
-                                    DeathRune2 = BloodRune2;
-                                    BloodRune2 = fightDuration;
-                                }
-                                pest = true;
-                            }
-                        }
-                        #endregion
-                    }
-
                     if ((FF <= 0 && (FrostRune1 < 0 || FrostRune2 < 0 || DeathRune1 < 0 || DeathRune2 < 0)) ||
                             (FF < FrostRune1 && FF < FrostRune2 && FF < DeathRune1 && FF > DeathRune2) ||
                             (FF < FrostRune1 && FF < FrostRune2 && FF > DeathRune1 && FF < DeathRune2) ||
