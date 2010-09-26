@@ -81,10 +81,11 @@ namespace Rawr.DPSWarr.Skills
             Name = "Berserker Rage";
             Description = "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
-            Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
 #if !RAWR4
+            Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
 #else
+            Cd = 30f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             RageCost = 0f;// -(Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
 #endif
             StanceOkArms = StanceOkDef = StanceOkFury = true;
@@ -150,7 +151,11 @@ namespace Rawr.DPSWarr.Skills
             Name = "Bloodrage";
             Description = "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
-            Cd = 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+#if RAWR4
+            Cd = 60f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
+#else
+            Cd = 60f * (1f - 1f/9f * Talents.IntensifyRage); // In Seconds
+#endif
             Duration = 10f; // In Seconds
             // Rage is actually reversed in the rotation
             RageCost = -(20f // Base
@@ -176,7 +181,6 @@ namespace Rawr.DPSWarr.Skills
     }
     public class BattleShout : BuffEffect
     {
-        // Constructors
         /// <summary>
         /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
         /// </summary>
@@ -192,10 +196,16 @@ namespace Rawr.DPSWarr.Skills
             Name = "Battle Shout";
             Description = "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
+#if RAWR4
+            MaxRange = 30f; // In Yards 
+            Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f/* * (1f + Talents.BoomingVoice * 0.25f)*/;
+            RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
+#else
             MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
             Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f * (1f + Talents.BoomingVoice * 0.25f);
-            Cd = Duration;
             RageCost = 10f;
+#endif
+            Cd = Duration;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
             //
@@ -229,10 +239,16 @@ namespace Rawr.DPSWarr.Skills
             Name = "Commanding Shout";
             Description = "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
+#if RAWR4
+            MaxRange = 30f/* * (1f + Talents.BoomingVoice * 0.25f)*/; // In Yards 
+            Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f/* * (1f + Talents.BoomingVoice * 0.25f)*/;
+            RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
+#else
             MaxRange = 30f * (1f + Talents.BoomingVoice * 0.25f); // In Yards 
             Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f * (1f + Talents.BoomingVoice * 0.25f);
-            Cd = Duration;
             RageCost = 10f;
+#endif
+            Cd = Duration;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
             //
@@ -265,7 +281,11 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
             ReqTalent = true;
             Talent2ChksValue = Talents.DeathWish;
-            Cd = 3f * 60f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+#if RAWR4
+            Cd = 3f * 60f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
+#else
+            Cd = 3f * 60f * (1f - 1f/9f * Talents.IntensifyRage); // In Seconds
+#endif
             Duration = 30f;
             RageCost = 10f;
             StanceOkArms = StanceOkFury = true;
@@ -293,7 +313,7 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
             Cd = (5f * 60f - Talents.ImprovedDisciplines * 30f) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
 #else
-            Cd = (5f * 60f /*- Talents.ImprovedDisciplines * 30f*/) * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
+            Cd = (5f * 60f /*- Talents.ImprovedDisciplines * 30f*/) * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
 #endif
             Duration = 12f; // In Seconds
             StanceOkFury = true;

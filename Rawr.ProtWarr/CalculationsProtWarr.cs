@@ -545,7 +545,11 @@ threat and limited threat scaled by the threat scale.",
                 //Parry = talents.Deflection * 0.01f,
                 //Dodge = talents.Anticipation * 0.01f,
                 Block = talents.ShieldSpecialization * 0.01f,
+#if !RAWR4
                 BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f + (talents.GlyphOfBlocking ? 0.1f : 0.0f),
+#else
+                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
+#endif
                 PhysicalCrit = talents.Cruelty * 0.01f /*+
                     ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
                         ? talents.PoleaxeSpecialization * 0.01f : 0.0f)*/,

@@ -155,6 +155,8 @@ namespace Rawr
 #if RAWR4
         /// <summary>The Warrior crits with a Mortal Strike</summary>
         MortalStrikeCrit,
+        /// <summary>The Warrior hits with an Execute</summary>
+        ExecuteHit,
 #endif
         #endregion
         #region Added by Warlock

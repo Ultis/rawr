@@ -865,6 +865,7 @@ applied and result is scaled down by 100)",
             TreeConstants.BaseMana = statsRace.Mana; // Setup TreeConstant
 
             Stats statsTalents = new Stats() {
+#if !RAWR4
                 BonusAgilityMultiplier   = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
                 BonusIntellectMultiplier = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.04f * talents.HeartOfTheWild) - 1f,
                 BonusSpiritMultiplier    = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) * (1f + 0.05f * talents.LivingSpirit) - 1f,
@@ -874,12 +875,13 @@ applied and result is scaled down by 100)",
                 SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
                 SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f,
-                RevitalizeChance         = talents.Revitalize * 0.05f,
+#endif
+                RevitalizeChance = talents.Revitalize * 0.05f,
             };
 
-            if (!calcOpts.IgnoreNaturesGrace && talents.NaturesGrace > 0) {
-                statsTalents.AddSpecialEffect(_SE_NaturesGrace[talents.NaturesGrace]);
-            }
+#if !RAWR4
+            if (!calcOpts.IgnoreNaturesGrace && talents.NaturesGrace > 0) { statsTalents.AddSpecialEffect(_SE_NaturesGrace[talents.NaturesGrace]); }
+#endif
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);

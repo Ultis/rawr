@@ -319,12 +319,21 @@ namespace Rawr.DPSWarr {
                 //    YwCritCap -= (new AttackTable(combatFactors.Char, BuffedStats, combatFactors, combatFactors.CalcOpts, FW, true, false, false)).AnyNotLand;
                 }
                 float useRamp = 0f;
-                if (combatFactors.Char.WarriorTalents.Rampage > 0f) useRamp = 0.05f;
+                if (combatFactors.Char.WarriorTalents.Rampage > 0f) 
+#if RAWR4
+                    useRamp = 0.05f + 0.02f;
+#else
+                    useRamp = 0.05f;
+#endif
                 float[] passiveContrsVals = new float[] {
                     0.03192f,
                     AgilityCritBonus,
                     StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc),
+#if RAWR4
+                    0f,
+#else
                     combatFactors.Char.WarriorTalents.Cruelty * 0.01f,
+#endif
                     (combatFactors.FuryStance ? 0.03f : 0f),
                     (combatFactors.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
                     BonusCritPercPoleAxeSpec,

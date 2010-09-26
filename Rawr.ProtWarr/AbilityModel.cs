@@ -79,14 +79,16 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.MockingBlow:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, true);
+#if !RAWR4
                     if(Talents.GlyphOfMockingBlow)
                         DamageMultiplier *= 1.25f;
+#endif
                     break;
                 case Ability.Rend:
                     baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, false);
+#if !RAWR4
                     if (Talents.GlyphOfRending)
                         baseDamage *= 1.4f;
-#if !RAWR4
                     DamageMultiplier *= (1.0f + Talents.ImprovedRend * 0.2f) * (1.0f + Stats.BonusBleedDamageMultiplier);
 #else
                     DamageMultiplier *= (1.0f /*+ Talents.ImprovedRend * 0.2f*/) * (1.0f + Stats.BonusBleedDamageMultiplier);
@@ -172,9 +174,11 @@ namespace Rawr.ProtWarr
                     abilityThreat *= 1.5f;
                     break;
                 case Ability.MockingBlow:
+#if !RAWR4
                     if(Talents.GlyphOfBarbaricInsults)
                         abilityThreat *= 6.0f;
                     else
+#endif
                         abilityThreat *= 3.0f;
                     break;
                 case Ability.Revenge:
@@ -197,9 +201,11 @@ namespace Rawr.ProtWarr
                     abilityThreat *= 1.85f;
                     break;
                 case Ability.Vigilance:
+#if !RAWR4
                     if (Talents.GlyphOfVigilance)
                         abilityThreat = (Options.VigilanceValue * 0.15f) * Talents.Vigilance;
                     else
+#endif
                         abilityThreat = (Options.VigilanceValue * 0.1f) * Talents.Vigilance;
                     break;
             }

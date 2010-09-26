@@ -24,26 +24,25 @@ namespace Rawr.DPSWarr.Skills
             Name = "Mortal Strike";
             Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
-#if !RAWR4
-            ReqTalent = true;
-            Talent2ChksValue = Talents.MortalStrike;
-            Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
-            RageCost = 30f - (Talents.FocusedRage * 1f);
-            DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
-#else
-            Cd = 6f;// -(Talents.ImprovedMortalStrike / 3f); // In Seconds
-            RageCost = 30f;// -(Talents.FocusedRage * 1f);
-            DamageBonus = /*(1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * */ (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
-#endif
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             //Targets += StatS.BonusTargets;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg + 380f;
             DamageBonus *= 1f + StatS.BonusExecOPMSDamageMultiplier;
-            BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
-#if RAWR4
+#if !RAWR4
+            ReqTalent = true;
+            Talent2ChksValue = Talents.MortalStrike;
+            Cd = 6f - (Talents.ImprovedMortalStrike / 3f); // In Seconds
+            RageCost = 30f - (Talents.FocusedRage * 1f);
+            DamageBonus = (1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
+            BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease + Talents.Cruelty * 0.05f;
+#else
+            Cd = 6f;// -(Talents.ImprovedMortalStrike / 3f); // In Seconds
+            RageCost = 30f;// -(Talents.FocusedRage * 1f);
+            DamageBonus = /*(1f + Talents.ImprovedMortalStrike / 3f * 0.1f) * */ (1f + (Talents.GlyphOfMortalStrike ? 0.1f : 0f));
+            BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease;
 #endif
             //
             Initialize();

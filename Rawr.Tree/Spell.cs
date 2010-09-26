@@ -258,18 +258,24 @@ namespace Rawr.Tree {
             extraCritModifier = 0.1f * druidTalents.LivingSeed * calcOpts.Current.LivingSeedEfficiency / 100f;
 
             minHeal *=
+#if !RAWR4
                 (1f + 0.02f * druidTalents.GiftOfNature) *
-                (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
+#endif
+ (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
+#if !RAWR4
                 (1f + 0.02f * druidTalents.GiftOfNature) *
+#endif
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH *=
+#if !RAWR4
                 (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
                 (1f + 0.02f * druidTalents.GiftOfNature) *
+#endif
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
@@ -650,7 +656,7 @@ namespace Rawr.Tree {
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             manaCostModifier *= (1f - druidTalents.TranquilSpirit * 0.02f - druidTalents.Moonglow * 0.03f);
 
-			extraCritPercent += 2f * druidTalents.NaturesMajesty;
+            extraCritPercent += 2f * druidTalents.NaturesMajesty;
             extraCritPercent += 5f * druidTalents.NaturesBounty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)

@@ -1364,21 +1364,20 @@ These numbers to do not include racial bonuses.",
                 {
                     calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                     calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
-                    calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                    , bossOpts
+                    calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts, bossOpts);
+#else
+                    calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts);
 #endif
-                        );
                     calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
                 }
                 
                 calculatedStats.combatFactors = combatFactors;
                 calculatedStats.Rot = Rot;
-                calculatedStats.TargetLevel =
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                    bossOpts.Level;
+                calculatedStats.TargetLevel = bossOpts.Level;
 #else
-                    calcOpts.TargetLevel; 
+                calculatedStats.TargetLevel = calcOpts.TargetLevel; 
 #endif
                 calculatedStats.BaseHealth = statsRace.Health; 
                 {// == Attack Table ==
@@ -1468,7 +1467,7 @@ These numbers to do not include racial bonuses.",
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
-                calculatedStats.TotalHPS = Rot._HPS_TTL; 
+                calculatedStats.TotalHPS = Rot._HPS_TTL;
                 calculatedStats.Survivability = calcOpts.SurvScale * (calculatedStats.TotalHPS
                                                                       + Health2Surv
                                                                       + DmgTakenMods2Surv
@@ -1562,11 +1561,37 @@ These numbers to do not include racial bonuses.",
 #endif
 
         private static SpecialEffect[] _SE_DeathWish = {
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 0)),
+            null,
+#if !RAWR4
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 1)),
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 2)),
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 3)),
+#else
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f),
+#endif
         };
+
+#if RAWR4
+        private static SpecialEffect[] _SE_Enrage = {
+            null,
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
+        };
+
+        private static SpecialEffect[] _SE_BloodCraze = {
+            null,
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f),
+        };
+
+        private static SpecialEffect[] _SE_Executioner = {
+            null,
+            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
+            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
+        };
+#endif
         #endregion
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
@@ -1672,7 +1697,7 @@ These numbers to do not include racial bonuses.",
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
                 PhysicalHaste = talents.BloodFrenzy * 0.025f,
-                PhysicalCrit = talents.Cruelty * 0.01f + (talents.Rampage > 0 && isBuffed ? 0.05f : 0f),
+                PhysicalCrit = /*talents.Cruelty * 0.01f +*/ (talents.Rampage > 0 && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 //BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
@@ -1690,6 +1715,9 @@ These numbers to do not include racial bonuses.",
             if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
 #if RAWR4
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_]) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.BloodCraze > 0) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
+            if (talents.Executioner > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.Executioner]); }
+            if (talents.Enrage > 0) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
 #else
             if (talents.Trauma > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_Trauma[talents.Trauma]); }
 #endif
@@ -2263,7 +2291,11 @@ These numbers to do not include racial bonuses.",
                 {
                     float numFlurryHits = 3f; // default
                     float mhPerc = 1f; // 100% by default
+#if RAWR4
+                    float flurryHaste = 0.25f / 3f * talents.Flurry;
+#else
                     float flurryHaste = 0.05f * talents.Flurry;
+#endif
                     bool useOffHand = false;
                     
                     float flurryHitsPerSec = charStruct.combatFactors.TotalHaste * (1f + flurryHaste) / (1f + flurryHaste * oldFlurryUptime);
@@ -2299,7 +2331,7 @@ These numbers to do not include racial bonuses.",
                     }
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.MHAtkTable.Crit, numFlurryHits * mhPerc * charStruct.Rot.WhiteAtks.MhActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
-                    flurryUptime = 1 - flurryUptime;
+                    flurryUptime = 1f - flurryUptime;
                     statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste) * (1f + flurryHaste * flurryUptime) - 1f;
                 }
 
@@ -2307,7 +2339,6 @@ These numbers to do not include racial bonuses.",
                 charStruct.combatFactors.InvalidateCache();
                 //Rot.InvalidateCache();
                 if (iterate) {
-
                     const float precisionWhole = 0.01f;
                     const float precisionDec = 0.0001f;
                     if (statsProcs.Agility - iterateOld.Agility > precisionWhole ||
@@ -2323,11 +2354,7 @@ These numbers to do not include racial bonuses.",
                         CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                         return IterativeSpecialEffectsStats(charStruct,
                             specialEffects, critEffects, triggerIntervals, triggerChances, flurryUptime, true, statsProcs, originalStats);
-                    }
-                    else
-                    {
-                        //int j = 0;
-                    }
+                    } else { /*int j = 0;*/ }
                 }
 
                 return statsProcs;

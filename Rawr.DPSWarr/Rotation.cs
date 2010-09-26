@@ -475,41 +475,51 @@ namespace Rawr.DPSWarr {
         }
         
         protected virtual float RageGenOverDur_Other {
-            get {
-                    float rage = RageGenOverDur_Anger               // Anger Management Talent
-                               + RageGenOverDur_IncDmg              // Damage from the bosses
-                               + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
-                               + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Might Rage Pot
+            get
+            {
+                float rage = RageGenOverDur_Anger               // Anger Management Talent
+                            + RageGenOverDur_IncDmg              // Damage from the bosses
+                            + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
+                            + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                    foreach (AbilWrapper aw in GetAbilityList())
-                    {
-                        if (aw.allRage < 0) 
-                            rage += (-1f) * aw.allRage;
+                foreach (AbilWrapper aw in GetAbilityList()) {
+                    if (aw.allRage < 0) {
+                        rage += (-1f) * aw.allRage;
                     }
+                }
 
-                    // 4pcT7
-                    if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * FightDuration;
-                        rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CombatFactors.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
-                    }
+                // 4pcT7
+                if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
+                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * FightDuration;
+                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CombatFactors.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
+                }
                     
                 return rage;
             }
         }
-        public int FightDuration {
-            get {
-                return
+        
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                    BossOpts.BerserkTimer;
+        public int FightDuration { get { return BossOpts.BerserkTimer; } }
 #else
-                    (int)CalcOpts.Duration;
+        public int FightDuration { get { return (int)CalcOpts.Duration; } }
 #endif
-            }
-        }
+                    
         protected float RageNeededOverDur {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage > 0f) { rage += aw.allRage; } }
+                foreach (AbilWrapper aw in GetAbilityList()) {
+                    if (aw.allRage > 0f) {
+#if RAWR4
+                        if (aw.ability.GetType() == typeof(MortalStrike)
+                            || aw.ability.GetType() == typeof(BloodThirst)
+                            || aw.ability.GetType() == typeof(Slam))
+                        {
+                            rage += aw.allRage * (1f - Talents.BattleTrance * 0.05f);
+                        } else
+#endif
+                            rage += aw.allRage;
+                    }
+                }
 #if RAWR4
                 if (Talents.DeadlyCalm > 0) { rage *= 1f - 10/120; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
 #endif
