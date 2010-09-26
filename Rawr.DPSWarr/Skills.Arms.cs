@@ -63,7 +63,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Sudden Death";
+            Name = "Colossus Smash";
             Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ColossusSmash_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
@@ -625,6 +625,7 @@ namespace Rawr.DPSWarr.Skills
         protected float addMisses;
         protected float addDodges;
         protected float addParrys;
+        public float ThunderApps = 0f;
         protected override float ActivatesOverride
         {
             get
@@ -635,8 +636,18 @@ namespace Rawr.DPSWarr.Skills
                 // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
                 // We're only doing the additional check once so it will at most Rend
                 // twice in a row, may consider doing a settler
+#if RAWR4
+                // HOWEVER, with this wonderful new Blood and Thunder talent in Cata, you only need to apply
+                // Rend to your initial target, then every time you Thunder Clap, you not only reapply Rend
+                // but you apply apply it to every target your Thunder Clap hit
+#endif
                 float result = 0f;
                 float Base = base.ActivatesOverride;
+#if RAWR4
+                if (Talents.BloodAndThunder > 0) {
+                    Base = 1f; // Initial Application as the rest is applied by Thunder Clap
+                }
+#endif
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                 addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                 addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
@@ -678,8 +689,8 @@ namespace Rawr.DPSWarr.Skills
         public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
-            float numticks = NumTicks * (acts - addMisses - addDodges - addParrys);
-            float result = GetDmgOverTickingTime(acts) / FightDuration;
+            float numticks = NumTicks * ((acts + ThunderApps) - addMisses - addDodges - addParrys);
+            float result = GetDmgOverTickingTime(acts + ThunderApps) / FightDuration;
             return result;
         }
     }

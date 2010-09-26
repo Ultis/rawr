@@ -137,603 +137,576 @@ namespace Rawr
         }
         public static string[] TreeNames = new[] { @"Arms", @"Fury", @"Protection", };
 
-        #region Arms
-        #region Tier 1
-        /// <summary>
-        /// Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by [5 * Pts]%.
-        /// <para>CataChecked: Implemented as DamageBonus on Heroic Strike, Cleave, Victory Rush and Slam</para>
-        /// </summary>
-        [TalentData(index: 0, name: "War Academy", maxPoints: 3, icon: "ability_warrior_unrelentingassault",
-         tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {
+#region Arms
+#region Tier 1
+/// <summary>
+/// Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by [5 * Pts]%.
+/// <para>CataChecked: Implemented as DamageBonus on Heroic Strike, Cleave, Victory Rush and Slam</para>
+/// </summary>
+[TalentData(index: 0, name: "War Academy", maxPoints: 3, icon: "ability_warrior_unrelentingassault",
+tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {
 @"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 5%.",
 @"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 10%.",
 @"Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by 15%.",})]
-        public int WarAcademy { get { return _data[0]; } set { _data[0] = value; } }
-        /// <summary>
-        /// Increases all healing received by [3 * Pts]%, and the effectiveness of your self-healing abilities by an additional [10 * Pts]%.
-        /// <para>CataCheck: Implemented as BonusHealingRecieved on Character and HealingBonus on SecondWind, EnragedRegeneration</para>
-        /// </summary>
-        [TalentData(index: 1, name: "Field Dressing", maxPoints: 2, icon: "inv_misc_bandage_05",
-         tree: 0, column: 2, row: 1, prerequisite: -1, description: new[] {
+public int WarAcademy { get { return _data[0]; } set { _data[0] = value; } }
+/// <summary>
+/// Increases all healing received by [3 * Pts]%, and the effectiveness of your self-healing abilities by an additional [10 * Pts]%.
+/// <para>CataCheck: Implemented as BonusHealingRecieved on Character and HealingBonus on SecondWind, EnragedRegeneration</para>
+/// </summary>
+[TalentData(index: 1, name: "Field Dressing", maxPoints: 2, icon: "inv_misc_bandage_05",
+tree: 0, column: 2, row: 1, prerequisite: -1, description: new[] {
 @"Increases all healing received by 3%, and the effectiveness of your self-healing abilities by an additional 10%.",
 @"Increases all healing received by 6%, and the effectiveness of your self-healing abilities by an additional 20%.",})]
-        public int FieldDressing { get { return _data[1]; } set { _data[1] = value; } }
-        /// <summary>
-        /// Your Charge generates [5 * Pts] additional rage and stuns an additional 2 nearby targets.
-        /// <para>CataCheck: Implemented as RageCost on Charge. Stun will never be implemented</para>
-        /// </summary>
-        [TalentData(index: 2, name: "Blitz", maxPoints: 2, icon: "warrior_talent_icon_blitz",
-         tree: 0, column: 3, row: 1, prerequisite: -1, description: new[] {
+public int FieldDressing { get { return _data[1]; } set { _data[1] = value; } }
+/// <summary>
+/// Your Charge generates [5 * Pts] additional rage and stuns an additional 2 nearby targets.
+/// <para>CataCheck: Implemented as RageCost on Charge. Stun will never be implemented</para>
+/// </summary>
+[TalentData(index: 2, name: "Blitz", maxPoints: 2, icon: "warrior_talent_icon_blitz",
+tree: 0, column: 3, row: 1, prerequisite: -1, description: new[] {
 @"Your Charge generates 5 additional rage and stuns an additional nearby target.",
 @"Your Charge generates 10 additional rage and stuns an additional 2 nearby targets.",})]
-        public int Blitz { get { return _data[2]; } set { _data[2] = value; } }
-        #endregion
-        #region Tier 2
-        /// <summary>
-        /// You retain up to an additional [25 * Pts] rage when you change stances.
-        /// <para>CataCheck: This talent will never be modelled</para>
-        /// </summary>
-        [TalentData(index: 3, name: "Tactical Mastery", maxPoints: 2, icon: "spell_nature_enchantarmor",
-         tree: 0, column: 1, row: 2, prerequisite: -1, description: new[] {
+public int Blitz { get { return _data[2]; } set { _data[2] = value; } }
+#endregion
+#region Tier 2
+/// <summary>
+/// You retain up to an additional [25 * Pts] rage when you change stances.
+/// <para>CataCheck: This talent will never be modelled</para>
+/// </summary>
+[TalentData(index: 3, name: "Tactical Mastery", maxPoints: 2, icon: "spell_nature_enchantarmor",
+tree: 0, column: 1, row: 2, prerequisite: -1, description: new[] {
 @"You retain up to an additional 25 rage when you change stances.",
 @"You retain up to an additional 50 rage when you change stances.",})]
-        public int TacticalMastery { get { return _data[3]; } set { _data[3] = value; } }
-        /// <summary>
-        /// Whenever you are struck by a Stun or Immobilize effect you generate [10 * Pts] rage and [5 * Pts]% of your total health over 10 sec.
-        /// <para>CataCheck: Did not change from WotLK</para>
-        /// </summary>
-        [TalentData(index: 4, name: "Second Wind", maxPoints: 2, icon: "ability_hunter_harass",
-         tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
+public int TacticalMastery { get { return _data[3]; } set { _data[3] = value; } }
+/// <summary>
+/// Whenever you are struck by a Stun or Immobilize effect you generate [10 * Pts] rage and [5 * Pts]% of your total health over 10 sec.
+/// <para>CataCheck: Did not change from WotLK</para>
+/// </summary>
+[TalentData(index: 4, name: "Second Wind", maxPoints: 2, icon: "ability_hunter_harass",
+tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"Whenever you are struck by a Stun or Immobilize effect you generate 10 rage and 5% of your total health over 10 sec.",
 @"Whenever you are struck by a Stun or Immobilize effect you generate 20 rage and 10% of your total health over 10 sec.",})]
-        public int SecondWind { get { return _data[4]; } set { _data[4] = value; } }
-        /// <summary>
-        /// Your critical strikes cause the opponent to bleed, dealing [16 * Pts]% of your melee weapon's average damage over 6 sec.
-        /// <para>CataCheck: Did not change from WotLK</para>
-        /// </summary>
-        [TalentData(index: 5, name: "Deep Wounds", maxPoints: 3, icon: "ability_backstab",
-         tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
+public int SecondWind { get { return _data[4]; } set { _data[4] = value; } }
+/// <summary>
+/// Your critical strikes cause the opponent to bleed, dealing [16 * Pts]% of your melee weapon's average damage over 6 sec.
+/// <para>CataCheck: Did not change from WotLK</para>
+/// </summary>
+[TalentData(index: 5, name: "Deep Wounds", maxPoints: 3, icon: "ability_backstab",
+tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
 @"Your critical strikes cause the opponent to bleed, dealing 16% of your melee weapon's average damage over 6 sec.",
 @"Your critical strikes cause the opponent to bleed, dealing 32% of your melee weapon's average damage over 6 sec.",
 @"Your critical strikes cause the opponent to bleed, dealing 48% of your melee weapon's average damage over 6 sec.",})]
-        public int DeepWounds { get { return _data[5]; } set { _data[5] = value; } }
-        /// <summary>
-        /// Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50 * Pts]%.
-        /// <para>CataCheck: Implemented as RageCost on DemoShout. Other abilities are not modeled.</para>
-        /// </summary>
-        [TalentData(index: 6, name: "Drums of War", maxPoints: 2, icon: "achievement_bg_winwsg_3-0",
-         tree: 0, column: 4, row: 2, prerequisite: -1, description: new[] {
+public int DeepWounds { get { return _data[5]; } set { _data[5] = value; } }
+/// <summary>
+/// Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by [50 * Pts]%.
+/// <para>CataCheck: Implemented as RageCost on DemoShout. Other abilities are not modeled.</para>
+/// </summary>
+[TalentData(index: 6, name: "Drums of War", maxPoints: 2, icon: "achievement_bg_winwsg_3-0",
+tree: 0, column: 4, row: 2, prerequisite: -1, description: new[] {
 @"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by 50%.",
 @"Reduces the rage cost of your Shield Bash, Pummel, and any shouts which cost rage by 100%.",})]
-        public int DrumsOfWar { get { return _data[6]; } set { _data[6] = value; } }
-        #endregion
-        #region Tier 3
-        /// <summary>
-        /// Increases your Overpower critical strike chance by [20 * Pts]%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.
-        /// <para>CataCheck: Implemented as BonusCritChance on Overpower, TasteForBlood. Also Enables TasteForBlood when Rend is active</para>
-        /// </summary>
-        [TalentData(index: 7, name: "Taste for Blood", maxPoints: 3, icon: "ability_rogue_hungerforblood",
-         tree: 0, column: 1, row: 3, prerequisite: -1, description: new[] {
+public int DrumsOfWar { get { return _data[6]; } set { _data[6] = value; } }
+#endregion
+#region Tier 3
+/// <summary>
+/// Increases your Overpower critical strike chance by [20 * Pts]%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.
+/// <para>CataCheck: Implemented as BonusCritChance on Overpower, TasteForBlood. Also Enables TasteForBlood when Rend is active</para>
+/// </summary>
+[TalentData(index: 7, name: "Taste for Blood", maxPoints: 3, icon: "ability_rogue_hungerforblood",
+tree: 0, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Increases your Overpower critical strike chance by 20%. In addition, whenever your Rend ability causes damage, you have a 33% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",
 @"Increases your Overpower critical strike chance by 40%. In addition, whenever your Rend ability causes damage, you have a 66% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",
 @"Increases your Overpower critical strike chance by 60%. In addition, whenever your Rend ability causes damage, you have a 100% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",})]
-        public int TasteForBlood { get { return _data[7]; } set { _data[7] = value; } }
-        /// <summary>
-        /// Battle, Berserker Stance - Sweeping Strikes - 30 Rage
-        /// 1 min cooldown - Instant
-        /// Your melee attacks strike an additional nearby opponent.  Lasts 10 sec.
-        /// <para>CataCheck: Applied Cd and Dur changes</para>
-        /// </summary>
-        [TalentData(index: 8, name: "Sweeping Strikes", maxPoints: 1, icon: "ability_rogue_slicedice",
-         tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
+public int TasteForBlood { get { return _data[7]; } set { _data[7] = value; } }
+/// <summary>
+/// Battle, Berserker Stance - Sweeping Strikes - 30 Rage
+/// 1 min cooldown - Instant
+/// Your melee attacks strike an additional nearby opponent.  Lasts 10 sec.
+/// <para>CataCheck: Applied Cd and Dur changes</para>
+/// </summary>
+[TalentData(index: 8, name: "Sweeping Strikes", maxPoints: 1, icon: "ability_rogue_slicedice",
+tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Battle, Berserker Stance - Sweeping Strikes - 30 Rage
 1 min cooldown - Instant
 Your melee attacks strike an additional nearby opponent.  Lasts 10 sec.",})]
-        public int SweepingStrikes { get { return _data[8]; } set { _data[8] = value; } }
-        /// <summary>
-        /// Increases the critical strike damage bonus of Mortal Strike, Slam and Overpower by [10 * Pts]%.
-        /// <para>CataCheck: Implemented as BonusCritDamage on MS, SL, OP(TFB).</para>
-        /// </summary>
-        [TalentData(index: 9, name: "Impale", maxPoints: 2, icon: "ability_searingarrow",
-         tree: 0, column: 3, row: 3, prerequisite: 5, description: new[] {
+public int SweepingStrikes { get { return _data[8]; } set { _data[8] = value; } }
+/// <summary>
+/// Increases the critical strike damage bonus of Mortal Strike, Slam and Overpower by [10 * Pts]%.
+/// <para>CataCheck: Implemented as BonusCritDamage on MS, SL, OP(TFB).</para>
+/// </summary>
+[TalentData(index: 9, name: "Impale", maxPoints: 2, icon: "ability_searingarrow",
+tree: 0, column: 3, row: 3, prerequisite: 5, description: new[] {
 @"Increases the critical strike damage bonus of Mortal Strike, Slam and Overpower by 10%.",
 @"Increases the critical strike damage bonus of Mortal Strike, Slam and Overpower by 20%.",})]
-        public int Impale { get { return _data[9]; } set { _data[9] = value; } }
-        /// <summary>
-        /// When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every [30 / 2 * Pts] sec.
-        /// <para>CataCheck: This talent will never be implemented</para>
-        /// </summary>
-        [TalentData(index: 10, name: "Improved Hamstring", maxPoints: 2, icon: "ability_shockwave",
-         tree: 0, column: 4, row: 3, prerequisite: -1, description: new[] {
+public int Impale { get { return _data[9]; } set { _data[9] = value; } }
+/// <summary>
+/// When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every [30 / 2 * Pts] sec.
+/// <para>CataCheck: This talent will never be implemented</para>
+/// </summary>
+[TalentData(index: 10, name: "Improved Hamstring", maxPoints: 2, icon: "ability_shockwave",
+tree: 0, column: 4, row: 3, prerequisite: -1, description: new[] {
 @"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 60 sec.",
 @"When reapplying Hamstring, you immobilize the target for 5 sec. This effect cannot occur more than once every 30 sec.",})]
-        public int ImprovedHamstring { get { return _data[10]; } set { _data[10] = value; } }
-        #endregion
-        #region Tier 4
-        /// <summary>
-        /// Decreases the swing time of Slam by [0.5 * Pts] sec and increases its damage by [10 * Pts]%.
-        /// <para>CataCheck: Applied the Damage Bonus change. Swing Timer already implemented from WotLK</para>
-        /// </summary>
-        [TalentData(index: 11, name: "Improved Slam", maxPoints: 2, icon: "ability_warrior_decisivestrike",
-         tree: 0, column: 1, row: 4, prerequisite: -1, description: new[] {
+public int ImprovedHamstring { get { return _data[10]; } set { _data[10] = value; } }
+#endregion
+#region Tier 4
+/// <summary>
+/// Decreases the swing time of Slam by [0.5 * Pts] sec and increases its damage by [10 * Pts]%.
+/// <para>CataCheck: Applied the Damage Bonus change. Swing Timer already implemented from WotLK</para>
+/// </summary>
+[TalentData(index: 11, name: "Improved Slam", maxPoints: 2, icon: "ability_warrior_decisivestrike",
+tree: 0, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"Decreases the swing time of Slam by 0.5 sec and increases its damage by 10%.",
 @"Decreases the swing time of Slam by 1 sec and increases its damage by 20%.",})]
-        public int ImprovedSlam { get { return _data[11]; } set { _data[11] = value; } }
-        /// <summary>
-        /// Deadly Calm - 2 min cooldown - Instant
-        /// For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.
-        /// <para>CataCheck: Implemented as a multiplier in RageNeededOverDur</para>
-        /// </summary>
-        [TalentData(index: 12, name: "Deadly Calm", maxPoints: 1, icon: "achievement_boss_kingymiron",
-         tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
+public int ImprovedSlam { get { return _data[11]; } set { _data[11] = value; } }
+/// <summary>
+/// Deadly Calm - 2 min cooldown - Instant
+/// For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.
+/// <para>CataCheck: Implemented as a multiplier in RageNeededOverDur</para>
+/// </summary>
+[TalentData(index: 12, name: "Deadly Calm", maxPoints: 1, icon: "achievement_boss_kingymiron",
+tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Deadly Calm - 2 min cooldown - Instant
 For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.",})]
-        public int DeadlyCalm { get { return _data[12]; } set { _data[12] = value; } }
-        /// <summary>
-        /// Your bleeds cause targets to take an extra [2 * Pts]% physical damage and [15 * Pts]% bleed damage. In addition, improves your melee attack speed by [5 / 2 * Pts]%.
-        /// <para>CataCheck: Removed Trauma and applied it's benefits under BF instead, as static instead of a SpecialEffect</para>
-        /// </summary>
-        [TalentData(index: 13, name: "Blood Frenzy", maxPoints: 2, icon: "ability_warrior_bloodfrenzy",
-         tree: 0, column: 3, row: 4, prerequisite: -1, description: new[] {
+public int DeadlyCalm { get { return _data[12]; } set { _data[12] = value; } }
+/// <summary>
+/// Your bleeds cause targets to take an extra [2 * Pts]% physical damage and [15 * Pts]% bleed damage. In addition, improves your melee attack speed by [5 / 2 * Pts]%.
+/// <para>CataCheck: Removed Trauma and applied it's benefits under BF instead, as static instead of a SpecialEffect</para>
+/// </summary>
+[TalentData(index: 13, name: "Blood Frenzy", maxPoints: 2, icon: "ability_warrior_bloodfrenzy",
+tree: 0, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Your bleeds cause targets to take an extra 2% physical damage and 15% bleed damage. In addition, improves your melee attack speed by 3%.",
 @"Your bleeds cause targets to take an extra 4% physical damage and 30% bleed damage. In addition, improves your melee attack speed by 5%.",})]
-        public int BloodFrenzy { get { return _data[13]; } set { _data[13] = value; } }
-        #endregion
-        #region Tier 5
-        /// <summary>
-        /// After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause [10 * Pts]% more damage.
-        /// <para>CataCheck: Implemented as a SpecialEffect with new stat BonusExecOPMSDamageMultiplier</para>
-        /// </summary>
-        [TalentData(index: 14, name: "Lambs to the Slaughter", maxPoints: 3, icon: "warrior_talent_icon_lambstotheslaughter",
-         tree: 0, column: 1, row: 5, prerequisite: -1, description: new[] {
+public int BloodFrenzy { get { return _data[13]; } set { _data[13] = value; } }
+#endregion
+#region Tier 5
+/// <summary>
+/// After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause [10 * Pts]% more damage.
+/// <para>CataCheck: Implemented as a SpecialEffect with new stat BonusExecOPMSDamageMultiplier</para>
+/// </summary>
+[TalentData(index: 14, name: "Lambs to the Slaughter", maxPoints: 3, icon: "warrior_talent_icon_lambstotheslaughter",
+tree: 0, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 10% more damage.",
 @"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 20% more damage.",
 @"After dealing a Mortal Strike, your next Execute, Overpower or Mortal Strike will cause 30% more damage.",})]
-        public int LambsToTheSlaughter { get { return _data[14]; } set { _data[14] = value; } }
-        /// <summary>
-        /// Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.
-        /// <para>CataCheck: No change from WotLK</para>
-        /// </summary>
-        [TalentData(index: 15, name: "Juggernaut", maxPoints: 1, icon: "ability_warrior_bullrush",
-         tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
+public int LambsToTheSlaughter { get { return _data[14]; } set { _data[14] = value; } }
+/// <summary>
+/// Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.
+/// <para>CataCheck: No change from WotLK</para>
+/// </summary>
+[TalentData(index: 15, name: "Juggernaut", maxPoints: 1, icon: "ability_warrior_bullrush",
+tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Your Charge ability is now usable while in combat, but the cooldown on Charge is increased by 5 sec. Following a Charge, your next Slam or Mortal Strike has an additional 25% chance to critically hit if used within 10 sec.",})]
-        public int Juggernaut { get { return _data[15]; } set { _data[15] = value; } }
-        /// <summary>
-        /// Your melee hits have a [5 * Pts]% chance of resetting the cooldown on your Colossus Smash, and you keep [5 * Pts] rage after using Execute.
-        /// </summary>
-        [TalentData(index: 16, name: "Sudden Death", maxPoints: 2, icon: "ability_warrior_improveddisciplines",
-         tree: 0, column: 4, row: 5, prerequisite: -1, description: new[] {
+public int Juggernaut { get { return _data[15]; } set { _data[15] = value; } }
+/// <summary>
+/// Your melee hits have a [5 * Pts]% chance of resetting the cooldown on your Colossus Smash, and you keep [5 * Pts] rage after using Execute.
+/// </summary>
+[TalentData(index: 16, name: "Sudden Death", maxPoints: 2, icon: "ability_warrior_improveddisciplines",
+tree: 0, column: 4, row: 5, prerequisite: -1, description: new[] {
 @"Your melee hits have a 5% chance of resetting the cooldown on your Colossus Smash, and you keep 5 rage after using Execute.",
 @"Your melee hits have a 10% chance of resetting the cooldown on your Colossus Smash, and you keep 10 rage after using Execute.",})]
-        public int SuddenDeath { get { return _data[16]; } set { _data[16] = value; } }
-        #endregion
-        #region Tier 6
-        /// <summary>
-        /// Your Mortal Strike critical hits have a [100 / 3 * Pts]% chance to Enrage you, increasing all damage caused by [10 / 3 * Pts]% for 12 sec.
-        /// <para>CataCheck: I think I did this right, but need to verify the numbers</para>
-        /// </summary>
-        [TalentData(index: 17, name: "Wrecking Crew", maxPoints: 3, icon: "ability_warrior_trauma",
-         tree: 0, column: 1, row: 6, prerequisite: -1, description: new[] {
+public int SuddenDeath { get { return _data[16]; } set { _data[16] = value; } }
+#endregion
+#region Tier 6
+/// <summary>
+/// Your Mortal Strike critical hits have a [100 / 3 * Pts]% chance to Enrage you, increasing all damage caused by [10 / 3 * Pts]% for 12 sec.
+/// <para>CataCheck: I think I did this right, but need to verify the numbers</para>
+/// </summary>
+[TalentData(index: 17, name: "Wrecking Crew", maxPoints: 3, icon: "ability_warrior_trauma",
+tree: 0, column: 1, row: 6, prerequisite: -1, description: new[] {
 @"Your Mortal Strike critical hits have a 33% chance to Enrage you, increasing all damage caused by 3% for 12 sec.",
 @"Your Mortal Strike critical hits have a 66% chance to Enrage you, increasing all damage caused by 6% for 12 sec.",
 @"Your Mortal Strike critical hits have a 100% chance to Enrage you, increasing all damage caused by 10% for 12 sec.",})]
-        public int WreckingCrew { get { return _data[17]; } set { _data[17] = value; } }
-        /// <summary>
-        /// Battle Stance - Throwdown - Melee Range - 15 Rage
-        /// 45 sec cooldown - Instant cast
-        /// Requires Melee Weapon - Knocks the target to the ground and stuns it for 5 sec.
-        /// <para>CataCheck: Most likely not going to model this one</para>
-        /// </summary>
-        [TalentData(index: 18, name: "Throwdown", maxPoints: 1, icon: "inv_mace_62",
-         tree: 0, column: 3, row: 6, prerequisite: 15, description: new[] {
+public int WreckingCrew { get { return _data[17]; } set { _data[17] = value; } }
+/// <summary>
+/// Battle Stance - Throwdown - Melee Range - 15 Rage
+/// 45 sec cooldown - Instant cast
+/// Requires Melee Weapon - Knocks the target to the ground and stuns it for 5 sec.
+/// <para>CataCheck: Most likely not going to model this one</para>
+/// </summary>
+[TalentData(index: 18, name: "Throwdown", maxPoints: 1, icon: "inv_mace_62",
+tree: 0, column: 3, row: 6, prerequisite: 15, description: new[] {
 @"Battle Stance - Throwdown - Melee Range - 15 Rage
 45 sec cooldown - Instant cast
 Requires Melee Weapon - Knocks the target to the ground and stuns it for 5 sec.",})]
-        public int Throwdown { get { return _data[18]; } set { _data[18] = value; } }
-        #endregion
-        #region Tier 7
-        /// <summary>
-        /// Bladestorm - 25 Rage
-        /// 1 min cooldown - Instant cast
-        /// Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets with your weapon and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.
-        /// <para>CataCheck: Implemented Cd change</para>
-        /// </summary>
-        [TalentData(index: 19, name: "Bladestorm", maxPoints: 1, icon: "ability_warrior_bladestorm",
-         tree: 0, column: 2, row: 7, prerequisite: 15, description: new[] {
+public int Throwdown { get { return _data[18]; } set { _data[18] = value; } }
+#endregion
+#region Tier 7
+/// <summary>
+/// Bladestorm - 25 Rage
+/// 1 min cooldown - Instant cast
+/// Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets with your weapon and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.
+/// <para>CataCheck: Implemented Cd change</para>
+/// </summary>
+[TalentData(index: 19, name: "Bladestorm", maxPoints: 1, icon: "ability_warrior_bladestorm",
+tree: 0, column: 2, row: 7, prerequisite: 15, description: new[] {
 @"Bladestorm - 25 Rage
 1 min cooldown - Instant cast
 Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets with your weapon and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.",})]
-        public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
-        #endregion
-        #endregion
-        #region Fury
-        #region Tier 1
-        /// <summary>
-        /// After taking any damage, you have a 10% chance to regenerate [2.5 * Pts]% of your total Health over 5 sec.
-        /// <para>CataCheck: Implemented as HealthRestoreFromMaxHealth SE</para>
-        /// </summary>
-        [TalentData(index: 20, name: "Blood Craze", maxPoints: 3, icon: "spell_shadow_summonimp",
-         tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
+public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
+#endregion
+#endregion
+#region Fury
+#region Tier 1
+/// <summary>
+/// After taking any damage, you have a 10% chance to regenerate [2.5 * Pts]% of your total Health over 5 sec.
+/// <para>CataCheck: Implemented as HealthRestoreFromMaxHealth SE</para>
+/// </summary>
+[TalentData(index: 20, name: "Blood Craze", maxPoints: 3, icon: "spell_shadow_summonimp",
+tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
 @"After taking any damage, you have a 10% chance to regenerate 2.5% of your total health over 5 sec.",
 @"After taking any damage, you have a 10% chance to regenerate 5% of your total Health over 5 sec.",
 @"After taking any damage, you have a 10% chance to regenerate 7.5% of your total Health over 5 sec.",})]
-        public int BloodCraze { get { return _data[20]; } set { _data[20] = value; } }
-        /// <summary>
-        /// Your Bloodthirst, Mortal Strike and Shield Slam hits have a [5 * Pts]% chance to make your next special attack consume no rage.
-        /// </summary>
-        [TalentData(index: 21, name: "Battle Trance", maxPoints: 3, icon: "inv_helmet_06",
-         tree: 1, column: 2, row: 1, prerequisite: -1, description: new[] {
+public int BloodCraze { get { return _data[20]; } set { _data[20] = value; } }
+/// <summary>
+/// Your Bloodthirst, Mortal Strike and Shield Slam hits have a [5 * Pts]% chance to make your next special attack consume no rage.
+/// </summary>
+[TalentData(index: 21, name: "Battle Trance", maxPoints: 3, icon: "inv_helmet_06",
+tree: 1, column: 2, row: 1, prerequisite: -1, description: new[] {
 @"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 5% chance to make your next special attack consume no rage.",
 @"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 10% chance to make your next special attack consume no rage.",
 @"Your Bloodthirst, Mortal Strike and Shield Slam hits have a 15% chance to make your next special attack consume no rage.",})]
-        public int BattleTrance { get { return _data[21]; } set { _data[21] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by [5 * Pts]%.
-        /// </summary>
-        [TalentData(index: 22, name: "Cruelty", maxPoints: 2, icon: "ability_rogue_eviscerate",
-         tree: 1, column: 3, row: 1, prerequisite: -1, description: new[] {
+public int BattleTrance { get { return _data[21]; } set { _data[21] = value; } }
+/// <summary>
+/// Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by [5 * Pts]%.
+/// </summary>
+[TalentData(index: 22, name: "Cruelty", maxPoints: 2, icon: "ability_rogue_eviscerate",
+tree: 1, column: 3, row: 1, prerequisite: -1, description: new[] {
 @"Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by 5%.",
 @"Increases the critical strike chance of Bloodthirst, Mortal Strike and Shield Slam by 10%.",})]
-        public int Cruelty { get { return _data[22]; } set { _data[22] = value; } }
-        #endregion
-        #region Tier 2
-        /// <summary>
-        /// Your Execute hits have a [50 * Pts]% chance to improve your melee attack speed by 5% for 9 sec.  This effect stacks up to 5 times.
-        /// </summary>
-        [TalentData(index: 23, name: "Executioner", maxPoints: 2, icon: "inv_sword_48",
-         tree: 1, column: 1, row: 2, prerequisite: -1, description: new[] {
+public int Cruelty { get { return _data[22]; } set { _data[22] = value; } }
+#endregion
+#region Tier 2
+/// <summary>
+/// Your Execute hits have a [50 * Pts]% chance to improve your melee attack speed by 5% for 9 sec.  This effect stacks up to 5 times.
+/// </summary>
+[TalentData(index: 23, name: "Executioner", maxPoints: 2, icon: "inv_sword_48",
+tree: 1, column: 1, row: 2, prerequisite: -1, description: new[] {
 @"Your Execute hits have a 50% chance to improve your melee attack speed by 5% for 9 sec. This effect stacks up to 5 times.",
 @"Your Execute hits have a 100% chance to improve your melee attack speed by 5% for 9 sec. This effect stacks up to 5 times.",})]
-        public int Executioner { get { return _data[23]; } set { _data[23] = value; } }
-        /// <summary>
-        /// Reduces the cooldown by [15 * Pts] sec and increases the rage generated by [5 * Pts] of your Battle Shout and Commanding Shout.
-        /// </summary>
-        [TalentData(index: 24, name: "Booming Voice", maxPoints: 2, icon: "spell_nature_purge",
-         tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
+public int Executioner { get { return _data[23]; } set { _data[23] = value; } }
+/// <summary>
+/// Reduces the cooldown by [15 * Pts] sec and increases the rage generated by [5 * Pts] of your Battle Shout and Commanding Shout.
+/// </summary>
+[TalentData(index: 24, name: "Booming Voice", maxPoints: 2, icon: "spell_nature_purge",
+tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"Reduces the cooldown by 15 sec and increases the rage generated by 5 of your Battle Shout and Commanding Shout.",
 @"Reduces the cooldown by 30 sec and increases the rage generated by 10 of your Battle Shout and Commanding Shout.",})]
-        public int BoomingVoice { get { return _data[24]; } set { _data[24] = value; } }
-        /// <summary>
-        /// Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for [15 * Pts] sec.
-        /// </summary>
-        [TalentData(index: 25, name: "Rude Interruption", maxPoints: 2, icon: "ability_warrior_commandingshout",
-         tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
+public int BoomingVoice { get { return _data[24]; } set { _data[24] = value; } }
+/// <summary>
+/// Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for [15 * Pts] sec.
+/// </summary>
+[TalentData(index: 25, name: "Rude Interruption", maxPoints: 2, icon: "ability_warrior_commandingshout",
+tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
 @"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 15 sec.",
 @"Successfully interrupting a spell with Shield Bash or Pummel increases your damage by 5% for 30 sec.",})]
-        public int RudeInterruption { get { return _data[25]; } set { _data[25] = value; } }
-        /// <summary>
-        /// Piercing Howl, 10 Rage, Instant cast
-        /// <para>Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.</para>
-        /// </summary>
-        [TalentData(index: 26, name: "Piercing Howl", maxPoints: 1, icon: "spell_shadow_deathscream",
-         tree: 1, column: 4, row: 2, prerequisite: -1, description: new[] {
+public int RudeInterruption { get { return _data[25]; } set { _data[25] = value; } }
+/// <summary>
+/// Piercing Howl, 10 Rage, Instant cast
+/// <para>Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.</para>
+/// </summary>
+[TalentData(index: 26, name: "Piercing Howl", maxPoints: 1, icon: "spell_shadow_deathscream",
+tree: 1, column: 4, row: 2, prerequisite: -1, description: new[] {
 @"Piercing Howl - 10 Rage
 Instant cast
 Causes all enemies within 10 yards to be Dazed, reducing movement speed by 50% for 6 sec.",})]
-        public int PiercingHowl { get { return _data[26]; } set { _data[26] = value; } }
-        #endregion
-        #region Tier 3
-        /// <summary>
-        /// Increases your attack speed by [25 / 3 * Pts]% for your next 3 swings after dealing a melee critical strike.
-        /// </summary>
-        [TalentData(index: 27, name: "Flurry", maxPoints: 3, icon: "ability_ghoulfrenzy",
-         tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
+public int PiercingHowl { get { return _data[26]; } set { _data[26] = value; } }
+#endregion
+#region Tier 3
+/// <summary>
+/// Increases your attack speed by [25 / 3 * Pts]% for your next 3 swings after dealing a melee critical strike.
+/// </summary>
+[TalentData(index: 27, name: "Flurry", maxPoints: 3, icon: "ability_ghoulfrenzy",
+tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Increases your attack speed by 8% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 16% for your next 3 swings after dealing a melee critical strike.",
 @"Increases your attack speed by 25% for your next 3 swings after dealing a melee critical strike.",})]
-        public int Flurry { get { return _data[27]; } set { _data[27] = value; } }
-        /// <summary>
-        /// Death Wish - 10 Rage
-        /// 3 min cooldown - Instant
-        /// When activated you become Enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.
-        /// </summary>
-        [TalentData(index: 28, name: "Death Wish", maxPoints: 1, icon: "spell_shadow_deathpact",
-         tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
+public int Flurry { get { return _data[27]; } set { _data[27] = value; } }
+/// <summary>
+/// Death Wish - 10 Rage
+/// 3 min cooldown - Instant
+/// When activated you become Enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.
+/// </summary>
+[TalentData(index: 28, name: "Death Wish", maxPoints: 1, icon: "spell_shadow_deathpact",
+tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Death Wish - 10 Rage
 3 min cooldown - Instant
 When activated you become Enraged, increasing your physical damage by 20% but increasing all damage taken by 5%.  Lasts 30 sec.",})]
-        public int DeathWish { get { return _data[28]; } set { _data[28] = value; } }
-        /// <summary>
-        /// Your melee hits have a [3 * Pts]% chance to Enrage you, giving you a [10 / 3 * Pts]% damage bonus for 9 sec.
-        /// </summary>
-        [TalentData(index: 29, name: "Enrage", maxPoints: 3, icon: "spell_shadow_unholyfrenzy",
-         tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
+public int DeathWish { get { return _data[28]; } set { _data[28] = value; } }
+/// <summary>
+/// Your melee hits have a [3 * Pts]% chance to Enrage you, giving you a [10 / 3 * Pts]% damage bonus for 9 sec.
+/// </summary>
+[TalentData(index: 29, name: "Enrage", maxPoints: 3, icon: "spell_shadow_unholyfrenzy",
+tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Your melee hits have a 3% chance to Enrage you, giving you a 3% damage bonus for 9 sec.",
 @"Your melee hits have a 6% chance to Enrage you,  giving you a 7% damage bonus for 9 sec.",
 @"Your melee hits have a 9% chance to Enrage you, giving you a 10% damage bonus for 9 sec.",})]
-        public int Enrage { get { return _data[29]; } set { _data[29] = value; } }
-        #endregion
-        #region Tier 4
-        /// <summary>
-        /// Increases your parry chance by 100% for [4*Pts] sec whenver you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.
-        /// </summary>
-        [TalentData(index: 30, name: "Die by the Sword", maxPoints: 2, icon: "inv_sword_86",
-         tree: 1, column: 1, row: 4, prerequisite: -1, description: new[] {
+public int Enrage { get { return _data[29]; } set { _data[29] = value; } }
+#endregion
+#region Tier 4
+/// <summary>
+/// Increases your parry chance by 100% for [4*Pts] sec whenver you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.
+/// </summary>
+[TalentData(index: 30, name: "Die by the Sword", maxPoints: 2, icon: "inv_sword_86",
+tree: 1, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"Increases your parry chance by 100% for 4 sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.",
 @"Increases your parry chance by 100% for 8 sec whenever you are brought to 20% health or less. This effect cannot occur more often than once every 2 min.",})]
-        public int DieByTheSword { get { return _data[30]; } set { _data[30] = value; } }
-        /// <summary>
-        /// Raging Blow - Berserker Stance - Melee Range - 20 Rage
-        /// <para>6 sec cooldown - Instant cast - Requires Melee Weapon</para>
-        /// <para>A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.</para>
-        /// </summary>
-        [TalentData(index: 31, name: "Raging Blow", maxPoints: 1, icon: "ability_hunter_swiftstrike",
-         tree: 1, column: 2, row: 4, prerequisite: 28, description: new[] {
+public int DieByTheSword { get { return _data[30]; } set { _data[30] = value; } }
+/// <summary>
+/// Raging Blow - Berserker Stance - Melee Range - 20 Rage
+/// <para>6 sec cooldown - Instant cast - Requires Melee Weapon</para>
+/// <para>A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.</para>
+/// </summary>
+[TalentData(index: 31, name: "Raging Blow", maxPoints: 1, icon: "ability_hunter_swiftstrike",
+tree: 1, column: 2, row: 4, prerequisite: 28, description: new[] {
 @"Berserker Stance - Raging Blow - Melee Range - 20 Rage
 6 sec cooldown - Instant cast
 Requires Melee Weapon - A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.",})]
-        public int RagingBlow { get { return _data[31]; } set { _data[31] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of all party and raid members within 100 yds by 5%. In addition, improves your critical strike chance by an additional 2%.
-        /// </summary>
-        [TalentData(index: 32, name: "Rampage", maxPoints: 1, icon: "ability_warrior_rampage",
-         tree: 1, column: 3, row: 4, prerequisite: 31, description: new[] {
+public int RagingBlow { get { return _data[31]; } set { _data[31] = value; } }
+/// <summary>
+/// Increases the critical strike chance of all party and raid members within 100 yds by 5%. In addition, improves your critical strike chance by an additional 2%.
+/// </summary>
+[TalentData(index: 32, name: "Rampage", maxPoints: 1, icon: "ability_warrior_rampage",
+tree: 1, column: 3, row: 4, prerequisite: 31, description: new[] {
 @"Increases the critical strike chance of all party and raid members within 100 yds by 5%. In addition, improves your critical strike chance by an additional 2%.",})]
-        public int Rampage { get { return _data[32]; } set { _data[32] = value; } }
-        /// <summary>
-        /// Heroic Fury - 30 sec cooldown - Instant cast
-        /// <para>Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.</para>
-        /// </summary>
-        [TalentData(index: 33, name: "Heroic Fury", maxPoints: 1, icon: "ability_heroicleap",
-         tree: 1, column: 4, row: 4, prerequisite: -1, description: new[] {
+public int Rampage { get { return _data[32]; } set { _data[32] = value; } }
+/// <summary>
+/// Heroic Fury - 30 sec cooldown - Instant cast
+/// <para>Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.</para>
+/// </summary>
+[TalentData(index: 33, name: "Heroic Fury", maxPoints: 1, icon: "ability_heroicleap",
+tree: 1, column: 4, row: 4, prerequisite: -1, description: new[] {
 @"Heroic Fury - 30 sec cooldown - Instant cast
 Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.",})]
-        public int HeroicFury { get { return _data[33]; } set { _data[33] = value; } }
-        #endregion
-        #region Tier 5
-        /// <summary>
-        /// Your autoattacks have a chance to reduce all healing done to the target by 20% for 10 sec.
-        /// </summary>
-        [TalentData(index: 34, name: "Furious Attacks", maxPoints: 1, icon: "ability_warrior_furiousresolve",
-         tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
+public int HeroicFury { get { return _data[33]; } set { _data[33] = value; } }
+#endregion
+#region Tier 5
+/// <summary>
+/// Your autoattacks have a chance to reduce all healing done to the target by 20% for 10 sec.
+/// </summary>
+[TalentData(index: 34, name: "Furious Attacks", maxPoints: 1, icon: "ability_warrior_furiousresolve",
+tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Your autoattacks have a chance to reduce all healing done to the target by 20% for 10 sec.",})]
-        public int FuriousAttacks { get { return _data[34]; } set { _data[34] = value; } }
-        /// <summary>
-        /// Your Cleave and Whirlwind have a [50 * Pts]% chance to increase the damage of your next Cleave or Whirlwind by an additional [10 * Pts]%.
-        /// </summary>
-        [TalentData(index: 35, name: "Meat Cleaver", maxPoints: 2, icon: "inv_throwingaxepvp330_08",
-         tree: 1, column: 3, row: 5, prerequisite: -1, description: new[] {
+public int FuriousAttacks { get { return _data[34]; } set { _data[34] = value; } }
+/// <summary>
+/// Your Cleave and Whirlwind have a [50 * Pts]% chance to increase the damage of your next Cleave or Whirlwind by an additional [10 * Pts]%.
+/// </summary>
+[TalentData(index: 35, name: "Meat Cleaver", maxPoints: 2, icon: "inv_throwingaxepvp330_08",
+tree: 1, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Your Cleave and Whirlwind have a 50% chance to increase the damage of your next Cleave or Whirlwind by an additional 10%.",
 @"Your Cleave and Whirlwind have a 100% chance to increase the damage of your next Cleave or Whirlwind by an additional 20%.",})]
-        public int MeatCleaver { get { return _data[35]; } set { _data[35] = value; } }
-        /// <summary>
-        /// Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by [10 * Pts]%.
-        /// </summary>
-        [TalentData(index: 36, name: "Intensify Rage", maxPoints: 2, icon: "ability_warrior_endlessrage",
-         tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
+public int MeatCleaver { get { return _data[35]; } set { _data[35] = value; } }
+/// <summary>
+/// Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by [10 * Pts]%.
+/// </summary>
+[TalentData(index: 36, name: "Intensify Rage", maxPoints: 2, icon: "ability_warrior_endlessrage",
+tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
 @"Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by 10%.",
 @"Reduces the cooldown of your Berserker Rage, Recklessness and Death Wish abilities by 20%.",})]
-        public int IntensifyRage { get { return _data[36]; } set { _data[36] = value; } }
-        #endregion
-        #region Tier 6
-        /// <summary>
-        /// Your Bloodthirst hits have a [10*Pts]% chance of making your next Slam instant for 10 sec.
-        /// </summary>
-        [TalentData(index: 37, name: "Bloodsurge", maxPoints: 3, icon: "ability_warrior_bloodsurge",
-         tree: 1, column: 2, row: 6, prerequisite: 31, description: new[] {
+public int IntensifyRage { get { return _data[36]; } set { _data[36] = value; } }
+#endregion
+#region Tier 6
+/// <summary>
+/// Your Bloodthirst hits have a [10*Pts]% chance of making your next Slam instant for 10 sec.
+/// </summary>
+[TalentData(index: 37, name: "Bloodsurge", maxPoints: 3, icon: "ability_warrior_bloodsurge",
+tree: 1, column: 2, row: 6, prerequisite: 31, description: new[] {
 @"Your Bloodthirst hits have a 10% chance of making your next Slam instant for 10 sec.",
 @"Your Bloodthirst hits have a 20% chance of making your next Slam instant for 10 sec.",
 @"Your Bloodthirst hits have a 30% chance of making your next Slam instant for 10 sec.",})]
-        public int Bloodsurge { get { return _data[37]; } set { _data[37] = value; } }
-        /// <summary>
-        /// Reduces the cooldown of your Intercept by [5 * Pts] sec and your Heroic Leap by [15 * Pts] sec.
-        /// </summary>
-        [TalentData(index: 38, name: "Skirmisher", maxPoints: 2, icon: "warrior_talent_icon_skirmisher",
-         tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
+public int Bloodsurge { get { return _data[37]; } set { _data[37] = value; } }
+/// <summary>
+/// Reduces the cooldown of your Intercept by [5 * Pts] sec and your Heroic Leap by [15 * Pts] sec.
+/// </summary>
+[TalentData(index: 38, name: "Skirmisher", maxPoints: 2, icon: "warrior_talent_icon_skirmisher",
+tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"Reduces the cooldown of your Intercept by 5 sec and your Heroic Leap by 15 sec.",
 @"Reduces the cooldown of your Intercept by 10 sec and your Heroic Leap by 30 sec.",})]
-        public int Skirmisher { get { return _data[38]; } set { _data[38] = value; } }
-        #endregion
-        #region Tier 7
-        /// <summary>
-        /// Allows you to equip two-handed axes, maces and swords in one hand.  While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.
-        /// </summary>
-        [TalentData(index: 39, name: "Titan's Grip", maxPoints: 1, icon: "ability_warrior_titansgrip",
-         tree: 1, column: 2, row: 7, prerequisite: -1, description: new[] {
+public int Skirmisher { get { return _data[38]; } set { _data[38] = value; } }
+#endregion
+#region Tier 7
+/// <summary>
+/// Allows you to equip two-handed axes, maces and swords in one hand.  While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.
+/// </summary>
+[TalentData(index: 39, name: "Titan's Grip", maxPoints: 1, icon: "ability_warrior_titansgrip",
+tree: 1, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Allows you to equip two-handed axes, maces and swords in one hand. While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.",})]
-        public int TitansGrip { get { return _data[39]; } set { _data[39] = value; } }
-        /// <summary>
-        /// When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.
-        /// </summary>
-        [TalentData(index: 40, name: "Single-Minded Fury", maxPoints: 1, icon: "warrior_talent_icon_singlemindedfury",
-         tree: 1, column: 3, row: 7, prerequisite: -1, description: new[] {
+public int TitansGrip { get { return _data[39]; } set { _data[39] = value; } }
+/// <summary>
+/// When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.
+/// </summary>
+[TalentData(index: 40, name: "Single-Minded Fury", maxPoints: 1, icon: "warrior_talent_icon_singlemindedfury",
+tree: 1, column: 3, row: 7, prerequisite: -1, description: new[] {
 @"When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.",})]
-        public int SingleMindedFury { get { return _data[40]; } set { _data[40] = value; } }
-        #endregion
-        #endregion
-        #region Prot
-        #region Tier 1
-        /// <summary>
-        /// Increases the critical strike chance of your Heroic Strike by [5 * Pts]%, and your Heroic Strike critical strikes have a [100 / 3 * Pts]% chance to make you next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.
-        /// </summary>
-        [TalentData(index: 41, name: "Incite", maxPoints: 3, icon: "ability_warrior_incite",
-         tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
+public int SingleMindedFury { get { return _data[40]; } set { _data[40] = value; } }
+#endregion
+#endregion
+#region Prot
+#region Tier 1
+/// <summary>Increases the critical strike chance of your Heroic Strike by [5*Pts]%, and your Heroic Strike critical strikes have a 
+/// [100/3*Pts]% chance to make you next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.</summary>
+[TalentData(index: 41, name: "Incite", maxPoints: 3, icon: "ability_warrior_incite", tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
 @"Increases the critical strike chance of your Heroic Strike by 5%, and your Heroic Strike critical strikes have a 33% chance to make you next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",
 @"Increases the critical strike chance of your Heroic Strike by 10%, and your Heroic Strike critical strikes have a 66% chance to make you next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",
 @"Increases the critical strike chance of your Heroic Strike by 15%, and your Heroic Strike critical strikes have a 100% chance to make you next Heroic Strike also a critical strike. This effect cannot occur more than once every 6 seconds.",})]
-        public int Incite { get { return _data[41]; } set { _data[41] = value; } }
-        /// <summary>
-        /// Increases your armor value from items by [10 / 3 * Pts]%.
-        /// </summary>
-        [TalentData(index: 42, name: "Toughness", maxPoints: 3, icon: "spell_holy_devotion",
-         tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
+public int Incite { get { return _data[41]; } set { _data[41] = value; } }
+/// <summary>Increases your armor value from items by [10 / 3 * Pts]%.</summary>
+[TalentData(index: 42, name: "Toughness", maxPoints: 3, icon: "spell_holy_devotion", tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
 @"Increases your armor value from items by 3%.",
 @"Increases your armor value from items by 6%.",
 @"Increases your armor value from items by 10%.",})]
-        public int Toughness { get { return _data[42]; } set { _data[42] = value; } }
-        /// <summary>
-        /// When you Thunder Clap a target affected by your Rend, you have a [50 * Pts]% chance to affect every target with Rend.
-        /// </summary>
-        [TalentData(index: 43, name: "Blood and Thunder", maxPoints: 2, icon: "spell_nature_callstorm",
-         tree: 2, column: 3, row: 1, prerequisite: -1, description: new[] {
+public int Toughness { get { return _data[42]; } set { _data[42] = value; } }
+/// <summary>When you Thunder Clap a target affected by your Rend, you have a [50 * Pts]% chance to affect every target with Rend.</summary>
+[TalentData(index: 43, name: "Blood and Thunder", maxPoints: 2, icon: "spell_nature_callstorm", tree: 2, column: 3, row: 1, prerequisite: -1, description: new[] {
 @"When you Thunder Clap a target affected by your Rend, you have a 50% chance to affect every target with Rend.",
 @"When you Thunder Clap a target affected by your Rend, you have a 100% chance to affect every target with Rend.",})]
-        public int BloodAndThunder { get { return _data[43]; } set { _data[43] = value; } }
-        #endregion
-        #region Tier 2
-        /// <summary>
-        /// You generate [5 * Pts] extra rage when you block an attack.   You generate [20 * Pts] extra rage when you Spell Reflect a magic attack.
-        /// </summary>
-        [TalentData(index: 44, name: "Shield Specialization", maxPoints: 3, icon: "inv_shield_06",
-         tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
+public int BloodAndThunder { get { return _data[43]; } set { _data[43] = value; } }
+#endregion
+#region Tier 2
+/// <summary>You generate [5*Pts] extra rage when you block an attack. You generate [20*Pts] extra rage when you Spell Reflect a magic attack.</summary>
+[TalentData(index: 44, name: "Shield Specialization", maxPoints: 3, icon: "inv_shield_06",
+tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
 @"You generate 5 extra rage when you block an attack. You generate 20 extra rage when you Spell Reflect a magic attack.",
-@"You generate 10 extra rage when you block an attack.   You generate 40 extra rage when you Spell Reflect a magic attack.",
-@"You generate 15 extra rage when you block an attack.   You generate 60 extra rage when you Spell Reflect a magic attack.",})]
-        public int ShieldSpecialization { get { return _data[44]; } set { _data[44] = value; } }
-        /// <summary>
-        /// Reduces the cooldown of your Shield Block by [10 * Pts] sec, your Shield Wall by [60 * Pts] sec and your Spell Reflect by [1 * Pts] sec.
-        /// </summary>
-        [TalentData(index: 45, name: "Shield Mastery", maxPoints: 3, icon: "ability_warrior_shieldguard",
-         tree: 2, column: 2, row: 2, prerequisite: -1, description: new[] {
+@"You generate 10 extra rage when you block an attack. You generate 40 extra rage when you Spell Reflect a magic attack.",
+@"You generate 15 extra rage when you block an attack. You generate 60 extra rage when you Spell Reflect a magic attack.",})]
+public int ShieldSpecialization { get { return _data[44]; } set { _data[44] = value; } }
+/// <summary>Reduces the cooldown of your Shield Block by [10 * Pts] sec, your Shield Wall by [60 * Pts] sec and your Spell Reflect by [1 * Pts] sec.</summary>
+[TalentData(index: 45, name: "Shield Mastery", maxPoints: 3, icon: "ability_warrior_shieldguard",
+tree: 2, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"Reduces the cooldown of your Shield Block by 10 sec, your Shield Wall by 60 sec and your Spell Reflect by 1 sec.",
 @"Reduces the cooldown of your Shield Block by 20 sec, your Shield Wall by 120 sec and your Spell Reflect by 2 sec.",
 @"Reduces the cooldown of your Shield Block by 30 sec, your Shield Wall by 180 sec and your Spell Reflect by 3 sec.",})]
-        public int ShieldMastery { get { return _data[45]; } set { _data[45] = value; } }
-        /// <summary>
-        /// Improves your critical strike and critical block chance by [5 * Pts]% for 10 sec following a successful parry.
-        /// </summary>
-        [TalentData(index: 46, name: "Hold the Line", maxPoints: 2, icon: "achievement_bg_defendxtowers_av",
-         tree: 2, column: 3, row: 2, prerequisite: -1, description: new[] {
+public int ShieldMastery { get { return _data[45]; } set { _data[45] = value; } }
+/// <summary>Improves your critical strike and critical block chance by [5 * Pts]% for 10 sec following a successful parry.</summary>
+[TalentData(index: 46, name: "Hold the Line", maxPoints: 2, icon: "achievement_bg_defendxtowers_av",
+tree: 2, column: 3, row: 2, prerequisite: -1, description: new[] {
 @"Improves your critical strike and critical block chance by 10% for 5 sec following a successful parry.",
 @"Improves your critical strike and critical block chance by 10% for 10 sec following a successful parry.",})]
-        public int HoldTheLine { get { return _data[46]; } set { _data[46] = value; } }
-        /// <summary>
-        /// Gives your Shield Bash and Heroic Throw a [50 * Pts]% chance to silence the target for 3 sec.    Also lowers the cooldown on Heroic Throw by [0 * Pts] sec.
-        /// </summary>
-        [TalentData(index: 47, name: "Gag Order", maxPoints: 2, icon: "ability_warrior_shieldbash",
-         tree: 2, column: 4, row: 2, prerequisite: -1, description: new[] {
-@"Gives your Shield Bash and Heroic Throw a 50% chance to silence the target for 3 sec.  Also lowers the cooldown on Heroic Throw by 0.0 sec.",
-@"Gives your Shield Bash and Heroic Throw a 100% chance to silence the target for 3 sec.    Also lowers the cooldown on Heroic Throw by 30 sec.",})]
-        public int GagOrder { get { return _data[47]; } set { _data[47] = value; } }
-        #endregion
-        #region Tier 3
-        /// <summary>
-        /// Last Stand - 3 min cooldown - Instant
-        /// Temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.
-        /// </summary>
-        [TalentData(index: 48, name: "Last Stand", maxPoints: 1, icon: "spell_holy_ashestoashes",
-         tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
+public int HoldTheLine { get { return _data[46]; } set { _data[46] = value; } }
+/// <summary>Gives your Shield Bash and Heroic Throw a [50 * Pts]% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by [0 * Pts] sec.</summary>
+[TalentData(index: 47, name: "Gag Order", maxPoints: 2, icon: "ability_warrior_shieldbash",
+tree: 2, column: 4, row: 2, prerequisite: -1, description: new[] {
+@"Gives your Shield Bash and Heroic Throw a 50% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by 0.0 sec.",
+@"Gives your Shield Bash and Heroic Throw a 100% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by 30 sec.",})]
+public int GagOrder { get { return _data[47]; } set { _data[47] = value; } }
+#endregion
+#region Tier 3
+/// <summary>Last Stand - 3 min cooldown - Instant<para>Temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.</para></summary>
+[TalentData(index: 48, name: "Last Stand", maxPoints: 1, icon: "spell_holy_ashestoashes", tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Last Stand - 3 min cooldown - Instant
-Temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.",})]
-        public int LastStand { get { return _data[48]; } set { _data[48] = value; } }
-        /// <summary>
-        /// Concussion Blow - Melee Range - 15 Rage
-        /// 30 sec cooldown - Instant cast
-        /// Requires Melee Weapon - Stuns the opponent for 5 sec and deals [38/100*AP] damage (based on attack power).
-        /// </summary>
-        [TalentData(index: 49, name: "Concussion Blow", maxPoints: 1, icon: "ability_thunderbolt",
-         tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
+Temporarily grants you 30% of your maximum health for 20 sec. After the effect expires, the health is lost.",})]
+public int LastStand { get { return _data[48]; } set { _data[48] = value; } }
+/// <summary>
+/// Concussion Blow - Melee Range - Requires Melee Weapon
+/// <para>30 sec cooldown - Instant cast - 15 Rage</para>
+/// <para>Stuns the opponent for 5 sec and deals [38/100*AP] damage (based on attack power).</para>
+/// </summary>
+[TalentData(index: 49, name: "Concussion Blow", maxPoints: 1, icon: "ability_thunderbolt", tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Concussion Blow - Melee Range - 15 Rage
 30 sec cooldown - Instant cast
 Requires Melee Weapon - Stuns the opponent for 5 sec and deals [38/100*AP] damage (based on attack power).",})]
-        public int ConcussionBlow { get { return _data[49]; } set { _data[49] = value; } }
-        /// <summary>
-        /// Reduces the chance you'll be critically hit by melee attacks by [3 * Pts]% while in Defensive Stance.  In addition, when you block, dodge or parry an attack you have a [10 * Pts]% chance to become Enraged, increasing physical damage done by [5 * Pts]% for 12 sec.
-        /// </summary>
-        [TalentData(index: 50, name: "Bastion of Defense", maxPoints: 2, icon: "ability_defend",
-         tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
+public int ConcussionBlow { get { return _data[49]; } set { _data[49] = value; } }
+/// <summary>Reduces the chance you'll be critically hit by melee attacks by [3 * Pts]% while in Defensive Stance.  In addition, when you block, dodge or parry an attack you have a [10 * Pts]% chance to become Enraged, increasing physical damage done by [5 * Pts]% for 12 sec.</summary>
+[TalentData(index: 50, name: "Bastion of Defense", maxPoints: 2, icon: "ability_defend", tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Reduces the chance you'll be critically hit by melee attacks by 3% while in Defensive Stance. In addition, when you block, dodge or parry an attack you have a 10% chance to become Enraged, increasing physical damage done by 5% for 12 sec.",
-@"Reduces the chance you'll be critically hit by melee attacks by 6% while in Defensive Stance.  In addition, when you block, dodge or parry an attack you have a 20% chance to become Enraged, increasing physical damage done by 10% for 12 sec.",})]
-        public int BastionOfDefense { get { return _data[50]; } set { _data[50] = value; } }
-        /// <summary>
-        /// Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.
-        /// </summary>
-        [TalentData(index: 51, name: "Warbringer", maxPoints: 1, icon: "ability_warrior_warbringer",
-         tree: 2, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.",})]
-        public int Warbringer { get { return _data[51]; } set { _data[51] = value; } }
-        #endregion
-        #region Tier 4
-        /// <summary>
-        /// Increases the damage of your Revenge ability by [30 * Pts]% and causes Revenge to strike an additional target.
-        /// </summary>
-        [TalentData(index: 52, name: "Improved Revenge", maxPoints: 2, icon: "ability_warrior_revenge",
-         tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
+@"Reduces the chance you'll be critically hit by melee attacks by 6% while in Defensive Stance. In addition, when you block, dodge or parry an attack you have a 20% chance to become Enraged, increasing physical damage done by 10% for 12 sec.",})]
+public int BastionOfDefense { get { return _data[50]; } set { _data[50] = value; } }
+/// <summary>Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance.  In addition, your Intervene ability will remove all movement impairing effects.</summary>
+[TalentData(index: 51, name: "Warbringer", maxPoints: 1, icon: "ability_warrior_warbringer", tree: 2, column: 4, row: 3, prerequisite: -1, description: new[] {
+@"Your Charge, Intercept and Intervene abilities are now usable while in combat and in any stance. In addition, your Intervene ability will remove all movement impairing effects.",})]
+public int Warbringer { get { return _data[51]; } set { _data[51] = value; } }
+#endregion
+#region Tier 4
+/// <summary>
+/// Increases the damage of your Revenge ability by [30 * Pts]% and causes Revenge to strike an additional target.
+/// </summary>
+[TalentData(index: 52, name: "Improved Revenge", maxPoints: 2, icon: "ability_warrior_revenge",
+tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"Increases the damage of your Revenge ability by 30% and causes Revenge to strike an additional target for 50% damage.",
 @"Increases the damage of your Revenge ability by 60% and causes Revenge to strike an additional target.",})]
-        public int ImprovedRevenge { get { return _data[52]; } set { _data[52] = value; } }
-        /// <summary>
-        /// Devastate - Melee Range - 15 Rage
-        /// Instant cast
-        /// Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 120% of weapon damage plus 58 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.
-        /// </summary>
-        [TalentData(index: 53, name: "Devastate", maxPoints: 1, icon: "inv_sword_11",
-         tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
+public int ImprovedRevenge { get { return _data[52]; } set { _data[52] = value; } }
+/// <summary>
+/// Devastate - Melee Range - 15 Rage
+/// Instant cast
+/// Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 120% of weapon damage plus 58 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.
+/// </summary>
+[TalentData(index: 53, name: "Devastate", maxPoints: 1, icon: "inv_sword_11",
+tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Devastate - Melee Range - 15 Rage
 Instant cast
 Requires Shields - Sunder the target's armor causing the Sunder Armor effect.  In addition, causes 120% of weapon damage plus 58 for each application of Sunder Armor on the target.  The Sunder Armor effect can stack up to 3 times.",})]
-        public int Devastate { get { return _data[53]; } set { _data[53] = value; } }
-        /// <summary>
-        /// Using Devastate on a target with 20% or less health has a [25 * Pts]% chance to allow the use of Victory Rush but that Victory Rush only heals for 5% of your health.
-        /// </summary>
-        [TalentData(index: 54, name: "Impending Victory", maxPoints: 2, icon: "ability_warrior_devastate",
-         tree: 2, column: 4, row: 4, prerequisite: 53, description: new[] {
+public int Devastate { get { return _data[53]; } set { _data[53] = value; } }
+/// <summary>
+/// Using Devastate on a target with 20% or less health has a [25 * Pts]% chance to allow the use of Victory Rush but that Victory Rush only heals for 5% of your health.
+/// </summary>
+[TalentData(index: 54, name: "Impending Victory", maxPoints: 2, icon: "ability_warrior_devastate",
+tree: 2, column: 4, row: 4, prerequisite: 53, description: new[] {
 @"Using Devastate on a target with 20% or less health has a 25% chance to allow the use of Victory Rush but that Victory Rush only heals for 5% of your health.",
 @"Using Devastate on a target with 20% or less health has a 50% chance to allow the use of Victory Rush but that Victory Rush only heals for 5% of your health.",})]
-        public int ImpendingVictory { get { return _data[54]; } set { _data[54] = value; } }
-        #endregion
-        #region Tier 5
-        /// <summary>
-        /// Improves the damage of your Cleave and Thunder Clap by [3 * Pts]%.  In addition, your Thunder Clap improves the damage of your next Shockwave by [5 * Pts]%.  Stacks up to 3 times.
-        /// </summary>
-        [TalentData(index: 55, name: "Thunderstruck", maxPoints: 2, icon: "warrior_talent_icon_thunderstruck",
-         tree: 2, column: 1, row: 5, prerequisite: -1, description: new[] {
+public int ImpendingVictory { get { return _data[54]; } set { _data[54] = value; } }
+#endregion
+#region Tier 5
+/// <summary>
+/// Improves the damage of your Cleave and Thunder Clap by [3 * Pts]%.  In addition, your Thunder Clap improves the damage of your next Shockwave by [5 * Pts]%.  Stacks up to 3 times.
+/// </summary>
+[TalentData(index: 55, name: "Thunderstruck", maxPoints: 2, icon: "warrior_talent_icon_thunderstruck",
+tree: 2, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Improves the damage of your Cleave and Thunder Clap by 3%.  In addition, your Thunder Clap improves the damage of your next Shockwave by 5%.  Stacks up to 3 times.",
 @"Improves the damage of your Cleave and Thunder Clap by 6%.  In addition, your Thunder Clap improves the damage of your next Shockwave by 10%.  Stacks up to 3 times.",})]
-        public int Thunderstruck { get { return _data[55]; } set { _data[55] = value; } }
-        /// <summary>
-        /// Vigilance - 30 yd range
-        /// Instant cast
-        /// Focus your protective gaze on a group or raid target, reducing their damage taken by 3%. In addition, each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.
-        /// </summary>
-        [TalentData(index: 56, name: "Vigilance", maxPoints: 1, icon: "ability_warrior_vigilance",
-         tree: 2, column: 2, row: 5, prerequisite: 49, description: new[] {
+public int Thunderstruck { get { return _data[55]; } set { _data[55] = value; } }
+/// <summary>
+/// Vigilance - 30 yd range
+/// Instant cast
+/// Focus your protective gaze on a group or raid target, reducing their damage taken by 3%. In addition, each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.
+/// </summary>
+[TalentData(index: 56, name: "Vigilance", maxPoints: 1, icon: "ability_warrior_vigilance",
+tree: 2, column: 2, row: 5, prerequisite: 49, description: new[] {
 @"Vigilance - 30 yd range
 Instant cast
 Focus your protective gaze on a group or raid target, reducing their damage taken by 3%. In addition, each time they are hit by an attack your Taunt cooldown is refreshed and you gain Vengeance as if 20% of the damage was done to you.  Lasts 30 min.  This effect can only be on one target at a time.",})]
-        public int Vigilance { get { return _data[56]; } set { _data[56] = value; } }
-        /// <summary>
-        /// While your Shield Block is active, your Shield Slam hits for an additional [50 * Pts]% damage.
-        /// </summary>
-        [TalentData(index: 57, name: "Heavy Repercussions", maxPoints: 2, icon: "inv_shield_01",
-         tree: 2, column: 4, row: 5, prerequisite: -1, description: new[] {
+public int Vigilance { get { return _data[56]; } set { _data[56] = value; } }
+/// <summary>
+/// While your Shield Block is active, your Shield Slam hits for an additional [50 * Pts]% damage.
+/// </summary>
+[TalentData(index: 57, name: "Heavy Repercussions", maxPoints: 2, icon: "inv_shield_01",
+tree: 2, column: 4, row: 5, prerequisite: -1, description: new[] {
 @"While your Shield Block is active, your Shield Slam hits for an additional 50% damage.",
 @"While your Shield Block is active, your Shield Slam hits for an additional 100% damage.",})]
-        public int HeavyRepercussions { get { return _data[57]; } set { _data[57] = value; } }
-        #endregion
-        #region Tier 6
-        /// <summary>
-        /// Reduces damage taken by the target of your Intervene ability by [15 * Pts]% for 6 sec.
-        /// </summary>
-        [TalentData(index: 58, name: "Safeguard", maxPoints: 2, icon: "ability_warrior_safeguard",
-         tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
+public int HeavyRepercussions { get { return _data[57]; } set { _data[57] = value; } }
+#endregion
+#region Tier 6
+/// <summary>
+/// Reduces damage taken by the target of your Intervene ability by [15 * Pts]% for 6 sec.
+/// </summary>
+[TalentData(index: 58, name: "Safeguard", maxPoints: 2, icon: "ability_warrior_safeguard",
+tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
 @"Reduces damage taken by the target of your Intervene ability by 15% for 6 sec.",
 @"Reduces damage taken by the target of your Intervene ability by 30% for 6 sec.",})]
-        public int Safeguard { get { return _data[58]; } set { _data[58] = value; } }
-        /// <summary>
-        /// Increases the critical strike chance of Devastate by [5 * Pts]%.  In addition, when your Devastate or Revenge deal damage, they have a [10 * Pts]% chance of refreshing the cooldown of your Shield Slam and reducing its cost by 100% for 5 sec.
-        /// </summary>
-        [TalentData(index: 59, name: "Sword and Board", maxPoints: 3, icon: "ability_warrior_swordandboard",
-         tree: 2, column: 3, row: 6, prerequisite: 53, description: new[] {
+public int Safeguard { get { return _data[58]; } set { _data[58] = value; } }
+/// <summary>
+/// Increases the critical strike chance of Devastate by [5 * Pts]%.  In addition, when your Devastate or Revenge deal damage, they have a [10 * Pts]% chance of refreshing the cooldown of your Shield Slam and reducing its cost by 100% for 5 sec.
+/// </summary>
+[TalentData(index: 59, name: "Sword and Board", maxPoints: 3, icon: "ability_warrior_swordandboard",
+tree: 2, column: 3, row: 6, prerequisite: 53, description: new[] {
 @"Increases the critical strike chance of Devastate by 5%.  In addition, when your Devastate or Revenge deal damage, they have a 10% chance of refreshing the cooldown of your Shield Slam and reducing its cost by 100% for 5 sec.",
 @"Increases the critical strike chance of Devastate by 10%.  In addition, when your Devastate or Revenge deal damage, they have a 20% chance of refreshing the cooldown of your Shield Slam and reducing its cost by 100% for 5 sec.",
 @"Increases the critical strike chance of Devastate by 15%.  In addition, when your Devastate or Revenge deal damage, they have a 30% chance of refreshing the cooldown of your Shield Slam and reducing its cost by 100% for 5 sec.",})]
-        public int SwordAndBoard { get { return _data[59]; } set { _data[59] = value; } }
-        #endregion
-        #region Tier 7
-        /// <summary>
-        /// Shockwave - 15 Rage
-        /// 20 sec cooldown - Instant cast
-        /// Sends a wave of force in front of you, causing [75/100*AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
-        /// </summary>
-        [TalentData(index: 60, name: "Shockwave", maxPoints: 1, icon: "ability_warrior_shockwave",
-         tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
+public int SwordAndBoard { get { return _data[59]; } set { _data[59] = value; } }
+#endregion
+#region Tier 7
+/// <summary>
+/// Shockwave - 15 Rage
+/// 20 sec cooldown - Instant cast
+/// Sends a wave of force in front of you, causing [75/100*AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
+/// </summary>
+[TalentData(index: 60, name: "Shockwave", maxPoints: 1, icon: "ability_warrior_shockwave",
+tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Shockwave - 15 Rage
 20 sec cooldown - Instant cast
 Sends a wave of force in front of you, causing [75/100*AP] damage (based on attack power) and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.",})]
-        public int Shockwave { get { return _data[60]; } set { _data[60] = value; } }
-        #endregion
-        #endregion
+public int Shockwave { get { return _data[60]; } set { _data[60] = value; } }
+#endregion
+#endregion
     }
 
     public partial class PaladinTalents : TalentsBase

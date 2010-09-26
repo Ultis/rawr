@@ -468,8 +468,8 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = 300f + StatS.AttackPower * 0.12f;
 #if !RAWR4
             DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
-#endif
             BonusCritChance = Talents.Incite * 0.05f;
+#endif
             UseSpellHit = true;
             CanBeDodged = CanBeParried = false;
             //

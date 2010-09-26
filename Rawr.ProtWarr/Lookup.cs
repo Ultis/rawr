@@ -152,9 +152,14 @@ namespace Rawr.ProtWarr
 
             switch (ability)
             {
+#if !RAWR4
                 case Ability.Cleave:
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;
+                case Ability.ThunderClap:
+                    abilityCritChance += character.WarriorTalents.Incite * 0.05f;
+                    break;
+#endif
                 case Ability.Devastate:
                     abilityCritChance += stats.DevastateCritIncrease;
                     break;
@@ -169,9 +174,6 @@ namespace Rawr.ProtWarr
                     abilityCritChance = 0;
                     break;
 #endif
-                case Ability.ThunderClap:
-                    abilityCritChance += character.WarriorTalents.Incite * 0.05f;
-                    break;
                 case Ability.DamageShield:
                 case Ability.DeepWounds:
                 case Ability.Rend:

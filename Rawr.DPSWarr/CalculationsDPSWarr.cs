@@ -1561,13 +1561,16 @@ These numbers to do not include racial bonuses.",
 #endif
 
         private static SpecialEffect[] _SE_DeathWish = {
-            null,
 #if !RAWR4
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 0)),
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 1)),
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 2)),
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 1f / 9f * 3)),
 #else
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),
 #endif
         };
 
@@ -1706,7 +1709,7 @@ These numbers to do not include racial bonuses.",
                 // Defensive
                 //Parry = talents.Deflection * 0.01f,
                 //Dodge = talents.Anticipation * 0.01f,
-                BaseArmorMultiplier = talents.Toughness * 0.02f,
+                BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
 #endif
             };

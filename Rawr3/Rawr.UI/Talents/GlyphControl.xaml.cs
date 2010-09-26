@@ -25,6 +25,9 @@ namespace Rawr.UI
             {
                 character = value;
                 talents = character.CurrentTalents;
+#if RAWR4
+                PrimeStack.Children.Clear();
+#endif
                 MajorStack.Children.Clear();
                 MinorStack.Children.Clear();
 

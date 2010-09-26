@@ -392,6 +392,50 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+        private SpecialEffect[] _SE_Incite = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.Use, null, 0, 6, 1f / 3f * 1f),
+            new SpecialEffect(Trigger.Use, null, 0, 6, 1f / 3f * 2f),
+            new SpecialEffect(Trigger.Use, null, 0, 6, 1f / 3f * 3f),
+        };
+        public float storedInciteBonusCrits = 0f;
+        public float storedActs = 0f;
+        public float InciteBonusCrits(float acts) {
+            if (Talents.Incite == 0) { storedActs = 0f; storedInciteBonusCrits = 0f; return 0f; }
+            storedActs = acts;
+            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(acts, MHAtkTable.Crit, combatFactors.MHSpeed, CalcOpts.SE_UseDur ? FightDuration : 0f) * FightDuration;
+            return storedInciteBonusCrits;
+        }
+        public override float DamageOnUseOverride
+        {
+            get
+            {
+                float dmg = Damage; // Base Damage
+                dmg *= combatFactors.DamageBonus; // Global Damage Bonuses
+                dmg *= combatFactors.DamageReduction; // Global Damage Penalties
+
+                float bonusForcedCritsPerc = Talents.BloodAndThunder > 0 ? storedInciteBonusCrits / storedActs : 0;
+
+                // Work the Attack Table
+                float dmgDrop = (1f
+                    - MHAtkTable.Miss   // no damage when being missed
+                    - MHAtkTable.Dodge  // no damage when being dodged
+                    - MHAtkTable.Parry  // no damage when being parried
+                    - MHAtkTable.Glance // glancing handled below
+                    - MHAtkTable.Block  // blocked handled below
+                    - (MHAtkTable.Crit + bonusForcedCritsPerc)); // crits   handled below
+
+                float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                float dmgCrit = dmg * (MHAtkTable.Crit + bonusForcedCritsPerc) * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus   Damage when critting
+
+                dmg *= dmgDrop;
+
+                dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
+
+                return dmg;
+            }
+        }
 #if !RAWR4
         public override float FullRageCost
         {
@@ -439,12 +483,12 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
 #if !RAWR4
             DamageBase = Whiteattacks.MhDamage + (222f * (1f + Talents.ImprovedCleave * 0.40f));
+            BonusCritChance = Talents.Incite * 0.05f;
 #else
             DamageBase = Whiteattacks.MhDamage + (222f/* * (1f + Talents.ImprovedCleave * 0.40f)*/);
             DamageBonus = Talents.WarAcademy * 0.05f;
 #endif
             //DamageBonus = 1f + Talents.ImprovedCleave * 0.40f; // Imp Cleave is only the "Bonus Damage", and not the whole attack
-            BonusCritChance = Talents.Incite * 0.05f;
             //
             Initialize();
         }

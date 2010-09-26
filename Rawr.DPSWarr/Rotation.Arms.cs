@@ -91,7 +91,7 @@ namespace Rawr.DPSWarr {
 #if !RAWR4
                   oldSDGCDs = 0f, oldSSActs = 0f;
 #else
-                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f;
+                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f, oldTHGCDs = 0f;
 #endif
 
             AbilWrapper SL = GetWrapper<Slam>();
@@ -108,6 +108,9 @@ namespace Rawr.DPSWarr {
             AbilWrapper OP = GetWrapper<OverPower>();
             AbilWrapper BLS = GetWrapper<Bladestorm>();
             AbilWrapper RD = GetWrapper<Rend>();
+#if RAWR4
+            AbilWrapper TH = GetWrapper<ThunderClap>();
+#endif
             AbilWrapper TB = GetWrapper<TasteForBlood>();
 
             Execute EX_ability = EX.ability as Execute;
@@ -185,6 +188,7 @@ namespace Rawr.DPSWarr {
                      Math.Abs(CS.numActivates - oldCSGCDs) > 0.1f ||
                      Math.Abs(HS.numActivates - oldHSGCDs) > 0.1f ||
                      Math.Abs(CL.numActivates - oldCLGCDs) > 0.1f ||
+                     Math.Abs(TH.numActivates - oldTHGCDs) > 0.1f ||
 #endif
                      Math.Abs(SL.numActivates - oldSLGCDs) > 0.1f ||
                      (percTimeUnder20 > 0 && Math.Abs(EX.numActivates - oldEXGCDs) > 0.1f)
@@ -204,7 +208,7 @@ namespace Rawr.DPSWarr {
                 BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = SD.numActivates = EX.numActivates = SL.numActivates = 0;
 #else
                 oldCSGCDs = CS.numActivates;
-                BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = CS.numActivates = EX.numActivates = SL.numActivates = 0;
+                BLS.numActivates = MS.numActivates = RD.numActivates = OP.numActivates = TB.numActivates = CS.numActivates = EX.numActivates = SL.numActivates = TH.numActivates = 0;
 #endif
                 availRage = origAvailRage;
                 availRage += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * percTimeOver20;
@@ -214,7 +218,7 @@ namespace Rawr.DPSWarr {
 #if !RAWR4
                 float RDspace, BLSspace, MSspace, TFBspace, OPspace, SDspace, /*EXspace,*/ SLspace;
 #else
-                float RDspace, BLSspace, MSspace, TFBspace, OPspace, CSspace, /*EXspace,*/ SLspace, HSspace, CLspace;
+                float RDspace, BLSspace, MSspace, TFBspace, OPspace, CSspace, /*EXspace,*/ SLspace, HSspace, CLspace, THspace;
 #endif
                 // ==== Primary Ability Priorities ====
 #if RAWR4
@@ -238,6 +242,19 @@ namespace Rawr.DPSWarr {
                     availRage -= RD.Rage;
                 }
                 RDspace = RD.numActivates / NumGCDs * RD.ability.UseTime / LatentGCD;
+
+#if RAWR4
+                // Thunder Clap
+                if (TH.ability.Validated) {
+                    acts = Math.Min(GCDsAvailable, TH.ability.Activates * percTimeInDPSAndOver20);
+                    Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                    TH.numActivates = Abil_GCDs;
+                    (RD.ability as Rend).ThunderApps = TH.numActivates * Talents.BloodAndThunder * 0.50f;
+                    //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
+                    availRage -= TH.Rage;
+                }
+                THspace = TH.numActivates / NumGCDs * TH.ability.UseTime / LatentGCD;
+#endif
 
                 // Reduc abilities due to lack of Rage for maintaining the rotation
                 if (repassAvailRage < 0f || PercFailRage != 1f) {
@@ -378,6 +395,7 @@ namespace Rawr.DPSWarr {
                     availRage -= MS.Rage;
                 }
                 MSspace = MS.numActivates / NumGCDs * MS.ability.UseTime / LatentGCD;
+
                 // Taste for Blood
                 float OPGCDReduc = (OP.ability.Cd < LatentGCD ? (OP.ability.Cd + CalcOpts.Latency) / LatentGCD : 1f);
                 if (TB.ability.Validated)
@@ -389,6 +407,7 @@ namespace Rawr.DPSWarr {
                     availRage -= TB.Rage;
                 }
                 TFBspace = TB.numActivates / NumGCDs * TB.ability.UseTime / LatentGCD;
+
                 // Overpower
                 if (OP.ability.Validated) {
                     OverPower _OP = OP.ability as OverPower;
@@ -450,6 +469,7 @@ namespace Rawr.DPSWarr {
                     Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                     CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
                     HS.numActivates = Abil_GCDs - CL.numActivates;
+                    (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivates);
                     //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
                     availRage -= HS.Rage + CL.Rage;
                 }
@@ -482,7 +502,7 @@ namespace Rawr.DPSWarr {
 #if !RAWR4
                 float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + SDspace + SLspace);
 #else
-                float TotalSpace = (RDspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace);
+                float TotalSpace = (RDspace + THspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace);
 #endif
                 repassAvailRage = availRage; // check for not enough rage to maintain rotation
                 InvalidateCache();
@@ -563,12 +583,12 @@ namespace Rawr.DPSWarr {
             {
                 DPS_TTL += aw.DPS;
                 _HPS_TTL += aw.HPS;
-                if (aw.Rage > 0) rageNeeded += aw.Rage;
-                else rageGenOther -= aw.Rage;
+                if (aw.Rage > 0) { rageNeeded += aw.Rage; }
+                else { rageGenOther -= aw.Rage; }
             }
 
             DPS_TTL += (WhiteAtks.MhDPS + (CombatFactors.useOH ? WhiteAtks.OhDPS : 0f)) * percTimeInDPSAndOver20;
-           // InvalidateCache();
+            // InvalidateCache();
             return DPS_TTL;
         }
 
