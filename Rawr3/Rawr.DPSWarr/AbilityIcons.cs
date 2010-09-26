@@ -7,9 +7,9 @@ using System.Threading;
 using System.Windows.Media.Imaging;
 //using log4net;
 
-namespace Rawr
+namespace Rawr.DPSWarr
 {
-    public static class Icons
+    public static class AbilityIcons
     {
 
         public static BitmapImage ItemIcon(string name)

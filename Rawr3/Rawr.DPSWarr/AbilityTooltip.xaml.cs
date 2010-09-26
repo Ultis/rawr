@@ -60,7 +60,7 @@ namespace Rawr.DPSWarr
             LB_Name.Text = name;
             TB_Desc.Text = desc;
             TB_WhatItDo.Text = whatitdo;
-            //TheImage.Source = Icons.TalentIcon();
+            TheImage.Source = AbilityIcons.ItemIcon(icon);
         }
 
         public AbilityTooltip()
