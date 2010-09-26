@@ -1169,7 +1169,7 @@ namespace Rawr
                 Name = "Expose Armor",
                 Source = "Rogue",
                 Group = "Armor (Major)",
-                Stats = { TargetArmorReduction = 0.20f },
+                Stats = { TargetArmorReduction = 0.12f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff

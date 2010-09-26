@@ -74,6 +74,12 @@ namespace Rawr.Rogue
             get { return _customUseRupt; }
             set { if (_customUseRupt != value) { _customUseRupt = value; OnPropertyChanged("CustomUseRupt"); } }
         }
+        private bool _customUseRS = false;
+        public bool CustomUseRS
+        {
+            get { return _customUseRS; }
+            set { if (_customUseRS != value) { _customUseRS = value; OnPropertyChanged("CustomUseRS"); } }
+        }
         private bool _customUseExpose = false;
         public bool CustomUseExpose
         {
@@ -139,6 +145,12 @@ namespace Rawr.Rogue
         {
             get { return _enableHemo; }
             set { if (_enableHemo != value) { _enableHemo = value; OnPropertyChanged("EnableHemo"); } }
+        }
+        private bool _enableRS = true;
+        public bool EnableRS
+        {
+            get { return _enableRS; }
+            set { if (_enableRS != value) { _enableRS = value; OnPropertyChanged("EnableRS"); } }
         }
         private bool _enableIP = true;
         public bool EnableIP
