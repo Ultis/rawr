@@ -86,23 +86,16 @@
     <Compile Include="..\..\Rawr.Bear\BearRotationCalculator.cs">
       <Link>BearRotationCalculator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Bear\CalculationOptionsBear.cs">
-      <Link>CalculationOptionsBear.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Bear\CalculationsBear.cs">
-      <Link>CalculationsBear.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Bear\StatsBear.cs">
-      <Link>StatsBear.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Bear\CalculationOptionsConverters.cs">
-      <Link>CalculationOptionsConverters.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Bear\CalculationOptionsPanelBear.xaml.cs">
-      <Link>CalculationOptionsPanelBear.xaml.cs</Link>
+    <Compile Include="CalculationOptionsBear.cs" />
+    <Compile Include="CalculationOptionsConverters.cs" />
+    <Compile Include="CalculationOptionsPanelBear.xaml.cs">
       <DependentUpon>CalculationOptionsPanelBear.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CalculationsBear.cs" />
+    <Compile Include="CharacterCalculationsBear.cs" />
+    <Compile Include="ComparisonCalculationBear.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsBear.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
@@ -128,8 +121,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Bear\CalculationOptionsPanelBear.xaml">
-      <Link>CalculationOptionsPanelBear.xaml</Link>
+    <Page Include="CalculationOptionsPanelBear.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

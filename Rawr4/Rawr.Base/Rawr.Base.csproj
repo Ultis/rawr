@@ -156,9 +156,6 @@
     <Compile Include="..\..\Rawr.Base\Bosses\BossList.cs">
       <Link>Bosses\BossList.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\Buff.cs">
-      <Link>Buff.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Base\Calculations.cs">
       <Link>Calculations.cs</Link>
     </Compile>
@@ -234,9 +231,6 @@
     <Compile Include="..\..\Rawr.Base\SpecialFunction.cs">
       <Link>SpecialFunction.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\StatConversion.cs">
-      <Link>StatConversion.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Base\Stats.cs">
       <Link>Stats.cs</Link>
     </Compile>
@@ -295,9 +289,11 @@
     <Compile Include="..\..\Rawr3\Rawr.Base\XMLUtils.cs">
       <Link>XMLUtils.cs</Link>
     </Compile>
+    <Compile Include="Buff.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatConversion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
