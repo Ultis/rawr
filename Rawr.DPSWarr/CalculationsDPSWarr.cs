@@ -260,26 +260,31 @@ namespace Rawr.DPSWarr {
             get {
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
-                        "Base Stats:Health and Stamina",
-                        "Base Stats:Armor",
-                        "Base Stats:Strength",
-                        "Base Stats:Attack Power",
-                        "Base Stats:Agility",
-                        "Base Stats:Crit",
-                        "Base Stats:Haste",
-                        @"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
+#region Base Stats
+"Base Stats:Health and Stamina",
+"Base Stats:Armor",
+"Base Stats:Strength",
+"Base Stats:Attack Power",
+"Base Stats:Agility",
+"Base Stats:Crit",
+"Base Stats:Haste",
+#if RAWR4
+@"Base Stats:Armor Penetration*Cata no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
+#else
+@"Base Stats:Armor Penetration*Rating to Cap with bonuses applied
 (but not trinkets)
 1400-None
 1261-Battle(140)
 1177-Battle(140)+T92P(084)
 1051-Battle(140)+Mace(210)
 0967-Battle(140)+T92P(084)+Mace(210)",
-                        @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks (LVL 83 Targ)
+#endif
+@"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks (LVL 83 Targ)
 Precision 0- 8%-0%=8%=264 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
 Precision 2- 8%-2%=6%=197 Rating soft cap
 Precision 3- 8%-3%=5%=164 Rating soft cap",
-                        @"Base Stats:Expertise*Base 6.50% chance to be Dodged (LVL 83 Targ)
+@"Base Stats:Expertise*Base 6.50% chance to be Dodged (LVL 83 Targ)
 X Axis is Weapon Mastery
 Y Axis is Strength of Arms
 x>| 0  |  1  |  2
@@ -297,46 +302,61 @@ Strength of Arms
 2 |426
 
 These numbers to do not include racial bonuses.",
-                        
-                        @"DPS Breakdown (Fury):Description*1st Number is per second or per tick
+#endregion
+            
+#region Fury
+@"DPS Breakdown (Fury):Description*1st Number is per second or per tick
 2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
 3rd Number is number of times activated over fight duration",
-                        "DPS Breakdown (Fury):Bloodsurge",
-                        "DPS Breakdown (Fury):Bloodthirst",
-                        "DPS Breakdown (Fury):Whirlwind",
-
-                        "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
-                        "DPS Breakdown (Arms):Mortal Strike",
-                        "DPS Breakdown (Arms):Rend",
-                        "DPS Breakdown (Arms):Overpower",
-                        "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
+"DPS Breakdown (Fury):Bloodsurge",
+"DPS Breakdown (Fury):Bloodthirst",
+"DPS Breakdown (Fury):Whirlwind",
 #if RAWR4
-                        "DPS Breakdown (Arms):Colossus Smash",
+"DPS Breakdown (Fury):Raging Blow",
+#endif
+#endregion
+
+#region Arms
+"DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
+"DPS Breakdown (Arms):Mortal Strike",
+"DPS Breakdown (Arms):Rend",
+"DPS Breakdown (Arms):Overpower",
+"DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
+#if RAWR4
+"DPS Breakdown (Arms):Colossus Smash",
 #else
-                        "DPS Breakdown (Arms):Sudden Death*Perform an Execute",
+"DPS Breakdown (Arms):Sudden Death*Perform an Execute",
 #endif
-                        "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
+"DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
 #if !RAWR4
-                        "DPS Breakdown (Arms):Sword Specialization",
+"DPS Breakdown (Arms):Sword Specialization",
 #endif
+#endregion
 
-                        "DPS Breakdown (Maintenance):Thunder Clap",
-                        "DPS Breakdown (Maintenance):Shattering Throw",
+#region Maintenance
+"DPS Breakdown (Maintenance):Thunder Clap",
+"DPS Breakdown (Maintenance):Shattering Throw",
+#endregion
 
-                        "DPS Breakdown (General):Deep Wounds",
-                        "DPS Breakdown (General):Heroic Strike",
-                        "DPS Breakdown (General):Cleave",
-                        "DPS Breakdown (General):White DPS",
-                        "DPS Breakdown (General):Execute*<20% Spamming only",
-                        "DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
-                        @"DPS Breakdown (General):Total DPS*1st number is total DPS
+#region General
+"DPS Breakdown (General):Deep Wounds",
+"DPS Breakdown (General):Heroic Strike",
+"DPS Breakdown (General):Cleave",
+"DPS Breakdown (General):White DPS",
+"DPS Breakdown (General):Execute*<20% Spamming only",
+"DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
+@"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
-                      
-                        "Rage Details:Total Generated Rage",
-                        "Rage Details:Needed Rage for Abilities",
-                        "Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
+#endregion
+
+#region Rage Details
+"Rage Details:Total Generated Rage",
+"Rage Details:Needed Rage for Abilities",
+"Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
+#endregion
+
 #if (!RAWR3 && !RAWR4 && DEBUG)                        
-                        "Debug:Calculation Time"
+"Debug:Calculation Time"
 #endif
                     };
                 }

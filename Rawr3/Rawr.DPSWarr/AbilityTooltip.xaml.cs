@@ -12,8 +12,8 @@ using Rawr.Base;
 
 namespace Rawr.DPSWarr
 {
-	public partial class AbilityTooltip : UserControl
-	{
+    public partial class AbilityTooltip : UserControl
+    {
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }
         public void Show(UIElement relativeTo, double offsetX, double offsetY)
         {
@@ -55,17 +55,18 @@ namespace Rawr.DPSWarr
             AbilityPopup.IsOpen = false;
         }
 
-        public void Setup(string name, string desc, string whatitdo)
+        public void Setup(string name, string desc, string whatitdo, string icon="invalid")
         {
             LB_Name.Text = name;
             TB_Desc.Text = desc;
             TB_WhatItDo.Text = whatitdo;
+            //TheImage.Source = Icons.TalentIcon();
         }
 
         public AbilityTooltip()
-		{
-			// Required to initialize variables
-			InitializeComponent();
+        {
+            // Required to initialize variables
+            InitializeComponent();
         }
-	}
+    }
 }

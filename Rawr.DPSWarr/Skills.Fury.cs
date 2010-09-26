@@ -13,8 +13,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.
         /// </summary>
-        /// <TalentsAffecting>Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Bloodthirst [+100% from healing effect]</GlyphsAffecting>
+        /// <para>Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
+        /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
         public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -50,8 +50,8 @@ namespace Rawr.DPSWarr.Skills
         /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,
         /// causing weapon damage from both melee weapons to each enemy.
         /// </summary>
-        /// <TalentsAffecting>Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Whirlwind [-2 sec Cooldown]</GlyphsAffecting>
+        /// <para>Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
+        /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
         public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -157,8 +157,8 @@ namespace Rawr.DPSWarr.Skills
         /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%)
         /// chance of making your next Slam instant for 5 sec.
         /// </summary>
-        /// <TalentsAffecting>Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</para>
+        /// <para>Glyphs: </para>
         public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
             Ability slam, Ability whirlwind, Ability bloodthirst)
         {
@@ -268,8 +268,8 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
         public RagingBlow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -284,6 +284,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 20f;
             StanceOkFury = true;
             SwingsOffHand = true;
+            BonusCritChance = Talents.GlyphOfRagingBlow ? 0.05f : 0f;
             //
             Initialize();
         }
@@ -362,8 +363,8 @@ namespace Rawr.DPSWarr.Skills
         /// A strong attack that increases melee damage by 495 and causes a high amount of
         /// threat. Causes 173.25 additional damage against Dazed targets.
         /// </summary>
-        /// <TalentsAffecting>Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Heroic Strike [+10 rage on crits]</GlyphsAffecting>
+        /// <para>Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
+        /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
         public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -457,8 +458,8 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.
         /// </summary>
-        /// <TalentsAffecting>Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Cleaving [+1 targets hit]</GlyphsAffecting>
+        /// <para>Talents: Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</para>
+        /// <para>Glyphs: Glyph of Cleaving [+1 targets hit]</para>
         public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -502,8 +503,8 @@ namespace Rawr.DPSWarr.Skills
         /// Pummel the target, interupting spellcasting and preventing any spell in that school
         /// from being cast for 4 sec.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         ///  - (Talents.FocusedRage * 1f)
         ///  RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
     }

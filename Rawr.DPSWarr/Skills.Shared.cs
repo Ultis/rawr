@@ -8,11 +8,12 @@ namespace Rawr.DPSWarr.Skills
     public class DeepWounds : DoT
     {
         /// <summary>
-        /// Your critical strikes cause the opponent to bleed, dealing (16*Pts)% of your melee weapon's
-        /// average damage over 6 sec.
+        /// Your critical strikes cause the opponent to bleed, dealing (16*Pts)% of your 
+        /// melee weapon's average damage over 6 sec.
+        /// <para>Talents: Deep Wounds (Requires Talent) [(16*Pts)% damage dealt]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <TalentsAffecting>Deep Wounds (Requires Talent) [(16*Pts)% damage dealt]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
         public DeepWounds(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -67,27 +68,41 @@ namespace Rawr.DPSWarr.Skills
     #region BuffEffects
     public class BerserkerRage : BuffEffect
     {
+#if RAWR4
+        /// <summary>
+        /// Instant, 30 sec Cd, Self, Any Stance,
+        /// Enter a berserker rage, removing and granting immunity to Fear, Sap and Incapacitate effects
+        /// and generating extra rage when taking damage. Lasts 10 sec.
+        /// <para>Talents: Intensify Rage [-(10*Pts)% Cd]</para>
+        /// <para>Glyphs: Glyph of Berserer Rage [+5 Rage Gen]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+#else
         /// <summary>
         /// Instant, 30 sec Cd, Self, (Any)
         /// The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects
         /// and generating extra tage when taking damage. Lasts 10 sec.
+        /// <para>Talents: Improved Berserker Rage [+(10*Pts) Rage Gen], Intensify Rage [-(10*Pts)% Cd]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <TalentsAffecting>Improved Berserker Rage [+(10*Pts) Rage Generated]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+#endif
         public BerserkerRage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Berserker Rage";
-            Description = "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec.";
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
+            Icon = "ability_warrior_focusedrage";
 #if !RAWR4
+            Description = "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra tage when taking damage. Lasts 10 sec.";
             Cd = 30f * (1f - 1f / 9f * Talents.IntensifyRage); // In Seconds
             RageCost = 0f - (Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
 #else
+            Description = "Enter a berserker rage, removing and granting immunity to Fear, Sap and Incapacitate effects and generating extra rage when taking damage. Lasts 10 sec.";
             Cd = 30f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
-            RageCost = 0f;// -(Talents.ImprovedBerserkerRage * 10f); // This is actually reversed in the rotation
+            RageCost = 0f - (Talents.GlyphOfBerserkerRage ? 5f : 0f); // This is actually reversed in the rotation
 #endif
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             UseReact = true;
@@ -98,26 +113,38 @@ namespace Rawr.DPSWarr.Skills
     }
     public class EnragedRegeneration : BuffEffect
     {
+#if RAWR4
+        /// <summary>
+        /// Instant, 3 min Cd, 15 Rage, Self, Any Stance,
+        /// You regenerate 30% of your total health over 10 sec. Can only be used while Enraged.
+        /// <para>Talents: Field Dressing [+(10*Pts)% Healed]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+#else
         /// <summary>
         /// Instant, 3 min Cd, 15 Rage, Self, (Any)
         /// You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect,
         /// consumes all Enrage effects and prevents any from affecting you for the full duration.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: Glyph of Enraged Regeneration [+10% to effect]</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Enraged Regeneration [+10% to effect]</GlyphsAffecting>
+#endif
         public EnragedRegeneration(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Name = "Enraged Regeneration";
-            Description = "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
             Cd = 3f * 60f; // In Seconds
             RageCost = 15f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
 #if !RAWR4
+            Description = "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.";
             HealingBase = StatS.Health * (0.30f + (Talents.GlyphOfEnragedRegeneration ? 0.10f : 0f));
 #else
+            Description = "You regenerate 30% of your total health over 10 sec. Can only be used while Enraged.";
             HealingBase = StatS.Health * 0.30f;
             HealingBonus = 1f + Talents.FieldDressing * 0.10f;
 #endif
@@ -133,8 +160,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 5 min Cd, Self, (Def)
         /// 
         /// </summary>
-        /// <TalentsAffecting>Last Stand [Requires Talent]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Last Stand [-1 min Cd]</GlyphsAffecting>
+        /// <para>Talents: Last Stand [Requires Talent]</para>
+        /// <para>Glyphs: Glyph of Last Stand [-1 min Cd]</para>
     }
     public class Bloodrage : BuffEffect
     {
@@ -142,8 +169,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 1 min cd, Self (Any)
         /// Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.
         /// </summary>
-        /// <TalentsAffecting>Improved Bloodrge [+(25*Pts)% Rage Generated], Intensify Rage [-(1/9*Pts]% Cooldown]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Bloodrage [-100% Health Cost]</GlyphsAffecting>
+        /// <para>Talents: Improved Bloodrge [+(25*Pts)% Rage Generated], Intensify Rage [-(1/9*Pts]% Cooldown]</para>
+        /// <para>Glyphs: Glyph of Bloodrage [-100% Health Cost]</para>
         public Bloodrage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -183,12 +210,12 @@ namespace Rawr.DPSWarr.Skills
     {
         /// <summary>
         /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
-        /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Booming Voice [+(25*Pts)% AoE and Duration],
         /// Commanding Presence [+(5*Pts)% to the AP Bonus]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Battle [+1 min duration]</GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: Glyph of Battle [+1 min duration]</para>
+        /// </summary>
         public BattleShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -227,11 +254,11 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Booming Voice [+(25*Pts)% AoE and Duration],
         /// Commanding Presence [+(5*Pts)% to the Health Bonus]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: </para>
         public CommandingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -270,8 +297,8 @@ namespace Rawr.DPSWarr.Skills
         /// When activated you become enraged, increasing your physical damage by 20% but increasing
         /// all damage taken by 5%. Lasts 30 sec.
         /// </summary>
-        /// <TalentsAffecting>Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</para>
+        /// <para>Glyphs: </para>
         public DeathWish(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -301,8 +328,8 @@ namespace Rawr.DPSWarr.Skills
         /// Your next 3 special ability attacks have an additional 100% to critically hit
         /// but all damage taken is increased by 20%. Lasts 12 sec.
         /// </summary>
-        /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: Improved Disciplines [-(30*Pts) sec Cd]</para>
+        /// <para>Glyphs: </para>
         public Recklessness(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -326,8 +353,8 @@ namespace Rawr.DPSWarr.Skills
     {
         // Constructors
         /// <summary>Your next 5 melee attacks strike an additional nearby opponent.</summary>
-        /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
+        /// <para>Talents: Sweeping Strikes [Requires Talent]</para>
+        /// <para>Glyphs: Glyph of Sweeping Strikes [-100% Rage cost]</para>
         public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -368,8 +395,8 @@ namespace Rawr.DPSWarr.Skills
         /// Whenever you are struck by a Stun of Immoblize effect you will generate
         /// 10*Pts Rage and (5*Pts)% of your total health over 10 sec.
         /// </summary>
-        /// <TalentsAffecting>Sweeping Strikes [Requires Talent]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Sweeping Strikes [-100% Rage cost]</GlyphsAffecting>
+        /// <para>Talents: Sweeping Strikes [Requires Talent]</para>
+        /// <para>Glyphs: Glyph of Sweeping Strikes [-100% Rage cost]</para>
         public SecondWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -415,14 +442,14 @@ namespace Rawr.DPSWarr.Skills
         /// This ability causes additional threat.
         /// <para>TODO: BonusCritDamage to 2x instead of 1.5x as it's now considered a ranged attack (3.3.3 notes) other parts implemented already</para>
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Improved Thunder Clap [-(1/2/4) rage cost, +(10*Pts)% Damage, +(ROUNDUP(10-10/3*Pts))% Slowing Effect]
         /// Incite [+(5*Pts)% Critical Strike chance]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: 
         /// Glyph of Thunder Clap [+2 yds MaxRange]
         /// Glyph of Resonating Power [-5 RageCost]
-        /// </GlyphsAffecting>
+        /// </para>
         public ThunderClap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -430,7 +457,6 @@ namespace Rawr.DPSWarr.Skills
             Name = "Thunder Clap";
             Description = "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
-            ReqMeleeWeap = true;
             ReqMeleeRange = true;
 #if RAWR3 || RAWR4 || SILVERLIGHT
             {
@@ -448,28 +474,22 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
             Cd = 6f; // In Seconds
             Duration = 30f; // In Seconds
-            float cost = 0f;
+            RageCost = 20f - (Talents.GlyphOfResonatingPower ? 5f : 0f);
 #if !RAWR4
-            switch (Talents.ImprovedThunderClap)
-            {
+            float cost = 0f;
+            switch (Talents.ImprovedThunderClap) {
                 case 1: { cost = 1f; break; }
                 case 2: { cost = 2f; break; }
                 case 3: { cost = 4f; break; }
                 default: { cost = 0f; break; }
             }
-#endif
-            RageCost = 20f - cost - (Talents.GlyphOfResonatingPower ? 5f : 0f) 
-#if !RAWR4
-                - (Talents.FocusedRage * 1f);
-#else
-            ;
-#endif
-            StanceOkArms = StanceOkDef = true;
-            DamageBase = 300f + StatS.AttackPower * 0.12f;
-#if !RAWR4
+            RageCost -= cost;
+            RageCost -= (Talents.FocusedRage * 1f);
             DamageBonus = 1f + Talents.ImprovedThunderClap * 0.10f;
             BonusCritChance = Talents.Incite * 0.05f;
 #endif
+            StanceOkArms = StanceOkDef = true;
+            DamageBase = 300f + StatS.AttackPower * 0.12f;
             UseSpellHit = true;
             CanBeDodged = CanBeParried = false;
             //
@@ -506,10 +526,9 @@ namespace Rawr.DPSWarr.Skills
     }
     public class SunderArmor : BuffEffect
     {
-        // Constructors
         /// <summary>Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.</summary>
-        /// <TalentsAffecting>Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Sunder Armor [+1 Targets]</GlyphsAffecting>
+        /// <para>Talents: Focused Rage [-(Pts) Rage Cost], Puncture [-(Pts) Rage Cost], </para>
+        /// <para>Glyphs: Glyph of Sunder Armor [+1 Targets]</para>
         public SunderArmor(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -526,7 +545,7 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
                 - (Talents.FocusedRage * 1f) - (Talents.Puncture * 1f);
 #else
-                ;
+                * (1f - (Talents.GlyphOfFuriousSundering ? 0.50f : 0f));
 #endif
             Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f);
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -599,8 +618,8 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -658,8 +677,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
         /// Maims the enemy, reducing movement speed by 50% for 15 sec.
         /// </summary>
-        /// <TalentsAffecting>Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</GlyphsAffecting>
+        /// <para>Talents: Improved Hamstring [Gives a [5*Pts]% chance to immobilize the target for 5 sec.]</para>
+        /// <para>Glyphs: Glyph of Hamstring [Gives a 10% chance to immobilize the target for 5 sec.]</para>
         public Hamstring(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -721,8 +740,8 @@ namespace Rawr.DPSWarr.Skills
         /// Removes all movement impairing effects and all effects which cause loss of control of
         /// your character. This effect shares a cooldown with other similar effects.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         public EveryManForHimself(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -743,8 +762,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 45 sec Cooldown, 0 Rage, Self (Any)
         /// Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         public HeroicFury(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -770,15 +789,15 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 15 sec cd, 0 Rage, 8-25 yds, (Battle)
         /// Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Warbringer [Usable in combat and any stance]
         /// Juggernaut [Usable in combat]
         /// Improved Charge [+(5*Pts) RageGen]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: 
         /// Glyph of Rapid Charge [-7% Cd]
         /// Glyph of Charge [+5 yds MaxRange]
-        /// </GlyphsAffecting>
+        /// </para>
         public Charge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -813,11 +832,11 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Zerker)
         /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Warbringer [Usable in any stance]
         /// Improved Intercept [-[5*Pts] sec Cd]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: </para>
         public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -846,12 +865,12 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Def)
         /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Warbringer [Usable in any stance]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: 
         /// Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]
-        /// </GlyphsAffecting>
+        /// </para>
         public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -881,8 +900,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instantly counterattack any enemy that strikes you in melee for 12 sec. Melee attacks
         /// made from behind cannot be counterattacked. A maximum of 20 attacks will cause retaliation.
         /// </summary>
-        /// <TalentsAffecting>Improved Disciplines [-(30*Pts) sec Cd]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: Improved Disciplines [-(30*Pts) sec Cd]</para>
+        /// <para>Glyphs: </para>
         public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;

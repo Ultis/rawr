@@ -161,46 +161,9 @@ namespace Rawr.DPSWarr {
             StatS = calcs.AverageStats;
 
             initAbilities();
-            //doIterations();
 
             // Whites
             calcs.Whites = WhiteAtks;
-            // Anti-Debuff
-            /*
-            calcs.HF = HF;
-            calcs.EM = EM;
-            calcs.CH = CH;
-            calcs.IN = IN;
-            calcs.IV = IV;
-            // Rage Generators
-            calcs.SndW = SndW;
-            calcs.BZ = BZ;
-            calcs.BR = BR;
-            // Maintenance
-            calcs.BTS = BTS;
-            calcs.CS = CS;
-            calcs.DS = DS;
-            calcs.SN = SN;
-            calcs.TH = TH;
-            calcs.HMS = HMS;
-            calcs.ER = ER;
-            // Periodics
-            calcs.ST = ST;
-            calcs.SW = SW;
-            calcs.Death = Death;
-            calcs.RK = RK;
-            
-            // Shared Instants
-            calcs.WW = WW;
-            calcs.SL = SL;
-            // Arms
-            
-            // Generic
-            calcs.CL = CL;
-            calcs.DW = DW;
-            calcs.HS = HS;
-            calcs.EX = EX;*/
-            //calcs.DW = DW;
         }
         public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
 
@@ -967,9 +930,18 @@ namespace Rawr.DPSWarr {
         };
         #endregion
         #region Battle Shout
-        /// <summary>
-        /// 3d Array, Commanding Presence 0-5, Glyph of Battle 0-1, Booming Voice 0-2
-        /// </summary>
+#if RAWR4
+        /// <summary>2d Array,  Glyph of Battle 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
+        private static readonly SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_BattleShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+        };
+#else
+        /// <summary>3d Array, Commanding Presence 0-5, Glyph of Battle 0-1, Booming Voice 0-2</summary>
         private static readonly SpecialEffect[/*commPresence:0-5*/][/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_BattleShout = {
             new SpecialEffect[][] {
                 new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
@@ -1020,11 +992,21 @@ namespace Rawr.DPSWarr {
                                       new SpecialEffect(Trigger.Use, new Stats() { AttackPower = (548f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
             },
         };
+#endif
         #endregion
         #region Commanding Shout
-        /// <summary>
-        /// 3d Array, Commanding Presence 0-5, Glyph of Command 0-1, Booming Voice 0-2
-        /// </summary>
+#if RAWR4
+        /// <summary>2d Array, Glyph of Command 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
+        private static readonly SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_CommandingShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+        };
+#else
+        /// <summary>3d Array, Commanding Presence 0-5, Glyph of Command 0-1, Booming Voice 0-2</summary>
         private static readonly SpecialEffect[/*commPresence:0-5*/][/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_CommandingShout = {
             new SpecialEffect[][] {
                 new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 0 * 0.05f)), }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
@@ -1075,8 +1057,15 @@ namespace Rawr.DPSWarr {
                                       new SpecialEffect(Trigger.Use, new Stats() { Health = (2255f * (1f + 5 * 0.05f)), }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
             },
         };
+#endif
         #endregion
         #region Demoralizing Shout
+#if RAWR4
+        private static readonly SpecialEffect[] _SE_DemoralizingShout = {
+            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (false ? 15f : 0f), 30f + (false ? 15f : 0f)),
+            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (true  ? 15f : 0f), 30f + (true  ? 15f : 0f)),
+        };
+#else
         private static readonly SpecialEffect[][] _SE_DemoralizingShout = {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 1 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 1 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
@@ -1085,6 +1074,7 @@ namespace Rawr.DPSWarr {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 4 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 4 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 0), 30f * (1f + 0.25f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 5 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 1), 30f * (1f + 0.25f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BossAttackPower = 410f * (1f + 0 * 0.08f) * -1f, }, 30f * (1f + 0.25f * 2), 30f * (1f + 0.25f * 2)) },
         };
+#endif
         #endregion
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
         private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
@@ -1110,9 +1100,9 @@ namespace Rawr.DPSWarr {
             if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.CommandingPresence][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
             if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.ImprovedDemoralizingShout][talents.BoomingVoice]); }
 #else
-            if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[0][talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
-            if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[0][talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
-            if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[0][talents.BoomingVoice]); }
+            if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+            if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+            if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
 #endif
             if (ST.Validated)
             {

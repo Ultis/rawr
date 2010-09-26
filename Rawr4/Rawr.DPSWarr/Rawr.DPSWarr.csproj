@@ -137,6 +137,9 @@
     <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
       <Link>Skills.Shared.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityIcons.cs">
+      <Link>AbilityIcons.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityTooltip.xaml.cs">
       <Link>AbilityTooltip.xaml.cs</Link>
       <DependentUpon>AbilityTooltip.xaml</DependentUpon>

@@ -12,12 +12,12 @@ namespace Rawr.DPSWarr.Skills
         /// Slam the target with your shield, causing 990 to 1040 damage, modified by you shield block
         /// value, and dispels 1 magic effect on the target. Also causes a high amount of threat.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Focused Rage [-(Talents.FocusedRage * 1f) RageCost],
         /// Gag Order [+(5*Pts)% Damage],
         /// OneHandedWeaponSpecialization [+(2*Pts)% Damage]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: </para>
     }
     public class Revenge : Ability
     {
@@ -26,8 +26,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instantly counterattack the enemy for 2399 to 2787 damage. Revenge is only usable after the
         /// warrior blocks, dodges or parries an attack.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         ///  -(Talents.FocusedRage * 1f) RageCost
         ///  +(10*Pts)% Damage
     }
@@ -37,8 +37,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 30 sec cd, 12 Rage, Melee Range, Melee Weapon (Any)
         /// Stuns the opponent for 5 sec and deals 2419 damage (based upon attack power).
         /// </summary>
-        /// <TalentsAffecting>Concussion Blow [Requires Talent], Focused Rage [-(Talents.FocusedRage * 1f ) Ragecost]</TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: Concussion Blow [Requires Talent], Focused Rage [-(Talents.FocusedRage * 1f ) Ragecost]</para>
+        /// <para>Glyphs: </para>
     }
     public class Devastate : Ability
     {
@@ -48,13 +48,13 @@ namespace Rawr.DPSWarr.Skills
         /// damage plus 101 for each application of Sunder Armor on the target. The Sunder Armor effect
         /// can stack up to 5 times.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Devastate [Requires Talent]
         /// Focused Rage [-(Talents.FocusedRage * 1f) RageCost]
         /// Puncture [-(Talents.Puncture * 1f) RageCost]
         /// Sword and Board [+(5*Pts)% Crit Chance]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Devastate [+1 stack of Sunder Armor]</GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: Glyph of Devastate [+1 stack of Sunder Armor]</para>
     }
     public class Shockwave : Ability
     {
@@ -63,8 +63,8 @@ namespace Rawr.DPSWarr.Skills
         /// Sends a wave of force in front of the warrior, causing 2419 damage (based upon attack power)
         /// and stunning all enemy targets within 10 yards in a frontal cone for 4 sec.
         /// </summary>
-        /// <TalentsAffecting>Shockwave [Requires Talent], Focused Rage [-(Talents.FocusedRage*1f) RageCost]</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Shockwave [-3 sec Cd]</GlyphsAffecting>
+        /// <para>Talents: Shockwave [Requires Talent], Focused Rage [-(Talents.FocusedRage*1f) RageCost]</para>
+        /// <para>Glyphs: Glyph of Shockwave [-3 sec Cd]</para>
     }
     public class MockingBlow : Ability
     {
@@ -73,12 +73,12 @@ namespace Rawr.DPSWarr.Skills
         /// A mocking attack that causes weapon damage, a moderate amount of threat and forces the
         /// target to focus attacks on you for 6 sec.
         /// </summary>
-        /// <TalentsAffecting>
+        /// <para>Talents: 
         /// Focused Rage [-(Talents.FocusedRage*1f) RageCost]
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>
+        /// </para>
+        /// <para>Glyphs: 
         /// Glyph of Barbaric Insults [+100% Threat]
         /// Glyph of Mocking Blow [+25% Damage]
-        /// </GlyphsAffecting>
+        /// </para>
     }
 }

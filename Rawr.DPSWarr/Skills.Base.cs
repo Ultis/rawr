@@ -408,6 +408,7 @@ namespace Rawr.DPSWarr.Skills
             // Ability Related
             Name = "Invalid";
             Description = "Invalid";
+            Icon = "trade_engineering";
             ReqTalent = false;
             CanBeDodged = true;
             CanBeParried = true;
@@ -449,6 +450,7 @@ namespace Rawr.DPSWarr.Skills
         #region Get/Set
         public string Name { get; protected set; }
         public string Description { get; protected set; }
+        public string Icon { get; protected set; }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
         public bool ReqMeleeWeap { get; set; }
@@ -858,11 +860,11 @@ namespace Rawr.DPSWarr.Skills
         /// Instant attack the target causing 1424 damage. Can only be used within 25 sec after you
         /// kill an enemy that yields experience or honor. Damage is based on your attack power.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: 
         /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
         /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
-        /// </GlyphsAffecting>
+        /// </para>
         public VictoryRush(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -887,8 +889,8 @@ namespace Rawr.DPSWarr.Skills
         /// Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability
         /// causes high threat.
         /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
         ///  - (Talents.FocusedRage * 1f)
     }
     #endregion
