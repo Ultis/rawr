@@ -610,8 +610,17 @@ namespace Rawr
 				if (item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Purple ||
 					item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Meta || item.Slot == ItemSlot.Prismatic)
 				{
-					item.Stats.CritRating = item.Stats.ArmorPenetrationRating;
-					item.Stats.ArmorPenetrationRating = 0;
+                    if (item.Stats.ArmorPenetrationRating > 0)
+                    {
+                        item.Stats.CritRating = item.Stats.ArmorPenetrationRating;
+                        item.Stats.ArmorPenetrationRating = 0;
+                    }
+                    if (item.Stats.SpellPower > 0)
+                    {
+                        // sp+int is removed, converted to runed I assume
+                        item.Stats.Intellect = (float)Math.Round(item.Stats.SpellPower / 23.0 * 20.0);
+                        item.Stats.SpellPower = 0;
+                    }
 				}
 				else
 				{
