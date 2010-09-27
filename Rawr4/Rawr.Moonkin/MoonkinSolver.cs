@@ -50,7 +50,7 @@ namespace Rawr.Moonkin
                             Name = "W",
                             BaseDamage = (606f + 682.0f) / 2.0f,
                             SpellDamageModifier = 2.5f/3.5f,
-                            BaseCastTime = 2.0f,
+                            BaseCastTime = 2.5f,
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.14f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
@@ -238,12 +238,7 @@ namespace Rawr.Moonkin
             float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow);
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
-            // Calculate effect of casting Starfall/Treants
-            float globalCooldown = 1.5f / (1 + baseHaste) + calcs.Latency;
-            float treantTime = (talents.ForceOfNature == 1) ? globalCooldown * (float)Math.Ceiling(treeCasts) : 0.0f;
-            float starfallTime = (talents.Starfall == 1) ? globalCooldown * (float)Math.Ceiling(numStarfallCasts) : 0.0f;
-
-            float totalTimeInRotation = calcs.FightLength * 60.0f - (treantTime + starfallTime);
+            float totalTimeInRotation = calcs.FightLength * 60.0f;
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
 #if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
@@ -690,42 +685,6 @@ namespace Rawr.Moonkin
             ResetSpellList();
 
             rotations = new List<SpellRotation>();
-            rotations.Add(new SpellRotation()
-                {
-                    RotationData = new RotationData()
-                    {
-                        Name = "2-Eclipse Stretched",
-                        SolarEclipseMode = EclipseMode.Stretched,
-                        LunarEclipseMode = EclipseMode.Stretched,
-                        MoonfireRefreshMode = DotMode.Always,
-                        InsectSwarmRefreshMode = DotMode.Always,
-                        StarsurgeCastMode = StarsurgeMode.OnCooldown
-                    }
-                });
-            rotations.Add(new SpellRotation()
-            {
-                RotationData = new RotationData()
-                {
-                    Name = "Lunar Only Stretched",
-                    SolarEclipseMode = EclipseMode.Unused,
-                    LunarEclipseMode = EclipseMode.Stretched,
-                    MoonfireRefreshMode = DotMode.Always,
-                    InsectSwarmRefreshMode = DotMode.Always,
-                    StarsurgeCastMode = StarsurgeMode.OnCooldown
-                }
-            });
-            rotations.Add(new SpellRotation()
-            {
-                RotationData = new RotationData()
-                {
-                    Name = "Solar Only Stretched",
-                    SolarEclipseMode = EclipseMode.Stretched,
-                    LunarEclipseMode = EclipseMode.Unused,
-                    MoonfireRefreshMode = DotMode.Always,
-                    InsectSwarmRefreshMode = DotMode.Always,
-                    StarsurgeCastMode = StarsurgeMode.OnCooldown
-                }
-            });
             for (int mfMode = 0; mfMode < 4; ++mfMode)
             {
                 for (int isMode = 0; isMode < 4; ++isMode)
@@ -744,8 +703,6 @@ namespace Rawr.Moonkin
                             RotationData = new RotationData()
                             {
                                 Name = name,
-                                LunarEclipseMode = EclipseMode.Standard,
-                                SolarEclipseMode = EclipseMode.Standard,
                                 MoonfireRefreshMode = mfModeEnum,
                                 InsectSwarmRefreshMode = isModeEnum,
                                 StarsurgeCastMode = ssModeEnum
