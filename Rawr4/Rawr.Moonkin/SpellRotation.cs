@@ -166,7 +166,7 @@ namespace Rawr.Moonkin
             float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
                 (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
                 (talents.Starfall == 1 ? RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast) : 0) +
-                (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (360f + RotationData.AverageInstantCast) : 0);
+                (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0);
 
             float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
                 (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
