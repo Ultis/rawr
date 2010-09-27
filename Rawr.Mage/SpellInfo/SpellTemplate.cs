@@ -141,9 +141,11 @@ namespace Rawr.Mage
             BaseCostModifier = 1.0f;
 
             float baseCostAmplifier = calculationOptions.EffectCostMultiplier;
+#if !RAWR4
             baseCostAmplifier *= (1.0f - 0.01f * mageTalents.Precision);
             if (mageTalents.FrostChanneling > 0) baseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) baseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
+#endif
             BaseCostAmplifier = baseCostAmplifier;
 
             float baseInterruptProtection = baseStats.InterruptProtection;
@@ -164,10 +166,12 @@ namespace Rawr.Mage
                     HitRate = solver.BaseArcaneHitRate;
                     ThreatMultiplier = solver.ArcaneThreatMultiplier;
                     realResistance = calculationOptions.ArcaneResist;
+#if !RAWR4
                     if (range != 0)
                     {
                         Range = range + mageTalents.MagicAttunement * 3;
                     }
+#endif
                     break;
                 case MagicSchool.Fire:
                     BaseSpellModifier = solver.BaseFireSpellModifier;
@@ -177,10 +181,12 @@ namespace Rawr.Mage
                     HitRate = solver.BaseFireHitRate;
                     ThreatMultiplier = solver.FireThreatMultiplier;
                     realResistance = calculationOptions.FireResist;
+#if !RAWR4
                     if (range != 0)
                     {
                         Range = range + mageTalents.FlameThrowing * 3;
                     }
+#endif
                     break;
                 case MagicSchool.FrostFire:
                     BaseSpellModifier = solver.BaseFrostFireSpellModifier;
@@ -211,7 +217,9 @@ namespace Rawr.Mage
                     HitRate = solver.BaseFrostHitRate;
                     ThreatMultiplier = solver.FrostThreatMultiplier;
                     realResistance = calculationOptions.FrostResist;
+#if !RAWR4
                     Range = range * (1 + mageTalents.ArcticReach * 0.1f);
+#endif
                     break;
                 case MagicSchool.Nature:
                     BaseSpellModifier = solver.BaseNatureSpellModifier;
@@ -253,7 +261,9 @@ namespace Rawr.Mage
             {
                 targetLevel = calculationOptions.AoeTargetLevel;
                 float hitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + solver.BaseSpellHit;
+#if !RAWR4
                 if (MagicSchool == MagicSchool.Arcane) hitRate += 0.01f * mageTalents.ArcaneFocus;
+#endif
                 if (hitRate > Spell.MaxHitRate) hitRate = Spell.MaxHitRate;
                 HitRate = hitRate;
             }

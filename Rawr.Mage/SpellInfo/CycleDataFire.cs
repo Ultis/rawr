@@ -46,7 +46,11 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
             K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+#endif
 
             float hasteFactor = 1.0f;
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -255,7 +259,11 @@ namespace Rawr.Mage
 
             float FBcrit = FB.CritRate;
             float LBcrit = LB.CritRate;
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
             float A2 = (FBcrit - LBcrit) * (LB.CastTime - FB.CastTime - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
             float A1 = (FBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FBcrit - LBcrit);
             float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
@@ -377,7 +385,11 @@ namespace Rawr.Mage
             float LBDotCrit = castingState.FireCritRate;
             float H = castingState.MageTalents.HotStreak / 3.0f;
             float C;
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
 
                 float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
                 float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
@@ -474,7 +486,11 @@ namespace Rawr.Mage
             float SCcrit = Sc.CritRate;
             float LBcrit = LB.CritRate;
             float H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
             float A2 = (SCcrit - LBcrit) * (LB.CastTime - Sc.CastTime - 12) - (SCcrit - LBcrit) * (SCcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
             float A1 = (SCcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - Sc.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (SCcrit - LBcrit);
             float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
@@ -574,7 +590,11 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
             K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+#endif
 
             float hasteFactor = 1.0f;
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -722,7 +742,11 @@ namespace Rawr.Mage
             float FBcrit = FB.CritRate;
             float SCcrit = Sc.CritRate;
             float H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
             float A2 = (FBcrit - SCcrit) * FB.CastTime * (1 - gap) + (FBcrit - SCcrit) * (FBcrit - SCcrit) * Pyro.CastTime / (1 - T8) * H * (1 - gap) + gap * (FBcrit - SCcrit) * Sc.CastTime;
             float A1 = FB.CastTime * (1 - gap) * (1 + SCcrit) + Pyro.CastTime / (1 - T8) * H * (2 * (FBcrit - SCcrit) * SCcrit * (1 - gap)) + Sc.CastTime * gap * (1 + 2 * SCcrit - FBcrit);
             float A0 = SCcrit * SCcrit * Pyro.CastTime / (1 - T8) * H * (1 - gap) - gap * Sc.CastTime * (1 + SCcrit);
@@ -886,7 +910,11 @@ namespace Rawr.Mage
                     float FBcrit = FB.CritRate;
                     float LBcrit = LB.CritRate;
                     H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+                    if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
                     if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
                     float A2 = (FBcrit - LBcrit) * (LB.CastTime - FB.CastTime - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
                     float A1 = (FBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FBcrit - LBcrit);
                     float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
@@ -935,7 +963,11 @@ namespace Rawr.Mage
                     float SCcrit = Sc.CritRate;
                     float LBcrit = LB.CritRate;
                     H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+                    if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
                     if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
                     float T1 = Sc.CastTime - P * FB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
                     float CY = SCcrit - FBcrit * P + LBcrit * (P - 1);
 
@@ -1059,7 +1091,11 @@ namespace Rawr.Mage
                     float FFBcrit = FFB.CritRate;
                     float LBcrit = LB.CritRate;
                     H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+                    if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
                     if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
                     float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
                     float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
                     float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
@@ -1105,7 +1141,11 @@ namespace Rawr.Mage
                     float SCcrit = Sc.CritRate;
                     float LBcrit = LB.CritRate;
                     H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+                    if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
                     if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
                     float T1 = Sc.CastTime - P * FFB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
                     float CY = SCcrit - FFBcrit * P + LBcrit * (P - 1);
 
@@ -1220,7 +1260,11 @@ namespace Rawr.Mage
             float FFBcrit = FFB.CritRate;
             float SCcrit = Sc.CritRate;
             float H = castingState.MageTalents.HotStreak / 3.0f;
+#if RAWR4
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+#else
             if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+#endif
             float A2 = (FFBcrit - SCcrit) * FFB.CastTime * (1 - gap) + (FFBcrit - SCcrit) * (FFBcrit - SCcrit) * Pyro.CastTime / (1 - T8) * H * (1 - gap) + gap * (FFBcrit - SCcrit) * Sc.CastTime;
             float A1 = FFB.CastTime * (1 - gap) * (1 + SCcrit) + Pyro.CastTime / (1 - T8) * H * (2 * (FFBcrit - SCcrit) * SCcrit * (1 - gap)) + Sc.CastTime * gap * (1 + 2 * SCcrit - FFBcrit);
             float A0 = SCcrit * SCcrit * Pyro.CastTime / (1 - T8) * H * (1 - gap) - gap * Sc.CastTime * (1 + SCcrit);

@@ -728,6 +728,7 @@ namespace Rawr.Mage
             }
             //threatPerSecond += (baseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
             // 3.2 mode Empowered Fire ignite return
+#if !RAWR4
             if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
             {
                 // on average we have IgniteProcs per CastTime
@@ -752,6 +753,7 @@ namespace Rawr.Mage
                 // finally using the proc of the ability we get the mps bonus
                 manaRegenPerSecond += 0.02f * 3268f * CastingState.MageTalents.EmpoweredFire / 3.0f * (float)ticksPerSecond;
             }
+#endif
         }
 
         public virtual void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
@@ -852,6 +854,7 @@ namespace Rawr.Mage
                         break;
                 }
             }
+#if !RAWR4
             if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
             {
                 double rate = IgniteProcs / CastTime;
@@ -860,6 +863,7 @@ namespace Rawr.Mage
                 double ticksPerSecond = rate * ticks;
                 dict["Other"] += duration * 0.02f * 3268f * CastingState.MageTalents.EmpoweredFire / 3.0f * (float)ticksPerSecond;
             }
+#endif
         }
 
         public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)

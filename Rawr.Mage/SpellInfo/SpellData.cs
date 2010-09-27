@@ -230,7 +230,11 @@ namespace Rawr.Mage
             Range = 30;
             this.speed = speed;
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+#if RAWR4
+            BaseSpellModifier = (1 + solver.BaseStats.BonusDamageMultiplier);
+#else
             BaseSpellModifier = (1 + 0.01f * solver.MageTalents.ArcaneInstability) * (1 + 0.01f * solver.MageTalents.PlayingWithFire) * (1 + solver.BaseStats.BonusDamageMultiplier);
+#endif
             switch (school)
             {
                 case MagicSchool.Arcane:
@@ -322,8 +326,10 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 8);
             InitializeDamage(solver, false, 20, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             Cooldown -= 1.0f * solver.MageTalents.ImprovedFireBlast;
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.Incineration;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+#endif
             Dirty = false;
         }
     }
@@ -379,9 +385,11 @@ namespace Rawr.Mage
             Name = "Scorch";
             InitializeCastTime(false, false, 1.5f, 0);
             InitializeDamage(solver, false, 30, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.Incineration;
-            BaseCritRate += 0.01f * solver.MageTalents.ImprovedScorch;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+#endif
+            BaseCritRate += 0.01f * solver.MageTalents.ImprovedScorch;
             if (solver.MageTalents.GlyphOfImprovedScorch)
             {
                 BaseSpellModifier *= 1.2f;
@@ -440,7 +448,9 @@ namespace Rawr.Mage
             InitializeCastTime(false, false, 2, 0);
             InitializeDamage(solver, true, 30, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions), 1, 1, 8f);
             DotTickInterval = 2;
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+#endif
             Dirty = false;
         }
     }
@@ -523,7 +533,11 @@ namespace Rawr.Mage
             // number of negates until absorb is distributed negative binomial
             // mean number of negated is then (1-p)/p = 0.3 / 0.7 times the absorb value
             // however on average it can't be more than (1-p) * incoming damage
+#if RAWR4
+            float q = 0f;
+#else
             float q = 0.15f * castingState.MageTalents.FrostWarding;
+#endif
             float absorb = 1950f + spellPowerCoefficient * castingState.FireSpellPower;
             spell.Absorb = absorb;
             // in 3.3.3 warding doesn't count as absorb for IA, assume that we'll get to normal absorb at least once in 30 sec (i.e. we're not lucky enough to continue proccing warding for the whole 30 sec)
@@ -585,7 +599,11 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState);
+#if RAWR4
+            float q = 0f;
+#else
             float q = 0.15f * castingState.MageTalents.FrostWarding;
+#endif
             float absorb = 1950f + spellPowerCoefficient * castingState.FrostSpellPower;
             spell.Absorb = absorb;
             spell.TotalAbsorb = Math.Min(absorb, 30f * (float)castingState.Solver.IncomingDamageDpsFrost);
@@ -729,12 +747,14 @@ namespace Rawr.Mage
             {
                 BaseDirectDamageModifier *= 1.05f;
             }
+#if !RAWR4
             BaseCritRate += 0.01f * solver.MageTalents.WintersChill;
             BaseCastTime -= 0.1f * solver.MageTalents.ImprovedFrostbolt;
             BaseCastTime -= 0.1f * solver.MageTalents.EmpoweredFrostbolt;
-            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFrostbolt;
             BaseSpellModifier *= /*(1 + solver.BaseStats.BonusMageNukeMultiplier) * */(1 + 0.01f * solver.MageTalents.ChilledToTheBone);
+#endif
+            BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             if (!solver.CalculationOptions.Beta)
@@ -885,14 +905,16 @@ namespace Rawr.Mage
             BaseCritRate += 0.01f * solver.MageTalents.ImprovedScorch + 0.05f * solver.BaseStats.Mage4T9;
             DotDuration = 8;
             DotTickInterval = 2;
+#if !RAWR4
             BaseCastTime -= 0.1f * solver.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
+            BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+#endif
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
             if (!solver.CalculationOptions.Beta)
             {
                 tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             }
-            BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             NukeProcs = 1;
             Dirty = false;
         }
@@ -969,8 +991,10 @@ namespace Rawr.Mage
             {
                 tormentFactor = 0.04f * solver.MageTalents.TormentTheWeak;
             }
+#if !RAWR4
             BaseSpellModifier *= (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
+#endif
             DotDuration = 9;
             DotTickInterval = 3;
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
@@ -1044,13 +1068,12 @@ namespace Rawr.Mage
             InitializeDamage(solver, false, 35, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             DotDuration = 12;
             DotTickInterval = 3;
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
-            if (!solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
             DotDamageCoefficient += 4 * 0.05f * solver.MageTalents.EmpoweredFire;
+#endif
             Dirty = false;
         }
     }
@@ -1122,7 +1145,9 @@ namespace Rawr.Mage
             InitializeDamage(solver, false, 35, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
             DotDuration = 12;
             DotTickInterval = 3;
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+#endif
             Dirty = false;
         }
     }
@@ -1215,9 +1240,11 @@ namespace Rawr.Mage
             InitializeDamage(solver, true, 0, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions));
             Cooldown *= (1 - 0.07f * solver.MageTalents.IceFloes + (solver.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
             int ImprovedConeOfCold = solver.MageTalents.ImprovedConeOfCold;
+#if !RAWR4
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
-            BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             BaseCritRate += 0.02f * solver.MageTalents.Incineration;
+#endif
+            BaseSpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0));
             Dirty = false;
         }
     }
@@ -1283,8 +1310,10 @@ namespace Rawr.Mage
             Name = "Ice Lance";
             InitializeCastTime(false, true, 0, 0);
             InitializeDamage(solver, false, 30, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions));
+#if !RAWR4
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             BaseSpellModifier *= (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
+#endif
             Dirty = false;
         }
     }
@@ -1509,7 +1538,9 @@ namespace Rawr.Mage
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
+#if !RAWR4
             BaseInterruptProtection += 0.2f * mageTalents.ArcaneStability;
+#endif
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             if (solver.CalculationOptions.Beta)
@@ -1520,7 +1551,11 @@ namespace Rawr.Mage
             {
                 arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             }
+#if !RAWR4
             BaseAdditiveSpellModifier += /*baseStats.ArcaneBlastBonus + */0.02f * mageTalents.SpellImpact;
+            SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
+            BaseCritRate += 0.02f * mageTalents.Incineration;
+#endif
             if (solver.CalculationOptions.Beta)
             {
                 tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
@@ -1529,8 +1564,6 @@ namespace Rawr.Mage
             {
                 tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             }
-            SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
-            BaseCritRate += 0.02f * mageTalents.Incineration;
             NukeProcs = 1;
             Dirty = false;
         }
@@ -1760,9 +1793,15 @@ namespace Rawr.Mage
             CastProcs2 = 1;
             if (solver.MageTalents.GlyphOfArcaneMissiles)
             {
+#if RAWR4
+                CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + solver.BaseStats.CritBonusDamage + 0.25f));
+#else
                 CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * solver.MageTalents.SpellPower + 0.1f * solver.MageTalents.Burnout + solver.BaseStats.CritBonusDamage + 0.25f));
+#endif
             }
+#if !RAWR4
             SpellDamageCoefficient += 0.15f * solver.MageTalents.ArcaneEmpowerment;
+#endif
             if (solver.CalculationOptions.Beta)
             {
                 tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
@@ -1780,7 +1819,9 @@ namespace Rawr.Mage
                 arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
             }
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
+#if !RAWR4
             BaseInterruptProtection += 0.2f * solver.MageTalents.ArcaneStability;
+#endif
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             // Arcane Potency bug
             BaseCritRate -= 0.8f * 0.15f * solver.ClearcastingChance * solver.MageTalents.ArcanePotency;
@@ -1830,8 +1871,10 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 0);
             InitializeDamage(solver, true, 0, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
             if (solver.MageTalents.GlyphOfArcaneExplosion) BaseCostAmplifier *= 0.9f;
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+#endif
             Dirty = false;
         }
     }
@@ -1878,8 +1921,10 @@ namespace Rawr.Mage
             Name = "Blast Wave";
             InitializeCastTime(false, true, 0, 30);
             InitializeDamage(solver, true, 0, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
+#if !RAWR4
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+#endif
             Dirty = false;
         }
     }
@@ -1926,7 +1971,9 @@ namespace Rawr.Mage
             Name = "Dragon's Breath";
             InitializeCastTime(false, true, 0, 20);
             InitializeDamage(solver, true, 0, MagicSchool.Fire, GetMaxRankSpellData(solver.CalculationOptions));
+#if !RAWR4
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+#endif
             Dirty = false;
         }
     }
@@ -1972,6 +2019,7 @@ namespace Rawr.Mage
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
             InitializeDamage(solver, true, 30, MagicSchool.Frost, GetMaxRankSpellData(solver.CalculationOptions), 4, 1, 0);
+#if !RAWR4
             if (solver.MageTalents.ImprovedBlizzard > 0)
             {
                 float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
@@ -1980,6 +2028,7 @@ namespace Rawr.Mage
                 //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
             BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
+#endif
             Dirty = false;
         }
     }

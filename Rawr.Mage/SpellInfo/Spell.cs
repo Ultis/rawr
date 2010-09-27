@@ -750,7 +750,9 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
+#if !RAWR4
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * solver.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+#endif
 
             cost *= (1 - solver.ClearcastingChance);
 
@@ -778,7 +780,9 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
+#if !RAWR4
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * solver.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+#endif
 
             if (!manualClearcasting || clearcastingAveraged)
             {
