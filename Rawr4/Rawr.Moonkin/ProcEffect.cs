@@ -99,19 +99,8 @@ namespace Rawr.Moonkin
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
                     if (r.RotationData.InsectSwarmTicks == 0) return 0.0f;
-                    Spell newSF = new Spell()
-                    {
-                        AllDamageModifier = r.Solver.Starfire.AllDamageModifier,
-                        BaseCastTime = 1.5f,
-                        BaseDamage = r.Solver.Starfire.BaseDamage,
-                        BaseManaCost = r.Solver.Starfire.BaseManaCost,
-                        CriticalChanceModifier = r.Solver.Starfire.CriticalChanceModifier,
-                        CriticalDamageModifier = r.Solver.Starfire.CriticalDamageModifier,
-                        DotEffect = null,
-                        Name = r.Solver.Starfire.Name,
-                        School = r.Solver.Starfire.School,
-                        SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
-                    };
+                    Spell newSF = new Spell(r.Solver.Starfire);
+                    newSF.BaseCastTime = 1.5f;
                     r.DoMainNuke(c, ref newSF, sp, sHi, sc, sHa);
                     float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.BaseTickLength / Effect.Chance;
                     float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);

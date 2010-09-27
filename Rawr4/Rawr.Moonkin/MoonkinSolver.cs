@@ -356,7 +356,7 @@ namespace Rawr.Moonkin
                         if (childEffect.Stats.CritRating != 0)
                         {
                             float maxStack = proc.Effect.Stats.CritRating;
-                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseCrit, 3.0f, proc.Effect.Duration);
+                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + StatConversion.GetSpellCritFromRating(maxStack)), 3.0f, proc.Effect.Duration);
                             float averageNegativeValue = childEffect.Stats.CritRating * numNegativeStacks;
                             float averageCritRating = maxStack + averageNegativeValue;
                             currentCrit += StatConversion.GetSpellCritFromRating(averageCritRating * proc.Effect.GetAverageUptime(0f, 1f));
@@ -370,10 +370,10 @@ namespace Rawr.Moonkin
                         else if (childEffect.Stats.SpellCrit != 0)
                         {
                             float maxStack = proc.Effect.Stats.SpellCrit;
-                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), baseCrit, 3.0f, proc.Effect.Duration);
+                            float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + maxStack), 3.0f, proc.Effect.Duration);
                             float averageNegativeValue = childEffect.Stats.SpellCrit * numNegativeStacks;
                             float averageCrit = maxStack + averageNegativeValue;
-                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration * (1 - rot.RotationData.SolarUptime - rot.RotationData.LunarUptime) / 2f, 1f);
+                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f);
                         }
                     }
                 }
@@ -427,6 +427,7 @@ namespace Rawr.Moonkin
                             ++lengthCounter;
                             activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
                         }
+                        currentCrit = (float)Math.Min(1.0f, currentCrit);
                         float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / rot.RotationData.Duration;
                         spellDetails[0] = rot.RotationData.StarfireAvgHit;
                         spellDetails[1] = rot.RotationData.WrathAvgHit;
