@@ -46,30 +46,12 @@ namespace Rawr.DPSWarr {
 
         private Dictionary<Type,AbilWrapper> AbilityList;
 
-        public List<AbilWrapper> GetDamagingAbilities()
-        {
-            return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.isDamaging);
-        }
+        public List<AbilWrapper> GetDamagingAbilities() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.isDamaging); }
+        public List<AbilWrapper> GetMaintenanceAbilities() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.isMaint); }
+        public List<AbilWrapper> GetAbilityList() { return new List<AbilWrapper>(AbilityList.Values); }
+        public List<AbilWrapper> GetAbilityListThatGCDs() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD); }
 
-        public List<AbilWrapper> GetMaintenanceAbilities()
-        {
-            return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.isMaint);
-        }
-
-        public List<AbilWrapper> GetAbilityList()
-        {
-            return new List<AbilWrapper>(AbilityList.Values);
-        }
-
-        public List<AbilWrapper> GetAbilityListThatGCDs()
-        {
-            return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD);
-        }
-
-        public AbilWrapper GetWrapper<T>()
-        {
-            return AbilityList[typeof(T)];
-        }
+        public AbilWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
 
         public float _HPS_TTL;
         public float _DPS_TTL, _DPS_TTL_U20;
@@ -224,15 +206,19 @@ namespace Rawr.DPSWarr {
 #endif
             AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
 #if !RAWR4
-            AddAbility(new AbilWrapper(new Skills.Suddendeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, EX)));
+            AddAbility(new AbilWrapper(new Skills.SuddenDeath(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, EX)));
 #else
             AddAbility(new AbilWrapper(new Skills.ColossusSmash(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.VictoryRush(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
 #endif
 
             // Fury abilities
             Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             AddAbility(new AbilWrapper(BT));
             AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SL, WW, BT)));
+#if RAWR4
+            AddAbility(new AbilWrapper(new Skills.RagingBlow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+#endif
 
             DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
 

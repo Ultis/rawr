@@ -324,6 +324,7 @@ These numbers to do not include racial bonuses.",
 "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
 #if RAWR4
 "DPS Breakdown (Arms):Colossus Smash",
+"DPS Breakdown (Arms):Victory Rush",
 #else
 "DPS Breakdown (Arms):Sudden Death*Perform an Execute",
 #endif
@@ -918,9 +919,17 @@ These numbers to do not include racial bonuses.",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_]) {
                 buffGroup.Clear();
+#if RAWR4
+                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Faerie Fire"));
+                buffGroup.Add(Buff.GetBuffByName("Corrosive Spit"));
+                buffGroup.Add(Buff.GetBuffByName("Tear Armor"));
+#else
                 buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
                 buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
                 buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
@@ -938,12 +947,19 @@ These numbers to do not include racial bonuses.",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_]) {
                 buffGroup.Clear();
+#if RAWR4
+                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
+                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
+                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
+#else
                 buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Thunder Clap"));
                 buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
                 buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
                 buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Icy Touch"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
@@ -961,10 +977,17 @@ These numbers to do not include racial bonuses.",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
                 buffGroup.Clear();
+#if RAWR4
+                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
+                buffGroup.Add(Buff.GetBuffByName("Horn of Winter"));
+                buffGroup.Add(Buff.GetBuffByName("Roar of Courage"));
+#else
                 buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Attack Power)"));
                 buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Blessing of Might"));
                 buffGroup.Add(Buff.GetBuffByName("Blessing of Might"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
 
@@ -973,10 +996,17 @@ These numbers to do not include racial bonuses.",
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
             if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
                 buffGroup.Clear();
+#if RAWR4
+                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+                buffGroup.Add(Buff.GetBuffByName("Quiraji Fortitude"));
+                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+#else
                 buffGroup.Add(Buff.GetBuffByName("Commanding Presence (Health)"));
                 buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Imp"));
                 buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
             #endregion
@@ -1004,6 +1034,14 @@ These numbers to do not include racial bonuses.",
 #if RAWR4
                 buffGroup.Add(Buff.GetBuffByName("Trauma"));
                 buffGroup.Add(Buff.GetBuffByName("Mangle"));
+                buffGroup.Add(Buff.GetBuffByName("Hemorrhage"));
+                buffGroup.Add(Buff.GetBuffByName("Tendon Rip"));
+                buffGroup.Add(Buff.GetBuffByName("Gore"));
+                buffGroup.Add(Buff.GetBuffByName("Stampede"));
+                //
+                buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
+                buffGroup.Add(Buff.GetBuffByName("Ravage"));
+                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
 #endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
@@ -1013,8 +1051,17 @@ These numbers to do not include racial bonuses.",
             if (character.WarriorTalents.Rampage > 0)
             {
                 buffGroup.Clear();
+#if RAWR4
                 buffGroup.Add(Buff.GetBuffByName("Rampage"));
                 buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));
+                buffGroup.Add(Buff.GetBuffByName("Honor Among Thieves"));
+                buffGroup.Add(Buff.GetBuffByName("Elemental Oath"));
+                buffGroup.Add(Buff.GetBuffByName("Furious Howl"));
+                buffGroup.Add(Buff.GetBuffByName("Terrifying Roar"));
+#else
+                buffGroup.Add(Buff.GetBuffByName("Rampage"));
+                buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));
+#endif
                 MaintBuffHelper(buffGroup, character, removedBuffs);
             }
             #endregion
@@ -1194,6 +1241,9 @@ These numbers to do not include racial bonuses.",
                         comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodsurge_));
                         comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodthirst_));
                         comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Whirlwind_));
+#if RAWR4
+                        comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.RagingBlow_));
+#endif
                         #endregion
                     } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
                         #region Arms
@@ -1202,7 +1252,11 @@ These numbers to do not include racial bonuses.",
                         comparisons.Add(getComp(dpswarchar, "Rend", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_));
                         comparisons.Add(getComp(dpswarchar, "Overpower", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_));
                         comparisons.Add(getComp(dpswarchar, "Taste for Blood", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_));
+#if !RAWR4
                         comparisons.Add(getComp(dpswarchar, "Sudden Death", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_));
+#else
+                        comparisons.Add(getComp(dpswarchar, "Colossus Smash", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ColossusSmash_));
+#endif
                         comparisons.Add(getComp(dpswarchar, "Slam", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_));
                         #endregion
                     }
@@ -1597,9 +1651,9 @@ These numbers to do not include racial bonuses.",
 #if RAWR4
         private static SpecialEffect[] _SE_Enrage = {
             null,
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
         };
 
         private static SpecialEffect[] _SE_BloodCraze = {

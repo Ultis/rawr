@@ -406,9 +406,6 @@ namespace Rawr.DPSWarr.Skills
             CalcOpts = null;
             BossOpts = null;
             // Ability Related
-            Name = "Invalid";
-            Description = "Invalid";
-            Icon = "trade_engineering";
             ReqTalent = false;
             CanBeDodged = true;
             CanBeParried = true;
@@ -448,9 +445,12 @@ namespace Rawr.DPSWarr.Skills
         public int AbilIterater;
         #endregion
         #region Get/Set
-        public string Name { get; protected set; }
-        public string Description { get; protected set; }
-        public string Icon { get; protected set; }
+        public static string SName { get { return "Invalid"; } }
+        public static string SDesc { get { return "Invalid"; } }
+        public static string SIcon { get { return "trade_engineering"; } }
+        public string Name { get { return SName; } }
+        public string Description { get { return SDesc; } }
+        public string Icon { get { return SIcon; } }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
         public bool ReqMeleeWeap { get; set; }
@@ -853,35 +853,7 @@ namespace Rawr.DPSWarr.Skills
     #endregion
 
     #region Unused
-    public class VictoryRush : Ability
-    {
-        /// <summary>
-        /// Instant, No Cd, No Rage, Melee Range, (Battle, Zerker)
-        /// Instant attack the target causing 1424 damage. Can only be used within 25 sec after you
-        /// kill an enemy that yields experience or honor. Damage is based on your attack power.
-        /// </summary>
-        /// <para>Talents: </para>
-        /// <para>Glyphs: 
-        /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
-        /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
-        /// </para>
-        public VictoryRush(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
-            //
-            Name = "Heroic Strike";
-            Description = "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.";
-            //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
-            //
 #if RAWR4
-            DamageBonus = Talents.WarAcademy * 0.05f;
-#endif
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
-            //
-            Initialize();
-        }
-    }
     public class HeroicThrow : Ability
     {
         /// <summary>
@@ -892,6 +864,10 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Talents: </para>
         /// <para>Glyphs: </para>
         ///  - (Talents.FocusedRage * 1f)
+        public static new string SName { get { return "Heroic Throw"; } }
+        public static new string SDesc { get { return "Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability causes high threat."; } }
+        public static new string SIcon { get { return "inv_axe_66"; } }
     }
+#endif
     #endregion
 }

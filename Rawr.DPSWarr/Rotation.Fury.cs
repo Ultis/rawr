@@ -343,6 +343,9 @@ namespace Rawr.DPSWarr
             AbilWrapper WW = GetWrapper<WhirlWind>();
             AbilWrapper BT = GetWrapper<BloodThirst>();
             AbilWrapper BS = GetWrapper<BloodSurge>();
+#if RAWR4
+            AbilWrapper RB = GetWrapper<RagingBlow>();
+#endif
             AbilWrapper HS = GetWrapper<HeroicStrike>();
             AbilWrapper CL = GetWrapper<Cleave>();
 
@@ -379,6 +382,19 @@ namespace Rawr.DPSWarr
             HPS_TTL += BS.HPS;
             rageadd = BS.allRage;
             availRage -= rageadd;
+            
+#if RAWR4
+            // Priority 4 : Raging Blow if available
+            float RB_GCDs = Math.Min(availGCDs, RB.ability.Activates) * (1f - timeLostPerc);
+            RB.numActivates = RB_GCDs;
+            GCDsused += Math.Min(NumGCDs, RB_GCDs);
+            if (_needDisplayCalcs) GCDUsage += RB.ability.Name + ": " + RB_GCDs.ToString() + "\n";
+            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
+            DPS_TTL += RB.DPS;
+            HPS_TTL += RB.HPS;
+            rageadd = RB.allRage;
+            availRage -= rageadd;
+#endif
 
             InvalidateCache();
             //Sword Spec, Doesn't eat GCDs

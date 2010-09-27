@@ -23,10 +23,9 @@ x:Class="Rawr.DPSWarr.AbilityTooltip"
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition />
             </Grid.ColumnDefinitions>
         
-            <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="2">
+            <Rectangle RadiusX="3" RadiusY="3">
                 <!--Rectangle.Effect> //Turning this effect off for performance reasons, may add it back in later
                     <DropShadowEffect ShadowDepth="4" Opacity="0.35" BlurRadius="10"/>
                 </Rectangle.Effect-->
@@ -46,16 +45,28 @@ x:Class="Rawr.DPSWarr.AbilityTooltip"
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Image x:Name="TheImage" Margin="4" Grid.Column="0" />
-            
-            <StackPanel x:Name="RootLayout" Margin="4" Grid.Column="1">
-                <TextBlock x:Name="LB_Name" Text="Ability Name" VerticalAlignment="Center" FontWeight="Bold" FontSize="12" Foreground="#FF8112C4"/>
-                <TextBlock Text=" "/>
-                <TextBlock x:Name="TB_Desc" Text="wurd" TextWrapping="Wrap"/>
-                <TextBlock Text=" "/>
-                <TextBlock x:Name="LB_WhatItDo" Text="What Checking this does:" FontWeight="Bold"/>
-                <TextBlock x:Name="TB_WhatItDo" Text="this" TextWrapping="Wrap"/>
-            </StackPanel>
+            <Grid x:Name="RootLayout" Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <!-- Row 0: Ability Name -->
+                <TextBlock x:Name="LB_Name" Text="Ability Name" VerticalAlignment="Center" FontWeight="Bold" FontSize="12" Foreground="#FF8112C4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <!-- Row 1: Ability Icon and Description -->
+                <Image x:Name="TheImage" Margin="4" Height="64" Width="64" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0" />
+                <TextBlock x:Name="TB_Desc" Text="wurd" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" />
+                <!-- Row 2: What It Do Label -->
+                <TextBlock x:Name="LB_WhatItDo" Text="What Checking this does:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" />
+                <!-- Row 3: What It Do Text -->
+                <TextBlock x:Name="TB_WhatItDo" Text="this" TextWrapping="Wrap" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
+            </Grid>
         </Grid>
     </Popup>
 </UserControl>

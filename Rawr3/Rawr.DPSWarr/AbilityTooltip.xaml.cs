@@ -55,12 +55,13 @@ namespace Rawr.DPSWarr
             AbilityPopup.IsOpen = false;
         }
 
-        public void Setup(string name, string desc, string whatitdo, string icon="invalid")
+        public void Setup(string name, string desc, string icon="invalid", string whatitdo="Nothing")
         {
             LB_Name.Text = name;
             TB_Desc.Text = desc;
             TB_WhatItDo.Text = whatitdo;
             TheImage.Source = AbilityIcons.ItemIcon(icon);
+            TheImage.Visibility = (icon.ToLower() == "invalid") ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public AbilityTooltip()

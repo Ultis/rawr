@@ -534,11 +534,48 @@ namespace Rawr.DPSWarr {
             format = "{0:0000} : {1:00000} : {2:000.00}";
             if (TotalDPS < 0f) { TotalDPS = 0f; }
             foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList()) {
-                if (!aw.ability.Name.Equals("Invalid")) {
-                    dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates)
-                                                    + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
+                string name = "Invalid";
+                #region Fury
+                if      (aw.ability.GetType() == typeof(Skills.BloodSurge)) { name = Skills.BloodSurge.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.BloodThirst)) { name = Skills.BloodThirst.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.WhirlWind)) { name = Skills.WhirlWind.SName; }
+                #if RAWR4
+                else if (aw.ability.GetType() == typeof(Skills.RagingBlow)) { name = Skills.RagingBlow.SName; }
+#endif
+                #endregion
+                #region Arms
+                else if (aw.ability.GetType() == typeof(Skills.Bladestorm)) { name = Skills.Bladestorm.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.MortalStrike)) { name = Skills.MortalStrike.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.Rend)) { name = Skills.Rend.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.OverPower)) { name = Skills.OverPower.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.TasteForBlood)) { name = Skills.TasteForBlood.SName; }
+#if !RAWR4
+                else if (aw.ability.GetType() == typeof(Skills.SuddenDeath)) { name = Skills.SuddenDeath.SName; }
+#else
+                else if (aw.ability.GetType() == typeof(Skills.ColossusSmash)) { name = Skills.ColossusSmash.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.VictoryRush)) { name = Skills.VictoryRush.SName; }
+#endif
+                else if (aw.ability.GetType() == typeof(Skills.Slam)) { name = Skills.Slam.SName; }
+#if !RAWR4
+                else if (aw.ability.GetType() == typeof(Skills.Swordspec)) { name = Skills.Swordspec.SName; }
+#endif
+                #endregion
+                #region Maintenance
+                else if (aw.ability.GetType() == typeof(Skills.ThunderClap)) { name = Skills.ThunderClap.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.ShatteringThrow)) { name = Skills.ShatteringThrow.SName; }
+                #endregion
+                #region General
+                else if (aw.ability.GetType() == typeof(Skills.HeroicStrike)) { name = Skills.HeroicStrike.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.Cleave)) { name = Skills.Cleave.SName; }
+                else if (aw.ability.GetType() == typeof(Skills.Execute)) { name = Skills.Execute.SName; }
+                #endregion
+                if (!name.Equals("Invalid"))
+                {
+                    dictValues.Add(name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
                 }
             }
+            // Maintenance
+            // General
             // DPS General
             dictValues.Add("White DPS",             string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
             dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize,Rot.DW.TickSize/TotalDPS));

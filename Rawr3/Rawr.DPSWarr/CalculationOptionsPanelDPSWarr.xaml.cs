@@ -61,6 +61,8 @@ namespace Rawr.DPSWarr {
                 CK_M_A_SD.Visibility = Visibility.Collapsed;
 #else
                 CK_M_A_CS.Visibility = Visibility.Collapsed;
+                CK_M_F_RB.Visibility = Visibility.Collapsed;
+                CK_M_A_VR.Visibility = Visibility.Collapsed;
 #endif
                 //
                 SetUpFAQ();
@@ -1042,8 +1044,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_A_RD);
             settooltip(CK_M_A_OP);
             settooltip(CK_M_A_TB);
+#if !RAWR4
             settooltip(CK_M_A_SD);
-#if RAWR4
+#else
             settooltip(CK_M_A_CS);
 #endif
             settooltip(CK_M_A_SL);
@@ -1055,6 +1058,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_F_WW);
             settooltip(CK_M_F_BT);
             settooltip(CK_M_F_BS);
+#if RAWR4
+            settooltip(CK_M_F_RB);
+#endif
             //
             settooltip(CK_M_F_DW);
             settooltip(CK_M_F_RK);
@@ -1080,104 +1086,63 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         private void Element_MouseEntered(object sender, MouseEventArgs e)
         {
             string MultiTargets = "This ability will also do additional damage if there are multiple mobs present per the Boss Handler.";
-            // Arms
-            if (sender == CK_M_A_BLS) tooltip.Setup("Bladestorm",
-                 "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.",
-                 "Four GCDs are consumed and Damage is put out. " + MultiTargets);
-            else if (sender == CK_M_A_MS) tooltip.Setup("Mortal Strike",
-                "A vicious strike that deals weapon damage plus x and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.",
-                "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_A_RD) tooltip.Setup("Rend",
-                "Wounds the target causing them to bleed for x damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.",
-                "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
-            else if (sender == CK_M_A_OP) tooltip.Setup("Overpower",
-                "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.",
-                "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            else if (sender == CK_M_A_TB) tooltip.Setup("Taste for Blood",
-                "Instantly overpower the enemy, causing weapon damage plus x. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.",
-                "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            else if (sender == CK_M_A_SD) tooltip.Setup("Sudden Death",
-                "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.",
-                "A GCD is consumed and Damage is put out.");
-#if RAWR4
-            else if (sender == CK_M_A_CS) tooltip.Setup("Colossus Smash",
-                "Smashes a target for weapon damage plus 120 and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec.",
-                "A GCD is consumed and Damage is put out.");
+            string DeActivatesBuff = "This ability also removes the value of the related Buff in the Buffs Pane and Charts. You can still select the Buff or it's Conflicting Buffs but they will not provide value.";
+            #region Arms
+            if      (sender == CK_M_A_BLS) tooltip.Setup(Skills.Bladestorm.SName, Skills.Bladestorm.SDesc, Skills.Bladestorm.SIcon,  "Four GCDs are consumed and Damage is put out. " + MultiTargets);
+            else if (sender == CK_M_A_MS ) tooltip.Setup(Skills.MortalStrike.SName, Skills.MortalStrike.SDesc, Skills.MortalStrike.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_RD ) tooltip.Setup(Skills.Rend.SName, Skills.Rend.SDesc, Skills.Rend.SIcon, "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
+            else if (sender == CK_M_A_OP ) tooltip.Setup(Skills.OverPower.SName, Skills.OverPower.SDesc, Skills.OverPower.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+            else if (sender == CK_M_A_TB) tooltip.Setup(Skills.TasteForBlood.SName, Skills.TasteForBlood.SDesc, Skills.TasteForBlood.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+#if !RAWR4
+            else if (sender == CK_M_A_SD) tooltip.Setup(Skills.SuddenDeath.SName, Skills.SuddenDeath.SDesc, Skills.SuddenDeath.SIcon, "A GCD is consumed and Damage is put out.");
+#else
+            else if (sender == CK_M_A_CS) tooltip.Setup(Skills.ColossusSmash.SName, Skills.ColossusSmash.SDesc, Skills.ColossusSmash.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_VR) tooltip.Setup(Skills.VictoryRush.SName, Skills.VictoryRush.SDesc, Skills.VictoryRush.SIcon, "A GCD is consumed and Damage is put out.");
 #endif
-            else if (sender == CK_M_A_SL) tooltip.Setup("Slam",
-                "Slams the opponent, causing weapon damage plus x.",
-                "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_SL) tooltip.Setup(Skills.Slam.SName, Skills.Slam.SDesc, Skills.Slam.SIcon, "A GCD is consumed and Damage is put out.");
             //
-            else if (sender == CK_M_A_TH) tooltip.Setup("Thunder Clap",
-                "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat.",
-                "A GCD will be consumed and the debuff will become active after each cooldown period. " + MultiTargets);
-            else if (sender == CK_M_A_ST) tooltip.Setup("Shattering Throw",
-                "Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power), reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.",
-                "A GCD will be consumed and the debuff will become active after each cooldown period");
-            else if (sender == CK_M_A_SW) tooltip.Setup("Sweeping Strikes",
-                "Your next 5 melee attacks strike an additional nearby opponent.",
-                "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
+            else if (sender == CK_M_A_TH) tooltip.Setup(Skills.ThunderClap.SName, Skills.ThunderClap.SDesc, Skills.ThunderClap.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period. " + DeActivatesBuff + " " + MultiTargets);
+            else if (sender == CK_M_A_ST) tooltip.Setup(Skills.ShatteringThrow.SName, Skills.ShatteringThrow.SDesc, Skills.ShatteringThrow.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
+            else if (sender == CK_M_A_SW) tooltip.Setup(Skills.SweepingStrikes.SName, Skills.SweepingStrikes.SDesc, Skills.SweepingStrikes.SIcon, "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
+            #endregion
+            #region Fury
             // Fury
-            else if (sender == CK_M_F_WW) tooltip.Setup("Whirlwind",
-                "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.",
-                "A GCD is consumed and Damage is put out. " + MultiTargets);
-            else if (sender == CK_M_F_BT) tooltip.Setup("Bloodthirst",
-                "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.",
-                "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_F_BS) tooltip.Setup("Bloodsurge",
-                "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.",
-                "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_WW) tooltip.Setup(Skills.WhirlWind.SName, Skills.WhirlWind.SDesc, Skills.WhirlWind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
+            else if (sender == CK_M_F_BT) tooltip.Setup(Skills.BloodThirst.SName, Skills.BloodThirst.SDesc, Skills.BloodThirst.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_BS) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
+#if RAWR4
+            else if (sender == CK_M_F_RB) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
+#endif
             //
-            else if (sender == CK_M_F_DW) tooltip.Setup("Death Wish",
-                "When activated you become enraged, increasing your physical damage by 20% but increasing all damage taken by 5%. Lasts 30 sec.",
-                "A GCD will be consumed and the buff will become active after each cooldown period");
-            else if (sender == CK_M_F_RK) tooltip.Setup("Recklessness",
-                "Your next 3 special ability attacks have an additional 100% to critically hit but all damage taken is increased by 20%. Lasts 12 sec.",
-                "A GCD will be consumed and the buff will become active after each cooldown period");
-            // Rage Gen
-            else if (sender == CK_Zerker) tooltip.Setup("Berserker Rage",
-                "The warrior enters a berserker rage, becoming immune to Fear, Sap and Incapacitate effects and generating extra rage when taking damage. Lasts 10 sec.",
-                "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
-            else if (sender == CK_BloodRage) tooltip.Setup("Bloodrage",
-                "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.",
-                "This adds to the total rage for maintaining your rotation (usually resulting in more Heroic Strikes).");
-            // Rage Dump
-            else if (sender == CK_Cleave) tooltip.Setup("Cleave",
-                "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.",
-                "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
-            else if (sender == CK_HeroicStrike) tooltip.Setup("Heroic Strike",
-                "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.",
-                "You White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
-            // Shout
-            else if (sender == RB_Shout_Battle) tooltip.Setup("Battle Shout",
-                "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.",
-                "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
-            else if (sender == RB_Shout_Comm) tooltip.Setup("Commanding Shout",
-                "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.",
-                "The Buff version of Commanding Shout (and it's equivalents) will be disabled in favor of your own Commanding Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
-            else if (sender == RB_Shout_None) tooltip.Setup("No Shout",
-                "You opt to not put up a shout yourself",
-                "The Buff Versions of Battle and Commanding Shout will become available and you will not consume GCDs for shouts");
-            // DeBuff
-            else if (sender == CK_DemoShout) tooltip.Setup("Demoralizing Shout",
-                "Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.",
-                "A GCD will be consumed and the debuff will become active after each cooldown period");
-            else if (sender == CK_Sunder) tooltip.Setup("Sunder Armor",
-                "Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.  Threat increased by attack power.  Can be applied up to 5 times.  Lasts 30 sec.",
-                "A GCD will be consumed and the debuff will become active after each cooldown period");
-            else if (sender == CK_Hamstring) tooltip.Setup("Hamstring",
-                "Maims the enemy, reducing movement speed by 50% for 15 sec.",
-                "A GCD will be consumed and the debuff will become active after each cooldown period");
-            // Other
-            else if (sender == CK_EnragedRegen) tooltip.Setup("Enraged Regeneration",
-                "You regenerate 30% of your total health over 10 sec. This ability requires an Enrage effect, consumes all Enrage effects and prevents any from affecting you for the full duration.",
-                "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
-            else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam",
-                "When the target's health drops below 20%, your Execute ability becomes active",
-                "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes\nNOTE: This check is presently non-functional due to calculational reasons. We do not presently have an ETA for Execute Spam support. It IS still what you want to be doing during Execute Phase.");
+            else if (sender == CK_M_F_DW) tooltip.Setup(Skills.DeathWish.SName, Skills.DeathWish.SDesc, Skills.DeathWish.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
+            else if (sender == CK_M_F_RK) tooltip.Setup(Skills.Recklessness.SName, Skills.Recklessness.SDesc, Skills.Recklessness.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
+            #endregion
+            #region Rage Gen
+            else if (sender == CK_Zerker) tooltip.Setup(Skills.BerserkerRage.SName, Skills.BerserkerRage.SDesc, Skills.BerserkerRage.SIcon, "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
+            else if (sender == CK_BloodRage) tooltip.Setup(Skills.Bloodrage.SName, Skills.Bloodrage.SDesc, Skills.Bloodrage.SIcon, "This adds to the total rage for maintaining your rotation (usually resulting in more Heroic Strikes).");
+            #endregion
+            #region Rage Dump
+            else if (sender == CK_Cleave) tooltip.Setup(Skills.Cleave.SName, Skills.Cleave.SDesc, Skills.Cleave.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
+            else if (sender == CK_HeroicStrike) tooltip.Setup(Skills.HeroicStrike.SName, Skills.HeroicStrike.SDesc, Skills.HeroicStrike.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
+            #endregion
+            #region Shout
+            else if (sender == RB_Shout_Battle) tooltip.Setup(Skills.BattleShout.SName, Skills.BattleShout.SDesc, Skills.BattleShout.SIcon, "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
+            else if (sender == RB_Shout_Comm) tooltip.Setup(Skills.CommandingShout.SName, Skills.CommandingShout.SDesc, Skills.CommandingShout.SIcon, "The Buff version of Commanding Shout (and it's equivalents) will be disabled in favor of your own Commanding Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
+            else if (sender == RB_Shout_None) tooltip.Setup("No Shout", "You Opt not to put up a Shout yourself", "Invalid", "The Buff Versions of Battle and Commanding Shout will become available and you will not consume GCDs for shouts");
+            #endregion
+            #region DeBuff
+            else if (sender == CK_DemoShout) tooltip.Setup(Skills.DemoralizingShout.SName, Skills.DemoralizingShout.SDesc, Skills.DemoralizingShout.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
+            else if (sender == CK_Sunder) tooltip.Setup(Skills.SunderArmor.SName, Skills.SunderArmor.SDesc, Skills.SunderArmor.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
+            else if (sender == CK_Hamstring) tooltip.Setup(Skills.Hamstring.SName, Skills.Hamstring.SDesc, Skills.Hamstring.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
+            #endregion
+            #region Other
+            else if (sender == CK_EnragedRegen) tooltip.Setup(Skills.EnragedRegeneration.SName, Skills.EnragedRegeneration.SDesc, Skills.EnragedRegeneration.SIcon, "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
+            else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes\nNOTE: This check is presently non-functional due to calculational reasons. We do not presently have an ETA for Execute Spam support. It IS still what you want to be doing during Execute Phase.");
             else if (sender == CK_Flooring) tooltip.Setup("Flooring Activations",
                 "Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs).",
+                "Invalid",
                 "Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be.\nUse Flooring at your own risk.");
+            #endregion
             //tooltip.Setup();
             tooltip.Show((UIElement)sender);
         }
@@ -1213,15 +1178,20 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                                 true,  // Whirlwind
                                 true,  // Bloodthirst
                                 true,  // Bloodsurge
+#if RAWR4
+                                true,  // Raging Blow
+#endif
                             true,  // Arms
                                 true,  // Bladestorm
                                 true,  // Mortal Strike
                                 true,  // Rend
                                 true,  // Overpower
                                 true,  // Taste for Blood
+#if !RAWR4
                                 true,  // Sudden Death
-#if RAWR4
+#else
                                 true,  // Colossus Smash
+                                true,  // Victory Rush
 #endif
                                 true,  // Slam
                             true,  // <20% Execute Spamming
@@ -1247,8 +1217,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 bool Checked = true;// CalcOpts.FuryStance;
                 // Fury
                 CK_M_F_WW.IsChecked = Checked;
-                CK_M_F_BS.IsChecked = Checked;
                 CK_M_F_BT.IsChecked = Checked;
+                CK_M_F_BS.IsChecked = Checked;
+#if RAWR4
+                CK_M_F_RB.IsChecked = Checked;
+#endif
                 // Fury Special
                 CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
                 CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
@@ -1258,9 +1231,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_A_RD.IsChecked = Checked;
                 CK_M_A_OP.IsChecked = Checked;
                 CK_M_A_TB.IsChecked = Checked;
+#if !RAWR4
                 CK_M_A_SD.IsChecked = Checked;
-#if RAWR4
+#else
                 CK_M_A_CS.IsChecked = Checked;
+                CK_M_A_VR.IsChecked = Checked;
 #endif
                 CK_M_A_SL.IsChecked = Checked;
                 // Arms Special

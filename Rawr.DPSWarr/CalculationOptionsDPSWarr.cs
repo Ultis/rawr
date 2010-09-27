@@ -45,14 +45,18 @@ namespace Rawr.DPSWarr {
                         true,  // Whirlwind
                         true,  // Bloodthirst
                         true,  // Bloodsurge
+#if RAWR4
+                        true,  // Raging Blow
+#endif
                     true,  // Arms
                         true,  // Bladestorm
                         true,  // Mortal Strike
                         true,  // Rend
                         true,  // Overpower
                         true,  // Taste for Blood
+#if !RAWR4
                         true,  // Sudden Death
-#if RAWR4
+#else
                         true,  // Colossus Smash
 #endif
                         true,  // Slam
@@ -183,15 +187,20 @@ namespace Rawr.DPSWarr {
             Whirlwind_,
             Bloodthirst_,
             Bloodsurge_,
+#if RAWR4
+            RagingBlow_,
+#endif
             Arms_,
             Bladestorm_,
             MortalStrike_,
             Rend_,
             Overpower_,
             TasteForBlood_,
+#if !RAWR4
             SuddenDeath_,
-#if RAWR4
+#else
             ColossusSmash_,
+            VictoryRush_,
 #endif
             Slam_,
             ExecuteSpam_,
@@ -213,7 +222,11 @@ namespace Rawr.DPSWarr {
                                 false, // Commanding Shout
                             false, // Demoralizing Shout
                             false, // Sunder Armor
+#if RAWR4
+                            true,  // Thunder Clap
+#else
                             false, // Thunder Clap
+#endif
                             false, // Hamstring
                         true,  // == Periodics ==
                             true,  // Shattering Throw
@@ -226,14 +239,21 @@ namespace Rawr.DPSWarr {
                                 true,  // Whirlwind
                                 true,  // Bloodthirst
                                 true,  // Bloodsurge
+#if RAWR4
+                                true,  // Raging Blow
+#endif
                             true,  // Arms
                                 true,  // Bladestorm
                                 true,  // Mortal Strike
                                 true,  // Rend
                                 true,  // Overpower
                                 true,  // Taste for Blood
+#if !RAWR4
                                 true,  // Sudden Death
+#else
                                 true,  // Colossus Smash
+                                true,  // Victory Rush
+#endif
                                 true,  // Slam
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
@@ -339,6 +359,14 @@ namespace Rawr.DPSWarr {
             get { return Maintenance[(int)Maintenances.Bloodsurge_]; }
             set { Maintenance[(int)Maintenances.Bloodsurge_] = value; OnPropertyChanged("M_Bloodsurge"); }
         }
+#if RAWR4
+        [XmlIgnore]
+        public bool M_RagingBlow
+        {
+            get { return Maintenance[(int)Maintenances.RagingBlow_]; }
+            set { Maintenance[(int)Maintenances.RagingBlow_] = value; OnPropertyChanged("M_RagingBlow"); }
+        }
+#endif
         [XmlIgnore]
         public bool M_Bladestorm
         {
@@ -369,18 +397,25 @@ namespace Rawr.DPSWarr {
             get { return Maintenance[(int)Maintenances.TasteForBlood_]; }
             set { Maintenance[(int)Maintenances.TasteForBlood_] = value; OnPropertyChanged("M_TasteForBlood"); }
         }
+#if !RAWR4
         [XmlIgnore]
         public bool M_SuddenDeath
         {
             get { return Maintenance[(int)Maintenances.SuddenDeath_]; }
             set { Maintenance[(int)Maintenances.SuddenDeath_] = value; OnPropertyChanged("M_SuddenDeath"); }
         }
-#if RAWR4
+#else
         [XmlIgnore]
         public bool M_ColossusSmash
         {
             get { return Maintenance[(int)Maintenances.ColossusSmash_]; }
             set { Maintenance[(int)Maintenances.ColossusSmash_] = value; OnPropertyChanged("M_ColossusSmash"); }
+        }
+        [XmlIgnore]
+        public bool M_VictoryRush
+        {
+            get { return Maintenance[(int)Maintenances.VictoryRush_]; }
+            set { Maintenance[(int)Maintenances.VictoryRush_] = value; OnPropertyChanged("M_VictoryRush"); }
         }
 #endif
         [XmlIgnore]

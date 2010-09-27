@@ -8,19 +8,20 @@ namespace Rawr.DPSWarr.Skills
     #region Instants
     public class BloodThirst : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Bloodthirst"; } }
+        public static new string SDesc { get { return "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
+        public static new string SIcon { get { return "spell_nature_bloodlust"; } }
         /// <summary>
         /// Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.
-        /// </summary>
         /// <para>Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Bloodthirst";
-            Description = "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
             ReqMeleeWeap = ReqMeleeRange = true;
             //Targets += StatS.BonusTargets;
@@ -46,18 +47,20 @@ namespace Rawr.DPSWarr.Skills
     }
     public class WhirlWind : Ability
     {
+        public static new string SName { get { return "Whirlwind"; } }
+        public static new string SDesc { get { return "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy."; } }
+        public static new string SIcon { get { return "ability_whirlwind"; } }
         /// <summary>
         /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,
         /// causing weapon damage from both melee weapons to each enemy.
-        /// </summary>
         /// <para>Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Whirlwind";
-            Description = "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -152,20 +155,20 @@ namespace Rawr.DPSWarr.Skills
     }
     public class BloodSurge : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Bloodsurge"; } }
+        public static new string SDesc { get { return "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec."; } }
+        public static new string SIcon { get { return "ability_warrior_bloodsurge"; } }
         /// <summary>
-        /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%)
-        /// chance of making your next Slam instant for 5 sec.
-        /// </summary>
+        /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.
         /// <para>Talents: Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</para>
-        /// <para>Glyphs: </para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
             Ability slam, Ability whirlwind, Ability bloodthirst)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Bloodsurge";
-            Description = "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bloodsurge;
@@ -265,17 +268,19 @@ namespace Rawr.DPSWarr.Skills
 #if RAWR4
     public class RagingBlow : Ability
     {
+        public static new string SName { get { return "Raging Blow"; } }
+        public static new string SDesc { get { return "A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged."; } }
+        public static new string SIcon { get { return "ability_hunter_swiftstrike"; } }
         /// <summary>
         /// A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.
-        /// </summary>
-        /// <para>Talents: </para>
+        /// <para>Talents: none</para>
         /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public RagingBlow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Raging Blow";
-            Description = "A mighty blow that deals 100% weapon damage from both melee weapons. Can only be used while Enraged.";
             ReqTalent = true;
             Talent2ChksValue = Talents.RagingBlow;
             //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
@@ -359,18 +364,20 @@ namespace Rawr.DPSWarr.Skills
         Ability
 #endif
     {
+        public static new string SName { get { return "Heroic Strike"; } }
+        public static new string SDesc { get { return "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets."; } }
+        public static new string SIcon { get { return "ability_rogue_ambush"; } }
         /// <summary>
         /// A strong attack that increases melee damage by 495 and causes a high amount of
         /// threat. Causes 173.25 additional damage against Dazed targets.
-        /// </summary>
         /// <para>Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
         /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Heroic Strike";
-            Description = "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -415,7 +422,11 @@ namespace Rawr.DPSWarr.Skills
                 dmg *= combatFactors.DamageBonus; // Global Damage Bonuses
                 dmg *= combatFactors.DamageReduction; // Global Damage Penalties
 
-                float bonusForcedCritsPerc = Talents.BloodAndThunder > 0 ? storedInciteBonusCrits / storedActs : 0;
+#if RAWR4
+                float bonusForcedCritsPerc = Talents.Incite > 0 ? storedInciteBonusCrits / storedActs : 0;
+#else
+                float bonusForcedCritsPerc = 0f;
+#endif
 
                 // Work the Attack Table
                 float dmgDrop = (1f
@@ -455,17 +466,19 @@ namespace Rawr.DPSWarr.Skills
         Ability
 #endif
     {
+        public static new string SName { get { return "Cleave"; } }
+        public static new string SDesc { get { return "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally."; } }
+        public static new string SIcon { get { return "ability_warrior_cleave"; } }
         /// <summary>
         /// A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.
-        /// </summary>
         /// <para>Talents: Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</para>
         /// <para>Glyphs: Glyph of Cleaving [+1 targets hit]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Cleave";
-            Description = "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -507,6 +520,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: </para>
         ///  - (Talents.FocusedRage * 1f)
         ///  RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
+        public static new string Icon { get { return "inv_gauntlets_04"; } }
     }
     #endregion
 }

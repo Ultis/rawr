@@ -8,21 +8,20 @@ namespace Rawr.DPSWarr.Skills
     #region Instants
     public class MortalStrike : Ability
     {
+        public static new string SName { get { return "Mortal Strike"; } }
+        public static new string SDesc { get { return "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec."; } }
+        public static new string SIcon { get { return "ability_warrior_savageblow"; } }
         /// <summary>
         /// A vicious strike that deals weapon damage plus 380 and wounds the target, reducing
         /// the effectiveness of any healing by 50% for 10 sec.
+        /// <para>Talents: Mortal Strike (Requires Talent), Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% Dmg, -(1/3*Pts) Cd]</para>
+        /// <para>Glyphs: Glyph of Mortal Strike [+10% Dmg]</para>
+        /// <para>Sets: T8 4P [+Crit %]</para>
         /// </summary>
-        /// <para>Talents: 
-        /// Mortal Strike (Requires Talent),
-        /// Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% damage, -(1/3*Pts) sec cooldown]
-        /// </para>
-        /// <para>Glyphs: Glyph of Mortal Strike [+10% damage]</para>
         public MortalStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Mortal Strike";
-            Description = "A vicious strike that deals weapon damage plus 380 and wounds the target, reducing the effectiveness of any healing by 50% for 10 sec.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -51,20 +50,20 @@ namespace Rawr.DPSWarr.Skills
 #if RAWR4
     public class ColossusSmash : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Colossus Smash"; } }
+        public static new string SDesc { get { return "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute."; } }
+        public static new string SIcon { get { return "ability_smash"; } }
         /// <summary>
         /// Smashes a target for weapon damage plus 120 and weakens their defenses,
         /// allowing your attacks to entirely bypass their armor for 6 sec.
-        /// </summary>
         /// <para>Talents: Sudden Death (Requires Talent) [(5*Pts)% chance on melee hit to reset the cd, keep 5*Pts rage after Exec]</para>
-        /// <para>Glyphs: </para>
-        /// <para>Sets: </para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public ColossusSmash(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Colossus Smash";
-            Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ColossusSmash_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 30;
@@ -94,9 +93,11 @@ namespace Rawr.DPSWarr.Skills
         }
     }
 #else
-    public class Suddendeath : Ability
+    public class SuddenDeath : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Sudden Death"; } }
+        public static new string SDesc { get { return "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute."; } }
+        public static new string SIcon { get { return "ability_warrior_improveddisciplines"; } }
         /// <summary>
         /// Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of
         /// the target's Health state. This Execute only uses up to 30 total rage. In addition,
@@ -110,12 +111,10 @@ namespace Rawr.DPSWarr.Skills
         /// its effect instead of 1, reduce the global cooldown on Execute or Slam by 0.5 sec,
         /// and for the duration of the effect to be increased by 100%.]
         /// </para>
-        public Suddendeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ex)
+        public SuddenDeath(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ex)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Sudden Death";
-            Description = "Your melee hits have a (3*Pts)% chance of allowing the use of Execute regardless of the target's Health state. This Execute only uses up to 30 total rage. In addition, you keep at least (3/7/10) rage after using Execute.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SuddenDeath_;
             Exec = ex as Execute;
             RageCost = Exec.RageCost;
@@ -141,7 +140,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        // Variables
+        #region Variables
         public Execute Exec;
         public float FreeRage { get { return Exec.FreeRage; } set { Exec.FreeRage = value; } }
         public float UsedExtraRage { get { return Exec.UsedExtraRage; } set { Exec.UsedExtraRage = value; } }
@@ -152,7 +151,8 @@ namespace Rawr.DPSWarr.Skills
             new SpecialEffect[] { new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (false ? 20f : 10f), 0f, 3 * 0.03f), new SpecialEffect(Trigger.MeleeHit, new Stats() { }, (true ? 20f : 10f), 0f, 3 * 0.03f), },
         };
         protected SpecialEffect Buff { get { return _buff[Talents.SuddenDeath][StatS.BonusWarrior_T10_4P_BSSDProcChange > 0 ? 1 : 0]; } }
-        // Functions
+        #endregion
+        #region Functions
         public float GetActivates(float landedatksoverdur) {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
             float acts = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f/*MHAtkTable.AnyLand*/, combatFactors._c_mhItemSpeed, FightDuration);
@@ -169,18 +169,22 @@ namespace Rawr.DPSWarr.Skills
         }
         private float[] _SDRageReduc = { 0, 3, 7, 10 };
         private float[] SDRageReduc { get{ return _SDRageReduc; } }
+        #endregion
     }
 #endif
     public class OverPower : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Overpower"; } }
+        public static new string SDesc { get { return "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried."; } }
+        public static new string SIcon { get { return "ability_meleedamage"; } }
         /// <summary>
         /// Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges.
         /// The Overpower cannot be blocked, dodged or parried.
-        /// </summary>
         /// <para>Talents: Improved Overpower [+(25*Pts)% Crit Chance],
         /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</para>
         /// <para>Glyphs: Glyph of Overpower [Can proc when parried]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
 #if !RAWR4
         public OverPower(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ss)
 #else
@@ -189,8 +193,6 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Overpower";
-            Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target dodges. The Overpower cannot be blocked, dodged or parried.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
 #if !RAWR4
             SS = ss;
@@ -264,20 +266,20 @@ namespace Rawr.DPSWarr.Skills
     }
     public class TasteForBlood : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Taste for Blood"; } }
+        public static new string SDesc { get { return "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried."; } }
+        public static new string SIcon { get { return "ability_rogue_hungerforblood"; } }
         /// <summary>
         /// Instantly overpower the enemy, causing weapon damage. Only usable after the target takes Rend Damage.
         /// The Overpower cannot be blocked, dodged or parried.
+        /// <para>Talents: Improved Overpower [+(25*Pts)% Crit Chance], Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <para>Talents: Improved Overpower [+(25*Pts)% Crit Chance],
-        /// Unrelenting Assault [-(2*Pts) sec cooldown, +(10*Pts)% Damage.]</para>
-        /// <para>Glyphs: </para>
         public TasteForBlood(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Taste for Blood";
-            Description = "Instantly overpower the enemy, causing weapon damage plus 125. Only usable after the target takes Rend Damage. The Overpower cannot be blocked, dodged or parried.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
             ReqTalent = true;
             Talent2ChksValue = Talents.TasteForBlood;
@@ -327,22 +329,23 @@ namespace Rawr.DPSWarr.Skills
     }
     public class Bladestorm : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Bladestorm"; } }
+        public static new string SDesc { get { return "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed."; } }
+        public static new string SIcon { get { return "ability_warrior_bladestorm"; } }
         /// <summary>
         /// Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will
         /// perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot
         /// perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped
         /// unless killed.
-        /// </summary>
         /// <para>Talents: Bladestorm [Requires Talent]</para>
         /// <para>Glyphs: Glyph of Bladestorm [-15 sec Cd]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ww)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             WW = ww;
-            Name = "Bladestorm";
-            Description = "Instantly Whirlwind up to 4 nearby targets and for the next 6 sec you will perform a whirlwind attack every 1 sec. While under the effects of Bladestorm, you can move but cannot perform any other abilities but you do not feel pity or remorse or fear and you cannot be stopped unless killed.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bladestorm;
@@ -382,6 +385,9 @@ namespace Rawr.DPSWarr.Skills
 #if !RAWR4
     public class Swordspec : Ability
     {
+        public static new string SName { get { return "Sword Specialization"; } }
+        public static new string SDesc { get { return "Gives a (1*Pts)% chance to get an extra attack on the same target after hitting your target with your Sword. This effect cannot occur more than once every 6 seconds."; } }
+        public static new string SIcon { get { return "inv_sword_27"; } }
         /// <summary>
         /// Gives a (1*Pts)% chance to get an extra attack on the same target after hitting
         /// your target with your Sword. This effect cannot occur more than once every 6 seconds.
@@ -392,8 +398,6 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Sword Specialization";
-            Description = "Gives a (1*Pts)% chance to get an extra attack on the same target after hitting your target with your Sword. This effect cannot occur more than once every 6 seconds.";
             ReqTalent = true;
 #if !RAWR4
             Talent2ChksValue = Talents.SwordSpecialization;
@@ -485,7 +489,9 @@ namespace Rawr.DPSWarr.Skills
 #endif
     public class Execute : Ability
     {
-        // Constructors
+        public static new string SName { get { return "Execute"; } }
+        public static new string SDesc { get { return "Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each extra point of rage into 38 additional damage. Only usable on enemies that have less than 20% health."; } }
+        public static new string SIcon { get { return "inv_sword_48"; } }
         /// <summary>
         /// Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each
         /// extra point of rage into 38 additional damage. Only usable on enemies that have less
@@ -497,8 +503,6 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Execute";
-            Description = "Attempt to finish off a wounded foe, causing (1456+AP*0.2) damage and converting each extra point of rage into 38 additional damage. Only usable on enemies that have less than 20% health.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -554,7 +558,11 @@ namespace Rawr.DPSWarr.Skills
     }
     public class Slam : Ability
     {
-        /// <summary>Slams the opponent, causing weapon damage plus 250.
+        public static new string SName { get { return "Slam"; } }
+        public static new string SDesc { get { return "Slams the opponent, causing weapon damage plus 250."; } }
+        public static new string SIcon { get { return "ability_warrior_decisivestrike"; } }
+        /// <summary>
+        /// Slams the opponent, causing weapon damage plus 250.
         /// <para>Talents: Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</para>
         /// <para>Glyphs: Slam [+5% Crit]</para>
         /// <para>Sets: T7 Deadnaught Battlegear 2 Pc [+10% Damage]</para>
@@ -563,8 +571,6 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Slam";
-            Description = "Slams the opponent, causing weapon damage plus 250.";
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
@@ -586,23 +592,72 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
     }
+    public class VictoryRush : Ability
+    {
+        public static new string SName { get { return "Victory Rush"; } }
+        public static new string SDesc { get { return "Instantly attack the target causing (AP * 45 / 100) damage and healing you for 20% of your maximum health.  Can only be used within 20 sec after you kill an enemy that yields experience or honor."; } }
+        public static new string SIcon { get { return "ability_warrior_devastate"; } }
+        /// <summary>
+        /// Instant, No Cd, No Rage, Melee Range, (Battle, Zerker)
+        /// Instant attack the target causing 1424 damage. Can only be used within 25 sec after you
+        /// kill an enemy that yields experience or honor. Damage is based on your attack power.
+        /// </summary>
+        /// <para>Talents: </para>
+        /// <para>Glyphs: 
+        /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
+        /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
+        /// </para>
+        public VictoryRush(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+#if RAWR4
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
+#endif
+            ReqMeleeWeap = ReqMeleeRange = true;
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            //
+            DamageBase = StatS.AttackPower * 45f / 100f;
+#if RAWR4
+            DamageBonus = 1f + Talents.WarAcademy * 0.05f;
+#endif
+            HealingBase = StatS.Health * 0.20f; // 20% of Max Health Restored
+            //
+            Initialize();
+        }
+        protected override float ActivatesOverride
+        {
+            get
+            {
+                float retVal = 0f;
+                if (BossOpts.MultiTargs) {
+                    float freq = BossOpts.MultiTargsFreq;
+                    float acts = FightDuration / freq;
+                    retVal = acts;
+                }
+                return retVal;
+            }
+        }
+    }
     #endregion
 
     public class Rend : DoT
     {
+        public static new string SName { get { return "Rend"; } }
+        public static new string SDesc { get { return "Wounds the target causing them to bleed for 380 damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage."; } }
+        public static new string SIcon { get { return "ability_gouge"; } }
         /// <summary>
         /// Wounds the target causing them to bleed for 380 damage plus an additional
         /// (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your
         /// target is above 75% health, Rend does 35% more damage.
-        /// </summary>
         /// <para>Talents: Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</para>
         /// <para>Glyphs: Glyph of Rending [+2 damage ticks]</para>
+        /// <para>Sets: none</para>
+        /// </summary>
         public Rend(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "Rend";
-            Description = "Wounds the target causing them to bleed for 380 damage plus an additional (0.2*5*MWB+mwb/2+AP/14*MWS) (based on weapon damage) over 15 sec. If used while your target is above 75% health, Rend does 35% more damage.";
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Rend_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
@@ -697,12 +752,12 @@ namespace Rawr.DPSWarr.Skills
 
     public class FakeWhite : Ability
     {
+        public static new string SName { get { return "MH White Swing"; } }
+        public static new string SDesc { get { return "White Damage"; } }
         public FakeWhite(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            Name = "MH White Swing";
-            Description = "White Damage";
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Cd = Whiteattacks.MhEffectiveSpeed;
