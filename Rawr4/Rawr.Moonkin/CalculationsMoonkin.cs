@@ -13,17 +13,19 @@ namespace Rawr.Moonkin
         /// <param name="character">The Character to set buffs for.</param>
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Blessing of Might"));
+            character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
+            character.ActiveBuffsAdd(("Arcane Brilliance (SP%)"));
+            character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
             character.ActiveBuffsAdd(("Moonkin Form"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Enduring Winter"));
             character.ActiveBuffsAdd(("Power Word: Fortitude"));
             character.ActiveBuffsAdd(("Mark of the Wild"));
             character.ActiveBuffsAdd(("Earth and Moon"));
-            character.ActiveBuffsAdd(("Faerie Fire"));
-            character.ActiveBuffsAdd(("Sunder Armor"));
+            character.ActiveBuffsAdd(("Critical Mass"));
             character.ActiveBuffsAdd(("Heroism/Bloodlust"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
+            character.ActiveBuffsAdd(("Power Infusion"));
+            character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
             character.ActiveBuffsAdd(("Fish Feast"));
         }
         private string[] _optimizableCalculationLabels = null;
