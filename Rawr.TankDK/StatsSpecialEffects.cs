@@ -24,13 +24,17 @@ namespace Rawr.TankDK
             if (effect.Trigger == Trigger.Use)
             {
                 if (calcOpts.bUseOnUseAbilities == true)
-                    statsAverage.Accumulate(effect.GetAverageStats());
+                    statsAverage.Accumulate(effect.GetAverageStats(calcOpts.FightLength * 60f, 1f, 0, calcOpts.FightLength));
             }
             else
             {
                 float trigger = 0f;
                 float chance = effect.Chance;
                 float duration = effect.Duration;
+                if (duration == float.PositiveInfinity)
+                {
+                    duration = calcOpts.FightLength;
+                }
                 float unhastedAttackSpeed = 2f;
                 switch (effect.Trigger)
                 {
