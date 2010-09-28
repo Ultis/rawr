@@ -122,6 +122,8 @@ namespace Rawr.Moonkin
                 Effect.Trigger == Trigger.SpellMiss ||
                 Effect.Trigger == Trigger.Use ||
                 Effect.Trigger == Trigger.MoonfireCast ||
+                Effect.Trigger == Trigger.InsectSwarmCast ||
+                Effect.Trigger == Trigger.InsectSwarmOrMoonfireCast ||
                 Effect.Trigger == Trigger.MoonfireTick ||
                 Effect.Trigger == Trigger.InsectSwarmTick ||
 				Effect.Trigger == Trigger.DoTTick) &&
@@ -204,6 +206,15 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.MoonfireCast:
                             upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireCasts, 1f);
+                            break;
+                        case Trigger.InsectSwarmCast:
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.InsectSwarmCasts, 1f);
+                            break;
+                        case Trigger.InsectSwarmOrMoonfireCast:
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.MoonfireCasts + r.RotationData.InsectSwarmCasts), 1f);
+                            break;
+                        case Trigger.EclipseProc:
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / 2f, 1f);
                             break;
                         case Trigger.MoonfireTick:
                             upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireTicks, 1f);

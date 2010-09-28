@@ -283,7 +283,21 @@ namespace Rawr.Moonkin
                 List<ProcEffect> alwaysUpEffects = new List<ProcEffect>();
 
                 // Pre-calculate rotational variables with base stats
-                rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery);
+                float baselineDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                // Calculate Nature's Grace uptime in a separate loop
+                if (talents.NaturesTorment > 0)
+                {
+                    ProcEffect naturesGrace = new ProcEffect(new SpecialEffect(Trigger.InsectSwarmOrMoonfireCast, new Stats() { SpellHaste = 0.05f * talents.NaturesTorment }, 15f, rot.RotationData.Duration / 2f));
+                    float delta = 0;
+                    do
+                    {
+                        currentHaste *= 1 + 0.05f * talents.NaturesTorment * naturesGrace.UpTime(rot, calcs);
+                        float currentDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                        delta = currentDPS - baselineDPS;
+                        baselineDPS = currentDPS;
+                        naturesGrace = new ProcEffect(new SpecialEffect(Trigger.InsectSwarmOrMoonfireCast, new Stats() { SpellHaste = 0.05f * talents.NaturesTorment }, 15f, rot.RotationData.Duration / 2f));
+                    } while (delta > 1);
+                }
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
                 // Add spell crit effects here as well, since they no longer affect timing
                 foreach (ProcEffect proc in procEffects)
