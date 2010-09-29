@@ -62,6 +62,9 @@ namespace Rawr.Moonkin
             retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.DPS));
             retVal.Add("Selected Time To OOM", String.Format(SelectedRotation.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", SelectedRotation.TimeToOOM.Minutes, SelectedRotation.TimeToOOM.Seconds));
             retVal.Add("Selected Cycle Length", String.Format("{0:F1} s", SelectedRotation.Duration));
+            retVal.Add("Nature's Grace Uptime", String.Format("{0:F2}%", SelectedRotation.NaturesGraceUptime * 100));
+            retVal.Add("Solar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.SolarUptime * 100));
+            retVal.Add("Lunar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.LunarUptime * 100));
 
             StringBuilder sb = new StringBuilder("*");
             float rotationDamage = SelectedRotation.DPS * SelectedRotation.Duration;

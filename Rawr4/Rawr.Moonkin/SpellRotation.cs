@@ -43,6 +43,7 @@ namespace Rawr.Moonkin
         public float TreantDamage { get; set; }
         public float SolarUptime { get; set; }
         public float LunarUptime { get; set; }
+        public float NaturesGraceUptime { get; set; }
         public DotMode MoonfireRefreshMode { get; set; }
         public DotMode InsectSwarmRefreshMode { get; set; }
         public StarsurgeMode StarsurgeCastMode { get; set; }
@@ -75,7 +76,7 @@ namespace Rawr.Moonkin
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * spellPower) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
-            mainNuke.AverageEnergy = mainNuke.BaseEnergy;
+            mainNuke.AverageEnergy = mainNuke.BaseEnergy * spellHit;
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
@@ -277,8 +278,8 @@ namespace Rawr.Moonkin
                 (RotationData.MoonfireRefreshMode == DotMode.Twice ? 0.5f :
                 (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0 :
                 (lunarTime + preSolarTime) / mainNukeDuration + mf.DotEffect.Duration / RotationData.Duration)));
-            float averageUnextendedHit = RotationData.LunarUptime * (eclipseMF.DamagePerHit + eclipseMF.DotEffect.DamagePerHit) + RotationData.SolarUptime * (eclipseSuF.DamagePerHit + eclipseSuF.DotEffect.DamagePerHit) + (1 - RotationData.SolarUptime - RotationData.LunarUptime) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
-            float averageExtendedHit = RotationData.LunarUptime * (eclipseMFExtended.DamagePerHit + eclipseMFExtended.DotEffect.DamagePerHit) + RotationData.SolarUptime * (eclipseSuFExtended.DamagePerHit + eclipseSuFExtended.DotEffect.DamagePerHit) + (1 - RotationData.SolarUptime - RotationData.LunarUptime) * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit);
+            float averageUnextendedHit = RotationData.LunarUptime * (eclipseMF.DamagePerHit + eclipseMF.DotEffect.DamagePerHit) + (talents.Sunfire > 0 ? RotationData.SolarUptime * (eclipseSuF.DamagePerHit + eclipseSuF.DotEffect.DamagePerHit) : 0) + (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0) - RotationData.LunarUptime) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
+            float averageExtendedHit = RotationData.LunarUptime * (eclipseMFExtended.DamagePerHit + eclipseMFExtended.DotEffect.DamagePerHit) + (talents.Sunfire > 0 ? RotationData.SolarUptime * (eclipseSuFExtended.DamagePerHit + eclipseSuFExtended.DotEffect.DamagePerHit) : 0) + (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0) - RotationData.LunarUptime) * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit);
             RotationData.MoonfireAvgHit = moonfireExtendedPercent * averageExtendedHit + (1 - moonfireExtendedPercent) * averageUnextendedHit;
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
             RotationData.InsectSwarmAvgHit = RotationData.SolarUptime * eclipseIS.DotEffect.DamagePerHit + (1 - RotationData.SolarUptime) * iSw.DotEffect.DamagePerHit;

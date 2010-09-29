@@ -291,7 +291,8 @@ namespace Rawr.Moonkin
                     float delta = 0;
                     do
                     {
-                        currentHaste *= 1 + 0.05f * talents.NaturesTorment * naturesGrace.UpTime(rot, calcs);
+                        rot.RotationData.NaturesGraceUptime = naturesGrace.UpTime(rot, calcs);
+                        currentHaste *= 1 + 0.05f * talents.NaturesTorment * rot.RotationData.NaturesGraceUptime;
                         float currentDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / (calcs.FightLength * 60.0f);
                         delta = currentDPS - baselineDPS;
                         baselineDPS = currentDPS;
