@@ -116,7 +116,7 @@ namespace Rawr.Moonkin
             Spell mf = new Spell(Solver.Moonfire);
             Spell iSw = new Spell(Solver.InsectSwarm);
             Spell mfExtended = new Spell(mf);
-            mfExtended.DotEffect.Duration += talents.GlyphOfStarfire ? 9.0f : 0.0f;
+            mfExtended.DotEffect.BaseDuration += talents.GlyphOfStarfire ? 9.0f : 0.0f;
 
             Spell eclipseSF = new Spell(Solver.Starfire);
             Spell eclipseW = new Spell(Solver.Wrath);
@@ -293,6 +293,14 @@ namespace Rawr.Moonkin
                 RotationData.StarSurgeCount * ss.BaseManaCost +
                 RotationData.MoonfireCasts * mf.BaseManaCost +
                 RotationData.InsectSwarmCasts * iSw.BaseManaCost;
+
+            float manaSavingsFromOOC = 0.06f * (RotationData.MoonfireCasts / RotationData.CastCount * mf.BaseManaCost) +
+                0.06f * (RotationData.InsectSwarmCasts / RotationData.CastCount * iSw.BaseManaCost) +
+                0.06f * (RotationData.StarfireCount / RotationData.CastCount * sf.BaseManaCost) +
+                0.06f * (RotationData.WrathCount / RotationData.CastCount * w.BaseManaCost) +
+                0.06f * (RotationData.StarSurgeCount / RotationData.CastCount * ss.BaseManaCost);
+
+            RotationData.ManaUsed -= manaSavingsFromOOC;
 
             RotationData.ManaGained = 2 * 0.06f * talents.Euphoria * calcs.BasicStats.Mana;
 

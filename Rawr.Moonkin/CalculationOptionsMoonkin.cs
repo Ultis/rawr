@@ -20,6 +20,8 @@ namespace Rawr.Moonkin
 			return xml.ToString();
 		}
 
+        public bool Notify = true;
+
 		private int targetLevel = 83;
 		public int TargetLevel
 		{
@@ -60,13 +62,6 @@ namespace Rawr.Moonkin
 			set { innervateDelay = value; OnPropertyChanged("InnervateDelay"); }
 		}
 
-		private string aldorScryer = "Aldor";
-		public string AldorScryer
-		{
-			get { return aldorScryer; }
-			set { aldorScryer = value; OnPropertyChanged("AldorScryer"); }
-		}
-
 		private float replenishmentUptime = 1.0f;
 		public float ReplenishmentUptime
 		{
@@ -99,7 +94,7 @@ namespace Rawr.Moonkin
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
 		{
-			if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
+			if (PropertyChanged != null && Notify) PropertyChanged(this, new PropertyChangedEventArgs(property));
 		}
 		#endregion
 	}

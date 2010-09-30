@@ -38,7 +38,7 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.18f),
                             DotEffect = new DotEffect()
                                 {
-                                    Duration = 12.0f,
+                                    BaseDuration = 12.0f,
                                     BaseTickLength = 2.0f,
                                     TickDamage = 84.0f,
                                     SpellDamageModifierPerTick = 0.18f
@@ -65,7 +65,7 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.08f),
                             DotEffect = new DotEffect()
                             {
-                                Duration = 12.0f,
+                                BaseDuration = 12.0f,
                                 BaseTickLength = 2.0f,
                                 TickDamage = 244.0f,
                                 SpellDamageModifierPerTick = 0.26f
@@ -612,7 +612,8 @@ namespace Rawr.Moonkin
             float innervateCooldown = 360 - calcs.BasicStats.InnervateCooldownReduction;
 
             // Mana/5 calculations
-            float totalManaRegen = calcs.ManaRegen * fightLength;
+            // Spirit-based mana regen is turned off in combat, so remove it from the regen table here
+            float totalManaRegen = (calcs.ManaRegen - StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect)) * fightLength;
 
             // Mana pot calculations
             float manaRestoredByPots = 0.0f;
@@ -741,17 +742,14 @@ namespace Rawr.Moonkin
                 case 1:
                     Starfire.BaseCastTime -= 0.1f;
                     Wrath.BaseCastTime -= 0.1f;
-                    Starsurge.BaseCastTime -= 0.1f;
                     break;
                 case 2:
                     Starfire.BaseCastTime -= 0.2f;
                     Wrath.BaseCastTime -= 0.2f;
-                    Starsurge.BaseCastTime -= 0.2f;
                     break;
                 case 3:
                     Starfire.BaseCastTime -= 0.5f;
                     Wrath.BaseCastTime -= 0.5f;
-                    Starsurge.BaseCastTime -= 0.5f;
                     break;
                 default:
                     break;
@@ -766,8 +764,8 @@ namespace Rawr.Moonkin
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
             Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
             // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
-            Moonfire.DotEffect.Duration += 0.2f * talents.Genesis;
-            InsectSwarm.DotEffect.Duration += 0.2f * talents.Genesis;
+            Moonfire.DotEffect.BaseDuration += 0.2f * talents.Genesis;
+            InsectSwarm.DotEffect.BaseDuration += 0.2f * talents.Genesis;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond
@@ -786,7 +784,7 @@ namespace Rawr.Moonkin
 
             // Add set bonuses
             // 2T6
-            Moonfire.DotEffect.Duration += stats.MoonfireExtension;
+            Moonfire.DotEffect.BaseDuration += stats.MoonfireExtension;
             // 4T6
             Starfire.CriticalChanceModifier += stats.StarfireCritChance;
             // 4T7

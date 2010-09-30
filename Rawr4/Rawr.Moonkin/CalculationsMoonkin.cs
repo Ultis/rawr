@@ -535,7 +535,8 @@ namespace Rawr.Moonkin
             get {
                 if (customChartNames == null) {
                     customChartNames = new string[] { 
-                    "Damage per Cast Time"
+                    "Damage per Cast Time",
+                    "Mana Gains By Source"
                     };
                 }
                 return customChartNames;
@@ -790,8 +791,79 @@ namespace Rawr.Moonkin
                     return new ComparisonCalculationBase[0];
                 case "Talent MP5 Comparison":
                     return new ComparisonCalculationBase[0];
-                case "Mana Gains":
-                    return new ComparisonCalculationBase[0];
+                case "Mana Gains By Source":
+                    CharacterCalculationsMoonkin calcsManaBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    RotationData manaGainsRot = calcsManaBase.SelectedRotation;
+                    Character c2 = character.Clone();
+
+                    List<ComparisonCalculationMoonkin> manaGainsList = new List<ComparisonCalculationMoonkin>();
+
+                    // Euphoria
+                    int previousTalentValue = c2.DruidTalents.Euphoria;
+                    c2.DruidTalents.Euphoria = 0;
+                    CharacterCalculationsMoonkin calcsManaMoonkin = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    c2.DruidTalents.Euphoria = previousTalentValue;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaMoonkin.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Euphoria",
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                            });
+                        }
+                    }
+
+                    // Replenishment
+                    CalculationOptionsMoonkin calcOpts = c2.CalculationOptions as CalculationOptionsMoonkin;
+                    calcOpts.Notify = false;
+                    float oldReplenishmentUptime = calcOpts.ReplenishmentUptime;
+                    calcOpts.ReplenishmentUptime = 0.0f;
+                    CharacterCalculationsMoonkin calcsManaReplenishment = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    calcOpts.ReplenishmentUptime = oldReplenishmentUptime;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaReplenishment.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Replenishment",
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                            });
+                        }
+                    }
+
+                    // Innervate
+                    bool innervate = calcOpts.Innervate;
+                    calcOpts.Innervate = false;
+                    CharacterCalculationsMoonkin calcsManaInnervate = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    calcOpts.Innervate = innervate;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaInnervate.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Innervate",
+                                OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                            });
+                        }
+                    }
+                    calcOpts.Notify = true;
+
+                    // mp5
+                    manaGainsList.Add(new ComparisonCalculationMoonkin()
+                    {
+                        Name = "MP5",
+                        OverallPoints = calcsManaBase.FightLength * 60.0f * (calcsManaBase.ManaRegen - StatConversion.GetSpiritRegenSec(calcsManaBase.BasicStats.Spirit, calcsManaBase.BasicStats.Intellect)),
+                        DamagePoints = calcsManaBase.FightLength * 60.0f * (calcsManaBase.ManaRegen - StatConversion.GetSpiritRegenSec(calcsManaBase.BasicStats.Spirit, calcsManaBase.BasicStats.Intellect))
+                    });
+                    return manaGainsList.ToArray();
+
                 case "Damage per Cast Time":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     ComparisonCalculationMoonkin sf = new ComparisonCalculationMoonkin() { Name = "Starfire" };
@@ -799,6 +871,7 @@ namespace Rawr.Moonkin
                     ComparisonCalculationMoonkin iSw = new ComparisonCalculationMoonkin() { Name = "Insect Swarm " };
                     ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath" };
                     ComparisonCalculationMoonkin ss = new ComparisonCalculationMoonkin() { Name = "Starsurge" };
+                    ComparisonCalculationMoonkin ssInst = new ComparisonCalculationMoonkin() { Name = "Shooting Stars Proc" };
                     sf.DamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
                     sf.OverallPoints = sf.DamagePoints;
                     mf.DamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
@@ -809,7 +882,9 @@ namespace Rawr.Moonkin
                     wr.OverallPoints = wr.DamagePoints;
                     ss.DamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.StarSurgeAvgCast;
                     ss.OverallPoints = ss.DamagePoints;
-                    return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss };
+                    ssInst.DamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    ssInst.OverallPoints = ssInst.DamagePoints;
+                    return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst };
             }
             return new ComparisonCalculationBase[0];
         }
