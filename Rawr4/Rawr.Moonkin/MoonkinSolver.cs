@@ -303,7 +303,7 @@ namespace Rawr.Moonkin
                 // Calculate Lunar Shower DPS for movement fights
                 Spell lunarShower = new Spell(Moonfire);
                 lunarShower.AllDamageModifier *= 1 + (0.15f * talents.LunarShower);
-                lunarShower.BaseManaCost *= 1 - (0.01f * talents.LunarShower);
+                lunarShower.BaseManaCost *= 1 - (0.1f * talents.LunarShower);
                 rot.DoDotSpell(calcs, ref lunarShower, baseSpellPower, baseHit, baseCrit, baseHaste);
                 float movementDPS = lunarShower.DamagePerHit / lunarShower.CastTime;
                 float movementManaPerSec = lunarShower.BaseManaCost / lunarShower.CastTime;
