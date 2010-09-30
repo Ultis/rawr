@@ -240,6 +240,7 @@ namespace Rawr.Moonkin
 
             float totalTimeInRotation = calcs.FightLength * 60.0f;
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
+            float movementShare = 0f;
 #if RAWR3 || RAWR4
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
@@ -256,7 +257,7 @@ namespace Rawr.Moonkin
             foreach (Attack a in attacks)
                 accumulatedDurations += a.AttackSpeed;
 
-            float movementShare = (movementCount == 0 ? 0 : assumedMovementDuration / (accumulatedDurations / movementCount) / (1 + calcs.BasicStats.MovementSpeed));
+            movementShare = (movementCount == 0 ? 0 : assumedMovementDuration / (accumulatedDurations / movementCount) / (1 + calcs.BasicStats.MovementSpeed));
 
             percentTimeInRotation -= movementShare + fearShare + stunShare + invulnerableShare;
 #endif
@@ -299,6 +300,13 @@ namespace Rawr.Moonkin
                         naturesGrace = new ProcEffect(new SpecialEffect(Trigger.InsectSwarmOrMoonfireCast, new Stats() { SpellHaste = 0.05f * talents.NaturesTorment }, 15f, rot.RotationData.Duration / 2f));
                     } while (delta > 1);
                 }
+                // Calculate Lunar Shower DPS for movement fights
+                Spell lunarShower = new Spell(Moonfire);
+                lunarShower.AllDamageModifier *= 1 + (0.15f * talents.LunarShower);
+                lunarShower.BaseManaCost *= 1 - (0.01f * talents.LunarShower);
+                rot.DoDotSpell(calcs, ref lunarShower, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float movementDPS = lunarShower.DamagePerHit / lunarShower.CastTime;
+                float movementManaPerSec = lunarShower.BaseManaCost / lunarShower.CastTime;
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop
                 // Add spell crit effects here as well, since they no longer affect timing
                 foreach (ProcEffect proc in procEffects)
@@ -529,9 +537,9 @@ namespace Rawr.Moonkin
 
                 accumulatedDamage += accumulatedDPS * rot.RotationData.Duration;
 
-                float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation;
+                float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation + movementDPS * movementShare;
                 float sustainedDPS = burstDPS;
-                float timeToOOM = (manaPool / (rot.RotationData.ManaUsed - rot.RotationData.ManaGained)) * rot.RotationData.Duration;
+                float timeToOOM = (manaPool / (rot.RotationData.ManaUsed - rot.RotationData.ManaGained)) * rot.RotationData.Duration * percentTimeInRotation + (manaPool / movementManaPerSec * movementShare);
                 if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
                 if (timeToOOM < calcs.FightLength * 60.0f)
                 {
@@ -629,7 +637,7 @@ namespace Rawr.Moonkin
             // Innervate calculations
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
             int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
-            float totalInnervateMana = numInnervates * calcs.BasicStats.Mana;
+            float totalInnervateMana = numInnervates * 0.2f * calcs.BasicStats.Mana;
             switch (character.DruidTalents.Dreamstate)
             {
                 case 1:
