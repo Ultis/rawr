@@ -994,9 +994,9 @@ namespace Rawr.DPSDK
                 statsTalents = new Stats()
                 {
                     // TODO: Expand this since I know in TankDK this was a much broader set of Talent->Stat adjustments.
-                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar + talents.EndlessWinter),
+                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.VeteranOfTheThirdWar + talents.EndlessWinter),
                     BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-                    BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                    BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
                     Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
 
                     //ArmorPenetration = talents.BloodGorged * 2f / 100,
@@ -1020,7 +1020,8 @@ namespace Rawr.DPSDK
             statsTotal.Accumulate(statsTalents);
 
             statsTotal = GetRelevantStats(statsTotal);
-            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
+            float ExpFromRating = (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
+            statsTotal.Expertise += ExpFromRating;
 
             StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
             Stats statSE = new Stats();
@@ -1116,9 +1117,9 @@ namespace Rawr.DPSDK
             {
                 statsTalents = new Stats()
                 {
-                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                    BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.VeteranOfTheThirdWar),
                     BaseArmorMultiplier = .03f * (float)(talents.Toughness),
-                    BonusStaminaMultiplier = .02f * (float)(/*talents.ShadowOfDeath + */talents.VeteranOfTheThirdWar),
+                    BonusStaminaMultiplier = .02f * (float)(talents.VeteranOfTheThirdWar),
                     Expertise = (float)(talents.TundraStalker + talents.RageOfRivendare) + 2f * (float)(talents.VeteranOfTheThirdWar),
                     BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
                     BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare) + 0.03f * talents.TundraStalker,
@@ -1969,6 +1970,7 @@ namespace Rawr.DPSDK
                 Agility = stats.Agility,
                 Stamina = stats.Stamina,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                Expertise = stats.Expertise,
                 ExpertiseRating = stats.ExpertiseRating,
                 AttackPower = stats.AttackPower,
                 // Other Base Stats
@@ -2151,6 +2153,7 @@ namespace Rawr.DPSDK
             bResults |= (stats.Agility != 0);
             bResults |= (stats.Stamina != 0);
             bResults |= (stats.ArmorPenetrationRating != 0);
+            bResults |= (stats.Expertise != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.AttackPower != 0);
             bool bHasCore = bResults; // if the above stats are 0, lets make sure we're not bringing in caster gear below.
