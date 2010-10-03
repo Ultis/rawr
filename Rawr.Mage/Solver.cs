@@ -2448,11 +2448,11 @@ namespace Rawr.Mage
             float spellCritPerInt = 0f;
             float spellCritBase = 0.9075f;
             float baseRegen = 0f;
+#if RAWR4
+            float baseCombatRegen = 63.821f;
+#else
             float baseCombatRegen = 0f;
-            if (CalculationOptions.Beta)
-            {
-                baseCombatRegen = 63.821f;
-            }
+#endif
             switch (playerLevel)
             {
                 case 70:
@@ -2523,21 +2523,18 @@ namespace Rawr.Mage
                     break;
             }
 
-            if (CalculationOptions.Beta)
+#if RAWR4
+            if (MageTalents.ArcaneConcentration == 3)
             {
-                if (MageTalents.ArcaneConcentration == 3)
-                {
-                    ClearcastingChance = 0.1f;
-                }
-                else
-                {
-                    ClearcastingChance = 0.03f * MageTalents.ArcaneConcentration;
-                }
+                ClearcastingChance = 0.1f;
             }
             else
             {
-                ClearcastingChance = 0.02f * MageTalents.ArcaneConcentration;
+                ClearcastingChance = 0.03f * MageTalents.ArcaneConcentration;
             }
+#else
+            ClearcastingChance = 0.02f * MageTalents.ArcaneConcentration;
+#endif
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
 #if RAWR4
             float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.15f * ClearcastingChance * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
@@ -2618,19 +2615,17 @@ namespace Rawr.Mage
 #if RAWR4
             CombustionFireCritBonus = 0f;
             CombustionFrostFireCritBonus = 0f;
+            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
 #else
             CombustionFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
             CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
 #endif
 
-            if (CalculationOptions.Beta)
-            {
-                CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
-            }
-            else
-            {
-                CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
-            }
+#if RAWR4
+            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+#else
+            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+#endif
             BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * CastingSpeedMultiplier;
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
 
@@ -3568,10 +3563,9 @@ namespace Rawr.Mage
                 }
                 int evocationSegments = (restrictManaUse) ? SegmentList.Count : 1;
                 float evocationDuration = (8f/* + baseStats.EvocationExtension*/) / evoBaseState.CastingSpeed;
-                if (CalculationOptions.Beta)
-                {
-                    evocationDuration = 6f / evoBaseState.CastingSpeed;
-                }
+#if RAWR4
+                evocationDuration = 6f / evoBaseState.CastingSpeed;
+#endif
                 EvocationDuration = evocationDuration;
                 EvocationDurationIV = evocationDuration / 1.2f;
                 EvocationDurationHero = evocationDuration / 1.3f;

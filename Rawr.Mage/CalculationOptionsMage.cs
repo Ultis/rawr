@@ -45,14 +45,35 @@ namespace Rawr.Mage
             set
             {
                 playerLevel = value;
-                if (playerLevel <= 80)
+                if (playerLevel < 80)
                 {
                     levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (playerLevel - 70) / 10f));
                 }
                 else
                 {
                     //levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(7f / 41f, (playerLevel - 80) / 5f));                    
-                    levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(0.2561350976370563f, (playerLevel - 80) / 5f));
+                    //levelScalingFactor = (float)((1638f / 5371f) * Math.Pow(0.2561350976370563f, (playerLevel - 80) / 5f));
+                    switch (value)
+                    {
+                        case 80:
+                            levelScalingFactor = 10f / 32.7899894714355f;
+                            break;
+                        case 81:
+                            levelScalingFactor = 10f / 43.0560150146484f;
+                            break;
+                        case 82:
+                            levelScalingFactor = 10f / 56.5397491455078f;
+                            break;
+                        case 83:
+                            levelScalingFactor = 10f / 74.2754516601563f;
+                            break;
+                        case 84:
+                            levelScalingFactor = 10f / 97.5272369384766f;
+                            break;
+                        case 85:
+                            levelScalingFactor = 10f / 128.057159423828f;
+                            break;
+                    }
                 }
                 #region Spell Scaling Data
                 switch (value)
@@ -295,23 +316,23 @@ namespace Rawr.Mage
                         spellScalingFactor = 820.1090f;
                         break;
                     case 80:
-                        spellScalingFactor = 839.1170f;
+                        spellScalingFactor = 839.117248535156f;
                         break;
                     case 81:
-                        spellScalingFactor = 858.3380f;
+                        spellScalingFactor = 858.337585449219f;
                         break;
                     case 82:
-                        spellScalingFactor = 877.7700f;
+                        spellScalingFactor = 877.769592285156f;
                         break;
                     case 83:
-                        spellScalingFactor = 897.4130f;
+                        spellScalingFactor = 897.412719726563f;
                         break;
                     case 84:
-                        spellScalingFactor = 917.2660f;
+                        spellScalingFactor = 917.266418457031f;
                         break;
                     case 85:
                     default:
-                        spellScalingFactor = 937.3300f;
+                        spellScalingFactor = 937.330017089844f;
                         break;
                 }
                 #endregion
@@ -380,13 +401,6 @@ namespace Rawr.Mage
                 UpdateCooldownStackingCache();
                 OnPropertyChanged("MaxUseAssumption"); 
             }
-        }
-
-        private bool _Beta;
-        public bool Beta
-        {
-            get { return _Beta; }
-            set { _Beta = value; OnPropertyChanged("Beta"); }
         }
 
         private int _TargetLevel;

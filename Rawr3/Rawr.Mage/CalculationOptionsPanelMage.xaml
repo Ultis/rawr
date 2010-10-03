@@ -33,7 +33,7 @@
                         <ColumnDefinition Width="0.4*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Player Level: " TextWrapping="Wrap" ToolTipService.ToolTip=""/>
-                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="0" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=PlayerLevel, UpdateSourceTrigger=Explicit}">
+                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="0" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=PlayerLevel}">
                         <System:Int32>70</System:Int32>
                         <System:Int32>71</System:Int32>
                         <System:Int32>72</System:Int32>
@@ -45,6 +45,11 @@
                         <System:Int32>78</System:Int32>
                         <System:Int32>79</System:Int32>
                         <System:Int32>80</System:Int32>
+                        <System:Int32>81</System:Int32>
+                        <System:Int32>82</System:Int32>
+                        <System:Int32>83</System:Int32>
+                        <System:Int32>84</System:Int32>
+                        <System:Int32>85</System:Int32>
                     </ComboBox>
                     <TextBlock Height="Auto" Grid.Row="2" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Cast Latency: *" TextWrapping="Wrap" ToolTipService.ToolTip="Effective latency in seconds. The value should include the benefit of built-in /stopcasting."/>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Row="2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=LatencyCast}" TextWrapping="Wrap"/>
@@ -202,7 +207,7 @@
                     <TextBlock Grid.Column="0" Grid.Row="20" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Farming Mode: *" TextWrapping="Wrap" ToolTipService.ToolTip="Includes time it takes to regen mana/health after encounter, use in combination with target damage." />
                     <TextBlock Grid.Column="0" Grid.Row="21" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Unlimited Mana: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable to completely ignore mana in evaluations." />
                     <TextBlock Grid.Column="0" Grid.Row="22" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="PVP: *" TextWrapping="Wrap" ToolTipService.ToolTip="When enabled follows PVP rules." />
-                    <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=TargetLevel, UpdateSourceTrigger=Explicit}">
+                    <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=TargetLevel}">
                         <System:Int32>70</System:Int32>
                         <System:Int32>71</System:Int32>
                         <System:Int32>72</System:Int32>
@@ -217,8 +222,13 @@
                         <System:Int32>81</System:Int32>
                         <System:Int32>82</System:Int32>
                         <System:Int32>83</System:Int32>
+                        <System:Int32>84</System:Int32>
+                        <System:Int32>85</System:Int32>
+                        <System:Int32>86</System:Int32>
+                        <System:Int32>87</System:Int32>
+                        <System:Int32>88</System:Int32>
                     </ComboBox>
-                    <ComboBox Grid.Column="1" Grid.Row="9" Margin="0,2,0,2" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=AoeTargetLevel, UpdateSourceTrigger=Explicit}">
+                    <ComboBox Grid.Column="1" Grid.Row="9" Margin="0,2,0,2" Height="Auto" SelectedItem="{Binding Mode=TwoWay, Path=AoeTargetLevel}">
                         <System:Int32>70</System:Int32>
                         <System:Int32>71</System:Int32>
                         <System:Int32>72</System:Int32>
@@ -233,6 +243,11 @@
                         <System:Int32>81</System:Int32>
                         <System:Int32>82</System:Int32>
                         <System:Int32>83</System:Int32>
+                        <System:Int32>84</System:Int32>
+                        <System:Int32>85</System:Int32>
+                        <System:Int32>86</System:Int32>
+                        <System:Int32>87</System:Int32>
+                        <System:Int32>88</System:Int32>
                     </ComboBox>
                     <TextBox Grid.Column="1" Grid.Row="1" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=FightDuration, UpdateSourceTrigger=Default}" TextWrapping="Wrap" />
                     <TextBox Grid.Column="1" Grid.Row="2" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=TpsLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" />

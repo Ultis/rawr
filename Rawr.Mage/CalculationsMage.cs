@@ -933,14 +933,11 @@ namespace Rawr.Mage
             float statsRaceBonusManaMultiplier = 0.0f;
             if (character.Race == CharacterRace.Gnome)
             {
-                if (calculationOptions.Beta)
-                {
-                    statsRaceBonusManaMultiplier = 0.05f;
-                }
-                else
-                {
-                    statsRaceBonusIntellectMultiplier = 0.05f;
-                }
+#if RAWR4
+                statsRaceBonusManaMultiplier = 0.05f;
+#else
+                statsRaceBonusIntellectMultiplier = 0.05f;
+#endif
             }
 #if RAWR4
             float statsTalentBonusIntellectMultiplier = 0f;
@@ -954,14 +951,13 @@ namespace Rawr.Mage
             }
 
             float statsWizardryBonusIntellectMultiplier = 0.0f;
-            if (calculationOptions.Beta)
+#if RAWR4
+            if (calculationOptions.PlayerLevel >= 50)
             {
-                if (calculationOptions.PlayerLevel >= 50)
-                {
-                    statsWizardryBonusIntellectMultiplier = 0.05f;
-                }
+                statsWizardryBonusIntellectMultiplier = 0.05f;
             }
-        
+#endif
+
             Stats statsTotal = rawStats;
 
             float statsTalentBonusSpiritMultiplier = 0.0f;
@@ -1023,14 +1019,11 @@ namespace Rawr.Mage
 #endif
             if (statsTotal.MageMoltenArmor > 0)
             {
-                if (calculationOptions.Beta)
-                {
-                    statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
-                }
-                else
-                {
-                    statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
-                }
+#if RAWR4
+                statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+#else
+                statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
+#endif
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
@@ -1054,7 +1047,6 @@ namespace Rawr.Mage
                     statsTotal.SpellCombatManaRegeneration += 0.5f;
                     break;
             }
-#endif
             switch (talents.Pyromaniac)
             {
                 case 1:
@@ -1069,11 +1061,7 @@ namespace Rawr.Mage
             }
 
             if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
-
-            if (calculationOptions.Beta)
-            {
-                statsTotal.SpellCombatManaRegeneration = 0.0f;
-            }
+#endif
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
@@ -1085,10 +1073,9 @@ namespace Rawr.Mage
 
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower);
             statsTotal.SpellPower += (float)Math.Floor(spellDamageFromIntellectPercentage * statsTotal.Intellect);
-            if (calculationOptions.Beta)
-            {
-                statsTotal.SpellPower += statsTotal.Intellect - 10;
-            }
+#if RAWR4
+            statsTotal.SpellPower += statsTotal.Intellect - 10;
+#endif
             //statsTotal.SpellPower += spellDamageFromSpiritPercentage * statsTotal.Spirit;
 
             statsTotal.CritBonusDamage += calculationOptions.EffectCritDamageBonus;

@@ -310,14 +310,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -360,14 +357,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public virtual Spell GetSpell(CastingState castingState, bool clearcastingActive)
@@ -424,14 +418,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public virtual Spell GetSpell(CastingState castingState, bool spammedDot)
@@ -512,14 +503,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
@@ -582,14 +570,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         private const float spellPowerCoefficient = 1.5f / 3.5f * 0.855f / 0.455f;
@@ -647,14 +632,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -692,14 +674,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom, bool averageFingersOfFrost)
@@ -753,14 +732,11 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * solver.MageTalents.EmpoweredFrostbolt;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFrostbolt;
             BaseSpellModifier *= /*(1 + solver.BaseStats.BonusMageNukeMultiplier) * */(1 + 0.01f * solver.MageTalents.ChilledToTheBone);
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
 #endif
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
             fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
-            if (!solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
             NukeProcs = 1;
             Dirty = false;
         }
@@ -792,14 +768,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         //float fingersOfFrostCritRate;
@@ -867,14 +840,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, bool pom, bool brainFreeze)
@@ -909,12 +879,9 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * solver.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
             BaseAdditiveSpellModifier += 0.02f * solver.MageTalents.SpellImpact;
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
 #endif
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
-            if (!solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
             NukeProcs = 1;
             Dirty = false;
         }
@@ -946,14 +913,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         private float tormentFactor;
@@ -987,11 +951,8 @@ namespace Rawr.Mage
                 BaseDirectDamageModifier *= 1.02f;
             }
             BaseCritRate += 0.01f * solver.MageTalents.ImprovedScorch + 0.05f * solver.BaseStats.Mage4T9;
-            if (!solver.CalculationOptions.Beta)
-            {
-                tormentFactor = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
 #if !RAWR4
+            tormentFactor = 0.04f * solver.MageTalents.TormentTheWeak;
             BaseSpellModifier *= (1 + 0.01f * solver.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * solver.MageTalents.EmpoweredFire;
 #endif
@@ -1031,14 +992,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
@@ -1105,14 +1063,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -1223,14 +1178,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -1276,14 +1228,11 @@ namespace Rawr.Mage
 
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public override Spell GetSpell(CastingState castingState)
@@ -1346,14 +1295,11 @@ namespace Rawr.Mage
 
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, float arcaneBlastDebuff)
@@ -1372,24 +1318,17 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Arcane Barrage";
-            InitializeCastTime(false, true, 0, 3);
+#if RAWR4
+            InitializeCastTime(false, true, 0, 5);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.19099998474121f, 0.200000002980232f, 0, 0.765f, 0, 1, 1, 0);
+            tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = 0f;
+#else
+            InitializeCastTime(false, true, 0, 3);            
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
-            if (solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
-            }
-            else
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
-            if (solver.CalculationOptions.Beta)
-            {
-                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
-            }
-            else
-            {
-                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            }
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+#endif
             if (solver.MageTalents.GlyphOfArcaneBarrage)
             {
                 BaseCostAmplifier *= 0.8f; // TODO is it additive or multiplicative?
@@ -1415,23 +1354,20 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 817, MaxDamage = 948, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 823, MaxDamage = 954, SpellDamageCoefficient = 2.5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1185, MaxDamage = 1377, SpellDamageCoefficient = 2.5f / 3.5f };
-            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1068, MaxDamage = 1240, SpellDamageCoefficient = 0.714f };
-            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 1092, MaxDamage = 1268, SpellDamageCoefficient = 0.714f };
-            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 1117, MaxDamage = 1297, SpellDamageCoefficient = 0.714f };
-            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 1140, MaxDamage = 1324, SpellDamageCoefficient = 0.714f };
-            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 1164, MaxDamage = 1352, SpellDamageCoefficient = 0.714f };
-            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 1188, MaxDamage = 1380, SpellDamageCoefficient = 0.714f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 1068, MaxDamage = 1240, SpellDamageCoefficient = 1.0592f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[81]), MinDamage = 1092, MaxDamage = 1268, SpellDamageCoefficient = 1.0592f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[82]), MinDamage = 1645.4413356612804878048780487804f, MaxDamage = 1912.2696603631097560975609756096f, SpellDamageCoefficient = 1.0592f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[83]), MinDamage = 1140, MaxDamage = 1324, SpellDamageCoefficient = 1.0592f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[84]), MinDamage = 1164, MaxDamage = 1352, SpellDamageCoefficient = 1.0592f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[85]), MinDamage = 1188, MaxDamage = 1380, SpellDamageCoefficient = 1.0592f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, int debuff, bool manualClearcasting, bool clearcastingActive, bool pom)
@@ -1535,7 +1471,11 @@ namespace Rawr.Mage
         {
             Name = "Arcane Blast";
             InitializeCastTime(false, false, 2.5f, 0);
+#if RAWR4
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.08f, 2.03500008583069f, 0.150000005960464f, 0, 1.057f, 0, 1, 1, 0);
+#else
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
+#endif
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
 #if !RAWR4
@@ -1543,27 +1483,18 @@ namespace Rawr.Mage
 #endif
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
-            if (solver.CalculationOptions.Beta)
-            {
-                arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
-            }
-            else
-            {
-                arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            }
+#if RAWR4
+            tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
+#else
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = mageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+#endif
 #if !RAWR4
             BaseAdditiveSpellModifier += /*baseStats.ArcaneBlastBonus + */0.02f * mageTalents.SpellImpact;
             SpellDamageCoefficient += 0.03f * mageTalents.ArcaneEmpowerment;
             BaseCritRate += 0.02f * mageTalents.Incineration;
 #endif
-            if (solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
-            }
-            else
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
             NukeProcs = 1;
             Dirty = false;
         }
@@ -1677,23 +1608,20 @@ namespace Rawr.Mage
             SpellData[8] = new SpellData() { Cost = (int)(0.31 * BaseMana[78]), MinDamage = 324.8f * 5, MaxDamage = 324.8f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[9] = new SpellData() { Cost = (int)(0.31 * BaseMana[79]), MinDamage = 360.0f * 5, MaxDamage = 360.0f * 5, SpellDamageCoefficient = 5f / 3.5f };
             SpellData[10] = new SpellData() { Cost = (int)(0.31 * BaseMana[80]), MinDamage = 361.9f * 5, MaxDamage = 361.9f * 5, SpellDamageCoefficient = 5f / 3.5f };
-            SpellData[0] = new SpellData() { Cost = (int)(0.00 * BaseMana[80]), MinDamage = 310.0f * 5, MaxDamage = 310.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
-            SpellData[1] = new SpellData() { Cost = (int)(0.00 * BaseMana[81]), MinDamage = 318.0f * 5, MaxDamage = 318.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
-            SpellData[2] = new SpellData() { Cost = (int)(0.00 * BaseMana[82]), MinDamage = 316.0f * 5, MaxDamage = 316.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
-            SpellData[3] = new SpellData() { Cost = (int)(0.00 * BaseMana[83]), MinDamage = 334.0f * 5, MaxDamage = 334.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
-            SpellData[4] = new SpellData() { Cost = (int)(0.00 * BaseMana[84]), MinDamage = 342.0f * 5, MaxDamage = 342.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
-            SpellData[5] = new SpellData() { Cost = (int)(0.00 * BaseMana[85]), MinDamage = 350.0f * 5, MaxDamage = 350.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[0] = new SpellData() { Cost = (int)(0.00 * BaseMana[80]), MinDamage = 310.0f * 5, MaxDamage = 310.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[1] = new SpellData() { Cost = (int)(0.00 * BaseMana[81]), MinDamage = 318.0f * 5, MaxDamage = 318.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[2] = new SpellData() { Cost = (int)(0.00 * BaseMana[82]), MinDamage = 316.0f * 5, MaxDamage = 316.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[3] = new SpellData() { Cost = (int)(0.00 * BaseMana[83]), MinDamage = 334.0f * 5, MaxDamage = 334.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[4] = new SpellData() { Cost = (int)(0.00 * BaseMana[84]), MinDamage = 342.0f * 5, MaxDamage = 342.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
+            SpellDataBeta[5] = new SpellData() { Cost = (int)(0.00 * BaseMana[85]), MinDamage = 350.0f * 5, MaxDamage = 350.0f * 5, SpellDamageCoefficient = 5 * 0.232f };
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellData[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public Spell GetSpell(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff)
@@ -1763,33 +1691,26 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Arcane Missiles";
-            if (solver.CalculationOptions.Beta)
-            {
-                float castTime = 0.75f;
-                if (solver.MageTalents.MissileBarrage == 1)
-                {
-                    castTime = 0.6f;
-                }
-                else if (solver.MageTalents.MissileBarrage == 2)
-                {
-                    castTime = 0.5f;
-                }
 #if RAWR4
-                int missiles = 3 + solver.MageTalents.ImprovedArcaneMissiles;
-#else
-                int missiles = 3;
-#endif
-                InitializeCastTime(true, false, castTime * missiles, 0);
-                InitializeDamage(solver, false, 35, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), missiles, missiles + 1, 0);
-                BaseMinDamage *= missiles / 5f;
-                BaseMaxDamage *= missiles / 5f;
-                SpellDamageCoefficient *= missiles / 5f;
-            }
-            else
+            float castTime = 0.75f;
+            if (solver.MageTalents.MissileBarrage == 1)
             {
-                InitializeCastTime(true, false, 5, 0);
-                InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), 5, 6, 0);
+                castTime = 0.6f;
             }
+            else if (solver.MageTalents.MissileBarrage == 2)
+            {
+                castTime = 0.5f;
+            }
+            int missiles = 3 + solver.MageTalents.ImprovedArcaneMissiles;
+            InitializeCastTime(true, false, castTime * missiles, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.363999992609024f, 0, 0, 0.234f, 0, missiles, missiles + 1, 0);
+            BaseMinDamage *= missiles;
+            BaseMaxDamage *= missiles;
+            SpellDamageCoefficient *= missiles;
+#else
+            InitializeCastTime(true, false, 5, 0);
+            InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions), 5, 6, 0);
+#endif
             CastProcs2 = 1;
             if (solver.MageTalents.GlyphOfArcaneMissiles)
             {
@@ -1802,22 +1723,13 @@ namespace Rawr.Mage
 #if !RAWR4
             SpellDamageCoefficient += 0.15f * solver.MageTalents.ArcaneEmpowerment;
 #endif
-            if (solver.CalculationOptions.Beta)
-            {
-                tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
-            }
-            else
-            {
-                tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
-            }
-            if (solver.CalculationOptions.Beta)
-            {
-                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.23f : 0.2f;
-            }
-            else
-            {
-                arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-            }
+#if RAWR4
+            tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = 0f;
+#else
+            tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
+            arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
+#endif
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
 #if !RAWR4
             BaseInterruptProtection += 0.2f * solver.MageTalents.ArcaneStability;
@@ -1855,14 +1767,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -1906,14 +1815,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -1956,14 +1862,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)
@@ -2004,14 +1907,11 @@ namespace Rawr.Mage
         }
         private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
         {
-            if (options.Beta)
-            {
-                return SpellDataBeta[options.PlayerLevel - 80];
-            }
-            else
-            {
-                return SpellData[options.PlayerLevel - 70];
-            }
+#if RAWR4
+            return SpellDataBeta[options.PlayerLevel - 80];
+#else
+            return SpellData[options.PlayerLevel - 70];
+#endif
         }
 
         public void Initialize(Solver solver)

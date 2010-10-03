@@ -2951,11 +2951,12 @@ namespace Rawr.Mage
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             T10 = castingState.BaseStats.Mage2T10 > 0;
             channelLatency = castingState.CalculationOptions.LatencyChannel;
-            beta = castingState.CalculationOptions.Beta;
-            if (beta)
-            {
-                AMProc = 0.3f;
-            }
+#if RAWR4
+            beta = true;
+            AMProc = 0.3f;
+#else
+            beta = false;
+#endif
 
             GenerateStateDescription();
         }
@@ -3282,11 +3283,12 @@ w = remaining time on 2T10 effect";
             T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
             T10 = castingState.BaseStats.Mage2T10 > 0;
             channelLatency = castingState.CalculationOptions.LatencyChannel;
-            beta = castingState.CalculationOptions.Beta;
-            if (beta)
-            {
-                AMProc = 0.3f;
-            }
+#if RAWR4
+            beta = true;
+            AMProc = 0.3f;
+#else
+            beta = false;
+#endif
 
             GenerateStateDescription();
         }

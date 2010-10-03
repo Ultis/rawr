@@ -117,23 +117,36 @@ namespace Rawr.Mage
             InitializeDamage(solver, areaEffect, range, magicSchool, spellData, 1, 1, 0);
         }
 
+        public void InitializeScaledDamage(Solver solver, bool areaEffect, int range, MagicSchool magicSchool, float baseCost, float baseAverage, float spread, float basePeriodic, float spellDamageCoefficient, float dotDamageCoefficient, float hitProcs, float castProcs, float dotDuration)
+        {
+            var options = solver.CalculationOptions;
+            var average = options.GetSpellValue(baseAverage);
+            var halfSpread = average * spread / 2f;
+            InitializeDamage(solver, areaEffect, range, magicSchool, (int)(baseCost * BaseMana[options.PlayerLevel]), average - halfSpread, average + halfSpread, spellDamageCoefficient, options.GetSpellValue(basePeriodic), dotDamageCoefficient, hitProcs, castProcs, dotDuration);
+        }
+
         public void InitializeDamage(Solver solver, bool areaEffect, int range, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs, float dotDuration)
+        {
+            InitializeDamage(solver, areaEffect, range, magicSchool, spellData.Cost, spellData.MinDamage, spellData.MaxDamage, spellData.SpellDamageCoefficient, spellData.PeriodicDamage, spellData.DotDamageCoefficient, hitProcs, castProcs, dotDuration);
+        }
+
+        public void InitializeDamage(Solver solver, bool areaEffect, int range, MagicSchool magicSchool, int cost, float minDamage, float maxDamage, float spellDamageCoefficient, float periodicDamage, float dotDamageCoefficient, float hitProcs, float castProcs, float dotDuration)
         {
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             CalculationOptionsMage calculationOptions = solver.CalculationOptions;
 
             AreaEffect = areaEffect;
-            BaseCost = spellData.Cost - (int)baseStats.SpellsManaReduction;
+            BaseCost = cost - (int)baseStats.SpellsManaReduction;
             MagicSchool = magicSchool;
             Ticks = hitProcs;
             CastProcs = castProcs;
             CastProcs2 = castProcs;
-            BaseMinDamage = spellData.MinDamage;
-            BaseMaxDamage = spellData.MaxDamage;
-            SpellDamageCoefficient = spellData.SpellDamageCoefficient;
-            BasePeriodicDamage = spellData.PeriodicDamage;
-            DotDamageCoefficient = spellData.DotDamageCoefficient;
+            BaseMinDamage = minDamage;
+            BaseMaxDamage = maxDamage;
+            SpellDamageCoefficient = spellDamageCoefficient;
+            BasePeriodicDamage = periodicDamage;
+            DotDamageCoefficient = dotDamageCoefficient;
             DotDuration = dotDuration;
 
             BaseDirectDamageModifier = 1.0f;
