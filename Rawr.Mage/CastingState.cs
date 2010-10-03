@@ -386,6 +386,12 @@ namespace Rawr.Mage
             {
                 SpellHasteRating += 500;
             }
+#if RAWR4
+            if (ManaGemEffect)
+            {
+                StateSpellPower += 0.01f * MageTalents.ImprovedManaGem * BaseStats.Mana;
+            }
+#endif
 
             List<EffectCooldown> cooldownList = solver.CooldownList;
             for (int i = 0; i < cooldownList.Count; i++)

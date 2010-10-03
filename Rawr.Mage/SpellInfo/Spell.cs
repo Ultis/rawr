@@ -482,6 +482,8 @@ namespace Rawr.Mage
 
         public void CalculateManualClearcasting(bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
         {
+            // if we want to continue manual clearcasting support we should completely overhaul this
+            // because we would need to properly support lower chance of proc on AM and 2 charges of arcane potency
             if (manualClearcasting && !clearcastingAveraged)
             {
                 CritRate -= 0.15f * castingState.Solver.ClearcastingChance * castingState.MageTalents.ArcanePotency; // replace averaged arcane potency with actual % chance

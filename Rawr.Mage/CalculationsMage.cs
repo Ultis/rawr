@@ -1000,7 +1000,7 @@ namespace Rawr.Mage
             if (statsTotal.MageMageArmor > 0)
             {
                 statsTotal.ManaRestoreFromMaxManaPerSecond += 0.006f * (talents.GlyphOfMageArmor ? 1.2f : 1.0f);
-                allResist += calculationOptions.GetSpellValue(0.048f);
+                allResist += calculationOptions.GetSpellValueRound(0.048f);
             }
 #else
             allResist += 0.5f * calculationOptions.PlayerLevel * talents.MagicAbsorption;

@@ -121,7 +121,9 @@ namespace Rawr.Mage
         {
             var options = solver.CalculationOptions;
             var average = options.GetSpellValue(baseAverage);
-            var halfSpread = average * spread / 2f;
+            //var halfSpread = average * spread / 2f;
+            var halfSpread = (float)Math.Floor(average * spread / 2f);
+            average = (float)Math.Round(average);
             InitializeDamage(solver, areaEffect, range, magicSchool, (int)(baseCost * BaseMana[options.PlayerLevel]), average - halfSpread, average + halfSpread, spellDamageCoefficient, options.GetSpellValue(basePeriodic), dotDamageCoefficient, hitProcs, castProcs, dotDuration);
         }
 

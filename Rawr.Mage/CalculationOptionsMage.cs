@@ -356,9 +356,14 @@ namespace Rawr.Mage
             }
         }
 
-        public float GetSpellValue(float value)
+        public float GetSpellValueRound(float value)
         {
             return (float)Math.Round(spellScalingFactor * value);
+        }
+
+        public float GetSpellValue(float value)
+        {
+            return spellScalingFactor * value;
         }
 
         public const float SetBonus4T8ProcRate = 0.25f;
