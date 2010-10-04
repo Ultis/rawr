@@ -406,9 +406,9 @@ namespace Rawr.Mage
             dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating\r\nArcane\t{2:F}%{3}\r\nFire\t{4:F}%{5}\r\nFrost\t{6:F}%{7}", 100 * BaseState.SpellHit, BaseStats.HitRating, 100 * BaseState.ArcaneHitRate, GetHitRatingDescription(RawArcaneHitRate), 100 * BaseState.FireHitRate, GetHitRatingDescription(RawFireHitRate), 100 * BaseState.FrostHitRate, GetHitRatingDescription(RawFrostHitRate)));
             dictValues.Add("Spell Penetration", BaseStats.SpellPenetration.ToString());
             dictValues.Add("Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * (BaseState.CastingSpeed - 1f), BaseState.SpellHasteRating));
-            dictValues.Add("Arcane Damage", BaseState.ArcaneSpellPower.ToString());
-            dictValues.Add("Fire Damage", BaseState.FireSpellPower.ToString());
-            dictValues.Add("Frost Damage", BaseState.FrostSpellPower.ToString());
+            dictValues.Add("Arcane Damage", (BaseState.ArcaneSpellPower * (1 + BaseStats.BonusSpellPowerMultiplier)).ToString());
+            dictValues.Add("Fire Damage", (BaseState.FireSpellPower * (1 + BaseStats.BonusSpellPowerMultiplier)).ToString());
+            dictValues.Add("Frost Damage", (BaseState.FrostSpellPower * (1 + BaseStats.BonusSpellPowerMultiplier)).ToString());
             dictValues.Add("MP5", BaseStats.Mp5.ToString());
             dictValues.Add("Mana Regen", Math.Floor(BaseState.ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\r\nMana Regen Drinking: {1}", Math.Floor(BaseState.ManaRegen5SR * 5), Math.Floor(BaseState.ManaRegenDrinking * 5)));
             dictValues.Add("Health Regen", Math.Floor(BaseState.HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(BaseState.HealthRegenEating * 5)));
@@ -424,7 +424,11 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
+#if RAWR4
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB };
+#else
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam04MBAM, CycleId.ABSpam024MBAM, CycleId.ABSpam0234MBAM, CycleId.AB4AM0234MBAM, CycleId.AB3AM023MBAM, CycleId.AB2AM, CycleId.FrBDFFBIL, CycleId.ABSpam034MBAM, CycleId.FrBDFFFB };
+#endif
             List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
             foreach (CycleId cycle in cycleList)
             {
@@ -454,8 +458,10 @@ namespace Rawr.Mage
             dictValues.Add("Arcane Blast(4)", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.ABCost));
             bs = BaseState.FrozenState.GetSpell(SpellId.DeepFreeze);
             dictValues.Add("Deep Freeze", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
+#if !RAWR4
             bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB);
             dictValues.Add("MBAM", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
+#endif
             Spell abss = BaseState.GetSpell(SpellId.FireWard);
             dictValues.Add("Fire Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
             abss = BaseState.GetSpell(SpellId.FrostWard);

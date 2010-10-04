@@ -16,6 +16,11 @@ namespace Rawr.Mage
         Fireball,
         FrostfireBoltFOF,
         ArcaneBlastSpam,
+        ABSpam234AM,
+        AB3ABar023AM,
+        AB23ABar023AM,
+        AB2ABar02AMABABar,
+        AB2ABar12AMABABar,
         ABABarSc,
         ABABarCSc,
         ABAMABarSc,
@@ -489,6 +494,7 @@ namespace Rawr.Mage
                 spellPower += Absorbed / CastTime * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10;
                 //spellPower += Math.Min((float)Math.Min(CastingState.CalculationOptions.AbsorptionPerSecond + Absorbed / CastTime, CastingState.Calculations.IncomingDamageDps) * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
             }
+            spellPower *= (1 + CastingState.BaseStats.BonusSpellPowerMultiplier);
             effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???

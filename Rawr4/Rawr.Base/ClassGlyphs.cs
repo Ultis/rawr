@@ -42,11 +42,11 @@ namespace Rawr
         public bool GlyphOfIceArmor { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
         [GlyphData(4, "Glyph of Improved Scorch", GlyphType.Major, @"Increases the damage of your Scorch spell by 20%.")]
         public bool GlyphOfImprovedScorch { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
-        [GlyphData(5, "Glyph of Mage Armor", GlyphType.Major, @"Your Mage Armor spell grants an additional 20% mana regeneration while casting.")]
+        [GlyphData(5, "Glyph of Mage Armor", GlyphType.Prime, @"Your Mage Armor regenerates 20% more mana.")]
         public bool GlyphOfMageArmor { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
         [GlyphData(6, "Glyph of Mana Gem", GlyphType.Major, @"Increases the mana recieved from using a mana gem by 40%.")]
         public bool GlyphOfManaGem { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        [GlyphData(7, "Glyph of Molten Armor", GlyphType.Major, @"Your Molten Armor spell grants an additional 20% of your spirit as critical strike rating.")]
+        [GlyphData(7, "Glyph of Molten Armor", GlyphType.Prime, @"Your Molten Armor grants an additional 2%  spell critical strike chance.")]
         public bool GlyphOfMoltenArmor { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         [GlyphData(8, "Glyph of Water Elemental", GlyphType.Major, @"Reduces the cooldown of your Summon Water Elemental spell by 30 sec.")]
         public bool GlyphOfWaterElemental { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
@@ -54,11 +54,11 @@ namespace Rawr
         public bool GlyphOfArcaneExplosion { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
         [GlyphData(10, "Glyph of Arcane Power", GlyphType.Major, @"Increases the duration of Arcane Power by 3 sec.")]
         public bool GlyphOfArcanePower { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
-        [GlyphData(11, "Glyph of Arcane Blast", GlyphType.Major, @"Increases the damage from your Arcane Blast buff by 3%.")]
+        [GlyphData(11, "Glyph of Arcane Blast", GlyphType.Prime, @"Increases the damage from your Arcane Blast buff by 3%.")]
         public bool GlyphOfArcaneBlast { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
-        [GlyphData(12, "Glyph of Arcane Missiles", GlyphType.Major, @"Increases the critical strike damage bonus of Arcane Missiles by 25%.")]
+        [GlyphData(12, "Glyph of Arcane Missiles", GlyphType.Prime, @"Increases the critical strike chance of your Arcane Missiles spell by 5%.")]
         public bool GlyphOfArcaneMissiles { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Arcane Barrage", GlyphType.Major, @"Reduces the mana cost of Arcane Barrage by 20%.")]
+        [GlyphData(13, "Glyph of Arcane Barrage", GlyphType.Prime, @"Increases the damage of your Arcane Barrage spell by 4%.")]
         public bool GlyphOfArcaneBarrage { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
         [GlyphData(14, "Glyph of Living Bomb", GlyphType.Major, @"The periodic damage from your Living Bomb can now be critical strikes.")]
         public bool GlyphOfLivingBomb { get { return _glyphData[14]; } set { _glyphData[14] = value; } }

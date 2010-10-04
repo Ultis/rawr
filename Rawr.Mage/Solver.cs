@@ -5464,13 +5464,28 @@ namespace Rawr.Mage
                 }*/
                 else
                 {
+#if RAWR4
+                    switch (Specialization)
+                    {
+                        case Specialization.Arcane:
+                            spellList.Add(CycleId.ArcaneBlastSpam);
+                            spellList.Add(CycleId.ABSpam234AM);
+                            spellList.Add(CycleId.AB3ABar023AM);
+                            spellList.Add(CycleId.AB23ABar023AM);
+                            spellList.Add(CycleId.AB2ABar02AMABABar);
+                            spellList.Add(CycleId.AB2ABar12AMABABar);
+                            break;
+                        case Specialization.Fire:
+                            break;
+                        case Specialization.Frost:
+                            break;
+                        case Specialization.None:
+                            break;
+                    }
+#else
                     if (useGlobalOptimizations)
                     {
-#if RAWR4
-                        if (Specialization == Specialization.Fire)
-#else
                         if (MageTalents.EmpoweredFire > 0)
-#endif
                         {
                             if (MageTalents.PiercingIce == 3 && MageTalents.IceShards == 3 && CalculationOptions.PlayerLevel >= 75)
                             {
@@ -5479,11 +5494,7 @@ namespace Rawr.Mage
                             }
                             else
                             {
-#if RAWR4
-                                if (MageTalents.HotStreak > 0)
-#else
                                 if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
-#endif
                                 {
                                     spellList.Add(CycleId.FBPyro);
                                 }
@@ -5494,11 +5505,7 @@ namespace Rawr.Mage
                                 if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FBLBPyro);
                             }
                         }
-#if RAWR4
-                        else if (Specialization == Specialization.Frost)
-#else
                         else if (MageTalents.EmpoweredFrostbolt > 0)
-#endif
                         {
                             if (MageTalents.BrainFreeze > 0)
                             {
@@ -5514,11 +5521,7 @@ namespace Rawr.Mage
                             spellList.Add(CycleId.FrBIL);
                             spellList.Add(CycleId.FrostboltFOF);
                         }
-#if RAWR4
-                        else if (Specialization == Specialization.Arcane)
-#else
                         else if (MageTalents.ArcaneEmpowerment > 0)
-#endif
                         {
                             spellList.Add(CycleId.AB2AM);
                             spellList.Add(CycleId.AB3AM023MBAM);
@@ -5545,11 +5548,7 @@ namespace Rawr.Mage
                         spellList.Add(CycleId.ArcaneMissiles);
                         spellList.Add(CycleId.Scorch);
                         if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.ScLBPyro);
-#if RAWR4
-                        if (MageTalents.HotStreak > 0 && Specialization == Specialization.Fire)
-#else
                         if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
-#endif
                         {
                             spellList.Add(CycleId.FBPyro);
                         }
@@ -5621,6 +5620,7 @@ namespace Rawr.Mage
                             list.Add(CycleId.AB3AMABar2C);
                         }*/
                     }
+#endif
                 }
                 if (CalculationOptions.AoeDuration > 0)
                 {

@@ -659,6 +659,21 @@ namespace Rawr.Mage
             Cycle c = null;
             switch (cycleId)
             {
+                case CycleId.ABSpam234AM:
+                    c = ABSpam234AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB3ABar023AM:
+                    c = AB3ABar023AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB23ABar023AM:
+                    c = AB23ABar023AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB2ABar02AMABABar:
+                    c = AB2ABar02AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB2ABar12AMABABar:
+                    c = AB2ABar12AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FrostboltFOF:
                     c = GetSpell(SpellId.FrostboltFOF);
                     break;

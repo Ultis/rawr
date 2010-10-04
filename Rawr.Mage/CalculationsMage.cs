@@ -130,7 +130,9 @@ namespace Rawr.Mage
                     "Solution:Threat Reduction",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
+#if !RAWR4
                     "Spell Info:MBAM*Missile Barrage Arcane Missiles",
+#endif
                     "Spell Info:Arcane Blast(4)*Full debuff stack",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
                     "Spell Info:Arcane Barrage*Requires talent points",
@@ -158,6 +160,13 @@ namespace Rawr.Mage
                     "Spell Info:FrBFBIL*Fireball on Brain Freeze, Ice Lance on shatter combo, use Brain Freeze on shatter combo when available",
                     "Spell Info:FrBILFB*Fireball on Brain Freeze, always Ice Lance on shatter combo",
                     "Spell Info:FrBDFFFB*Frostfire Bolt on non-FOF Brain Freeze, on shatter combo Deep Freeze > BF Frostfire Bolt",
+#if RAWR4
+                    "Spell Info:AB2ABar12AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 1 or 2 stack",
+                    "Spell Info:AB2ABar02AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 0 or 2 stack",
+                    "Spell Info:AB23ABar023AM*AB-AB-(AB-)-ABar, ABar on 2 stack if off cooldown, AM on 0, 2 or 3 stack",
+                    "Spell Info:AB3ABar023AM*AB-AB-AB-ABar, AM on 0, 2 or 3 stack",
+                    "Spell Info:ABSpam234AM*Spam AB, AM on 2, 3 or 4 stack",
+#else
                     "Spell Info:AB2AM*AB-AB-AM regardless of procs",
                     "Spell Info:AB3AM023MBAM*AB-AB-AB-AM, MBAM on 0, 2 or 3 stack",
                     "Spell Info:AB4AM0234MBAM*AB-AB-AB-AB-AM, MBAM on 0, 2, 3 or 4 stack",
@@ -165,6 +174,7 @@ namespace Rawr.Mage
                     "Spell Info:ABSpam024MBAM*Spam AB, MBAM on 0, 2 or 4 stack",
                     "Spell Info:ABSpam034MBAM*Spam AB, MBAM on 0, 3 or 4 stack",
                     "Spell Info:ABSpam04MBAM*Spam AB, MBAM on 0 or 4 stack",
+#endif
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
                     "Spell Info:Cone of Cold",
@@ -1841,7 +1851,8 @@ namespace Rawr.Mage
                 Mage2T10 = stats.Mage2T10,
                 Mage4T10 = stats.Mage4T10,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
-                MasteryRating = stats.MasteryRating
+                MasteryRating = stats.MasteryRating,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1944,7 +1955,7 @@ namespace Rawr.Mage
 
         private bool HasMageStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10;
+            float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10 + stats.BonusSpellPowerMultiplier;
             return mageStats > 0;
         }
 

@@ -101,6 +101,13 @@ namespace Rawr.Mage
             CalculationsMage.CancelAsync();
         }
 
+        private void ScaleRaidBuffsToLevel_Click(object sender, RoutedEventArgs e)
+        {
+            CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
+            Buff.LoadDefaultBuffs(null, calculationOptions.PlayerLevel);
+            Character.OnCalculationsInvalidated();
+        }
+
         private void CooldownEditor_Click(object sender, RoutedEventArgs e)
         {
             //if (cooldownRestrictions == null || cooldownRestrictions.IsDisposed)

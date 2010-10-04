@@ -156,25 +156,36 @@ namespace Rawr
 			
 #endif
 				//the serializer doens't throw an exception in the designer, just sets the value null, have to move this outside the try cactch
-				loadedBuffs = loadedBuffs ?? new List<Buff>();
-				List<Buff> defaultBuffs = GetDefaultBuffs();
-				Dictionary<string, Buff> allBuffs = new Dictionary<string, Buff>();
-				foreach (Buff loadedBuff in loadedBuffs)
-					if (loadedBuff.IsCustom)
-						allBuffs.Add(loadedBuff.Name, loadedBuff);
-				foreach (Buff defaultBuff in defaultBuffs)
-					if (!allBuffs.ContainsKey(defaultBuff.Name))
-						allBuffs.Add(defaultBuff.Name, defaultBuff);
-				Buff[] allBuffArray = new Buff[allBuffs.Count];
-				allBuffs.Values.CopyTo(allBuffArray, 0);
-				_allBuffs = new BuffList(allBuffs.Values);
-				_allBuffsByName = null;
-				_allSetBonuses = null;
-				_relevantBuffs = null;
-				_relevantSetBonuses = null;
-				CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
+                LoadDefaultBuffs(loadedBuffs, 85);
 			} catch { }
 		}
+
+        public static event EventHandler<EventArgs> BuffsLoaded;
+
+        public static void LoadDefaultBuffs(List<Buff> loadedBuffs, int level)
+        {
+            loadedBuffs = loadedBuffs ?? new List<Buff>();
+            List<Buff> defaultBuffs = GetDefaultBuffs(level);
+            Dictionary<string, Buff> allBuffs = new Dictionary<string, Buff>();
+            foreach (Buff loadedBuff in loadedBuffs)
+                if (loadedBuff.IsCustom)
+                    allBuffs.Add(loadedBuff.Name, loadedBuff);
+            foreach (Buff defaultBuff in defaultBuffs)
+                if (!allBuffs.ContainsKey(defaultBuff.Name))
+                    allBuffs.Add(defaultBuff.Name, defaultBuff);
+            Buff[] allBuffArray = new Buff[allBuffs.Count];
+            allBuffs.Values.CopyTo(allBuffArray, 0);
+            _allBuffs = new BuffList(allBuffs.Values);
+            _allBuffsByName = null;
+            _allSetBonuses = null;
+            _relevantBuffs = null;
+            _relevantSetBonuses = null;
+            CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
+            if (BuffsLoaded != null)
+            {
+                BuffsLoaded(null, EventArgs.Empty);
+            }
+        }
 
 		private static void CacheSetBonuses() {
 			Dictionary<string, List<Buff>> listDict = new Dictionary<string, List<Buff>>();
@@ -301,9 +312,34 @@ namespace Rawr
 			get { return _allBuffs; }
 		}
 
-		private static List<Buff> GetDefaultBuffs() {
+		private static List<Buff> GetDefaultBuffs(int level) {
 			List<Buff> defaultBuffs = new List<Buff>();
 			Buff buff;
+
+            // these values are for spells that have generic scaling (-1 group in gtSpellScaling in DBC, starting at 1100)
+            float scalingValue;
+            switch (level)
+            {
+                case 80:
+                    scalingValue = 125f;
+                    break;
+                case 81:
+                    scalingValue = 305f;
+                    break;
+                case 82:
+                    scalingValue = 338f;
+                    break;
+                case 83:
+                    scalingValue = 375f;
+                    break;
+                case 84:
+                    scalingValue = 407f;
+                    break;
+                case 85:
+                default:
+                    scalingValue = 443f;
+                    break;
+            }
 
 			#region Buffs
 
@@ -313,7 +349,7 @@ namespace Rawr
 				Name = "Strength of Earth Totem",
 				Source = "Shaman",
 				Group = "Agility and Strength",
-				Stats = { Strength = 1395, Agility = 1395 },
+                Stats = { Strength = (float)Math.Round(scalingValue * 1.24), Agility = (float)Math.Round(scalingValue * 1.24) },
 				ConflictingBuffs = { "Agility", "Strength" },
 			});
 			defaultBuffs.Add(new Buff
@@ -321,7 +357,7 @@ namespace Rawr
 				Name = "Horn of Winter",
 				Source = "Death Knight",
 				Group = "Agility and Strength",
-				Stats = { Strength = 1395, Agility = 1395 },
+                Stats = { Strength = (float)Math.Round(scalingValue * 1.24), Agility = (float)Math.Round(scalingValue * 1.24) },
 				ConflictingBuffs = { "Agility", "Strength" }
 			});
 			defaultBuffs.Add(new Buff
@@ -329,7 +365,7 @@ namespace Rawr
 				Name = "Battle Shout",
 				Source = "Warrior",
 				Group = "Agility and Strength",
-				Stats = { Strength = 1395, Agility = 1395 },
+                Stats = { Strength = (float)Math.Round(scalingValue * 1.24), Agility = (float)Math.Round(scalingValue * 1.24) },
 				ConflictingBuffs = { "Agility", "Strength" }
 			});
 			defaultBuffs.Add(new Buff
@@ -337,7 +373,7 @@ namespace Rawr
 				Name = "Roar of Courage",
 				Source = "Hunter w/ Cat OR Beast Mastery Hunter w/ Spirit Beast",
 				Group = "Agility and Strength",
-				Stats = { Strength = 1395, Agility = 1395 },
+                Stats = { Strength = (float)Math.Round(scalingValue * 1.24), Agility = (float)Math.Round(scalingValue * 1.24) },
 				ConflictingBuffs = { "Agility", "Strength" }
 			});
 			#endregion
@@ -348,14 +384,14 @@ namespace Rawr
 				Name = "Stoneskin Totem",
 				Source = "Shaman",
 				Group = "Armor",
-				Stats = { BonusArmor = 10352f },
+                Stats = { BonusArmor = (float)Math.Round(scalingValue * 9.2) },
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Devotion Aura",
 				Source = "Paladin",
 				Group = "Armor",
-				Stats = { BonusArmor = 10352f },
+                Stats = { BonusArmor = (float)Math.Round(scalingValue * 9.2) },
 			});
 			#endregion
 
@@ -424,7 +460,7 @@ namespace Rawr
 			});
 			defaultBuffs.Add(new Buff
 			{
-				Name = "Arcane Empowerment",
+				Name = "Arcane Tactics",
 				Source = "Arcane Mage",
 				Group = "Damage (%)",
 				Stats = { BonusDamageMultiplier = 0.03f }
@@ -437,7 +473,7 @@ namespace Rawr
 				Name = "Power Word: Fortitude",
 				Source = "Priest",
 				Group = "Stamina",
-				Stats = { Stamina = 1485f },
+                Stats = { Stamina = (float)Math.Round(scalingValue * 1.32) },
 				ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
 			});
 			defaultBuffs.Add(new Buff
@@ -445,7 +481,7 @@ namespace Rawr
 				Name = "Qiraji Fortitude",
 				Source = "Beast Mastery Hunter w/ Silithid",
 				Group = "Stamina",
-				Stats = { Stamina = 1485f },
+                Stats = { Stamina = (float)Math.Round(scalingValue * 1.32) },
 				ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
 			});
 			defaultBuffs.Add(new Buff
@@ -453,7 +489,7 @@ namespace Rawr
 				Name = "Blood Pact",
 				Source = "Warlock w/ Imp",
 				Group = "Stamina",
-				Stats = { Stamina = 1485f },
+                Stats = { Stamina = (float)Math.Round(scalingValue * 1.32) },
 				ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
 			});
 			defaultBuffs.Add(new Buff
@@ -461,7 +497,7 @@ namespace Rawr
 				Name = "Commanding Shout",
 				Source = "Warrior",
 				Group = "Stamina",
-				Stats = { Stamina = 1485f },
+                Stats = { Stamina = (float)Math.Round(scalingValue * 1.32) },
 				ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
 			});
 			#endregion
@@ -472,7 +508,7 @@ namespace Rawr
 				Name = "Arcane Brilliance (Mana)",
 				Source = "Mage",
 				Group = "Mana",
-				Stats = { Mana = 5401f },
+                Stats = { Mana = (float)Math.Round(scalingValue * 4.8) },
 				ConflictingBuffs = new List<string>(new string[] { "Mana" }),
 			});
 			defaultBuffs.Add(new Buff
@@ -480,7 +516,7 @@ namespace Rawr
 				Name = "Fel Intelligence (Mana)",
 				Source = "Warlock",
 				Group = "Mana",
-				Stats = { Mana = 5401f },
+                Stats = { Mana = (float)Math.Round(scalingValue * 4.8) },
 				ConflictingBuffs = new List<string>(new string[] { "Mana" }),
 			});
 			#endregion
@@ -491,21 +527,21 @@ namespace Rawr
 				Name = "Mana Spring Totem",
 				Source = "Shaman",
 				Group = "Mana Regeneration",
-				Stats = { Mp5 = 828f },
+                Stats = { Mp5 = (float)Math.Round(scalingValue * 0.736) },
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Fel Intelligence (Mp5)",
 				Source = "Warlock w/ Felhunter",
 				Group = "Mana Regeneration",
-				Stats = { Mp5 = 828f },
+                Stats = { Mp5 = (float)Math.Round(scalingValue * 0.736) },
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Blessing of Might (Mp5)",
 				Source = "Paladin",
 				Group = "Mana Regeneration",
-				Stats = { Mp5 = 828f },
+                Stats = { Mp5 = (float)Math.Round(scalingValue * 0.736) },
 			});
 			#endregion
 
@@ -755,11 +791,11 @@ namespace Rawr
 					BonusAgilityMultiplier = 0.05f,
 					BonusIntellectMultiplier = 0.05f,
 					BonusStaminaMultiplier = 0.05f,
-					NatureResistanceBuff = 684f,
-					FireResistanceBuff = 684f,
-					FrostResistanceBuff = 684f,
-					ShadowResistanceBuff = 684f,
-					ArcaneResistanceBuff = 684f,
+                    NatureResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    FireResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    FrostResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    ShadowResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    ArcaneResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
 				},
 			});
 			defaultBuffs.Add(new Buff

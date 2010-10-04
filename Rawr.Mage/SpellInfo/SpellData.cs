@@ -1332,16 +1332,20 @@ namespace Rawr.Mage
             InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.19099998474121f, 0.200000002980232f, 0, 0.765f, 0, 1, 1, 0);
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = 0f;
+            if (solver.MageTalents.GlyphOfArcaneBarrage)
+            {
+                BaseDirectDamageModifier *= 1.04f;
+            }
 #else
             InitializeCastTime(false, true, 0, 3);            
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
             tormentTheWeak = 0.04f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.18f : 0.15f;
-#endif
             if (solver.MageTalents.GlyphOfArcaneBarrage)
             {
                 BaseCostAmplifier *= 0.8f; // TODO is it additive or multiplicative?
             }
+#endif
             Dirty = false;
         }
     }
@@ -1439,7 +1443,11 @@ namespace Rawr.Mage
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)));
+#if RAWR4
+            cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.15f * mageTalents.MasterOfElements;
+#else
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+#endif
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
@@ -1464,7 +1472,11 @@ namespace Rawr.Mage
 
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 1.75f)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3.50f)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 5.25f)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 7.00f)));
+#if RAWR4
+            cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.15f * mageTalents.MasterOfElements;
+#else
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.1f * mageTalents.MasterOfElements;
+#endif
             cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
@@ -1724,7 +1736,7 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfArcaneMissiles)
             {
 #if RAWR4
-                CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + solver.BaseStats.CritBonusDamage + 0.25f));
+                BaseCritRate += 0.05f;
 #else
                 CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * solver.MageTalents.SpellPower + 0.1f * solver.MageTalents.Burnout + solver.BaseStats.CritBonusDamage + 0.25f));
 #endif

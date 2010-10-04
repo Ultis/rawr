@@ -236,7 +236,25 @@ namespace Rawr.UI
 
             OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
             OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);
+#if RAWR4
+            Buff.BuffsLoaded += new EventHandler<EventArgs>(Buff_BuffsLoaded);
+#endif
         }
+
+#if RAWR4
+        void Buff_BuffsLoaded(object sender, EventArgs e)
+        {
+            _loadingBuffsFromCharacter = true;
+            BuildControls();
+            if (character != null)
+            {
+                LoadBuffsFromCharacter();
+            }
+            UpdateEnabledStates();
+            UpdateSavedSets();
+            _loadingBuffsFromCharacter = false;
+        }
+#endif
 
         void GeneralSettings_DisplayBuffChanged(object sender, EventArgs e)
         {

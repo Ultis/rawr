@@ -51,6 +51,7 @@
                         <System:Int32>84</System:Int32>
                         <System:Int32>85</System:Int32>
                     </ComboBox>
+                    <Button Grid.Row="1" Grid.ColumnSpan="2" Content="Scale Raid Buffs to Level" Margin="2,2,2,2" Click="ScaleRaidBuffsToLevel_Click" />
                     <TextBlock Height="Auto" Grid.Row="2" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Cast Latency: *" TextWrapping="Wrap" ToolTipService.ToolTip="Effective latency in seconds. The value should include the benefit of built-in /stopcasting."/>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Row="2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=LatencyCast}" TextWrapping="Wrap"/>
                     <TextBlock Height="Auto" Grid.Row="3" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="GCD Latency: *" TextWrapping="Wrap" ToolTipService.ToolTip="Effective latency in seconds. The value should include the benefit of built-in /stopcasting."/>
@@ -504,7 +505,6 @@
                     <TextBlock Grid.Column="0" Grid.Row="4" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Enable Hasted Evocation: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables use of evocation on last tick of Icy Veins or Heroism, should not be used without advanced constraints." />
                     <TextBlock Grid.Column="0" Grid.Row="5" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Use Assumption: *" TextWrapping="Wrap" ToolTipService.ToolTip="Add stacking constraints based under assumption that each effect must be used maximum possible amount. You should only disable this when using maximum settings for advanced constraints." />
                     <TextBlock Grid.Column="0" Grid.Row="6" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Cycle Level Haste Procs: *" TextWrapping="Wrap" ToolTipService.ToolTip="Evaluates cycle level haste proc interactions, but at a significant performance cost." />
-                    <TextBlock Grid.Column="0" Grid.Row="7" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Patch 3.3.3: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables 3.3.3 calculations." />
                     <TextBlock Grid.Column="0" Grid.Row="8" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Computation Limit: *" TextWrapping="Wrap" ToolTipService.ToolTip="Limits the number of iterations taken by SMP algorithm." />
                     <TextBlock Grid.Column="0" Grid.Row="9" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Search Method: *" TextWrapping="Wrap" ToolTipService.ToolTip="If Best Bound method does not provide solution at the specified computation limit then using Depth First search will provide at least a feasible solution, although not optimal." />
                     <TextBlock Grid.Column="0" Grid.Row="10" Height="Auto" HorizontalAlignment="Right" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Comparison / Display: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable options for comparisons or for display only." Grid.ColumnSpan="3" />
@@ -522,7 +522,6 @@
                     <CheckBox Grid.Column="2" Grid.Row="4" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=EnableHastedEvocation, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
                     <CheckBox Grid.Column="2" Grid.Row="5" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=MaxUseAssumption, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
                     <CheckBox Grid.Column="2" Grid.Row="6" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=AdvancedHasteProcs, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
-                    <CheckBox Grid.Column="2" Grid.Row="7" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=Mode333, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
                     <CheckBox Grid.Column="1" Grid.Row="11" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonIntegralMana, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height" HorizontalAlignment="Right" />
                     <ComboBox Grid.Column="1" Grid.Row="9" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=MIPMethod}">
                         <local:MIPMethod>BestBound</local:MIPMethod>
@@ -535,7 +534,7 @@
                     <CheckBox Grid.Column="2" Grid.Row="0" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=SmartOptimization, UpdateSourceTrigger=Default}" />
                     <TextBox Grid.Column="1" Grid.Row="8" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxHeapLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <CheckBox Grid.Column="2" Grid.Row="11" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplayIntegralMana, UpdateSourceTrigger=Default}" />
-                    <CheckBox Grid.Column="1" Grid.Row="13" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentMana, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
+                    <CheckBox Grid.Column="1" Grid.Row="13" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentMana, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
                     <CheckBox Grid.Column="2" Grid.Row="13" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentMana, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="1" Grid.Row="12" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentCooldowns, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
                     <CheckBox Grid.Column="2" Grid.Row="12" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentCooldowns, UpdateSourceTrigger=Default}" />

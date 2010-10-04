@@ -18,6 +18,7 @@
             <ComboBoxItem Content="Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)" />
             <ComboBoxItem Content="Arcane (no ABar, MB duration collapsed)" />
             <ComboBoxItem Content="Arcane Movement (average 1 per 10 sec for 1 sec)" />
+            <ComboBoxItem Content="Arcane Beta" />
             <ComboBoxItem Content="Frost" />
             <ComboBoxItem Content="Frost (no latency combos)" />
             <ComboBoxItem Content="Frost+Deep Freeze" />

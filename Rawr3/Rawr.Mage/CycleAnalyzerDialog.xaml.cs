@@ -141,107 +141,186 @@ namespace Rawr.Mage
 
         private void CycleGeneratorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string armor = "Molten Armor";
+            string armor;
+            Solver solver;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
-            Solver solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
-            solver.Initialize(null);
 
             switch ((string)((ComboBoxItem)CycleGeneratorComboBox.SelectedItem).Content)
             {
                 case "Arcane (MB/2T10 duration collapsed)":
+                default:
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true, true);
                     break;
                 case "Arcane (Arcane Power, MB/2T10 duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, (int)StandardEffect.ArcanePower, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, false, true, false, true, true);
                     break;
                 case "Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, true, true, true, true, true, true);
                     break;
                 case "Arcane (no ABar, MB duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneCycleGenerator(castingState, false, true, true, true, false, true);
                     break;
                 case "Arcane Movement (average 1 per 10 sec for 1 sec)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new ArcaneMovementCycleGenerator(castingState, 0.1f, 1.0f, true, false, true, true, true, true);
                     break;
+                case "Arcane Beta":
+                    armor = "Mage Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
+                    castingState = new CastingState(solver, 0, false, 0);
+                    generator = new ArcaneCycleGeneratorBeta(castingState, true, false, false, true);
+                    break;
                 case "Frost":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator(castingState, true, false);
                     break;
                 case "Frost (no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator(castingState, false, false);
                     break;
                 case "Frost+Deep Freeze":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, false, false, false);
                     break;
                 case "Frost+Deep Freeze (no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, false, false, false);
                     break;
                 case "Frost+Deep Freeze (2T10 duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, false, false);
                     break;
                 case "Frost+Deep Freeze (2T10 duration collapsed, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, false, false);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, true, false);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, true, false);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 10.0f, true, true, false);
                     break;
                 case "Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 10.0f, true, true, false);
                     break;
                 case "FrostFFB+Deep Freeze":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, false, false, true);
                     break;
                 case "FrostFFB+Deep Freeze (no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, false, false, true);
                     break;
                 case "FrostFFB+Deep Freeze (2T10 duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, false, true);
                     break;
                 case "FrostFFB+Deep Freeze (2T10 duration collapsed, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, false, true);
                     break;
                 case "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 30.0f, true, true, true);
                     break;
                 case "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 30.0f, true, true, true);
                     break;
                 case "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, true, true, 10.0f, true, true, true);
                     break;
                 case "FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown, no latency combos)":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FrostCycleGenerator2(castingState, false, true, 10.0f, true, true, true);
                     break;
                 case "Fire":
+                    armor = "Molten Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
                     generator = new FireCycleGenerator(castingState);
                     break;
