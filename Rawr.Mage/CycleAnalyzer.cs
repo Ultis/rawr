@@ -138,7 +138,7 @@ namespace Rawr.Mage
                     break;
                 case "Arcane Beta":
                     castingState = new CastingState(solver, 0, false, 0);
-                    generator = new ArcaneCycleGeneratorBeta(castingState, true, true, true, true, true, true);
+                    generator = new ArcaneCycleGeneratorBeta(castingState, true, false, false, true);
                     break;
                 case "Arcane (no ABar, MB duration collapsed)":
                     castingState = new CastingState(solver, 0, false, 0);
