@@ -60,6 +60,7 @@ namespace Rawr.Rogue
         public float ChanceOnMGAttackOnMHAttack { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPOnFinisher { get; set; }
+        public float KSBonusDamage { get; set; }
         public float EnergyOnBelow35BS { get; set; }
         public float EnergyOnOHAttack { get; set; }
         public float EnergyRegenMultiplier { get; set; }
@@ -136,6 +137,7 @@ namespace Rawr.Rogue
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
             ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
+            KSBonusDamage = (Char.RogueTalents.GlyphOfKillingSpree ? 0.1f : 0f);
             RSBonus = 1f + (0.2f + (Char.RogueTalents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Char.RogueTalents.RevealingStrike;
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;           
             #endregion
@@ -401,7 +403,7 @@ namespace Rawr.Rogue
             #region Killing Spree & Adrenaline Rush
             float kSAttacks = 0;
             float kSDuration = 0;
-            float kSDmgBonus = 0.2f;
+            float kSDmgBonus = 0.2f + KSBonusDamage;
             float restlessBladesBonus = averageFinisherCP * ruptCount + _averageCP[finisherCP] * (evisCount + envenomCount) * Char.RogueTalents.RestlessBlades;
             if (Char.RogueTalents.KillingSpree > 0)
             {
