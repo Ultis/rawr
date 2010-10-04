@@ -552,7 +552,7 @@ namespace Rawr.Rogue
                 //Sinister Strike - Identical to Yellow, with higher crit chance
                 float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
-                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + CPonCPGCrit + (character.RogueTalents.GlyphOfSinisterStrike ? 0.5f : 0f)));
+                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + CPonCPGCrit)) * (1f + (character.RogueTalents.GlyphOfSinisterStrike ? 0.2f : 0f));
 
                 //Hemorrhage - Identical to Yellow, with higher crit chance
                 float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
