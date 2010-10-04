@@ -7,15 +7,15 @@
  
     <style type="text/css">
     html, body {
-	    height: 100%;
-	    overflow: auto;
+        height: 100%;
+        overflow: auto;
     }
     body {
-	    padding: 0;
-	    margin: 0;
+        padding: 0;
+        margin: 0;
     }
     #silverlightControlHost {
-	    height: 100%;
+        height: 100%;
     }
     </style>
     
@@ -58,11 +58,11 @@
  
 <body>
     <!-- Runtime errors from Silverlight will be displayed here.
-	This will contain debugging information and should be removed or hidden when debugging is completed -->
-	<div id='errorLocation' style="font-size: small;color: Gray;"></div>
+    This will contain debugging information and should be removed or hidden when debugging is completed -->
+    <div id='errorLocation' style="font-size: small;color: Gray;"></div>
  
     <div id="silverlightControlHost">
-	    <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%">
+        <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%">
             <param name="source" value="ClientBin/Rawr.Silverlight.xap"/>
             <param name="onerror" value="onSilverlightError" />
             <param name="background" value="white" />
@@ -85,7 +85,6 @@ try {
 var pageTracker = _gat._getTracker("UA-9423722-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-    
 </body>
 </html>
 

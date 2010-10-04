@@ -160,6 +160,22 @@ namespace Rawr.DPSWarr {
             get { return _calculationToGraph; }
             set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
         }
+        [XmlIgnore]
+        public bool SG_STR { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
+        [XmlIgnore]
+        public bool SG_AGI { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_AGI"); } }
+        [XmlIgnore]
+        public bool SG_AP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_AP"); } }
+        [XmlIgnore]
+        public bool SG_Crit { get { return StatsList[3]; } set { StatsList[3] = value; OnPropertyChanged("SG_Crit"); } }
+        [XmlIgnore]
+        public bool SG_Hit { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Hit"); } }
+        [XmlIgnore]
+        public bool SG_Exp { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_Exp"); } }
+        [XmlIgnore]
+        public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
+        [XmlIgnore]
+        public bool SG_ArP { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_ArP"); } }
         #endregion
         #region Abilities to Maintain
         private bool[] _Maintenance;

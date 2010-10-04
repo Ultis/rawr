@@ -292,6 +292,9 @@
     <Compile Include="Buff.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
+    <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
+      <DependentUpon>StatGraphWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatConversion.cs" />
   </ItemGroup>
@@ -323,6 +326,10 @@
       <Link>CustomControls\Graph.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControls\StatGraphWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />

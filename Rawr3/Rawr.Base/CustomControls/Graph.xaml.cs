@@ -17,20 +17,10 @@ namespace Rawr
 {
     public partial class Graph : UserControl
     {
-        public Graph()
-        {
-            InitializeComponent();
-        }
+        public Graph() { InitializeComponent(); }
 
         private static Graph instance = new Graph();
-
-        public static Graph Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static Graph Instance { get { return instance; } }
 
         public void SetupStatsGraph(Character character, Stats[] statsList, int scale, string explanatoryText, string calculation)
         {

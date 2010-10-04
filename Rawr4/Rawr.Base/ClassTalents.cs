@@ -141,7 +141,7 @@ namespace Rawr
 #region Tier 1
 /// <summary>
 /// Increases the damage of Heroic Strike, Cleave, Victory Rush and Slam by [5 * Pts]%.
-/// <para>CataChecked: Implemented as DamageBonus on Heroic Strike, Cleave, Victory Rush and Slam</para>
+/// <para>CataCheck: Implemented as DamageBonus on Heroic Strike, Cleave, Victory Rush and Slam</para>
 /// </summary>
 [TalentData(index: 0, name: "War Academy", maxPoints: 3, icon: "ability_warrior_unrelentingassault",
 tree: 0, column: 1, row: 1, prerequisite: -1, description: new[] {

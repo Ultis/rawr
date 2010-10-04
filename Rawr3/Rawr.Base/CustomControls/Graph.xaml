@@ -39,15 +39,13 @@
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <visualizationToolkit:Title Style="{TemplateBinding TitleStyle}"
-                                                  Content="{TemplateBinding Title}" />
+                                <visualizationToolkit:Title Style="{TemplateBinding TitleStyle}" Content="{TemplateBinding Title}" />
                                 <Grid Margin="0,15,0,15" Grid.Row="1">
                                     <chartingprimitives:EdgePanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
                                         <Grid Style="{TemplateBinding PlotAreaStyle}" Canvas.ZIndex="-1" />
                                         <Border Canvas.ZIndex="10" BorderBrush="#FF919191" BorderThickness="1" />
                                     </chartingprimitives:EdgePanel>
-                                    <visualizationToolkit:Legend Margin="0,0,0,50" VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="Legend"
-                                               Style="{TemplateBinding LegendStyle}"/><!-- Title="{TemplateBinding LegendTitle}" -->
+                                    <visualizationToolkit:Legend Margin="0,0,0,50" VerticalAlignment="Bottom" HorizontalAlignment="Right" x:Name="Legend" Style="{TemplateBinding LegendStyle}"/><!-- Title="{TemplateBinding LegendTitle}" -->
                                 </Grid>
                             </Grid>
                         </Border>
