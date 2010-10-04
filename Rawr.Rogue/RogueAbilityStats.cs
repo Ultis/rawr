@@ -43,6 +43,17 @@ namespace Rawr.Rogue
         }
     }
 
+    public class RogueMainGaucheStats : RogueAbilityStats
+    {
+        public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
+        {
+            float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
+            string stats = string.Format("{0:F0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
+                useCount, damageDone, damageDone / totalDamage, DamagePerSwing, DamagePerHit);
+            return stats;
+        }
+    }
+
     public class RogueBackstabStats : RogueAbilityStats
     {
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)

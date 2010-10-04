@@ -27,6 +27,7 @@ namespace Rawr.Rogue
 
         public RogueAbilityStats MainHandStats { get; set; }
         public RogueAbilityStats OffHandStats { get; set; }
+        public RogueAbilityStats MainGaucheStats { get; set; }
         public RogueAbilityStats BackstabStats { get; set; }
         public RogueAbilityStats HemoStats { get; set; }
         public RogueAbilityStats MutiStats { get; set; }
@@ -56,7 +57,7 @@ namespace Rawr.Rogue
         public float ChanceOnEnergyPerCPFinisher { get; set; }
         public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
         public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
-        public float ChanceOnOHAttackOnMHAttack { get; set; }
+        public float ChanceOnMGAttackOnMHAttack { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPOnFinisher { get; set; }
         public float EnergyOnBelow35BS { get; set; }
@@ -77,8 +78,8 @@ namespace Rawr.Rogue
 
         public RogueRotationCalculator(Character character, int spec, Stats stats, CalculationOptionsRogue calcOpts, bool maintainBleed,
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
-			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, 
-            RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
+			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
+            RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats eAStats,
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats aPStats)
 		{
@@ -103,6 +104,7 @@ namespace Rawr.Rogue
 
             MainHandStats = mainHandStats;
             OffHandStats = offHandStats;
+            MainGaucheStats = mainGaucheStats;
             BackstabStats = backstabStats;
             HemoStats = hemoStats;
             MutiStats = mutiStats;
@@ -122,20 +124,20 @@ namespace Rawr.Rogue
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? 20f : 0f;
             ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
-            ChanceOnOHAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * stats.MasteryRating / 93f : 0f;
+            ChanceOnMGAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * stats.MasteryRating / 93f : 0f; //Main gauche
             ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
             DPFrequencyMultiplier = spec == 0 ? 0.2f : 0f;
             EACPCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;
             EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;
-            EnergyRegenTimeOnDamagingCP = 15f / 180f * character.RogueTalents.AdrenalineRush * character.RogueTalents.RestlessBlades;
+            EnergyRegenTimeOnDamagingCP = (15f + (character.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * character.RogueTalents.AdrenalineRush * character.RogueTalents.RestlessBlades;
             EnergyOnOHAttack = 0.2f * 5f * character.RogueTalents.CombatPotency;
-            EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + 15f / 180f * character.RogueTalents.AdrenalineRush;
+            EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + (15f + (character.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * character.RogueTalents.AdrenalineRush; //Vitality
             IPFrequencyMultiplier = spec == 0 ? 0.5f : 0f;
             BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
             ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
-            RSBonus = 1f + (0.2f /*+ Char.RogueTalents.GlyphOfRevealingStrike*/) * Char.RogueTalents.RevealingStrike;
-            VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;
+            RSBonus = 1f + (0.2f + (Char.RogueTalents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Char.RogueTalents.RevealingStrike;
+            VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;           
             #endregion
 
             #region Probability tables
@@ -189,7 +191,8 @@ namespace Rawr.Rogue
 			
 			#region Melee
 			float whiteMHAttacks = duration / MainHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
-            float whiteOHAttacks = duration / OffHandSpeed + ChanceOnOHAttackOnMHAttack * whiteMHAttacks + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
+            float whiteOHAttacks = duration / OffHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
+            float mGAttacks = ChanceOnMGAttackOnMHAttack * whiteMHAttacks;
             totalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack +
                                     ChanceOnEnergyOnCrit * whiteMHAttacks * MainHandStats.CritChance +
                                     ChanceOnEnergyOnCrit * whiteOHAttacks * OffHandStats.CritChance;
@@ -408,8 +411,8 @@ namespace Rawr.Rogue
             }
             if (Char.RogueTalents.AdrenalineRush > 0)
             {
-                whiteMHAttacks *= 1f + 0.2f * 15f * (duration + restlessBladesBonus) / 180f / duration;
-                whiteOHAttacks *= 1f + 0.2f * 15f * (duration + restlessBladesBonus) / 180f / duration;
+                whiteMHAttacks *= 1f + 0.2f * (15f + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
+                whiteOHAttacks *= 1f + 0.2f * (15f + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
             }
             #endregion
 
@@ -418,6 +421,7 @@ namespace Rawr.Rogue
                                         kSAttacks * MainHandStats.DamagePerSwing * (1f + kSDmgBonus) / (1f + kSDmgBonus * kSDuration / duration);
             float offHandDamageTotal = whiteOHAttacks * OffHandStats.DamagePerSwing +
                                         kSAttacks * OffHandStats.DamagePerSwing * (1f + kSDmgBonus) / (1f + kSDmgBonus * kSDuration / duration);
+            float mainGaucheDamageTotal = mGAttacks * MainGaucheStats.DamagePerSwing;
             float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing;
             float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing;
             float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing;
