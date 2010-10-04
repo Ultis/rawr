@@ -998,7 +998,7 @@ namespace Rawr.Rogue
             Stats statsTalents = new Stats()
             {
                 BonusAttackPowerMultiplier = (spec == 1 ? 0.15f : 0f) + 0.02f * talents.SavageCombat, //Vitality
-                BonusDamageMultiplier = 1f + 0.01f * talents.SlaughterFromTheShadows + 0.2f * talents.Vendetta * 30f / 120f,
+                BonusDamageMultiplier = 1f + 0.01f * talents.SlaughterFromTheShadows + 0.2f * talents.Vendetta * (30f * (character.RogueTalents.GlyphOfVendetta ? 1.2f : 1f)) / 120f,
                 BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : 0.02f * talents.SavageCombat,
                 Dodge = 0.02f * talents.LightningReflexes,
                 PhysicalHit = 0.01f * talents.Precision,
