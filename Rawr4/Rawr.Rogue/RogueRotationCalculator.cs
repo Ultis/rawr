@@ -139,6 +139,7 @@ namespace Rawr.Rogue
             CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
             KSBonusDamage = (Char.RogueTalents.GlyphOfKillingSpree ? 0.1f : 0f);
             RSBonus = 1f + (0.2f + (Char.RogueTalents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Char.RogueTalents.RevealingStrike;
+            ToTTCostReduction = (Char.RogueTalents.GlyphOfTricksOfTheTrade ? 15f : 0f);
             VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;           
             #endregion
 
