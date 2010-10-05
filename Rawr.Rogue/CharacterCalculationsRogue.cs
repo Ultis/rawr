@@ -178,12 +178,16 @@ namespace Rawr.Rogue
             float chancePoisonNonAvoided = 1f - (AvoidedPoisonAttacks / 100f);
             dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteMHNonAvoided, Duration));
             dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
+#if RAWR4
             dictValues.Add("Main Gauche", MainGaucheStats.GetStatsTexts(HighestDPSRotation.MGCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
+#endif
             dictValues.Add("Backstab", BackstabStats.GetStatsTexts(HighestDPSRotation.BackstabCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Hemorrhage", HemoStats.GetStatsTexts(HighestDPSRotation.HemoCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Mutilate", MutiStats.GetStatsTexts(HighestDPSRotation.MutiCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+#if RAWR4
             dictValues.Add("Revealing Strike", RStrikeStats.GetStatsTexts(HighestDPSRotation.RStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+#endif
             dictValues.Add("Rupture", RuptStats.GetStatsTexts(HighestDPSRotation.RuptCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Slice and Dice", SnDStats.GetStatsTexts(HighestDPSRotation.SnDCount, HighestDPSRotation.SnDCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Eviscerate", EvisStats.GetStatsTexts(HighestDPSRotation.EvisCount, Math.Max(HighestDPSRotation.EvisCP, HighestDPSRotation.EnvenomCP), HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
