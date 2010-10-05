@@ -431,7 +431,7 @@ namespace Rawr.Rogue
             float meleeSpeedMultiplier = 0.02f * character.RogueTalents.LightningReflexes + 0.2f * 15f / 180f * character.RogueTalents.AdrenalineRush;
             float mutiCostReduction = character.RogueTalents.GlyphOfMutilate ? 5f : 0;
             float offhandDamageMultiplier = spec == 1 ? 0.5f : 0f;
-            float poisonDamageMultiplier = (spec == 0 ? 0.2f + 0.025f * stats.MasteryRating / 93 : 0f) + (character.RogueTalents.VilePoisons == 3 ? 0.2f : 0.07f * character.RogueTalents.VilePoisons);
+            float poisonDamageMultiplier = (spec == 0 ? 0.2f + 0.025f * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f) + (character.RogueTalents.VilePoisons == 3 ? 0.2f : 0.07f * character.RogueTalents.VilePoisons);
             float sStrikeCostReduction = 2f * character.RogueTalents.ImprovedSinisterStrike;
             float sStrikeDamageMultiplier = 0.1f * character.RogueTalents.ImprovedSinisterStrike + 0.05f * character.RogueTalents.Aggression;
             #endregion
@@ -770,7 +770,7 @@ namespace Rawr.Rogue
                 CritChance = chanceCritMuti,
                 CPPerSwing = cpPerMuti,
             };
-            RogueAbilityStats rSStats = new RogueRStrikeStats()
+            RogueAbilityStats rStrikeStats = new RogueRStrikeStats()
             {
                 DamagePerHit = rStrikeDamageRaw,
                 DamagePerSwing = rStrikeDamageAverage,
@@ -845,7 +845,7 @@ namespace Rawr.Rogue
             RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, spec, stats, calcOpts,
                 maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
                 chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * CPonCPGCrit, (1f - chanceHitMuti * chanceHitMuti) * CPonCPGCrit,
-                mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rSStats,
+                mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
                 ruptStats, evisStats, envenomStats, snDStats, eAStats, iPStats, dPStats, wPStats, aPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationOptimal = new RogueRotationCalculator.RogueRotationCalculation();
 
@@ -874,7 +874,7 @@ namespace Rawr.Rogue
                                         (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
                                     for (int useRS = 0; useRS < 2; useRS++)
                                     {
-                                        if (!calcOpts.EnableRS || (useRS == 1 && rSStats.DamagePerSwing == 0)) continue;
+                                        if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
                                         for (int mHPoison = 0; mHPoison < 5; mHPoison++)
                                         {
                                             if (!targetPoisonable || mainHand == null) break;
@@ -950,10 +950,12 @@ namespace Rawr.Rogue
 
             calculatedStats.MainHandStats = mainHandStats;
             calculatedStats.OffHandStats = offHandStats;
+            calculatedStats.MainGaucheStats = mainGaucheStats;
             calculatedStats.BackstabStats = backstabStats;
             calculatedStats.HemoStats = hemoStats;
             calculatedStats.SStrikeStats = sStrikeStats;
             calculatedStats.MutiStats = mutiStats;
+            calculatedStats.RStrikeStats = rStrikeStats;
             calculatedStats.RuptStats = ruptStats;
             calculatedStats.SnDStats = snDStats;
             calculatedStats.EvisStats = evisStats;
@@ -1283,6 +1285,7 @@ namespace Rawr.Rogue
                ExpertiseRating = stats.ExpertiseRating,
                ArmorPenetration = stats.ArmorPenetration,
                ArmorPenetrationRating = stats.ArmorPenetrationRating,
+               MasteryRating = stats.MasteryRating,
                TargetArmorReduction = stats.TargetArmorReduction,
                WeaponDamage = stats.WeaponDamage,
                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -1369,6 +1372,7 @@ namespace Rawr.Rogue
                     stats.ExpertiseRating +
                     stats.ArmorPenetration +
                     stats.ArmorPenetrationRating +
+                    stats.MasteryRating +
                     stats.TargetArmorReduction +
                     stats.WeaponDamage +
                     stats.BonusAgilityMultiplier +
@@ -1517,31 +1521,8 @@ namespace Rawr.Rogue
                 character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
         }
-
-        private static List<string> _relevantGlyphs = null;
-        public override List<string> GetRelevantGlyphs() {
-            if (_relevantGlyphs == null) {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Backstab");
-                _relevantGlyphs.Add("Glyph of Eviscerate");
-                _relevantGlyphs.Add("Glyph of Mutilate");
-                _relevantGlyphs.Add("Glyph of Hunger For Blood");
-                _relevantGlyphs.Add("Glyph of Sinister Strike");
-                _relevantGlyphs.Add("Glyph of Slice and Dice");
-                _relevantGlyphs.Add("Glyph of Feint");
-                _relevantGlyphs.Add("Glyph of Rupture");
-                _relevantGlyphs.Add("Glyph of Blade Flurry");
-                _relevantGlyphs.Add("Glyph of Adrenaline Rush");
-                _relevantGlyphs.Add("Glyph of Killing Spree");
-                _relevantGlyphs.Add("Glyph of Vigor");
-                _relevantGlyphs.Add("Glyph of Fan of Knives");
-                _relevantGlyphs.Add("Glyph of Expose Armor");
-                _relevantGlyphs.Add("Glyph of Ghostly Strike");
-                _relevantGlyphs.Add("Glyph of Tricks of the Trade");
-            }
-            return _relevantGlyphs;
-        }
     }
+
     public class Knuckles : Item { public Knuckles() { Speed = 2f; } }
 
     public class ComparisonCalculationsRogue : ComparisonCalculationBase

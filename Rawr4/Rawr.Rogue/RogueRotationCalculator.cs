@@ -125,7 +125,7 @@ namespace Rawr.Rogue
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? 20f : 0f;
             ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
-            ChanceOnMGAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * stats.MasteryRating / 93f : 0f; //Main gauche
+            ChanceOnMGAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f; //Main gauche
             ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
             DPFrequencyMultiplier = spec == 0 ? 0.2f : 0f;
             EACPCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;
@@ -457,6 +457,7 @@ namespace Rawr.Rogue
 
                 MainHandCount = whiteMHAttacks,
                 OffHandCount = whiteOHAttacks,
+                MGCount = mGAttacks,
                 BackstabCount = (CPG == 2 ? cpgCount : 0),
                 HemoCount = (CPG == 3 ? cpgCount : 0),
                 SStrikeCount = (CPG == 1 ? cpgCount : 0),
@@ -494,6 +495,7 @@ namespace Rawr.Rogue
 
             public float MainHandCount { get; set; }
             public float OffHandCount { get; set; }
+            public float MGCount { get; set; }
             public float BackstabCount { get; set; }
             public float HemoCount { get; set; }
             public float SStrikeCount { get; set; }
