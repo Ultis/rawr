@@ -95,6 +95,7 @@ namespace Rawr.Warlock {
             // the warlocks the right amount of crit.
 
             WarlockTalents talents = Mommy.Talents;
+#if !RAWR4
             float vitality = talents.FelVitality * .05f;
             float tacticsCrit
                 = .02f * talents.DemonicTactics
@@ -102,19 +103,26 @@ namespace Rawr.Warlock {
                         * talents.ImprovedDemonicTactics
                         * (Mommy.CalcSpellCrit()
                             - Mommy.Stats.SpellCritOnTarget);
+#endif
             Stats = new Stats() {
                 Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina(),
                 Intellect
                     = BaseIntellect + IntellectCoef * Mommy.CalcIntellect(),
                 Strength = 297f,
                 Agility = 90f,
+#if !RAWR4
                 BonusStaminaMultiplier = vitality,
                 BonusIntellectMultiplier = vitality,
                 SpellCrit
                     = BaseSpellCrit + tacticsCrit + Mommy.Stats.Warlock2T9,
+#endif
                 SpellPower = BaseSpellPower,
                 AttackPower = BaseAttackPower,
+#if !RAWR4
                 PhysicalCrit = .0329f + tacticsCrit + Mommy.Stats.Warlock2T9,
+#else
+                PhysicalCrit = .0329f + Mommy.Stats.Warlock2T9,
+#endif
             };
             Stats.Accumulate(Mommy.PetBuffs);
 
@@ -160,8 +168,10 @@ namespace Rawr.Warlock {
 
             TotalModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusDamageMultiplier);
+#if !RAWR4
             MeleeModifiers.AddAdditiveMultiplier(
                 .04f * Mommy.Talents.UnholyPower);
+#endif
             MeleeModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusPhysicalDamageMultiplier);
             if (Mommy.Character.Race == CharacterRace.Orc) {
@@ -233,7 +243,11 @@ namespace Rawr.Warlock {
                 = .17f
                     - Mommy.CalcSpellHit()
                     + Stats.SpellHit
+#if !RAWR4
                     - Mommy.Talents.Suppression * .01f;
+#else
+                    ;
+#endif
            
             // adjust to melee miss rate
             miss *= 8f / 13f;
@@ -371,8 +385,11 @@ namespace Rawr.Warlock {
         }
 
         protected float GetEmpowermentCooldown() {
-
+#if !RAWR4
             return 60f * (1f - .1f * Mommy.Talents.Nemesis);
+#else
+            return 60f;
+#endif
         }
     }
 
@@ -393,7 +410,7 @@ namespace Rawr.Warlock {
         protected override void FinalizeModifiers() {
             
             base.FinalizeModifiers();
-
+#if !RAWR4
             WarlockTalents talents = Mommy.Talents;
             float apBonus = 1.5f + talents.DemonicBrutality * .1f;
             if (Mommy.Talents.GlyphFelguard) {
@@ -403,7 +420,6 @@ namespace Rawr.Warlock {
                 = (1f + Stats.BonusAttackPowerMultiplier) * apBonus - 1f;
             TotalModifiers.AddMultiplicativeMultiplier(
                 talents.MasterDemonologist * .01f);
-
             if (talents.DemonicEmpowerment > 0) {
                 Stats.AddSpecialEffect(
                     new SpecialEffect(
@@ -412,6 +428,7 @@ namespace Rawr.Warlock {
                         15f,
                         GetEmpowermentCooldown()));
             }
+#endif
         }
 
         public override float GetSpecialDamage() {
@@ -433,7 +450,11 @@ namespace Rawr.Warlock {
 
             SpecialBaseDamage = (112f + 159f) / 2f;
             SpecialDamagePerSpellPower = .5f;
+#if !RAWR4
             SpecialCooldown = 6f - Mommy.Talents.ImprovedFelhunter * 2f;
+#else
+            SpecialCooldown = 6f;
+#endif
         }
 
         protected override void FinalizeModifiers() {
@@ -448,7 +469,11 @@ namespace Rawr.Warlock {
             if (Mommy.CastSpells.ContainsKey("Corruption")) {
                 SpecialModifiers.AddAdditiveMultiplier(.15f);
             }
+#if !RAWR4
             if (Mommy.CastSpells.ContainsKey("Curse Of Agony")) {
+#else
+            if (Mommy.CastSpells.ContainsKey("Bane Of Agony")) {
+#endif
                 SpecialModifiers.AddAdditiveMultiplier(.15f);
             }
             if (Mommy.CastSpells.ContainsKey("Immolate")) {
@@ -476,7 +501,11 @@ namespace Rawr.Warlock {
 
             SpecialBaseDamage = (213f + 239f) / 2f;
             SpecialDamagePerSpellPower = .79f;
+#if !RAWR4
             SpecialCastTime = 2.5f - Mommy.Talents.DemonicPower * .25f;
+#else
+            SpecialCastTime = 2.5f - Mommy.Talents.DarkArts * .25f;
+#endif
         }
 
         public float GetCritsPerSec() {
@@ -489,6 +518,7 @@ namespace Rawr.Warlock {
             base.FinalizeModifiers();
 
             WarlockTalents talents = Mommy.Talents;
+#if !RAWR4
             float demonologist = talents.MasterDemonologist * .01f;
 
             // crit goes into the stats object
@@ -508,6 +538,14 @@ namespace Rawr.Warlock {
             if (talents.GlyphImp) {
                 SpecialModifiers.AddAdditiveMultiplier(.2f);
             }
+#else
+            // multipliers go into SpecialModifiers
+            SpecialModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusFireDamageMultiplier);
+            if (talents.GlyphImp) {
+                SpecialModifiers.AddAdditiveMultiplier(.2f);
+            }
+#endif
         }
     }
 
@@ -523,13 +561,18 @@ namespace Rawr.Warlock {
 
             SpecialBaseDamage = 248f;
             SpecialDamagePerSpellPower = .5f;
+#if !RAWR4
             SpecialCooldown = 12f - Mommy.Talents.DemonicPower * 3f;
+#else
+            SpecialCooldown = 12f;
+#endif
         }
 
         protected override void FinalizeModifiers() {
 
             base.FinalizeModifiers();
 
+#if !RAWR4
             WarlockTalents talents = Mommy.Talents;
             float demonologist = talents.MasterDemonologist * .01f;
 
@@ -540,6 +583,11 @@ namespace Rawr.Warlock {
             SpecialModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusShadowDamageMultiplier);
             SpecialModifiers.AddAdditiveMultiplier(demonologist);
+#else
+            // multipliers go into SpecialModifiers
+            SpecialModifiers.AddMultiplicativeMultiplier(
+                Stats.BonusShadowDamageMultiplier);       
+#endif
         }
     }
 

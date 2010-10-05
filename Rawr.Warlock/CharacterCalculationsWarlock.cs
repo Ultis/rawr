@@ -41,6 +41,36 @@ namespace Rawr.Warlock {
         public Dictionary<string, Spell> Spells { get; private set; }
         public Dictionary<string, Spell> CastSpells { get; private set; }
 
+#if RAWR4
+        private bool? _affliction = null;
+        private bool? _demonology = null;
+        private bool? _destruction = null;
+        public bool Affliction { get { if (_affliction == null) { DetermineSpec(); } return (bool)_affliction; } }
+        public bool Demonology { get { if (_demonology == null) { DetermineSpec(); } return (bool)_demonology; } }
+        public bool Destruction { get { if (_destruction == null) { DetermineSpec(); } return (bool)_destruction; } }
+
+        private void DetermineSpec() {
+            if (Talents == null) {
+                _affliction = false;
+                _demonology = false;
+                _destruction = false;
+                return;
+            }
+            int afflictionCtr = 0;
+            int demonologyCtr = 0;
+            int destructionCtr = 0;
+            int[] talentData = Talents.Data;
+
+            for (int i = 0; i <= 17; i++) { afflictionCtr += talentData[i]; }
+            for (int i = 18; i <= 36; i++) { demonologyCtr += talentData[i]; }
+            for (int i = 37; i <= 55; i++) { destructionCtr += talentData[i]; }
+
+            _affliction = (afflictionCtr > destructionCtr) && (afflictionCtr > demonologyCtr);
+            _demonology = (demonologyCtr > destructionCtr) && (demonologyCtr > afflictionCtr);
+            _destruction = (destructionCtr > afflictionCtr) && (destructionCtr > demonologyCtr);
+        }
+#endif
+
         #endregion
 
 
@@ -70,7 +100,7 @@ namespace Rawr.Warlock {
                 = Math.Min(
                     1f,
                     Options.GetBaseHitRate() / 100f + CalcSpellHit());
-
+#if !RAWR4
             if (!Options.Pet.Equals("None")
                 && (Talents.SummonFelguard > 0
                     || !Options.Pet.Equals("Felguard"))) {
@@ -79,6 +109,16 @@ namespace Rawr.Warlock {
                 Pet = (Pet) Activator.CreateInstance(
                         type, new object[] { this });
             }
+#else
+            if (!Options.Pet.Equals("None")
+                && (Demonology 
+                    || !Options.Pet.Equals("Felguard"))) {
+
+                Type type = Type.GetType("Rawr.Warlock." + Options.Pet);
+                Pet = (Pet)Activator.CreateInstance(
+                        type, new object[] { this });
+            }
+#endif
 
             float personalDps = CalcPersonalDps();
             float petDps = CalcPetDps();
@@ -175,7 +215,11 @@ namespace Rawr.Warlock {
                 = (1 / StatConversion.GetSpellHitFromRating(1));
             float hitFromRating
                 = StatConversion.GetSpellHitFromRating(Stats.HitRating);
+#if !RAWR4
             float hitFromTalents = Talents.Suppression * 0.01f;
+#else
+            float hitFromTalents = 0f;
+#endif
             float hitFromBuffs
                 = (CalcSpellHit() - hitFromRating - hitFromTalents);
             float targetHit = Options.GetBaseHitRate() / 100f;
@@ -373,8 +417,10 @@ namespace Rawr.Warlock {
             SpellModifiers = new SpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(
                 Stats.BonusDamageMultiplier);
+#if !RAWR4
             SpellModifiers.AddMultiplicativeMultiplier(
                 Talents.Malediction * .01f);
+#endif
             SpellModifiers.AddMultiplicativeMultiplier(
                 Talents.DemonicPact * .02f);
             SpellModifiers.AddCritOverallMultiplier(
@@ -383,10 +429,12 @@ namespace Rawr.Warlock {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     GetMetamorphosisBonus());
             }
+#if !RAWR4
             if (Pet is Felguard) {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     Talents.MasterDemonologist * .01f);
             }
+#endif
             Add4pT10(SpellModifiers);
 
             Stats critProcs = CalcCritProcs();
@@ -397,10 +445,12 @@ namespace Rawr.Warlock {
 
             if (Pet != null) {
                 Pet.CalcStats1();
+#if !RAWR4
                 Stats.SpellPower
                     += Talents.DemonicKnowledge
                         * .04f
                         * (Pet.CalcStamina() + Pet.CalcIntellect());
+#endif
             }
 
             #endregion
@@ -482,7 +532,7 @@ namespace Rawr.Warlock {
             }
 
             raidBuff += Options.PerCritBuff * (CalcAddedCritBuff() / .05f);
-
+#if !RAWR4
             raidBuff
                 += Options.PerInt
                     * CalculationsWarlock.CalcPetIntBuff(
@@ -491,6 +541,7 @@ namespace Rawr.Warlock {
                 += Options.PerSpi
                     * CalculationsWarlock.CalcPetSpiBuff(
                         Options.Pet, Talents, Character.ActiveBuffs);
+#endif
             raidBuff
                 += Options.PerHealth
                     * CalculationsWarlock.CalcPetHealthBuff(
@@ -502,9 +553,15 @@ namespace Rawr.Warlock {
         public float GetExecutePercentage() {
 
             string executeName = Options.GetActiveRotation().Execute;
+#if !RAWR4
             if (executeName == null || executeName == "" || executeName.Equals("Drain Soul")) {
                 return 0f;
             }
+#else
+            if (executeName == null || executeName == "") {
+                return 0f;
+            }
+#endif
 
             Spell execute = GetSpell(executeName);
             if (!execute.IsCastable()) {
@@ -523,7 +580,11 @@ namespace Rawr.Warlock {
             // If the 5% crit debuff is not already being maintained by
             // somebody else (i.e. it's not selected in the buffs tab), we
             // may supply it via Improved Shadow Bolt.
+#if !RAWR4
             if (Talents.ImprovedShadowBolt == 0
+#else
+            if (Talents.ShadowAndFlame == 0
+#endif
                 || StatUtils.GetActiveBuff(
                         Character.ActiveBuffs,
                         "Spell Critical Strike Taken",
@@ -545,7 +606,11 @@ namespace Rawr.Warlock {
             }
 
             float uprate = Spell.CalcUprate(
+#if !RAWR4
                 Talents.ImprovedShadowBolt * .2f, // proc rate
+#else
+                Talents.ShadowAndFlame * .33f, // proc rate
+#endif
                 30f, // duration
                 Options.Duration / casts); // trigger period
             float benefit = .05f - Stats.SpellCritOnTarget;
@@ -759,9 +824,11 @@ namespace Rawr.Warlock {
                         || effectStats.FrostDamage > 0) {
                     SpellModifiers mods = new SpellModifiers();
                     mods.Accumulate(SpellModifiers);
+#if !RAWR4
                     if (Options.Imbue.Equals("Grand Firestone")) {
                         mods.AddAdditiveDirectMultiplier(.01f);
                     }
+#endif
                     if (effectStats.ShadowDamage > 0) {
                         AddShadowModifiers(mods);
                     } else if (effectStats.FireDamage > 0) {
@@ -1027,48 +1094,91 @@ namespace Rawr.Warlock {
                 return 0;
             }
 
+#if !RAWR4
             float cooldown = 180f * (1f - Talents.Nemesis * .1f);
+#else
+            float cooldown = 180f;
+#endif
             float duration = 30f;
             if (Talents.GlyphMetamorphosis) {
                 duration += 6f;
             }
+#if !RAWR4
             return .2f * duration / cooldown;
+#else
+            float bonus = .2f; //base definition of Metamorphosis
+            if (this.Demonology) 
+            {
+                //mastery bonus for Demonology
+                bonus += .12f + .015f * this.Stats.MasteryRating;
+            }
+
+            return bonus * duration / cooldown;
+#endif
         }
 
         public void AddShadowModifiers(SpellModifiers modifiers) {
 
             modifiers.AddMultiplicativeMultiplier(
                 Stats.BonusShadowDamageMultiplier);
+#if !RAWR4
             modifiers.AddAdditiveMultiplier(
                 Talents.ShadowMastery * .03f);
+#else
+            modifiers.AddAdditiveMultiplier(
+                Affliction ? .25f : 0f);
+            modifiers.AddAdditiveMultiplier(
+                Demonology ? .15f : 0f);
+            if (Affliction) {
+                modifiers.AddMultiplicativeTickMultiplier(
+                    .1304f + Stats.MasteryRating * .0163f);
+            }
+#endif
             if (Options.GetActiveRotation().Contains("Shadow Bolt")
                 || (Options.GetActiveRotation().Contains("Haunt")
                     && Talents.Haunt > 0)) {
-
+#if !RAWR4
                 modifiers.AddMultiplicativeTickMultiplier(
                     Talents.ShadowEmbrace * .01f * 3f);
+#else
+                float[] talentEffects = { 0f, .03f, .04f, .05f };
+                modifiers.AddMultiplicativeTickMultiplier(
+                    talentEffects[Talents.ShadowEmbrace] * 3f);
+#endif
             }
             if (CastSpells.ContainsKey("Haunt")) {
                 modifiers.AddMultiplicativeTickMultiplier(
                     ((Haunt) CastSpells["Haunt"]).GetAvgTickBonus());
             }
+#if !RAWR4
             if (Pet is Succubus) {
                 float bonus = Talents.MasterDemonologist * .01f;
                 modifiers.AddMultiplicativeMultiplier(bonus);
                 modifiers.AddCritChance(bonus);
             }
+#endif
         }
 
         public void AddFireModifiers(SpellModifiers modifiers) {
 
             modifiers.AddMultiplicativeMultiplier(
                 Stats.BonusFireDamageMultiplier);
+#if !RAWR4
             modifiers.AddAdditiveMultiplier(Talents.Emberstorm * .03f);
             if (Pet is Imp) {
                 float bonus = Talents.MasterDemonologist * .01f;
                 modifiers.AddMultiplicativeMultiplier(bonus);
                 modifiers.AddCritChance(bonus);
             }
+#else
+            //additive or multiplicative?
+            modifiers.AddAdditiveMultiplier(Demonology ? .15f : 0f);
+            modifiers.AddAdditiveMultiplier(Destruction ? .25f : 0f);
+            if (Destruction) {
+                modifiers.AddMultiplicativeMultiplier(
+                    .1f + .0125f * Stats.MasteryRating);
+            }
+#endif
         }
 
         public void Add4pT10(SpellModifiers modifiers) {

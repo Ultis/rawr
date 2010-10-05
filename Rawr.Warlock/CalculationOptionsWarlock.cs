@@ -36,12 +36,21 @@ namespace Rawr.Warlock {
                 if (!Spell.ALL_SPELLS.Contains(spell)) {
                     return spell + " can no longer be prioritized.";
                 }
+#if !RAWR4
                 if (spell.StartsWith("Curse")) {
                     if (foundCurse) {
                         return "You may only include one curse.";
                     }
                     foundCurse = true;
                 }
+#else
+                if (spell.StartsWith("Bane")) {
+                    if (foundCurse) {
+                        return "You may only include one bane.";
+                    }
+                    foundCurse = true;
+                }
+#endif
             }
 
             int immo = SpellPriority.IndexOf("Immolate");
@@ -112,7 +121,11 @@ namespace Rawr.Warlock {
                     "Haunt",
                     "Corruption",
                     "Unstable Affliction",
+#if !RAWR4
                     "Curse Of Agony"));
+#else
+                    "Bane Of Agony"));
+#endif
             options.Rotations.Add(
                 new Rotation(
                     "Demonology",
@@ -122,7 +135,11 @@ namespace Rawr.Warlock {
                     "Corruption",
                     "Immolate",
                     "Incinerate (Under Molten Core)",
+#if !RAWR4
                     "Curse Of Agony"));
+#else
+                    "Bane Of Agony"));
+#endif
             options.Rotations.Add(
                 new Rotation(
                     "Destruction",
@@ -132,7 +149,11 @@ namespace Rawr.Warlock {
                     "Conflagrate",
                     "Incinerate (Under Backdraft)",
                     "Chaos Bolt",
+#if !RAWR4
                     "Curse Of Doom"));
+#else
+                    "Bane Of Doom"));
+#endif
 
             return options;
         }

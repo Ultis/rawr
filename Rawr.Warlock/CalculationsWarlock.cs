@@ -82,7 +82,9 @@ namespace Rawr.Warlock {
         public override void SetDefaults(Character character) {
 
             character.ActiveBuffsAdd("Fel Armor");
+#if !RAWR4
             character.ActiveBuffsAdd("Grand Spellstone");
+#endif
         }
 
         private string[] _characterDisplayCalculationLabels = null;
@@ -107,8 +109,13 @@ namespace Rawr.Warlock {
                         "Pet Stats:Pet Intellect",
                         "Pet Stats:Pet Health",
                         "Affliction:Corruption",
+#if !RAWR4
                         "Affliction:Curse Of Agony",
                         "Affliction:Curse Of Doom",
+#else
+                        "Affliction:Bane Of Agony",
+                        "Affliction:Bane Of Doom",
+#endif
                         "Affliction:Curse Of The Elements",
                         "Affliction:Haunt",
                         "Affliction:Life Tap",
@@ -122,7 +129,11 @@ namespace Rawr.Warlock {
                         "Destruction:Incinerate (Under Molten Core)",
                         "Destruction:Soul Fire",
                         "Destruction:Shadow Bolt",
-                        "Destruction:Shadow Bolt (Instant)" };
+                        "Destruction:Shadow Bolt (Instant)" 
+#if RAWR4
+                        , "Destruction:Shadowburn"
+#endif
+                    };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -274,17 +285,21 @@ namespace Rawr.Warlock {
 
             // Buffs
             AccumulateBuffsStats(stats, character.ActiveBuffs);
+#if !RAWR4
             if (options.Imbue.Equals("Grand Spellstone")) {
                 stats.HasteRating += 60f * (1f + talents.MasterConjuror * 1.5f);
             } else {
                 Debug.Assert(options.Imbue.Equals("Grand Firestone"));
                 stats.CritRating += 49f * (1f + talents.MasterConjuror * 1.5f);
             }
+#endif
             ApplyPetsRaidBuff(
                 stats, options.Pet, talents, character.ActiveBuffs);
+#if !RAWR4
             float aegis = 1f + talents.DemonicAegis * 0.10f;
             stats.SpellPower += 180f * aegis; // fel armor
             stats.SpellDamageFromSpiritPercentage += .3f * aegis; // fel armor
+#endif
 
             // Talents
             float[] talentValues = { 0f, .04f, .07f, .1f };
@@ -292,7 +307,7 @@ namespace Rawr.Warlock {
 
                 //Demonic Embrace: increases your stamina by 4/7/10%
                 BonusStaminaMultiplier = talentValues[talents.DemonicEmbrace],
-
+#if !RAWR4
                 //Fel Vitality: increases your maximum Health & Mana by 1/2/3%
                 BonusHealthMultiplier = talents.FelVitality * 0.01f,
                 BonusManaMultiplier = talents.FelVitality * 0.01f,
@@ -306,6 +321,7 @@ namespace Rawr.Warlock {
                 //Backlash: increases your spell crit chance by 1/2/3%
                 BonusCritChance
                     = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
+#endif
             };
             if (talents.Eradication > 0) {
                 talentValues = new float[] { 0f, .06f, .12f, .20f };
@@ -315,7 +331,11 @@ namespace Rawr.Warlock {
                         new Stats() {
                             SpellHaste = talentValues[talents.Eradication]
                         },
+#if !RAWR4
                         6f,
+#else
+                        10f,
+#endif
                         0f,
                         .06f));
             }
@@ -323,9 +343,17 @@ namespace Rawr.Warlock {
             stats.ManaRestoreFromMaxManaPerSecond
                 = Math.Max(
                     stats.ManaRestoreFromMaxManaPerSecond,
+#if !RAWR4
                     .002f
+#else
+                    .001f
+#endif
                         * Spell.CalcUprate(
+#if !RAWR4
                             talents.ImprovedSoulLeech * .5f,
+#else
+                            talents.SoulLeech > 0 ? 1f : 0f,
+#endif
                             15f,
                             options.Duration * 1.1f));
 
@@ -339,8 +367,13 @@ namespace Rawr.Warlock {
             List<Buff> activeBuffs) {
 
             stats.Health += CalcPetHealthBuff(pet, talents, activeBuffs);
+#if !RAWR4
             stats.Intellect += CalcPetIntBuff(pet, talents, activeBuffs);
             stats.Spirit += CalcPetSpiBuff(pet, talents, activeBuffs);
+#else
+            stats.Mana += CalcPetManaBuff(pet, talents, activeBuffs);
+            stats.Mp5 += CalcPetMP5Buff(pet, talents, activeBuffs);
+#endif
         }
 
         public static float CalcPetHealthBuff(
@@ -352,13 +385,19 @@ namespace Rawr.Warlock {
 
             return StatUtils.GetBuffEffect(
                 activeBuffs,
+#if !RAWR4
                 1330f * (1 + talents.ImprovedImp * .1f),
+#else
+                1650f, //14850 at level 85
+#endif
                 "Health",
                 s => s.Health);
         }
 
+#if !RAWR4
         public static float CalcPetIntBuff(
             string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
 
             if (!pet.Equals("Felhunter")) {
                 return 0f;
@@ -384,6 +423,32 @@ namespace Rawr.Warlock {
                 "Spirit",
                 s => s.Spirit);
         }
+#else
+        public static float CalcPetManaBuff(
+            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
+            if (!pet.Equals("Felhunter")) {
+                return 0f;
+            }
+            return StatUtils.GetBuffEffect(
+                activeBuffs,
+                600f, //5401 at level 85
+                "Mana",
+                s => s.Mana);
+        }
+        public static float CalcPetMP5Buff(
+            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+
+            if (!pet.Equals("Felhunter")) {
+                return 0f;
+            }
+            return StatUtils.GetBuffEffect(
+                activeBuffs,
+                92f, //828 at level 85
+                "Mana Regeneration",
+                s => s.Mp5);
+        }
+#endif
 
         /// <summary>
         /// Gets data for a custom chart that Rawr.Warlock provides
@@ -431,6 +496,7 @@ namespace Rawr.Warlock {
         /// </summary>
         public override List<GemmingTemplate> DefaultGemmingTemplates {
             get {
+                //TODO: update for cata
                 //Relevant Gem IDs for Warlocks
                 //Red
                 int[] runed = { 39911, 39998, 40113, 42144 };
@@ -768,10 +834,18 @@ namespace Rawr.Warlock {
                 _relevantGlyphs
                     = new List<string>{
                         "Glyph of Metamorphosis",
+#if !RAWR4
                         "Glyph of Quick Decay",
+#endif
                         "Glyph of Corruption",
                         "Glyph of Life Tap",
+#if !RAWR4
                         "Glyph of Curse of Agony",
+#else
+                        "Glyph of Bane of Agony",
+                        "Glyph of Lash of Pain",
+                        "Glyph of Shadowburn",
+#endif
                         "Glyph of Unstable Affliction",
                         "Glyph of Haunt",
                         "Glyph of Chaos Bolt",
