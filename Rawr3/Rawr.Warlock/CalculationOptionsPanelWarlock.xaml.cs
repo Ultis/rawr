@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace Rawr.Warlock
 {
@@ -20,71 +14,51 @@ namespace Rawr.Warlock
             InitializeComponent();
             DataContext = this;
         }
-
-        #region ICalculationOptionsPanel Members
-        public UserControl PanelControl { get { return this; } }
-
-        CalculationOptionsWarlock calcOpts = null;
-
-        private Character character;
+        public UserControl PanelControl { get { return this; } }      
         public Character Character
         {
-            get { return character; }
+            get { return m_character; }
             set
             {
                 // Kill any old event connections
-                if (character != null && character.CalculationOptions != null
-                    && character.CalculationOptions is CalculationOptionsWarlock)
-                    ((CalculationOptionsWarlock)character.CalculationOptions).PropertyChanged
+                if (m_character != null && m_character.CalculationOptions != null
+                    && m_character.CalculationOptions is CalculationOptionsWarlock)
+                    ((CalculationOptionsWarlock)m_character.CalculationOptions).PropertyChanged
                         -= new PropertyChangedEventHandler(CalculationOptionsPanelWarlock_PropertyChanged);
                 // Apply the new character
-                character = value;
+                m_character = value;
                 // Load the new CalcOpts
                 LoadCalculationOptions();
                 // Model Specific Code
                 // Set the Data Context
-                LayoutRoot.DataContext = calcOpts;
+                LayoutRoot.DataContext = m_calcOpts;
                 // Add new event connections
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelWarlock_PropertyChanged);
+                m_calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelWarlock_PropertyChanged);
                 // Run it once for any special UI config checks
                 CalculationOptionsPanelWarlock_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
-
-        private bool _loadingCalculationOptions;
         public void LoadCalculationOptions()
         {
-            _loadingCalculationOptions = true;
+            m_loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsWarlock();
-            calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-            // Model Specific Code
+            m_calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
             RefreshRotationPanel();
-            //
-            _loadingCalculationOptions = false;
+            m_loadingCalculationOptions = false;
         }
 
-        void CalculationOptionsPanelWarlock_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void CalculationOptionsPanelWarlock_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_loadingCalculationOptions) { return; }
-            // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
-            if (e.PropertyName == "SomeProperty")
-            {
-                // Do some code
-            }
-            //
+            if (m_loadingCalculationOptions) { return; }
             if (Character != null) { Character.OnCalculationsInvalidated(); }
-        }
-        #endregion
-
-        #region Options Tab
-        #region Methods
+        }        
         private void RefreshRotationPanel() {
-            _loadingCalculationOptions = true;
+            m_loadingCalculationOptions = true;
 
-            Rotation rotation = calcOpts.GetActiveRotation();
+            Rotation rotation = m_calcOpts.GetActiveRotation();
 
             rotationCombo.Items.Clear();
-            foreach (Rotation r in calcOpts.Rotations) {
+            foreach (Rotation r in m_calcOpts.Rotations) {
                 rotationCombo.Items.Add(r.Name);
             }
             rotationCombo.SelectedItem = rotation.Name;
@@ -113,10 +87,9 @@ namespace Rawr.Warlock
 
             RefreshRotationButtons();
 
-            _loadingCalculationOptions = false;
+            m_loadingCalculationOptions = false;
         }
         private void RefreshRotationButtons() {
-
             int itemCount = rotationList.Items.Count;
             int curIndex = rotationList.SelectedIndex;
 
@@ -125,10 +98,9 @@ namespace Rawr.Warlock
             rotationDownButton.IsEnabled = curIndex >= 0 && curIndex < itemCount - 1;
             rotationClearButton.IsEnabled = itemCount > 0;
 
-            rotationErrorLabel.Text = calcOpts.GetActiveRotation().GetError();
+            rotationErrorLabel.Text = m_calcOpts.GetActiveRotation().GetError();
         }
         private void RotationSwap(int swapWith) {
-
             int oldIndex = rotationList.SelectedIndex;
             int newIndex = oldIndex + swapWith;
             Utilities.SwapElements(GetActivePriorities(), oldIndex, newIndex);
@@ -136,51 +108,19 @@ namespace Rawr.Warlock
             rotationList.SelectedIndex = newIndex;
         }
         private List<string> GetActivePriorities() {
-            return calcOpts.GetActiveRotation().SpellPriority;
-        }
-        private string PromptForRotationName(string title, string start) {
-            string error = null;
-            while (true) {
-                string message = "Choose a name:";
-                if (error != null) {
-                    message = error + message;
-                }
-                string name = TextInputDialog.Text;
-                //string name = TextInputDialog.Show(title, message, start);
-                if (name == null) {
-                    return null;
-                }
-                if (name.Length == 0) {
-                    error = "The name cannot be blank.  ";
-                    continue;
-                }
+            return m_calcOpts.GetActiveRotation().SpellPriority;
+        }       
+        private void rotationAddButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
-                error = null;
-                foreach (Rotation rotation in calcOpts.Rotations) {
-                    if (rotation.Name == name) {
-                        error = "There is already a rotation by that name.  ";
-                        break;
-                    }
-                }
-                if (error == null) {
-                    return name;
-                }
-            }
-        }
-        #endregion
-        private void rotationAddButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_loadingCalculationOptions) { return; }
-            _loadingCalculationOptions = true;
+            m_loadingCalculationOptions = true;
             GetActivePriorities().Add((string) rotationMenu.SelectedItem);
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
-            _loadingCalculationOptions = false;
+            m_loadingCalculationOptions = false;
         }
-        private void rotationRemoveButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (_loadingCalculationOptions) { return; }
+        private void rotationRemoveButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
             int index = rotationList.SelectedIndex;
             GetActivePriorities().RemoveAt(index);
@@ -191,113 +131,101 @@ namespace Rawr.Warlock
             }
             Character.OnCalculationsInvalidated();
         }
-        private void rotationUpButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (_loadingCalculationOptions) { return; }
+        private void rotationUpButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
             RotationSwap(-1);
             Character.OnCalculationsInvalidated();
         }
-        private void rotationDownButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (_loadingCalculationOptions) { return; }
+        private void rotationDownButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
             RotationSwap(1);
             Character.OnCalculationsInvalidated();
         }
-        private void rotationClearButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (_loadingCalculationOptions) { return; }
+        private void rotationClearButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
             GetActivePriorities().Clear();
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
         private void rotationMenu_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-
-            if (_loadingCalculationOptions) { return; }
+            if (m_loadingCalculationOptions) { return; }
 
             RefreshRotationButtons();
         }
         private void rotationList_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-
-            if (_loadingCalculationOptions) { return; }
+            if (m_loadingCalculationOptions) { return; }
 
             RefreshRotationButtons();
         }
         private void fillerCombo_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
-            if (_loadingCalculationOptions) { return; }
-
-            calcOpts.GetActiveRotation().Filler
+            m_calcOpts.GetActiveRotation().Filler
                 = (string) fillerCombo.SelectedItem;
             Character.OnCalculationsInvalidated();
         }
         private void rotationCombo_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
-            if (_loadingCalculationOptions) { return; }
-            calcOpts.ActiveRotationIndex = rotationCombo.SelectedIndex;
+            if (m_loadingCalculationOptions) { return; }
+            m_calcOpts.ActiveRotationIndex = rotationCombo.SelectedIndex;
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
-        private void newRotationButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void newRotationButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
-            if (_loadingCalculationOptions) { return; }
-
-            string name = PromptForRotationName("New Rotation", "");
-            if (name == null) {
-                return;
-            }
-            calcOpts.ActiveRotationIndex = calcOpts.Rotations.Count;
-            calcOpts.Rotations.Add(new Rotation(name, "Shadow Bolt", null));
-
-            RefreshRotationPanel();
-            Character.OnCalculationsInvalidated();
+            TextInputDialog d = new TextInputDialog("New Rotation", "Choose a name:", "", 
+                m_calcOpts.Rotations.Select(x => x.Name));
+            d.Closed += new EventHandler((a, b) => {
+                if (d.DialogResult.GetValueOrDefault()) {
+                    m_calcOpts.Rotations.Add(new Rotation(d.Result, "Shadow Bolt", null));
+                    m_calcOpts.ActiveRotationIndex = m_calcOpts.Rotations.Count - 1;
+                    RefreshRotationPanel();
+                    Character.OnCalculationsInvalidated();
+                }
+            });
+            d.Show();
         }
         private void rotationRenameButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
-            if (_loadingCalculationOptions) { return; }
-
-            Rotation rotation = calcOpts.GetActiveRotation();
-            string name
-                = PromptForRotationName("Rename Rotation", rotation.Name);
-            if (name == null) { return; }
-            rotation.Name = name;
-
-            RefreshRotationPanel();
-            Character.OnCalculationsInvalidated();
+            Rotation rotation = m_calcOpts.GetActiveRotation();
+            TextInputDialog d = new TextInputDialog("Rename Rotation", "Rename to:", rotation.Name, 
+                m_calcOpts.Rotations.Select(x => x.Name).Where(x => x != rotation.Name));
+            d.Closed += new EventHandler((a, b) => {
+                if (d.DialogResult.GetValueOrDefault()) {
+                    rotation.Name = d.Result;
+                    RefreshRotationPanel();
+                    Character.OnCalculationsInvalidated();
+                }
+            });
+            d.Show();
         }
         private void deleteRotationButton_Click(object sender, RoutedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
-            if (_loadingCalculationOptions) { return; }
-
-            calcOpts.RemoveActiveRotation();
-            if (calcOpts.Rotations.Count == 0) {
-                calcOpts.Rotations.Add(new Rotation("New Rotation", "Shadow Bolt", null));
-                calcOpts.ActiveRotationIndex = 0;
+            m_calcOpts.RemoveActiveRotation();
+            if (m_calcOpts.Rotations.Count == 0) {
+                m_calcOpts.Rotations.Add(new Rotation("New Rotation", "Shadow Bolt", null));
+                m_calcOpts.ActiveRotationIndex = 0;
             }
 
             RefreshRotationPanel();
             Character.OnCalculationsInvalidated();
         }
-        private void executeCombo_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_loadingCalculationOptions) { return; }
+        private void executeCombo_SelectedIndexChanged(object sender, SelectionChangedEventArgs e) {
+            if (m_loadingCalculationOptions) { return; }
 
             if ((string)executeCombo.SelectedItem == "None") {
-                calcOpts.GetActiveRotation().Execute = null;
+                m_calcOpts.GetActiveRotation().Execute = null;
             } else {
-                calcOpts.GetActiveRotation().Execute = (string)executeCombo.SelectedItem;
+                m_calcOpts.GetActiveRotation().Execute = (string)executeCombo.SelectedItem;
             }
             Character.OnCalculationsInvalidated();
-        }
-        #endregion
-        #region Debug Tab
-        private void TimerButton_Click(object sender, RoutedEventArgs e)
-        {
+        }        
+        private void TimerButton_Click(object sender, RoutedEventArgs e) {
             /*System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
             CalculationsWarlock calculations = (CalculationsWarlock)Calculations.Instance;
             Character character = Character;
@@ -308,6 +236,9 @@ namespace Rawr.Warlock
             clock.Stop();
             MessageBox.Show(clock.Elapsed.TotalSeconds + " seconds.");*/
         }
-        #endregion
+
+        private bool m_loadingCalculationOptions;
+        private CalculationOptionsWarlock m_calcOpts = null;
+        private Character m_character;
     }
 }
