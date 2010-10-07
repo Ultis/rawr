@@ -18,6 +18,7 @@ namespace Rawr.DK
             this.bWeaponRequired = false;
             this.bTriggersGCD = true;
             this.uRange = 30;
+            this.tDamageType = ItemDamageType.Shadow;
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -34,6 +35,22 @@ namespace Rawr.DK
             set
             {
                 _DamageAdditiveModifer = value;
+            }
+        }
+
+        private float _DamageMultiplierModifier = 0;
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                //this.DamageAdditiveModifer = [AP * 0.3]
+                if (CState.m_Talents.GlyphofDeathCoil)
+                    _DamageMultiplierModifier += .15f;
+                return this._DamageMultiplierModifier + base.DamageMultiplierModifer;
+            }
+            set
+            {
+                _DamageMultiplierModifier = value;
             }
         }
     }

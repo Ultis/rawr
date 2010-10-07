@@ -23,7 +23,7 @@ namespace Rawr.DK
             this.uRange = 30;
             this.uArea = 10;
             this.uTickRate = 1 * 1000;
-            this.uDuration = 10 * 1000;
+            this.uDuration = (uint)(10 * 1000 * (CS.m_Talents.GlyphofDeathandDecay ? 1.5 : 1));
             this.Cooldown = 30 * 1000;
             this.bAOE = true;
 

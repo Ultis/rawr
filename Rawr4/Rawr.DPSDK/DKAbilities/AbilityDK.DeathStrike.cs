@@ -60,5 +60,20 @@ namespace Rawr.DK
                 uMaxDamage = uMinDamage = value;
             }
         }
+
+        private float _DamageMultiplierModifier;
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                _DamageMultiplierModifier = base.DamageMultiplierModifer;
+                _DamageMultiplierModifier += (this.CState.m_Talents.GlyphofDeathStrike ? Math.Max(.02f * CState.m_CurrentRP, .4f) : 0);
+                return _DamageMultiplierModifier;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
     }
 }

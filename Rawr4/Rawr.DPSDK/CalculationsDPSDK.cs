@@ -7,50 +7,52 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
+    public enum DKability
+    {
+        // Basic
+        White,
+        // Melee abilities
+        BloodStrike,
+        DeathStrike,
+        FesteringStrike,
+        FrostStrike,
+        HeartStrike,
+        NecroticStrike,
+        Obliterate,
+        PlagueStrike,
+        RuneStrike,
+        ScourgeStrike,
+        // Ranged/AOE abilities
+        BloodBoil,
+        DeathCoil,
+        DeathNDecay,
+        HowlingBlast,
+        IcyTouch,
+        // Others
+        BloodParasite,
+        BloodPlague,
+        DRW,
+        FrostFever,
+        Gargoyle,
+        Ghoul,
+        UnholyBlight,
+        WanderingPlague,
+        OtherPhysical,
+        OtherHoly,
+        OtherArcane,
+        OtherFire,
+        OtherFrost,
+        OtherNature,
+        OtherShadow,
+    }
+
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
         public float BonusMaxRunicPower = 0f;
 
-        enum ability
-        {
-            // Basic
-            White,
-            // Melee abilities
-            BloodStrike,
-            DeathStrike,
-            FesteringStrike,
-            FrostStrike,
-            HeartStrike,
-            NecroticStrike,
-            Obliterate,
-            PlagueStrike,
-            RuneStrike,
-            ScourgeStrike,
-            // Ranged/AOE abilities
-            BloodBoil,
-            DeathCoil,
-            DeathNDecay,
-            HowlingBlast,
-            IcyTouch,
-            // Others
-            BloodParasite,
-            BloodPlague,
-            DRW,
-            FrostFever,
-            Gargoyle,
-            Ghoul,
-            UnholyBlight,
-            WanderingPlague,
-            OtherPhysical,
-            OtherHoly,
-            OtherArcane,
-            OtherFire,
-            OtherFrost,
-            OtherNature,
-            OtherShadow,
-        }
-        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(ability))];
+
+        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float Mastery { get; set; }
         public float BonusRPMultiplier { get; set; }
         public float BonusRuneRegeneration { get; set; }
@@ -170,6 +172,7 @@ namespace Rawr.DPSDK
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
                         "Basic Stats:Armor",
+                        "Basic Stats:Mastery Rating",
                         "Basic Stats:Mastery",
 					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
 					    "Advanced Stats:Attack Speed",
@@ -196,9 +199,24 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
                         "DPS Breakdown:Ghoul",
-                        "DPS Breakdown:Bloodparasite",
+                        "DPS Breakdown:Blood Parasite",
                         "DPS Breakdown:Other",
                         "DPS Breakdown:Total DPS",
+                        "Damage Per Use:BB",
+                        "Damage Per Use:BS",
+                        "Damage Per Use:DC",
+                        "Damage Per Use:DnD",
+                        "Damage Per Use:DS",
+                        "Damage Per Use:Fest",
+                        "Damage Per Use:FS",
+                        "Damage Per Use:HS",
+                        "Damage Per Use:HB",
+                        "Damage Per Use:IT",
+                        "Damage Per Use:NS",
+                        "Damage Per Use:OB",
+                        "Damage Per Use:PS",
+                        "Damage Per Use:RS",
+                        "Damage Per Use:SS",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -287,9 +305,15 @@ namespace Rawr.DPSDK
             int targetLevel = hBossOptions.Level;
 
             stats = GetCharacterStats(character, additionalItem);
-            calcs.BasicStats = stats.Clone();
+            calcs.BasicStats = stats.Clone(); // This is for what is on-display.
+            AccumulateSpecialEffectStats(stats, character, calcOpts); // Now add in the special effects.
 
-            CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts/*, additionalItem*/);
+            CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts);
+
+            calcs.CritChance = stats.PhysicalCrit;
+            calcs.EffectiveArmor = stats.Armor;
+            calcs.SpellCritChance = stats.SpellCrit;
+            calcs.Mastery = Mastery;
 
             calcs.OverallPoints = calcs.DPSPoints = combatTable.m_DPS; 
             return calcs;
@@ -321,7 +345,7 @@ namespace Rawr.DPSDK
                     PresenceStats.BaseArmorMultiplier += 0.6f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
-                    PresenceStats.ThreatIncreaseMultiplier += 2f; // TODO: NOT VERIFIED AT ALL
+                    PresenceStats.ThreatIncreaseMultiplier += 2.5f; // TODO: NOT VERIFIED AT ALL
                     break;
                 }
                 case CalculationOptionsDPSDK.Presence.Frost:
@@ -366,14 +390,40 @@ namespace Rawr.DPSDK
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            Stats statsTotal = new Stats();
+            if (null == character)
+            {
+#if DEBUG
+                throw new Exception("Character is Null");
+#else
+                return statsTotal;
+#endif
+            }
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
+            if (null == calcOpts)
+            {
+#if DEBUG
+                throw new Exception("calcOpts is Null");
+#else
+                return statsTotal;
+#endif
+            }
             DeathKnightTalents talents = character.DeathKnightTalents;
-
+            if (null == talents)
+            {
+#if DEBUG
+                throw new Exception("talents is Null");
+#else
+                return statsTotal;
+#endif
+            }
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
 
             // Filter out the duplicate non-stacking Rune Enchants:
-            if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+            if (character.OffHand != null 
+                && character.OffHandEnchant != null
+                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
                 && character.MainHandEnchant == character.OffHandEnchant)
             {
                 bool bFC1Found = false;
@@ -394,38 +444,15 @@ namespace Rawr.DPSDK
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence, talents);
-            Stats statsTalents = GetTalentStats(character);
 
-            Stats statsTotal = new Stats();
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
             statsTotal.Accumulate(statsPresence);
-            statsTotal.Accumulate(statsTalents);
+            AccumulateTalents(statsTotal, character);
 
             statsTotal = GetRelevantStats(statsTotal);
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
-
-            StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-            Stats statSE = new Stats();
-            foreach (SpecialEffect e in statsTotal.SpecialEffects())
-            {
-                // There are some multi-level special effects that need to be factored in.
-                foreach (SpecialEffect ee in e.Stats.SpecialEffects())
-                {
-                    e.Stats = se.getSpecialEffects(calcOpts, ee);
-                }
-                statSE.Accumulate(se.getSpecialEffects(calcOpts, e));
-            }
-
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
-            {
-                if (HasRelevantStats(effect.Stats))
-                {
-                    se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-                    statsTotal.Accumulate(se.getSpecialEffects(calcOpts, effect));
-                }
-            }
 
             statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc/3;
             statsTotal.HasteRating += statsTotal.DeathbringerProc/3;
@@ -443,84 +470,54 @@ namespace Rawr.DPSDK
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
 
-            statsTotal.BonusSpellPowerMultiplier++;
-            statsTotal.BonusFrostDamageMultiplier++;
-            statsTotal.BonusShadowDamageMultiplier++;
-
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
-            statsTotal.BonusPhysicalDamageMultiplier++;
+            statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
+            statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);
+            statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
+            statsTotal.PhysicalHaste += StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
+
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
 
             return (statsTotal);
         }
 
-        /*
-        public Stats GetCharacterStatsMaximum(Character character, Item additionalItem, float abilityCooldown)
+        private void AccumulateSpecialEffectStats(Stats s, Character c, CalculationOptionsDPSDK calcOpts)
         {
-            CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            DeathKnightTalents talents = character.DeathKnightTalents;
-            Stats statsRace = GetRaceStats(character);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTalents = GetTalentStats(character);
-
-            Stats statsTotal = new Stats();
-            Stats statsGearEnchantsBuffs = new Stats();
-
-            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
-
-            statsTotal = GetRelevantStats(statsGearEnchantsBuffs);
-            statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsGearEnchantsBuffs.ExpertiseRating);
-
-            StatsSpecialEffects se = new StatsSpecialEffects(character, statsTotal, new CombatTable(character, statsTotal, calcOpts));
-            int temp = 0;
-            Stats statsTemp = new Stats();
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects())
+            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new CombatTable(c, s, calcOpts));
+            Stats statSE = new Stats();
+            foreach (SpecialEffect e in s.SpecialEffects())
             {
-                statsTemp.AddSpecialEffect(effect);
+                // There are some multi-level special effects that need to be factored in.
+                foreach (SpecialEffect ee in e.Stats.SpecialEffects())
+                {
+                    e.Stats = se.getSpecialEffects(calcOpts, ee);
+                }
+                statSE.Accumulate(se.getSpecialEffects(calcOpts, e));
             }
-            foreach (SpecialEffect effect in statsTemp.SpecialEffects())
+
+            foreach (SpecialEffect effect in s.SpecialEffects())
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    if (effect.Trigger == Trigger.Use)
-                    {
-                        float uptimeMult = 0f;
-                        if (effect.Cooldown > abilityCooldown)
-                        {
-                            for (int i = 0; i * effect.Cooldown < calcOpts.FightLength * 60f; i++)
-                            {
-                                if (i * effect.Cooldown % abilityCooldown == 0)
-                                {
-                                    uptimeMult++;
-                                }
-                            }
-                            uptimeMult /= calcOpts.FightLength * 60f / abilityCooldown;
-                            statsTotal += effect.Stats * uptimeMult;
-                        }
-                    }
-                    else
-                    {
-                        statsTotal.AddSpecialEffect(effect);
-                        temp++;
-                    }
+                    se = new StatsSpecialEffects(c, s, new CombatTable(c, s, calcOpts));
+                    s.Accumulate(se.getSpecialEffects(calcOpts, effect));
                 }
             }
-            return (statsTotal);
         }
-        */
 
-        public Stats GetTalentStats(Character c)
+        private void AccumulateGlyphStats(Stats s, DeathKnightTalents t)
         {
-            // TODO: This will eventually be in the common area.
-            Stats TalentStats = new Stats();
+            if (t.GlyphofBoneShield)
+                s.MovementSpeed = (float)Math.Max(s.MovementSpeed, 1.15f);
 
-            AccumulateTalents(TalentStats, c);
-
-            return TalentStats;
         }
 
-        public Rotation.Type TalentFocus(DeathKnightTalents t)
+        public Rotation.Type GetSpec(DeathKnightTalents t)
         {
             Rotation.Type curRotationType = Rotation.Type.Custom;
             const int indexBlood = 0; // start index of Blood Talents.
@@ -574,7 +571,7 @@ namespace Rawr.DPSDK
 
             // Which talent tree focus?
             #region Talent Speciality
-            Rotation.Type r = TalentFocus(character.DeathKnightTalents);
+            Rotation.Type r = GetSpec(character.DeathKnightTalents);
             switch (r)
             {
                 case Rotation.Type.Blood:
@@ -594,6 +591,7 @@ namespace Rawr.DPSDK
                         // Mastery: Blood Shield
                         // Each Time you heal yourself w/ DS you gain a shield worth 50% of the amount healed
                         // Each Point of Mastery increases the shield by 6.25%
+                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
                         break;
                     }
                 case Rotation.Type.Frost:
@@ -607,8 +605,9 @@ namespace Rawr.DPSDK
                         // Whenever you hit with Blood Strike or Pest, your blood rune will become a death rune.
                         // Mastery: Frozen Heart
                         // Increases all frost damage by 16%.  
-                        FullCharacterStats.BonusFrostDamageMultiplier += .16f;
                         // Each point of mastery increases frost damage by an additional 2.0%
+                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
+                        FullCharacterStats.BonusFrostDamageMultiplier += .16f + (.02f * Mastery);
                         break;
                     }
                 case Rotation.Type.Unholy:
@@ -626,8 +625,9 @@ namespace Rawr.DPSDK
                         FullCharacterStats.BonusStrengthMultiplier += .15f;
                         // Mastery: Blightcaller.
                         // Increases the damage done by your diseases by 32%.
-                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f;
                         // Each point of mastery increases disease damage by an additional 4.0%
+                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
+                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f + (.04f * Mastery);
                         break;
                     }
             }
@@ -1239,6 +1239,8 @@ namespace Rawr.DPSDK
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc, 
+                ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1285,7 +1287,17 @@ namespace Rawr.DPSDK
             bool bRelevant = false;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (relevantStats(effect.Stats))
+                if (effect.Trigger == Trigger.BloodStrikeHit ||
+                        effect.Trigger == Trigger.HeartStrikeHit ||
+                        effect.Trigger == Trigger.ScourgeStrikeHit ||
+                        effect.Trigger == Trigger.ObliterateHit ||
+                        effect.Trigger == Trigger.DeathStrikeHit ||
+                        effect.Trigger == Trigger.IcyTouchHit ||
+                        effect.Trigger == Trigger.PlagueStrikeHit ||
+                        effect.Trigger == Trigger.RuneStrikeHit
+                    )
+                { bRelevant = true; }
+                else if (relevantStats(effect.Stats))
                 {
                     if (effect.Trigger == Trigger.DamageDone ||
                         effect.Trigger == Trigger.DamageOrHealingDone ||
@@ -1303,15 +1315,6 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.OffHandHit ||
                         effect.Trigger == Trigger.PhysicalCrit ||
                         effect.Trigger == Trigger.PhysicalHit ||
-                        effect.Trigger == Trigger.BloodStrikeHit ||
-                        effect.Trigger == Trigger.HeartStrikeHit ||
-                        effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
-                        effect.Trigger == Trigger.ScourgeStrikeHit ||
-                        effect.Trigger == Trigger.ObliterateHit ||
-                        effect.Trigger == Trigger.DeathStrikeHit ||
-                        effect.Trigger == Trigger.IcyTouchHit ||
-                        effect.Trigger == Trigger.PlagueStrikeHit ||
-                        effect.Trigger == Trigger.RuneStrikeHit ||
                         effect.Trigger == Trigger.Use)
                     {
                         foreach (SpecialEffect e in effect.Stats.SpecialEffects())
@@ -1421,7 +1424,9 @@ namespace Rawr.DPSDK
             bResults |= ( stats.DiseasesCanCrit != 0); 
             bResults |= ( stats.HighestStat != 0); 
             bResults |= ( stats.Paragon != 0); 
-            bResults |= ( stats.DeathbringerProc != 0); 
+            bResults |= ( stats.DeathbringerProc != 0);
+            bResults |= (stats.ThreatIncreaseMultiplier != 0);
+            bResults |= (stats.ThreatReductionMultiplier != 0); 
 
             // Filter out caster gear:
             if (!bHasCore & bResults)
@@ -1462,40 +1467,40 @@ namespace Rawr.DPSDK
 
         #region Static SpecialEffects
         // Talent: Spell Deflection
-        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
+        public static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
         // Gear: T10 4P
-        private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
+        public static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         // Enchant: Rune of Fallen Crusader
-        private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
-        private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
-        private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
+        public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
+        public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+        public static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
         };
         // Talent: Rune Tap
-        private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
+        public static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
         };
         // Talent Bloody Vengence.
-        private static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
+        public static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
         };
-        private static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
+        public static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
             new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
         };
-        private static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
-        private static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
+        public static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
+        public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 1) }, 0, 0, 0.45f),
             new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 2) }, 0, 0, 0.45f),

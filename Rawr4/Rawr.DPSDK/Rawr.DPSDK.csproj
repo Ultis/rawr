@@ -115,6 +115,7 @@
     <Compile Include="DKAbilities\AbilityDK.RuneStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.ScourgeStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.WhiteSwing.cs" />
+    <Compile Include="DKAbilities\AbilityDK.ChainsOfIce.cs" />
     <Compile Include="DKAbilities\CombatState.cs" />
     <Compile Include="DKAbilities\CombatTable2.cs" />
     <Compile Include="DRW.cs" />

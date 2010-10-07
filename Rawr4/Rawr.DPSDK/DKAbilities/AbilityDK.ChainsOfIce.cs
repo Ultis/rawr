@@ -7,21 +7,21 @@ namespace Rawr.DK
     /// <summary>
     /// This class is the implmentation of the IcyTouch Ability based on the AbilityDK_Base class.
     /// </summary>
-    class AbilityDK_IcyTouch : AbilityDK_Base
+    class AbilityDK_ChainsOfIce : AbilityDK_Base
     {
         /// <summary>
         /// Chills the target for 227 to 245 Frost damage and  infects 
         /// them with Frost Fever, a disease that deals periodic damage 
         /// and reduces melee and ranged attack speed by 14% for 15 sec.
         /// </summary>
-        public AbilityDK_IcyTouch(CombatState CS)
+        public AbilityDK_ChainsOfIce(CombatState CS)
         {
             this.CState = CS;
-            this.szName = "Icy Touch";
+            this.szName = "Chains of Ice";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uMaxDamage = 505 / 2;
-            this.uMinDamage = 547 / 2;
+            this.uMaxDamage = (CS.m_Talents.GlyphofChainsofIce ? 156u : 0u);
+            this.uMinDamage = (CS.m_Talents.GlyphofChainsofIce ? 144u : 0u);
             this.uRange = 20;
             this.tDamageType = ItemDamageType.Frost;
             this.bTriggersGCD = true;
@@ -38,7 +38,10 @@ namespace Rawr.DK
             get
             {
                 //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.CState.m_Stats.AttackPower * .2);
+                if (CState.m_Talents.GlyphofChainsofIce)
+                    return (int)(this.CState.m_Stats.AttackPower * .2) + base.DamageAdditiveModifer;
+                else
+                    return 0;
             }
             set
             {

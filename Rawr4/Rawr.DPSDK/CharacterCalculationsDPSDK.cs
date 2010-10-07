@@ -26,11 +26,14 @@ namespace Rawr.DPSDK
             set { _subPoints[0] = value; }
         }
 
-        private float _whiteDPS;
+        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
+        public float[] damSub = new float[EnumHelper.GetCount(typeof(DKability))];
+        public float[] threatSub = new float[EnumHelper.GetCount(typeof(DKability))];
+
         public float WhiteDPS
         {
-            get { return _whiteDPS; }
-            set { _whiteDPS = value; }
+            get { return dpsSub[(int)DKability.White]; }
+            set { dpsSub[(int)DKability.White] = value; }
         }
 
         private float _NecrosisDPS;
@@ -96,11 +99,11 @@ namespace Rawr.DPSDK
             set { _UnholyBlightDPS = value; }
         }
 
-        private float _BloodwormsDPS;
-        public float BloodwormsDPS
+        private float _BloodparasiteDPS;
+        public float BloodparasiteDPS
         {
-            get { return _BloodwormsDPS; }
-            set { _BloodwormsDPS = value; }
+            get { return _BloodparasiteDPS; }
+            set { _BloodparasiteDPS = value; }
         }
 
         private float _OtherDPS;
@@ -304,6 +307,8 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
+        public float Mastery { get; set; }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             float critRating = BasicStats.CritRating;
@@ -321,6 +326,8 @@ namespace Rawr.DPSDK
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));
             dictValues.Add("Resilience",        BasicStats.Resilience.ToString("F0"));
+            dictValues.Add("Mastery Rating",    BasicStats.MasteryRating.ToString("N0"));
+            dictValues.Add("Mastery",           Mastery.ToString());
 
             dictValues.Add("Weapon Damage",     MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed",      MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
@@ -348,10 +355,25 @@ namespace Rawr.DPSDK
             dictValues.Add("Wandering Plague",  string.Format("{0:N2}*{1:P}", WanderingPlagueDPS, (float)WanderingPlagueDPS / DPSPoints));
             dictValues.Add("White",             string.Format("{0:N2}*{1:P}", WhiteDPS, (float)WhiteDPS / DPSPoints));
             dictValues.Add("Ghoul",             string.Format("{0:N2}*{1:P}", GhoulDPS, (float)GhoulDPS / DPSPoints));
-            dictValues.Add("Bloodworms",        string.Format("{0:N2}*{1:P}", BloodwormsDPS, (float)BloodwormsDPS / DPSPoints));
+            dictValues.Add("Blood Parasite",    string.Format("{0:N2}*{1:P}", BloodparasiteDPS, (float)BloodparasiteDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
             dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
 
+            dictValues.Add("BB", damSub[(int)DKability.BloodBoil].ToString());
+            dictValues.Add("BS", damSub[(int)DKability.BloodStrike].ToString());
+            dictValues.Add("DC", damSub[(int)DKability.DeathCoil].ToString());
+            dictValues.Add("DnD", damSub[(int)DKability.DeathNDecay].ToString());
+            dictValues.Add("DS", damSub[(int)DKability.DeathStrike].ToString());
+            dictValues.Add("Fest", damSub[(int)DKability.FesteringStrike].ToString());
+            dictValues.Add("FS", damSub[(int)DKability.FrostStrike].ToString());
+            dictValues.Add("IT", damSub[(int)DKability.IcyTouch].ToString());
+            dictValues.Add("HS", damSub[(int)DKability.HeartStrike].ToString());
+            dictValues.Add("HB", damSub[(int)DKability.HowlingBlast].ToString());
+            dictValues.Add("NS", damSub[(int)DKability.NecroticStrike].ToString());
+            dictValues.Add("OB", damSub[(int)DKability.Obliterate].ToString());
+            dictValues.Add("PS", damSub[(int)DKability.PlagueStrike].ToString());
+            dictValues.Add("RS", damSub[(int)DKability.RuneStrike].ToString());
+            dictValues.Add("SS", damSub[(int)DKability.ScourgeStrike].ToString());
             return dictValues;
         }
         public override float GetOptimizableCalculationValue(string calculation)

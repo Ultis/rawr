@@ -59,7 +59,7 @@ namespace Rawr.DK
             }
         }
 
-        private int[] _AbilityCost;
+        private int[] _AbilityCost = {0,0,0,0, 0,0,0,0};
         public float m_RotationDuration // readonly
         {
             get 
@@ -106,7 +106,7 @@ namespace Rawr.DK
         {
             get { return _AbilityCost[(int)DKCostTypes.RunicPower]; }
         }
-        private int _GCDs;
+        private int _GCDs = 1;
         public int m_GCDs
         {
             get { return _GCDs; }
@@ -133,15 +133,73 @@ namespace Rawr.DK
             this.m_CState.m_NumberOfTargets = m_BO.Targets.Count;
             //m_Rotation = calcOpts.m_Rotation;
 
-            //TODO: Handle Expertise
+            float MHExpertise = stats.Expertise;
+            float OHExpertise = stats.Expertise;
+
+            if (c.Race == CharacterRace.Dwarf)
+            {
+                if (c.MainHand != null &&
+                    (c.MainHand.Item.Type == ItemType.OneHandMace ||
+                     c.MainHand.Item.Type == ItemType.TwoHandMace))
+                {
+                    MHExpertise += 5f;
+                }
+
+                if (c.OffHand != null && c.OffHand.Item.Type == ItemType.OneHandMace)
+                {
+                    OHExpertise += 5f;
+                }
+            }
+            else if (c.Race == CharacterRace.Orc)
+            {
+                if (c.MainHand != null &&
+                    (c.MainHand.Item.Type == ItemType.OneHandAxe ||
+                     c.MainHand.Item.Type == ItemType.TwoHandAxe))
+                {
+                    MHExpertise += 5f;
+                }
+
+                if (c.OffHand != null && c.OffHand.Item.Type == ItemType.OneHandAxe)
+                {
+                    OHExpertise += 5f;
+                }
+            }
+            if (c.Race == CharacterRace.Human)
+            {
+                if (c.MainHand != null &&
+                    (c.MainHand.Item.Type == ItemType.OneHandSword ||
+                     c.MainHand.Item.Type == ItemType.TwoHandSword ||
+                     c.MainHand.Item.Type == ItemType.OneHandMace ||
+                     c.MainHand.Item.Type == ItemType.TwoHandMace))
+                {
+                    MHExpertise += 3f;
+                }
+
+                if (c.OffHand != null &&
+                    (c.OffHand.Item.Type == ItemType.OneHandSword ||
+                    c.OffHand.Item.Type == ItemType.OneHandMace))
+                {
+                    OHExpertise += 3f;
+                }
+            }
+
             if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
             {
-                //m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, 0);
+                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_CState.m_Talents, MHExpertise);
                 m_CState.OH = null;
+                calcs.MHExpertise = m_CState.MH.effectiveExpertise;
+                calcs.MHWeaponDamage = m_CState.MH.damage;
+                calcs.MHAttackSpeed = m_CState.MH.hastedSpeed;
                 if (c.MainHand.Slot != ItemSlot.TwoHand)
                 {
-                    //if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
-                        //m_CState.OH = new Weapon(c.OffHand.Item, this.m_CState.m_Stats, m_Opts, 0);
+                    if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
+                    {
+                        DW = true;
+                        m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_CState.m_Talents, OHExpertise);
+                        calcs.OHExpertise = m_CState.OH.effectiveExpertise;
+                        calcs.OHWeaponDamage = m_CState.OH.damage;
+                        calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
+                    }
                 }
             }
             else
@@ -173,25 +231,44 @@ namespace Rawr.DK
         {
             // TODO: need to setup a CombatState object. 
             // Setup an instance of each ability.
+            // No runes:
+            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CState);
             // Single Runes:
             AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CState);
+            PostData(IT, DKability.IcyTouch);
             AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CState);
             AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CState);
+            PostData(PS, DKability.PlagueStrike);
             AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CState);
             AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CState);
+            PostData(BS, DKability.BloodStrike);
             AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CState);
+            PostData(HS, DKability.HeartStrike);
+            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CState);
+            PostData(NS, DKability.NecroticStrike);
             AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CState);
             AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CState);
+            PostData(BB, DKability.BloodBoil);
+            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CState);
+            PostData(HB, DKability.HowlingBlast);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CState);
+            PostData(SS, DKability.ScourgeStrike);
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CState);
+            PostData(DnD, DKability.DeathNDecay);
             // Multi Runes:
             AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CState);
-            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CState);
+            PostData(DS, DKability.DeathStrike);
+            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CState);
+            PostData(Fest, DKability.FesteringStrike);
             AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CState);
-            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CState);
-            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CState);
+            PostData(OB, DKability.Obliterate);
             // RP:
             AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CState);
+            PostData(RS, DKability.RuneStrike);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CState);
+            PostData(DC, DKability.DeathCoil);
             AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CState);
+            PostData(FS, DKability.FrostStrike);
 
             // Build the sortable list of abilities
             List<AbilityDK_Base> l_RotRunes = new List<AbilityDK_Base>();
@@ -201,12 +278,14 @@ namespace Rawr.DK
             l_RotRunes.Add(BS);
             l_RotRunes.Add(HS);
             l_RotRunes.Add(BB);
-
-            l_RotRunes.Add(DS);
+            l_RotRunes.Add(NS);
             l_RotRunes.Add(HB);
-            l_RotRunes.Add(OB);
             l_RotRunes.Add(SS);
             l_RotRunes.Add(DnD);
+
+            l_RotRunes.Add(DS);
+            l_RotRunes.Add(OB);
+            l_RotRunes.Add(Fest);
 
             l_RotRP.Add(RS);
             l_RotRP.Add(DC);
@@ -219,6 +298,32 @@ namespace Rawr.DK
 
             // we now have lists that provide sorted by cost of # of runes 
             // and ammount of RP needed.
+
+            // For now, let's just blow everything in here one each.
+            ml_Rot = new List<AbilityDK_Base>();
+            ml_Rot.Add(IT);
+            ml_Rot.Add(PS);
+            ml_Rot.Add(BS);
+            ml_Rot.Add(HS);
+            ml_Rot.Add(BB);
+            ml_Rot.Add(NS);
+            ml_Rot.Add(HB);
+            ml_Rot.Add(SS);
+            ml_Rot.Add(DnD);
+
+            ml_Rot.Add(DS);
+            ml_Rot.Add(OB);
+            ml_Rot.Add(Fest);
+
+            ml_Rot.Add(RS);
+            ml_Rot.Add(DC);
+            ml_Rot.Add(FS);
+
+            foreach (AbilityDK_Base ability in ml_Rot)
+            {
+                this._TotalDamage += ability.GetTotalDamage();
+                this._TotalThreat += ability.GetTotalThreat();
+            }
         }
 
         /// <summary>
@@ -272,7 +377,6 @@ namespace Rawr.DK
             }
             if (Rot.HeartStrike > 0)
             {
-//                    if (m_CState.m_Talents.HeartStrike > 0)
                 {
                     for (i = (int)Rot.HeartStrike; i > 0; i--)
                         ml_Rot.Add(new AbilityDK_HeartStrike(m_CState));
@@ -468,7 +572,7 @@ namespace Rawr.DK
             this._TotalDamage = 0;
             this._TotalThreat = 0;
             _TotalDamage += fWhiteDamage;
-            _TotalThreat += fWhiteDamage * AbilityDK_Base.THREAT_FROST_PRESENCE;
+            _TotalThreat += (StatConversion.ApplyMultiplier(fWhiteDamage, m_CState.m_Stats.ThreatIncreaseMultiplier - m_CState.m_Stats.ThreatReductionMultiplier));
 
             foreach (AbilityDK_Base ability in ml_Rot)
             {
@@ -514,5 +618,12 @@ namespace Rawr.DK
                 SpendDeathRunes(AbilityCost, DRSpent);
             }
         }
+
+        private void PostData(AbilityDK_Base ability, DKability AbIndex)
+        {
+            m_Calcs.damSub[(int)AbIndex] = ability.GetTotalDamage();
+            m_Calcs.threatSub[(int)AbIndex] = ability.GetTotalThreat();
+        }
+
     }
 }

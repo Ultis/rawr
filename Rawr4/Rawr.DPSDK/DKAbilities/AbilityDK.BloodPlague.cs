@@ -29,6 +29,8 @@ namespace Rawr.DK
             this.bTriggersGCD = false;
             this.CastTime = 0;
             this.Cooldown = 0;
+            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
+                CState.m_uDiseaseCount++;
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -40,7 +42,7 @@ namespace Rawr.DK
             get
             {
                 //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer;
+                return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer + base.DamageAdditiveModifer;
             }
             set
             {

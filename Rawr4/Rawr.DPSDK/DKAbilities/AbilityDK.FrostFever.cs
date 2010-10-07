@@ -30,6 +30,8 @@ namespace Rawr.DK
             this.bTriggersGCD = false;
             this.Cooldown = 0;
             this.CastTime = 0;
+            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
+                CState.m_uDiseaseCount++;
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -49,5 +51,18 @@ namespace Rawr.DK
             }
         }
 
+        private float _DamageMultiplierModifier;
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                _DamageMultiplierModifier = base.DamageMultiplierModifer + (CState.m_Talents.GlyphofIcyTouch ? .3f : 0);
+                return _DamageMultiplierModifier;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
     }
 }

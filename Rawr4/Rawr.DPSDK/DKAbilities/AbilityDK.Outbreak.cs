@@ -18,6 +18,9 @@ namespace Rawr.DK
             this.uRange = 30;
             this.bTriggersGCD = true;
             this.Cooldown = 60 * 1000; // 1 min CD.
+            this.ml_TriggeredAbility = new AbilityDK_Base[2];
+            this.ml_TriggeredAbility[0] = new AbilityDK_BloodPlague(CS);
+            this.ml_TriggeredAbility[1] = new AbilityDK_FrostFever(CS);
         }
 
     }

@@ -63,15 +63,6 @@ namespace Rawr.DPSDK
 			set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
 		}
 		
-/*
- * private bool _EnforceMetagemRequirements = false;
-		public bool EnforceMetagemRequirements
-		{
-			get {return _EnforceMetagemRequirements; }
-			set { _EnforceMetagemRequirements = value; OnPropertyChanged("EnforceMetagemRequirements"); }
-		}
-*/		
-
         private bool _getRefreshForReferenceCalcs = true;
         public bool GetRefreshForReferenceCalcs
         {
@@ -111,7 +102,7 @@ namespace Rawr.DPSDK
                 _rotation = value; OnPropertyChanged("rotation"); 
             }
 		}
-		
+		/*
 		private bool _TalentsSaved = false;
 		public bool TalentsSaved
 		{
@@ -125,7 +116,7 @@ namespace Rawr.DPSDK
             get { return _weightScale; }
             set { _weightScale = value; }
         }
-
+        */
 		#region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)

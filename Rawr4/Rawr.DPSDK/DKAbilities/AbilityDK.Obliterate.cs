@@ -69,7 +69,7 @@ namespace Rawr.DK
         {
             get
             {
-                float multiplier = (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer;
+                float multiplier = (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofObliterate ? .20f : 0);
                 return multiplier;
             }
             set

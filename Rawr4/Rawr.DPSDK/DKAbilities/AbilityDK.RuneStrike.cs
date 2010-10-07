@@ -19,9 +19,7 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 20;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 2f;
-            this.DamageAdditiveModifer = 2 * (int)CState.m_Stats.AttackPower * 10 / 10000;
             this.bTriggersGCD = true;
-            this.Cooldown = 0;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
         }
 
@@ -74,6 +72,14 @@ namespace Rawr.DK
             {
                 _DamageAdditiveModifer = value;
             }
-        }   
+        }
+
+        public override float CritChance
+        {
+            get
+            {
+                return base.CritChance + (CState.m_Talents.GlyphofRuneStrike ? .1f : 0);
+            }
+        }
     }
 }

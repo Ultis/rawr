@@ -21,11 +21,11 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 0;
             this.bTriggersGCD = true;
             this.uRange = 0;
-            this.uArea = 10;
+            this.uArea = (uint)(10 + (CS.m_Talents.GlyphofBloodBoil ? 5 : 0));
             this.bAOE = true;
         }
 
-        private int _DamageAdditiveModifer = 95;
+        private int _DamageAdditiveModifer = 0;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
@@ -38,7 +38,7 @@ namespace Rawr.DK
                 // Additional Disease Damage:
                 if (CState.m_uDiseaseCount > 0)
                     AdditionalDamage += (int)(this.CState.m_Stats.AttackPower * 0.035);
-                return AdditionalDamage + _DamageAdditiveModifer;
+                return AdditionalDamage + base.DamageAdditiveModifer + _DamageAdditiveModifer;
             }
             set
             {

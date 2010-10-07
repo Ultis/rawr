@@ -18,5 +18,6 @@ namespace Rawr.DK
         public Weapon MH, OH;
         public float m_NumberOfTargets;
         public uint m_uDiseaseCount;
+        public int m_CurrentRP;
     }
 }

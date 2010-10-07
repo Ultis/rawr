@@ -21,6 +21,7 @@ namespace Rawr.DK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
+            this.tDamageType = ItemDamageType.Physical;
             // TODO: Physical Damage * .25 * # diseases on target as shadow.
         }
 
@@ -32,7 +33,7 @@ namespace Rawr.DK
         {
             get
             {
-                return CState.m_uDiseaseCount * .12f;
+                return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0);
             }
             set
             {

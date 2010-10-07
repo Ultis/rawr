@@ -35,7 +35,6 @@ namespace Rawr.DK
         public const uint MIN_GCD_MS = 1000;
         public const uint INSTANT = 1;
         public const uint MELEE_RANGE = 5;
-        public const float THREAT_FROST_PRESENCE = 2.0735f;
         #endregion
 
         #region Constructors
@@ -99,8 +98,9 @@ namespace Rawr.DK
         /// Any DK ability triggered by this ability.  
         /// Should not be recursive.
         /// This would mean FF when using IT or Glyphed HB.
+        /// TODO: This needs to be updated to a list since outbreak now doubles up.
         /// </summary>
-        public AbilityDK_Base m_TriggeredAbility;
+        public AbilityDK_Base[] ml_TriggeredAbility;
 
         /// <summary>Name of the ability.</summary>
         public string szName { get; set; }
@@ -135,14 +135,14 @@ namespace Rawr.DK
                 uint AvgDam = (this.uMinDamage + this.uMaxDamage) / 2;
                 uint WDam = 0;
                 // Handle non-weapon based effects:
-                if (null != this.wMH)
+                if (this.bWeaponRequired == true && null != this.wMH)
                 {
                     WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
                 }
                 // Average out the min & max damage, then add in baseDamage from the weapon.
                 // Factor in miss rate based on HIT
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
-                chanceMiss -= CState.m_Stats.PhysicalHit;
+                chanceMiss -= CState.m_Stats.PhysicalHit; // TODO: Update this so it properly uses physical v. spell hit.
                 chanceMiss = Math.Max(0f, chanceMiss);
 
                 return (uint)((AvgDam + WDam) * (1 - chanceMiss));
@@ -263,6 +263,35 @@ namespace Rawr.DK
         #endregion 
 
         /// <summary>
+        /// The Crit Chance for the ability.  
+        /// </summary>
+        virtual public float CritChance 
+        { 
+            get
+            {
+                if (this.bWeaponRequired)
+                    return Math.Max(1, CState.m_Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                else
+                    return Math.Max(1, CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+            }
+        }
+
+        /// <summary>
+        /// The Hit Chance for the ability.  
+        /// </summary>
+        virtual public float HitChance
+        {
+            get
+            {
+                
+                if (this.bWeaponRequired)
+                    return Math.Max(1, 1 - (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
+                else
+                    return Math.Max(1, 1 - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+            }
+        }
+
+        /// <summary>
         /// Get the single instance damage of this ability.
         /// </summary>
         /// <returns>Int that represents a fully buffed single instance of this ability.</returns>
@@ -282,6 +311,10 @@ namespace Rawr.DK
         /// <returns>int that is TickDamage * duration</returns>
         virtual public int GetTotalDamage()
         {
+            if (this.bWeaponRequired == true && (null == this.wMH && null == this.wOH))
+            {
+                return 0;
+            }
             // Start w/ getting the base damage values.
             int iDamage = this.GetTickDamage();
             // Assuming full duration, or standard impact.
@@ -297,9 +330,10 @@ namespace Rawr.DK
                 // Ensure that the Damage counts off at least once.
                 fDamageCount = 1;
             }
-            iDamage = (int)((float)iDamage * fDamageCount);
+            iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * HitChance);
             if (bAOE == true)
             {
+                // Need to ensure this value is reasonable for all abilities.
                 iDamage = (int)((float)iDamage * this.CState.m_NumberOfTargets);
             }
             return iDamage;
@@ -329,6 +363,30 @@ namespace Rawr.DK
         {
             get
             {
+                switch (tDamageType)
+                {
+                    case ItemDamageType.Arcane:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusArcaneDamageMultiplier;
+                        break;
+                    case ItemDamageType.Fire:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusFireDamageMultiplier;
+                        break;
+                    case ItemDamageType.Frost:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusFrostDamageMultiplier;
+                        break;
+                    case ItemDamageType.Holy:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusHolyDamageMultiplier;
+                        break;
+                    case ItemDamageType.Nature:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusNatureDamageMultiplier;
+                        break;
+                    case ItemDamageType.Physical:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusPhysicalDamageMultiplier;
+                        break;
+                    case ItemDamageType.Shadow:
+                        this._DamageMultiplierModifer += CState.m_Stats.BonusShadowDamageMultiplier;
+                        break;
+                }
                 return _DamageMultiplierModifer;
             }
             set
@@ -345,6 +403,8 @@ namespace Rawr.DK
         {
             get
             {
+                if (CState.m_Talents.GlyphofDancingRuneWeapon)
+                    _ThreatMultiplier += .5f;
                 return _ThreatMultiplier;
             }
             set
@@ -363,7 +423,8 @@ namespace Rawr.DK
         {
             get
             {
-                return (StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier);
+                float Threat = StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
+                return (StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier));
             }
             set
             {

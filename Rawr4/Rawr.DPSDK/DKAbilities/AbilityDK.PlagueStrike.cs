@@ -19,9 +19,11 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.uBaseDamage = 420;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = .5f;
+            this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.ml_TriggeredAbility = new AbilityDK_Base[1];
+            this.ml_TriggeredAbility[0] = new AbilityDK_BloodPlague(CS);
 
         }
 

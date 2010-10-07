@@ -24,6 +24,11 @@ namespace Rawr.DK
             this.uRange = 20;
             this.uArea = 10;
             this.bAOE = true;
+            if (CS.m_Talents.GlyphofHowlingBlast)
+            {
+                this.ml_TriggeredAbility = new AbilityDK_Base[1];
+                this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
+            }
             
         }
 
