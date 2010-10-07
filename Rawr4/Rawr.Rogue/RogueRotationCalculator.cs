@@ -7,6 +7,7 @@ namespace Rawr.Rogue
     public class RogueRotationCalculator
     {
         public Character Char { get; set; }
+        public RogueTalents Talents { get; set; }
         public int Spec { get; set; }
         public Stats Stats { get; set; }
         public CalculationOptionsRogue CalcOpts { get; set; }
@@ -85,6 +86,7 @@ namespace Rawr.Rogue
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats aPStats)
 		{
             Char = character;
+            Talents = character.RogueTalents;
             Spec = spec;
 			Stats = stats;
             CalcOpts = calcOpts;
@@ -123,24 +125,24 @@ namespace Rawr.Rogue
 
             #region Talent/Mastery bonuses
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? 20f : 0f;
-            ChanceOnEnergyOnGarrRuptTick = 0.3f * character.RogueTalents.VenomousWounds;
-            ChanceOnNoDPConsumeOnEnvenom = Char.RogueTalents.MasterPoisoner;
+            ChanceOnEnergyOnGarrRuptTick = 0.3f * Talents.VenomousWounds;
+            ChanceOnNoDPConsumeOnEnvenom = Talents.MasterPoisoner;
             ChanceOnMGAttackOnMHAttack = spec == 1 ? 0.1f + 0.0125f * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f; //Main gauche
-            ChanceOnSnDResetOnEvisEnv = Char.RogueTalents.CutToTheChase == 3 ? 1f : Char.RogueTalents.CutToTheChase == 2 ? 0.67f : Char.RogueTalents.CutToTheChase == 1 ? 0.33f : 0f;
+            ChanceOnSnDResetOnEvisEnv = Talents.CutToTheChase == 3 ? 1f : Talents.CutToTheChase == 2 ? 0.67f : Talents.CutToTheChase == 1 ? 0.33f : 0f;
             DPFrequencyMultiplier = spec == 0 ? 0.2f : 0f;
-            EACPCostReduction = 0.5f * character.RogueTalents.ImprovedExposeArmor;
-            EnergyOnBelow35BS = 15f * Char.RogueTalents.MurderousIntent;
-            EnergyRegenTimeOnDamagingCP = (15f + (character.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * character.RogueTalents.AdrenalineRush * character.RogueTalents.RestlessBlades;
-            EnergyOnOHAttack = 0.2f * 5f * character.RogueTalents.CombatPotency;
-            EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + (15f + (character.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * character.RogueTalents.AdrenalineRush; //Vitality
+            EACPCostReduction = 0.5f * Talents.ImprovedExposeArmor;
+            EnergyOnBelow35BS = 15f * Talents.MurderousIntent;
+            EnergyRegenTimeOnDamagingCP = (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * Talents.AdrenalineRush * Talents.RestlessBlades;
+            EnergyOnOHAttack = 0.2f * 5f * Talents.CombatPotency;
+            EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * Talents.AdrenalineRush; //Vitality
             IPFrequencyMultiplier = spec == 0 ? 0.5f : 0f;
-            BonusStealthEnergyRegen = 0.3f * Char.RogueTalents.Overkill;
-            ChanceOnEnergyPerCPFinisher = 0.04f * Char.RogueTalents.RelentlessStrikes;
-            CPOnFinisher = 0.2f * Char.RogueTalents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
-            KSBonusDamage = (Char.RogueTalents.GlyphOfKillingSpree ? 0.1f : 0f);
-            RSBonus = 1f + (0.2f + (Char.RogueTalents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Char.RogueTalents.RevealingStrike;
-            ToTTCostReduction = (Char.RogueTalents.GlyphOfTricksOfTheTrade ? 15f : 0f);
-            VanishCDReduction = 30 * Char.RogueTalents.Elusiveness;           
+            BonusStealthEnergyRegen = 0.3f * Talents.Overkill;
+            ChanceOnEnergyPerCPFinisher = 0.04f * Talents.RelentlessStrikes;
+            CPOnFinisher = 0.2f * Talents.Ruthlessness + 3f * Stats.ChanceOn3CPOnFinisher;
+            KSBonusDamage = (Talents.GlyphOfKillingSpree ? 0.1f : 0f);
+            RSBonus = 1f + (0.2f + (Talents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Talents.RevealingStrike;
+            ToTTCostReduction = (Talents.GlyphOfTricksOfTheTrade ? 15f : 0f);
+            VanishCDReduction = 30 * Talents.Elusiveness;           
             #endregion
 
             #region Probability tables
@@ -182,7 +184,7 @@ namespace Rawr.Rogue
                                          ((duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
                                          (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCostReduction)) * (duration - 5f) / (30f - ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
-                                         25 * Char.RogueTalents.ColdBlood * duration / 120f +
+                                         25 * Talents.ColdBlood * duration / 120f +
                                          energyRegen * 2f * BonusEnergyRegen * (duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * duration / 120f : 0f);
             float averageGCD = 1f / (1f - AvoidedMHAttacks);
@@ -405,17 +407,17 @@ namespace Rawr.Rogue
             float kSAttacks = 0;
             float kSDuration = 0;
             float kSDmgBonus = 0.2f + KSBonusDamage;
-            float restlessBladesBonus = averageFinisherCP * ruptCount + _averageCP[finisherCP] * (evisCount + envenomCount) * Char.RogueTalents.RestlessBlades;
-            if (Char.RogueTalents.KillingSpree > 0)
+            float restlessBladesBonus = averageFinisherCP * ruptCount + _averageCP[finisherCP] * (evisCount + envenomCount) * Talents.RestlessBlades;
+            if (Talents.KillingSpree > 0)
             {
                 float kSCount = (duration + restlessBladesBonus) / 120f;
                 kSDuration = kSCount * 2.5f;
                 kSAttacks = 5f * kSCount;
             }
-            if (Char.RogueTalents.AdrenalineRush > 0)
+            if (Talents.AdrenalineRush > 0)
             {
-                whiteMHAttacks *= 1f + 0.2f * (15f + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
-                whiteOHAttacks *= 1f + 0.2f * (15f + (Char.RogueTalents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
+                whiteMHAttacks *= 1f + 0.2f * (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
+                whiteOHAttacks *= 1f + 0.2f * (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) * (duration + restlessBladesBonus) / 180f / duration;
             }
             #endregion
 
@@ -440,9 +442,9 @@ namespace Rawr.Rogue
 
             float damageTotal = (mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + mutiDamageTotal +
                                   rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal + anestheticPoisonTotal) * (1f + kSDmgBonus * kSDuration / duration);
-            if (Char.RogueTalents.BanditsGuile > 0)
+            if (Talents.BanditsGuile > 0)
             {
-                float buildupTime = duration / (((CPG == 1 ? cpgCount : 0) + rSCount) * (Char.RogueTalents.BanditsGuile == 3 ? 1f : Char.RogueTalents.BanditsGuile * 0.33f));
+                float buildupTime = duration / (((CPG == 1 ? cpgCount : 0) + rSCount) * (Talents.BanditsGuile == 3 ? 1f : Talents.BanditsGuile * 0.33f));
                 float guileBonus = 0.05f / buildupTime + 0.1f / buildupTime + 0.15f / 15f;
                 damageTotal *= 1f + guileBonus;
             }
