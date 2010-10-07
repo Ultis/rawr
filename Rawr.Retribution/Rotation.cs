@@ -24,7 +24,11 @@ namespace Rawr.Retribution
                 throw new ArgumentNullException("combats");
 			
             Combats = combats;
-			CS = combats.Talents.CrusaderStrike == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
+#if RAWR4
+            CS = 0 == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
+#else
+            CS = combats.Talents.CrusaderStrike == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
+#endif
             DS = combats.Talents.DivineStorm == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new DivineStorm(combats);
             Exo = new Exorcism(combats);
             HoW = new HammerOfWrath(combats);
@@ -41,7 +45,11 @@ namespace Rawr.Retribution
                     break;
 
                 case SealOf.Command:
+#if RAWR4
+                    if (0 == 0)
+#else
                     if (combats.Talents.SealOfCommand == 0)
+#endif
                         goto default;
 
 					Seal = new SealOfCommand(combats);

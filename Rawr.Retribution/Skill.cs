@@ -101,11 +101,19 @@ namespace Rawr.Retribution
             {
                 if (Stats.RighteousVengeanceCanCrit != 0)
                 {
+#if RAWR4
+                    rightVen += .1f * 0f * (1f + Stats.PhysicalCrit);
+#else
                     rightVen += .1f * Talents.RighteousVengeance * (1f + Stats.PhysicalCrit);
+#endif
                 }
                 else
                 {
+#if RAWR4
+                    rightVen += .1f * 0f;
+#else
                     rightVen += .1f * Talents.RighteousVengeance;
+#endif
                 }
             }
             if (AbilityType == AbilityType.Spell)
@@ -132,8 +140,13 @@ namespace Rawr.Retribution
                 damage *= (1f + Stats.BonusHolyDamageMultiplier);
             }
             damage *= 1f + Stats.BonusDamageMultiplier;
+#if RAWR4
+            if (DamageType != DamageType.Magic) damage *= 1f + .03f * 0;
+            if (UsesWeapon) damage *= 1f + .02f * 0;
+#else
             if (DamageType != DamageType.Magic) damage *= 1f + .03f * Talents.Vengeance;
             if (UsesWeapon) damage *= 1f + .02f * Talents.TwoHandedWeaponSpecialization;
+#endif
             damage *= (1f + .01f * Talents.Crusade);
             if (CalcOpts.Mob != MobType.Other) damage *= (1f + .01f * Talents.Crusade);
             damage *= Combats.AvengingWrathMulti;
@@ -183,7 +196,11 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
+#if RAWR4
+            return 0 * .06f + Stats.JudgementCrit;
+#else
             return Talents.Fanaticism * .06f + Stats.JudgementCrit;
+#endif
         }
 
     }
@@ -210,7 +227,11 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
+#if RAWR4
+            return 0 * .06f + Stats.JudgementCrit;
+#else
             return Talents.Fanaticism * .06f + Stats.JudgementCrit;
+#endif
         }
 
     }
@@ -242,7 +263,11 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
+#if RAWR4
+            return 0 * .06f + Stats.JudgementCrit;
+#else
             return Talents.Fanaticism * .06f + Stats.JudgementCrit;
+#endif
         }
 
     }

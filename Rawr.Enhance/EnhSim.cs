@@ -148,6 +148,24 @@ namespace Rawr.Enhance
             sb.AppendLine("## Talents ##");
             sb.AppendLine("#############");
             sb.AppendLine();
+#if RAWR4
+            sb.AppendLine("improved_shields                " + character.ShamanTalents.ImprovedShields + "/3");
+            sb.AppendLine("flurry                          " + character.ShamanTalents.Flurry + "/5");
+            sb.AppendLine("elemental_weapons               " + character.ShamanTalents.ElementalWeapons + "/3");
+            sb.AppendLine("unleashed_rage                  " + character.ShamanTalents.UnleashedRage + "/3");
+            sb.AppendLine("static_shock                    " + character.ShamanTalents.StaticShock + "/3");
+            sb.AppendLine("maelstrom_weapon                " + character.ShamanTalents.MaelstromWeapon + "/5");
+            sb.AppendLine("convection                      " + character.ShamanTalents.Convection + "/5");
+            sb.AppendLine("concussion                      " + character.ShamanTalents.Concussion + "/5");
+            sb.AppendLine("call_of_flame                   " + character.ShamanTalents.CallOfFlame + "/3");
+            sb.AppendLine("elemental_devastation           " + character.ShamanTalents.ElementalDevastation + "/3");
+            sb.AppendLine("reverberation                   " + character.ShamanTalents.Reverberation + "/5");
+            sb.AppendLine("elemental_focus                 " + character.ShamanTalents.ElementalFocus + "/1");
+            sb.AppendLine("improved_fire_nova              " + character.ShamanTalents.ImprovedFireNova + "/2");
+            sb.AppendLine("elemental_precision             " + character.ShamanTalents.ElementalPrecision + "/3");
+            sb.AppendLine("elemental_oath                  " + character.ShamanTalents.ElementalOath + "/2");
+            sb.AppendLine("lava_flows                      " + character.ShamanTalents.LavaFlows + "/3");
+#else
             sb.AppendLine("ancestral_knowledge             " + character.ShamanTalents.AncestralKnowledge + "/5");
             sb.AppendLine("improved_shields                " + character.ShamanTalents.ImprovedShields + "/3");
             sb.AppendLine("mental_dexterity                " + character.ShamanTalents.MentalDexterity + "/3");
@@ -178,6 +196,7 @@ namespace Rawr.Enhance
             sb.AppendLine("lava_flows                      " + character.ShamanTalents.LavaFlows + "/3");
             sb.AppendLine("storm_earth_and_fire            " + character.ShamanTalents.StormEarthAndFire + "/3");
             sb.AppendLine("shamanism                       " + character.ShamanTalents.Shamanism + "/5");
+#endif
             sb.AppendLine();
 
             addBuffs(character, sb);

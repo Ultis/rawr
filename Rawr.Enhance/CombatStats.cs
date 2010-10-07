@@ -165,7 +165,11 @@ namespace Rawr.Enhance
 
         public float MaxMana { get { return maxMana; } }
         public float ManaRegen { get { return manaRegen; } }
+#if RAWR4
+        public float ImpStormStrikeMana { get { return 0f * .1f * baseMana; } }
+#else
         public float ImpStormStrikeMana { get { return _talents.ImprovedStormstrike * .1f * baseMana; } }
+#endif
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor,
@@ -215,12 +219,22 @@ namespace Rawr.Enhance
         public void UpdateCalcs(bool firstPass)
         {
             // talents
+#if RAWR4
+            callOfThunder = .05f * 0;
+            critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
+            critMultiplierSpell = (1.5f + .1f * 0) * (1 + _stats.BonusSpellCritMultiplier);
+#else
             callOfThunder = .05f * _talents.CallOfThunder;
             critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
             critMultiplierSpell = (1.5f + .1f * _character.ShamanTalents.ElementalFury) * (1 + _stats.BonusSpellCritMultiplier);
+#endif
             
             // Melee
+#if RAWR4
+            float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + 0.02f * 0;
+#else
             float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + 0.02f * _talents.DualWieldSpecialization;
+#endif
             expertiseBonusMH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
             expertiseBonusOH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
 
@@ -236,9 +250,14 @@ namespace Rawr.Enhance
             }
 
             float meleeCritModifier = _stats.PhysicalCrit;
-            float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) + 
+#if RAWR4
+            float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) +
+                                  StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * 0;
+#else
+            float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) +
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.ThunderingStrikes;
-            chanceDodgeMH      = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
+#endif
+            chanceDodgeMH = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH      = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
             float ParryChance = ParryChanceCap - expertiseBonusMH;
             chanceParryMH = (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc / 100f) : ParryChance);
@@ -259,15 +278,24 @@ namespace Rawr.Enhance
             ftBonusCrit = 0f;
             if (_calcOpts.MainhandImbue == "Flametongue")
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+#if RAWR4
+            if (_calcOpts.OffhandImbue == "Flametongue" && 0 == 1)
+#else
             if (_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1)
+#endif
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
 
             float spellCritModifier = _stats.SpellCrit + _stats.SpellCritOnTarget + ftBonusCrit;
             float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
             chanceSpellMiss = Math.Max(0f, SpellMissRate - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SpellMissRate);
-            float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) + 
+#if RAWR4
+            float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) +
+                                  StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * 0;
+#else
+            float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) +
                                   StatConversion.GetSpellCritFromIntellect(_stats.Intellect) + .01f * _talents.ThunderingStrikes;
+#endif
             //chanceSpellCrit = Math.Min(0.75f, (1 + _stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
             chanceSpellCrit = Math.Min(0.75f, baseSpellCrit + spellCritModifier + .00005f); //fudge factor for rounding
 
@@ -285,7 +313,11 @@ namespace Rawr.Enhance
             edUptime = 0f;
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
+#if RAWR4
+            float lavaLashSpeed = firstPass ? (0 == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
+#else
             float lavaLashSpeed = firstPass ? (_talents.LavaLash == 1 ? 6f : 0f) : AbilityCooldown(EnhanceAbility.LavaLash);
+#endif
             float fireNovaSpeed = firstPass ? BaseFireNovaSpeed : AbilityCooldown(EnhanceAbility.FireNova);
             if (_calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
                 fireTotemUptime = firstPass ? 1.0f : 20f / AbilityCooldown(EnhanceAbility.MagmaTotem);
@@ -306,7 +338,11 @@ namespace Rawr.Enhance
             if (_talents.Stormstrike == 1)
             {
                 hitsPerSMHSS = (1f - chanceYellowMissMH) / stormstrikeSpeed;
+#if RAWR4
+                hitsPerSOHSS = 0 == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
+#else
                 hitsPerSOHSS = _character.ShamanTalents.DualWield == 1 ? ((1f - 2 * chanceYellowMissOH) / stormstrikeSpeed) : 0f; //OH only swings if MH connects
+#endif
             }
             hitsPerSLL = lavaLashSpeed == 0 ? 0f : (1f - chanceYellowMissOH) / lavaLashSpeed;
             float swingsPerSMHMelee = 0f;
@@ -338,7 +374,11 @@ namespace Rawr.Enhance
                 if (_calcOpts.MainhandImbue == "Windfury")
                 {
                     float hitsThatProcWFPerS = whiteHitsPerSMH + hitsPerSMHSS;
+#if RAWR4
+                    if (0 == 1)
+#else
                     if (_character.ShamanTalents.DualWield == 1)
+#endif
                         hitsThatProcWFPerS += moteHitsPerS / 2; // half the hits will be OH and thus won't proc WF
                     else
                         hitsThatProcWFPerS += moteHitsPerS; // if no offhand then all motes will be MH weapon by definition
@@ -359,7 +399,11 @@ namespace Rawr.Enhance
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
 
                 // Maelstrom Weapon time to 5 stacks calc
+#if RAWR4
+                if (0 == 1 && unhastedOHSpeed != 0f)
+#else
                 if (_character.ShamanTalents.DualWield == 1 && unhastedOHSpeed != 0f)
+#endif
                 {
                     hitsPerSMH = whiteHitsPerSMH + yellowHitsPerSMH + moteHitsPerS / 2;
                     hitsPerSOH = whiteHitsPerSOH + yellowHitsPerSOH + moteHitsPerS / 2;
@@ -375,8 +419,13 @@ namespace Rawr.Enhance
 
                 // Elemental Devastation Uptime calc
                 staticShocksPerSecond = (hitsPerSMH + hitsPerSOH) * staticShockChance;
+#if RAWR4
+                flameTongueHitsPerSecond = (_calcOpts.MainhandImbue == "Flametongue" ? HitsPerSMH : 0f) +
+                    ((_calcOpts.OffhandImbue == "Flametongue" && 0 == 1) ? HitsPerSOH : 0f);
+#else
                 flameTongueHitsPerSecond = (_calcOpts.MainhandImbue == "Flametongue" ? HitsPerSMH : 0f) +
                     ((_calcOpts.OffhandImbue == "Flametongue" && _talents.DualWield == 1) ? HitsPerSOH : 0f);
+#endif
                 spellAttacksPerSec = (1f / secondsToFiveStack + 1f / shockSpeed + 1f / fireNovaSpeed + staticShocksPerSecond) // + flameTongueHitsPerSecond)
                                    * (1f - chanceSpellMiss);
                 float couldCritSpellsPerS = spellAttacksPerSec - staticShocksPerSecond; // LS procs from Static Shock cannot crit
@@ -384,7 +433,11 @@ namespace Rawr.Enhance
                 averageMeleeCritChance = (chanceWhiteCritMH + chanceWhiteCritOH + chanceYellowCritMH + chanceYellowCritOH) / 4f + edUptime * edCritBonus;
             }
             float yellowAttacksPerSecond = hitsPerSWF + hitsPerSMHSS;
+#if RAWR4
+            if (0 == 1 && unhastedMHSpeed != 0)
+#else
             if (_character.ShamanTalents.DualWield == 1 && unhastedMHSpeed != 0)
+#endif
                 yellowAttacksPerSecond += hitsPerSOHSS;
 
             // set output variables

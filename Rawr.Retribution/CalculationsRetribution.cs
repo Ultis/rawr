@@ -769,12 +769,21 @@ namespace Rawr.Retribution
         private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel)
         {
             // Primary stats
+#if RAWR4
+            stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + 0 * .03f);
+            stats.Agility *= (1 + stats.BonusAgilityMultiplier);
+            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * 
+                (1f + talents.SacredDuty * .04f) * 
+                (1f + 0 * .02f);
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + 0 * .02f);
+#else
             stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
             stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * 
                 (1f + talents.SacredDuty * .04f) * 
                 (1f + talents.CombatExpertise * .02f);
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
+#endif
 
             // Secondary stats
             // GetManaFromIntellect/GetHealthFromStamina account for the fact 
@@ -784,12 +793,20 @@ namespace Rawr.Retribution
             stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
+#if RAWR4
+            stats.Expertise += 0 * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+#else
             stats.Expertise += talents.CombatExpertise * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
-            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating( stats.HitRating, CharacterClass.Paladin);
+#endif
+            stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
 
-            float talentCrit = 
-                talents.CombatExpertise * .02f + 
+            float talentCrit =
+#if RAWR4
+                0 * .02f +
+#else
+                talents.CombatExpertise * .02f +
+#endif
                 talents.Conviction * .01f + 
                 talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit += 
@@ -810,9 +827,15 @@ namespace Rawr.Retribution
                 (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
                 - 1f;
 
-            stats.SpellPower += 
-                stats.Strength * talents.TouchedByTheLight * .2f + 
+#if RAWR4
+            stats.SpellPower +=
+                stats.Strength * 0 * .2f +
+                stats.AttackPower * 0 * .1f;
+#else
+            stats.SpellPower +=
+                stats.Strength * talents.TouchedByTheLight * .2f +
                 stats.AttackPower * talents.SheathOfLight * .1f;
+#endif
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
@@ -824,37 +847,64 @@ namespace Rawr.Retribution
             // If the character itself has any rank of Swift Retribution.
             // Improved Moonkin Form and different ranks of Swift Retribution don't stack.
             // Only the strongest one must be in ActiveBuffs
+#if RAWR4
+            if ((0 != 0) &&
+#else
             if ((character.PaladinTalents.SwiftRetribution != 0) &&
+#endif
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Swift Retribution")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Moonkin Form")))
             {
                 Stats additionalStats = new Stats();
+#if RAWR4
+                additionalStats.PhysicalHaste = 0 * 0.01f;
+                additionalStats.RangedHaste = 0 * 0.01f;
+                additionalStats.SpellHaste = 0 * 0.01f;
+#else
                 additionalStats.PhysicalHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
                 additionalStats.RangedHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
                 additionalStats.SpellHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
+#endif
 
                 buffStats += additionalStats;
             }
 
+#if RAWR4
+            if ((0 != 0) &&
+#else
             if ((character.PaladinTalents.HeartOfTheCrusader != 0) &&
+#endif
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heart of the Crusader")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath")))
             {
                 Stats additionalStats = new Stats();
+#if RAWR4
+                additionalStats.PhysicalCrit = 0 * 0.01f;
+                additionalStats.SpellCritOnTarget = 0 * 0.01f;
+#else
                 additionalStats.PhysicalCrit = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
                 additionalStats.SpellCritOnTarget = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
+#endif
 
                 buffStats += additionalStats;
             }
 
+#if RAWR4
+            if ((0 != 0) &&
+#else
             if ((character.PaladinTalents.SanctifiedRetribution != 0) &&
+#endif
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sanctified Retribution")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Arcane Empowerment")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
             {
                 Stats additionalStats = new Stats();
+#if RAWR4
+                additionalStats.BonusDamageMultiplier = 0 * 0.03f;
+#else
                 additionalStats.BonusDamageMultiplier = character.PaladinTalents.SanctifiedRetribution * 0.03f;
+#endif
 
                 buffStats += additionalStats;
             }

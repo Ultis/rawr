@@ -31,8 +31,13 @@ namespace Rawr.Enhance
             float convection = 1f - _talents.Convection * 0.02f;
             float baseMana = BaseStats.GetBaseStats(_character).Mana;
             float elementalFocus = (_talents.ElementalFocus == 1) ? .6f * _cs.ChanceSpellCrit : 1f;
+#if RAWR4
+            float ESMana = 0 == 1 ? baseMana * 0.55f * 0.18f : baseMana * 0.18f; // 45% reduction if Shamanistic Focus
+            float FSMana = 0 == 1 ? baseMana * 0.55f * 0.17f : baseMana * 0.17f; // 45% reduction if Shamanistic Focus
+#else
             float ESMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.18f : baseMana * 0.18f; // 45% reduction if Shamanistic Focus
             float FSMana = _talents.ShamanisticFocus == 1 ? baseMana * 0.55f * 0.17f : baseMana * 0.17f; // 45% reduction if Shamanistic Focus
+#endif
             float fireElementalCD = _talents.GlyphofFireElementalTotem ? 300f : 600f;
             float gcd = Math.Max(1.0f, 1.5f / (1f + _stats.SpellHaste + StatConversion.GetSpellHasteFromRating(_stats.HasteRating)));
 
@@ -67,7 +72,11 @@ namespace Rawr.Enhance
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection * elementalFocus, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
+#if RAWR4
+            if (priority > 0 && 0 == 1)
+#else
             if (priority > 0 && _talents.LavaLash == 1)
+#endif
                 abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, 1.5f, 0.04f * baseMana, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireNova);

@@ -232,7 +232,11 @@ namespace Rawr.Enhance
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float callofFlameBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float fireNovaBonus = 1f + .1f * character.ShamanTalents.ImprovedFireNova;
+#if RAWR4
+            float mentalQuickness = .1f * 0f;
+#else
             float mentalQuickness = .1f * character.ShamanTalents.MentalQuickness;
+#endif
             float shockBonus = stats.Enhance4T9 == 1f ? 1.25f : 1f;
             float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;
             float windfuryDamageBonus = 1f;
@@ -243,7 +247,11 @@ namespace Rawr.Enhance
                 case 3: windfuryDamageBonus = 1.40f; break;
             }
             float weaponMastery = 1f;
+#if RAWR4
+            switch (0)
+#else
             switch (character.ShamanTalents.WeaponMastery)
+#endif
             {
                 case 1: weaponMastery = 1.04f; break;
                 case 2: weaponMastery = 1.07f; break;
@@ -259,7 +267,11 @@ namespace Rawr.Enhance
             float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f)));
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
+#if RAWR4
+            if (calcOpts.OffhandImbue == "Flametongue" && 0 == 1)
+#else
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
+#endif
                 stats.SpellPower += FTspellpower;
 
             float addedAttackPower = stats.AttackPower - initialAP;
@@ -333,7 +345,11 @@ namespace Rawr.Enhance
             float meleeMultipliers = weaponMastery * cs.DamageReduction * bonusPhysicalDamage;
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
+#if RAWR4
+            if (0 == 1 && cs.HastedOHSpeed != 0)
+#else
             if (character.ShamanTalents.DualWield == 1 && cs.HastedOHSpeed != 0)
+#endif
             {
                 adjustedOHDPS = (wdpsOH + APDPS) * .5f;
                 float dpsOHMeleeNormal = adjustedOHDPS * cs.NormalHitModifierOH;
@@ -345,10 +361,18 @@ namespace Rawr.Enhance
             // Generic MH & OH damage values used for SS, LL & WF
             float damageMHSwing = adjustedMHDPS * cs.UnhastedMHSpeed;
             float damageOHSwing = 0f;
+#if RAWR4
+            if (0 == 1)
+#else
             if (character.ShamanTalents.DualWield == 1)
+#endif
                 damageOHSwing = adjustedOHDPS * cs.UnhastedOHSpeed;
 
+#if RAWR4
+            if (0 == 1)
+#else
             if (character.ShamanTalents.DualWield == 1)
+#endif
                 dpsMoteOfAnger = (damageMHSwing + damageOHSwing) / 2 * stats.MoteOfAnger;
             else
                 dpsMoteOfAnger = damageMHSwing * stats.MoteOfAnger;
@@ -372,7 +396,11 @@ namespace Rawr.Enhance
 
             #region Lavalash DPS
             float dpsLL = 0f;
+#if RAWR4
+            if (0 == 1 && 0 == 1 && calcOpts.PriorityInUse(EnhanceAbility.LavaLash))
+#else
             if (character.ShamanTalents.LavaLash == 1 && character.ShamanTalents.DualWield == 1 && calcOpts.PriorityInUse(EnhanceAbility.LavaLash))
+#endif
             {
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
@@ -419,7 +447,11 @@ namespace Rawr.Enhance
                 float flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 if (character.ShamanTalents.GlyphofFlameShock)
                 {
+#if RAWR4
+                    float critMultiplierSpell = (1.5f + .1f * 0 + 0.6f) * (1 + stats.BonusSpellCritMultiplier);
+#else
                     float critMultiplierSpell = (1.5f + .1f * character.ShamanTalents.ElementalFury + 0.6f) * (1 + stats.BonusSpellCritMultiplier);
+#endif
                     flameShockCrit = (flameShockdps + flameShockDoTdps) * cs.SpellCritModifier * critMultiplierSpell;
                 }
                 dpsFS = (flameShockNormal + flameShockCrit) * bonusFireDamage * bossFireResistance * shockBonus;
@@ -514,7 +546,11 @@ namespace Rawr.Enhance
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }
+#if RAWR4
+            if (calcOpts.OffhandImbue == "Flametongue" && 0 == 1)
+#else
             if (calcOpts.OffhandImbue == "Flametongue" && character.ShamanTalents.DualWield == 1)
+#endif
             {
                 float damageFTBase = 274f * cs.UnhastedOHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
@@ -534,7 +570,11 @@ namespace Rawr.Enhance
             bool critBuff = character.ActiveBuffsContains("Leader of the Pack") ||
                             character.ActiveBuffsContains("Rampage");
             float critbuffs = (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f);
+#if RAWR4
+            float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * 0;
+#else
             float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + .02f * character.ShamanTalents.DualWieldSpecialization;
+#endif
             float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - meleeHitBonus) + cs.AverageDodge;
             float petMeleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
             #endregion
@@ -653,7 +693,11 @@ namespace Rawr.Enhance
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
-			int AK = character.ShamanTalents.AncestralKnowledge;
+#if RAWR4
+            int AK = 0;
+#else
+            int AK = character.ShamanTalents.AncestralKnowledge;
+#endif
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
             float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
 			float strBase = (float)Math.Floor((float)(statsBase.Strength));
@@ -695,7 +739,11 @@ namespace Rawr.Enhance
             statsTotal.Expertise += 3 * character.ShamanTalents.UnleashedRage;
 
             float intBonusToAP = 0.0f;
+#if RAWR4
+            switch (0)
+#else
             switch (character.ShamanTalents.MentalDexterity)
+#endif
             {
                 case 1:
                     intBonusToAP = .33f * statsTotal.Intellect;
@@ -709,7 +757,11 @@ namespace Rawr.Enhance
             }
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility + intBonusToAP;
             statsTotal.AttackPower = statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier);
+#if RAWR4
+            float SPfromAP = statsTotal.AttackPower * .1f * 0;
+#else
             float SPfromAP = statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness;
+#endif
             statsTotal.SpellPower += SPfromAP;
 
             statsTotal.SpellPower = statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier);
@@ -726,9 +778,17 @@ namespace Rawr.Enhance
             character.ActiveBuffsAdd("Heroism/Bloodlust");
             character.ActiveBuffsAdd("Windfury Totem");
 
+#if RAWR4
+            if (0 == 2)
+#else
             if (character.ShamanTalents.ImprovedWindfuryTotem == 2)
+#endif
                 character.ActiveBuffsAdd("Improved Windfury Totem");
+#if RAWR4
+            if (0 == 3)
+#else
             if (character.ShamanTalents.EnhancingTotems == 3)
+#endif
             {
                 character.ActiveBuffsAdd("Enhancing Totems (Agility/Strength)"); // add both the Agi Str one 
             }
@@ -1128,7 +1188,11 @@ namespace Rawr.Enhance
                                                              MHtwoPointThree, MHtwoPointFour, MHtwoPointFive, MHtwoPointSix, MHtwoPointSeven, MHtwoPointEight };
 
                 case "OH Weapon Speeds":
+#if RAWR4
+                    if (character.OffHand == null || 0 != 1)
+#else
                     if (character.OffHand == null || character.ShamanTalents.DualWield != 1)
+#endif
                         return new ComparisonCalculationBase[0];
                     ComparisonCalculationBase OHonePointFour = CheckWeaponSpeedEffect(character, 1.4f, false);
                     ComparisonCalculationBase OHonePointFive = CheckWeaponSpeedEffect(character, 1.5f, false);

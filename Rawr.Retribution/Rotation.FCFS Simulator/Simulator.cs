@@ -20,7 +20,11 @@ namespace Rawr.Retribution
         {
             Ability[] result = rotation;
 
+#if RAWR4
+            if (0 == 0)
+#else
             if (combats.Talents.CrusaderStrike == 0)
+#endif
             {
                 List<Ability> abilities = new List<Ability>(result);
                 abilities.Remove(Ability.CrusaderStrike);
@@ -52,7 +56,11 @@ namespace Rawr.Retribution
                 combats.CalcOpts.Wait,
                 combats.CalcOpts.Delay,
                 combats.Stats.JudgementCDReduction > 0,
+#if RAWR4
+                0,
+#else
                 combats.Talents.ImprovedJudgements,
+#endif
                 combats.Talents.GlyphOfConsecration,
                 divineStormCooldown,
                 spellHaste,
