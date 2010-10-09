@@ -21,7 +21,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "SF",
-                            BaseDamage = (885 + 1103) / 2.0f,
+                            BaseDamage = (987 + 1229) / 2.0f,
                             SpellDamageModifier = 1.0f,
                             BaseCastTime = 3.5f,
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f),
@@ -32,7 +32,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "MF",
-                            BaseDamage = (176.0f + 214.0f) / 2.0f,
+                            BaseDamage = (197.0f + 239.0f) / 2.0f,
                             SpellDamageModifier = 0.18f,
                             BaseCastTime = 1.5f,
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.18f),
@@ -40,7 +40,7 @@ namespace Rawr.Moonkin
                                 {
                                     BaseDuration = 12.0f,
                                     BaseTickLength = 2.0f,
-                                    TickDamage = 84.0f,
+                                    TickDamage = 93.0f,
                                     SpellDamageModifierPerTick = 0.18f
                                 },
                             School = SpellSchool.Arcane
@@ -48,7 +48,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "W",
-                            BaseDamage = (606f + 682.0f) / 2.0f,
+                            BaseDamage = (675f + 761.0f) / 2.0f,
                             SpellDamageModifier = 2.5f/3.5f,
                             BaseCastTime = 2.5f,
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.14f),
@@ -67,7 +67,7 @@ namespace Rawr.Moonkin
                             {
                                 BaseDuration = 12.0f,
                                 BaseTickLength = 2.0f,
-                                TickDamage = 244.0f,
+                                TickDamage = 272.0f,
                                 SpellDamageModifierPerTick = 0.26f
                             },
                             School = SpellSchool.Nature
@@ -75,7 +75,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "SS",
-                            BaseDamage = (1140 + 1574) / 2f,
+                            BaseDamage = (1272 + 1756) / 2f,
                             SpellDamageModifier = 1.535f,
                             BaseCastTime = 2.0f,
                             BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
@@ -689,30 +689,24 @@ namespace Rawr.Moonkin
         // Starfall
         private float DoStarfallCalcs(float effectiveArcaneDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier, out float numberOfStarHits)
         {
-            float baseDamagePerStar = (331.0f + 383.0f) / 2.0f;
+            float baseDamagePerStar = (369.0f + 427.0f) / 2.0f;
             float mainStarCoefficient = 0.247f;
-            float baseSplashDamage = 101.0f;
-            float splashCoefficient = 0.127f;
 
             // TODO: Right now, calculating single-target only, which is 10 stars with splash damage.
             // AOE situations gives 20 stars.
             // CORRECTION 2010/06/12: single-target damage DOES do splash, if the star hits.
 
             float damagePerBigStarHit = (baseDamagePerStar + effectiveArcaneDamage * mainStarCoefficient) * hitDamageModifier;
-            float damagePerSmallStarHit = (baseSplashDamage + effectiveArcaneDamage * splashCoefficient) * hitDamageModifier;
 
             float critDamagePerBigStarHit = damagePerBigStarHit * critDamageModifier;
-            float critDamagePerSmallStarHit = damagePerSmallStarHit * critDamageModifier;
 
             float averageDamagePerBigStar = spellCrit * critDamagePerBigStarHit + (1 - spellCrit) * damagePerBigStarHit;
-            float averageDamagePerSmallStar = spellCrit * critDamagePerSmallStarHit + (1 - spellCrit) * damagePerSmallStarHit;
 
             numberOfStarHits = 10.0f;
 
             float avgNumBigStarsHit = spellHit * numberOfStarHits;
-            float avgNumSmallStarsHit = avgNumBigStarsHit * spellHit;
 
-            return avgNumBigStarsHit * averageDamagePerBigStar + avgNumSmallStarsHit * averageDamagePerSmallStar;
+            return avgNumBigStarsHit * averageDamagePerBigStar;
         }
 
         // Redo the spell calculations
