@@ -118,5 +118,9 @@ namespace Rawr.Enhance
         ShamanisticRage = 11,
         FireNova = 12,
         FireElemental = 13,
+#if RAWR4
+        ChainLightning = 14,
+        UnleashWeapon = 15,
+#endif
     }
 }

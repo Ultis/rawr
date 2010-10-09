@@ -491,9 +491,15 @@ namespace Rawr.Enhance
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+#if RAWR4
             dictValues.Add("Mastery Rating", String.Format("{0}*{1}% Mastery",
                 BasicStats.MasteryRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+#else
+            dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
+                BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+#endif
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Boss Parried\r\n{3}% Spell Misses\r\n{4}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 

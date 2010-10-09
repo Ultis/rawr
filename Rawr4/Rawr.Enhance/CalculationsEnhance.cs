@@ -459,16 +459,16 @@ namespace Rawr.Enhance
             #region Chain Lightning DPS
             //Single Target for now.  Add in Multi target later.  FIXME
             float dpsCL = 0f;
-            /*if (calcOpts.PriorityInUse(EnhanceAbility.ChainLightning))
+            if (calcOpts.PriorityInUse(EnhanceAbility.ChainLightning))
             {
                 float damageCLBase = 1092f;
                 float coefCL = 0.5714f;
                 float damageCL = concussionMultiplier * (damageCLBase + coefCL * spellPower);
                 float cldps = damageCL / cs.AbilityCooldown(EnhanceAbility.ChainLightning);
-                float clNormal = cldps * cs.NatureSpellHitModifier;
-                float clCrit = cldps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
+                float clNormal = cldps * cs.SpellHitModifier;  //cs.NatureSpellHitModifier CATA
+                float clCrit = cldps * cs.SpellHitModifier * cs.CritMultiplierSpell;  //cs.NatureSpellCritModifier CATA
                 dpsCL = (clNormal + clCrit) * mastery * bonusNatureDamage * bossNatureResistance;
-            }*/
+            }
             #endregion
 
             #region Windfury DPS
@@ -661,7 +661,7 @@ namespace Rawr.Enhance
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
             calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
-            //calculatedStats.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
+            calculatedStats.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
             calculatedStats.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);

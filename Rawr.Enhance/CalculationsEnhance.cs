@@ -653,11 +653,7 @@ namespace Rawr.Enhance
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
-#if RAWR4
-            int AK = 0;
-#else
             int AK = character.ShamanTalents.AncestralKnowledge;
-#endif
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
             float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
 			float strBase = (float)Math.Floor((float)(statsBase.Strength));
@@ -699,11 +695,7 @@ namespace Rawr.Enhance
             statsTotal.Expertise += 3 * character.ShamanTalents.UnleashedRage;
 
             float intBonusToAP = 0.0f;
-#if RAWR4
-            switch (0)
-#else
             switch (character.ShamanTalents.MentalDexterity)
-#endif
             {
                 case 1:
                     intBonusToAP = .33f * statsTotal.Intellect;
@@ -717,11 +709,7 @@ namespace Rawr.Enhance
             }
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility + intBonusToAP;
             statsTotal.AttackPower = statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier);
-#if RAWR4
-            float SPfromAP = statsTotal.AttackPower * .1f * 0;
-#else
             float SPfromAP = statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness;
-#endif
             statsTotal.SpellPower += SPfromAP;
 
             statsTotal.SpellPower = statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier);
