@@ -157,18 +157,18 @@ namespace Rawr.Moonkin
         public float GetSpellHit(CharacterCalculationsMoonkin calcs)
         {
             float baseHit = 1.0f;
-            switch (calcs.TargetLevel)
+            switch (calcs.TargetLevel - calcs.PlayerLevel)
             {
-                case 80:
+                case 0:
                     baseHit -= 0.04f;
                     break;
-                case 81:
+                case 1:
                     baseHit -= 0.05f;
                     break;
-                case 82:
+                case 2:
                     baseHit -= 0.06f;
                     break;
-                case 83:
+                case 3:
                     baseHit -= 0.17f;
                     break;
                 default:
@@ -203,7 +203,7 @@ namespace Rawr.Moonkin
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.PhysicalCrit, calcOpts.TreantLifespan) : 0.0f;
+            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.PhysicalCrit, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
             // Extend that to number of casts per fight.
             float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
@@ -237,6 +237,18 @@ namespace Rawr.Moonkin
             starfallDamage *= numStarfallCasts;
             float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow);
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
+
+            // Do Wild Mushroom calculations.
+            float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
+                (1 + calcs.BasicStats.BonusDamageMultiplier) *
+                (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
+                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier);
+            float mushroomCD = 10f;
+            float numMushroomDetonations = (float)Math.Floor(calcs.FightLength * 60f / mushroomCD) + 1.0f;
+            mushroomDamage *= numMushroomDetonations;
+            float mushroomDPS = mushroomDamage / (calcs.FightLength * 60.0f);
+            float mushroomManaUsage = (float)Math.Ceiling(numMushroomDetonations) * CalculationsMoonkin.BaseMana * 0.33f * (1 - 0.03f * talents.Moonglow);
+            manaPool -= mushroomManaUsage;
 
             float totalTimeInRotation = calcs.FightLength * 60.0f;
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
@@ -557,11 +569,12 @@ namespace Rawr.Moonkin
                     t10StarfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
                 }
                 float starfallDPS = t10StarfallDamage / (calcs.FightLength * 60.0f);
-                burstDPS += trinketDPS + treeDPS + starfallDPS;
-                sustainedDPS += trinketDPS + treeDPS + starfallDPS;
+                burstDPS += trinketDPS + treeDPS + starfallDPS + mushroomDPS;
+                sustainedDPS += trinketDPS + treeDPS + starfallDPS + mushroomDPS;
 
                 rot.RotationData.StarfallDamage = t10StarfallDamage / numStarfallCasts;
                 rot.RotationData.StarfallStars = numberOfStarHits;
+                rot.RotationData.MushroomDamage = mushroomDamage / numMushroomDetonations;
                 rot.RotationData.DPS = sustainedDPS;
                 rot.RotationData.StarfireAvgHit = spellDetails[0];
                 rot.RotationData.WrathAvgHit = spellDetails[1];
@@ -620,8 +633,7 @@ namespace Rawr.Moonkin
             float innervateCooldown = 360 - calcs.BasicStats.InnervateCooldownReduction;
 
             // Mana/5 calculations
-            // Spirit-based mana regen is turned off in combat, so remove it from the regen table here
-            float totalManaRegen = (calcs.ManaRegen - StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect)) * fightLength;
+            float totalManaRegen = calcs.ManaRegen * fightLength;
 
             // Mana pot calculations
             float manaRestoredByPots = 0.0f;
@@ -638,17 +650,7 @@ namespace Rawr.Moonkin
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
             int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
             float totalInnervateMana = numInnervates * 0.2f * calcs.BasicStats.Mana;
-            switch (character.DruidTalents.Dreamstate)
-            {
-                case 1:
-                    totalInnervateMana *= 1.1f;
-                    break;
-                case 2:
-                    totalInnervateMana *= 1.3f;
-                    break;
-                default:
-                    break;
-            }
+            totalInnervateMana *= 1 + 0.15f * character.DruidTalents.Dreamstate;
 
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
@@ -657,8 +659,18 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
+        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
+        {
+            // The spreadsheet says this.  Wowhead says 650 to 786.  We'll try it this way.
+            float baseDamage = (1300 + 1573) / 2;
+            // The spreadsheet has 0.464 for the spell power scaling; the latest SimCraft data mining shows this.
+            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.928f) * hitDamageModifier;
+            float damagePerCrit = damagePerHit * critDamageModifier;
+            return 3 * spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
+        }
+
         // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float meleeCrit, float treantLifespan)
+        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float meleeCrit, int bossLevel, int playerLevel, float treantLifespan)
         {
             // 642 = base AP, 57% spell power scaling
             float attackPower = 642.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
@@ -666,8 +678,7 @@ namespace Rawr.Moonkin
             float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
             float critRate = 0.05f + meleeCrit;
             float glancingRate = 0.2f;
-            float bossArmor = StatConversion.NPC_ARMOR[83 - 80];
-            float damageReduction = bossArmor / (bossArmor + 15232.5f);
+            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel], 0, 0, 0);
             damagePerHit *= 1.0f - damageReduction;
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);
             float attackSpeed = 1.7f / (1 + meleeHaste);

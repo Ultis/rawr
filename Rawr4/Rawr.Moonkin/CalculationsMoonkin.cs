@@ -523,7 +523,8 @@ namespace Rawr.Moonkin
                     "Spell Info:Moonfire",
                     "Spell Info:Insect Swarm",
                     "Spell Info:Starfall",
-                    "Spell Info:Treants"
+                    "Spell Info:Treants",
+                    "Spell Info:Wild Mushroom"
                     };
                 }
                 return characterDisplayCalculationLabels;
@@ -616,7 +617,7 @@ namespace Rawr.Moonkin
             calcs.Latency = calcOpts.Latency;
 
             // Mastery from rating
-            calcs.Mastery = 8.0f + stats.MasteryRating / 93.0f;
+            calcs.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
 
 #if RAWR3 || RAWR4
             BossOptions bossOpts = new BossOptions();
@@ -629,8 +630,9 @@ namespace Rawr.Moonkin
 #endif
 
             // 3.1 spirit regen
-            float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
-            calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
+            // Irrelevant in Cataclysm, when we never get spirit regen
+            //float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
+            calcs.ManaRegen = stats.Mp5 / 5f;
 
             return calcs;
         }
@@ -639,6 +641,7 @@ namespace Rawr.Moonkin
         {
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsMoonkin calcs = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
+            calcs.PlayerLevel = character.Level;
             // Run the solver to do final calculations
             new MoonkinSolver().Solve(character, ref calcs);
 
@@ -648,119 +651,47 @@ namespace Rawr.Moonkin
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            // Start off with a slightly modified form of druid base character stats calculations
-            Stats statsRace = null;
-            if (character.Race == CharacterRace.NightElf)
-            {
-                statsRace = new Stats()
-                {
-                    Health = 7416f,
-                    Mana = 3496f,
-                    Stamina = 97f,
-                    Agility = 87f,
-                    Intellect = 143f,
-                    Spirit = 157f
-                };
-            }
-            else if (character.Race == CharacterRace.Tauren)
-            {
-                statsRace = new Stats()
-                {
-                    Health = 7416f,
-                    Mana = 3496f,
-                    Stamina = 99f,
-                    Agility = 78f,
-                    Intellect = 139f,
-                    Spirit = 161f
-                };
-            }
-            // TODO: When Cataclysm goes live, these blocks will need to be filled in
-            /*else if (character.Race == CharacterRace.Troll)
-            {
-            }
-            else if (character.Race == CharacterRace.Worgen)
-            {
-            }*/
-            // Default to night elf, Because I Said So
-            else
-            {
-                statsRace = new Stats()
-                {
-                    Health = 7416f,
-                    Mana = 3496f,
-                    Stamina = 97f,
-                    Agility = 87f,
-                    Intellect = 143f,
-                    Spirit = 157f
-                };
-            }
+
+            Stats statsTotal = new Stats();
+            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin));
             
             // Get the gear/enchants/buffs stats loaded in
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
+            statsTotal.Accumulate(GetItemStats(character, additionalItem));
+            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+            bool leatherSpecialization = character.Head != null && character.Head.Type == ItemType.Leather &&
+                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Leather &&
+                                            character.Chest != null && character.Chest.Type == ItemType.Leather &&
+                                            character.Wrist != null && character.Wrist.Type == ItemType.Leather &&
+                                            character.Hands != null && character.Hands.Type == ItemType.Leather &&
+                                            character.Waist != null && character.Waist.Type == ItemType.Leather &&
+                                            character.Legs != null && character.Legs.Type == ItemType.Leather &&
+                                            character.Feet != null && character.Feet.Type == ItemType.Leather;
 
             // Talented bonus multipliers
 
-            Stats statsHotW = new Stats()
+            Stats statsTalents = new Stats()
             {
-                BonusIntellectMultiplier = 0.02f * character.DruidTalents.HeartOfTheWild
-            };
-
-            Stats statsFuror = new Stats()
-            {
-                BonusManaMultiplier = 0.05f * character.DruidTalents.Furor
-            };
-
-            Stats statsBalanceOfPower = new Stats()
-            {
-                BonusSpellPowerMultiplier = 0.01f * character.DruidTalents.BalanceOfPower
-            };
-
-            Stats statsEarthAndMoon = new Stats()
-            {
-                BonusSpellPowerMultiplier = 0.02f * character.DruidTalents.EarthAndMoon
-            };
-
-            Stats statsMoonkinForm = new Stats()
-            {
+                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f),
+                BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
+                BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
+                                            (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
                 BaseArmorMultiplier = 1.2f * character.DruidTalents.MoonkinForm,
-                BonusArcaneDamageMultiplier = 0.01f * character.DruidTalents.MoonkinForm,
-                BonusNatureDamageMultiplier = 0.01f * character.DruidTalents.MoonkinForm
+                BonusArcaneDamageMultiplier = 1.25f * (1 + 0.01f * character.DruidTalents.MoonkinForm) - 1,
+                BonusNatureDamageMultiplier = 1.25f * (1 + 0.01f * character.DruidTalents.MoonkinForm) - 1
             };
 
-            Stats statsMasterSS = new Stats()
-            {
-                BonusSpellPowerMultiplier = (character.DruidTalents.MoonkinForm > 0) ?
-                                            0.04f * character.DruidTalents.MasterShapeshifter : 0.0f
-            };
-
-            Stats statsMoonfury = new Stats()
-            {
-                BonusArcaneDamageMultiplier = 0.25f,
-                BonusNatureDamageMultiplier = 0.25f
-            };
-
-            Stats statsTalents = statsHotW + statsBalanceOfPower + statsFuror + statsEarthAndMoon + statsMoonkinForm + statsMasterSS + statsMoonfury;
-
-            // Create the total stats object
-            Stats statsTotal = statsGearEnchantsBuffs + statsRace + statsTalents;
+            statsTotal.Accumulate(statsTalents);
 
             // Base stats: Intellect, Stamina, Spirit, Agility
-			statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsRace.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Intellect += (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Agility = (float)Math.Floor(statsRace.Agility * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Agility += (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(statsRace.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Spirit += (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
             // Derived stats: Health, mana pool, armor
-            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
             statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
+            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect));
             statsTotal.Mana = (float)Math.Floor(statsTotal.Mana * (1f + statsTotal.BonusManaMultiplier));
             // Armor
             statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
@@ -787,10 +718,6 @@ namespace Rawr.Moonkin
             
             switch (chartName)
             {
-                case "Talent DPS Comparison":
-                    return new ComparisonCalculationBase[0];
-                case "Talent MP5 Comparison":
-                    return new ComparisonCalculationBase[0];
                 case "Mana Gains By Source":
                     CharacterCalculationsMoonkin calcsManaBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     RotationData manaGainsRot = calcsManaBase.SelectedRotation;
@@ -859,8 +786,8 @@ namespace Rawr.Moonkin
                     manaGainsList.Add(new ComparisonCalculationMoonkin()
                     {
                         Name = "MP5",
-                        OverallPoints = calcsManaBase.FightLength * 60.0f * (calcsManaBase.ManaRegen - StatConversion.GetSpiritRegenSec(calcsManaBase.BasicStats.Spirit, calcsManaBase.BasicStats.Intellect)),
-                        DamagePoints = calcsManaBase.FightLength * 60.0f * (calcsManaBase.ManaRegen - StatConversion.GetSpiritRegenSec(calcsManaBase.BasicStats.Spirit, calcsManaBase.BasicStats.Intellect))
+                        OverallPoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen,
+                        DamagePoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen
                     });
                     return manaGainsList.ToArray();
 
@@ -872,6 +799,9 @@ namespace Rawr.Moonkin
                     ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath" };
                     ComparisonCalculationMoonkin ss = new ComparisonCalculationMoonkin() { Name = "Starsurge" };
                     ComparisonCalculationMoonkin ssInst = new ComparisonCalculationMoonkin() { Name = "Shooting Stars Proc" };
+                    ComparisonCalculationMoonkin wm = new ComparisonCalculationMoonkin() { Name = "Wild Mushroom" };
+                    ComparisonCalculationMoonkin sfa = new ComparisonCalculationMoonkin() { Name = "Starfall" };
+                    ComparisonCalculationMoonkin fon = new ComparisonCalculationMoonkin() { Name = "Force of Nature" };
                     sf.DamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
                     sf.OverallPoints = sf.DamagePoints;
                     mf.DamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
@@ -884,7 +814,13 @@ namespace Rawr.Moonkin
                     ss.OverallPoints = ss.DamagePoints;
                     ssInst.DamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
                     ssInst.OverallPoints = ssInst.DamagePoints;
-                    return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst };
+                    wm.DamagePoints = calcsBase.SelectedRotation.MushroomDamage / 1.5f;
+                    wm.OverallPoints = wm.DamagePoints;
+                    sfa.DamagePoints = calcsBase.SelectedRotation.StarfallDamage / calcsBase.SelectedRotation.AverageInstantCast;
+                    sfa.OverallPoints = sfa.DamagePoints;
+                    fon.DamagePoints = calcsBase.SelectedRotation.TreantDamage / calcsBase.SelectedRotation.AverageInstantCast;
+                    fon.OverallPoints = fon.DamagePoints;
+                    return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst, sfa, fon, wm };
             }
             return new ComparisonCalculationBase[0];
         }

@@ -143,6 +143,7 @@ namespace Rawr
 						S.Armor = 0;
 						S.SpellPower = 0;
 						S.SpellCrit = 0.0185f;
+                        S.Mp5 = 931f;
 						switch (characterForm)
 						{
 							case DruidForm.Moonkin:

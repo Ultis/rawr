@@ -40,6 +40,7 @@ namespace Rawr.Moonkin
         public float MoonfireDuration { get; set; }
         public float StarfallDamage { get; set; }
         public float StarfallStars { get; set; }
+        public float MushroomDamage { get; set; }
         public float TreantDamage { get; set; }
         public float SolarUptime { get; set; }
         public float LunarUptime { get; set; }
@@ -65,7 +66,7 @@ namespace Rawr.Moonkin
             overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) :
                 (mainNuke.School == SpellSchool.Nature ? (1 + calcs.BasicStats.BonusNatureDamageMultiplier) :
                 (1 + (calcs.BasicStats.BonusArcaneDamageMultiplier > calcs.BasicStats.BonusNatureDamageMultiplier ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier)));
-            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -86,10 +87,10 @@ namespace Rawr.Moonkin
             float schoolMultiplier = dotSpell.School == SpellSchool.Arcane ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier;
 
             float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
-            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
-            dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -167,7 +168,8 @@ namespace Rawr.Moonkin
             float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
                 (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
                 (talents.Starfall == 1 ? RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast) : 0) +
-                (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0);
+                (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
+                (3 * 0.5f / 10f);
 
             float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
                 (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :

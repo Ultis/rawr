@@ -21,6 +21,7 @@ namespace Rawr.Moonkin
         public float ManaRegen { get; set; }
         public float Latency { get; set; }
         public int TargetLevel { get; set; }
+        public int PlayerLevel { get; set; }
         public float FightLength { get; set; }
         public float EclipseBase = 0.25f;
         private Stats baseStats;
@@ -114,6 +115,10 @@ namespace Rawr.Moonkin
                 SelectedRotation.StarfallDamage / (SelectedRotation.StarfallStars > 0 ? SelectedRotation.StarfallStars : 1f)));
             retVal.Add("Treants", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per tree",
                 SelectedRotation.TreantDamage / 30.0f, SelectedRotation.TreantDamage, SelectedRotation.TreantDamage / 3.0f));
+            retVal.Add("Wild Mushroom", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per mushroom",
+                SelectedRotation.MushroomDamage / 10.0f,
+                SelectedRotation.MushroomDamage,
+                SelectedRotation.MushroomDamage / 3f));
 
             return retVal;
         }
