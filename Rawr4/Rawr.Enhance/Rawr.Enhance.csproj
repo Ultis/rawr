@@ -90,9 +90,6 @@
     <Compile Include="..\..\Rawr.Enhance\CalculationOptionsEnhance.cs">
       <Link>CalculationOptionsEnhance.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\CalculationsEnhance.cs">
-      <Link>CalculationsEnhance.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Enhance\CharacterCalculationsEnhance.cs">
       <Link>CharacterCalculationsEnhance.cs</Link>
     </Compile>
@@ -121,6 +118,10 @@
       <Link>CalculationOptionsPanelEnhance.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
     </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.Enhance\Clipboard.cs">
+      <Link>Clipboard.cs</Link>
+    </Compile>
+    <Compile Include="CalculationsEnhance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Rawr3\Rawr.Enhance\clipboard.swf">
+      <Link>clipboard.swf</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

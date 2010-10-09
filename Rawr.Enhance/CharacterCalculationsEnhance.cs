@@ -161,6 +161,15 @@ namespace Rawr.Enhance
             set { _spellHit = value; }
         }
 
+#if RAWR4
+        private float _masteryRating;
+        public float MasteryRating
+        {
+            get { return _masteryRating; }
+            set { _masteryRating = value; }
+        }
+#endif
+
         private float _overSpellHitCap;
         public float OverSpellHitCap
         {
@@ -267,6 +276,15 @@ namespace Rawr.Enhance
             set { _lightningBolt = value; }
         }
 
+#if RAWR4
+        private DPSAnalysis _chainLightning;
+        public DPSAnalysis ChainLightning
+        {
+            get { return _chainLightning; }
+            set { _chainLightning = value; }
+        }
+#endif
+
         private DPSAnalysis _earthShock;
         public DPSAnalysis EarthShock
         {
@@ -330,6 +348,15 @@ namespace Rawr.Enhance
             set { _lavaLash = value; }
         }
 
+#if RAWR4
+        private DPSAnalysis _unleashWeapon;
+        public DPSAnalysis UnleashWeapon
+        {
+            get { return _unleashWeapon; }
+            set { _unleashWeapon = value; }
+        }
+#endif
+
         private string _version;
         public string Version
         {
@@ -372,6 +399,7 @@ namespace Rawr.Enhance
             set { _fireTotemUptime = value; }
         }
 
+#if !RAWR4
         private float _t10_2Uptime;
         public float T10_2Uptime
         {
@@ -385,6 +413,7 @@ namespace Rawr.Enhance
             get { return _t10_4Uptime; }
             set { _t10_4Uptime = value; }
         }
+#endif
 
         public List<Buff> ActiveBuffs { get; set; }
         #endregion
@@ -425,7 +454,8 @@ namespace Rawr.Enhance
                     OverSpellHitCap.ToString("F2", CultureInfo.InvariantCulture)));
             else
             {
-                if (SpellHit < 100f) {
+                if (SpellHit < 100f)
+                {
                     float ratingRequired = (float)Math.Ceiling(StatConversion.GetRatingFromHit(1f - SpellHit/100f));
                     dictValues.Add("Spell Hit", String.Format("{0}% (Under Cap)*You need {1} more hit rating to cap spells (ES, LB etc)", 
                         SpellHit.ToString("F2", CultureInfo.InvariantCulture),
@@ -461,9 +491,9 @@ namespace Rawr.Enhance
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
-                BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Mastery Rating", String.Format("{0}*{1}% Mastery",
+                BasicStats.MasteryRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Boss Parried\r\n{3}% Spell Misses\r\n{4}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
@@ -487,22 +517,27 @@ namespace Rawr.Enhance
             dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+#if !RAWR4
             dictValues.Add("Tier 10 2 pc Uptime", T10_2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Tier 10 4 pc Uptime", T10_4Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+#endif
             
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
-            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints, true));
+            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPSPoints, true));
             dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
-            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints, false));
-            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints, false));
-            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints, false));
+            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack, DPSPoints, false));
+            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt, DPSPoints, false));
+#if RAWR4
+            dictValues.Add("Chain Lightning", dpsOutputFormat(ChainLightning, DPSPoints, false));
+#endif
+            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock, DPSPoints, false));
             dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints, false));
             dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints, false));
             dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
-            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints, true));
+            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf, DPSPoints, true));
             dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
             dictValues.Add("Fire Elemental", FireElemental.getDPSOutput());
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
