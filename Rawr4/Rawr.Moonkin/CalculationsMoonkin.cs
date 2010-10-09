@@ -672,7 +672,7 @@ namespace Rawr.Moonkin
 
             Stats statsTalents = new Stats()
             {
-                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f),
+                BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1,
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
                 BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
