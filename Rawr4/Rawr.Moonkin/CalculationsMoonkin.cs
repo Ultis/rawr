@@ -455,7 +455,6 @@ namespace Rawr.Moonkin
             return _relevantGlyphs;
         }
 
-        public static float BaseMana = 3496.0f;
 #if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> subColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors

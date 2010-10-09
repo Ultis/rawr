@@ -9,6 +9,7 @@ namespace Rawr.Moonkin
         private const int NUM_SPELL_DETAILS = 13;
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
+        private float BaseMana;
         // A list of all the damage spells
         private Spell[] _spellData = null;
         private Spell[] SpellData
@@ -24,7 +25,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (987 + 1229) / 2.0f,
                             SpellDamageModifier = 1.0f,
                             BaseCastTime = 3.5f,
-                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.16f),
                             DotEffect = null,
                             School = SpellSchool.Arcane,
                             BaseEnergy = 20
@@ -35,7 +36,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (197.0f + 239.0f) / 2.0f,
                             SpellDamageModifier = 0.18f,
                             BaseCastTime = 1.5f,
-                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.18f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.18f),
                             DotEffect = new DotEffect()
                                 {
                                     BaseDuration = 12.0f,
@@ -51,7 +52,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (675f + 761.0f) / 2.0f,
                             SpellDamageModifier = 2.5f/3.5f,
                             BaseCastTime = 2.5f,
-                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.14f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.14f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
                             BaseEnergy = 13+1/3
@@ -62,7 +63,7 @@ namespace Rawr.Moonkin
                             BaseDamage = 0.0f,
                             SpellDamageModifier = 0.0f,
                             BaseCastTime = 1.5f,
-                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.08f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.08f),
                             DotEffect = new DotEffect()
                             {
                                 BaseDuration = 12.0f,
@@ -78,7 +79,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (1272 + 1756) / 2f,
                             SpellDamageModifier = 1.535f,
                             BaseCastTime = 2.0f,
-                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Spellstorm,
                             BaseEnergy = 15,
@@ -181,6 +182,7 @@ namespace Rawr.Moonkin
 
         public void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
         {
+            BaseMana = BaseStats.GetBaseStats(character).Mana;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             DruidTalents talents = character.DruidTalents;
             procEffects = new List<ProcEffect>();
@@ -215,7 +217,7 @@ namespace Rawr.Moonkin
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcs.FightLength * 60.0f);
             // Calculate mana usage for trees.
-            float treeManaUsage = (float)Math.Ceiling(treeCasts) * CalculationsMoonkin.BaseMana * 0.12f;
+            float treeManaUsage = (float)Math.Ceiling(treeCasts) * BaseMana * 0.12f;
             manaPool -= talents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
 
             // Do Starfall calculations.
@@ -235,7 +237,7 @@ namespace Rawr.Moonkin
             if (starfallDiff > 0 && starfallDiff < 10)
                 numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
-            float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * CalculationsMoonkin.BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow);
+            float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow);
             manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
 
             // Do Wild Mushroom calculations.
@@ -247,7 +249,7 @@ namespace Rawr.Moonkin
             float numMushroomDetonations = (float)Math.Floor(calcs.FightLength * 60f / mushroomCD) + 1.0f;
             mushroomDamage *= numMushroomDetonations;
             float mushroomDPS = mushroomDamage / (calcs.FightLength * 60.0f);
-            float mushroomManaUsage = (float)Math.Ceiling(numMushroomDetonations) * CalculationsMoonkin.BaseMana * 0.33f * (1 - 0.03f * talents.Moonglow);
+            float mushroomManaUsage = (float)Math.Ceiling(numMushroomDetonations) * BaseMana * 0.33f * (1 - 0.03f * talents.Moonglow);
             manaPool -= mushroomManaUsage;
 
             float totalTimeInRotation = calcs.FightLength * 60.0f;
