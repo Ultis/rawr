@@ -9,7 +9,7 @@ namespace Rawr.Moonkin
         private float overallPoints = 0f;
         public override float OverallPoints { get { return overallPoints; } set { overallPoints = value; } }
 
-        private float[] subPoints = new float[] { 0f };
+        private float[] subPoints = new float[] { 0f, 0f };
 
         public override float[] SubPoints { get { return subPoints; } set { subPoints = value; } }
 
@@ -27,6 +27,7 @@ namespace Rawr.Moonkin
         private Stats baseStats;
         public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
         public RotationData SelectedRotation { get; set; }
+        public RotationData BurstRotation { get; set; }
         public Dictionary<string, RotationData> Rotations = new Dictionary<string, RotationData>();
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
@@ -58,17 +59,14 @@ namespace Rawr.Moonkin
                 Mastery * 1.5f,
                 baseStats.MasteryRating));
             retVal.Add("Mana Regen", String.Format("{0:F0}", ManaRegen * 5.0f));
-            retVal.Add("Total Score", String.Format("{0:F2}", SubPoints[0]));
+            retVal.Add("Total Score", String.Format("{0:F2}", OverallPoints));
             retVal.Add("Selected Rotation", String.Format("*{0}", SelectedRotation.Name));
-            retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.DPS));
+            retVal.Add("Selected DPS", String.Format("{0:F2}", SelectedRotation.SustainedDPS));
             retVal.Add("Selected Time To OOM", String.Format(SelectedRotation.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", SelectedRotation.TimeToOOM.Minutes, SelectedRotation.TimeToOOM.Seconds));
             retVal.Add("Selected Cycle Length", String.Format("{0:F1} s", SelectedRotation.Duration));
-            retVal.Add("Nature's Grace Uptime", String.Format("{0:F2}%", SelectedRotation.NaturesGraceUptime * 100));
-            retVal.Add("Solar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.SolarUptime * 100));
-            retVal.Add("Lunar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.LunarUptime * 100));
 
             StringBuilder sb = new StringBuilder("*");
-            float rotationDamage = SelectedRotation.DPS * SelectedRotation.Duration;
+            float rotationDamage = SelectedRotation.SustainedDPS * SelectedRotation.Duration;
             sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfire", 100 * SelectedRotation.StarfireAvgHit * SelectedRotation.StarfireCount / rotationDamage,
                 SelectedRotation.StarfireAvgHit * SelectedRotation.StarfireCount,
                 SelectedRotation.StarfireCount));
@@ -86,6 +84,36 @@ namespace Rawr.Moonkin
                 SelectedRotation.StarSurgeCount));
 
             retVal.Add("Selected Spell Breakdown", sb.ToString());
+
+            retVal.Add("Burst Rotation", String.Format("*{0}", BurstRotation.Name));
+            retVal.Add("Burst DPS", String.Format("{0:F2}", BurstRotation.BurstDPS));
+            retVal.Add("Burst Time To OOM", String.Format(BurstRotation.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", BurstRotation.TimeToOOM.Minutes, BurstRotation.TimeToOOM.Seconds));
+            retVal.Add("Burst Cycle Length", String.Format("{0:F1} s", BurstRotation.Duration));
+
+            sb = new StringBuilder("*");
+            rotationDamage = BurstRotation.BurstDPS * BurstRotation.Duration;
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfire", 100 * BurstRotation.StarfireAvgHit * BurstRotation.StarfireCount / rotationDamage,
+                BurstRotation.StarfireAvgHit * BurstRotation.StarfireCount,
+                BurstRotation.StarfireCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Moonfire", 100 * (BurstRotation.MoonfireAvgHit) * BurstRotation.MoonfireCasts / rotationDamage,
+                (BurstRotation.MoonfireAvgHit) * BurstRotation.MoonfireCasts,
+                BurstRotation.MoonfireCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Insect Swarm", 100 * BurstRotation.InsectSwarmAvgHit * BurstRotation.InsectSwarmCasts / rotationDamage,
+                BurstRotation.InsectSwarmAvgHit * (BurstRotation.InsectSwarmCasts),
+                BurstRotation.InsectSwarmCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wrath", 100 * BurstRotation.WrathAvgHit * BurstRotation.WrathCount / rotationDamage,
+                BurstRotation.WrathAvgHit * BurstRotation.WrathCount,
+                BurstRotation.WrathCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starsurge", 100 * BurstRotation.StarSurgeAvgHit * BurstRotation.StarSurgeCount / rotationDamage,
+                BurstRotation.StarSurgeAvgHit * BurstRotation.StarSurgeCount,
+                BurstRotation.StarSurgeCount));
+
+            retVal.Add("Burst Spell Breakdown", sb.ToString());
+
+            retVal.Add("Nature's Grace Uptime", String.Format("{0:F2}%", SelectedRotation.NaturesGraceUptime * 100));
+            retVal.Add("Solar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.SolarUptime * 100));
+            retVal.Add("Lunar Eclipse Uptime", String.Format("{0:F2}%", SelectedRotation.LunarUptime * 100));
+
             retVal.Add("Starfire", String.Format("{0:F2} dps*{1:F2} s avg\n {2:F2} avg hit\n{3:F0} avg energy",
                 SelectedRotation.StarfireAvgHit / (SelectedRotation.StarfireAvgCast > 0 ? SelectedRotation.StarfireAvgCast : 1f),
                 SelectedRotation.StarfireAvgCast,

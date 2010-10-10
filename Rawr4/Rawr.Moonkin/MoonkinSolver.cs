@@ -150,7 +150,15 @@ namespace Rawr.Moonkin
         }
 
         // The spell rotations themselves.
-        public List<SpellRotation> rotations = null;
+        private List<SpellRotation> rotations = null;
+        public List<SpellRotation> Rotations
+        {
+            get
+            {
+                if (rotations == null) RecreateRotations();
+                return rotations;
+            }
+        }
 
         // Results data from the calculations, which will be sent to the UI.
         Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
@@ -198,7 +206,7 @@ namespace Rawr.Moonkin
 
             BuildProcList(calcs);
 
-            float maxDamageDone = 0.0f;
+            float maxDamageDone = 0.0f, maxBurstDamageDone = 0.0f;
             SpellRotation maxBurstRotation = rotations[0];
             SpellRotation maxRotation = rotations[0];
 
@@ -217,8 +225,7 @@ namespace Rawr.Moonkin
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcs.FightLength * 60.0f);
             // Calculate mana usage for trees.
-            float treeManaUsage = (float)Math.Ceiling(treeCasts) * BaseMana * 0.12f;
-            manaPool -= talents.ForceOfNature == 1 ? treeManaUsage : 0.0f;
+            float treeManaUsage = talents.ForceOfNature == 1 ? (float)Math.Ceiling(treeCasts) * BaseMana * 0.12f : 0f;
 
             // Do Starfall calculations.
             bool starfallGlyph = talents.GlyphOfStarfall;
@@ -237,8 +244,7 @@ namespace Rawr.Moonkin
             if (starfallDiff > 0 && starfallDiff < 10)
                 numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
             starfallDamage *= numStarfallCasts;
-            float starfallManaUsage = (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow);
-            manaPool -= talents.Starfall == 1 ? starfallManaUsage : 0.0f;
+            float starfallManaUsage = talents.Starfall == 1 ? (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow) : 0f;
 
             // Do Wild Mushroom calculations.
             float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
@@ -250,7 +256,6 @@ namespace Rawr.Moonkin
             mushroomDamage *= numMushroomDetonations;
             float mushroomDPS = mushroomDamage / (calcs.FightLength * 60.0f);
             float mushroomManaUsage = (float)Math.Ceiling(numMushroomDetonations) * BaseMana * 0.33f * (1 - 0.03f * talents.Moonglow);
-            manaPool -= mushroomManaUsage;
 
             float totalTimeInRotation = calcs.FightLength * 60.0f;
             float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
@@ -283,6 +288,7 @@ namespace Rawr.Moonkin
 
             foreach (SpellRotation rot in rotations)
             {
+                if (rot.RotationData.Name == "None") continue;
                 rot.Solver = this;
 
                 // Reset variables modified in the pre-loop to base values
@@ -553,7 +559,12 @@ namespace Rawr.Moonkin
 
                 float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation + movementDPS * movementShare;
                 float sustainedDPS = burstDPS;
-                float timeToOOM = (manaPool / (rot.RotationData.ManaUsed - rot.RotationData.ManaGained)) * rot.RotationData.Duration * percentTimeInRotation + (manaPool / movementManaPerSec * movementShare);
+                // Mana calcs:
+                // Main rotation - all spells
+                // Movement rotation - Lunar Shower MF and Starfall only
+                rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.RotationData.Duration;
+                float timeToOOM = manaPool / ((rot.RotationData.ManaUsed - rot.RotationData.ManaGained) / rot.RotationData.Duration + (starfallManaUsage + treeManaUsage + mushroomManaUsage) / (calcs.FightLength * 60f)) * percentTimeInRotation +
+                    (manaPool / movementManaPerSec + starfallManaUsage / (calcs.FightLength * 60f)) * movementShare;
                 if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
                 if (timeToOOM < calcs.FightLength * 60.0f)
                 {
@@ -577,7 +588,8 @@ namespace Rawr.Moonkin
                 rot.RotationData.StarfallDamage = t10StarfallDamage / numStarfallCasts;
                 rot.RotationData.StarfallStars = numberOfStarHits;
                 rot.RotationData.MushroomDamage = mushroomDamage / numMushroomDetonations;
-                rot.RotationData.DPS = sustainedDPS;
+                rot.RotationData.SustainedDPS = sustainedDPS;
+                rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.StarfireAvgHit = spellDetails[0];
                 rot.RotationData.WrathAvgHit = spellDetails[1];
                 rot.RotationData.MoonfireAvgHit = spellDetails[2];
@@ -595,12 +607,16 @@ namespace Rawr.Moonkin
                 // 1) No user rotation is selected and sustained DPS is maximum
                 // 2) A user rotation is selected, Eclipse is not present, and the user rotation matches the current rotation
                 // 3) A user rotation is selected, Eclipse is present, and the user rotation's dot spells matches this rotation's
-                if (sustainedDPS > maxDamageDone)
+                if ((calcOpts.UserRotation == "None" && sustainedDPS > maxDamageDone) || rot.RotationData.Name == calcOpts.UserRotation)
                 {
                     maxDamageDone = sustainedDPS;
                     maxRotation = rot;
                 }
-                rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.RotationData.Duration;
+                if (burstDPS > maxBurstDamageDone)
+                {
+                    maxBurstDamageDone = burstDPS;
+                    maxBurstRotation = rot;
+                }
                 cachedResults[rot.RotationData.Name] = rot.RotationData;
 
                 // Deactivate always-up procs
@@ -612,8 +628,9 @@ namespace Rawr.Moonkin
             }
             // Present the findings to the user.
             calcs.SelectedRotation = maxRotation.RotationData;
-            calcs.SubPoints = new float[] { maxDamageDone };
-            calcs.OverallPoints = calcs.SubPoints[0];
+            calcs.BurstRotation = maxBurstRotation.RotationData;
+            calcs.SubPoints = new float[] { maxBurstDamageDone, maxDamageDone };
+            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
         }
 
@@ -715,8 +732,14 @@ namespace Rawr.Moonkin
         private void RecreateSpells(DruidTalents talents, ref CharacterCalculationsMoonkin calcs)
         {
             ResetSpellList();
+            RecreateRotations();
+            UpdateSpells(talents, ref calcs);
+        }
 
+        private void RecreateRotations()
+        {
             rotations = new List<SpellRotation>();
+            rotations.Add(new SpellRotation() { RotationData = new RotationData() { Name = "None" } });
             for (int mfMode = 0; mfMode < 4; ++mfMode)
             {
                 for (int isMode = 0; isMode < 4; ++isMode)
@@ -743,8 +766,6 @@ namespace Rawr.Moonkin
                     }
                 }
             }
-
-            UpdateSpells(talents, ref calcs);
         }
 
         // Add talented effects to the spells

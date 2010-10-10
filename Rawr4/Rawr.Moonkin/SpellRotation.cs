@@ -8,7 +8,8 @@ namespace Rawr.Moonkin
     // Rotation information for display to the user.
     public class RotationData
     {
-        public float DPS = 0.0f;
+        public float SustainedDPS = 0.0f;
+        public float BurstDPS = 0.0f;
         public float DPM = 0.0f;
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
         public string Name { get; set; }
@@ -55,6 +56,11 @@ namespace Rawr.Moonkin
     {
         public MoonkinSolver Solver { get; set; }
         public RotationData RotationData = new RotationData();
+
+        public override string ToString()
+        {
+            return RotationData.Name;
+        }
 
         // Calculate damage and casting time for a single, direct-damage spell.
         public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)

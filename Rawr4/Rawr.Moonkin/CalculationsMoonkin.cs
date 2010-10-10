@@ -464,6 +464,7 @@ namespace Rawr.Moonkin
                 if (subColors == null)
                 {
                     subColors = new Dictionary<string, System.Windows.Media.Color>();
+                    subColors.Add("Burst Damage", System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
                     subColors.Add("Sustained Damage", System.Windows.Media.Color.FromArgb(255, 0, 0, 255));
                 }
                 return subColors;
@@ -512,10 +513,15 @@ namespace Rawr.Moonkin
                     "Solution:Selected DPS",
                     "Solution:Selected Time To OOM",
                     "Solution:Selected Cycle Length",
+                    "Solution:Selected Spell Breakdown",
+                    "Solution:Burst Rotation",
+                    "Solution:Burst DPS",
+                    "Solution:Burst Time To OOM",
+                    "Solution:Burst Cycle Length",
+                    "Solution:Burst Spell Breakdown",
                     "Solution:Nature's Grace Uptime",
                     "Solution:Solar Eclipse Uptime",
                     "Solution:Lunar Eclipse Uptime",
-                    "Solution:Selected Spell Breakdown",
                     "Spell Info:Starfire",
                     "Spell Info:Wrath",
                     "Spell Info:Starsurge",
@@ -737,7 +743,7 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Euphoria",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
                             });
                         }
                     }
@@ -757,7 +763,7 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Replenishment",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
                             });
                         }
                     }
@@ -775,7 +781,7 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Innervate",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                DamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
                             });
                         }
                     }
@@ -786,7 +792,7 @@ namespace Rawr.Moonkin
                     {
                         Name = "MP5",
                         OverallPoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen,
-                        DamagePoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen
+                        BurstDamagePoints = calcsManaBase.FightLength * 60.0f * calcsManaBase.ManaRegen
                     });
                     return manaGainsList.ToArray();
 
@@ -801,24 +807,24 @@ namespace Rawr.Moonkin
                     ComparisonCalculationMoonkin wm = new ComparisonCalculationMoonkin() { Name = "Wild Mushroom" };
                     ComparisonCalculationMoonkin sfa = new ComparisonCalculationMoonkin() { Name = "Starfall" };
                     ComparisonCalculationMoonkin fon = new ComparisonCalculationMoonkin() { Name = "Force of Nature" };
-                    sf.DamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
-                    sf.OverallPoints = sf.DamagePoints;
-                    mf.DamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
-                    mf.OverallPoints = mf.DamagePoints;
-                    iSw.DamagePoints = calcsBase.SelectedRotation.InsectSwarmAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
-                    iSw.OverallPoints = iSw.DamagePoints;
-                    wr.DamagePoints = calcsBase.SelectedRotation.WrathAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
-                    wr.OverallPoints = wr.DamagePoints;
-                    ss.DamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.StarSurgeAvgCast;
-                    ss.OverallPoints = ss.DamagePoints;
-                    ssInst.DamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
-                    ssInst.OverallPoints = ssInst.DamagePoints;
-                    wm.DamagePoints = calcsBase.SelectedRotation.MushroomDamage / 1.5f;
-                    wm.OverallPoints = wm.DamagePoints;
-                    sfa.DamagePoints = calcsBase.SelectedRotation.StarfallDamage / calcsBase.SelectedRotation.AverageInstantCast;
-                    sfa.OverallPoints = sfa.DamagePoints;
-                    fon.DamagePoints = calcsBase.SelectedRotation.TreantDamage / calcsBase.SelectedRotation.AverageInstantCast;
-                    fon.OverallPoints = fon.DamagePoints;
+                    sf.BurstDamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
+                    sf.OverallPoints = sf.BurstDamagePoints;
+                    mf.BurstDamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    mf.OverallPoints = mf.BurstDamagePoints;
+                    iSw.BurstDamagePoints = calcsBase.SelectedRotation.InsectSwarmAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    iSw.OverallPoints = iSw.BurstDamagePoints;
+                    wr.BurstDamagePoints = calcsBase.SelectedRotation.WrathAvgHit / calcsBase.SelectedRotation.WrathAvgCast;
+                    wr.OverallPoints = wr.BurstDamagePoints;
+                    ss.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.StarSurgeAvgCast;
+                    ss.OverallPoints = ss.BurstDamagePoints;
+                    ssInst.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
+                    ssInst.OverallPoints = ssInst.BurstDamagePoints;
+                    wm.BurstDamagePoints = calcsBase.SelectedRotation.MushroomDamage / 1.5f;
+                    wm.OverallPoints = wm.BurstDamagePoints;
+                    sfa.BurstDamagePoints = calcsBase.SelectedRotation.StarfallDamage / calcsBase.SelectedRotation.AverageInstantCast;
+                    sfa.OverallPoints = sfa.BurstDamagePoints;
+                    fon.BurstDamagePoints = calcsBase.SelectedRotation.TreantDamage / calcsBase.SelectedRotation.AverageInstantCast;
+                    fon.OverallPoints = fon.BurstDamagePoints;
                     return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst, sfa, fon, wm };
             }
             return new ComparisonCalculationBase[0];

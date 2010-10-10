@@ -39,7 +39,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        private float[] subPoints = new float[] { 0f };
+        private float[] subPoints = new float[] { 0f, 0f };
 
         public override float[] SubPoints
         {
@@ -53,7 +53,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        public float DamagePoints
+        public float BurstDamagePoints
         {
             get
             {
@@ -62,6 +62,18 @@ namespace Rawr.Moonkin
             set
             {
                 subPoints[0] = value;
+            }
+        }
+
+        public float SustainedDamagePoints
+        {
+            get
+            {
+                return subPoints[1];
+            }
+            set
+            {
+                subPoints[1] = value;
             }
         }
 

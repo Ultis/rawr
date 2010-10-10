@@ -87,12 +87,11 @@
     <Compile Include="..\..\Rawr.Moonkin\CalculationOptionsMoonkin.cs">
       <Link>CalculationOptionsMoonkin.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Moonkin\CalculationOptionsPanelMoonkin.xaml.cs">
-      <Link>CalculationOptionsPanelMoonkin.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Moonkin\MoonkinConverters.cs">
       <Link>MoonkinConverters.cs</Link>
+    </Compile>
+    <Compile Include="CalculationOptionsPanelMoonkin.xaml.cs">
+      <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
     </Compile>
     <Compile Include="CalculationsMoonkin.cs" />
     <Compile Include="CharacterCalculationsMoonkin.cs" />
@@ -127,8 +126,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Moonkin\CalculationOptionsPanelMoonkin.xaml">
-      <Link>CalculationOptionsPanelMoonkin.xaml</Link>
+    <Page Include="CalculationOptionsPanelMoonkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
