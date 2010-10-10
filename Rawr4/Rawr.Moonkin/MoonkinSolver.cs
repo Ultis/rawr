@@ -550,7 +550,8 @@ namespace Rawr.Moonkin
                     (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
                     (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
                     (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
-                float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f) - (talents.GlyphOfStarsurge ? (5f / 60f) * rot.RotationData.StarSurgeCount : 0f);
+                float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
+                starfallCD -= talents.GlyphOfStarsurge ? (5f / 60f) * (rot.RotationData.StarSurgeCount / (rot.RotationData.Duration / 60f) * starfallCD) : 0f;
                 float numStarfallCasts = (float)Math.Floor(calcs.FightLength / starfallCD) + 1.0f;
                 // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
                 // calculate a partial cast
