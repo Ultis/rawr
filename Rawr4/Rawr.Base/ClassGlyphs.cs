@@ -74,7 +74,7 @@ namespace Rawr
 
     public partial class DruidTalents
     {
-        private bool[] _glyphData = new bool[25];
+        private bool[] _glyphData = new bool[26];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         //Cat Glyphs
@@ -98,20 +98,22 @@ namespace Rawr
         public bool GlyphOfFrenziedRegeneration { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         
         //Moonkin Glyphs
-        [GlyphData(8, "Glyph of Focus", GlyphType.Major, @"Increases the damage done by Starfall by 20%, but decreases its radius by 50%.")]
+        [GlyphData(8, "Glyph of Focus", GlyphType.Major, @"Increases the damage done by Starfall by 10%, but decreases its radius by 50%.")]
         public bool GlyphOfFocus { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
-        [GlyphData(9, "Glyph of Insect Swarm", GlyphType.Major, @"Increases the damage of your Insect Swarm ability by 20%, but it no longer affects your victim's chance to hit.")]
+        [GlyphData(9, "Glyph of Insect Swarm", GlyphType.Prime, @"Increases the damage of your Insect Swarm ability by 30%.")]
         public bool GlyphOfInsectSwarm { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
         [GlyphData(10, "Glyph of Monsoon", GlyphType.Major, @"Reduces the cooldown of your Typhoon spell by 3 sec.")]
         public bool GlyphOfMonsoon { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
-        [GlyphData(11, "Glyph of Moonfire", GlyphType.Major, @"Increases the periodic damage of your Moonfire ability by 75%, but initial damage is decreased by 90%.")]
+        [GlyphData(11, "Glyph of Moonfire", GlyphType.Prime, @"Increases the periodic damage of your Moonfire ability by 20%.")]
         public bool GlyphOfMoonfire { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
         [GlyphData(12, "Glyph of Starfall", GlyphType.Major, @"Reduces the cooldown of Starfall by 30 sec.")]
         public bool GlyphOfStarfall { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Starfire", GlyphType.Major, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
+        [GlyphData(13, "Glyph of Starfire", GlyphType.Prime, @"Your Starfire ability increases the duration of your Moonfire effect on the target by 3 sec, up to a maximum of 9 additional seconds.")]
         public bool GlyphOfStarfire { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
-        [GlyphData(14, "Glyph of Wrath", GlyphType.Major, @"Reduces the pushback suffered from damaging attacks while casting your Wrath spell by 50%.")]
+        [GlyphData(14, "Glyph of Wrath", GlyphType.Prime, @"Your Wrath does 10% additional damage to targets afflicted by your Insect Swarm.")]
         public bool GlyphOfWrath { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
+        [GlyphData(25, "Glyph of Starsurge", GlyphType.Prime, @"When your Starsurge deals damage, the cooldown remaining on your Starfall is reduced by 5 sec.")]
+        public bool GlyphOfStarsurge { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
 
         //Tree Glyphs
         [GlyphData(15, "Glyph of Healing Touch", GlyphType.Major, @"Decreases the cast time of Healing Touch by 1.5 sec., the mana cost by 25%, and the amount healed by 50%.")]

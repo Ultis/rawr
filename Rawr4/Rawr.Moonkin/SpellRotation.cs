@@ -241,6 +241,22 @@ namespace Rawr.Moonkin
 
             RotationData.StarfireAvgCast = sf.CastTime;
             RotationData.StarfireAvgEnergy = sf.AverageEnergy;
+            float starSurgeRatio = ss.CastTime / (starsurgeCooldownWithSSProcs + RotationData.AverageInstantCast);
+            float starSurgeTime = 0;
+            if (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown)
+            {
+                starSurgeTime = RotationData.Duration * starSurgeRatio;
+            }
+            else if (RotationData.StarsurgeCastMode != StarsurgeMode.Unused)
+            {
+                starSurgeTime = ss.CastTime * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
+            }
+
+            if (talents.Starfall == 1 && RotationData.StarsurgeCastMode != StarsurgeMode.Unused && talents.GlyphOfStarsurge)
+            {
+                totalNonNukeRatio -= RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast);
+                totalNonNukeRatio += RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) - (starSurgeTime / ss.CastTime * 5f) + RotationData.AverageInstantCast);
+            }
 
             float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
             float nukesAndNotOnCDDuration = mainNukeDuration +
@@ -252,16 +268,6 @@ namespace Rawr.Moonkin
             RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
             float insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
 
-            float starSurgeRatio = ss.CastTime / (starsurgeCooldownWithSSProcs + RotationData.AverageInstantCast);
-            float starSurgeTime = 0;
-            if (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown)
-            {
-                starSurgeTime = RotationData.Duration * starSurgeRatio;
-            }
-            else if (RotationData.StarsurgeCastMode != StarsurgeMode.Unused)
-            {
-                starSurgeTime = ss.CastTime * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
-            }
 
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;

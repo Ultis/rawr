@@ -227,25 +227,6 @@ namespace Rawr.Moonkin
             // Calculate mana usage for trees.
             float treeManaUsage = talents.ForceOfNature == 1 ? (float)Math.Ceiling(treeCasts) * BaseMana * 0.12f : 0f;
 
-            // Do Starfall calculations.
-            bool starfallGlyph = talents.GlyphOfStarfall;
-            Buff tier102PieceBuff = character.ActiveBuffs.Find(theBuff => theBuff.Name == "Lasherweave Regalia (T10) 2 Piece Bonus");
-            float numberOfStarHits = 10.0f;
-            float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit,
-                (1 + calcs.BasicStats.BonusDamageMultiplier) *
-                (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
-                (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
-                (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
-            float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
-            float numStarfallCasts = (float)Math.Floor(calcs.FightLength / starfallCD) + 1.0f;
-            // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
-            // calculate a partial cast
-            float starfallDiff = calcs.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
-            if (starfallDiff > 0 && starfallDiff < 10)
-                numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
-            starfallDamage *= numStarfallCasts;
-            float starfallManaUsage = talents.Starfall == 1 ? (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow) : 0f;
-
             // Do Wild Mushroom calculations.
             float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
                 (1 + calcs.BasicStats.BonusDamageMultiplier) *
@@ -559,6 +540,25 @@ namespace Rawr.Moonkin
 
                 float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation + movementDPS * movementShare;
                 float sustainedDPS = burstDPS;
+
+                // Do Starfall calculations.
+                bool starfallGlyph = talents.GlyphOfStarfall;
+                Buff tier102PieceBuff = character.ActiveBuffs.Find(theBuff => theBuff.Name == "Lasherweave Regalia (T10) 2 Piece Bonus");
+                float numberOfStarHits = 10.0f;
+                float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit,
+                    (1 + calcs.BasicStats.BonusDamageMultiplier) *
+                    (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
+                    (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
+                    (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
+                float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f) - (talents.GlyphOfStarsurge ? (5f / 60f) * rot.RotationData.StarSurgeCount : 0f);
+                float numStarfallCasts = (float)Math.Floor(calcs.FightLength / starfallCD) + 1.0f;
+                // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
+                // calculate a partial cast
+                float starfallDiff = calcs.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
+                if (starfallDiff > 0 && starfallDiff < 10)
+                    numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
+                starfallDamage *= numStarfallCasts;
+                float starfallManaUsage = talents.Starfall == 1 ? (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow) : 0f;
                 // Mana calcs:
                 // Main rotation - all spells
                 // Movement rotation - Lunar Shower MF and Starfall only

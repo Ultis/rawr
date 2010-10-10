@@ -447,10 +447,10 @@ namespace Rawr.Moonkin
                 _relevantGlyphs.Add("Glyph of Moonfire");
                 _relevantGlyphs.Add("Glyph of Starfire");
                 _relevantGlyphs.Add("Glyph of Wrath");
+                _relevantGlyphs.Add("Glyph of Starsurge");
                 // Major glyphs
                 _relevantGlyphs.Add("Glyph of Starfall");
                 _relevantGlyphs.Add("Glyph of Focus");
-                _relevantGlyphs.Add("Glyph of Innervate");
             }
             return _relevantGlyphs;
         }
