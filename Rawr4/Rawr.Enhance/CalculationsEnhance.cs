@@ -448,8 +448,8 @@ namespace Rawr.Enhance
                 // LightningSpellPower is for totem of hex/the void/ancestral guidance
                 float damageLB = concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
-                float lbNormal = lbdps * cs.LBHitModifier;  //cs.NatureSpellHitModifier CATA
-                float lbCrit = lbdps * cs.LBCritModifier * cs.CritMultiplierSpell;  //cs.NatureSpellCritModifier CATA
+                float lbNormal = lbdps * cs.NatureSpellHitModifier;
+                float lbCrit = lbdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -554,7 +554,7 @@ namespace Rawr.Enhance
             }
             #endregion
 
-            #region Unleash Weapon DPS
+            #region Unleash Elements DPS
             //TODO CATA
             #endregion
 
@@ -666,7 +666,7 @@ namespace Rawr.Enhance
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
             calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
-            calculatedStats.UnleashWeapon = null; //CATA FIXME!
+            calculatedStats.UnleashElements = null; //CATA FIXME!
 
 #if RAWR3 || RAWR4
             calculatedStats.Version = VERSION;

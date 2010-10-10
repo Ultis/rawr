@@ -93,9 +93,6 @@
     <Compile Include="..\..\Rawr.Enhance\CharacterCalculationsEnhance.cs">
       <Link>CharacterCalculationsEnhance.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\CombatStats.cs">
-      <Link>CombatStats.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Enhance\ComparisonCalculationsEnhance.cs">
       <Link>ComparisonCalculationsEnhance.cs</Link>
     </Compile>
@@ -108,9 +105,6 @@
     <Compile Include="..\..\Rawr.Enhance\Gemming.cs">
       <Link>Gemming.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\Priority.cs">
-      <Link>Priority.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
       <Link>StatsSpecialEffects.cs</Link>
     </Compile>
@@ -122,6 +116,8 @@
       <Link>Clipboard.cs</Link>
     </Compile>
     <Compile Include="CalculationsEnhance.cs" />
+    <Compile Include="CombatStats.cs" />
+    <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

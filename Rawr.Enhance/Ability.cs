@@ -120,7 +120,7 @@ namespace Rawr.Enhance
         FireElemental = 13,
 #if RAWR4
         ChainLightning = 14,
-        UnleashWeapon = 15,
+        UnleashElements = 15,
 #endif
     }
 }

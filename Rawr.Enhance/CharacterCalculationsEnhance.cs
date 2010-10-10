@@ -349,11 +349,11 @@ namespace Rawr.Enhance
         }
 
 #if RAWR4
-        private DPSAnalysis _unleashWeapon;
-        public DPSAnalysis UnleashWeapon
+        private DPSAnalysis _unleashElements;
+        public DPSAnalysis UnleashElements
         {
-            get { return _unleashWeapon; }
-            set { _unleashWeapon = value; }
+            get { return _unleashElements; }
+            set { _unleashElements = value; }
         }
 #endif
 
