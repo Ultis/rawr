@@ -36,6 +36,7 @@ namespace Rawr.Mage.SequenceReconstruction
             this.cycle = Calculations.SolutionVariable[index].Cycle;
             this.castingState = Calculations.SolutionVariable[index].State;
             this.segment = Calculations.SolutionVariable[index].Segment;
+            ManaSegment = Calculations.SolutionVariable[index].ManaSegment;
             if (castingState == null) castingState = Calculations.BaseState;
 
             minTime = 0.0;
@@ -122,6 +123,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 segment = value;
             }
         }
+
+        public int ManaSegment { get; set; }
 
         public double Duration;
         public double Timestamp;
@@ -223,8 +226,8 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public override string ToString()
         {
-            if (cycle == null) return string.Format("{0}: {1}", Segment, VariableType);
-            return string.Format("{0}: {1}", Segment, castingState.BuffLabel + "+" + cycle.Name);
+            if (cycle == null) return string.Format("{0}.{2}: {1}", Segment, VariableType, ManaSegment);
+            return string.Format("{0}.{2}: {1}", Segment, castingState.BuffLabel + "+" + cycle.Name, ManaSegment);
         }
     }
 }

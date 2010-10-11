@@ -56,6 +56,8 @@ namespace Rawr.Mage
         private int[] sort;
         //private int[] sortinv;
         private double Qk;
+        private int[] cycling;
+        private int cyclingCount;
 
 #if SILVERLIGHT
         private double[] a;
@@ -877,6 +879,10 @@ namespace Rawr.Mage
             if (_S == null || _S.Length < cols)
             {
                 _S = new int[cols];
+            }
+            if (cycling == null || cycling.Length < cols)
+            {
+                cycling = new int[cols];
             }
 
 #if SILVERLIGHT
@@ -1943,7 +1949,7 @@ namespace Rawr.Mage
             return maxj;
         }
 
-        private int SelectPrimalIncomingBoundary(out double direction, bool prepareForDual)
+        private int SelectPrimalIncomingBoundary(out double direction, bool prepareForDual, bool antiCycling)
         {
             double maxc = (prepareForDual) ? epsDualI : epsDual;
             int maxj = -1;
@@ -1967,11 +1973,22 @@ namespace Rawr.Mage
                 {
                     continue;
                 }
-                if (costj > maxc && (flags[col] & flagDis) == 0 && (flags[col] & flagFix) == 0)
+                if (antiCycling)
                 {
-                    maxc = costj;
-                    maxj = j;
-                    direction = dir;
+                    if (costj > maxc && (maxj == -1 || col < V[maxj]) && (flags[col] & flagDis) == 0 && (flags[col] & flagFix) == 0)
+                    {
+                        maxj = j;
+                        direction = dir;
+                    }
+                }
+                else
+                {
+                    if (costj > maxc && (flags[col] & flagDis) == 0 && (flags[col] & flagFix) == 0)
+                    {
+                        maxc = costj;
+                        maxj = j;
+                        direction = dir;
+                    }
                 }
             }
             return maxj;
@@ -5548,6 +5565,8 @@ namespace Rawr.Mage
         private double[] SolvePrimalQuadraticCGUnsafe()
         {
             int limit = 5000;
+            cyclingCount = 0;
+            bool antiCycling = false;
 
             //RESTART:
             int i, k;
@@ -5559,6 +5578,7 @@ namespace Rawr.Mage
             bool changeBasis;
             double direction;
             bool checkTermination;
+            bool stall;
             bool needsReducedGradientStep = false;
             osbDirty = true;
 
@@ -5713,6 +5733,8 @@ namespace Rawr.Mage
                             {
                                 mb[i] += cg_x[i];
                             }
+                            cyclingCount = 0;
+                            antiCycling = false;
                             updateCount++;
                             //ValidateFeasibility();
                             //ValidateFlags();
@@ -5775,7 +5797,7 @@ namespace Rawr.Mage
                         // basis shouldn't give too many problems due to zero snapping
 
                         updateCount++;
-                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                         {
                             // we lost feasibility, go to phase I
                             feasible = false;
@@ -5793,7 +5815,7 @@ namespace Rawr.Mage
                                 goto TERMINATION;
                             }
                             updateCount++;
-                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                             {
                                 // we lost feasibility, go to phase I
                                 feasible = false;
@@ -5862,6 +5884,8 @@ namespace Rawr.Mage
                 // move for alpha
                 if (alpha > epsZero)
                 {
+                    cyclingCount = 0;
+                    antiCycling = false;
                     for (i = 0; i < cols + rows; i++)
                     {
                         mb[i] += alpha * cg_x[i];
@@ -6019,7 +6043,7 @@ namespace Rawr.Mage
                 // so pretend superbasics are fixed and do a single direction change
                 ComputeReducedCostGradient();
 
-                maxj = SelectPrimalIncomingBoundary(out direction, false);
+                maxj = SelectPrimalIncomingBoundary(out direction, false, antiCycling);
 
                 if (maxj == -1)
                 {
@@ -6053,13 +6077,33 @@ namespace Rawr.Mage
                 }
 
                 updateCount++;
-                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                 {
                     // we lost feasibility, go to phase I
                     feasible = false;
                     lowestInfeasibility = double.PositiveInfinity;
                     redecompose = 0;
                     goto DECOMPOSE;
+                }
+                if (stall)
+                {
+                    for (i = 0; i < cyclingCount; i++)
+                    {
+                        if (V[maxj] == cycling[i])
+                        {
+                            antiCycling = true;
+                        }
+                    }
+                    if (!antiCycling)
+                    {
+                        cycling[cyclingCount] = V[maxj];
+                        cyclingCount++;
+                    }
+                }
+                else
+                {
+                    antiCycling = false;
+                    cyclingCount = 0;
                 }
 
                 if (checkTermination)
@@ -6071,7 +6115,7 @@ namespace Rawr.Mage
                         goto TERMINATION;
                     }
                     updateCount++;
-                    if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                    if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                     {
                         // we lost feasibility, go to phase I
                         feasible = false;
@@ -6202,6 +6246,7 @@ namespace Rawr.Mage
             bool changeBasis;
             double direction;
             osbDirty = true;
+            bool stall;
             bool needsReducedGradientStep = false;
 
             //int verificationAttempts = 0;
@@ -6508,7 +6553,7 @@ namespace Rawr.Mage
 
                         updateCount++;
                         bool checkTermination;
-                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                        if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                         {
                             // we lost feasibility, go to phase I
                             feasible = false;
@@ -6526,7 +6571,7 @@ namespace Rawr.Mage
                                 goto TERMINATION;
                             }
                             updateCount++;
-                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination))
+                            if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall))
                             {
                                 // we lost feasibility, go to phase I
                                 feasible = false;
@@ -7483,10 +7528,11 @@ namespace Rawr.Mage
         private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis)
         {
             bool checkTermination;
-            return ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination);
+            bool stall;
+            return ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination, out stall);
         }
 
-        private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis, out bool checkTermination)
+        private bool ReducedGradientStep(int maxj, double direction, double eps, out int mini, out int bound, out bool changeBasis, out bool checkTermination, out bool stall)
         {
             ComputeBasisStep(maxj);
 
@@ -7495,10 +7541,16 @@ namespace Rawr.Mage
             bound = flagNMid;
             changeBasis = false;
             checkTermination = false;
+            stall = false;
 
             if (!SelectReducedGradientOutgoing(direction, eps, ref mini, ref minr, ref bound))
             {
                 return false;
+            }
+
+            if (minr < epsPrimal)
+            {
+                stall = true;
             }
 
             int col = V[maxj];

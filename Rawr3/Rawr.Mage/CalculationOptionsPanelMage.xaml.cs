@@ -282,5 +282,12 @@ namespace Rawr.Mage
             }
         }
         #endregion
+
+        private void CopyCharacterStats_Click(object sender, RoutedEventArgs e)
+        {
+            CalculationsMage calculations = (CalculationsMage)Calculations.Instance;
+            string stats = calculations.GetCharacterStatsString(character);
+            Clipboard.SetText(stats);
+        }
     }
 }

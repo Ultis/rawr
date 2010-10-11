@@ -2487,11 +2487,7 @@ namespace Rawr.Mage
             float spellCritPerInt = 0f;
             float spellCritBase = 0.9075f;
             float baseRegen = 0f;
-#if RAWR4
-            float baseCombatRegen = 63.821f;
-#else
             float baseCombatRegen = 0f;
-#endif
             switch (playerLevel)
             {
                 case 70:
@@ -2535,30 +2531,38 @@ namespace Rawr.Mage
                     baseRegen = 0.003522f;
                     break;
                 case 80:
-                    spellCritPerInt = 0.006f;
                     baseRegen = 0.003345f;
+#if RAWR4
+                    baseCombatRegen = 32.681f;
+                    spellCritPerInt = 0.00601838000875432f;
+#else
+                    spellCritPerInt = 0.006f;
+#endif
                     break;
                 case 81:
-                    spellCritPerInt = 0.0042f;
+                    spellCritPerInt = 0.00458338981843553f;
                     baseRegen = 0.003345f;
+                    baseCombatRegen = 32.681f; // FIX
                     break;
                 case 82:
-                    //spellCritPerInt = 0.003f;
-                    //spellCritPerInt = 0.0029676f;  // 5/27/10
-                    spellCritPerInt = 0.00349f; // 9/12/10
+                    spellCritPerInt = 0.00349034016835503f;
                     baseRegen = 0.003345f;
+                    baseCombatRegen = 63.821f;
                     break;
                 case 83:
-                    spellCritPerInt = 0.003f;
+                    spellCritPerInt = 0.00265689996012952f;
                     baseRegen = 0.003345f;
+                    baseCombatRegen = 63.821f; // FIX
                     break;
                 case 84:
-                    spellCritPerInt = 0.003f;
+                    spellCritPerInt = 0.0020234600015101f;
                     baseRegen = 0.003345f;
+                    baseCombatRegen = 63.821f; // FIX
                     break;
                 case 85:
-                    spellCritPerInt = 0.003f;
+                    spellCritPerInt = 0.00154105000547133f;
                     baseRegen = 0.003345f;
+                    baseCombatRegen = 63.821f; // FIX
                     break;
             }
 
@@ -2654,7 +2658,7 @@ namespace Rawr.Mage
             IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * 0.08f * MageTalents.Ignite;
 
 #if RAWR4
-            float mult = (2.0f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
+            float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
 #else
             float mult = (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
@@ -2924,8 +2928,11 @@ namespace Rawr.Mage
                 {
                     for (int ss = 0; ss < manaSegments * SegmentList.Count - 1; ss++)
                     {
-                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, ManaRegenLPScaling);
                         lp.SetRowScaleUnsafe(rowSegmentManaUnderflow + ss, ManaRegenLPScaling);
+                    }
+                    for (int ss = 0; ss < manaSegments * SegmentList.Count; ss++)
+                    {
+                        lp.SetRowScaleUnsafe(rowSegmentManaOverflow + ss, ManaRegenLPScaling);
                     }
                 }
                 if (restrictThreat)
@@ -3104,11 +3111,7 @@ namespace Rawr.Mage
                         if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                         if (restrictManaUse)
                         {
-                            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                            {
-                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                            }
+                            SetManaConstraint(mps, segment, manaSegment, column);
                         }
                         if (restrictThreat)
                         {
@@ -3124,6 +3127,22 @@ namespace Rawr.Mage
             {
                 ConjureManaGem = null;
                 MaxConjureManaGem = 0;
+            }
+        }
+
+        private void SetManaConstraint(double mps, int segment, int manaSegment, int column)
+        {
+            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
+            {
+                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
+            }
+            if (mps < 0)
+            {
+                lp.SetElementUnsafe(rowSegmentManaOverflow + segment * manaSegments + manaSegment, column, -mps);
+            }
+            for (int ss = segment * manaSegments + manaSegment + 1; ss < SegmentList.Count * manaSegments; ss++)
+            {
+                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
             }
         }
 
@@ -3160,13 +3179,18 @@ namespace Rawr.Mage
         {
             if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaOverflow, Segment = segment, ManaSegment = manaSegment });
             int column = lp.AddColumnUnsafe();
+            lp.SetColumnScaleUnsafe(column, 100);
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, 1.0);
             lp.SetElementUnsafe(rowManaRegen, column, 1.0);
             for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
             {
                 lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, 1.0);
+            }
+            for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments; ss++)
+            {
                 lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
             }
+            SetManaConstraint(1.0, segment, manaSegment, column);
         }
 
         private void ConstructAfterFightRegen(bool afterFightRegen)
@@ -3234,11 +3258,7 @@ namespace Rawr.Mage
                 if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + 0, column, 1.0);
                 if (restrictManaUse)
                 {
-                    for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
-                    {
-                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                    }
+                    SetManaConstraint(mps, 0, 0, column);
                 }
             }
         }
@@ -3315,11 +3335,7 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
             if (segmentCooldowns)
             {
@@ -3409,11 +3425,7 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
             {
-                for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
             if (segmentCooldowns)
             {
@@ -3515,11 +3527,7 @@ namespace Rawr.Mage
             }
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
             if (restrictThreat)
             {
@@ -3594,11 +3602,7 @@ namespace Rawr.Mage
             }*/
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
             if (restrictThreat)
             {
@@ -3909,25 +3913,7 @@ namespace Rawr.Mage
             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
             {
-                if (segmentMana)
-                {
-                    for (int ss = segment * manaSegments + manaSegment - 1; ss < SegmentList.Count * manaSegments - 1; ss++)
-                    {
-                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                    }
-                    for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                    {
-                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    }
-                }
-                else
-                {
-                    for (int ss = segment; ss < SegmentList.Count - 1; ss++)
-                    {
-                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                    }
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
                 if (segmentCooldowns)
                 {
                     foreach (SegmentConstraint constraint in rowSegmentEvocation)
@@ -4022,11 +4008,7 @@ namespace Rawr.Mage
             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
             if (restrictThreat)
             {
@@ -4085,11 +4067,7 @@ namespace Rawr.Mage
             if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < idleRegenSegments * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, mps);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -mps);
-                }
+                SetManaConstraint(mps, segment, manaSegment, column);
             }
         }
 
@@ -4608,6 +4586,9 @@ namespace Rawr.Mage
                 for (int ss = 0; ss < SegmentList.Count * manaSegments - 1; ss++)
                 {
                     lp.SetRHSUnsafe(rowSegmentManaUnderflow + ss, StartingMana);
+                }
+                for (int ss = 0; ss < SegmentList.Count * manaSegments; ss++)
+                {
                     lp.SetRHSUnsafe(rowSegmentManaOverflow + ss, BaseStats.Mana - StartingMana);
                 }
             }
@@ -4872,7 +4853,7 @@ namespace Rawr.Mage
                 {
                     int segments = segmentCooldowns ? SegmentList.Count : 1;
                     rowSegmentManaOverflow = rowCount;
-                    rowCount += segments * manaSegments - 1;
+                    rowCount += segments * manaSegments;
                     rowSegmentManaUnderflow = rowCount;
                     rowCount += segments * manaSegments - 1;
                 }
@@ -5249,11 +5230,7 @@ namespace Rawr.Mage
             }
             if (restrictManaUse)
             {
-                for (int ss = segment * manaSegments + manaSegment; ss < SegmentList.Count * manaSegments - 1; ss++)
-                {
-                    lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
-                    lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
-                }
+                SetManaConstraint(manaRegen, segment, manaSegment, column);
             }
             lp.SetColumnUpperBound(column, bound);
         }
@@ -5813,6 +5790,7 @@ namespace Rawr.Mage
         {
             DisplayCalculations displayCalculations = new DisplayCalculations();
 
+            displayCalculations.Specialization = Specialization;
             displayCalculations.BaseStats = BaseStats;
             displayCalculations.BaseState = BaseState;
             displayCalculations.Character = Character;

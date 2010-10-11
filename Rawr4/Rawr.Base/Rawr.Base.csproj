@@ -296,6 +296,7 @@
       <DependentUpon>StatGraphWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reforging.cs" />
     <Compile Include="StatConversion.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -280,27 +280,32 @@ namespace Rawr.Mage.Graphs
                     VariableType type = sequence[i].VariableType;
                     float duration = (float)sequence[i].Duration;
                     Cycle cycle = sequence[i].Cycle;
-                    if (cycle != null && cycle.DamagePerSecond > maxDps) maxDps = cycle.DamagePerSecond;
+                    if (cycle != null)
+                    {
+                        float dps = cycle.GetDamagePerSecond(calculations.ManaAdeptBonus);
+                        if (dps > maxDps) maxDps = dps;
+                    }
                     CastingState state = sequence[i].CastingState;
                     float mps = (float)sequence[i].Mps;
                     if (sequence[i].IsManaPotionOrGem)
                     {
+                        float value = duration;
                         duration = 0;
                         if (sequence[i].VariableType == VariableType.ManaGem)
                         {
-                            mana += (float)((1 + calculations.BaseStats.BonusManaGem) * calculations.ManaGemValue);
+                            mana += (float)((1 + calculations.BaseStats.BonusManaGem) * calculations.ManaGemValue * value);
                             gemCount++;
                         }
                         else if (sequence[i].VariableType == VariableType.ManaPotion)
                         {
-                            mana += (float)((1 + calculations.BaseStats.BonusManaPotion) * calculations.ManaPotionValue);
+                            mana += (float)((1 + calculations.BaseStats.BonusManaPotion) * calculations.ManaPotionValue * value);
                         }
                         if (mana < 0) mana = 0;
                         if (mana > maxMana)
                         {
                             mana = maxMana;
                         }
-                        manaList.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time), Value = mana });
+                        manaList.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time) + TimeSpan.FromTicks(1), Value = mana });
                     }
                     else
                     {
@@ -464,8 +469,23 @@ namespace Rawr.Mage.Graphs
                     }
                     if (duration > 0)
                     {
-                        list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.1f * duration), Value = dps });
-                        list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.9f * duration), Value = dps });
+                        if (calculations.ManaAdeptBonus > 0)
+                        {
+                            for (int t = 1; t < 10; t++)
+                            {
+                                DateTime timet = baseTime + TimeSpan.FromSeconds(time + 0.1f * t * duration);
+                                if (cycle != null)
+                                {
+                                    dps = cycle.GetDamagePerSecond((float)(calculations.ManaAdeptBonus * GetManaAtTime(manaList, timet) / maxMana));
+                                }
+                                list.Add(new TimeData() { Time = timet, Value = dps });
+                            }
+                        }
+                        else
+                        {
+                            list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.1f * duration), Value = dps });
+                            list.Add(new TimeData() { Time = baseTime + TimeSpan.FromSeconds(time + 0.9f * duration), Value = dps });
+                        }
                     }
                     time += duration;
                 }
@@ -506,6 +526,23 @@ namespace Rawr.Mage.Graphs
                     host.BackgroundElements.Add(zeroLineCanvas);
                 }
             }
+        }
+
+        private double GetManaAtTime(List<TimeData> manaList, DateTime time)
+        {
+            int i = 0;
+            for (; i < manaList.Count; i++)
+            {
+                if (manaList[i].Time > time)
+                {
+                    break;
+                }
+            }
+            if (i >= manaList.Count)
+            {
+                return manaList[manaList.Count - 1].Value;
+            }
+            return manaList[i - 1].Value + (manaList[i].Value - manaList[i - 1].Value) * (time - manaList[i - 1].Time).TotalSeconds / (manaList[i].Time - manaList[i - 1].Time).TotalSeconds;
         }
     }
 }

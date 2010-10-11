@@ -807,7 +807,11 @@ namespace Rawr //O O . .
                 _relevantItems.Clear();
                 _relevantItemInstances.Clear();
             }
-            if (!IsLoading)
+            // looking at TFS this was introduced in check in 34542
+            // but it doesn't seem like it serves any purpose
+            // purpose of this function is to clear relevant item instances so I don't know why
+            // cloning equipped items has anything to do with it, specially on each invalidate
+            /*if (!IsLoading)
             {
                 for (int i = 0; i < _item.Length; i++)
                 {
@@ -816,14 +820,14 @@ namespace Rawr //O O . .
                         _item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
                     }
                 }
-            }
+            }*/
         }
 
         public void InvalidateItemInstances(CharacterSlot slot)
         {
             _relevantItemInstances.Remove(slot);
-            int i = (int)slot;
-            _item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
+            //int i = (int)slot;
+            //_item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
         }
 
         [XmlIgnore]
@@ -971,24 +975,39 @@ namespace Rawr //O O . .
                     if (item.FitsInSlot(slot, this) && item.FitsFaction(Race))
                     {
                         itemChecked[item.Id] = true;
-                        List<ItemInstance> itemInstances = new List<ItemInstance>();
-                        foreach (GemmingTemplate template in CurrentGemmingTemplates)
+#if RAWR4
+                        foreach (Reforging reforging in Reforging.GetReforgingOptions(item, CurrentCalculations.GetStatsToReforgeFrom(), CurrentCalculations.GetStatsToReforgeTo()))
                         {
-                            if (template.Enabled)
+#endif
+                            List<ItemInstance> itemInstances = new List<ItemInstance>();
+                            foreach (GemmingTemplate template in CurrentGemmingTemplates)
                             {
-                                ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-                                if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                if (template.Enabled)
+                                {
+#if RAWR4
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
+#else
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+#endif
+                                    if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                }
                             }
-                        }
-                        foreach (GemmingTemplate template in CustomGemmingTemplates)
-                        {
-                            if (template.Enabled && template.Model == CurrentModel)
+                            foreach (GemmingTemplate template in CustomGemmingTemplates)
                             {
-                                ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-                                if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                if (template.Enabled && template.Model == CurrentModel)
+                                {
+#if RAWR4
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
+#else
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+#endif
+                                    if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                }
                             }
+                            items.AddRange(itemInstances);
+#if RAWR4
                         }
-                        items.AddRange(itemInstances);
+#endif
                     }
                 }
                 // add custom instances
@@ -1042,22 +1061,37 @@ namespace Rawr //O O . .
                                     enchant = Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, this);
                                 }
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
-                                foreach (GemmingTemplate template in CurrentGemmingTemplates)
+#if RAWR4
+                                foreach (Reforging reforging in Reforging.GetReforgingOptions(item, CurrentCalculations.GetStatsToReforgeFrom(), CurrentCalculations.GetStatsToReforgeTo()))
                                 {
-                                    if (template.Enabled)
+#endif
+                                    foreach (GemmingTemplate template in CurrentGemmingTemplates)
                                     {
-                                        ItemInstance instance = template.GetItemInstance(item, enchant, blacksmithingSocket);
-                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                        if (template.Enabled)
+                                        {
+#if RAWR4
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
+#else
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+#endif
+                                            if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                        }
                                     }
-                                }
-                                foreach (GemmingTemplate template in CustomGemmingTemplates)
-                                {
-                                    if (template.Enabled && template.Model == CurrentModel)
+                                    foreach (GemmingTemplate template in CustomGemmingTemplates)
                                     {
-                                        ItemInstance instance = template.GetItemInstance(item, enchant, blacksmithingSocket);
-                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                        if (template.Enabled && template.Model == CurrentModel)
+                                        {
+#if RAWR4
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
+#else
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+#endif
+                                            if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                        }
                                     }
+#if RAWR4
                                 }
+#endif
                                 if (check)
                                 {
                                     foreach (ItemInstance instance in itemInstances)
@@ -1084,9 +1118,13 @@ namespace Rawr //O O . .
                         if (item.FitsInSlot(slot, this))
                         {
                             Enchant enchant = GetEnchantBySlot(slot) ?? new Enchant();
+#if RAWR4
+                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]), ids.Length > 5 ? int.Parse(ids[5]) : 0, ids.Length > 6 ? int.Parse(ids[6]) : 0);
+#else
                             ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]));
+#endif
                             instance.ForceDisplay = true;
-                            // we want to force display even if it's already present (might be lower then top N)
+                            // we want to force display even if it's already present (might be lower than top N)
                             int index = items.IndexOf(instance);
                             if (index < 0)
                             {

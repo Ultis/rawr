@@ -573,7 +573,8 @@
                     <TextBlock Grid.Row="4" Text="Editors:" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" TextWrapping="Wrap"/>
                     <Button Grid.Row="5" Content="Cooldown Editor" Margin="2,2,2,2" Click="CooldownEditor_Click" IsEnabled="False" />
                     <TextBlock Grid.Row="8" Text="Performance:" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" TextWrapping="Wrap"/>
-                    <Button Grid.Row="10" Content="Calculation Timing" Margin="2,2,2,2" Click="CalculationTiming_Click" />
+                    <Button Grid.Row="9" Content="Calculation Timing" Margin="2,2,2,2" Click="CalculationTiming_Click" />
+                    <Button Grid.Row="10" Content="Copy Character Stats" Margin="2,2,2,2" Click="CopyCharacterStats_Click" />
                 </Grid>
             </controls:TabItem>
             <controls:TabItem Header="Solver Log">

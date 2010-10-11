@@ -1144,6 +1144,50 @@ namespace Rawr
                 _enchantId = value; OnIdsChanged();
             }
 		}
+#if RAWR4
+        [DefaultValueAttribute(0)]
+        public int ReforgeFromId
+        {
+            get 
+            {
+                if (Reforging != null)
+                {
+                    return (int)Reforging.ReforgeFrom;
+                }
+                return 0; 
+            }
+            set
+            {
+                if (Reforging == null)
+                {
+                    Reforging = new Reforging();
+                }
+                Reforging.ReforgeFrom = (AdditiveStat)value;
+                OnIdsChanged();
+            }
+        }
+        [DefaultValueAttribute(0)]
+        public int ReforgeToId
+        {
+            get
+            {
+                if (Reforging != null)
+                {
+                    return (int)Reforging.ReforgeTo;
+                }
+                return 0;
+            }
+            set
+            {
+                if (Reforging == null)
+                {
+                    Reforging = new Reforging();
+                }
+                Reforging.ReforgeTo = (AdditiveStat)value;
+                OnIdsChanged();
+            }
+        }
+#endif
 
         private void UpdateJewelerCount()
         {
@@ -1166,6 +1210,12 @@ namespace Rawr
             _gemmedId = string.Empty;
             InvalidateCachedData();
             UpdateJewelerCount();
+#if RAWR4
+            if (Reforging != null)
+            {
+                Reforging.ApplyReforging(Item);
+            }
+#endif
             if (IdsChanged != null) IdsChanged(this, null);
         }
 
@@ -1288,6 +1338,22 @@ namespace Rawr
             }
 		}
 
+        [XmlIgnore]
+        private Reforging _reforging;
+        [XmlIgnore]
+        public Reforging Reforging
+        {
+            get
+            {
+                return _reforging;
+            }
+            set
+            {
+                _reforging = value;
+                OnIdsChanged();
+            }
+        }
+
 		// 1-based index
 		public Item GetGem(int index)
 		{
@@ -1329,7 +1395,11 @@ namespace Rawr
 			{
 				if (_gemmedId.Length == 0) // _gemmedId is never null
 				{
+#if RAWR4
+                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeFromId, ReforgeToId);
+#else
 					_gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId);
+#endif
 				}
 				return _gemmedId;
 			}
@@ -1343,6 +1413,10 @@ namespace Rawr
                 _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
                 _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
                 _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+#if RAWR4
+                ReforgeFromId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+                ReforgeToId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
+#endif
                 OnIdsChanged();
             }
 		}
@@ -1357,7 +1431,15 @@ namespace Rawr
 			_gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
 			_enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
             UpdateJewelerCount();
-		}
+#if RAWR4
+            ReforgeFromId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+            ReforgeToId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
+            if (Reforging != null)
+            {
+                Reforging.ApplyReforging(Item);
+            }
+#endif
+        }
 		public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId)
 		{
 			_id = id;
@@ -1382,6 +1464,34 @@ namespace Rawr
             _enchantId = enchant != null ? enchant.Id : 0;
             OnIdsChanged();
         }
+#if RAWR4
+        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeFromId, int reforgeToId)
+        {
+            _id = id;
+            _gem1Id = gem1Id;
+            _gem2Id = gem2Id;
+            _gem3Id = gem3Id;
+            _enchantId = enchantId;
+            UpdateJewelerCount();
+            _reforging = new Reforging(Item, (AdditiveStat)reforgeFromId, (AdditiveStat)reforgeToId);
+        }
+        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging)
+        {
+            // this code path is used a lot, optimize for performance
+            _itemCached = item;
+            _gem1Cached = gem1;
+            _gem2Cached = gem2;
+            _gem3Cached = gem3;
+            _enchantCached = enchant;
+            _id = item != null ? item.Id : 0;
+            _gem1Id = gem1 != null ? gem1.Id : 0;
+            _gem2Id = gem2 != null ? gem2.Id : 0;
+            _gem3Id = gem3 != null ? gem3.Id : 0;
+            _enchantId = enchant != null ? enchant.Id : 0;
+            _reforging = reforging;
+            OnIdsChanged();
+        }
+#endif
 
 		public ItemInstance Clone()
 		{
@@ -1392,6 +1502,9 @@ namespace Rawr
 				Gem2 = this.Gem2,
 				Gem3 = this.Gem3,
 				Enchant = this.Enchant
+#if RAWR4
+                ,Reforging = this.Reforging == null ? null : this.Reforging.Clone()
+#endif
 			};
 		}
 
@@ -1492,6 +1605,13 @@ namespace Rawr
             if (volatileItem && unsafeStatsAccumulator != null)
             {
                 unsafeStatsAccumulator.AccumulateUnsafe(item.Stats, true);
+#if RAWR4
+                if (Reforging != null)
+                {
+                    unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeFrom] -= Reforging.ReforgeAmount;
+                    unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeTo] += Reforging.ReforgeAmount;
+                }
+#endif
                 if (gem1) unsafeStatsAccumulator.AccumulateUnsafe(g1.Stats, true);
                 if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(g2.Stats, true);
                 if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(g3.Stats, true);
@@ -1526,6 +1646,13 @@ namespace Rawr
                     totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
 #endif
                     totalItemStats.AccumulateUnsafe(item.Stats, true);
+#if RAWR4
+                    if (Reforging != null)
+                    {
+                        totalItemStats._rawAdditiveData[(int)Reforging.ReforgeFrom] -= Reforging.ReforgeAmount;
+                        totalItemStats._rawAdditiveData[(int)Reforging.ReforgeTo] += Reforging.ReforgeAmount;
+                    }
+#endif
                     if (gem1) totalItemStats.AccumulateUnsafe(g1.Stats, true);
                     if (gem2) totalItemStats.AccumulateUnsafe(g2.Stats, true);
                     if (gem3) totalItemStats.AccumulateUnsafe(g3.Stats, true);

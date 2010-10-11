@@ -219,8 +219,16 @@ namespace Rawr
             }
         }
 
+#if RAWR4
+        public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
+        {
+            return GetItemInstance(item, enchant, null, blacksmithingSocket);
+        }
+		public ItemInstance GetItemInstance(Item item, Enchant enchant, Reforging reforging, bool blacksmithingSocket)
+#else
 		public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
-		{
+#endif
+        {
 			if (item == null) return null;
 			Item gem1 = null;
             Item gem2 = null;
@@ -270,7 +278,11 @@ namespace Rawr
                     }
                     break;
             }
+#if RAWR4
+            return new ItemInstance(item, gem1, gem2, gem3, enchant, reforging);
+#else
 			return new ItemInstance(item, gem1, gem2, gem3, enchant);
+#endif
 		}
 
         private static Dictionary<string, List<GemmingTemplate>> _allTemplates = new Dictionary<string, List<GemmingTemplate>>();

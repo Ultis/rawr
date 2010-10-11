@@ -203,6 +203,21 @@ namespace Rawr.Mage
             }
         }
 
+#if RAWR4
+        private AdditiveStat[] _reforgeFrom = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.Spirit, AdditiveStat.HitRating, AdditiveStat.MasteryRating };
+        private AdditiveStat[] _reforgeTo = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.HitRating, AdditiveStat.MasteryRating };
+
+        public override AdditiveStat[] GetStatsToReforgeFrom()
+        {
+            return _reforgeFrom;
+        }
+
+        public override AdditiveStat[] GetStatsToReforgeTo()
+        {
+            return _reforgeTo;
+        }
+#endif
+
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {

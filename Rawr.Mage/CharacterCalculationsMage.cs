@@ -82,6 +82,8 @@ namespace Rawr.Mage
 
     public sealed class DisplayCalculations
     {
+        public Specialization Specialization { get; set; }
+
         //public CalculationsMage Calculations { get; set; }
         public Stats BaseStats { get; set; }
         public CastingState BaseState { get; set; }
@@ -188,7 +190,7 @@ namespace Rawr.Mage
 
 
             // mana gem/pot/evo positioning
-            if (CalculationOptions.CooldownRestrictionList == null && !CalculationOptions.EncounterEnabled)
+            if (Specialization != Specialization.Arcane && CalculationOptions.CooldownRestrictionList == null && !CalculationOptions.EncounterEnabled)
             {
                 sequence.RepositionManaConsumption();
             }
@@ -490,6 +492,7 @@ namespace Rawr.Mage
             double cmg = 0;
             double ward = 0;
             bool segmentedOutput = CharacterCalculationsMage.DebugCooldownSegmentation;
+            segmentedOutput = true;
             DamageSources = new Dictionary<string, SpellContribution>();
             ManaSources = new Dictionary<string, float>();
             ManaUsage = new Dictionary<string, float>();

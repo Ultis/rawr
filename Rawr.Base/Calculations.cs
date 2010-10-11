@@ -726,6 +726,46 @@ namespace Rawr
         /// <returns>The model's CalculationOptions data object.</returns>
         public abstract ICalculationOptionBase DeserializeDataObject(string xml);
 
+#if RAWR4
+        private AdditiveStat[] _reforgeStats;
+
+        private AdditiveStat[] GetReforgeStats()
+        {
+            if (_reforgeStats == null)
+            {
+                AdditiveStat[] allReforgeStats = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.Spirit, AdditiveStat.DodgeRating, AdditiveStat.ParryRating, AdditiveStat.HitRating, AdditiveStat.ExpertiseRating, AdditiveStat.MasteryRating };
+                Stats allStats = new Stats();
+                foreach (var stat in allReforgeStats)
+                {
+                    allStats._rawAdditiveData[(int)stat] = 1f;
+                }
+
+                Stats relevantStats = GetRelevantStats(allStats);
+                List<AdditiveStat> reforgeStats = new List<AdditiveStat>();
+                foreach (var stat in allReforgeStats)
+                {
+                    if (relevantStats._rawAdditiveData[(int)stat] > 0)
+                    {
+                        reforgeStats.Add(stat);
+                    }
+                }
+
+                _reforgeStats = reforgeStats.ToArray();
+            }
+            return _reforgeStats;
+        }
+
+        public virtual AdditiveStat[] GetStatsToReforgeFrom()
+        {
+            return GetReforgeStats();
+        }
+
+        public virtual AdditiveStat[] GetStatsToReforgeTo()
+        {
+            return GetReforgeStats();
+        }
+#endif
+
         public virtual void ClearCache()
         {
             _cachedCharacterStatsWithSlotEmpty = null;

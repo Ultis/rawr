@@ -136,6 +136,7 @@ namespace Rawr.UI
                 GemNamesLabel3.Visibility = Visibility.Collapsed;
                 SocketBonusLabel.Visibility = Visibility.Collapsed;
                 EnchantLabel.Visibility = Visibility.Collapsed;
+                ReforgingLabel.Visibility = Visibility.Collapsed;
 
                 LocationLabel.Visibility = Visibility.Visible;
                 LocationLabel.Text = Desc;
@@ -424,6 +425,20 @@ namespace Rawr.UI
                     SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Gray);
                 else SocketBonusLabel.Foreground = new SolidColorBrush(Colors.Black);
             }
+            #endregion
+
+            #region Reforging
+#if RAWR4
+            if (ItemInstance != null && ItemInstance.Reforging != null && ItemInstance.Reforging.ReforgeAmount > 0)
+            {
+                ReforgingLabel.Text = string.Format("Reforge {0} {1} → {2}", ItemInstance.Reforging.ReforgeAmount, Extensions.SpaceCamel(ItemInstance.Reforging.ReforgeFrom.ToString()), Extensions.SpaceCamel(ItemInstance.Reforging.ReforgeTo.ToString()));
+                ReforgingLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ReforgingLabel.Visibility = Visibility.Collapsed;
+            }
+#endif
             #endregion
 
             #region Location Section

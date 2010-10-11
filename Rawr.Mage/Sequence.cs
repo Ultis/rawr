@@ -1497,6 +1497,25 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public bool SortGroups(Solver solver)
         {
+            if (SequenceItem.Calculations.Specialization == Specialization.Arcane)
+            {
+                // it's using fixed ordering anyway so it's more meaningful to show that than to
+                // try to pack cooldowns
+                sequence.Sort((x, y) =>
+                {
+                    int compare = x.Segment.CompareTo(y.Segment);
+                    if (compare != 0) return compare;
+                    compare = x.ManaSegment.CompareTo(y.ManaSegment);
+                    if (compare != 0) return compare;
+                    compare = -x.IsEvocation.CompareTo(y.IsEvocation);
+                    if (compare != 0) return compare;
+                    compare = -x.IsManaPotionOrGem.CompareTo(y.IsManaPotionOrGem);
+                    if (compare != 0) return compare;
+                    compare = x.Mps.CompareTo(y.Mps);
+                    return compare;
+                });
+                return true;
+            }
             const double eps = 0.000001;
             List<SequenceItem> groupedItems = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)

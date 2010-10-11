@@ -248,6 +248,11 @@ namespace Rawr.UI
             BuildControls();
             if (character != null)
             {
+                // reload character buffs
+                for (int i = 0; i < character.ActiveBuffs.Count; i++)
+                {
+                    character.ActiveBuffs[i] = Buff.GetBuffByName(character.ActiveBuffs[i].Name);
+                }
                 LoadBuffsFromCharacter();
             }
             UpdateEnabledStates();

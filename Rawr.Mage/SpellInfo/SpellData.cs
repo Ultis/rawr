@@ -147,7 +147,7 @@ namespace Rawr.Mage
             RealResistance = calculationOptions.FrostResist;
             PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, RealResistance, 0));
 #if RAWR4
-            multiplier *= PartialResistFactor * (1 + 1.0f * spellCrit);
+            multiplier *= PartialResistFactor * (1 + (1.5f * 1.33f - 1) * spellCrit);
 #else
             multiplier *= PartialResistFactor * (1 + 0.5f * spellCrit);
 #endif
@@ -195,7 +195,7 @@ namespace Rawr.Mage
             blastMultiplier = blastHitRate * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusFireDamageMultiplier) * ((calculationOptions.FireResist == -1) ? 0 : (1 - StatConversion.GetAverageResistance(playerLevel, targetLevel, calculationOptions.FireResist, 0)));
             castTime = (2 * 3.0f + 1.5f) / haste;
 #if RAWR4
-            multiplier = (solver.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 1.0f * spellCrit);
+            multiplier = (solver.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + (1.5f * 1.33f - 1) * spellCrit);
 #else
             multiplier = (solver.MageTalents.GlyphOfMirrorImage ? 4 : 3) * (1 + 0.5f * spellCrit);
 #endif
@@ -238,7 +238,7 @@ namespace Rawr.Mage
             Range = 30;
             this.speed = speed;
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
             BaseSpellModifier = (1 + solver.BaseStats.BonusDamageMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
@@ -1329,7 +1329,7 @@ namespace Rawr.Mage
             Name = "Arcane Barrage";
 #if RAWR4
             InitializeCastTime(false, true, 0, 5);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.19099998474121f, 0.200000002980232f, 0, 0.765f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.19099998474121f, 0.200000002980232f, 0, 0.764999985694885f, 0, 1, 1, 0);
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = 0f;
             if (solver.MageTalents.GlyphOfArcaneBarrage)
@@ -1493,7 +1493,7 @@ namespace Rawr.Mage
             Name = "Arcane Blast";
             InitializeCastTime(false, false, 2.5f, 0);
 #if RAWR4
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.08f, 2.03500008583069f, 0.150000005960464f, 0, 1.057f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.08f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
 #else
             InitializeDamage(solver, false, 30, MagicSchool.Arcane, GetMaxRankSpellData(solver.CalculationOptions));
 #endif
@@ -1724,7 +1724,7 @@ namespace Rawr.Mage
             }
             int missiles = 3 + solver.MageTalents.ImprovedArcaneMissiles;
             InitializeCastTime(true, false, castTime * missiles, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.363999992609024f, 0, 0, 0.234f, 0, missiles, missiles + 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.363999992609024f, 0, 0, 0.233999997377396f, 0, missiles, missiles + 1, 0);
             BaseMinDamage *= missiles;
             BaseMaxDamage *= missiles;
             SpellDamageCoefficient *= missiles;
@@ -1983,7 +1983,7 @@ namespace Rawr.Mage
             Name = "Lightning Bolt";
             InitializeEffectDamage(solver, MagicSchool.Nature, 694, 806);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -1999,7 +1999,7 @@ namespace Rawr.Mage
             Name = "Lightning Bolt";
             InitializeEffectDamage(solver, MagicSchool.Nature, 1181, 1371);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2031,7 +2031,7 @@ namespace Rawr.Mage
             Name = "Pendulum of Telluric Currents";
             InitializeEffectDamage(solver, MagicSchool.Shadow, 1168, 1752);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2047,7 +2047,7 @@ namespace Rawr.Mage
             Name = "Lightweave Bolt";
             InitializeEffectDamage(solver, MagicSchool.Holy, 1000, 1200);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2062,7 +2062,7 @@ namespace Rawr.Mage
             Name = "Arcane Damage";
             InitializeEffectDamage(solver, MagicSchool.Arcane, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2079,7 +2079,7 @@ namespace Rawr.Mage
             Name = "Fire Damage";
             InitializeEffectDamage(solver, MagicSchool.Fire, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2096,7 +2096,7 @@ namespace Rawr.Mage
             Name = "Frost Damage";
             InitializeEffectDamage(solver, MagicSchool.Frost, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2113,7 +2113,7 @@ namespace Rawr.Mage
             Name = "Shadow Damage";
             InitializeEffectDamage(solver, MagicSchool.Shadow, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2130,7 +2130,7 @@ namespace Rawr.Mage
             Name = "Nature Damage";
             InitializeEffectDamage(solver, MagicSchool.Nature, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2147,7 +2147,7 @@ namespace Rawr.Mage
             Name = "Holy Damage";
             InitializeEffectDamage(solver, MagicSchool.Holy, 1, 1);
 #if RAWR4
-            CritBonus = (1 + (2.0f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
 #else
             CritBonus = (1 + (1.5f * (1 + solver.BaseStats.BonusSpellCritMultiplier) - 1));
 #endif
@@ -2170,7 +2170,7 @@ namespace Rawr.Mage
             RealResistance = solver.CalculationOptions.HolyResist;
             PartialResistFactor = (RealResistance == -1) ? 0 : (1 - StatConversion.GetAverageResistance(solver.CalculationOptions.PlayerLevel, solver.CalculationOptions.TargetLevel, RealResistance, 0));
 #if RAWR4
-            Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 1.0f * spellCrit);
+            Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + (1.5f * 1.33f - 1) * spellCrit);
 #else
             Multiplier = PartialResistFactor * (1 + solver.TargetDebuffs.BonusDamageMultiplier) * (1 + solver.TargetDebuffs.BonusHolyDamageMultiplier) * (1 + 0.5f * spellCrit);
 #endif
