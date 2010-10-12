@@ -13,7 +13,6 @@ namespace Rawr.RestoSham
     {
         #region Base mana at level 80 and 85
         const float BaseMana = 23430f;
-        
         #endregion
         #region Carry over calculations
         public float HealPerSec { get; set; }
@@ -22,7 +21,8 @@ namespace Rawr.RestoSham
         public float FightSeconds { get; set; }
         public float castingActivity { get; set; }
         #endregion
-        #region Setup Character Defaults (Buffs, Gem Templates)
+        #region Setup Character Defaults (Buffs, Gem Templates, Glyph listings, and relevent items)
+        #region Buff Setup
         /// <summary>
         /// Sets the defaults for a RestoShaman character
         /// </summary>
@@ -46,6 +46,8 @@ namespace Rawr.RestoSham
             character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
             character.ActiveBuffsAdd(("Spell Power Food"));
         }
+        #endregion
+        #region Gemming Templates (Needs Updated post 4.0.1)
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -149,7 +151,8 @@ namespace Rawr.RestoSham
 				};
             }
         }
-
+        #endregion
+        #region Glyph listing and choosing relevant item types
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {
@@ -178,6 +181,7 @@ namespace Rawr.RestoSham
         {
             get { return Relevants.RelevantItemTypes; }
         }
+        #endregion
         #endregion
         #region Labels and Charts Overrides
         public override Dictionary<string, Color> SubPointNameColors
@@ -249,7 +253,7 @@ namespace Rawr.RestoSham
             return new CharacterCalculationsRestoSham();
         }
         #endregion
-        #region Calculations Begin
+        #region Calculations Area (Spells, Armor, Ratings, and Burst/Sustained Points)
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             return GetCharacterCalculations(character, additionalItem, null);
@@ -262,9 +266,21 @@ namespace Rawr.RestoSham
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
             if (options == null)
                 return calcStats;
-            
+            #region Armor Specialization (Thanks to Astrylian), FightSeconds, and CastingActivity
             FightSeconds = options.FightLength * 60f;
             castingActivity = 1f;
+            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
+                                 character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
+                                 character.Chest != null && character.Chest.Type == ItemType.Mail &&
+                                 character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
+                                 character.Hands != null && character.Hands.Type == ItemType.Mail &&
+                                 character.Waist != null && character.Waist.Type == ItemType.Mail &&
+                                 character.Legs != null && character.Legs.Type == ItemType.Mail &&
+                                 character.Feet != null && character.Feet.Type == ItemType.Mail;
+            stats.BonusStaminaMultiplier += (MailSpecialization ? .05f : 0);
+            stats.BonusSpiritMultiplier += (MailSpecialization ? .05f : 0);
+            stats.BonusIntellectMultiplier += (MailSpecialization ? .05f : 0);
+            #endregion
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Intellect - 10f;
             stats.SpellPower += 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f);
@@ -956,7 +972,7 @@ namespace Rawr.RestoSham
             calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;
             calcStats.SubPoints[0] = calcStats.BurstHPS;
             calcStats.SubPoints[1] = calcStats.SustainedHPS;
-            calcStats.SubPoints[2] = calcStats.Survival;
+            calcStats.SubPoints[2] = calcStats.Survival; 
 
             return calcStats;
             #endregion
@@ -967,6 +983,7 @@ namespace Rawr.RestoSham
         {
             return GetCharacterStats(character, additionalItem, null);
         }
+
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
@@ -1043,6 +1060,7 @@ namespace Rawr.RestoSham
         /// <returns>
         /// True if any of the positive stats in the Stats are relevant.
         /// </returns>
+        
         public override bool HasRelevantStats(Stats stats)
         {
             // Accumulate the "base" stats with the special effect stats.
