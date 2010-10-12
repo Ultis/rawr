@@ -952,7 +952,7 @@ namespace Rawr.Mage
         private int[] segmentColumn;
         public List<SolutionVariable> SolutionVariable { get; set; }
 
-        private const double ManaRegenLPScaling = 0.01;
+        private const double ManaRegenLPScaling = 0.001;
         public float StartingMana { get; set; }
 
         public Cycle ConjureManaGem { get; set; }
@@ -1164,6 +1164,8 @@ namespace Rawr.Mage
 
             ConstructProblem();
 
+            //TestScaling();
+
             if (needsQuadratic)
             {
                 SolveQuadratic();
@@ -1182,6 +1184,45 @@ namespace Rawr.Mage
             ArraySet = null;
 
             return ret;
+        }
+
+        private void TestScaling()
+        {
+            // column scaling
+            for (int i = 0; i < lp.Columns; i++)
+            {
+                double maxMagnitude = 0;
+                for (int j = 0; j < lp.Rows; j++)
+                {
+                    double v = Math.Abs(ArraySet.SparseMatrixData[i * lp.Rows + j]);
+                    if (v > maxMagnitude)
+                    {
+                        maxMagnitude = v;
+                    }
+                }
+                if (maxMagnitude < 0.1 || maxMagnitude > 10)
+                {
+                    maxMagnitude = 1;
+                }
+            }
+
+            // row scaling
+            for (int j = 0; j < lp.Rows; j++)
+            {
+                double maxMagnitude = 0;
+                for (int i = 0; i < lp.Columns; i++)
+                {
+                    double v = Math.Abs(ArraySet.SparseMatrixData[i * lp.Rows + j]);
+                    if (v > maxMagnitude)
+                    {
+                        maxMagnitude = v;
+                    }
+                }
+                if (maxMagnitude < 0.1 || maxMagnitude > 10)
+                {
+                    maxMagnitude = 1;
+                }
+            }
         }
 
         #region Effect Maximization
@@ -1756,6 +1797,36 @@ namespace Rawr.Mage
 #else
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && BaseStats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.ManaGem);
 #endif
+
+            // if we're using incremental optimizations it's possible we know some effects won't be used
+            // in that case we can skip them and possible save some constraints
+            if (useIncrementalOptimizations)
+            {
+                int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
+                bool usesPotionOfSpeed = false;
+                bool usesPotionOfWildMagic = false;
+                for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
+                {
+                    // incremental index is filtered by non-item based cooldowns
+                    int incrementalSetIndex = sortedStates[incrementalSortedIndex];
+                    if ((incrementalSetIndex & (int)StandardEffect.PotionOfSpeed) != 0)
+                    {
+                        usesPotionOfSpeed = true;
+                    }
+                    if ((incrementalSetIndex & (int)StandardEffect.PotionOfSpeed) != 0)
+                    {
+                        usesPotionOfWildMagic = true;
+                    }
+                }
+                if (!usesPotionOfSpeed)
+                {
+                    potionOfSpeedAvailable = false;
+                }
+                if (!usesPotionOfWildMagic)
+                {
+                    potionOfWildMagicAvailable = false;
+                }
+            }
 
             if (!CalculationOptions.EffectDisableManaSources)
             {
@@ -2915,10 +2986,10 @@ namespace Rawr.Mage
 
                 #region Set LP Scaling
                 lp.SetRowScaleUnsafe(rowManaRegen, ManaRegenLPScaling);
-                lp.SetRowScaleUnsafe(rowManaGem, 40.0);
-                lp.SetRowScaleUnsafe(rowPotion, 40.0);
-                lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
-                lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
+                //lp.SetRowScaleUnsafe(rowManaGem, 40.0);
+                //lp.SetRowScaleUnsafe(rowPotion, 40.0);
+                //lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
+                //lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
@@ -3190,7 +3261,6 @@ namespace Rawr.Mage
             {
                 lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -1.0);
             }
-            SetManaConstraint(1.0, segment, manaSegment, column);
         }
 
         private void ConstructAfterFightRegen(bool afterFightRegen)
@@ -3506,7 +3576,7 @@ namespace Rawr.Mage
         {
             if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaGem, Segment = segment, ManaSegment = manaSegment, Dps = dps, Mps = mps, Tps = tps });
             int column = lp.AddColumnUnsafe();
-            lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
+            //lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
             lp.SetColumnUpperBound(column, upperBound);
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
             lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -3579,7 +3649,7 @@ namespace Rawr.Mage
         {
             if (needsSolutionVariables) SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ManaPotion, Segment = segment, ManaSegment = manaSegment, Dps = dps, Mps = mps, Tps = tps });
             int column = lp.AddColumnUnsafe();
-            lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
+            //lp.SetColumnScaleUnsafe(column, 1.0 / 40.0);
             lp.SetColumnUpperBound(column, 1.0);
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, mps);
             lp.SetElementUnsafe(rowManaRegen, column, mps);
@@ -4796,6 +4866,31 @@ namespace Rawr.Mage
                             }
                             if (valid)
                             {
+                                // if we're using incremental optimizations and both are non-item based then we can
+                                // remove the constraint if they won't be used together
+                                if (useIncrementalOptimizations && cooli.StandardEffect != StandardEffect.None && coolj.StandardEffect != StandardEffect.None)
+                                {
+                                    int mask = (cooli.Mask | coolj.Mask);
+                                    int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
+                                    bool usedTogether = false;
+                                    for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
+                                    {
+                                        // incremental index is filtered by non-item based cooldowns
+                                        int incrementalSetIndex = sortedStates[incrementalSortedIndex];
+                                        if ((incrementalSetIndex & mask) == mask)
+                                        {
+                                            usedTogether = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!usedTogether)
+                                    {
+                                        valid = false;
+                                    }
+                                }
+                            }
+                            if (valid)
+                            {
                                 double maxDuration = MaximizeStackingDuration(CalculationOptions.FightDuration, cooli.Duration, cooli.Cooldown, coolj.Duration, coolj.Cooldown);
                                 if (maxDuration < cooli.MaximumDuration && maxDuration < coolj.MaximumDuration)
                                 {
@@ -5725,6 +5820,26 @@ namespace Rawr.Mage
         #endregion
 
         #region Quadratic Solver
+        private int GetQuadraticIndex(SolutionVariable v)
+        {
+            if (v.IsZeroTime)
+            {
+                if (v.Mps >= 0)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            if (v.Mps >= 0)
+            {
+                return 3;
+            }
+            return 1;
+        }
+
         private void SolveQuadratic()
         {
             // for now requires solution variables to work
@@ -5737,47 +5852,14 @@ namespace Rawr.Mage
             {
                 SolutionVariable vx = SolutionVariable[x];
                 SolutionVariable vy = SolutionVariable[y];
-                if (vx.State != null && vx.State.Evocation && vy.Type == VariableType.ManaOverflow && vx.Segment == vy.Segment && vx.ManaSegment == vy.ManaSegment + 1)
-                {
-                    return -1;
-                }
-                if (vy.State != null && vy.State.Evocation && vx.Type == VariableType.ManaOverflow && vx.Segment == vy.Segment && vy.ManaSegment == vx.ManaSegment + 1)
-                {
-                    return 1;
-                }
                 int comp = vx.Segment.CompareTo(vy.Segment);
                 if (comp != 0) return comp;
                 comp = vx.ManaSegment.CompareTo(vy.ManaSegment);
                 if (comp != 0) return comp;
-                if (vx.Dps == 0.0)
-                {
-                    if (vy.Dps == 0.0)
-                    {
-                        return vx.Mps.CompareTo(vy.Mps);
-                    }
-                    else
-                    {
-                        if (vx.Mps <= 0)
-                        {
-                            return -1;
-                        }
-                        else
-                        {
-                            return 1;
-                        }
-                    }
-                }
-                else if (vy.Dps == 0.0)
-                {
-                    if (vy.Mps <= 0)
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
-                }
+                // first instant mana gain, then negative mps
+                // then mana overflow, then positive mps
+                comp = GetQuadraticIndex(vx).CompareTo(GetQuadraticIndex(vy));
+                if (comp != 0) return comp;
                 return vx.Mps.CompareTo(vy.Mps);
             });
 

@@ -168,6 +168,15 @@ namespace Rawr.Mage
             }
         }
 
+        public int Rows
+        {
+            get
+            {
+                return cRows;
+            }
+        }
+
+
         public int AddColumn()
         {
             arraySet.columnScale[cCols] = 1.0;
