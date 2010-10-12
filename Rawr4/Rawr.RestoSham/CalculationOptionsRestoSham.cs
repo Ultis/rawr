@@ -129,6 +129,12 @@ namespace Rawr.RestoSham
         /// </summary>
         private float _WSPops = 0f;
         public float WSPops { get { return _WSPops; } set { _WSPops = value; OnPropertyChanged("WSPops"); } }
+
+        /// <summary>
+        /// The number of times water shield pops per minute.
+        /// </summary>
+        private float _LBUse = 0f;
+        public float LBUse { get { return _LBUse; } set { _LBUse = value; OnPropertyChanged("LBUse"); } }
 		#endregion
 
         #region INotifyPropertyChanged Members

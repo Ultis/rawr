@@ -70,6 +70,8 @@ namespace Rawr.RestoSham
             new Stats() { Mp5 = 1 },
             new Stats() { CritRating = 1 },
             new Stats() { HasteRating = 1 },
+            new Stats() { Spirit = 1 },
+            new Stats() { MasteryRating = 1 },
             new Stats() { Intellect = 1 }
         };
         public static Color[] StatsGraphColors = new Color[] { 
@@ -157,7 +159,7 @@ namespace Rawr.RestoSham
                 originalOptions = new CalculationOptionsRestoSham();
 
             CalculationOptionsRestoSham opts = originalOptions;
-            string[] styles = new string[] { "CH Spam", "HW Spam", "LHW Spam", "RT+HW", "RT+CH", "RT+LHW" };
+            string[] styles = new string[] { "CH Spam", "HW Spam", "HSrg Spam", "RT+HW", "RT+CH", "RT+HSrg" };
             string[] descs = new string[] {
                         "All chain heal, all the time.  \nMana available for use per minute added to sustained.",
                         "All healing wave, all the time  \nMana available for use per minute added to sustained.",

@@ -11,17 +11,17 @@ namespace Rawr.RestoSham
     [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman)]
     public class CalculationsRestoSham : CalculationsBase
     {
-        //  Base mana at level 80
+        #region Base mana at level 80 and 85
         const float BaseMana = 4396f;
-
-        // Carry over calculations
+        #endregion
+        #region Carry over calculations
         public float HealPerSec { get; set; }
         public float HealHitPerSec { get; set; }
         public float CritPerSec { get; set; }
         public float FightSeconds { get; set; }
         public float castingActivity { get; set; }
-
-        #region Setup Character Defaults
+        #endregion
+        #region Setup Character Defaults (Buffs, Gem Templates)
         /// <summary>
         /// Sets the defaults for a RestoShaman character
         /// </summary>
@@ -153,7 +153,6 @@ namespace Rawr.RestoSham
             get { return Relevants.RelevantItemTypes; }
         }
         #endregion
-
         #region Labels and Charts Overrides
         public override Dictionary<string, Color> SubPointNameColors
         {
@@ -179,7 +178,7 @@ namespace Rawr.RestoSham
         }
 #endif
         #endregion
-
+        #region Set calculation options and item usable options
 #if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
@@ -200,7 +199,7 @@ namespace Rawr.RestoSham
             if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
-        
+        #endregion
         #region Model Verification and prepare Calculations
         //
         // This model is for shammies!
@@ -239,20 +238,15 @@ namespace Rawr.RestoSham
                 return calcStats;
 
             FightSeconds = options.FightLength * 60f;
-            castingActivity = options.ActivityPerc * .01f;
+            castingActivity = 1f;
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Intellect - 10f;
             stats.SpellPower += 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f);
-            stats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
-            //  FIXME: you can't really model Hero/BL as a flat haste increase since with decent amounts of haste from gear/buffs you'll begin hitting the GCD cap, which will skew a lot of computations
-            /*
-            if (options.Heroism.Equals("Me") || options.Heroism.Equals("Yes"))
-                stats.SpellHaste = (1 + stats.SpellHaste) * (1 + .3f / FightSeconds) - 1;
-            if (options.Heroism.Equals("Me"))
-                stats.Mp5 -= .19f * BaseMana * 5 / FightSeconds;
-             * */
+            stats.SpellHaste = (1 + (stats.HasteRating / 3279f)) * (1 + stats.SpellHaste) - 1;  // 80 Haste Setting  (PENGUIN)
+            /*stats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;*/ // 85 Haste Setting (PENGUIN)
             calcStats.SpellHaste = stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
+            float LBSpellPower = Healing -  (1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f));
             #endregion
             #region Overhealing/Latency/Interval/CH jumps values
             float GcdLatency = options.Latency / 1000;
@@ -264,7 +258,9 @@ namespace Rawr.RestoSham
             float RTOverheal = 0;
             float HWOverheal = 0;
             float HWSelfOverheal = 0;
-            float LHWOverheal = 0;
+            float GHWOverheal = 0;
+            float GHWSelfOverheal = 0;
+            float HSrgOverheal = 0;
             float AAOverheal = 0;
             float HSTOverheal = 0;
             float ESInterval = 0;
@@ -275,7 +271,7 @@ namespace Rawr.RestoSham
             float RTOverheal = 0.8f;
             float HWOverheal = 0.4f;
             float HWSelfOverheal = 0.9f;
-            float LHWOverheal = 0.75f;
+            float HSrgOverheal = 0.75f;
             float AAOverheal = 0.6f;
             float HSTOverheal = 0.9f;
             float ESInterval = 6;
@@ -283,17 +279,23 @@ namespace Rawr.RestoSham
             bool TankHeal = options.Targets == "Tank";
             bool RaidHeal = options.Targets == "Heavy Raid";
             bool SelfHeal = RaidHeal || options.Targets == "Self";
+            calcStats.DeepHeals = .2f + ((stats.MasteryRating / 6.34f) * .025f); // %Health_Deficit*Mastery% = Additional Healing
+            #region Theoretical deep healing based off oposite of over-heal.  Will require tweaking.  Much, Much tweaking.
+            float DeepHeal = calcStats.DeepHeals * (1 - (CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal) / 5);
+            #endregion
             float ELWOverwriteScale = RaidHeal ? 0.875f : TankHeal ? 0.5f : 0.6f;
             float CHRTConsumption = RaidHeal ? 0.07f : TankHeal ? 0.5f : 0.19f;
             float CHJumps = RaidHeal ? 4 : SelfHeal ? 1.73f : TankHeal ? 1.86f : 2.5f;
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
-            #region Intellect and MP5 Based Calcs
-            stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f;
-            float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + LHWOverheal + AAOverheal) / 6f) / 2f);
-            stats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
+            #region Intellect, Spell Crit, and MP5 Based Calcs
+            stats.Mp5 += (float)Math.Round((5f * (0.001f + (float)Math.Sqrt(stats.Intellect) * stats.Spirit * 0.005575f) * 0.60f) / 2); // Level 80 Mana Regen (PENGUIN)
+            /*stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f;*/ //Level 85 Regen to be enabled (PENGUIN)
+            float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
+            stats.SpellCrit = .022f + ((stats.Intellect / (166 + (2 / 3))) / 100) + (stats.CritRating / 4591f) + stats.SpellCrit + (.01f * (character.ShamanTalents.Acuity)); //Level 80 Crit (PENGUIN)
+            /*stats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect)
                 + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit +
-                (.01f * (character.ShamanTalents.Acuity));
+                (.01f * (character.ShamanTalents.Acuity));*/ //Level 85 Crit (PENGUIN)
             calcStats.SpellCrit = stats.SpellCrit;
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calcStats.SpellCrit;
@@ -309,12 +311,11 @@ namespace Rawr.RestoSham
             //  AA scale
             float AAScale = CriticalScale * character.ShamanTalents.AncestralAwakening * .1f * PurificationScale;
             //  TW chance
-            float TWChance = character.ShamanTalents.TidalWaves * 0.2f;
+            float TWChance = character.ShamanTalents.TidalWaves * 0.1f;
             #endregion
             #region Water Shield and Mana Calculations
-            //// Code Flag: Dodger = Re-cast not needed in 3.2
-            //float WSC = (float)Math.Max((1.5 * (1 - (calcStats.SpellHaste))), 1f) / 4;
             float Orb;
+            /*Create addition to orb if 85 (PENGUIN)*/
             if (options.WaterShield)
             {
                 stats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 150 : 100) + 100f * stats.WaterShieldIncrease;
@@ -355,11 +356,12 @@ namespace Rawr.RestoSham
             float RTPerSec = 0;
             float RTTicksPerSec = 0;
             float HWPerSec = 0;
-            float GHWPerSwc = 0;
+            float GHWPerSec = 0;
+            float GHWCPerSec = 0;
             float CHPerSec = 0;
             float CHHitsPerSec = 0;
-            float LHWPerSec = 0;
-            float LHWCPerSec = 0f;
+            float HSrgPerSec = 0;
+            float HSrgCPerSec = 0f;
             float CHCPerSec = 0f;
             float CHCHitsPerSec = 0;
             float HWCPerSec = 0f;
@@ -367,13 +369,17 @@ namespace Rawr.RestoSham
             float AAsPerSec = 0f;
             float ELWTicksPerSec = 0;
             #endregion
-            #region Base Speeds ( Hasted / RTCast / LHWCast / HWCast / CHCast )
+            #region Base Speeds ( Hasted / RTCast / HSrgCast / HWCast / CHCast )
             float HasteScale = 1f / (1f + calcStats.SpellHaste);
             float RTHaste = stats.RestoSham2T10 * 0.2f;
             float RTCast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency);
             float RTCD = 6 - stats.RTCDDecrease;
             float RTCDCast = RTCD + GcdLatency;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
+            float HRCast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency);
+            float HRCD = 6 - stats.RTCDDecrease;
+            float HRCDCast = HRCD + GcdLatency;
+            float HRDuration = 15;
             float ELWDuration = 12;
             float HWCastBase = 2.5f;
             float GHWCastBase = 2.5f;
@@ -383,15 +389,15 @@ namespace Rawr.RestoSham
             float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
             float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calcStats.SpellHaste + RTHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
-            float RealGHWCast = GHWCastBase * HasteScale;
+            calcStats.RealGHWCast = GHWCastBase * HasteScale;
             float GHWCast = (float)Math.Max(GHWCastBase * HasteScale + Latency, 1f + GcdLatency);
             float GHWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
             float GHWCastTW = (float)Math.Max(GHWCastBase * HasteScale * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
             float GHWCast_RT = (float)Math.Max(GHWCastBase / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float GHWCastTW_RT = (float)Math.Max(GHWCastBase / (1f + calcStats.SpellHaste + RTHaste) * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
-            calcStats.RealLHWCast = 1.5f * HasteScale;
-            float LHWCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
-            float LHWCast_RT = (float)Math.Max(1.5f / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
+            calcStats.RealHSrgCast = 1.5f * HasteScale;
+            float HSrgCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
+            float HSrgCast_RT = (float)Math.Max(1.5f / (1f + calcStats.SpellHaste + RTHaste), 1f) + GcdLatency;
             float CHCastBase = 2.5f - stats.CHCTDecrease;
             calcStats.RealCHCast = CHCastBase * HasteScale;
             float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
@@ -399,14 +405,16 @@ namespace Rawr.RestoSham
             // This totally heals the boss backwards! Yeah! :D
             // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
             calcStats.LBCast = (float)Math.Max(2.5f * HasteScale, 1f);
+            calcStats.LBRestore = (((((645 + 735) / 2) + LBSpellPower) * 1.08f) * (.2f * character.ShamanTalents.TelluricCurrents)) - (BaseMana * .06f); //Make an 85 Version (719+831) (PENGUIN)
             #endregion
-            #region Base Spells ( TankCH / RTHeal / LHWHeal / HWHeal / CHHeal )
+            #region Base Spells ( TankCH / RTHeal / HSrgHeal / GHWHeal / HWHeal / CHHeal )
+            #region Riptide area
             //  RT bonus healing = spell power
             float RTBonusHealing = stats.SpellPower;
             //  ... * generic healing scale * HoT scale
             RTBonusHealing *= 1.88f * (1f / 3.5f);
             //  RT healing scale = purification scale
-            float RTHealingScale = PurificationScale;
+            float RTHealingScale = PurificationScale + DeepHeal;
             //  ... + 20% 2pc T9 bonus
             RTHealingScale *= 1 + stats.RestoSham2T9 * .2f;
             //  ... set to zero if RT talent is not taken
@@ -419,19 +427,43 @@ namespace Rawr.RestoSham
             float RTHotTickHeal = RTHotHeal / 5;
             RTHotHeal = RTDuration / 3 * RTHotTickHeal;
             float RTHotHPS = RTHotTickHeal / 3;
-            //  LHW bonus healing = spell power + totem spell power bonus
-            float LHWBonusHealing = stats.SpellPower;
+            #endregion
+            #region Healing Rains
+            //  RT bonus healing = spell power
+            float HRBonusHealing = stats.SpellPower;
+            //  ... * generic healing scale * HoT scale
+            HRBonusHealing *= 1.88f * (1f / 3.5f);
+            //  RT healing scale = purification scale
+            float HRHealingScale = PurificationScale;
+            //  ... + 20% 2pc T9 bonus
+            HRHealingScale *= 1f;
+            //  ... set to zero if RT talent is not taken
+            float HRHeal = (1670 + HRBonusHealing) * HRHealingScale;
+            //  RT HoT bonus healing = spell power
+            float HRHotBonusHealing = stats.SpellPower;
+            //  ... * generic healing scale * HoT scale
+            HRHotBonusHealing *= 1.88f * 0.5f;
+            float HRHotHeal = (1670 + RTHotBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
+            float HRHotTickHeal = HRHotHeal / 5;
+            HRHotHeal = HRDuration / 3 * HRHotTickHeal;
+            float HRHotHPS = HRHotTickHeal / 3;
+            #endregion
+            #region Healing Surge Area
+            //  HSrg bonus healing = spell power + totem spell power bonus
+            float HSrgBonusHealing = stats.SpellPower;
             //  ... * generic healing scale + bonus from TW
-            LHWBonusHealing *= 1.88f * (1.5f / 3.5f) + character.ShamanTalents.TidalWaves * .02f;
-            //  LHW healing scale = purification scale
-            float LHWHealingScale = PurificationScale;
-            float LHWHeal = (1720 + LHWBonusHealing) * LHWHealingScale;
+            HSrgBonusHealing *= 1.88f * (1.5f / 3.5f);
+            //  HSrg healing scale = purification scale
+            float HSrgHealingScale = PurificationScale + DeepHeal;
+            float HSrgHeal = (1720 + HSrgBonusHealing) * HSrgHealingScale;
+            #endregion
+            #region Healing Wave Area
             //  HW bonus healing = spell power + totem spell power bonus
             float HWBonusHealing = stats.SpellPower;
             //  ... * generic healing scale + bonus from TW
             HWBonusHealing *= 1.88f * (3.0f / 3.5f) + character.ShamanTalents.TidalWaves * .04f;
             //  HW healing scale = purification scale
-            float HWHealingScale = PurificationScale;
+            float HWHealingScale = PurificationScale + DeepHeal;
             //  ... + 8%/16%/25% Healing Way bonus
             HWHealingScale *= 1f / 3f;
             //  ... + 5% 4pc T7 bonus
@@ -441,83 +473,102 @@ namespace Rawr.RestoSham
             float HWSelfHealingScale = SelfHeal && character.ShamanTalents.GlyphofHealingWave ? 0.2f : 0;
             //      * correction due to the fact it's just not smart to use GoHW for self-healing if you're _really_ hammered down
             HWSelfHealingScale *= 1f / HWHealingScale;
-            //  CH bonus healing = spell power + totem spell power bonus
+            #endregion
+            #region Greater Healing Wave Area
+            //  HW bonus healing = spell power
+            float GHWBonusHealing = stats.SpellPower;
+            //  ... * generic healing scale
+            GHWBonusHealing *= 1.88f * (3.0f / 3.5f);
+            //  HW healing scale = purification scale
+            float GHWHealingScale = PurificationScale + DeepHeal;
+            GHWHealingScale *= 1f / 3f;
+            //  ... + 5% 4pc T7 bonus
+            GHWHealingScale *= 1 + stats.CHHWHealIncrease;
+            float GHWHeal = (3250 + GHWBonusHealing) * GHWHealingScale;
+            //  HW self-healing scale = 20% if w/Glyph (no longer benefits from Purification since patch 3.2)
+            float GHWSelfHealingScale = SelfHeal && character.ShamanTalents.GlyphofHealingWave ? 0.2f : 0;
+            //      * correction due to the fact it's just not smart to use GoHW for self-healing if you're _really_ hammered down
+            GHWSelfHealingScale *= 1f / GHWHealingScale;
+            #endregion
+            #region Chain Heal Area
+            //  CH bonus healing = spell power
             float CHBonusHealing = stats.SpellPower;
             //  ... * generic healing scale
             CHBonusHealing *= 1.88f * (2.5f / 3.5f);
-            //  CH healing scale = purification scale
-            float CHHealingScale = PurificationScale;
-            //  ... + 5/10/15% Improved Chain Heal
+            float CHHealingScale = PurificationScale + DeepHeal;
             CHHealingScale *= 1f;
             //  ... + 5% 4pc T7 + HoT 4pc T10
             CHHealingScale *= 1f + stats.CHHWHealIncrease + .25f * CriticalChance * stats.RestoSham4T10;
-            //  NOTE: stats.CHHealIncrease isn't handled since WotLK items don't have it
-            float CHHeal = (1130 + CHBonusHealing) * CHHealingScale;
+            float CHHeal = (1130 + CHBonusHealing) * (CHHealingScale - (character.ShamanTalents.GlyphofChainHeal ? .1f : 0));
             float CHJumpHeal = 0;
             float scale = 1f;
             int jump;
             for (jump = 0; jump < CHJumps; jump++)
             {
                 CHJumpHeal += scale;
-                scale *= 0.3f;
+                scale *= 0.3f + (character.ShamanTalents.GlyphofChainHeal ? .15f : 0);
             }
             CHJumpHeal += scale * (CHJumps - jump);
             CHJumpHeal *= CHHeal;
+            #endregion
+            #region Healing Stream Totem Area
             //  HST bonus healing = spell power
             float HSTBonusHealing = stats.SpellPower;
             //      * generic healing scale * HoT scale
             HSTBonusHealing *= 1.88f * 0.044f;
             //  HST healing scale = purification scale
             float HSTHealingScale = PurificationScale;
-            //      + 15%/30%/45% Restorative Totems + 20% w/Glyph
+            //      + 25%/50% Healing Rains
             HSTHealingScale *= 1 + (.25f * character.ShamanTalents.SoothingRains);
             #endregion
-            #region Base Costs ( Preserve / RTCost / LHWCost / CHCost )
+            #endregion
+            #region Base Costs ( Preserve / RTCost / HSrgCost / CHCost )
             float Preserve = stats.ManacostReduceWithin15OnHealingCast * .02f;
             float RTCost = ((float)Math.Round(BaseMana * .18f) - Preserve) * CostScale;
-            float LHWCost = ((float)Math.Round(BaseMana * .27f) - Preserve) * CostScale;
+            float HRCost = ((float)Math.Round(BaseMana * .46f) - Preserve) * CostScale;
+            float HSrgCost = ((float)Math.Round(BaseMana * .27f) - Preserve) * CostScale;
             float HWCost = ((float)Math.Round(BaseMana * .09f) - Preserve) * CostScale;
             float GHWCost = ((float)Math.Round(BaseMana * .30f) - Preserve) * CostScale;
             float HRNCost = ((float)Math.Round(BaseMana * .46f) - Preserve) * CostScale;
             float DecurseCost = ((float)Math.Round(BaseMana * .14f) - Preserve) * CostScale;
             float CHCost = ((float)Math.Round(BaseMana * .17f) - Preserve) * CostScale;
             #endregion
-            #region RT + LHW Rotation (RTLHWMPS / RTLHWHPS / RTLHWTime)  (Adjusted based on Casting Activity)
+            #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
             {
-                float RTLHWTime = RTCast;
-                float RTLHWRemainingTime = RTCDCast - RTLHWTime;
-                int RTLHWLHWCasts = 0;
-                if (RTLHWRemainingTime > GcdLatency)
+                float RTHSrgTime = RTCast;
+                float RTHSrgRemainingTime = RTCDCast - RTHSrgTime;
+                int RTHSrgHSrgCasts = 0;
+                if (RTHSrgRemainingTime > GcdLatency)
                 {
-                    RTLHWRemainingTime -= LHWCast_RT;
-                    RTLHWTime += LHWCast_RT;
-                    ++RTLHWLHWCasts;
-                    if (RTLHWRemainingTime > GcdLatency)
+                    RTHSrgRemainingTime -= HSrgCast_RT;
+                    RTHSrgTime += HSrgCast_RT;
+                    ++RTHSrgHSrgCasts;
+                    if (RTHSrgRemainingTime > GcdLatency)
                     {
-                        int RTLHWLHWRemainingCasts = (int)Math.Ceiling((RTLHWRemainingTime - GcdLatency) / LHWCast);
-                        RTLHWTime += RTLHWLHWRemainingCasts * LHWCast;
-                        RTLHWLHWCasts += RTLHWLHWRemainingCasts;
+                        int RTHSrgHSrgRemainingCasts = (int)Math.Ceiling((RTHSrgRemainingTime - GcdLatency) / HSrgCast);
+                        RTHSrgTime += RTHSrgHSrgRemainingCasts * HSrgCast;
+                        RTHSrgHSrgCasts += RTHSrgHSrgRemainingCasts;
                     }
                 }
-                float RTLHWLHWCrits = Math.Min(2, RTLHWLHWCasts) * Math.Min(CriticalChance + TWChance * 0.25f, 1) + (RTLHWLHWCasts - 2) * CriticalChance;
-                float RTLHWRTHeal = RTHeal * Critical;
-                float RTLHWLHWCritHeal = LHWHeal * Critical;
-                float RTLHWLHWHeal = (LHWHeal * (RTLHWLHWCasts - RTLHWLHWCrits)) + (RTLHWLHWCrits * RTLHWLHWCritHeal);
-                float RTLHWAA = (RTHeal * CriticalChance + LHWHeal * RTLHWLHWCrits) * AAScale;
-                float RTTargets = TankHeal ? 1 : RTDuration / RTLHWTime;
-                float RTLHWELWTargets = ELWChance * (TankHeal ? 1 : RTLHWLHWCasts * ELWDuration / RTLHWTime);
-                calcStats.RTLHWHPS = (((RTLHWRTHeal * (1 - RTOverheal) + RTLHWLHWHeal * (1 - LHWOverheal) + RTLHWAA * (1 - AAOverheal)) / RTLHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTLHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-                calcStats.RTLHWMPS = ((RTCost + (LHWCost * RTLHWLHWCasts)) / RTLHWTime) * castingActivity;
-                if (options.SustStyle.Equals("RT+LHW"))
+                float RTHSrgHSrgCrits = Math.Min(2, RTHSrgHSrgCasts) * Math.Min(CriticalChance + TWChance * 0.25f, 1) + (RTHSrgHSrgCasts - 2) * CriticalChance;
+                float RTHSrgRTHeal = RTHeal * Critical;
+                float RTHSrgHSrgCritHeal = HSrgHeal * Critical;
+                float RTHSrgHSrgHeal = (HSrgHeal * (RTHSrgHSrgCasts - RTHSrgHSrgCrits)) + (RTHSrgHSrgCrits * RTHSrgHSrgCritHeal);
+                float RTHSrgAA = (RTHeal * CriticalChance + HSrgHeal * RTHSrgHSrgCrits) * AAScale;
+                float RTTargets = TankHeal ? 1 : RTDuration / RTHSrgTime;
+                float RTHSrgELWTargets = ELWChance * (TankHeal ? 1 : RTHSrgHSrgCasts * ELWDuration / RTHSrgTime);
+                calcStats.RTHSrgHPS = (((RTHSrgRTHeal * (1 - RTOverheal) + RTHSrgHSrgHeal * (1 - HSrgOverheal) + RTHSrgAA * (1 - AAOverheal)) / RTHSrgTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calcStats.RTHSrgMPS = ((RTCost + (HSrgCost * RTHSrgHSrgCasts)) / RTHSrgTime) * castingActivity;
+                if (options.SustStyle.Equals("RT+HSrg"))
                 {
-                    RTPerSec = 1f / RTLHWTime;
+                    RTPerSec = 1f / RTHSrgTime;
                     RTTicksPerSec = RTTargets / 3;
-                    LHWPerSec = RTLHWLHWCasts / RTLHWTime;
+                    HSrgPerSec = RTHSrgHSrgCasts / RTHSrgTime;
                     RTCPerSec = RTPerSec * CriticalChance;
-                    LHWCPerSec = RTLHWLHWCrits / RTLHWTime;
-                    AAsPerSec += (CriticalChance + RTLHWLHWCrits) / RTLHWTime;
-                    ELWTicksPerSec += RTLHWELWTargets;
+                    HSrgCPerSec = RTHSrgHSrgCrits / RTHSrgTime;
+                    AAsPerSec += (CriticalChance + RTHSrgHSrgCrits) / RTHSrgTime;
+                    ELWTicksPerSec += RTHSrgELWTargets;
                 }
             }
             #endregion
@@ -566,6 +617,54 @@ namespace Rawr.RestoSham
                     HWCPerSec = RTHWHWHCrits / RTHWTime;
                     AAsPerSec += (CriticalChance + RTHWHWHCrits) / RTHWTime;
                     ELWTicksPerSec += RTHWELWTargets;
+                }
+            }
+            #endregion
+            #region RT + GHW Rotation (RTGHWMPS / RTGHWHPS / RTGHWTime) (Adjusted based on Casting Activity)
+            if (character.ShamanTalents.Riptide != 0)
+            {
+                float RTGHWTime = RTCast;
+                float RTGHWRemainingTime = RTCDCast - RTGHWTime;
+                int RTGHWGHWCasts = 0;
+                if (RTGHWRemainingTime > GcdLatency)
+                {
+                    float RTGHWGHWCastTW_RT = GHWCastTW_RT * TWChance + GHWCast_RT * (1 - TWChance);
+                    RTGHWRemainingTime -= RTGHWGHWCastTW_RT;
+                    RTGHWTime += RTGHWGHWCastTW_RT;
+                    ++RTGHWGHWCasts;
+                    if (RTGHWRemainingTime > GcdLatency)
+                    {
+                        float RTGHWGHWCastTW = GHWCastTW * TWChance + GHWCast * (1 - TWChance);
+                        RTGHWRemainingTime -= RTGHWGHWCastTW;
+                        RTGHWTime += RTGHWGHWCastTW;
+                        ++RTGHWGHWCasts;
+                        if (RTGHWRemainingTime > GcdLatency)
+                        {
+                            int RTGHWGHWRemainingCasts = (int)Math.Ceiling((RTGHWRemainingTime - GcdLatency) / GHWCast);
+                            RTGHWTime += RTGHWGHWRemainingCasts * GHWCast;
+                            RTGHWGHWCasts += RTGHWGHWRemainingCasts;
+                        }
+                    }
+                }
+                float RTGHWRTHeal = RTHeal * Critical;
+                float RTGHWGHWHCrits = RTGHWGHWCasts * CriticalChance;
+                float RTGHWGHWHeal = GHWHeal * RTGHWGHWCasts * Critical;
+                float RTGHWGHWSelfHeal = RTGHWGHWHeal * GHWSelfHealingScale * Critical;
+                float RTGHWAA = (RTHeal * CriticalChance + GHWHeal * RTGHWGHWHCrits) * AAScale;
+                //  Multi-target ELW handling not in yet due to low priority
+                float RTTargets = TankHeal ? 1 : RTDuration / RTGHWTime;
+                float RTGHWELWTargets = ELWChance * (TankHeal ? 1 : RTGHWGHWCasts * ELWDuration / RTGHWTime);
+                calcStats.RTGHWHPS = (((RTGHWRTHeal * (1 - RTOverheal) + RTGHWGHWHeal * (1 - GHWOverheal) + RTGHWGHWSelfHeal * (1 - GHWSelfOverheal) + RTGHWAA * (1 - AAOverheal)) / RTGHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTGHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calcStats.RTGHWMPS = ((RTCost + (GHWCost * RTGHWGHWCasts)) / RTGHWTime) * castingActivity;
+                if (options.SustStyle.Equals("RT+GHW"))
+                {
+                    RTPerSec = 1f / RTGHWTime;
+                    RTTicksPerSec = RTTargets / 3;
+                    GHWPerSec = RTGHWGHWCasts / RTGHWTime;
+                    RTCPerSec = RTPerSec * CriticalChance;
+                    GHWCPerSec = RTGHWGHWHCrits / RTGHWTime;
+                    AAsPerSec += (CriticalChance + RTGHWGHWHCrits) / RTGHWTime;
+                    ELWTicksPerSec += RTGHWELWTargets;
                 }
             }
             #endregion
@@ -621,17 +720,17 @@ namespace Rawr.RestoSham
                 ELWTicksPerSec += CHELWTargets;
             }
             #endregion
-            #region LHW Spam (LHWHPS / LHWMPS)
-            float LHWLHWHeal = LHWHeal * Critical;
-            float LHWAA = LHWHeal * CriticalChance * AAScale;
-            float LHWELWTargets = ELWChance * ELWDuration / LHWCast;
-            calcStats.LHWSpamHPS = (((LHWLHWHeal * (1 - LHWOverheal) + LHWAA * (1 - AAOverheal)) / LHWCast + LHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-            calcStats.LHWSpamMPS = (LHWCost / LHWCast) * castingActivity;
-            if (options.SustStyle.Equals("LHW Spam"))
+            #region HSrg Spam (HSrgHPS / HSrgMPS)
+            float HSrgHSrgHeal = HSrgHeal * Critical;
+            float HSrgAA = HSrgHeal * CriticalChance * AAScale;
+            float HSrgELWTargets = ELWChance * ELWDuration / HSrgCast;
+            calcStats.HSrgSpamHPS = (((HSrgHSrgHeal * (1 - HSrgOverheal) + HSrgAA * (1 - AAOverheal)) / HSrgCast + HSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calcStats.HSrgSpamMPS = (HSrgCost / HSrgCast) * castingActivity;
+            if (options.SustStyle.Equals("HSrg Spam"))
             {
-                LHWPerSec = 1f / LHWCast;
-                LHWCPerSec = CriticalChance / LHWCast;
-                ELWTicksPerSec += LHWELWTargets;
+                HSrgPerSec = 1f / HSrgCast;
+                HSrgCPerSec = CriticalChance / HSrgCast;
+                ELWTicksPerSec += HSrgELWTargets;
             }
             #endregion
             #region HW Spam (HWHPS / HWMPS)
@@ -648,21 +747,37 @@ namespace Rawr.RestoSham
                 ELWTicksPerSec += HWELWTargets;
             }
             #endregion
+            #region GHW Spam (GHWHPS / GHWMPS)
+            float GHWGHWHeal = GHWHeal * Critical;
+            float GHWGHWSelfHeal = GHWGHWHeal * GHWSelfHealingScale * Critical;
+            float GHWAA = GHWHeal * CriticalChance * AAScale;
+            float GHWELWTargets = ELWChance * ELWDuration / GHWCast;
+            calcStats.GHWSpamHPS = (((GHWGHWHeal * (1 - GHWOverheal) + GHWGHWSelfHeal * (1 - GHWSelfOverheal) + GHWAA * (1 - AAOverheal)) / GHWCast + GHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calcStats.GHWSpamMPS = (GHWCost / GHWCast) * castingActivity;
+            if (options.SustStyle.Equals("GHW Spam"))
+            {
+                GHWPerSec = 1f / GHWCast;
+                GHWCPerSec = CriticalChance / GHWCast;
+                ELWTicksPerSec += GHWELWTargets;
+            }
+            #endregion
             #region Variables if Riptide not taken in talents
             if (character.ShamanTalents.Riptide == 0)
             {
-                calcStats.RTLHWHPS = calcStats.LHWSpamHPS;
-                calcStats.RTLHWMPS = calcStats.LHWSpamMPS;
+                calcStats.RTHSrgHPS = calcStats.HSrgSpamHPS;
+                calcStats.RTHSrgMPS = calcStats.HSrgSpamMPS;
                 calcStats.RTHWHPS = calcStats.HWSpamHPS;
                 calcStats.RTHWMPS = calcStats.HWSpamMPS;
+                calcStats.RTGHWHPS = calcStats.GHWSpamHPS;
+                calcStats.RTGHWMPS = calcStats.GHWSpamMPS;
                 calcStats.RTCHHPS = calcStats.CHSpamHPS;
                 calcStats.RTCHMPS = calcStats.CHSpamMPS;
             }
             #endregion
             #region Create Final calcs via spell cast (HealPerSec/HealHitPerSec/CritPerSec)
-            HealPerSec = (RTPerSec + LHWPerSec + HWPerSec + CHPerSec) * castingActivity;
-            HealHitPerSec = (RTPerSec + RTTicksPerSec + LHWPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec) * castingActivity;
-            CritPerSec = (RTCPerSec + LHWCPerSec + HWCPerSec + CHCPerSec) * castingActivity;
+            HealPerSec = (RTPerSec + HSrgPerSec + HWPerSec + CHPerSec + GHWPerSec) * castingActivity;
+            HealHitPerSec = (RTPerSec + RTTicksPerSec + HSrgPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec + GHWPerSec) * castingActivity;
+            CritPerSec = (RTCPerSec + HSrgCPerSec + HWCPerSec + CHCPerSec + GHWCPerSec) * castingActivity;
             #endregion
             #region Proc Handling for Mana Restore only
             Stats statsProcs2 = new Stats();
@@ -706,85 +821,112 @@ namespace Rawr.RestoSham
 
             // Burst
             calcStats.BurstSequence = options.BurstStyle;
+            float BurstHPS = 0;
+            float BurstMUPS = 0;
             switch (options.BurstStyle)
             {
                 case "CH Spam":
-                    calcStats.BurstHPS = calcStats.CHSpamHPS;
+                    BurstHPS = calcStats.CHSpamHPS;
+                    BurstMUPS = calcStats.CHSpamMPS;
                     break;
                 case "HW Spam":
-                    calcStats.BurstHPS = calcStats.HWSpamHPS;
+                    BurstHPS = calcStats.HWSpamHPS;
+                    BurstMUPS = calcStats.HWSpamMPS;
                     break;
-                case "LHW Spam":
-                    calcStats.BurstHPS = calcStats.LHWSpamHPS;
+                case "GHW Spam":
+                    BurstHPS = calcStats.GHWSpamHPS;
+                    BurstMUPS = calcStats.GHWSpamMPS;
+                    break;
+                case "HSrg Spam":
+                    BurstHPS = calcStats.HSrgSpamHPS;
+                    BurstMUPS = calcStats.HSrgSpamMPS;
                     break;
                 case "RT+HW":
-                    calcStats.BurstHPS = calcStats.RTHWHPS;
+                    BurstHPS = calcStats.RTHWHPS;
+                    BurstMUPS = calcStats.RTHWMPS;
                     break;
-                case "RT+LHW":
-                    calcStats.BurstHPS = calcStats.RTLHWHPS;
+                case "RT+GHW":
+                    BurstHPS = calcStats.RTGHWHPS;
+                    BurstMUPS = calcStats.RTGHWMPS;
+                    break;
+                case "RT+HSrg":
+                    BurstHPS = calcStats.RTHSrgHPS;
+                    BurstMUPS = calcStats.RTHSrgMPS;
                     break;
                 case "RT+CH":
-                    calcStats.BurstHPS = calcStats.RTCHHPS;
+                    BurstHPS = calcStats.RTCHHPS;
+                    BurstMUPS = calcStats.RTCHMPS;
                     break;
             }
 
             // Sustained
             calcStats.SustainedSequence = options.SustStyle;
             float SustHPS = 0;
+            float SustMUPS = 0;
             switch (options.SustStyle)
             {
                 case "CH Spam":
                     SustHPS = calcStats.CHSpamHPS;
-                    calcStats.MUPS = calcStats.CHSpamMPS;
+                    SustMUPS = calcStats.CHSpamMPS;
                     break;
                 case "HW Spam":
                     SustHPS = calcStats.HWSpamHPS;
-                    calcStats.MUPS = calcStats.HWSpamMPS;
+                    SustMUPS = calcStats.HWSpamMPS;
                     break;
-                case "LHW Spam":
-                    SustHPS = calcStats.LHWSpamHPS;
-                    calcStats.MUPS = calcStats.LHWSpamMPS;
+                case "GHW Spam":
+                    SustHPS = calcStats.GHWSpamHPS;
+                    SustMUPS = calcStats.GHWSpamMPS;
+                    break;
+                case "HSrg Spam":
+                    SustHPS = calcStats.HSrgSpamHPS;
+                    SustMUPS = calcStats.HSrgSpamMPS;
                     break;
                 case "RT+HW":
                     SustHPS = calcStats.RTHWHPS;
-                    calcStats.MUPS = calcStats.RTHWMPS;
+                    SustMUPS = calcStats.RTHWMPS;
                     break;
-                case "RT+LHW":
-                    SustHPS = calcStats.RTLHWHPS;
-                    calcStats.MUPS = calcStats.RTLHWMPS;
+                case "RT+GHW":
+                    SustHPS = calcStats.RTGHWHPS;
+                    SustMUPS = calcStats.RTGHWMPS;
+                    break;
+                case "RT+HSrg":
+                    SustHPS = calcStats.RTHSrgHPS;
+                    SustMUPS = calcStats.RTHSrgMPS;
                     break;
                 case "RT+CH":
                     SustHPS = calcStats.RTCHHPS;
-                    calcStats.MUPS = calcStats.RTCHMPS;
+                    SustMUPS = calcStats.RTCHMPS;
                     break;
             }
 
             calcStats.BurstHPS += calcStats.HSTHeals;
             SustHPS += calcStats.HSTHeals;
+            calcStats.MUPS = ((SustMUPS * options.ActivityPerc) + (BurstMUPS * (100 - options.ActivityPerc))) * .01f;
             calcStats.MUPS += (DecurseCost * options.Decurse) / FightSeconds;
             #endregion
             #region Final Stats
+            calcStats.LBNumber = options.LBUse;
             float ESUsage = UseES ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
             float ESDowntime = (FightSeconds - (RTCast * ESUsage) - 3) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
             calcStats.MAPS = ((stats.Mana) / (FightSeconds))
                 + (stats.ManaRestore / FightSeconds)
-                + ((((((float)Math.Floor(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f + ((character.ShamanTalents.GlyphofManaTideTotem ? 0.04f : 0)))))) * (options.ManaTideEveryCD && character.ShamanTalents.ManaTideTotem > 0 ? 1 : 0)) / FightSeconds)
-                + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * (options.ReplenishmentPercentage * .01f))
+                + (stats.ManaRestoreFromMaxManaPerSecond * stats.Mana)
                 + (stats.Mp5 / 5f)
                 + (options.Innervates * 7866f / FightSeconds)
                 + statsProcs2.ManaRestore
                 + ((RTCPerSec * Orb) * castingActivity * ESDowntime)
-                + ((LHWCPerSec * Orb * .6f) * castingActivity * ESDowntime)
+                + ((HSrgCPerSec * Orb * .6f) * castingActivity * ESDowntime)
                 + ((HWCPerSec * Orb) * castingActivity * ESDowntime)
+                + ((GHWCPerSec * Orb) * castingActivity * ESDowntime)
                 + ((CHCHitsPerSec * Orb * .3f) * castingActivity * ESDowntime)
+                + (calcStats.LBRestore * calcStats.LBNumber)
                 - ESMPS;
             if (options.WSPops > 0)
                 calcStats.MAPS += ((options.WSPops * Orb) / 60);
             calcStats.ManaUsed = calcStats.MAPS * FightSeconds;
-            float MAPSConvert = (float)Math.Min((calcStats.MAPS / ((calcStats.MUPS * castingActivity) * ESDowntime)), 1);
-            //  FIXME: some Healed effects can crit and some are not affected by Purification, this should be taken into account
-            float HealedHPS = (stats.Healed * PurificationScale) * (1 + stats.BonusHealingDoneMultiplier);
-            calcStats.BurstHPS = (calcStats.BurstHPS * ESDowntime) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
+            float MAPSConvert = (float)Math.Min((calcStats.MAPS / ((calcStats.MUPS) * ESDowntime)), 1);
+            float HealedHPS = stats.Healed * (1 + stats.BonusHealingDoneMultiplier);
+            calcStats.BurstHPS = (BurstHPS * ESDowntime) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
             calcStats.SustainedHPS = (SustHPS * MAPSConvert) + calcStats.ESHPS * (1 - ESOverheal) + HealedHPS;
             calcStats.Survival = (calcStats.BasicStats.Health + calcStats.BasicStats.Hp5) * (options.SurvivalPerc * .01f);
             calcStats.OverallPoints = calcStats.BurstHPS + calcStats.SustainedHPS + calcStats.Survival;

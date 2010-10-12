@@ -91,10 +91,12 @@ namespace Rawr.RestoSham
             "Basic Stats:Stamina",
             "Basic Stats:Intellect",
             "Basic Stats:Spell Power",
+            "Basic Stats:Deep Healing %",
             "Basic Stats:MP5*Mana regeneration while casting",
             "Basic Stats:Mana Available*This is your total mana from all sources throughout the entire fight.",
             "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
             "Basic Stats:Spell Haste",
+            "Basic Stats:TC Mana Restore",
             "Healing Style Breakdowns:Burst Sequence",
             "Healing Style Breakdowns:Sustained Sequence",
             "Healing Style Breakdowns:Mana Available per Second",
@@ -102,22 +104,24 @@ namespace Rawr.RestoSham
             "Healing Style Breakdowns:Healing Stream HPS",
             "Healing Style Breakdowns:Earth Shield HPS",
             "Healing Style Breakdowns:RT+HW HPS",
-            "Healing Style Breakdowns:RT+LHW HPS",
+            "Healing Style Breakdowns:RT+GHW HPS",
+            "Healing Style Breakdowns:RT+HSrg HPS",
             "Healing Style Breakdowns:RT+CH HPS",
             "Healing Style Breakdowns:HW Spam HPS",
-            "Healing Style Breakdowns:LHW Spam HPS",
+            "Healing Style Breakdowns:GHW Spam HPS",
+            "Healing Style Breakdowns:HS Spam HPS",
             "Healing Style Breakdowns:CH Spam HPS",
             "Average Cast Times:Global Cooldown",
             "Average Cast Times:Healing Wave*Normal / Tidal Waves",
-            "Average Cast Times:Lesser Healing Wave",
+            "Average Cast Times:Greater Healing Wave*Normal / Tidal Waves",
+            "Average Cast Times:Healing Surge",
             "Average Cast Times:Chain Heal",
-            "Average Cast Times:Lightning Bolt*Aren't you busy healing people? ;)",
+            "Average Cast Times:Lightning Bolt*Telluric Currents mana restoration in Basic stats area.)",
         };
 
         public static string[] OptimizableCalculationLabels = new string[] {
             "Haste %",
             "Crit %",
-            "Mana Usable per Second",
         };
 
         public static Dictionary<string, Color> SubPointNameColors = new Dictionary<string, Color>()
