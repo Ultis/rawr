@@ -118,6 +118,9 @@ x:Class="Rawr.RestoSham.CalculationOptionsPanelRestoSham"
 
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Sustained Time:" TextWrapping="Wrap" ToolTipService.ToolTip="This is the percentage of time spent casting non-burst spells." Grid.Row="16"/>
                     <Slider Margin="2" Grid.ColumnSpan="12" Grid.Row="17" Value="{Binding ActivityPerc, Mode=TwoWay}" Minimum="0" Maximum="100"/>
+                 
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Level 80?" TextWrapping="Wrap" ToolTipService.ToolTip="Enable if level 80 and would like the model to work for 80.  Disable if you are using the model for 85. Note, this may cause massive differences." Grid.Row="18"/>
+                    <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="18" IsChecked="{Binding Mode=TwoWay, Path=CataOrLive}" d:LayoutOverrides="Height, VerticalMargin"/>
 
 
                 </Grid>

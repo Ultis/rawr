@@ -35,6 +35,7 @@ namespace Rawr.RestoSham
             "BonusCritHealMultiplier",
             "BonusHealingDoneMultiplier",
             "BonusManaMultiplier",
+            "BonusSpiritMultiplier",
             "BonusIntellectMultiplier",
             "RestoSham2T9",
             "RestoSham4T9",

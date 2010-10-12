@@ -720,28 +720,15 @@ namespace Rawr
 				Source = "Resto Shaman",
 				Group = "Burst Mana Regeneration",
 				Stats = new Stats() { },
-				Improvements = {
-					new Buff {
-						Name = "Glyphed Mana Tide Totem",
-						Source = "Resto Shaman",
-						Stats = new Stats() { },
-					}
-				},
+				Improvements = { },
 				ConflictingBuffs = new List<string>() { }, // preventing this group from conflicting with itself
 			});
 			buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
 				new Stats()
-				{// 6% Mana every 3 sec for 8 sec
-					ManaRestoreFromMaxManaPerSecond = (0.06f / 3f),
+                {// Spirit increased by 350% for 12 seconds.
+					BonusSpiritMultiplier = 3.5f,
 				},
-				12f, 5 * 60)
-			);
-			buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
-				new Stats()
-				{// Glyph adds 1% sec to the Restoration
-					ManaRestoreFromMaxManaPerSecond = (0.01f / 2f),
-				},
-				12f, 5 * 60)
+				12f, 3 * 60)
 			);
 			#endregion
 
@@ -2034,15 +2021,6 @@ namespace Rawr
 				Group = "Scrolls",
 				ConflictingBuffs = new List<string>(new string[] { "Scroll of Protection", "StatArmor" }),
 				Stats = { BonusArmor = 340 }
-			});
-			#endregion
-
-			#region Temporary Weapon Enchantment
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Earthliving Weapon",
-				Group = "Temporary Weapon Enchantment",
-				Stats = { Earthliving = 1 }
 			});
 			#endregion
 

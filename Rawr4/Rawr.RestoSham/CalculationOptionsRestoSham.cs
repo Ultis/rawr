@@ -49,8 +49,8 @@ namespace Rawr.RestoSham
 		/// <summary>
 		/// Whether a Mana Tide totem is placed every time the cooldown is up.
 		/// </summary>
-        private bool _ManaTideEveryCD = true;
-        public bool ManaTideEveryCD { get { return _ManaTideEveryCD; } set { _ManaTideEveryCD = value; OnPropertyChanged("ManaTideEveryCD"); } }
+        private bool _CataOrLive = true;
+        public bool CataOrLive { get { return _CataOrLive; } set { _CataOrLive = value; OnPropertyChanged("CataOrLive"); } }
 
         /// <summary>
         /// Count of Innervates you get.
@@ -87,18 +87,6 @@ namespace Rawr.RestoSham
         /// </summary>
         private string _Targets = "Raid";
         public string Targets { get { return _Targets; } set { _Targets = value; OnPropertyChanged("Targets"); } }
-
-        /// <summary>
-		/// Will you or someone else use heroism?
-		/// </summary>
-        private string _Heroism = "Me";
-        public string Heroism { get { return _Heroism; } set { _Heroism = value; OnPropertyChanged("Heroism"); } }
-
-		/// <summary>
-		/// The percentage of time that Replenishment is "up".
-		/// </summary>
-        private float _ReplenishmentPercentage = 90f;
-        public float ReplenishmentPercentage { get { return _ReplenishmentPercentage; } set { _ReplenishmentPercentage = value; OnPropertyChanged("ReplenishmentPercentage"); } }
 
 		/// <summary>
 		/// The number of times you use Cleanse Spirit.
