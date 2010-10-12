@@ -512,4 +512,12 @@
     <Tree2>13</Tree2>
     <Tree3>58</Tree3>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+  <Name>Resto: Telluric Currents Build (5 Free)</Name>
+  <Class>Shaman</Class>
+  <Spec>000000000000000000020300000000000000000332200213212312301.10000000010100011000100000000000</Spec>
+  <Tree1>0</Tree1>
+  <Tree2>5</Tree2>
+  <Tree3>31</Tree3>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

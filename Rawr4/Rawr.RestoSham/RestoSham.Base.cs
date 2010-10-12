@@ -20,6 +20,7 @@ namespace Rawr.RestoSham
             "HasteRating",
             "SpellCrit",
             "SpellHaste",
+            "MasteryRating",
             "Mana",
             "Mp5",
             "Earthliving",
