@@ -37,12 +37,18 @@ namespace Rawr.Healadin
         public float AverageCost()
         {
             return (float)Math.Floor((BaseMana * (DivineIllumination ? 0.5f : 1f) - CostReduction())
-                * (AbilityCostMultiplier() - (Talents.GlyphOfSealOfWisdom ? .05f : 0f)));
+                * (AbilityCostMultiplier()));
         }
 
         public float AverageHealed()
         {
             return BaseHealed() * (1f - ChanceToCrit()) + CritHealed() * ChanceToCrit();
+        }
+
+        // Illuminated Healing
+        public float AverageShielded()
+        {
+            return AverageHealed() * (1f + StatConversion.GetMasteryFromRating(Stats.MasteryRating) * 0.1f);
         }
 
         public float CritHealed() { return BaseHealed() * 1.5f * (1f + Stats.BonusCritHealMultiplier) * AbilityCritMultiplier(); }
@@ -51,7 +57,7 @@ namespace Rawr.Healadin
         {
             float heal = AbilityHealed();
 
-            heal *= Talents.GlyphOfSealOfLight ? 1.05f : 1;
+            heal *= Talents.GlyphOfSealOfLight ? 1.05f : 1; // TODO: Change to Glyph of Seal of Insight
             heal *= 1f + Stats.HealingReceivedMultiplier;
             heal *= 1f - Rotation.DivinePleas * 15f / Rotation.FightLength * .5f;
             heal *= 1f + .01f * Talents.Divinity;
@@ -60,6 +66,9 @@ namespace Rawr.Healadin
             if (DivineIllumination) {
                 heal *= (1f + Stats.DivineIlluminationHealingMultiplier);
             }
+
+            // Walk in the Light
+            heal *= 0.15f; // TODO: Figure out a way to detect the character's main spec
 
             return heal;
         }
@@ -94,6 +103,19 @@ namespace Rawr.Healadin
                 CastTime(),
                 ChanceToCrit() * 100);
         }
+
+        protected static float ClarityOfPurpose(int talentPoints) {
+            switch (talentPoints) {
+                case 1:
+                    return 0.15f;
+                case 2:
+                    return 0.35f;
+                case 3:
+                    return 0.5f;
+                default:
+                    return 0f;
+            }
+        }
     }
 
     public class FlashOfLight : Heal
@@ -102,13 +124,12 @@ namespace Rawr.Healadin
             : base(rotation)
         { }
 
-        public override float BaseCastTime { get { return InfusionOfLight ? 1.5f - 0.75f * Talents.InfusionOfLight : 1.5f; } }
-        public override float BaseMana { get { return 307f; } }
-        public bool InfusionOfLight { get; set; }
+        public override float BaseCastTime { get { return 1.5f; } }
+        public override float BaseMana { get { return 6324f; } } // TODO: Determine exact mana cost.  27% of base mana
 
         protected override float AbilityCritChance()
         {
-            return (Talents.GlyphOfFlashOfLight ? .05f : 0f) + Stats.FlashOfLightCrit;
+            return Stats.FlashOfLightCrit;
         }
 
         protected override float AbilityHealedMultiplier()
@@ -116,49 +137,10 @@ namespace Rawr.Healadin
             return 1f + Stats.FlashOfLightMultiplier;
         }
 
-        public float BaseAverageHealed()
-        {
-            return AverageHealed() * (1f - ssPercentage);
-        }
-        
-        private float ssPercentage = 0f;
-        private float folHoTUptime = 0f;
         protected override float AbilityHealed()
         {
-            const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
-            float baseHealed = (835.5f + (Stats.SpellPower + Stats.FlashOfLightSpellPower) * fol_coef);
-
-            // Infusion of Light's Flash of Light HoT for Sacred Shield
-            // Max HoT Uptime is 12 seconds.  If user is casting FoL more often than every 12 seconds, the HoT gets overridden
-            // so we must calculate how long the HoT will be active.
-            
-            folHoTUptime = Rotation.FoLCasts == 0f ? 12f : Math.Min(Rotation.FightLength / (Rotation.FoLCasts * Rotation.CalcOpts.FoLOnTank), 12f);
-            float ssHealed = baseHealed * (0.5f * Talents.InfusionOfLight) * (folHoTUptime / 12f) * (1f + Stats.FlashOfLightHoTMultiplier) * Rotation.CalcOpts.SSUptime * Rotation.CalcOpts.FoLOnTank;
-            ssPercentage = ssHealed / (baseHealed + ssHealed);
-            return baseHealed + ssHealed;
-        }
-
-        public override string ToString()
-        {
-            if (Talents.InfusionOfLight > 0 && Rotation.CalcOpts.SSUptime > 0)
-            {
-                float averageHealed = AverageHealed();
-                float averageSSHealed = averageHealed * ssPercentage;
-                return string.Format("Average Heal: {0:N0}\nAverage Base Heal: {6:N0}\nAverage Sacred Shield HoT Uptime: {7:N2} sec\nAverage Sacred Shield Total HoT: {8:N0}\nAverage Cost: {1:N0}\nHPS: {2:N0}\nHPM: {3:N2}\nCast Time: {4:N2} sec\nCrit Chance: {5:N2}%",
-                    averageHealed,
-                    AverageCost(),
-                    HPS(),
-                    HPM(),
-                    CastTime(),
-                    ChanceToCrit() * 100,
-                    averageHealed - averageSSHealed,
-                    folHoTUptime,
-                    averageSSHealed);
-            }
-            else
-            {
-                return base.ToString();
-            }
+            const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct
+            return (4830f + 5418f) / 2f + (Stats.SpellPower + Stats.FlashOfLightSpellPower) * fol_coef;
         }
     }
 
@@ -168,9 +150,10 @@ namespace Rawr.Healadin
             : base(rotation)
         { }
 
-        public override float BaseCastTime { get { return CastTimeReductionFromHolyShock ? 2.5f - Stats.HolyLightCastTimeReductionFromHolyShock : 2.5f; } }
-        public override float BaseMana { get { return 1274f; } }
-        public bool CastTimeReductionFromHolyShock { get; set; }
+        public override float BaseCastTime { get { return 3f - ClarityOfPurpose(Talents.ClarityOfPurpose) - CastTimeReduction; } }
+        public override float BaseMana { get { return 2108f; } } // TODO: Determine exact mana cost.  9% of base mana
+
+        public float CastTimeReduction { get; set; }
 
         protected override float AbilityCostReduction()
         {
@@ -184,15 +167,24 @@ namespace Rawr.Healadin
 
         protected override float AbilityHealed()
         {
-            const float hl_coef = 2.5f / 3.5f * 66f / 35f * 1.25f;
-            return (5166f + (Stats.HolyLightSpellPower + Stats.SpellPower) * hl_coef);
+            const float hl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct.  Since Holy Light is now a 3s cast time, I bumped the co-effecient up to 3 from 2.5.
+            return (2911f + 3243f) / 2f + (Stats.HolyLightSpellPower + Stats.SpellPower) * hl_coef;
         }
+    }
 
-        public float GlyphOfHolyLight(float hlHealed)
-        {
-            return hlHealed * (Talents.GlyphOfHolyLight ? .1f * Rotation.CalcOpts.GHL_Targets : 0f);
+    public class DivineLight : Heal
+    {
+        public DivineLight(Rotation rotation)
+            : base(rotation)
+        { }
+
+        public override float BaseCastTime { get { return 3f - ClarityOfPurpose(Talents.ClarityOfPurpose); } }
+        public override float BaseMana { get { return 7027f; } } // TODO: Determine exact mana cast.  30% of base mana
+
+        protected override float AbilityHealed() {
+            const float dl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-efficient is correct.
+            return (7762f + 8648f) / 2f + Stats.SpellPower * dl_coef;
         }
-
     }
 
     public class HolyShock : Heal
@@ -202,12 +194,12 @@ namespace Rawr.Healadin
         { }
 
         public override float BaseCastTime { get { return 1.5f; } }
-        public override float BaseMana { get { return 790f; } }
+        public override float BaseMana { get { return 1874f; } } // TODO: Determine exact mana cost.  8% of base mana
 
         protected override float AbilityHealed()
         {
-            const float hs_coef = 1.5f / 3.5f * 66f / 35f;
-            return (2500f + Stats.SpellPower * hs_coef);
+            const float hs_coef = 1.5f / 3.5f * 66f / 35f; // TODO: Determine if spell power co-effecient is correct
+            return ((2758f + 2986f) / 2f + Stats.SpellPower * hs_coef) * (1f + Talents.Crusade * 0.1f);
         }
 
         public float Usage()
@@ -232,12 +224,12 @@ namespace Rawr.Healadin
 
         public float Cooldown()
         {
-            return Talents.GlyphOfHolyShock ? 5f : 6f;
+            return 6f; // TODO: Account for talent Daybreak
         }
 
         protected override float AbilityCritMultiplier()
         {
-             return 1f + Stats.HolyShockHoTOnCrit;
+            return 1f + Stats.HolyShockHoTOnCrit + (Talents.GlyphOfHolyShock ? 0.05f : 0f) + (Talents.InfusionOfLight * 0.05f);
         }
 
     }
@@ -358,12 +350,12 @@ namespace Rawr.Healadin
         {
             Duration = 60f + (Talents.GlyphOfBeaconOfLight ? 30f : 0f);
             Uptime = Rotation.FightLength * Rotation.CalcOpts.BoLUp;
-            BaseCost = 1537f;
+            BaseCost = 1405f; // TODO: Determine exact mana cost.  6% of base mana
         }
 
         public float HealingDone(float procableHealing)
         {
-            return procableHealing * Rotation.CalcOpts.BoLUp;
+            return procableHealing * Rotation.CalcOpts.BoLUp * 0.5f;
         }
 
     }

@@ -75,12 +75,12 @@ namespace Rawr.Healadin
 
         public float ManaPool(CharacterCalculationsHealadin calc)
         {
-            DivinePleas = (float)Math.Ceiling((FightLength - 60f) / (60f * CalcOpts.DivinePlea));
+            DivinePleas = (float)Math.Ceiling((FightLength - 120f) / (120f * CalcOpts.DivinePlea));
 
             calc.ManaBase = Stats.Mana;
-            calc.ManaLayOnHands = 1950 * ((Talents.GlyphOfDivinity ? 1 : 0) + (CalcOpts.LoHSelf ? 1 : 0)) * (Talents.GlyphOfDivinity ? 2f : 1f);
+            calc.ManaLayOnHands = 2175 * ((Talents.GlyphOfDivinity ? 1 : 0) + (CalcOpts.LoHSelf ? 1 : 0)) * (Talents.GlyphOfDivinity ? 2f : 1f); // TODO: Turn into a spell that's cast based on options
             calc.ManaArcaneTorrent = (Character.Race == CharacterRace.BloodElf ? Stats.Mana * .06f * (float)Math.Ceiling(FightLength / 120f - .25f) : 0);
-            calc.ManaDivinePlea = Stats.Mana * .25f * DivinePleas;
+            calc.ManaDivinePlea = Stats.Mana * 0.1f * DivinePleas;
             calc.ManaMp5 = FightLength * Stats.Mp5 / 5f;
             calc.ManaReplenishment = Stats.ManaRestoreFromMaxManaPerSecond * Stats.Mana * FightLength * CalcOpts.Replenishment;
             calc.ManaOther += Stats.ManaRestore;
@@ -88,7 +88,7 @@ namespace Rawr.Healadin
             {
                 float greatnessMana = Stats.HighestStat * StatConversion.RATING_PER_MANA;
                 calc.ManaReplenishment += Stats.ManaRestoreFromMaxManaPerSecond * FightLength * greatnessMana * CalcOpts.Replenishment; // Replenishment
-                calc.ManaDivinePlea += DivinePleas * greatnessMana * .25f; // Divine Plea
+                calc.ManaDivinePlea += DivinePleas * greatnessMana * .1f; // Divine Plea
             }
             return calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther +
                 calc.ManaReplenishment + calc.ManaLayOnHands;
@@ -124,8 +124,6 @@ namespace Rawr.Healadin
 
         public float CalculateFightHealing(CharacterCalculationsHealadin calc)
         {
-            float fol_BaseHealed = 0f;
-
             #region Copying Stuff to Calc
             calc.FightLength = FightLength;
 
@@ -164,30 +162,24 @@ namespace Rawr.Healadin
             #region Infusion of Light
 
             float iol_hlcasts = 0;
-            float iol_folcasts = 0;
             if (CalcOpts.InfusionOfLight)
             {
-                float iol_count = hs.Casts() * hs.ChanceToCrit();
+                iol_hlcasts = hs.Casts() * hs.ChanceToCrit();
 
-                HolyLight hl_iol = new HolyLight(this) { ExtraCritChance = .1f * Talents.InfusionOfLight };
-                if (Stats.HolyLightCastTimeReductionFromHolyShock > 0)
-                {
-                    hl_iol.CastTimeReductionFromHolyShock = true;
-                }
-
-                iol_hlcasts = hs.Casts() * CalcOpts.IoLHolyLight * hs.ChanceToCrit();
+                HolyLight hl_iol = new HolyLight(this) { CastTimeReduction = 0.75f * Talents.InfusionOfLight + Stats.HolyLightCastTimeReductionFromHolyShock };
 
                 calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
                 calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
                 calc.HealedHL += iol_hlcasts * hl_iol.AverageHealed();
-
-                iol_folcasts = hs.Casts() * (1f - CalcOpts.IoLHolyLight) * hs.ChanceToCrit();
             }
 
             #endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
             remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
+
+            // Meditation
+            remainingMana += Stats.Mp5 * 0.5f * (FightLength / 5f); // TODO: Figure out a way to detect the character's main spec
 
             float remainingTime = FightLength * CalcOpts.Activity;
             remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
@@ -198,7 +190,7 @@ namespace Rawr.Healadin
                 if (Stats.HolyLightCastTimeReductionFromHolyShock > 0) // Calculations for Holy Light with cost reduction from Holy Shock
                 {
                     // Get the Holy Light model for cast time reduction from Holy Shock
-                    HolyLight hl_hs = new HolyLight(this) { CastTimeReductionFromHolyShock = true };
+                    HolyLight hl_hs = new HolyLight(this) { CastTimeReduction = Stats.HolyLightCastTimeReductionFromHolyShock };
 
                     // Calculate how much time we have available to cast Holy Lights after Holy Shock
                     float hl_hs_time_available = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl_hs.MPS() - fol.MPS())));
@@ -257,73 +249,22 @@ namespace Rawr.Healadin
                 }
 
                 // Calculate Flash of Light data
-                if (iol_folcasts > 0) // We are using Infusion of Light, so we must calculate it differently than normal
-                {
-                    // Get the Flash of Light model for Infusion of Light
-                    FlashOfLight fol_iol = new FlashOfLight(this) { InfusionOfLight = true };
+                // Determine how many total casts
+                FoLCasts = fol_time / fol.CastTime();
 
-                    // If there is less time remaining than it would take to cast all of the
-                    // Infusion of Light procs, we are forced to drop some of them.  Note
-                    // that this should *never* happen, but is here for a sanity check.
-                    if (fol_time <= iol_folcasts * fol_iol.CastTime())
-                    {
-                        // Determine how many total casts we are going to be able to do
-                        FoLCasts = fol_time / fol_iol.CastTime();
-
-                        // Adding Flash of Light with Infusion of Light stats
-                        calc.UsageFoL += FoLCasts * fol_iol.AverageCost();
-                        calc.RotationFoL += FoLCasts * fol_iol.CastTime();
-                        calc.HealedFoL += FoLCasts * fol_iol.AverageHealed();
-
-                        fol_BaseHealed += FoLCasts * fol_iol.BaseAverageHealed();
-                    }
-                    else
-                    {
-                        // Adding Flash of Light with Infusion of Light
-                        calc.UsageFoL += iol_folcasts * fol_iol.AverageCost();
-                        calc.RotationFoL += iol_folcasts * fol_iol.CastTime();
-                        calc.HealedFoL += iol_folcasts * fol_iol.AverageHealed();
-
-                        fol_BaseHealed += iol_folcasts * fol_iol.BaseAverageHealed();
-
-                        // Determine how much time we have left to cast Flash of Light without the procs
-                        fol_time = fol_time - iol_folcasts * fol.CastTime();
-
-                        // Determine how many total casts, with and without Infusion of Light
-                        float remaining_folcasts = fol_time / fol.CastTime();
-                        FoLCasts = iol_folcasts + remaining_folcasts;
-
-                        // Adding Flash of Light stats
-                        calc.RotationFoL += fol_time;
-                        calc.UsageFoL += fol.MPS() * fol_time;
-                        calc.HealedFoL += fol.HPS() * fol_time;
-
-                        fol_BaseHealed += remaining_folcasts * fol.BaseAverageHealed();
-                    }
-                }
-                else // We don't use Infusion of Light, so just calculate normal data for Flash of Light
-                {
-                    // Determine how many total casts, with and without Infusion of Light
-                    FoLCasts = fol_time / fol.CastTime();
-
-                    // Adding Flash of Light stats
-                    calc.RotationFoL += fol_time;
-                    calc.UsageFoL += fol.MPS() * fol_time;
-                    calc.HealedFoL += fol.HPS() * fol_time;
-
-                    fol_BaseHealed += FoLCasts * fol.BaseAverageHealed();
-                }
+                // Adding Flash of Light stats
+                calc.RotationFoL += fol_time;
+                calc.UsageFoL += fol.MPS() * fol_time;
+                calc.HealedFoL += fol.HPS() * fol_time;
             }
 
             calc.TotalHealed = calc.HealedFoL + calc.HealedHL + calc.HealedHS;
 
             if (Talents.BeaconOfLight > 0)
             {
-                calc.TotalHealed += calc.HealedBoL = bol.HealingDone(fol_BaseHealed + calc.HealedHL + calc.HealedHS);
+                calc.TotalHealed += calc.HealedBoL = bol.HealingDone(calc.TotalHealed);
             }
 
-            calc.TotalHealed += calc.HealedGHL = hl.GlyphOfHolyLight(calc.HealedHL);
-            
             calc.HealedOther = Stats.Healed;
             calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealed;
 
