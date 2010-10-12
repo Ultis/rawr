@@ -354,12 +354,8 @@ namespace Rawr
         #region Major Glyphs
         [GlyphData(0, "Glyph of Healing Wave", GlyphType.Major, @"Your Healing Wave also heals you for 20% of the healing effect when you heal someone else.")]
         public bool GlyphofHealingWave { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-        [GlyphData(19, "Glyph of Totemic Recall", GlyphType.Major, @"Causes your Totemic Recall ability to return an additional 50% of the mana cost of recalled totems.")]
-        public bool GlyphofManaTideTotem { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
         [GlyphData(9, "Glyph of Healing Stream Totem", GlyphType.Major, @"Your Healing Stream Totem increases all the resistances of nearby party and raid members by 130.")]
         public bool GlyphofHealingStreamTotem { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
-        [GlyphData(10, "Glyph of Lesser Healing Wave", GlyphType.Major, @"Your Lesser Healing Wave heals for 20% more if the target is also affected by your Earth Shield.")]
-        public bool GlyphofLesserHealingWave { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
         [GlyphData(15, "Glyph of Chain Heal", GlyphType.Major, @"Increases healing done by your Chain Heal to targets beyond the first by 15%, but decreases the amount received by the initial target by 10%.")]
         public bool GlyphofChainHeal { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
         [GlyphData(3, "Glyph of Lightning Shield", GlyphType.Major, @"Your Lightning Shield can no longer drop below 3 charges from dealing damage to attackers.")]

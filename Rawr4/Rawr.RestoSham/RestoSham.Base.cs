@@ -47,19 +47,7 @@ namespace Rawr.RestoSham
             "Healed",
             "Hp5",
             "MovementSpeed"
-        };
-
-        public static List<string> RelevantGlyphs = new List<string>(10) {
-            "Glyph of Healing Wave",
-            "Glyph of Water Shield",
-            "Glyph of Chain Heal",
-            "Glyph of Earth Shield",
-            "Glyph of Lesser Healing Wave",
-            "Glyph of Earthliving Weapon",
-            "Glyph of Mana Tide Totem",
-            "Glyph of Healing Stream Totem",
-            "Glyph of Riptide"
-        };
+        }; 
 
         public static List<ItemType> RelevantItemTypes = new List<ItemType>(new ItemType[] {
             ItemType.None,

@@ -149,6 +149,31 @@ namespace Rawr.RestoSham
 				};
             }
         }
+
+        private static List<string> _relevantGlyphs;
+        public override List<string> GetRelevantGlyphs()
+        {
+            if (_relevantGlyphs == null)
+            {
+                _relevantGlyphs = new List<string>();
+                // Prime glyphs
+                _relevantGlyphs.Add("Glyph of Water Shield");
+                _relevantGlyphs.Add("Glyph of Earth Shield");
+                _relevantGlyphs.Add("Glyph of Earthliving Weapon");
+                _relevantGlyphs.Add("Glyph of Riptide");
+                // Major glyphs
+                _relevantGlyphs.Add("Glyph of Healing Wave");
+                _relevantGlyphs.Add("Glyph of Chain Heal");
+                _relevantGlyphs.Add("Glyph of Healing Stream Totem");
+                _relevantGlyphs.Add("Glyph of Totemic Recall");
+                _relevantGlyphs.Add("Glyph of Hex");
+                // Minor Glyphs
+                _relevantGlyphs.Add("Glyph of Renewed Life");
+                _relevantGlyphs.Add("Glyph of Astral Recall");
+                _relevantGlyphs.Add("Glyph of Arctic Wolf");
+            }
+            return _relevantGlyphs;
+        }
         public override List<ItemType> RelevantItemTypes
         {
             get { return Relevants.RelevantItemTypes; }
