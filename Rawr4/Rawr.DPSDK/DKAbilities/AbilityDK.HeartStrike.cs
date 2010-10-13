@@ -32,17 +32,13 @@ namespace Rawr.DK
         {
             get
             {
-                _DamageMultiplierModifer += (this.CState.m_Talents.GlyphofHeartStrike ? .3f : 0);
+                _DamageMultiplierModifer += base.DamageMultiplierModifer + (this.CState.m_Talents.GlyphofHeartStrike ? .3f : 0);
                 float multiplier = (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer;
                 if (CState.m_NumberOfTargets > 1)
                 { multiplier *= 1.75f; }
                 if (CState.m_NumberOfTargets > 2)
                 { multiplier *= 1.75f; }
                 return multiplier;
-            }
-            set
-            {
-                _DamageMultiplierModifer = value;
             }
         }
     }

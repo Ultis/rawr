@@ -17,7 +17,6 @@ namespace Rawr.DK
             this.szName = "Frost Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = (40 - (CState.m_Talents.GlyphofFrostStrike ? 8 : 0));
             this.uBaseDamage = 0;
-            this.DamageAdditiveModifer = (277 * 110 / 100);
             this.tDamageType = ItemDamageType.Frost;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.1f;
@@ -35,7 +34,7 @@ namespace Rawr.DK
         {
             get
             {
-                uint WDam = base.uBaseDamage;
+                uint WDam = (uint)((277 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.
                 if (m_iToT > 0 && null != this.wOH) // DW
@@ -51,13 +50,6 @@ namespace Rawr.DK
                 }
                 return WDam;
             }
-            set
-            {
-                // Setup so that we can just set a base damage w/o having to 
-                // manually set Min & Max all the time.
-                uMaxDamage = uMinDamage = value;
-            }
         }
-
     }
 }

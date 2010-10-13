@@ -33,11 +33,7 @@ namespace Rawr.DK
         {
             get
             {
-                return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0);
-            }
-            set
-            {
-                _DamageMultiplierModifer = value;
+                return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
             }
         }
     }

@@ -56,12 +56,8 @@ namespace Rawr.DK
         {
             get
             {
-                _DamageMultiplierModifier = base.DamageMultiplierModifer + (CState.m_Talents.GlyphofIcyTouch ? .3f : 0);
+                _DamageMultiplierModifier = CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofIcyTouch ? .3f : 0);
                 return _DamageMultiplierModifier;
-            }
-            set
-            {
-                base.DamageMultiplierModifer = value;
             }
         }
     }

@@ -57,11 +57,7 @@ namespace Rawr.DK
         {
             get
             {
-                return CState.m_NumberOfTargets;
-            }
-            set
-            {
-                _DamageMultiplierModifer = value;
+                return CState.m_NumberOfTargets * (1 + base.DamageMultiplierModifer) - 1;
             }
         }
     }

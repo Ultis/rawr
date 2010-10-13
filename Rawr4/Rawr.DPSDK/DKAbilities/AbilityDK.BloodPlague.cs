@@ -50,6 +50,16 @@ namespace Rawr.DK
             }
         }
 
-
+        private float _DamageMultiplierModifer = 0;
+        /// <summary>
+        /// Setup the modifier formula for a given ability.
+        /// </summary>
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                return CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer;
+            }
+        }
     }
 }

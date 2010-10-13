@@ -53,10 +53,7 @@ namespace Rawr.TankDK {
         public float Armor { get; set; }
 
         public float Crit { get; set; }
-        public float Defense { get; set; }
         public float Resilience { get; set; }
-        public float DefenseRating { get; set; }
-        public float DefenseRatingNeeded { get; set; }
 
         public float TargetMiss { get; set; }
         public float TargetDodge { get; set; }
@@ -64,7 +61,6 @@ namespace Rawr.TankDK {
 
         public float BurstTime { get; set; }
         public float ReactionTime { get; set; }
-
 
         public float Expertise { get; set; }
 
@@ -121,6 +117,7 @@ namespace Rawr.TankDK {
                 case "Reaction Time": return ReactionTime;
                 case "Resilience": return Resilience;
                 case "Spell Penetration": return BasicStats.SpellPenetration;
+                case "DPS": return DPS;
 
                 default: return 0.0f;
             }
@@ -193,10 +190,7 @@ namespace Rawr.TankDK {
             dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
 
             dict["Crit"] = Crit.ToString("F2");
-            dict["Defense"] = Defense.ToString("F0");
             dict["Resilience"] = Resilience.ToString("F0");
-            dict["Defense Rating"] = DefenseRating.ToString("F0");
-            dict["Defense Rating needed"] = DefenseRatingNeeded.ToString("F0");
 
             dict["Target Miss"] = (TargetMiss * 100.0f).ToString("F1") + "%";
             dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("F1") + "%";

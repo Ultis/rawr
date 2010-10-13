@@ -15,6 +15,16 @@ namespace Rawr.DK
         private CalculationOptionsDPSDK m_Opts;
         private BossOptions m_BO; 
         //public Rotation m_Rotation;
+        public float physCrits { get { return m_CState.m_Stats.PhysicalCrit; } }
+        public float spellCrits { get { return m_CState.m_Stats.SpellCrit; } }
+        public float combinedSwingTime { get; set; }
+        public Weapon MH { get { return m_CState.MH; } }
+        public Weapon OH { get { return m_CState.OH; } }
+        public float missedSpecial { get; set; }
+        public float dodgedSpecial { get; set; }
+        public float parriedSpecial { get; set; }
+        public float totalMHMiss { get; set; }
+        public float spellResist { get; set; }
         #endregion
 
         // TODO: Find a way to balance 2h vs. DW.
@@ -106,10 +116,11 @@ namespace Rawr.DK
         {
             get { return _AbilityCost[(int)DKCostTypes.RunicPower]; }
         }
-        private int _GCDs = 1;
+        private int _GCDs = 0;
         public int m_GCDs
         {
             get { return _GCDs; }
+            set { _GCDs = value; }
         }
 
         public bool DW { get; set; }
@@ -302,7 +313,9 @@ namespace Rawr.DK
             // For now, let's just blow everything in here one each.
             ml_Rot = new List<AbilityDK_Base>();
             ml_Rot.Add(IT);
+            ml_Rot.Add(FF);
             ml_Rot.Add(PS);
+            ml_Rot.Add(BP);
             ml_Rot.Add(BS);
             ml_Rot.Add(HS);
             ml_Rot.Add(BB);
@@ -321,6 +334,12 @@ namespace Rawr.DK
 
             foreach (AbilityDK_Base ability in ml_Rot)
             {
+                for (int i = 0; i < (int)EnumHelper.GetCount(typeof(DKCostTypes)); i++)
+                {
+                    this._AbilityCost[i] = ability.AbilityCost[i];
+                    if (ability.bTriggersGCD)
+                        m_GCDs++;
+                }
                 this._TotalDamage += ability.GetTotalDamage();
                 this._TotalThreat += ability.GetTotalThreat();
             }

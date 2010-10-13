@@ -18,7 +18,6 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            this.uBaseDamage = 650 * 160 / 100;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.6f;
             this.bTriggersGCD = true;
@@ -37,7 +36,7 @@ namespace Rawr.DK
         {
             get
             {
-                uint WDam = base.uBaseDamage;
+                uint WDam = (uint)((650 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.
                 if (m_iToT > 0 && null != this.wOH) // DW
@@ -53,12 +52,6 @@ namespace Rawr.DK
                 }
                 return WDam;
             }
-            set
-            {
-                // Setup so that we can just set a base damage w/o having to 
-                // manually set Min & Max all the time.
-                uMaxDamage = uMinDamage = value;
-            }
         }
 
         private float _DamageMultiplierModifer = 0;
@@ -71,10 +64,6 @@ namespace Rawr.DK
             {
                 float multiplier = (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofObliterate ? .20f : 0);
                 return multiplier;
-            }
-            set
-            {
-                _DamageMultiplierModifer = value;
             }
         }
     

@@ -18,7 +18,7 @@ namespace Rawr.DK
             this.szName = "Rune Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 20;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 2f;
+            this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
         }
@@ -33,7 +33,7 @@ namespace Rawr.DK
         {
             get
             {
-                uint WDam = base.uBaseDamage;
+                uint WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.
                 if (m_iToT > 0 && null != this.wOH) // DW
@@ -48,12 +48,6 @@ namespace Rawr.DK
                     WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier);
                 }
                 return WDam;
-            }
-            set
-            {
-                // Setup so that we can just set a base damage w/o having to 
-                // manually set Min & Max all the time.
-                uMaxDamage = uMinDamage = value;
             }
         }
 

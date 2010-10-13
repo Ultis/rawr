@@ -9,10 +9,10 @@ namespace Rawr.DPSDK
     {
         public Character character;
         public Stats stats;
-        public CombatTable combatTable;
+        public CombatTable2 combatTable;
         private BossOptions bo;
 
-        public StatsSpecialEffects(Character c, Stats s, CombatTable t)
+        public StatsSpecialEffects(Character c, Stats s, CombatTable2 t)
         {
             character = c;
             stats = s;

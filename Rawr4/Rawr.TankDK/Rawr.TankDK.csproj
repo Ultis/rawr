@@ -102,6 +102,10 @@
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.csproj">
+      <Project>{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}</Project>
+      <Name>Rawr.DPSDK</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

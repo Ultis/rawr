@@ -270,24 +270,40 @@ namespace Rawr.DK
             get
             {
                 if (this.bWeaponRequired)
-                    return Math.Max(1, CState.m_Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                    return Math.Max(1, .0065f + CState.m_Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
                 else
-                    return Math.Max(1, CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                    return Math.Max(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
             }
         }
 
         /// <summary>
-        /// The Hit Chance for the ability.  
+        /// Chance for the ability to hit the target.  
+        /// TODO: Add Expertise/dodge/parry related info.
         /// </summary>
         virtual public float HitChance
         {
             get
             {
-                
+
                 if (this.bWeaponRequired)
-                    return Math.Max(1, 1 - (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit));
+                {
+                    bool bAttackingFrominFront = false;
+                    float ChanceToHit = 1;
+                    // Determine Dodge chance
+                    float fDodgeChanceForTarget = 0;
+                    fDodgeChanceForTarget = StatConversion.YELLOW_DODGE_CHANCE_CAP[3] - StatConversion.GetDodgeParryReducFromExpertise(CState.m_Stats.Expertise);
+                    // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
+                    float fParryChanceForTarget = StatConversion.YELLOW_PARRY_CHANCE_CAP[3] - StatConversion.GetDodgeParryReducFromExpertise(CState.m_Stats.Expertise);
+                    // Determine Miss Chance
+                    float fMissChance = (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit);
+                    ChanceToHit -= Math.Max(0, fMissChance);
+                    ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
+                    if (bAttackingFrominFront)
+                        ChanceToHit -= Math.Max(0, fParryChanceForTarget);
+                    return ChanceToHit;
+                }
                 else
-                    return Math.Max(1, 1 - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                    return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
             }
         }
 
@@ -403,6 +419,7 @@ namespace Rawr.DK
         {
             get
             {
+                // TODO: Update for DRW uptime.
                 if (CState.m_Talents.GlyphofDancingRuneWeapon)
                     _ThreatMultiplier += .5f;
                 return _ThreatMultiplier;

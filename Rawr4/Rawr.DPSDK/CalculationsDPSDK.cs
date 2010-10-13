@@ -49,13 +49,7 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-        public float BonusMaxRunicPower = 0f;
-
-
         private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
-        public float Mastery { get; set; }
-        public float BonusRPMultiplier { get; set; }
-        public float BonusRuneRegeneration { get; set; }
 
         //public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -295,7 +289,7 @@ namespace Rawr.DPSDK
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            Stats stats = new Stats();
+            StatsDK stats = new StatsDK();
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             DeathKnightTalents talents = character.DeathKnightTalents;
 
@@ -304,16 +298,16 @@ namespace Rawr.DPSDK
             BossOptions hBossOptions = new BossOptions();
             int targetLevel = hBossOptions.Level;
 
-            stats = GetCharacterStats(character, additionalItem);
+            stats = (StatsDK)GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats.Clone(); // This is for what is on-display.
-            AccumulateSpecialEffectStats(stats, character, calcOpts); // Now add in the special effects.
+            AccumulateSpecialEffectStats(stats, character, calcOpts, calcs); // Now add in the special effects.
 
             CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts);
 
             calcs.CritChance = stats.PhysicalCrit;
             calcs.EffectiveArmor = stats.Armor;
             calcs.SpellCritChance = stats.SpellCrit;
-            calcs.Mastery = Mastery;
+            calcs.Mastery = stats.Mastery;
 
             calcs.OverallPoints = calcs.DPSPoints = combatTable.m_DPS; 
             return calcs;
@@ -326,9 +320,7 @@ namespace Rawr.DPSDK
 
         public Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p,  DeathKnightTalents t)
         {
-            BonusRPMultiplier = 0;
-            BonusRuneRegeneration = 0f;
-            Stats PresenceStats = new Stats();
+            StatsDK PresenceStats = new StatsDK();
             switch(p)
             {
                 case CalculationOptionsDPSDK.Presence.Blood:
@@ -336,7 +328,7 @@ namespace Rawr.DPSDK
                     if (t.ImprovedBloodPresence > 0)
                         PresenceStats.CritChanceReduction -= 0.03f * t.ImprovedBloodPresence;
                     else if (t.ImprovedFrostPresence > 0)
-                        BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
+                        PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence == 1)
                         PresenceStats.MovementSpeed += .08f;
                     else if (t.ImprovedUnholyPresence == 2)
@@ -357,7 +349,7 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
                     PresenceStats.BonusDamageMultiplier += 0.1f;
-                    BonusRPMultiplier += 0.1f;  // TODO: Put this into a stats object or something.
+                    PresenceStats.BonusRPMultiplier += 0.1f;  // TODO: Put this into a stats object or something.
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
                 }
@@ -366,9 +358,9 @@ namespace Rawr.DPSDK
                     if (t.ImprovedBloodPresence > 0)
                         PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
                     else if (t.ImprovedFrostPresence > 0)
-                        BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
+                        PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     PresenceStats.PhysicalHaste += .1f;
-                    BonusRuneRegeneration += .1f;
+                    PresenceStats.BonusRuneRegeneration += .1f;
                     PresenceStats.MovementSpeed += .15f;
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
@@ -390,7 +382,8 @@ namespace Rawr.DPSDK
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
-            Stats statsTotal = new Stats();
+            StatsDK statsTotal = new StatsDK();
+            statsTotal.Mastery += 8;
             if (null == character)
             {
 #if DEBUG
@@ -448,10 +441,10 @@ namespace Rawr.DPSDK
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
-            statsTotal.Accumulate(statsPresence);
             AccumulateTalents(statsTotal, character);
+            statsTotal.Accumulate(statsPresence);
 
-            statsTotal = GetRelevantStats(statsTotal);
+            statsTotal = (StatsDK)GetRelevantStats(statsTotal);
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
             statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc/3;
@@ -486,9 +479,9 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
-        private void AccumulateSpecialEffectStats(Stats s, Character c, CalculationOptionsDPSDK calcOpts)
+        private void AccumulateSpecialEffectStats(Stats s, Character c, CalculationOptionsDPSDK calcOpts, CharacterCalculationsDPSDK calcs)
         {
-            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new CombatTable(c, s, calcOpts));
+            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new CombatTable2(c, s, calcs, calcOpts));
             Stats statSE = new Stats();
             foreach (SpecialEffect e in s.SpecialEffects())
             {
@@ -504,7 +497,7 @@ namespace Rawr.DPSDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    se = new StatsSpecialEffects(c, s, new CombatTable(c, s, calcOpts));
+                    se = new StatsSpecialEffects(c, s, new CombatTable2(c, s, calcs, calcOpts));
                     s.Accumulate(se.getSpecialEffects(calcOpts, effect));
                 }
             }
@@ -564,10 +557,55 @@ namespace Rawr.DPSDK
             return curRotationType;
         }
 
+        /// <summary>
+        /// Local version of GetItemStats()
+        /// Includes the Armor style bonus.
+        /// </summary>
+        /// <param name="character"></param>
+        /// <param name="additionalItem"></param>
+        /// <returns></returns>
+        public override Stats GetItemStats(Character character, Item additionalItem)
+        {
+            Stats stats = base.GetItemStats(character, additionalItem);
+            // Add in armor specialty
+            if (GetQualifiesForArmorBonus(character, additionalItem))
+            {
+                stats.BonusStrengthMultiplier += .05f;
+                stats.BonusStaminaMultiplier += .05f;
+            }
+            return stats;
+        }
+
+
+        private bool GetQualifiesForArmorBonus(Character c, Item additionalItem)
+        {
+            // Easier to check if there is a DIS qualifying item than 
+            // to ensure than every item matches what we expect.
+            ItemTypeList list = new ItemTypeList();
+            list.Add(ItemType.Cloth);
+            list.Add(ItemType.Leather);
+            list.Add(ItemType.Mail);
+            if (additionalItem != null && list.Contains(additionalItem.Type))
+                return false;
+            else if ((c.Chest != null && list.Contains(c.Chest.Type))
+                || (c.Feet != null && list.Contains(c.Feet.Type))
+                || (c.Hands != null && list.Contains(c.Hands.Type))
+                || (c.Head != null && list.Contains(c.Head.Type))
+                || (c.Legs != null && list.Contains(c.Legs.Type))
+                || (c.Neck != null && list.Contains(c.Neck.Type))
+                || (c.Shoulders != null && list.Contains(c.Shoulders.Type))
+                || (c.Waist != null && list.Contains(c.Waist.Type))
+                || (c.Wrist != null && list.Contains(c.Wrist.Type))
+                )
+                return false;
+            else
+                return true;
+        }
         /// <summary>Build the talent effects.</summary>
-        private void AccumulateTalents(Stats FullCharacterStats, Character character)
+        private void AccumulateTalents(StatsDK FullCharacterStats, Character character)
         {
             Stats newStats = new Stats();
+            FullCharacterStats.Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
 
             // Which talent tree focus?
             #region Talent Speciality
@@ -591,7 +629,6 @@ namespace Rawr.DPSDK
                         // Mastery: Blood Shield
                         // Each Time you heal yourself w/ DS you gain a shield worth 50% of the amount healed
                         // Each Point of Mastery increases the shield by 6.25%
-                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
                         break;
                     }
                 case Rotation.Type.Frost:
@@ -606,8 +643,7 @@ namespace Rawr.DPSDK
                         // Mastery: Frozen Heart
                         // Increases all frost damage by 16%.  
                         // Each point of mastery increases frost damage by an additional 2.0%
-                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
-                        FullCharacterStats.BonusFrostDamageMultiplier += .16f + (.02f * Mastery);
+                        FullCharacterStats.BonusFrostDamageMultiplier += .16f + (.02f * FullCharacterStats.Mastery);
                         break;
                     }
                 case Rotation.Type.Unholy:
@@ -626,8 +662,7 @@ namespace Rawr.DPSDK
                         // Mastery: Blightcaller.
                         // Increases the damage done by your diseases by 32%.
                         // Each point of mastery increases disease damage by an additional 4.0%
-                        Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
-                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f + (.04f * Mastery);
+                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f + (.04f * FullCharacterStats.Mastery);
                         break;
                     }
             }
@@ -808,7 +843,7 @@ namespace Rawr.DPSDK
             // Increases Max RP by 10 per point
             if (character.DeathKnightTalents.RunicPowerMastery > 0)
             {
-                BonusMaxRunicPower += 10 * character.DeathKnightTalents.RunicPowerMastery;
+                FullCharacterStats.BonusMaxRunicPower += 10 * character.DeathKnightTalents.RunicPowerMastery;
             }
 
             // Icy Reach
@@ -1151,7 +1186,7 @@ namespace Rawr.DPSDK
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            Stats s = new Stats()
+            Stats s = new StatsDK()
             {
                 // Core stats
                 Strength = stats.Strength,
@@ -1167,7 +1202,6 @@ namespace Rawr.DPSDK
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Resilience = stats.Resilience,
-//                Mastery = stats.Mastery,
 
                 // Secondary Stats
                 Health = stats.Health,

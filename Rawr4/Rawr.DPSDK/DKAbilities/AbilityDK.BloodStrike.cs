@@ -51,7 +51,7 @@ namespace Rawr.DK
         {
             get
             {
-                uint WDam = base.uBaseDamage;
+                uint WDam = (uint)((850 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.
                 if (m_iToT > 0 && null != this.wOH) // DW
@@ -66,12 +66,6 @@ namespace Rawr.DK
                     WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier);
                 }
                 return WDam;
-            }
-            set
-            {
-                // Setup so that we can just set a base damage w/o having to 
-                // manually set Min & Max all the time.
-                uMaxDamage = uMinDamage = value;
             }
         }
     }

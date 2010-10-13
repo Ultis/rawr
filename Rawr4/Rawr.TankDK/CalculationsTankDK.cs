@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Xml.Serialization;
+using Rawr.DK;
 
 namespace Rawr.TankDK {
 	[Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
@@ -196,10 +193,7 @@ Points individually may be important.",
 
 						@"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary 
 criteria to this <= 0 to ensure that you stay defense-soft capped.",
-						"Defense:Defense Rating",
-						"Defense:Defense",
 						"Defense:Resilience",
-						"Defense:Defense Rating needed*Including Resilience to ensure being uncrittable.",
 
 						"Advanced Stats:Miss*After Diminishing Returns",
 						"Advanced Stats:Dodge*After Diminishing Returns",
@@ -245,23 +239,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 		}
 		
 
-#if RAWR3 || RAWR4
 		private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		public override ICalculationOptionsPanel CalculationOptionsPanel
 		{
 			get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
 		}
-#else
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-		/// <summary>
-		/// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
-		/// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
-		/// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
-		/// </summary>
-		public override CalculationOptionsPanelBase CalculationOptionsPanel {
-			get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
-		}
-#endif
 
 		private List<ItemType> _relevantItemTypes = null;
 		/// <summary>
@@ -324,7 +306,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 					"Reaction Time",
 					"Burst Time",
                     "Resilience",
-                    "Spell Penetration"
+                    "Spell Penetration",
+                    "DPS",
 				}; 
 			} 
 		}
@@ -443,17 +426,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			TDK.opts = character.CalculationOptions as CalculationOptionsTankDK;
 			// Validate opts 
 			if (null == TDK.opts) { return calcs; }
+
+            // Get the boss info
+            BossOptions bo = new BossOptions();
 			// Get the shotrotation/combat model here.
 //			if (TDK.opts.m_Rotation == null) { return calcs; }
 
 			// Level differences.
-			int iTargetLevel = TDK.opts.TargetLevel;
-			if (TDK.opts.bExperimental)
-			{
-				iTargetLevel = TDK.opts.hCurrentBoss.Level;
-			}
-			int iLevelDiff = iTargetLevel - character.Level;
-			float fLevelDiffModifier = iLevelDiff * 0.2f;
+			int iTargetLevel = bo.Level;
+
+//			int iLevelDiff = iTargetLevel - character.Level;
+            int iLevelDiff = 3;
+            float fLevelDiffModifier = iLevelDiff * 0.2f;
 
 			// Apply the ratings to actual stats.
 			ProcessRatings(stats);
@@ -461,7 +445,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Need to save off the base avoidance stats before having their ratings applied to them.
 			float fBaseDodge = stats.Dodge;
 			float fBaseParry = stats.Parry;
-			float fBaseDef = stats.Defense;
 			float fBaseMiss = stats.Miss;
 
 			ProcessAvoidance(stats, iTargetLevel);
@@ -528,16 +511,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			#endregion
 
 			// need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
-//			TDK.opts.m_Rotation.m_fDodge = stats.Dodge;
-//			TDK.opts.m_Rotation.m_fParry = stats.Parry;
-//			TDK.opts.m_Rotation.m_fPhysicalHaste = stats.PhysicalHaste;
 
 			// This is the point that SHOULD have the right values according to the paper-doll.
 			Stats sPaperDoll = stats.Clone();
 
-//			CombatTable ct = new CombatTable(TDK.Char, calcs, stats, TDK.opts);
-			// Setup for new combat table using the new ability objects.
-//			CombatTable2 ct2 = new CombatTable2(TDK.Char, stats, calcs, TDK.opts);
+//			CombatTable2 ct = new CombatTable2(TDK.Char, stats, calcs, TDK.opts);
 			// Now that we have the combat table, we should be able to integrate the Special effects.
 			// However, the special effects will modify the incoming stats for all aspects, so we have 
 			// ensure that as we iterate, we don't count whole sets of stats twice.
@@ -557,9 +535,11 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			#endregion 
 
 			// Filter out the duplicate Runes:
-			if (character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-				&& character.MainHandEnchant == character.OffHandEnchant)
-			{
+            if (character.OffHand != null
+                && character.OffHandEnchant != null
+                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && character.MainHandEnchant == character.OffHandEnchant)
+            {
 				bool bFC1Found = false;
 				bool bFC2Found = false;
 				foreach (SpecialEffect se1 in stats.SpecialEffects())
@@ -630,7 +610,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// Refresh the base avoidance values
 			stats.Dodge = fBaseDodge;
 			stats.Parry = fBaseParry;
-			stats.Defense = fBaseDef;
 			stats.Miss = fBaseMiss;
 
 			stats.Accumulate(statSE);
@@ -665,10 +644,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			}
 
 			float fChanceToGetCrit = fAvoidance[(int)HitResult.Crit];
-			// The next call expect Defense rating to NOT be factored into the defense stat
-			calcs.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, iTargetLevel);
-
-			stats.Defense += StatConversion.GetDefenseFromRating(stats.DefenseRating, character.Class);
 
 			// 5% + Level difference crit chance.
 			// Level difference is already factored in above.
@@ -678,12 +653,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			float fPercentCritMitigation = 1f - (fChanceToGetCrit / fBaseCritChance);
 
 			// refresh Combat table w/ the new stats.
-//			ct = new CombatTable(character, calcs, stats, TDK.opts);
-			if (TDK.opts.bExperimental)
-			{
-				// Setup for new combat table using the new ability objects.
+			// Setup for new combat table using the new ability objects.
 //				ct2 = new CombatTable2(character, stats, calcs, TDK.opts);
-			}
 
 			#region Talents with general reach that aren't already in stats.
 			#region Talent: Bone Shield
@@ -739,13 +710,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
 			#region Setup Fight parameters
 
-			float fFightDuration = TDK.opts.FightLength;
+			float fFightDuration = bo.BerserkTimer;
 			if (fFightDuration == 0f)
 			{
 				TDK.opts.FightLength = fFightDuration = 10f;
 			}
 			// Does the boss have parry haste?
-			bool bParryHaste = TDK.opts.bParryHaste;
+			bool bParryHaste = false;
 
 			// Get the values of each type of damage in %.
 			// So first we get each type of damage in the same units: DPS.
@@ -766,56 +737,51 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			// We want to start getting the Boss Handler stuff going on.
 			#region ***** Boss Handler *****
 			// Setup initial Boss data.
-			BossHandler hCurrentBoss = new BossHandler();
-			if (TDK.opts.bExperimental)
+			// How much of what kind of damage does this boss deal with?
+			#region ** Incoming Boss Damage **
+			int uAttackCount = bo.Attacks.Count;
+			if (uAttackCount <= 0)
 			{
-				hCurrentBoss = TDK.opts.hCurrentBoss;                
-				// How much of what kind of damage does this boss deal with?
-				#region ** Incoming Boss Damage **
-				int uAttackCount = hCurrentBoss.Attacks.Count;
-				if (uAttackCount <= 0)
+				// Error
+			}
+			else
+			{
+				fPhyDamageDPS = bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
+				foreach (Attack a in bo.Attacks)
 				{
-					// Error
-				}
-				else
-				{
-					fPhyDamageDPS = hCurrentBoss.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
-					foreach (Attack a in hCurrentBoss.Attacks)
+					if (a.IgnoresAllTanks == false)
 					{
-						if (a.IgnoresAllTanks == false)
+						// Bleeds vs Magic vs Physical
+						if (a.DamageType == ItemDamageType.Physical)
 						{
-							// Bleeds vs Magic vs Physical
-							if (a.DamageType == ItemDamageType.Physical)
+							// Bleed or Physical
+							// Need to figure out how to determine bleed vs. physical hits.
+							// Also need to balance out the physical hits and balance the hit rate.
+							if (a.Avoidable)
 							{
-								// Bleed or Physical
-								// Need to figure out how to determine bleed vs. physical hits.
-								// Also need to balance out the physical hits and balance the hit rate.
-								if (a.Avoidable)
-								{
-									fPhyDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
-								}
-								else
-								{
-									fBleedDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
-								}
+								fPhyDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
 							}
 							else
 							{
-								// Magic
-								fMagicDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
+								fBleedDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
 							}
+						}
+						else
+						{
+							// Magic
+							fMagicDamageDPS = GetDPS(a.DamagePerHit, a.AttackSpeed);
 						}
 					}
 				}
-				#endregion
-
-				#region Fight Settings
-				// Set the Fight Duration to no larger than the Berserk Timer
-				// Question: What is the units for Berserk & Speed Timer? MS/S/M?
-				fFightDuration = Math.Min(hCurrentBoss.BerserkTimer, fFightDuration);
-				bParryHaste = hCurrentBoss.DefaultMeleeAttack != null ? hCurrentBoss.DefaultMeleeAttack.UseParryHaste : false;
-				#endregion 
 			}
+			#endregion
+
+			#region Fight Settings
+			// Set the Fight Duration to no larger than the Berserk Timer
+			// Question: What is the units for Berserk & Speed Timer? MS/S/M?
+			fFightDuration = Math.Min(bo.BerserkTimer, fFightDuration);
+			bParryHaste = bo.DefaultMeleeAttack != null ? bo.DefaultMeleeAttack.UseParryHaste : false;
+			#endregion 
 			#endregion
 
 			#region ***** Survival Rating *****
@@ -1137,8 +1103,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			if (float.IsNaN(calcs.Threat) ||
 				float.IsNaN(calcs.Survival) ||
 				float.IsNaN(calcs.Mitigation) ||
-				float.IsNaN(calcs.BurstTime) ||
-				float.IsNaN(calcs.ReactionTime) ||
+//				float.IsNaN(calcs.BurstTime) ||
+//				float.IsNaN(calcs.ReactionTime) ||
 				float.IsNaN(calcs.OverallPoints) )
 			{
 #if DEBUG
@@ -1169,15 +1135,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 				calcs.Parry = stats.Parry * 100f;
 				calcs.Crit = fChanceToGetCrit * 100f;
 
-				calcs.DefenseRating = stats.DefenseRating;
-				calcs.Defense = stats.Defense;
 				calcs.Resilience = stats.Resilience;
 
 				calcs.TargetDodge = chanceTargetDodge;
 				calcs.TargetMiss = chanceTargetMiss;
 				calcs.TargetParry = chanceTargetParry;
 				calcs.Expertise = stats.Expertise;
-//                calcs.BasicStats.ArmorPenetration = StatConversion.GetArmorPenetrationFromRating(sPaperDoll.ArmorPenetrationRating) * 100f;
 
 				calcs.ArmorDamageReduction = ArmorDamageReduction;
 //            }
@@ -1209,8 +1172,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
 
 			// Filter out the duplicate Runes:
-			if (character.MainHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-				&& character.MainHandEnchant == character.OffHandEnchant)
+            if (character.OffHand != null
+                && character.OffHandEnchant != null
+                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && character.MainHandEnchant == character.OffHandEnchant)
 			{
 				// Remove one of the enchants.
 				character.OffHandEnchant = null;
@@ -1220,10 +1185,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			statsTotal = BaseStats.GetBaseStats(character);
 			statsTotal.BaseAgility = BaseStats.GetBaseStats(character).Agility;
 
-			if (statsTotal.Defense < 400f)
-				// Adding in the base 400 Defense skill all tanks are expected to have.  
-				// There are too many places where this just kinda stuck in.  It should be attached to the toon.
-				statsTotal.Defense = 400f;
 			AccumulateItemStats(statsTotal, character, additionalItem);
 			AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
 			// Except the 4 piece T9 - improves CD of VB, UA, and BS by 10 sec.  That has to get handled elsewhere.
