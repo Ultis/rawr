@@ -302,7 +302,7 @@ namespace Rawr.Moonkin
 
             RotationData.ManaUsed -= manaSavingsFromOOC;
 
-            RotationData.ManaGained = 2 * 0.06f * talents.Euphoria * calcs.BasicStats.Mana;
+            RotationData.ManaGained = 2 * 0.08f * talents.Euphoria * calcs.BasicStats.Mana;
 
             return preSolarDamage + solarDamage + preLunarDamage + lunarDamage + moonfireDamage + insectSwarmDamage + starSurgeDamage;
         }

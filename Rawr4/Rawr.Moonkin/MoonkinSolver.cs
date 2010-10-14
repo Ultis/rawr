@@ -24,8 +24,8 @@ namespace Rawr.Moonkin
                             Name = "SF",
                             BaseDamage = (987 + 1229) / 2.0f,
                             SpellDamageModifier = 1.0f,
-                            BaseCastTime = 3.5f,
-                            BaseManaCost = (float)(int)(BaseMana * 0.16f),
+                            BaseCastTime = 3.2f,
+                            BaseManaCost = (float)(int)(BaseMana * 0.11f),
                             DotEffect = null,
                             School = SpellSchool.Arcane,
                             BaseEnergy = 20
@@ -33,7 +33,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "MF",
-                            BaseDamage = (197.0f + 239.0f) / 2.0f,
+                            BaseDamage = (197.0f + 239.0f) / 2.0f * 1.5f,
                             SpellDamageModifier = 0.18f,
                             BaseCastTime = 1.5f,
                             BaseManaCost = (float)(int)(BaseMana * 0.18f),
@@ -52,7 +52,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (675f + 761.0f) / 2.0f,
                             SpellDamageModifier = 2.5f/3.5f,
                             BaseCastTime = 2.5f,
-                            BaseManaCost = (float)(int)(BaseMana * 0.14f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.09f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
                             BaseEnergy = 13+1/3
@@ -745,7 +745,7 @@ namespace Rawr.Moonkin
             {
                 for (int isMode = 0; isMode < 4; ++isMode)
                 {
-                    for (int ssMode = 0; ssMode < 3; ++ssMode)
+                    for (int ssMode = 0; ssMode < 4; ++ssMode)
                     {
                         DotMode mfModeEnum = (DotMode)mfMode;
                         DotMode isModeEnum = (DotMode)isMode;
