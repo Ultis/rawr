@@ -39,7 +39,7 @@ namespace Rawr.Enhance
 
             int priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ShamanisticRage);
             if (priority > 0 && _talents.ShamanisticRage == 1)
-                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, 1.5f, 0f, priority, false, true));
+                abilities.Add(new Ability(EnhanceAbility.ShamanisticRage, 60f, 1.5f, 0f, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FeralSpirits);
             if (priority > 0 && _talents.FeralSpirit == 1)
@@ -58,7 +58,7 @@ namespace Rawr.Enhance
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0 && _talents.Stormstrike == 1)
-                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, 1.5f, 0.08f * baseMana, priority, false, true));
+                abilities.Add(new Ability(EnhanceAbility.StormStrike, 8f, 1.5f, 0.08f * baseMana, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
             if (priority > 0)
@@ -87,9 +87,9 @@ namespace Rawr.Enhance
             if (priority > 0 && !_calcOpts.Magma)
                 abilities.Add(new Ability(EnhanceAbility.SearingTotem, 60f, 1.0f, 0.05f * baseMana * mentalQuickness, priority, false, false));
 
-            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningShield);  //FIXME  static shock no longer consumes charges
+            priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LightningShield);  //FIXME
             if (priority > 0 && _talents.StaticShock > 0)
-                    abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, priority, true, false));
+                abilities.Add(new Ability(EnhanceAbility.LightningShield, _cs.StaticShockAvDuration, gcd, 0f, priority, true, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.ChainLightning);
             if (priority > 0 && _talents.MaelstromWeapon > 0)

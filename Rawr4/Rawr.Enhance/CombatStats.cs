@@ -132,9 +132,9 @@ namespace Rawr.Enhance
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
         public float AverageFSDotTime { get { return averageFSDotTime; } } 
         public float BaseShockSpeed { get { return 6f - .2f * _talents.Reverberation; } }
-        public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } } // -(_talents.GlyphofFireNova ? 3f : 0f); } }
+        public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
-        public float StaticShockAvDuration { get { return StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS); } }  //FIXME Static Chock no longer consumes charges
+        public float StaticShockAvDuration { get { return /*StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS)*/600f; } }  //FIXME Static Chock no longer consumes charges
         public float MultiTargetMultiplier { get { return _calcOpts.MultipleTargets ? _calcOpts.AdditionalTargets * _calcOpts.AdditionalTargetPercent : 1f; } }
             
         public float HitsPerSOH { get { return hitsPerSOH; } }
@@ -217,7 +217,7 @@ namespace Rawr.Enhance
             // talents
             if (_calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
             {
-                stormstrikeBonusCrit = .05f * _talents.Stormstrike;
+                stormstrikeBonusCrit = .25f * _talents.Stormstrike + (_talents.GlyphofStormstrike ? .1f : 0f);
             }
             else
             {

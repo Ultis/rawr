@@ -27,11 +27,7 @@ namespace Rawr.Enhance
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();
                 if (mhEffects.MoveNext()) { mainHandEnchant = mhEffects.Current; }
             }
-#if RAWR4
             if (character.OffHandEnchant != null)
-#else
-            if (_character.ShamanTalents.DualWield == 1 && character.OffHandEnchant != null)
-#endif
             {
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
                 if (ohEffects.MoveNext()) { offHandEnchant = ohEffects.Current; }
@@ -142,11 +138,7 @@ namespace Rawr.Enhance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeAttack:
-#if RAWR4
                     if (_cs.UnhastedOHSpeed != 1)
-#else
-                    if (_character.ShamanTalents.DualWield == 1)
-#endif
                     {
                         trigger = (_cs.HastedMHSpeed + _cs.HastedOHSpeed) / 2;
                         chance = 1f;
@@ -252,14 +244,11 @@ namespace Rawr.Enhance
             }
         }
 
-        private void AddHighestStat(Stats statsAverage)
+        private void AddHighestStat(Stats statsAverage)  //(Chcek) FIXME
         {
             //trinket procs
             if (statsAverage.HighestStat > 0)
             {
-#if !RAWR4
-                float intfromAP = _character.ShamanTalents.MentalDexterity / 3;
-#endif
                 // Highest stat
                 float highestStat = 0f;
                 if (_stats.Agility > _stats.Strength)
@@ -274,11 +263,7 @@ namespace Rawr.Enhance
                     {
                         highestStat = statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier);
                         statsAverage.Intellect += highestStat;
-#if RAWR4
                         statsAverage.SpellPower += highestStat;
-#else
-                        statsAverage.AttackPower += intfromAP * highestStat;
-#endif
                     }
                 }
                 else
@@ -293,11 +278,7 @@ namespace Rawr.Enhance
                     {
                         highestStat = statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier);
                         statsAverage.Intellect += highestStat;
-#if RAWR4
-                        statsAverage.SpellPower += highestStat
-#else
-                        statsAverage.AttackPower += intfromAP * highestStat;
-#endif
+                        statsAverage.SpellPower += highestStat;
                     }
                 }
             }

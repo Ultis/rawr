@@ -53,10 +53,10 @@ namespace Rawr.Enhance
                     "Basic Stats:Strength",
                     "Basic Stats:Agility",
                     "Basic Stats:Intellect",
-                    "Basic Stats:Spirit",
+                    //"Basic Stats:Spirit",
                     "Basic Stats:Mastery Rating",
 					"Basic Stats:Attack Power",
-					"Basic Stats:SpellPower",
+					"Basic Stats:Spell Power",
 					"Basic Stats:White Hit",
                     "Basic Stats:Yellow Hit",
                     "Basic Stats:Spell Hit",
@@ -86,7 +86,7 @@ namespace Rawr.Enhance
                     "Attacks:Earth Shock",
                     "Attacks:Flame Shock",
                     "Attacks:Lightning Bolt",
-                    "Attacks:Unleash Weapon",
+                    "Attacks:Unleash Elements",
                     "Attacks:Lightning Shield",
                     "Attacks:Chain Lightning",
                     "Attacks:Fire Nova",
@@ -220,6 +220,16 @@ namespace Rawr.Enhance
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             float initialAP = stats.AttackPower;
 
+            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
+                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
+                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
+                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
+                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
+                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
+                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
+                                character.Feet != null && character.Feet.Type == ItemType.Mail;
+            stats.BonusAgilityMultiplier += (MailSpecialization ? .05f : 0);
+
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
             stats.Accumulate(se.getSpecialEffects());
@@ -229,7 +239,7 @@ namespace Rawr.Enhance
             float callofFlameBonus = 1f + .1f * character.ShamanTalents.CallOfFlame;
             float fireNovaBonus = 1f + .1f * character.ShamanTalents.ImprovedFireNova;
             float mentalQuickness = .5f;  //AP -> SP conversion
-            float windfuryWeaponBonus = 1250f + stats.BonusWFAttackPower;  //WFAP (Check)
+            float windfuryWeaponBonus = 4430f + stats.BonusWFAttackPower;  //WFAP (Check)
             float windfuryDamageBonus = 1f;
             switch (character.ShamanTalents.ElementalWeapons)
             {
@@ -249,7 +259,7 @@ namespace Rawr.Enhance
                 case 1: unleashedRage = .05f; break;
                 case 2: unleashedRage = .10f; break;
             }
-            float FTspellpower = (float)Math.Floor((float)(211f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));  //FT SP Bonus (Check) 
+            float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));  //FT SP Bonus (Check) 
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
             if (calcOpts.OffhandImbue == "Flametongue")
@@ -414,8 +424,8 @@ namespace Rawr.Enhance
                 float coefES = .3858f;
                 float damageES = concussionMultiplier * (damageESBase + coefES * spellPower);
                 float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
-                float shockNormal = shockdps * cs.SpellHitModifier;  //cs.NatureSpellHitModifier CATA
-                float shockCrit = shockdps * cs.SpellCritModifier * cs.CritMultiplierSpell;  //cs.NatureSpellCritModifier CATA
+                float shockNormal = shockdps * cs.NatureSpellHitModifier;  //CATA
+                float shockCrit = shockdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;  //CATA
                 dpsES = (shockNormal + shockCrit) * mastery * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
@@ -491,8 +501,8 @@ namespace Rawr.Enhance
                 float damageLSCoef = 0.267f; // co-efficient from EnhSim
                 float damageLS = shieldBonus * (damageLSBase + damageLSCoef * spellPower);
                 float lsdps = damageLS * cs.StaticShockProcsPerS;
-                float lsNormal = lsdps * cs.SpellHitModifier;  //cs.NatureSpellHitModifie CATA
-                float lsCrit = lsdps * cs.SpellCritModifier * cs.CritMultiplierSpell;  //cs.NatureSpellCritModifie CATA
+                float lsNormal = lsdps * cs.NatureSpellHitModifier;  // CATA
+                float lsCrit = lsdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;  // CATA
                 dpsLS = (lsNormal + lsCrit) * mastery * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
@@ -510,7 +520,7 @@ namespace Rawr.Enhance
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
                 float damageFireTotem = (105f + .1667f * spellPower) * callofFlameBonus;
-                float FireTotemdps = damageFireTotem / 1.65f * cs.FireTotemUptime;  //cs.SearingTotemUptime CATA
+                float FireTotemdps = damageFireTotem / 1.65f * cs.SearingTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
@@ -532,7 +542,7 @@ namespace Rawr.Enhance
 
             #region Flametongue Weapon DPS
             float dpsFT = 0f;
-            if (calcOpts.MainhandImbue == "Flametongue")
+            /*if (calcOpts.MainhandImbue == "Flametongue")
             {
                 float damageFTBase = 274f * cs.UnhastedMHSpeed / 4.0f;
                 float damageFTCoef = 0.03811f * cs.UnhastedMHSpeed;
@@ -541,7 +551,7 @@ namespace Rawr.Enhance
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
-            }
+            }*/
             if (calcOpts.OffhandImbue == "Flametongue")
             {
                 float damageFTBase = 274f * cs.UnhastedOHSpeed / 4.0f;
@@ -555,7 +565,31 @@ namespace Rawr.Enhance
             #endregion
 
             #region Unleash Elements DPS
-            //TODO CATA
+            float dpsUEW = 0f;
+            float dpsUEF = 0f;
+            float dpsUE = 0f;
+            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements))
+            {
+                if (calcOpts.MainhandImbue == "Windfury")
+                {
+                    float damageUEWHit = dpsMHMeleeNormal * .5f;
+                    float UEWdps = damageUEWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
+                    float UEWnormal = UEWdps * cs.YellowCritModifierMH;
+                    float UEWCrit = UEWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
+                    dpsUEW = (UEWnormal + UEWCrit) * cs.DamageReduction * bonusPhysicalDamage;
+                }
+                if (calcOpts.OffhandImbue == "Flametongue")
+                {
+                    float damageUEFBase = 1070f;
+                    float damageUEFCoef = 0.43f;
+                    float damageUEF = damageUEFBase + damageUEFCoef * spellPower;
+                    float uefdps = damageUEF / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
+                    float uefnormal = uefdps * cs.SpellHitModifier;
+                    float uefcrit = uefdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                    dpsUEF = (uefnormal + uefcrit) * mastery * bonusFireDamage * bossFireResistance;
+                }
+                dpsUE = dpsUEW + dpsUEF;
+            }
             #endregion
 
             #region Pet calculations
@@ -648,7 +682,7 @@ namespace Rawr.Enhance
             calculatedStats.OHEnchantUptime = se.GetOHUptime() * 100f;
             calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
-            calculatedStats.FireTotemUptime = cs.FireTotemUptime * 100f;  //CATA FIXME!!
+            calculatedStats.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;  //CATA
             
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
@@ -666,7 +700,7 @@ namespace Rawr.Enhance
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
             calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
-            calculatedStats.UnleashElements = null; //CATA FIXME!
+            calculatedStats.UnleashElements = new DPSAnalysis(dpsUE, 1, -1, -1, 1, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements)); //CATA FIXME!
 
 #if RAWR3 || RAWR4
             calculatedStats.Version = VERSION;
@@ -731,7 +765,7 @@ namespace Rawr.Enhance
             statsTotal.AttackPower = statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier);
 
             float SPfromAP = statsTotal.AttackPower * .5f;  //Mental Quickness
-            statsTotal.SpellPower += SPfromAP;
+            statsTotal.SpellPower += SPfromAP + statsTotal.Intellect;
             statsTotal.SpellPower = statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier);
 
             return statsTotal;
@@ -1085,31 +1119,27 @@ namespace Rawr.Enhance
 
                 case "Relative Gem Values":
                     float dpsBase = GetCharacterCalculations(character).OverallPoints;
-                    float dpsStr = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Strength = 20 } }).OverallPoints - dpsBase);
-                    float dpsAgi = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Agility = 20 } }).OverallPoints - dpsBase);
-                    float dpsAP = (GetCharacterCalculations(character, new Item()    { Stats = new Stats() { AttackPower = 40 } }).OverallPoints - dpsBase);
-                    float dpsInt = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Intellect = 20 } }).OverallPoints - dpsBase);
-                    float dpsCrit = (GetCharacterCalculations(character, new Item()  { Stats = new Stats() { CritRating = 20 } }).OverallPoints - dpsBase);
-                    float dpsExp = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { ExpertiseRating = 20 } }).OverallPoints - dpsBase);
-                    float dpsHaste = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 20 } }).OverallPoints - dpsBase);
-                    float dpsHit = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { HitRating = 20 } }).OverallPoints - dpsBase);
+                    float dpsStr = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Strength = 40 } }).OverallPoints - dpsBase);
+                    float dpsAgi = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Agility = 40 } }).OverallPoints - dpsBase);
+                    float dpsInt = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Intellect = 40 } }).OverallPoints - dpsBase);
+                    float dpsCrit = (GetCharacterCalculations(character, new Item()  { Stats = new Stats() { CritRating = 40 } }).OverallPoints - dpsBase);
+                    float dpsExp = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { ExpertiseRating = 40 } }).OverallPoints - dpsBase);
+                    float dpsHaste = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 40 } }).OverallPoints - dpsBase);
+                    float dpsHit = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { HitRating = 40 } }).OverallPoints - dpsBase);
                     float dpsDmg = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-                    float dpsPen = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { ArmorPenetrationRating = 20 } }).OverallPoints - dpsBase);
-                    float dpsSpd = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { SpellPower = 23 } }).OverallPoints - dpsBase);
-                    float dpsSta = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Stamina = 30 } }).OverallPoints - dpsBase);
+                    float dpsMast = (GetCharacterCalculations(character, new Item()  { Stats = new Stats() { MasteryRating = 40 } }).OverallPoints - dpsBase);
+                    float dpsSta = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Stamina = 60 } }).OverallPoints - dpsBase);
 
                     return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationEnhance() { Name = "30 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "20 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "20 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationEnhance() { Name = "40 Attack Power", OverallPoints = dpsAP, DPSPoints = dpsAP },
-						new ComparisonCalculationEnhance() { Name = "20 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-						new ComparisonCalculationEnhance() { Name = "20 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationEnhance() { Name = "20 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-						new ComparisonCalculationEnhance() { Name = "20 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationEnhance() { Name = "20 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
-						new ComparisonCalculationEnhance() { Name = "20 Armor Penetration", OverallPoints = dpsPen, DPSPoints = dpsPen },
-                        new ComparisonCalculationEnhance() { Name = "23 Spellpower", OverallPoints = dpsSpd, DPSPoints = dpsSpd }
+						new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+						new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
+						new ComparisonCalculationEnhance() { Name = "40 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+						new ComparisonCalculationEnhance() { Name = "40 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+						new ComparisonCalculationEnhance() { Name = "40 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+						new ComparisonCalculationEnhance() { Name = "40 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+                        new ComparisonCalculationEnhance() { Name = "40 Mastery Rating", OverallPoints = dpsMast, DPSPoints = dpsMast }
 					};
 
                 case "MH Weapon Speeds":
