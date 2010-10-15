@@ -108,6 +108,9 @@ namespace Rawr.Warlock {
 
             CalculationOptionsWarlock options = new CalculationOptionsWarlock();
             options.Pet = "None";
+#if RAWR4
+            options.PlayerLevel = 80;
+#endif
             options.TargetLevel = 83;
             options.Duration = 300;
             options.Latency = .1f;
@@ -170,6 +173,9 @@ namespace Rawr.Warlock {
         private string _Pet = "None";
         private string _Imbue = "Grand Spellstone"; // default it here for backward compatibility w/ files from before it was added
         private bool _UseInfernal = false;
+#if RAWR4
+        private int _PlayerLevel = 80;
+#endif
         private int _TargetLevel = 83;
         private float _Duration = 300;
         private float _Latency = 200;
@@ -192,6 +198,9 @@ namespace Rawr.Warlock {
         public string Pet { get { return _Pet; } set { _Pet = value; OnPropertyChanged("Pet"); } }
         public string Imbue { get { return _Imbue; } set { _Imbue = value; OnPropertyChanged("Imbue"); } }
         public bool UseInfernal { get { return _UseInfernal; } set { _UseInfernal = value; OnPropertyChanged("UseInfernal"); } }
+#if RAWR4
+        public int PlayerLevel { get { return _PlayerLevel; } set { _PlayerLevel = value; OnPropertyChanged("PlayerLevel"); } }
+#endif
         public int TargetLevel { get { return _TargetLevel; } set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); } }
         public float Duration { get { return _Duration; } set { _Duration = value; OnPropertyChanged("Duration"); } }
         public float Latency { get { return _Latency; } set { _Latency = value; OnPropertyChanged("Latency"); } }

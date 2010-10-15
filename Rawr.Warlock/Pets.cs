@@ -207,8 +207,11 @@ namespace Rawr.Warlock {
         }
 
         public float CalcSpellCrit() {
-
+#if !RAWR4
             return StatUtils.CalcSpellCrit(Stats);
+#else
+            return StatUtils.CalcSpellCrit(Stats, Mommy.Options.PlayerLevel);
+#endif
         }
 
         public float CalcAttackPower() {
@@ -296,7 +299,11 @@ namespace Rawr.Warlock {
         public float GetSpecialSpeed() {
 
             return SpecialCooldown
+#if !RAWR4
                 + SpecialCastTime / StatUtils.CalcSpellHaste(Stats);
+#else
+                + SpecialCastTime / StatUtils.CalcSpellHaste(Stats, Mommy.Options.PlayerLevel);
+#endif
         }
 
         public virtual float GetSpecialDamage() {
@@ -328,6 +335,7 @@ namespace Rawr.Warlock {
 
         #endregion
 
+#if !RAWR4
         public float ApplyPactProcBenefit() {
 
             float benefit = GetPactProcBenefit();
@@ -383,6 +391,7 @@ namespace Rawr.Warlock {
 
             return uprate * buff;
         }
+#endif
 
         protected float GetEmpowermentCooldown() {
 #if !RAWR4

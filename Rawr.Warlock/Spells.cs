@@ -7,9 +7,16 @@ using System.Diagnostics;
 namespace Rawr.Warlock {
 
     public class Spell {
+        // index is level - 80
+        protected static float[] WARLOCKSPELLBASEVALUES = { 
+            861.855224609375000f, 881.517456054687500f, 901.397033691406250f, 
+            921.494018554687500f, 941.806640625000000f, 962.335632324218750f
+        };
+        protected static float[] OTHERSPELLBASEVALUES = { 
+            125f, 308f, 338f, 375f, 407f, 443f
+        };
 
         public enum SpellTree { Affliction, Demonology, Destruction }
-
         public static List<string> ALL_SPELLS = new List<String>();
 
         static Spell() {
@@ -33,18 +40,10 @@ namespace Rawr.Warlock {
             }
         }
 
-        public static float CalcUprate(
-            float procRate, float duration, float triggerPeriod) {
-
-            return 1f
-                - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
+        public static float CalcUprate(float procRate, float duration, float triggerPeriod) {
+            return 1f - (float) Math.Pow(1f - procRate, duration / triggerPeriod);
         }
-
-        public static float GetTimeUsed(
-            float baseCastTime,
-            float gcdBonus,
-            List<WeightedStat> haste,
-            float lag) {
+        public static float GetTimeUsed(float baseCastTime, float gcdBonus, List<WeightedStat> haste, float lag) {
 
             float minGCD = 1f - gcdBonus;
             float unhasted = Math.Max(baseCastTime, 1.5f - gcdBonus);
@@ -100,7 +99,6 @@ namespace Rawr.Warlock {
 
         #endregion
 
-
         #region Non-Damage Constructor
         public Spell(
             CharacterCalculationsWarlock mommy,
@@ -120,8 +118,12 @@ namespace Rawr.Warlock {
                 cooldown,
                 recastPeriod,
                 canMiss,
+#if !RAWR4
                 0f, // lowDirectDamage,
                 0f, // highDirectDamage,
+#else
+                0f, // avgDirectDamage,
+#endif
                 0f, // directCoefficient,
                 0f, // addedDirectMultiplier,
                 0f, // baseTickDamage,
@@ -142,8 +144,12 @@ namespace Rawr.Warlock {
             float baseCastTime,
             float cooldown,
             float recastPeriod,
+#if !RAWR4
             float lowDirectDamage,
             float highDirectDamage,
+#else
+            float avgDirectDamage,
+#endif
             float directCoefficient,
             float addedDirectMultiplier,
             float bonusCritChance,
@@ -157,8 +163,12 @@ namespace Rawr.Warlock {
                 cooldown,
                 recastPeriod,
                 true,
+#if !RAWR4
                 lowDirectDamage,
                 highDirectDamage,
+#else
+                avgDirectDamage,
+#endif
                 directCoefficient,
                 addedDirectMultiplier,
                 0f, // baseTickDamage,
@@ -195,8 +205,12 @@ namespace Rawr.Warlock {
                 cooldown,
                 recastPeriod,
                 true,
+#if !RAWR4
                 0f, // direct low damage
                 0f, // direct high damage
+#else
+                0f, // direct avg damage
+#endif
                 0f, // direct coefficient
                 0f, // addedDirectMultiplier
                 baseTickDamage,
@@ -218,8 +232,12 @@ namespace Rawr.Warlock {
             float cooldown,
             float recastPeriod,
             bool canMiss,
+#if !RAWR4
             float lowDirectDamage,
             float highDirectDamage,
+#else
+            float avgDirectDamage,
+#endif
             float directCoefficient,
             float addedDirectMultiplier,
             float baseTickDamage,
@@ -235,7 +253,11 @@ namespace Rawr.Warlock {
             MySpellTree = spellTree;
             ManaCost = mommy.BaseMana * percentBaseMana;
             BaseCastTime = baseCastTime;
-            BaseDamage = (lowDirectDamage + highDirectDamage) / 2f;
+#if !RAWR4
+            BaseDamage = (lowDirectDamage + highDirectDamage) / 2;
+#else
+            BaseDamage = avgDirectDamage;
+#endif
             Cooldown = cooldown;
             RecastPeriod = recastPeriod;
             CanMiss = canMiss;
@@ -249,10 +271,17 @@ namespace Rawr.Warlock {
 
             WarlockTalents talents = mommy.Talents;
             SpellModifiers = new SpellModifiers();
+#if !RAWR4
             SpellModifiers.AddAdditiveDirectMultiplier(
                 addedDirectMultiplier);
             SpellModifiers.AddAdditiveTickMultiplier(
                 addedTickMultiplier);
+#else
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                addedDirectMultiplier);
+            SpellModifiers.AddMultiplicativeDirectMultiplier(
+                addedTickMultiplier);
+#endif
             SpellModifiers.AddCritChance(bonusCritChance);
             SpellModifiers.AddCritBonusMultiplier(bonusCritMultiplier);
 #if !RAWR4
@@ -266,9 +295,7 @@ namespace Rawr.Warlock {
         }
         #endregion
 
-
         protected Rotation GetRotation() {
-
             return Mommy.Options.GetActiveRotation();
         }
 
@@ -288,10 +315,8 @@ namespace Rawr.Warlock {
 #endif
 
         public virtual bool IsCastable() {
-
             return true;
         }
-
         public string GetToolTip() {
 
             float numCasts = GetNumCasts();
@@ -396,9 +421,7 @@ namespace Rawr.Warlock {
             return toolTip;
         }
 
-
         #region setting NumCasts
-
         public void Spam(float timeRemaining) {
 
             Debug.Assert(Cooldown == 0 && RecastPeriod == 0);
@@ -414,7 +437,6 @@ namespace Rawr.Warlock {
             }
 #endif
         }
-
         public virtual float GetNumCasts() {
 
             if (NumCasts == 0) {
@@ -427,17 +449,12 @@ namespace Rawr.Warlock {
             }
             return NumCasts;
         }
-
         public virtual bool IsCastDuringExecute() {
-
             return true;
         }
-
         private bool IsBinary() {
-
             return false;
         }
-
         public virtual float GetQueueProbability(CastingState state) {
 
             if (state.Cooldowns.ContainsKey(this)) {
@@ -453,7 +470,6 @@ namespace Rawr.Warlock {
                     maxQueued / (GetAvgRequeueTime() - unqueuable), 1f);
             }
         }
-
         public float GetAvgRequeueTime() {
 
             // TODO this should really not be averaged (for the cases this
@@ -480,7 +496,6 @@ namespace Rawr.Warlock {
             }
             return period;
         }
-
         public virtual List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
 
@@ -548,7 +563,6 @@ namespace Rawr.Warlock {
 
             return results;
         }
-
         public void RecordSimulatedStat(
             string statName, float value, float weight) {
 
@@ -557,7 +571,6 @@ namespace Rawr.Warlock {
             }
             SimulatedStats[statName].AddSample(value, weight);
         }
-
         private void PopulateNextState(
             List<CastingState> results,
             CastingState stateBeforeCast,
@@ -579,7 +592,6 @@ namespace Rawr.Warlock {
 
             results.Add(nextState);
         }
-
         public float GetTimeUsed(CastingState state) {
 
             return MaybeApplyBackdraft(
@@ -587,7 +599,6 @@ namespace Rawr.Warlock {
                     BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency),
                 state);
         }
-
         public float GetCastTime(CastingState state) {
 
             if (BaseCastTime == 0f) {
@@ -600,7 +611,6 @@ namespace Rawr.Warlock {
             }
             return MaybeApplyBackdraft(avg, state);
         }
-
         private float MaybeApplyBackdraft(float time, CastingState state) {
 
             if (state != null
@@ -611,7 +621,6 @@ namespace Rawr.Warlock {
             }
             return time;
         }
-
         public float GetAvgTimeUsed() {
 
             if (SimulatedStats.ContainsKey("time used")) {
@@ -621,12 +630,10 @@ namespace Rawr.Warlock {
                     BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency);
             }
         }
-
         public float GetTotalWeight() {
 
             return SimulatedStats["delay"].GetTotalWeight();
         }
-
         public float GetAvgTimeBetweenCasts() {
 
             return Mommy.Options.Duration / GetNumCasts();
@@ -661,17 +668,13 @@ namespace Rawr.Warlock {
                     maxQueued / (GetAvgRequeueTime() - unqueuable), 1f);
             return 1 - chanceQueued;
         }
-
         public virtual void AdjustAfterCastingIsSet() {
 
             // here for subclasses to override if desired.
         }
-
         #endregion
 
-
         #region setting avg damage
-
         public virtual void FinalizeSpellModifiers() {
 
             SpellModifiers.Accumulate(Mommy.SpellModifiers);
@@ -715,17 +718,32 @@ namespace Rawr.Warlock {
             }
 #endif
         }
-
         public virtual void SetDamageStats(float baseSpellPower) {
 
             AvgDirectHit
                 = (BaseDamage + DirectCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalDirectMultiplier()
                     * (1 - GetResist());
+#if !RAWR4
             AvgTickHit
                 = (BaseTickDamage + TickCoefficient * baseSpellPower)
                     * SpellModifiers.GetFinalTickMultiplier()
                     * (1 - GetResist());
+#else
+            if (this is BaneOfDoom) {
+                // PTR reports that Bane of Doom does not get periodic spell
+                // damage bonuses, despite being a DOT effect
+                AvgTickHit
+                    = (BaseTickDamage + TickCoefficient * baseSpellPower)
+                        * SpellModifiers.GetFinalDirectMultiplier()
+                        * (1 - GetResist());
+            } else {
+                AvgTickHit
+                    = (BaseTickDamage + TickCoefficient * baseSpellPower)
+                        * SpellModifiers.GetFinalTickMultiplier()
+                        * (1 - GetResist());
+            }
+#endif
 
             // crit direct damage
             float critChance = SpellModifiers.CritChance;
@@ -757,9 +775,7 @@ namespace Rawr.Warlock {
                 = Mommy.HitChance
                     * (avgDirectDamage + NumTicks * avgTickDamage);
         }
-
         protected float GetResist() {
-
             return StatConversion.GetAverageResistance(
                 80, Mommy.Options.TargetLevel, 0f, 0f);
         }
@@ -774,14 +790,16 @@ namespace Rawr.Warlock {
                 && Mommy.CastSpells.ContainsKey("Conflagrate");
         }
 #endif
-
         #endregion
 
     }
 
+    // spell 50796, spellEffect 43048
     public class ChaosBolt : Spell {
 #if RAWR4
         static float[] talentValues = { .1f, .3f, .5f };
+        private const float SCALE = 1.7580000162f;
+        private const float COEFF = 0.7139999866f;
 #endif
 
         public ChaosBolt(CharacterCalculationsWarlock mommy)
@@ -803,13 +821,16 @@ namespace Rawr.Warlock {
                 (1 + mommy.Talents.ShadowAndFlame * .04f)
                     * .7142f, // directCoefficient,
 #else
-                1335f, // lowDirectDamage, 1490 at level 85
-                1695f, // highDirectDamage, 1892 at level 85
-                .7142f, // directCoefficient, NEED TO VERIFY
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                COEFF, // directCoefficient
 #endif
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
+#if !RAWR4
                 0f) { // bonus crit multiplier
+#else
+                1f) { // bonus crit multiplier
+#endif
 
 #if !RAWR4
             ApplyImprovedSoulLeech();
@@ -844,6 +865,7 @@ namespace Rawr.Warlock {
         }
     }
 
+    // spell 17962, spellEffect 9553, 9554 (placeholders)
     public class Conflagrate : Spell {
 
         public const float COOLDOWN = 10f;
@@ -878,19 +900,20 @@ namespace Rawr.Warlock {
                 .4f * .2f * 5f / 3f, // tickCoefficient,
                 0f, // addedTickMultiplier, modified in SetDamageStats
                 true, // canTickCrit,
+                mommy.Talents.FireAndBrimstone * .05f, // bonusCritChance,
+                0f) { // bonusCritMultiplier) {
+
+            ApplyImprovedSoulLeech();
 #else
                 COOLDOWN - (mommy.Talents.GlyphConflag ? 2f : 0f), // cooldown,
                 0f, // recastPeriod,
-                430f * (int)((5f / mommy.AvgHaste) + 0.5f), // lowDirectDamage = total periodic immolate damage, accounting for haste
-                430f * (int)((5f / mommy.AvgHaste) + 0.5f), // highDirectDamage = total periodic immolate damage, accounting for haste
-                .2f * 5f, // directCoefficient, TODO; placeholder
-                0f, // addedDirectMultiplier, modified in SetDamageStats?
-#endif
+                0f, // avgDirectDamage, will be set in SetDamageStats
+                0f, // directCoefficient, already accounted for by Immolate AvgTickDamage
+                0f, // addedDirectMultiplier, already accounted for by Immolate AvgTickDamage
                 mommy.Talents.FireAndBrimstone * .05f, // bonusCritChance,
-                0f) { // bonusCritMultiplier) {
-#if !RAWR4
-            ApplyImprovedSoulLeech();
-#endif
+                1f) { // bonusCritMultiplier) {
+#endif                
+
             RecordMissesSeparately = true;
         }
 
@@ -914,24 +937,28 @@ namespace Rawr.Warlock {
             SpellModifiers.AddAdditiveDirectMultiplier(-direct);
             direct -= direct * Mommy.Talents.Emberstorm * .03f;
             SpellModifiers.AddMultiplicativeDirectMultiplier(direct);
-#endif
 
             // Also account for improvements to immolate, which in turn improve
             // conflagrate
-#if !RAWR4
             SpellModifiers.AddAdditiveMultiplier(
                 Mommy.Talents.ImprovedImmolate * .1f
                     + (Mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + Mommy.Talents.Aftermath * .03f);
-#else
-            SpellModifiers.AddAdditiveMultiplier(
-                Mommy.Talents.ImprovedImmolate * .1f
-                    + (Mommy.Talents.GlyphImmolate ? .1f : 0f));
-#endif
+
             if (Mommy.Stats.Warlock2T8 > 0) {
                 SpellModifiers.AddAdditiveMultiplier(.1f);
             }
+#endif
         }
+
+#if RAWR4
+        public override void SetDamageStats(float baseSpellPower) {
+            // this is guaranteed to be called after Immolate has been solved
+            // 60% factor added in PTR build 13156
+            BaseDamage = Mommy.CastSpells["Immolate"].AvgTickHit * Mommy.CastSpells["Immolate"].NumTicks * .6f;
+            base.SetDamageStats(baseSpellPower);
+        }
+#endif
 
         public override List<CastingState> SimulateCast(
             CastingState stateBeforeCast, float chanceOfCast) {
@@ -956,14 +983,21 @@ namespace Rawr.Warlock {
         }
     }
 
+    // spell 172, spellEffect 97, 98
     public class Corruption : Spell {
+        private const float SCALE = 0.1739999950f;
+        private const float COEFF = 0.2000000030f;
 
         public static float GetTickPeriod(CharacterCalculationsWarlock mommy) {
 
             float period = 3.1f; // total guess
+#if !RAWR4
             if (mommy.Talents.GlyphQuickDecay) {
                 period /= mommy.AvgHaste;
             }
+#else
+            period /= mommy.AvgHaste;
+#endif
             return period;
         }
 
@@ -976,40 +1010,35 @@ namespace Rawr.Warlock {
                 0f, // cast time
                 0f, // cooldown
                 18f, // recast period
+#if !RAWR4
                 1080f / 6f, // damage per tick
                 6f, // num ticks
-#if !RAWR4
                 (1.2f + mommy.Talents.EmpoweredCorruption * .12f) / 6f
                     + mommy.Talents.EverlastingAffliction
                         * .01f, // tick coefficient
-#else
-                (1.2f) / 6f, // tick coefficient
-#endif
-#if !RAWR4
                 mommy.Talents.ImprovedCorruption * .02f
                     + mommy.Talents.Contagion * .01f
                     + mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
-#else
-                mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
-#endif
-#if !RAWR4
                 mommy.Talents.Pandemic > 0, // canTickCrit
-#else
-                true, // canTickCrit
-#endif
-#if !RAWR4
                 (mommy.Talents.Malediction * .03f + mommy.Stats.Warlock2T10)
                     * mommy.Talents.Pandemic, // bonus crit chance
-#else
-                (mommy.Talents.EverlastingAffliction * .05f + mommy.Stats.Warlock2T10)
-                    * mommy.Talents.Pandemic, // bonus crit chance
-#endif
                 mommy.Talents.Pandemic) { // bonus crit multiplier
+#else
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // base damage per tick
+                (int)((6f / mommy.AvgHaste) + 0.5f), // hasted num ticks
+                COEFF, // tick coefficient
+                mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
+                true, // canTickCrit
+                (mommy.Talents.EverlastingAffliction * .05f + mommy.Stats.Warlock2T10), // bonus crit chance
+                1f) { // bonus crit multiplier
+#endif
 
             WarlockTalents talents = Mommy.Talents;
+#if !RAWR4
             if (talents.GlyphQuickDecay) {
                 RecastPeriod /= Mommy.AvgHaste;
             }
+#endif
 
             #region rolling corruption
             // Malficus solved the average duration of a rolling Corruption, see
@@ -1021,8 +1050,14 @@ namespace Rawr.Warlock {
             // TC = the time between corruption ticks
             float d = RecastPeriod;
             float t = GuessRollingTriggerFrequency();
+#if !RAWR4
             float p = Mommy.HitChance * talents.EverlastingAffliction * .2f;
             float tc = d / 6f;
+#else
+            float[] points = { 0f, .33f, .66f, 1f };
+            float p = Mommy.HitChance * points[talents.EverlastingAffliction];
+            float tc = d / NumTicks;
+#endif
             if (p == 1 && t <= d) {
                 RecastPeriod = Mommy.Options.Duration;
             } else if (p > 0 && t > 0) {
@@ -1052,11 +1087,12 @@ namespace Rawr.Warlock {
         }
 
         public override void SetDamageStats(float baseSpellPower) {
-
+#if !RAWR4
             // stack crit trinkets at the front of a rolling corruption
             if (NumCasts < 2) {
                 SpellModifiers.AddCritChance(Mommy.ExtraCritAtMax);
             }
+#endif
             
             base.SetDamageStats(baseSpellPower);
         }
@@ -1124,6 +1160,14 @@ namespace Rawr.Warlock {
                 // assume 11 seconds between haunt casts, on average
                 freq += 1f / 11f;
             }
+#if RAWR4
+            if (GetRotation().Execute == "Drain Soul (Execute)") {
+                // assume drain soul spam, since it refreshes Corruption and UA
+                // maybe account for need to redo BoA
+                freq += Mommy.GetExecutePercentage() * Mommy.Options.Duration
+                    / GetTimeUsed(15f, 0f, Mommy.Haste, Mommy.Options.Latency);
+            }
+#endif
             return freq;
         }
     }
@@ -1133,7 +1177,10 @@ namespace Rawr.Warlock {
 
         public CurseOfAgony(CharacterCalculationsWarlock mommy)
 #else
+    //spellid 980, effectid 374
     public class BaneOfAgony : Spell {
+        private const float SCALE = 0.1509999931f;
+        private const float COEFF = 0.1000000015f;
 
         public BaneOfAgony(CharacterCalculationsWarlock mommy)
 #endif
@@ -1145,7 +1192,7 @@ namespace Rawr.Warlock {
                 0f, // cast time
                 0f, // cooldown
                 mommy.Talents.GlyphCoA ? 28f : 24f, // recast period
-
+#if !RAWR4
                 // Glyph of Curse of Agony raises the *average* tick to
                 // 8/7 its unglyphed value.
 
@@ -1157,13 +1204,16 @@ namespace Rawr.Warlock {
 
                 // Notice that spellstone is NOT applied to Curse of Agony.
                 // Why?  Ask Blizzard, I have no idea.
-#if !RAWR4
+
                 mommy.Talents.ImprovedCurseOfAgony * .05f
                     + mommy.Talents.Contagion * .01f, // addedTickMultiplier
                 false, // canTickCrit
                 0f, // bonus crit chance
                 0f) { // bonus crit multiplier
 #else
+                0f, // damage per tick - set below
+                0f, // num ticks - set below
+                COEFF, // tick coefficient
                 0f, // addedTickMultiplier
                 true, //canTickCrit
                 mommy.Talents.DoomAndGloom * .04f, // bonus crit chance
@@ -1174,6 +1224,16 @@ namespace Rawr.Warlock {
             GCDBonus = mommy.Talents.AmplifyCurse * .5f;
 #else
             GCDBonus = mommy.Talents.Pandemic * .25f;
+
+            // BoA consists of 4 weak ticks, 4 medium ticks, 4 strong ticks, and if glyphed, 2 very strong ticks.
+            // Additional ticks from haste are weak ticks.
+            float baseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 12f;
+            float baseNumTicks = mommy.Talents.GlyphCoA ? 14f : 12f;
+            NumTicks = (int)((baseNumTicks / mommy.AvgHaste) + 0.5f);
+            BaseTickDamage = baseDamage 
+                * (1f + (NumTicks - baseNumTicks) * .042f 
+                      + (mommy.Talents.GlyphCoA ? .3325f : 0f)) 
+                / NumTicks;
 #endif
         }
     }
@@ -1183,7 +1243,10 @@ namespace Rawr.Warlock {
 
         public CurseOfDoom(CharacterCalculationsWarlock mommy)
 #else
+    //spellid 603, effectid 246, 86707
     public class BaneOfDoom : Spell {
+        private const float SCALE = 2.2999999523f;
+        private const float COEFF = 1.0000000000f;
 
         public BaneOfDoom(CharacterCalculationsWarlock mommy)
 #endif
@@ -1193,19 +1256,28 @@ namespace Rawr.Warlock {
                 SpellTree.Affliction, // spell tree
                 .15f, // percent base mana
                 0f, // baseCastTime,
+#if !RAWR4
                 60f, // cooldown,
                 0f, // recastPeriod,
                 7300f, // baseTickDamage,
                 1f, // numTicks,
                 2f, // tickCoefficient,
                 0f, // addedTickMultiplier,
-#if !RAWR4
                 false, //    canTickCrit,
                 0f, // bonusCritChance,
                 0f) { // bonusCritMultiplier)
 
             GCDBonus = mommy.Talents.AmplifyCurse * .5f;
 #else
+            //beta reports no haste scaling
+            //UNMODELED: 20% chance to summon Ebon Imp with each tick (+ Impending Doom * 10%)
+            //Ebon Imp does avg X damage over Y seconds; Z cooldown
+                0f, // cooldown,
+                60f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // baseTickDamage,
+                4f, // numTicks,
+                COEFF, // tickCoefficient,
+                0f, // addedTickMultiplier,
                 true, //    canTickCrit,
                 mommy.Talents.DoomAndGloom * .04f, // bonus crit chance
                 1f) { // bonusCritMultiplier)
@@ -1242,33 +1314,89 @@ namespace Rawr.Warlock {
     }
 
 #if RAWR4
+    //spell ID 1120, effectID 397, 399
     public class DrainSoul : Spell {
+        private const float SCALE = 0.0909999982f; //pre-hotfix
+        private const float COEFF = 0.4289999902f;
+
         public DrainSoul(CharacterCalculationsWarlock mommy) 
             : base(
                 mommy,
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
-                0f, //percent base mana
-                0f, //base cast time
+                .14f, //percent base mana
+                15f, //base cast time
                 0f, //cooldown
                 0f, //recast period
-                0f, //baseTickDamage
-                0f, //numTicks
-                0f, //tickCoefficient
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 4f, //baseTickDamage during execute
+                (int)((3f / mommy.AvgHaste) + 0.5f), // hasted num ticks
+                COEFF, //tickCoefficient
                 0f, //addedTickMultiplier
-                false, //canTickCrit
+                true, //canTickCrit
                 0f, //bonusCritChance
-                0f) { //bonusCritMultiplier
-
-        }
-
-        public override bool IsCastable() {
-            return false; //not yet simulated
-        } 
+                1f) { }//bonusCritMultiplier
     }
 #endif
 
+#if RAWR4
+    //spellID 77799 effectID 68189
+    public class FelFlame : Spell {
+        private const float SCALE = 0.2820000052f;
+        private const float COEFF = 0.3429999948f;
+
+        public FelFlame(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Destruction,
+                .06f, // percentBaseMana,
+                0f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                COEFF, // directCoefficient
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                1f) { // bonus crit multiplier
+            // UNMODELED: extends Immolate or Unstable Affliction duration by 6 sec
+        }
+
+        public override bool IsCastable() {
+            return Mommy.Options.PlayerLevel >= 81;
+        }
+    }
+#endif
+
+#if RAWR4
+    //spellID 71521 effectID 65178
+    public class HandOfGuldan : Spell {
+        private const float SCALE = 1.8099999428f;
+        private const float COEFF = 1.1000000238f;
+
+        public HandOfGuldan(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Demonology,
+                .07f, // percentBaseMana,
+                2f, // baseCastTime,
+                12f, // cooldown,
+                0f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                COEFF, // directCoefficient
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                1f) { // bonus crit multiplier
+            // UNMODELED: 50% * #Cremation chance to refresh Immolate
+            // UNMODELED: 5% * #Impending Doom chance to reduce Metamorphosis cooldown by 6 sec
+        }
+    }
+#endif
+
+    //spellID 48181, effectID 40331
     public class Haunt : Spell {
+        private const float SCALE = 0.7369999886f;
+        private const float COEFF = 2f / 3.5f; // it's set to 0 in the client; this is what simc uses
 
         private float AvgBonus;
 
@@ -1281,12 +1409,20 @@ namespace Rawr.Warlock {
                 1.5f, // cast time
                 8f, // cooldown
                 0f, // recast period
+#if !RAWR4
                 645f, // low direct damage
                 753f, // high direct damage
                 .4266f, // direct coefficient
                 0f, // bonus direct multiplier
                 0f, // bonus crit chance
                 mommy.Talents.Pandemic) { } // bonus crit multiplier
+#else
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg direct damage
+                COEFF, // direct coefficient
+                0f, // bonus direct multiplier
+                0f, // bonus crit chance
+                1f) { } // bonus crit multiplier
+#endif
 
         public override bool IsCastable() {
 
@@ -1351,8 +1487,15 @@ namespace Rawr.Warlock {
         }
     }
 
+    //spellID 348 effectID 145, 146
     public class Immolate : Spell {
+        private const float DIRECTSCALE = 0.7860000134f;
+        private const float DIRECTCOEFF = 0.2500000000f;
+        private const float TICKSCALE = 0.4990000129f;
+        private const float TICKCOEFF = 0.2000000030f;
+        private static float[] talentValues = { 0f, 0.1f, 0.3f, 0.5f };
 
+#if !RAWR4
         public static float GetRecastPeriod(
             CharacterCalculationsWarlock mommy) {
 
@@ -1364,6 +1507,13 @@ namespace Rawr.Warlock {
 
             return Conflagrate.WillBeCast(mommy) && !mommy.Talents.GlyphConflag;
         }
+#else
+        public static float GetTickPeriod(
+            CharacterCalculationsWarlock mommy) {
+
+            return 3.1f / mommy.AvgHaste;
+        }
+#endif
 
         public Immolate(CharacterCalculationsWarlock mommy)
             : base(
@@ -1371,6 +1521,7 @@ namespace Rawr.Warlock {
                 MagicSchool.Fire,
                 SpellTree.Destruction,
                 .17f, // percentBaseMana,
+#if !RAWR4
                 2f - mommy.Talents.Bane * .1f, // baseCastTime,
                 0f, // cooldown,
                 GetRecastPeriod(mommy), // recastPeriod,
@@ -1388,10 +1539,28 @@ namespace Rawr.Warlock {
                 true, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { // bonusCritMultiplier) {
+#else
+                2f - talentValues[mommy.Talents.Bane], // baseCastTime,
+                0f, // cooldown,
+                15f, // recastPeriod,
+                true, // canMiss,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * DIRECTSCALE, // avgDirectDamage,
+                DIRECTCOEFF, // directCoefficient,
+                mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
+                (int)((5f / mommy.AvgHaste) + 0.5f), // numTicks,
+                TICKCOEFF, // tickCoefficient,
+                (mommy.Talents.GlyphImmolate ? .1f : 0f)
+                    + mommy.Talents.ImprovedImmolate * .1f, // addedTickMultiplier,
+                true, // canTickCrit,
+                0f, // bonusCritChance,
+                1f) { // bonusCritMultiplier)
+#endif
 
             RecordMissesSeparately = true;
         }
 
+#if !RAWR4
         public override float GetQueueProbability(CastingState state) {
 
             if (IsClippedByConflagrate(Mommy)
@@ -1434,6 +1603,7 @@ namespace Rawr.Warlock {
                 NumTicks = uptime / 3f;
             }
         }
+#endif
 
         public override void FinalizeSpellModifiers() {
             
@@ -1451,6 +1621,7 @@ namespace Rawr.Warlock {
         public void RecordUpChance(Spell spell, CastingState state) {
 
             float chance;
+#if !RAWR4
             if (!state.Cooldowns.ContainsKey(this)
                 && IsClippedByConflagrate(Mommy)) {
 
@@ -1465,12 +1636,17 @@ namespace Rawr.Warlock {
             } else {
                 chance = GetUprate(state, spell);
             }
+#else
+            chance = GetUprate(state, spell);
+#endif
             spell.RecordSimulatedStat(
                 "immolate up-chance", chance, state.Probability);
         }
     }
 
+    //spellID 50589 effectID 42809, 42810
     public class ImmolationAura : Spell {
+        private const float COEFF = 0.1430000067f;
 
         public ImmolationAura(CharacterCalculationsWarlock mommy)
             : base(
@@ -1486,12 +1662,21 @@ namespace Rawr.Warlock {
 #endif
                 0f, // recastPeriod,
                 251f, // baseTickDamage,
+#if !RAWR4
                 15f, // numTicks,
                 2.14f / 15f, // tickCoefficient,
                 0f, // addedTickMultiplier,
                 false, // canTickCrit,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier)
+#else
+                (int)((15f / mommy.AvgHaste) + 0.5f), // numTicks,
+                COEFF, // tickCoefficient,
+                0f, // addedTickMultiplier,
+                true, // canTickCrit,
+                0f, // bonusCritChance,
+                1f) { } // bonusCritMultiplier)
+#endif
 
         public override bool IsCastable() {
             
@@ -1508,7 +1693,10 @@ namespace Rawr.Warlock {
         }
     }
 
+    //spellID 29722 effectID 19297
     public class Incinerate : Spell {
+        private const float SCALE = 0.6069999933f;
+        private const float COEFF = 0.7139999866f;
 
         public Incinerate(CharacterCalculationsWarlock mommy)
             : base(
@@ -1516,6 +1704,7 @@ namespace Rawr.Warlock {
                 MagicSchool.Fire,
                 SpellTree.Destruction,
                 .14f, // percentBaseMana,
+#if !RAWR4
                 2.5f - mommy.Talents.Emberstorm * .05f, // baseCastTime,
                 0f, // cooldown,
                 0f, // recastPeriod,
@@ -1528,6 +1717,19 @@ namespace Rawr.Warlock {
                 mommy.Stats.Warlock2T10
                     + mommy.Stats.Warlock4T8, // bonusCritChance,
                 0f) { // bonus crit multiplier
+#else
+                2.5f - mommy.Talents.Emberstorm * .0125f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
+                COEFF, // directCoefficient,
+                (1f + (mommy.Talents.GlyphIncinerate ? .05f : 0f)) 
+                * (1f + mommy.Talents.ShadowAndFlame * .04f), // addedDirectMultiplier,
+                mommy.Stats.Warlock2T10
+                    + mommy.Stats.Warlock4T8, // bonusCritChance,
+                1f) { // bonus crit multiplier
+#endif
+
 #if !RAWR4
             ApplyImprovedSoulLeech();
 #endif
@@ -1545,12 +1747,15 @@ namespace Rawr.Warlock {
         }
 
         protected virtual float GetImmolateUpRate() {
-
+#if !RAWR4
             if (Immolate.IsClippedByConflagrate(Mommy)) {
                 return 1f;
             } else {
                 return 1 - GetCastTime(null) / Immolate.GetRecastPeriod(Mommy);
             }
+#else
+            return 1 - GetCastTime(null) / 15f;
+#endif
         }
     }
 
@@ -1607,15 +1812,25 @@ namespace Rawr.Warlock {
 
             BaseCastTime /= 1f + Mommy.Talents.MoltenCore * .1f;
 
+            
+#if !RAWR4
             float procChance = Mommy.Talents.MoltenCore * .04f;
             float tickPeriod = Corruption.GetTickPeriod(mommy);
+#else
+            float procChance = Mommy.Talents.MoltenCore * .02f;
+            float tickPeriod = Immolate.GetTickPeriod(mommy);
+#endif
             Cooldown = tickPeriod / procChance;
         }
 
         public override bool IsCastable() {
 
             return Mommy.Talents.MoltenCore > 0
+#if !RAWR4
                 && GetRotation().Contains("Corruption");
+#else
+                && GetRotation().Contains("Immolate");
+#endif
         }
 
         public override bool IsCastDuringExecute() {
@@ -1655,11 +1870,12 @@ namespace Rawr.Warlock {
         }
     }
 
+    //spellID 1454 effect ID 458, 96397, 96427
     public class LifeTap : Spell {
 
         // This exists as a spell object only for the case when we would have
-        // enough mana to never life tap, but still need to keep up the gyph. So
-        // make it's cooldown 37s (40s duration of the glyph minus just about
+        // enough mana to never life tap, but still need to keep up the glyph. So
+        // make its cooldown 37s (40s duration of the glyph minus just about
         // enough time to make cooldown collisions & such don't let it drop
         // off).
 
@@ -1674,14 +1890,25 @@ namespace Rawr.Warlock {
                 37f, // recast period
                 false) { // can miss
 
+#if !RAWR4
             ManaCost
                 = (-2000f - mommy.CalcSpellPower() * .5f)
                     * (1f + mommy.Talents.ImprovedLifeTap * .1f);
+#else
+            // on current PTR, Life Tap tooltip says "144% mana" when glyphed, though the real bonus is only 140%
+            ManaCost
+                = (mommy.CalcHealth() * .15f)
+                    * (1.2f + mommy.Talents.ImprovedLifeTap * .1f);
+            GCDBonus = mommy.Talents.GlyphLifeTap ? 0.5f : 0f;
+#endif
         }
 
         public override bool IsCastable() {
-
+#if !RAWR4
             return Mommy.Talents.GlyphLifeTap;
+#else
+            return false;
+#endif
         }
 
         public float AddCastsForRegen(
@@ -1715,6 +1942,7 @@ namespace Rawr.Warlock {
             return toAdd;
         }
 
+#if !RAWR4
         public float GetAvgBonusSpellPower() {
 
             if (!Mommy.Talents.GlyphLifeTap) {
@@ -1726,14 +1954,48 @@ namespace Rawr.Warlock {
                     1f, (NumCasts + .8f) * 40f / Mommy.Options.Duration);
             return uprate * Mommy.CalcSpirit() * .2f;
         }
+#endif
     }
 
+#if RAWR4
+    //spellID 5676 effectID 
+    public class SearingPain : Spell {
+        private const float SCALE = 0.9219999909f; //pre-hotfix numbers
+        private const float COEFF = 0.7120000124f; //pre-hotfix numbers
+
+        public SearingPain(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Demonology,
+                .12f, // percentBaseMana,
+                1.5f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                COEFF, // directCoefficient
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                1f) { // bonus crit multiplier
+            // UNMODELED: bonus crit chance = 20% * #ImprovedSearingPain if target < 50% health
+        }
+    }
+#endif
+
+    //spellID 686 effectID 267
     public class ShadowBolt : Spell {
+        private const float SCALE = 0.7039999962f;
+        private const float COEFF = 0.8569999933f;
+        private static float[] talentValues = { 0f, 0.1f, 0.3f, 0.5f };
 
         public static float GetBaseCastTime(
             CharacterCalculationsWarlock mommy) {
 
+#if !RAWR4
             return 3f - mommy.Talents.Bane * .1f;
+#else
+            return 3f - talentValues[mommy.Talents.Bane];
+#endif
         }
 
         public ShadowBolt(CharacterCalculationsWarlock mommy)
@@ -1741,25 +2003,33 @@ namespace Rawr.Warlock {
                 mommy, // options
                 MagicSchool.Shadow, // magic school
                 SpellTree.Destruction, // spell tree
+#if !RAWR4
                 .17f, // percent base mana
                 GetBaseCastTime(mommy), // cast time
                 0f, // cooldown
                 0f, // recast period
                 694f, // low base
                 775f, // high base
-#if !RAWR4
                 (1 + mommy.Talents.ShadowAndFlame * .04f)
                     * .8571f, // direct coefficient
                 mommy.Talents.ImprovedShadowBolt
                     * .01f, // addedDirectMultiplier
-#else
-                .8571f, // direct coefficient
-                mommy.Talents.ShadowAndFlame
-                    * .04f, // addedDirectMultiplier
-#endif
                 mommy.Stats.Warlock2T10
                     + mommy.Stats.Warlock4T8, // bonus crit chance
                 0f) { // bonus crit multiplier
+#else
+                .1f, // percent base mana
+                GetBaseCastTime(mommy), // cast time
+                0f, // cooldown
+                0f, // recast period
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg base
+                COEFF, // direct coefficient
+                mommy.Talents.ShadowAndFlame
+                    * .04f, // addedDirectMultiplier
+                mommy.Stats.Warlock2T10
+                    + mommy.Stats.Warlock4T8, // bonus crit chance
+                1f) { // bonus crit multiplier
+#endif
 #if !RAWR4
             ApplyImprovedSoulLeech();
 #endif
@@ -1800,7 +2070,39 @@ namespace Rawr.Warlock {
         }
     }
 
+#if RAWR4
+    //spellID 17877 effectID 9474, 9475
+    public class Shadowburn : Spell {
+        private const float SCALE = 0.8109999895f;
+        private const float COEFF = 0.5000000000f;
+
+        public Shadowburn(CharacterCalculationsWarlock mommy)
+            : base(
+                mommy,
+                MagicSchool.Shadow,
+                SpellTree.Destruction,
+                .15f, // percentBaseMana,
+                0f, // baseCastTime,
+                15f, // cooldown,
+                0f, // recastPeriod,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                COEFF, // directCoefficient
+                0f, // addedDirectMultiplier,
+                0f, // bonusCritChance,
+                1f) { // bonus crit multiplier
+            // UNMODELED: if glyphed and doesn't kill a target, cooldown is reset; cooldown 6 sec for this effect
+        }
+
+        public override bool IsCastable() {
+            return false; //target below 20% health
+        }
+    }
+#endif
+
+    //spellID 6353 effectID 2210
     public class SoulFire : Spell {
+        private const float SCALE = 2.8900001049f;
+        private const float COEFF = 0.7139999866f;
 
         public SoulFire(CharacterCalculationsWarlock mommy) 
             : base(
@@ -1808,6 +2110,7 @@ namespace Rawr.Warlock {
                 MagicSchool.Fire, // magicSchool,
                 SpellTree.Destruction, // spellTree,
                 .09f, // percentBaseMana,
+#if !RAWR4
                 (6f - mommy.Talents.Bane * .4f)
                     * (1 - mommy.Talents.Decimation * .2f), // baseCastTime,
                 0f, // cooldown,
@@ -1818,14 +2121,38 @@ namespace Rawr.Warlock {
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
                 0f) { } // bonusCritMultiplier) { }
+#else
+                4f - mommy.Talents.Emberstorm * 0.5f, // baseCastTime,
+                0f, // cooldown,
+                0f, // recastPeriod,
+                true,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
+                COEFF, // directCoefficient,
+                0f, // addedDirectMultiplier,
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * mommy.Talents.BurningEmbers * .15f/7f, // baseTickDamage,
+                7f, // numTicks,
+                COEFF, // tickCoefficient,
+                0f, // addedTickMultiplier,
+                true, // canTickCrit,
+                0f, // bonusCritChance,
+                1f) { } // bonusCritMultiplier)
+
+        //UNMODELED: when target below 35% health, cast time reduced by #Decimation * 20% for 10 sec
+#endif
 
         public override bool IsCastable() {
-            
+#if !RAWR4
             return Mommy.Talents.Decimation > 0;
+#else
+            return true;
+#endif
         }
     }
 
+    //spellID 30108 effectID 19678
     public class UnstableAffliction : Spell {
+        private const float SCALE = 0.2319999933f;
+        private const float COEFF = 0.2000000030f;
 
         public UnstableAffliction(CharacterCalculationsWarlock mommy)
             : base(
@@ -1833,24 +2160,28 @@ namespace Rawr.Warlock {
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .15f, // percent base mana
+#if !RAWR4
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
                 0f, // cooldown
                 15f, // recast period
                 1150f / 5f, // tick damage
                 5f, // num ticks
-#if !RAWR4
                 mommy.Talents.EverlastingAffliction * .01f
                     + 1f / 5f, // tick coefficient
-#else
-                1f / 5f, // tick coefficient
-#endif
                 mommy.Talents.SiphonLife * .05f, // addedTickMultiplier
                 mommy.Talents.Pandemic > 0, // canTickCrit
-#if !RAWR4
                 mommy.Talents.Malediction * .03f
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { // bonus crit multiplier
 #else
+                mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
+                0f, // cooldown
+                15f, // recast period
+                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // tick damage
+                (int)((5f / mommy.AvgHaste) + 0.5f), // num ticks
+                COEFF, // tick coefficient
+                0f, // addedTickMultiplier
+                true, // canTickCrit
                 mommy.Talents.EverlastingAffliction * .05f, // bonus crit chance
                 1f) { // bonus crit multiplier
 #endif

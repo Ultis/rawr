@@ -147,9 +147,21 @@ namespace Rawr.Warlock {
             return StatUtils.CalcUsableMana(Stats, fightLen);
         }
 
-        public float CalcSpellCrit() { return StatUtils.CalcSpellCrit(Stats); }
+        public float CalcSpellCrit() { 
+#if !RAWR4
+            return StatUtils.CalcSpellCrit(Stats); 
+#else
+            return StatUtils.CalcSpellCrit(Stats, Options.PlayerLevel); 
+#endif
+        }
 
-        public float CalcSpellHit() { return StatUtils.CalcSpellHit(Stats); }
+        public float CalcSpellHit() { 
+#if !RAWR4
+            return StatUtils.CalcSpellHit(Stats); 
+#else
+            return StatUtils.CalcSpellHit(Stats, Options.PlayerLevel); 
+#endif
+        }
 
         public float CalcSpellPower() {
             
@@ -157,10 +169,16 @@ namespace Rawr.Warlock {
         }
 
         public float CalcSpellHaste() {
-            
+#if !RAWR4
             return StatUtils.CalcSpellHaste(Stats);
+#else
+            return StatUtils.CalcSpellHaste(Stats, Options.PlayerLevel);
+#endif
         }
 
+#if RAWR4
+        public float CalcMastery() { return StatUtils.CalcMastery(Stats, Options.PlayerLevel); }
+#endif
         #endregion
 
 
@@ -259,7 +277,11 @@ namespace Rawr.Warlock {
                 string.Format(
                     "{0:0.00%}*{1:0.00%}\tBefore Procs",
                     CalcSpellCrit(),
+#if !RAWR4
                     StatUtils.CalcSpellCrit(PreProcStats)));
+#else
+                    StatUtils.CalcSpellCrit(PreProcStats, Options.PlayerLevel)));
+#endif
 
             dictValues.Add(
                 "Average Haste",
@@ -275,7 +297,11 @@ namespace Rawr.Warlock {
                         * 100f,
                     Stats.HasteRating,
                     Stats.SpellHaste * 100f,
+#if !RAWR4
                     (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats)) * 100f,
+#else
+                    (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel)) * 100f,
+#endif
                     Math.Max(1.0f, 1.5f / AvgHaste)));
 
             // Pet Stats
@@ -411,8 +437,9 @@ namespace Rawr.Warlock {
             float critBuff = CalcAddedCritBuff();
             Stats.SpellCritOnTarget += critBuff;
             PetBuffs.SpellCritOnTarget += critBuff;
+#if !RAWR4
             Stats.SpellPower += lifeTap.GetAvgBonusSpellPower();
-
+#endif
             // create the SpellModifiers object
             SpellModifiers = new SpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(
@@ -461,7 +488,9 @@ namespace Rawr.Warlock {
 
             if (Pet != null) {
                 Pet.CalcStats2();
+#if !RAWR4
                 Stats.SpellPower += Pet.ApplyPactProcBenefit();
+#endif
             }
             
             // finilize each spell's modifiers.
@@ -514,7 +543,9 @@ namespace Rawr.Warlock {
 
             float perSP = Options.PerSP;
             if (perSP > 0 && Pet != null) {
+#if !RAWR4
                 raidBuff += perSP * Pet.GetPactProcBenefit();
+#endif
                 if (Options.ConvertTotem) {
                     float curTotem
                         = StatUtils.GetActiveBuff(
@@ -618,8 +649,11 @@ namespace Rawr.Warlock {
         }
 
         private void CalcHasteAndManaProcs() {
-
+#if !RAWR4
             float nonProcHaste = StatUtils.CalcSpellHaste(PreProcStats);
+#else
+            float nonProcHaste = StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel);
+#endif
             if (Options.NoProcs) {
                 WeightedStat staticHaste = new WeightedStat();
                 staticHaste.Chance = 1f;
@@ -639,9 +673,13 @@ namespace Rawr.Warlock {
             float corruptionPeriod = 0f;
             if (Options.GetActiveRotation().Contains("Corruption")) {
                 corruptionPeriod = 3.1f;
+#if !RAWR4
                 if (Talents.GlyphQuickDecay) {
                     corruptionPeriod /= nonProcHaste;
                 }
+#else
+                corruptionPeriod /= nonProcHaste;
+#endif
             }
             PopulateTriggers(
                 periods,
@@ -779,8 +817,13 @@ namespace Rawr.Warlock {
                 procStats.Accumulate(proc);
                 if (effect.Trigger == Trigger.Use && !IsDoublePot(effect)) {
                     ExtraCritAtMax
+#if !RAWR4
                         += StatUtils.CalcSpellCrit(effect.Stats)
                             - StatUtils.CalcSpellCrit(proc);
+#else
+                        += StatUtils.CalcSpellCrit(effect.Stats, Options.PlayerLevel)
+                            - StatUtils.CalcSpellCrit(proc, Options.PlayerLevel);
+#endif
                 }
             }
             return procStats;
@@ -1110,7 +1153,7 @@ namespace Rawr.Warlock {
             if (this.Demonology) 
             {
                 //mastery bonus for Demonology
-                bonus += .12f + .015f * this.Stats.MasteryRating;
+                bonus += .12f + .015f * CalcMastery();
             }
 
             return bonus * duration / cooldown;
@@ -1125,13 +1168,13 @@ namespace Rawr.Warlock {
             modifiers.AddAdditiveMultiplier(
                 Talents.ShadowMastery * .03f);
 #else
-            modifiers.AddAdditiveMultiplier(
+            modifiers.AddMultiplicativeMultiplier(
                 Affliction ? .25f : 0f);
-            modifiers.AddAdditiveMultiplier(
+            modifiers.AddMultiplicativeMultiplier(
                 Demonology ? .15f : 0f);
             if (Affliction) {
                 modifiers.AddMultiplicativeTickMultiplier(
-                    .1304f + Stats.MasteryRating * .0163f);
+                    .1304f + CalcMastery() * .0163f);
             }
 #endif
             if (Options.GetActiveRotation().Contains("Shadow Bolt")
@@ -1171,12 +1214,11 @@ namespace Rawr.Warlock {
                 modifiers.AddCritChance(bonus);
             }
 #else
-            //additive or multiplicative?
-            modifiers.AddAdditiveMultiplier(Demonology ? .15f : 0f);
-            modifiers.AddAdditiveMultiplier(Destruction ? .25f : 0f);
+            modifiers.AddMultiplicativeMultiplier(Demonology ? .15f : 0f);
+            modifiers.AddMultiplicativeMultiplier(Destruction ? .25f : 0f);
             if (Destruction) {
                 modifiers.AddMultiplicativeMultiplier(
-                    .1f + .0125f * Stats.MasteryRating);
+                    .1f + .0125f * CalcMastery());
             }
 #endif
         }

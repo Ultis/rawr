@@ -765,6 +765,9 @@ namespace Rawr.Warlock {
                 + stats.HitRating + stats.SpellHit
                 + stats.HasteRating + stats.SpellHaste
                 + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget
+#if RAWR4
+                + stats.MasteryRating
+#endif
                 + stats.ShadowDamage + stats.SpellShadowDamageRating
                 + stats.FireDamage + stats.SpellFireDamageRating
 
