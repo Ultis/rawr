@@ -434,12 +434,14 @@ namespace Rawr.Enhance
             float dpsFS = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.FlameShock))
             {
+                float FSBaseNumTick = 18f / 3f;
                 float damageFSBase = 500f;
-                float damageFSDoTBase = 834f;
+                float damageFSDoTTickBase = 834f / FSBaseNumTick;
+                float FSNumTick = cs.AverageFSDotTime / cs.AverageFSTickTime;
                 float coefFS = 1.5f / 3.5f / 2f;
                 float coefFSDoT = .6f;
                 float damageFS = (damageFSBase + coefFS * spellPower) * concussionMultiplier;
-                float damageFTDoT = (damageFSDoTBase + coefFSDoT * spellPower) * concussionMultiplier;
+                float damageFTDoT = ((damageFSDoTTickBase * FSNumTick) + coefFSDoT * spellPower) * concussionMultiplier;
                 float usesCooldown = cs.AbilityCooldown(EnhanceAbility.FlameShock);
                 float flameShockdps = damageFS / usesCooldown;
                 float flameShockDoTdps = damageFTDoT / usesCooldown;
@@ -1128,10 +1130,10 @@ namespace Rawr.Enhance
                     float dpsHit = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { HitRating = 40 } }).OverallPoints - dpsBase);
                     float dpsDmg = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
                     float dpsMast = (GetCharacterCalculations(character, new Item()  { Stats = new Stats() { MasteryRating = 40 } }).OverallPoints - dpsBase);
-                    float dpsSta = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Stamina = 60 } }).OverallPoints - dpsBase);
+                    //float dpsSta = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Stamina = 60 } }).OverallPoints - dpsBase);
 
                     return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+						//new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsSta, DPSPoints = dpsSta },
 						new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
 						new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
 						new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },

@@ -143,7 +143,7 @@ namespace Rawr.Enhance
                     break;
                 case Trigger.MeleeAttack:
 #if RAWR4
-                    if (_cs.UnhastedOHSpeed != 1)
+                    if (_cs.UnhastedOHSpeed != 0)
 #else
                     if (_character.ShamanTalents.DualWield == 1)
 #endif
@@ -294,7 +294,7 @@ namespace Rawr.Enhance
                         highestStat = statsAverage.HighestStat * (1 + _stats.BonusIntellectMultiplier);
                         statsAverage.Intellect += highestStat;
 #if RAWR4
-                        statsAverage.SpellPower += highestStat
+                        statsAverage.SpellPower += highestStat;
 #else
                         statsAverage.AttackPower += intfromAP * highestStat;
 #endif

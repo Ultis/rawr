@@ -102,6 +102,9 @@
     <Compile Include="..\..\Rawr.Enhance\PriorityQueue.cs">
       <Link>PriorityQueue.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
+      <Link>StatsSpecialEffects.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Enhance\CalculationOptionsPanelEnhance.xaml.cs">
       <Link>CalculationOptionsPanelEnhance.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
@@ -115,7 +118,6 @@
     <Compile Include="CombatStats.cs" />
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatsSpecialEffects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

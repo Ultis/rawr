@@ -51,10 +51,12 @@ namespace Rawr.Enhance
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FlameShock);
             if (priority > 0)
+            {
                 if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.FlameShock, _cs.AverageFSDotTime, 1.0f, FSMana * convection * mentalQuickness, priority, false, false));
                 else
-                    abilities.Add(new Ability(EnhanceAbility.FlameShock, _cs.AverageFSDotTime, gcd, FSMana * convection * mentalQuickness, priority, false, false));
+                    abilities.Add(new Ability(EnhanceAbility.FlameShock, _cs.AverageFSDotTime, gcd, FSMana * convection * mentalQuickness, priority, false, false));     
+            }
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.StormStrike);
             if (priority > 0 && _talents.Stormstrike == 1)
@@ -62,10 +64,12 @@ namespace Rawr.Enhance
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.EarthShock);
             if (priority > 0)
+            {
                 if (_talents.GlyphofShocking)
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, 1.0f, ESMana * convection * mentalQuickness, priority, false, false));
                 else
                     abilities.Add(new Ability(EnhanceAbility.EarthShock, _cs.BaseShockSpeed, gcd, ESMana * convection * mentalQuickness, priority, false, false));
+            }
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
             if (priority > 0)
