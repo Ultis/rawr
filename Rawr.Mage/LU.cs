@@ -675,7 +675,6 @@ namespace Rawr.Mage
 
             if (lastnz < col)
             {
-                Singular = true;
                 pivot = 0.0;
                 return false;
             }
@@ -769,6 +768,10 @@ namespace Rawr.Mage
             if (Math.Abs(U[lastnz * size + lastnz]) < 0.000001)
             {
                 Singular = true;
+            }
+            else
+            {
+                Singular = false;
             }
             return true;
         }

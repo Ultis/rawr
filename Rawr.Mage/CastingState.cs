@@ -22,7 +22,7 @@ namespace Rawr.Mage
         Evocation = 0x800,
         ManaGemEffect = 0x1000,
         MirrorImage = 0x2000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
-        NonItemBasedMask = PowerInfusion | PotionOfSpeed | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | MirrorImage
+        NonItemBasedMask = PowerInfusion | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | ManaGemEffect | MirrorImage
     }
 
     public class CastingState
