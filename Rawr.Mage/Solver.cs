@@ -1130,7 +1130,7 @@ namespace Rawr.Mage
             this.useIncrementalOptimizations = useIncrementalOptimizations;
             this.useGlobalOptimizations = useGlobalOptimizations;
             this.NeedsDisplayCalculations = needsDisplayCalculations;
-            this.requiresMIP = segmentCooldowns || integralMana;
+            this.requiresMIP = segmentCooldowns || integralMana || (segmentMana && advancedConstraintsLevel > 0);
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
             this.needsQuadratic = false;

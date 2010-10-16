@@ -56,6 +56,7 @@ namespace Rawr.Mage
 
         private List<int>[] hexList;
         private double[][] segmentCooldownCount;
+        private double[][] manaSegmentCooldownCount;
         private double[] manaList;
         private double[] segmentFilled;
         private int[] hexMask;
@@ -696,6 +697,11 @@ namespace Rawr.Mage
         {
             AnalyzeSolution();
 
+            if (segmentMana && !segmentCooldowns && advancedConstraintsLevel >= 1)
+            {
+                if (evocationAvailable && !ValidateSegmentedEvocation()) return false;
+            }
+
             if (segmentCooldowns && advancedConstraintsLevel >= 1)
             {
                 resolution = lowResolution;
@@ -936,6 +942,73 @@ namespace Rawr.Mage
             return true;
         }
 
+        private bool ValidateSegmentedEvocation()
+        {
+            // this is only for the case without cooldown segmentation (we only have mana segments)
+
+            const double eps = 0.00001;
+            double[] allCount = GetManaSegmentCooldownCount((int)StandardEffect.None, VariableType.None);
+            double[] evoCount = GetManaSegmentCooldownCount((int)StandardEffect.Evocation, VariableType.None);
+
+            // if there is evo at mana segment i, then either there is no more evo after or mana segment i contains full duration of evo cooldown
+            // (there is no evo in mana segment 0)
+
+            int mseg;
+            for (mseg = manaSegments - 1; mseg >= 0; mseg--)
+            {
+                if (evoCount[mseg] > eps)
+                {
+                    break;
+                }
+            }
+            for (mseg--; mseg >= 0; mseg--)
+            {
+                if (evoCount[mseg] > eps)
+                {
+                    // we have evo with another evo after
+                    // are we filled up?
+                    if (allCount[mseg] < EvocationCooldown - eps)
+                    {
+                        // we have conflict
+                        // either fill up
+                        SolverLP branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Evocation cooldown after m" + mseg);
+                        bool newConstraint;
+                        int row = branchlp.AddConstraint("ManaSegment" + mseg, out newConstraint);
+                        if (newConstraint)
+                        {
+                            for (int index = 0; index < SolutionVariable.Count; index++)
+                            {
+                                if (SolutionVariable[index].ManaSegment == mseg && !SolutionVariable[index].IsZeroTime)
+                                {
+                                    branchlp.SetConstraintElement(row, index, 1);
+                                }
+                            }
+                        }
+                        branchlp.SetConstraintRHS(row, EvocationCooldown);
+                        branchlp.SetConstraintLHS(row, EvocationCooldown);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                        // or remove evocation
+                        branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Remove evocation at m" + mseg);
+                        DisableCooldown(branchlp, (int)StandardEffect.Evocation, 0, mseg, 0, mseg);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                        // or remove all evocations after this one
+                        branchlp = lp;
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Remove evocations after m" + mseg);
+                        DisableCooldown(branchlp, (int)StandardEffect.Evocation, 0, mseg + 1, 0, manaSegments - 1);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         private void HeapPush(SolverLP childLP)
         {
 #if DEBUG_BRANCHING
@@ -1092,10 +1165,52 @@ namespace Rawr.Mage
             return segCount;
         }
 
+        private double[] GetManaSegmentCooldownCount(int effectsMask, VariableType cooldownType)
+        {
+            int ind = -1;
+            switch (effectsMask)
+            {
+                case (int)StandardEffect.None:
+                    ind = 0;
+                    break;
+                case (int)StandardEffect.Evocation:
+                    ind = 1;
+                    break;
+            }
+            double[] segCount = manaSegmentCooldownCount[ind];
+            if (segCount == null)
+            {
+                segCount = new double[SegmentList.Count * manaSegments];
+                manaSegmentCooldownCount[ind] = segCount;
+                if (effectsMask == 0)
+                {
+                    for (int index = 0; index < SolutionVariable.Count; index++)
+                    {
+                        if (!SolutionVariable[index].IsZeroTime)
+                        {
+                            segCount[SolutionVariable[index].Segment * manaSegments + SolutionVariable[index].ManaSegment] += solution[index];
+                        }
+                    }
+                }
+                else
+                {
+                    for (int index = 0; index < SolutionVariable.Count; index++)
+                    {
+                        if (SolutionVariable[index].IsMatch(effectsMask, cooldownType))
+                        {
+                            segCount[SolutionVariable[index].Segment * manaSegments + SolutionVariable[index].ManaSegment] += solution[index];
+                        }
+                    }
+                }
+            }
+            return segCount;
+        }
+
         private void AnalyzeSolution()
         {
             manaList = new double[SegmentList.Count];
             segmentCooldownCount = new double[23 + ItemBasedEffectCooldownsCount][];
+            manaSegmentCooldownCount = new double[2][];
             hexList = new List<int>[SegmentList.Count];
             segmentFilled = new double[SegmentList.Count];
             hexMask = new int[SegmentList.Count];
@@ -3402,6 +3517,20 @@ namespace Rawr.Mage
                 {
                     int seg = SolutionVariable[index].Segment;
                     if (seg >= minSegment && seg <= maxSegment) branchlp.EraseColumn(index);
+                }
+            }
+        }
+
+        private void DisableCooldown(SolverLP branchlp, int effect, int minSegment, int minManaSegment, int maxSegment, int maxManaSegment)
+        {
+            for (int index = 0; index < SolutionVariable.Count; index++)
+            {
+                CastingState state = SolutionVariable[index].State;
+                if (state != null && state.EffectsActive(effect))
+                {
+                    int seg = SolutionVariable[index].Segment;
+                    int mseg = SolutionVariable[index].ManaSegment;
+                    if ((seg == minSegment && mseg >= minManaSegment) || (seg == maxSegment && mseg <= maxManaSegment) || (seg > minSegment && seg < maxSegment)) branchlp.EraseColumn(index);
                 }
             }
         }

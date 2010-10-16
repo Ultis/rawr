@@ -938,7 +938,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplaySegmentMana != DisplayCalculations.CalculationOptions.ComparisonSegmentMana || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || (DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns == true && DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel);
+                return DisplayCalculations.CalculationOptions.DisplaySegmentCooldowns != DisplayCalculations.CalculationOptions.ComparisonSegmentCooldowns || DisplayCalculations.CalculationOptions.DisplaySegmentMana != DisplayCalculations.CalculationOptions.ComparisonSegmentMana || DisplayCalculations.CalculationOptions.DisplayIntegralMana != DisplayCalculations.CalculationOptions.ComparisonIntegralMana || DisplayCalculations.CalculationOptions.DisplayAdvancedConstraintsLevel != DisplayCalculations.CalculationOptions.ComparisonAdvancedConstraintsLevel;
             }
         }
 

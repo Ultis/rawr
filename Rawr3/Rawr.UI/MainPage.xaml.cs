@@ -192,7 +192,7 @@ namespace Rawr.UI
             AsyncCalculationResult result = (AsyncCalculationResult)arg;
             if (result.DisplayCalculationValues != null && result.Calculations == referenceCalculation)
             {
-                CalculationDisplay.SetCalculations(result.DisplayCalculationValues);
+                UpdateDisplayCalculationValues(result.DisplayCalculationValues, referenceCalculation);
                 // refresh chart
                 ComparisonGraph.UpdateGraph();
                 asyncCalculation = null;
@@ -214,7 +214,6 @@ namespace Rawr.UI
             }
             //_unsavedChanges = true;
             referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
-            CalculationDisplay.SetCalculations(referenceCalculation.GetCharacterDisplayCalculationValues());
             UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
             if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing)
             {
@@ -250,7 +249,7 @@ namespace Rawr.UI
 
         public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues, CharacterCalculationsBase _calculatedStats)
         {
-            //calculationDisplay1.SetCalculations(displayCalculationValues);
+            CalculationDisplay.SetCalculations(displayCalculationValues);
             string status;
             if (!displayCalculationValues.TryGetValue("Status", out status))
             {
