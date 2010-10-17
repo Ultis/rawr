@@ -23,30 +23,18 @@ namespace Rawr.Mage
                 if (_defaultGemmingTemplates == null)
                 {
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Purified)", false, 39911, 39957, 39956, 39959, 39946, 39941);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Royal)", false, 39911, 39957, 39956, 39959, 39946, 39943);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Glowing)", false, 39911, 39957, 39956, 39959, 39946, 39936);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Jewelcrafting)", false, 42144, 39957, 39956, 39959, 39946, 39941);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Purified)", false, 39998, 40049, 40048, 40051, 40047, 40026);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Royal)", false, 39998, 40049, 40048, 40051, 40047, 40027);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Glowing)", false, 39998, 40049, 40048, 40051, 40047, 40025);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 42144, 40049, 40048, 40051, 40047, 40026);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Purified)", true, 40113, 40153, 40152, 40155, 40151, 40133);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Royal)", false, 40113, 40153, 40152, 40155, 40151, 40134);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Glowing)", false, 40113, 40153, 40152, 40155, 40151, 40132);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 42144, 40153, 40152, 40155, 40151, 40133);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 40113, 40152, 40155, 40153);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 42144, 40152, 40155, 40153);
                 }
                 return _defaultGemmingTemplates;
             }
         }
 
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int veiled, int potent, int reckless, int luminous, int blue)
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int potent, int reckless, int blue)
         {
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = veiled, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = potent, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = reckless, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = luminous, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = potent, BlueId = blue, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = reckless, BlueId = blue, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
         }
 
         public static CalculationsMage instance;
@@ -108,17 +96,16 @@ namespace Rawr.Mage
                     _characterDisplayCalculationLabels = new string[] {
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
-					"Basic Stats:Spirit",
-					"Basic Stats:Armor",
 					"Basic Stats:Health",
 					"Basic Stats:Mana",
-                    "Spell Stats:Crit Rate",
-                    "Spell Stats:Hit Rate",
-                    "Spell Stats:Spell Penetration",
+                    "Spell Stats:Spell Power",
                     "Spell Stats:Haste",
-                    "Spell Stats:Arcane Damage",
-                    "Spell Stats:Fire Damage",
-                    "Spell Stats:Frost Damage",
+                    "Spell Stats:Hit Chance",
+                    "Spell Stats:Penetration",
+                    "Spell Stats:Mana Regen",
+                    "Spell Stats:Combat Regen",
+                    "Spell Stats:Crit Chance",
+                    "Spell Stats:Mastery",
                     "Solution:Total Damage",
                     "Solution:Score",
                     "Solution:Dps",
@@ -183,9 +170,7 @@ namespace Rawr.Mage
                     "Spell Info:Dragon's Breath*Requires talent points",
                     "Spell Info:Fire Ward*Set incoming fire damage under survivability settings",
                     "Spell Info:Frost Ward*Set incoming frost damage under survivability settings",
-                    "Regeneration:MP5",
-                    "Regeneration:Mana Regen",
-                    "Regeneration:Health Regen",
+					"Survivability:Armor",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
                     "Survivability:Nature Resist",

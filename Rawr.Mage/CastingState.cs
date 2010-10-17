@@ -100,6 +100,9 @@ namespace Rawr.Mage
         public float FrostFireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Solver.BaseFrostFireCritRate; } }
         public float HolyCritRate { get { return StateCritRate + Solver.BaseHolyCritRate; } }
 
+        public float Mastery { get { return Solver.Mastery; } }
+
+
         //public float ResilienceCritDamageReduction { get; set; }
         //public float ResilienceCritRateReduction { get; set; }
 
