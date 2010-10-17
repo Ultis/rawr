@@ -526,7 +526,7 @@ namespace Rawr
 				foreach (Item item in listItems)
 				{
 #if RAWR4
-					CataclysmizeItem(item);
+					//CataclysmizeItem(item);
 #endif
 					AddItem(item, false);
 				}
