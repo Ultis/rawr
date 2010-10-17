@@ -428,7 +428,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
 #if RAWR4
-            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB };
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB, CycleId.ArcaneManaNeutral };
 #else
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam04MBAM, CycleId.ABSpam024MBAM, CycleId.ABSpam0234MBAM, CycleId.AB4AM0234MBAM, CycleId.AB3AM023MBAM, CycleId.AB2AM, CycleId.FrBDFFBIL, CycleId.ABSpam034MBAM, CycleId.FrBDFFFB };
 #endif

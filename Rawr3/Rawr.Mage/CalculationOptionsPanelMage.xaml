@@ -83,6 +83,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="29" />
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -115,10 +116,10 @@
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Mana Gem: *" TextWrapping="Wrap" ToolTipService.ToolTip="You can uncheck this to disable use of Mana Gems." Grid.Row="17"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Custom Spell Mix: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable and configure a special custom mix of spells." Grid.Row="18"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Custom Mix Only: *" TextWrapping="Wrap" ToolTipService.ToolTip="Disable all spell cycles except custom mix." Grid.Row="19"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Snared Time (0-1): *" TextWrapping="Wrap" ToolTipService.ToolTip="Percentage of time that the target is snared by someone else, cycles that provide snare override this to 1." Grid.Row="20"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Frostbite Utilization (0-1): *" TextWrapping="Wrap" ToolTipService.ToolTip="Utilization of 1 corresponds to no diminishing returns, only applies to Blizzard." Grid.Row="21"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Focus Magic Rate: *" TextWrapping="Wrap" ToolTipService.ToolTip="Normalized Crit rate of Focus Magic target, compute as [1 - (1 - crit chance) ^ (1 / cast time)] (example 50% crit change, 3 sec cast time =&gt; 0.206)" Grid.Row="22"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Warlock Spell Power: *" TextWrapping="Wrap" ToolTipService.ToolTip="Spell Power used for Demonic Pact buff value." Grid.Row="23"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Mana Neutral Cycle Mix: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable to include mana neutral arcane cycle mix in case your solution is using mana regen cycles." Grid.Row="20"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Snared Time (0-1): *" TextWrapping="Wrap" ToolTipService.ToolTip="Percentage of time that the target is snared by someone else, cycles that provide snare override this to 1." Grid.Row="21"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Frostbite Utilization (0-1): *" TextWrapping="Wrap" ToolTipService.ToolTip="Utilization of 1 corresponds to no diminishing returns, only applies to Blizzard." Grid.Row="22"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Focus Magic Rate: *" TextWrapping="Wrap" ToolTipService.ToolTip="Normalized Crit rate of Focus Magic target, compute as [1 - (1 - crit chance) ^ (1 / cast time)] (example 50% crit change, 3 sec cast time =&gt; 0.206)" Grid.Row="23"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="0" IsChecked="{Binding Mode=TwoWay, Path=AutomaticArmor}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="1" IsChecked="{Binding Mode=TwoWay, Path=HeroismAvailable}" d:LayoutOverrides="Height, VerticalMargin"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="2" IsChecked="{Binding Mode=TwoWay, Path=PowerInfusionAvailable}" d:LayoutOverrides="Height, VerticalMargin"/>
@@ -143,12 +144,12 @@
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="16" IsChecked="{Binding Mode=TwoWay, Path=ManaPotionEnabled}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="17" IsChecked="{Binding Mode=TwoWay, Path=ManaGemEnabled}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="19" IsChecked="{Binding Mode=TwoWay, Path=CustomSpellMixOnly}"/>
+                    <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="20" IsChecked="{Binding Mode=TwoWay, Path=IncludeManaNeutralCycleMix}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="18" IsChecked="{Binding Mode=TwoWay, Path=CustomSpellMixEnabled}" Width="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <Button Margin="0,2,0,2" Content="..." Grid.Column="1" Grid.Row="18" Width="96" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="CustomSpellMix_Click" />
-                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=SnaredTime}" TextWrapping="Wrap" Grid.Row="20"/>
-                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FrostbiteUtilization}" TextWrapping="Wrap" Grid.Row="21"/>
-                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FocusMagicTargetCritRate}" TextWrapping="Wrap" Grid.Row="22"/>
-                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=WarlockSpellPower}" TextWrapping="Wrap" Grid.Row="23"/>
+                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=SnaredTime}" TextWrapping="Wrap" Grid.Row="21"/>
+                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FrostbiteUtilization}" TextWrapping="Wrap" Grid.Row="22"/>
+                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=FocusMagicTargetCritRate}" TextWrapping="Wrap" Grid.Row="23"/>
                 </Grid>
             </controls:TabItem>
             <controls:TabItem Header="Fight">

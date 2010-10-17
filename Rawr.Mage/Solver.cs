@@ -5546,6 +5546,10 @@ namespace Rawr.Mage
                             spellList.Add(CycleId.AB23ABar023AM);
                             spellList.Add(CycleId.AB2ABar02AMABABar);
                             spellList.Add(CycleId.AB2ABar12AMABABar);
+                            if (CalculationOptions.IncludeManaNeutralCycleMix)
+                            {
+                                spellList.Add(CycleId.ArcaneManaNeutral);
+                            }
                             break;
                         case Specialization.Fire:
                             break;

@@ -466,11 +466,11 @@ namespace Rawr.Mage
                     {
                         if (solver.SolutionVariable[i].Type == VariableType.Spell)
                         {
-                            sb.AppendLine(String.Format("{2} {0}: {1:F}", solver.SolutionVariable[i].State.BuffLabel + "+" + solver.SolutionVariable[i].Cycle.Name, compactSolution[i], solver.SolutionVariable[i].Segment));
+                            sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}", solver.SolutionVariable[i].State.BuffLabel + "+" + solver.SolutionVariable[i].Cycle.Name, compactSolution[i], solver.SolutionVariable[i].Segment, solver.SolutionVariable[i].ManaSegment));
                         }
                         else
                         {
-                            sb.AppendLine(String.Format("{2} {0}: {1:F}", solver.SolutionVariable[i].Type, compactSolution[i], solver.SolutionVariable[i].Segment));
+                            sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}", solver.SolutionVariable[i].Type, compactSolution[i], solver.SolutionVariable[i].Segment, solver.SolutionVariable[i].ManaSegment));
                         }
                     }
                 }

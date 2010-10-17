@@ -872,8 +872,16 @@ namespace Rawr.Mage
 
             if (integralMana && advancedConstraintsLevel >= 2)
             {
-                if (manaPotionAvailable && !ValidateIntegralConsumable(VariableType.ManaPotion)) return false;
-                if (CalculationOptions.ManaGemEnabled && !ValidateIntegralConsumable(VariableType.ManaGem)) return false;
+                if (manaPotionAvailable && !ValidateIntegralConsumable(VariableType.ManaPotion, 1)) return false;
+                if (CalculationOptions.ManaGemEnabled && !ValidateIntegralConsumable(VariableType.ManaGem, 1)) return false;
+
+                if (evocationAvailable && !ValidateIntegralConsumable(VariableType.Evocation, EvocationDuration / 4)) return false;
+                /*if (CalculationOptions.EnableHastedEvocation)
+                {
+                    if (evocationAvailable && icyVeinsAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIV, EvocationDuration / 4 / 1.2)) return false;
+                    if (evocationAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationHero, EvocationDuration / 4 / 1.3)) return false;
+                    if (evocationAvailable && icyVeinsAvailable && heroismAvailable && !ValidateIntegralConsumableOverall(VariableType.EvocationIVHero, EvocationDuration / 4 / 1.2 / 1.3)) return false;
+                }*/
             }
 
             if (segmentCooldowns && advancedConstraintsLevel >= 3)
@@ -2259,28 +2267,32 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private bool ValidateIntegralConsumable(VariableType integralConsumable)
+        private bool ValidateIntegralConsumable(VariableType integralConsumable, double unit)
         {
             for (int index = 0; index < SolutionVariable.Count; index++)
             {
                 if (SolutionVariable[index].Type == integralConsumable)
                 {
                     double value = solution[index];
-                    int count = (int)Math.Round(value);
-                    bool valid = (Math.Abs(value - count) < 0.000001);
+
+                    double count = Math.Round(value / unit) * unit;
+                    bool valid = (Math.Abs(value - count) < 0.0001);
+
+                    //int count = (int)Math.Round(value);
+                    //bool valid = (Math.Abs(value - count) < 0.000001);
 
                     if (!valid)
                     {
                         SolverLP maxCount = lp.Clone();
                         // count >= ceiling(value)
-                        lp.SetColumnLowerBound(index, Math.Ceiling(value));
+                        lp.SetColumnLowerBound(index, Math.Ceiling(value / unit) * unit);
                         lp.ForceRecalculation(true);
-                        if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " at " + SolutionVariable[index].Segment + ", min " + Math.Ceiling(value));
+                        if (lp.Log != null) lp.Log.AppendLine("Integral consumable " + integralConsumable + " at " + SolutionVariable[index].Segment + ", min " + Math.Ceiling(value / unit) * unit);
                         HeapPush(lp);
                         // count <= floor(value)
-                        maxCount.SetColumnUpperBound(index, Math.Floor(value));
+                        maxCount.SetColumnUpperBound(index, Math.Floor(value / unit) * unit);
                         maxCount.ForceRecalculation(true);
-                        if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + SolutionVariable[index].Segment + ", max " + Math.Floor(value));
+                        if (maxCount.Log != null) maxCount.Log.AppendLine("Integral consumable " + integralConsumable + " at " + SolutionVariable[index].Segment + ", max " + Math.Floor(value / unit) * unit);
                         HeapPush(maxCount);
                         return false;
                     }
@@ -3530,7 +3542,14 @@ namespace Rawr.Mage
                 {
                     int seg = SolutionVariable[index].Segment;
                     int mseg = SolutionVariable[index].ManaSegment;
-                    if ((seg == minSegment && mseg >= minManaSegment) || (seg == maxSegment && mseg <= maxManaSegment) || (seg > minSegment && seg < maxSegment)) branchlp.EraseColumn(index);
+                    if (minSegment == maxSegment)
+                    {
+                        if (mseg >= minManaSegment && mseg <= maxManaSegment) branchlp.EraseColumn(index);
+                    }
+                    else
+                    {
+                        if ((seg == minSegment && mseg >= minManaSegment) || (seg == maxSegment && mseg <= maxManaSegment) || (seg > minSegment && seg < maxSegment)) branchlp.EraseColumn(index);
+                    }
                 }
             }
         }

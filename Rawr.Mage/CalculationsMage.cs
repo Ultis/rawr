@@ -148,6 +148,7 @@ namespace Rawr.Mage
                     "Spell Info:FrBILFB*Fireball on Brain Freeze, always Ice Lance on shatter combo",
                     "Spell Info:FrBDFFFB*Frostfire Bolt on non-FOF Brain Freeze, on shatter combo Deep Freeze > BF Frostfire Bolt",
 #if RAWR4
+                    "Spell Info:ArcaneManaNeutral*Mana neutral mix of arcane cycles",
                     "Spell Info:AB2ABar12AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 1 or 2 stack",
                     "Spell Info:AB2ABar02AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 0 or 2 stack",
                     "Spell Info:AB23ABar023AM*AB-AB-(AB-)-ABar, ABar on 2 stack if off cooldown, AM on 0, 2 or 3 stack",

@@ -7447,7 +7447,7 @@ namespace Rawr.Mage
         private void PhaseIQStep(out int maxj, double eps, out int mini, out int bound, out bool changeBasis)
         {
             double direction;
-            maxj = SelectPrimalIncoming(out direction, false);
+            maxj = SelectPrimalIncoming(out direction, true);
 
 
             mini = -1;

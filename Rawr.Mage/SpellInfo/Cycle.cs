@@ -15,6 +15,7 @@ namespace Rawr.Mage
         FrostboltFOF,
         Fireball,
         FrostfireBoltFOF,
+        ArcaneManaNeutral,
         ArcaneBlastSpam,
         ABSpam234AM,
         AB3ABar023AM,

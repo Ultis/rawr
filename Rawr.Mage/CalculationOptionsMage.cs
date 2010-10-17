@@ -941,6 +941,12 @@ namespace Rawr.Mage
             set { _MIPMethod = value; OnPropertyChanged("MIPMethod"); }
         }
 
+        private bool _IncludeManaNeutralCycleMix;
+        public bool IncludeManaNeutralCycleMix
+        {
+            get { return _IncludeManaNeutralCycleMix; }
+            set { _IncludeManaNeutralCycleMix = value; OnPropertyChanged("IncludeManaNeutralCycleMix"); }
+        }
 
         private float _Innervate;
         public float Innervate

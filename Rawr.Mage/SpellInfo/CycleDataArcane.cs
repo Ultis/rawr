@@ -2505,6 +2505,64 @@ namespace Rawr.Mage
         }
     }
 
+    public static class ArcaneManaNeutral
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            List<Cycle> cycles = new List<Cycle>();
+            cycles.Add(castingState.GetCycle(CycleId.ArcaneBlastSpam));
+            cycles.Add(castingState.GetCycle(CycleId.ABSpam234AM));
+            cycles.Add(castingState.GetCycle(CycleId.AB3ABar023AM));
+            cycles.Add(castingState.GetCycle(CycleId.AB23ABar023AM));
+            cycles.Add(castingState.GetCycle(CycleId.AB2ABar02AMABABar));
+            cycles.Add(castingState.GetCycle(CycleId.AB2ABar12AMABABar));
+
+            cycles.Sort((c1, c2) => c1.ManaPerSecond.CompareTo(c2.ManaPerSecond));
+
+            if (cycles[0].ManaPerSecond > 0)
+            {
+                return cycles[0];
+            }
+
+            int i = 0;
+            while (i < cycles.Count)
+            {
+                float maxDpm = 0;
+                int maxj = -1;
+                for (int j = i + 1; j < cycles.Count; j++)
+                {
+                    float dpm = (cycles[j].DamagePerSecond - cycles[i].DamagePerSecond) / (cycles[j].ManaPerSecond - cycles[i].ManaPerSecond);
+                    if (dpm > maxDpm)
+                    {
+                        maxDpm = dpm;
+                        maxj = j;
+                    }
+                }
+                if (maxj != -1)
+                {
+                    if (cycles[maxj].ManaPerSecond >= 0)
+                    {
+                        // mps1 + k * (mps2 - mps1)
+                        float k = -cycles[i].ManaPerSecond / (cycles[maxj].ManaPerSecond - cycles[i].ManaPerSecond);
+                        Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+                        cycle.Name = "ArcaneManaNeutral";
+                        cycle.AddCycle(needsDisplayCalculations, cycles[i], (1 - k) / cycles[i].CastTime);
+                        cycle.AddCycle(needsDisplayCalculations, cycles[maxj], k / cycles[maxj].CastTime);
+                        cycle.Calculate();
+                        return cycle;
+                    }
+                    i = maxj;
+                }
+                else
+                {
+                    // we've run out of cycles                    
+                    return cycles[i];
+                }
+            }
+            return null;
+        }
+    }
+
     public static class ABSpam234AM
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

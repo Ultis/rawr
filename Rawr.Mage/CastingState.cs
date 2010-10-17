@@ -857,6 +857,9 @@ namespace Rawr.Mage
                 case CycleId.AB2ABarMBAM:
                     c = new AB2ABarMBAM(Solver.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.ArcaneManaNeutral:
+                    c = ArcaneManaNeutral.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 /*case CycleId.AB3ABar:
                     c = new AB3ABar(Calculations.NeedsDisplayCalculations, this);
                     break;
