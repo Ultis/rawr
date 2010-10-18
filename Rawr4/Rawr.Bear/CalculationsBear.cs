@@ -1439,6 +1439,38 @@ the Threat Scale defined on the Options tab.",
 			return relevant;
 		}
 
+		private static List<string> _relevantGlyphs;
+		public override List<string> GetRelevantGlyphs()
+		{
+			if (_relevantGlyphs == null)
+			{
+				_relevantGlyphs = new List<string>();
+				_relevantGlyphs.Add("Glyph Of Aquatic Form");
+				_relevantGlyphs.Add("Glyph Of Barkskin");
+				_relevantGlyphs.Add("Glyph Of Berserk");
+				_relevantGlyphs.Add("Glyph Of Challenging Roar");
+				_relevantGlyphs.Add("Glyph Of Dash");
+				_relevantGlyphs.Add("Glyph Of Entangling Roots");
+				_relevantGlyphs.Add("Glyph Of Faerie Fire");
+				_relevantGlyphs.Add("Glyph Of Feral Charge");
+				_relevantGlyphs.Add("Glyph Of Ferocious Bite");
+				_relevantGlyphs.Add("Glyph Of Frenzied Regeneration");
+				_relevantGlyphs.Add("Glyph Of Lacerate");
+				_relevantGlyphs.Add("Glyph Of Mangle");
+				_relevantGlyphs.Add("Glyph Of Maul");
+				_relevantGlyphs.Add("Glyph Of Rake");
+				_relevantGlyphs.Add("Glyph Of Rebirth");
+				_relevantGlyphs.Add("Glyph Of Rip");
+				_relevantGlyphs.Add("Glyph Of Savage Roar");
+				_relevantGlyphs.Add("Glyph Of Shred");
+				_relevantGlyphs.Add("Glyph Of The Wild");
+				_relevantGlyphs.Add("Glyph Of Thorns");
+				_relevantGlyphs.Add("Glyph Of Tiger's Fury");
+				_relevantGlyphs.Add("Glyph Of Unburdened Rebirth");
+			}
+			return _relevantGlyphs;
+		}
+
 		#endregion
 
 		public Stats GetBuffsStats(Character character, CalculationOptionsBear calcOpts)
@@ -1510,38 +1542,6 @@ the Threat Scale defined on the Options tab.",
 			character.DruidTalents.GlyphOfChallengingRoar = true;
 			character.DruidTalents.GlyphOfUnburdenedRebirth = true;
 			character.DruidTalents.GlyphOfDash = true;
-		}
-
-		private static List<string> _relevantGlyphs;
-		public override List<string> GetRelevantGlyphs()
-		{
-			if (_relevantGlyphs == null)
-			{
-				_relevantGlyphs = new List<string>();
-				_relevantGlyphs.Add("Glyph Of Aquatic Form");
-				_relevantGlyphs.Add("Glyph Of Barkskin");
-				_relevantGlyphs.Add("Glyph Of Berserk");
-				_relevantGlyphs.Add("Glyph Of Challenging Roar");
-				_relevantGlyphs.Add("Glyph Of Dash");
-				_relevantGlyphs.Add("Glyph Of Entangling Roots");
-				_relevantGlyphs.Add("Glyph Of Faerie Fire");
-				_relevantGlyphs.Add("Glyph Of Feral Charge");
-				_relevantGlyphs.Add("Glyph Of Ferocious Bite");
-				_relevantGlyphs.Add("Glyph Of Frenzied Regeneration");
-				_relevantGlyphs.Add("Glyph Of Lacerate");
-				_relevantGlyphs.Add("Glyph Of Mangle");
-				_relevantGlyphs.Add("Glyph Of Maul");
-				_relevantGlyphs.Add("Glyph Of Rake");
-				_relevantGlyphs.Add("Glyph Of Rebirth");
-				_relevantGlyphs.Add("Glyph Of Rip");
-				_relevantGlyphs.Add("Glyph Of Savage Roar");
-				_relevantGlyphs.Add("Glyph Of Shred");
-				_relevantGlyphs.Add("Glyph Of The Wild");
-				_relevantGlyphs.Add("Glyph Of Thorns");
-				_relevantGlyphs.Add("Glyph Of Tiger's Fury");
-				_relevantGlyphs.Add("Glyph Of Unburdened Rebirth");
-			}
-			return _relevantGlyphs;
 		}
 	}
 }

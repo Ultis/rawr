@@ -7,7 +7,7 @@
 	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
 	x:Class="Rawr.UI.WelcomeWindow"
-	Title="Welcome to Rawr3 Public Beta" Width="655">
+	Title="Welcome to Rawr4 Public Beta" Width="655">
 	<StackPanel Orientation="Vertical">
 		<TextBlock x:Name="MessageText" HorizontalAlignment="Left" TextWrapping="Wrap" Width="630" Margin="4,4,4,4"/>
     <StackPanel Grid.Row="3" HorizontalAlignment="Left" Orientation="Horizontal">

@@ -105,44 +105,12 @@
     <Tree3>11</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
-    <Name>Frostfire</Name>
-    <Class>Mage</Class>
-    <Spec>00000000000000000000000000000023050300123033310531203013512033030310030000000000000000.0100000100000010000</Spec>
-    <Tree1>0</Tree1>
-    <Tree2>53</Tree2>
-    <Tree3>18</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
     <Name>Arcane</Name>
     <Class>Mage</Class>
-    <Spec>23200523010033015032310250532103000000000000000000000000002032030010000000000000000000.0000000100011000000</Spec>
-    <Tree1>57</Tree1>
-    <Tree2>3</Tree2>
-    <Tree3>11</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Arcane+Scorch</Name>
-    <Class>Mage</Class>
-    <Spec>23000523010023015032310250532023050020123000000000000000000000000000000000000000000000.0000000100011000000</Spec>
-    <Tree1>53</Tree1>
-    <Tree2>18</Tree2>
-    <Tree3>0</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Frostbolt</Name>
-    <Class>Mage</Class>
-    <Spec>00500503110003000000000000000000000000000000000000000000000533030310033100230152231351.0010000100000000001</Spec>
-    <Tree1>18</Tree1>
-    <Tree2>0</Tree2>
-    <Tree3>53</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-    <Name>Fireball</Name>
-    <Class>Mage</Class>
-    <Spec>23000503310003000000000000000000550310113033300531203003510000000000000000000000000000.1000000100000010000</Spec>
-    <Tree1>20</Tree1>
-    <Tree2>51</Tree2>
-    <Tree3>0</Tree3>
+    <Spec>3033222212001022111212000000000000000000000300000000000000000.0000010000011000000</Spec>
+    <Tree1>31</Tree1>
+    <Tree2>2</Tree2>
+    <Tree3>3</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Default Resto (0/13/55)</Name>
@@ -511,13 +479,5 @@
     <Tree1>0</Tree1>
     <Tree2>13</Tree2>
     <Tree3>58</Tree3>
-  </SavedTalentSpec>
-  <SavedTalentSpec>
-  <Name>Resto: Telluric Currents Build (5 Free)</Name>
-  <Class>Shaman</Class>
-  <Spec>000000000000000000020300000000000000000332200213212312301.10000000010100011000100000000000</Spec>
-  <Tree1>0</Tree1>
-  <Tree2>5</Tree2>
-  <Tree3>31</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

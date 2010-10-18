@@ -144,10 +144,6 @@
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>
       <Name>Rawr.Healadin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.HealPriest\Rawr.HealPriest.csproj">
-      <Project>{859EB628-A235-482E-A2DA-643DAB35A626}</Project>
-      <Name>Rawr.HealPriest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rawr.Hunter\Rawr.Hunter.csproj">
       <Project>{5FEA13E2-1D46-400A-ACD8-DD2E5DBADB3E}</Project>
       <Name>Rawr.Hunter</Name>
@@ -180,21 +176,17 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.csproj">
-      <Project>{6E5BC92F-AAA0-4C14-B25A-1A39196291E4}</Project>
-      <Name>Rawr.ShadowPriest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.csproj">
       <Project>{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}</Project>
       <Name>Rawr.TankDK</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.csproj">
-      <Project>{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}</Project>
-      <Name>Rawr.Tree</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Rawr.UI\Rawr.UI.csproj">
       <Project>{E5177B6E-4D62-4506-BD70-E657540A9C4D}</Project>
       <Name>Rawr.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Warlock\Rawr.Warlock.csproj">
+      <Project>{EE625724-2A4E-45F7-806D-584449250C11}</Project>
+      <Name>Rawr.Warlock</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
