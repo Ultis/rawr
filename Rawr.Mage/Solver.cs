@@ -3129,6 +3129,10 @@ namespace Rawr.Mage
                                             break;
                                         }
                                     }
+                                    if (c.ManaPerSecond < -0.001 && CalculationOptions.DisableManaRegenCycles)
+                                    {
+                                        skip = true;
+                                    }
                                     if (!skip)
                                     {
                                         placed.Add(c);
@@ -4036,22 +4040,25 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    int wandSegments = (segmentNonCooldowns) ? SegmentList.Count : 1;
-                    WandTemplate.Initialize(this, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed);
-                    Spell w = WandTemplate.GetSpell(BaseState);
-                    Wand = w;
-                    Cycle wand = w;
-                    double mps = wand.ManaPerSecond;
-                    for (int segment = 0; segment < wandSegments; segment++)
+                    if (!CalculationOptions.DisableManaRegenCycles)
                     {
-                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                        int wandSegments = (segmentNonCooldowns) ? SegmentList.Count : 1;
+                        WandTemplate.Initialize(this, (MagicSchool)Character.Ranged.Item.DamageType, Character.Ranged.Item.MinDamage, Character.Ranged.Item.MaxDamage, Character.Ranged.Item.Speed);
+                        Spell w = WandTemplate.GetSpell(BaseState);
+                        Wand = w;
+                        Cycle wand = w;
+                        double mps = wand.ManaPerSecond;
+                        for (int segment = 0; segment < wandSegments; segment++)
                         {
-                            float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
-                            double dps = wand.DamagePerSecond * mult;
-                            double tps = wand.ThreatPerSecond;
-                            if (mult > 0)
+                            for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
                             {
-                                SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                float mult = segmentCooldowns ? CalculationOptions.GetDamageMultiplier(SegmentList[segment]) : 1.0f;
+                                double dps = wand.DamagePerSecond * mult;
+                                double tps = wand.ThreatPerSecond;
+                                if (mult > 0)
+                                {
+                                    SetWandColumn(wand, mps, segment, manaSegment, dps, tps);
+                                }
                             }
                         }
                     }
@@ -4109,11 +4116,14 @@ namespace Rawr.Mage
             }
             else
             {
-                for (int segment = 0; segment < idleRegenSegments; segment++)
+                if (!CalculationOptions.DisableManaRegenCycles)
                 {
-                    for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                    for (int segment = 0; segment < idleRegenSegments; segment++)
                     {
-                        SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                        for (int manaSegment = 0; manaSegment < manaSegments; manaSegment++)
+                        {
+                            SetIdleRegenColumn(idleRegenSegments, dps, tps, mps, segment, manaSegment);
+                        }
                     }
                 }
             }
@@ -5828,7 +5838,7 @@ namespace Rawr.Mage
         {
             if (v.IsZeroTime)
             {
-                if (v.Mps >= 0)
+                if (v.Mps >= -0.001)
                 {
                     return 2;
                 }
@@ -5837,7 +5847,7 @@ namespace Rawr.Mage
                     return 0;
                 }
             }
-            if (v.Mps >= 0)
+            if (v.Mps >= -0.001)
             {
                 return 3;
             }

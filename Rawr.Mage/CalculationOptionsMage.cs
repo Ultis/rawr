@@ -948,6 +948,13 @@ namespace Rawr.Mage
             set { _IncludeManaNeutralCycleMix = value; OnPropertyChanged("IncludeManaNeutralCycleMix"); }
         }
 
+        private bool _DisableManaRegenCycles;
+        public bool DisableManaRegenCycles
+        {
+            get { return _DisableManaRegenCycles; }
+            set { _DisableManaRegenCycles = value; OnPropertyChanged("DisableManaRegenCycles"); }
+        }
+
         private float _Innervate;
         public float Innervate
         {
