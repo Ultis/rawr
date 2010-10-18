@@ -14,6 +14,8 @@ namespace Rawr.Bear
 		public float FurySwipesChance { get; set; }
 		public float HasteOnFeralCharge { get; set; }
 		public float BonusPulverizeDuration { get; set; }
+		public float BonusLacerateCritChance { get; set; }
+		public float BonusFaerieFireStacks { get; set; }
 
 		public WeightedStat[] TemporaryArmorUptimes { get; set; }
 

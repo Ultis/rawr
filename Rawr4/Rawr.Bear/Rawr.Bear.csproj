@@ -86,6 +86,7 @@
     <Compile Include="..\..\Rawr.Bear\BearRotationCalculator.cs">
       <Link>BearRotationCalculator.cs</Link>
     </Compile>
+    <Compile Include="BearAbilityStats.cs" />
     <Compile Include="CalculationOptionsBear.cs" />
     <Compile Include="CalculationOptionsConverters.cs" />
     <Compile Include="CalculationOptionsPanelBear.xaml.cs">

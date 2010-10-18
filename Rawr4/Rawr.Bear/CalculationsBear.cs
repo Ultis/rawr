@@ -587,6 +587,11 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.ParriedAttacks = chanceParry;
 			calculatedStats.MissedAttacks = chanceMiss;
 
+			BearAbilityBuilder abilties = new BearAbilityBuilder(stats, 
+				character.MainHand == null ? 1.5f : (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f,
+				attackSpeed, modArmor, chanceAvoided, chanceCrit, chanceCritSpell, chanceGlance, critMultiplier, spellCritMultiplier);
+
+
 			float baseDamage = 137f + (stats.AttackPower / 14f) * 2.5f;
 			float bearThreatMultiplier = (29f / 14f) * (1f + stats.ThreatIncreaseMultiplier);
 
@@ -796,6 +801,8 @@ the Threat Scale defined on the Options tab.",
 				BonusStaminaMultiplier = (1f + 0.1f * talents.HeartOfTheWild / 3f) * (leatherSpecialization ? 1.05f : 1f) - 1f,
 				BonusPhysicalDamageMultiplier = 0.04f * talents.MasterShapeshifter,
 				BonusMangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
+				BonusLacerateCritChance = talents.GlyphOfLacerate ? 0.05f : 0f,
+				BonusFaerieFireStacks = talents.FeralAggression
 			};
 			statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear));
 			statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -1487,10 +1494,22 @@ the Threat Scale defined on the Options tab.",
 			character.ActiveBuffsAdd("Flask of Steelskin");
 			character.ActiveBuffsAdd("Agility Food");
 
-
-			character.DruidTalents.GlyphOfMaul = true;
-			character.DruidTalents.GlyphOfGrowl = true;
+			//Prime
+			character.DruidTalents.GlyphOfBerserk = true;
+			character.DruidTalents.GlyphOfLacerate = true;
+			character.DruidTalents.GlyphOfMangle = true;
+			
+			//Major
+			//character.DruidTalents.GlyphOfFaerieFire = true;
+			character.DruidTalents.GlyphOfFeralCharge = true;
 			character.DruidTalents.GlyphOfFrenziedRegeneration = true;
+			character.DruidTalents.GlyphOfMaul = true;
+			//character.DruidTalents.GlyphOfThorns = true;
+			
+			//Minor
+			character.DruidTalents.GlyphOfChallengingRoar = true;
+			character.DruidTalents.GlyphOfUnburdenedRebirth = true;
+			character.DruidTalents.GlyphOfDash = true;
 		}
 
 		private static List<string> _relevantGlyphs;
@@ -1499,11 +1518,28 @@ the Threat Scale defined on the Options tab.",
 			if (_relevantGlyphs == null)
 			{
 				_relevantGlyphs = new List<string>();
-				_relevantGlyphs.Add("Glyph of Maul");
-				_relevantGlyphs.Add("Glyph of Growl");
-				_relevantGlyphs.Add("Glyph of Frenzied Regeneration");
-				_relevantGlyphs.Add("Glyph of Mangle");
-				_relevantGlyphs.Add("Glyph of Berserk");
+				_relevantGlyphs.Add("Glyph Of Aquatic Form");
+				_relevantGlyphs.Add("Glyph Of Barkskin");
+				_relevantGlyphs.Add("Glyph Of Berserk");
+				_relevantGlyphs.Add("Glyph Of Challenging Roar");
+				_relevantGlyphs.Add("Glyph Of Dash");
+				_relevantGlyphs.Add("Glyph Of Entangling Roots");
+				_relevantGlyphs.Add("Glyph Of Faerie Fire");
+				_relevantGlyphs.Add("Glyph Of Feral Charge");
+				_relevantGlyphs.Add("Glyph Of Ferocious Bite");
+				_relevantGlyphs.Add("Glyph Of Frenzied Regeneration");
+				_relevantGlyphs.Add("Glyph Of Lacerate");
+				_relevantGlyphs.Add("Glyph Of Mangle");
+				_relevantGlyphs.Add("Glyph Of Maul");
+				_relevantGlyphs.Add("Glyph Of Rake");
+				_relevantGlyphs.Add("Glyph Of Rebirth");
+				_relevantGlyphs.Add("Glyph Of Rip");
+				_relevantGlyphs.Add("Glyph Of Savage Roar");
+				_relevantGlyphs.Add("Glyph Of Shred");
+				_relevantGlyphs.Add("Glyph Of The Wild");
+				_relevantGlyphs.Add("Glyph Of Thorns");
+				_relevantGlyphs.Add("Glyph Of Tiger's Fury");
+				_relevantGlyphs.Add("Glyph Of Unburdened Rebirth");
 			}
 			return _relevantGlyphs;
 		}
