@@ -75,6 +75,7 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="6*"/>
@@ -136,6 +137,8 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                 <CheckBox Grid.Column="1" Grid.Row="9" Margin="2" IsChecked="{Binding CustomUseExpose, Mode=TwoWay}" />
                 <TextBlock Text="Use Revealing Strike: " VerticalAlignment="Center" Margin="2" Grid.Row="10" Grid.Column="0" />
                 <CheckBox Grid.Column="1" Grid.Row="10" Margin="2" IsChecked="{Binding CustomUseRS, Mode=TwoWay}" />
+                <TextBlock Text="Use Recuperate: " VerticalAlignment="Center" Margin="2" Grid.Row="11" Grid.Column="0" />
+                <CheckBox Grid.Column="1" Grid.Row="11" Margin="2" IsChecked="{Binding CustomUseRecup, Mode=TwoWay}" />
             </Grid>
         </layoutToolkit:AccordionItem>
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" IsSelected="True">
@@ -145,6 +148,7 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
             <ScrollViewer x:Name="SV_RotOpti" VerticalScrollBarVisibility="Auto">
                 <Grid Margin="2,2,2,8" DataContext="{Binding}">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -186,6 +190,8 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <CheckBox Grid.Column="1" Grid.Row="10" Margin="2" IsChecked="{Binding EnableEvis, Mode=TwoWay}" />
                     <TextBlock Text="Envenom: " VerticalAlignment="Center" Margin="2" Grid.Row="11" Grid.Column="0" />
                     <CheckBox Grid.Column="1" Grid.Row="11" Margin="2" IsChecked="{Binding EnableEnvenom, Mode=TwoWay}" />
+                    <TextBlock Text="Recuperate: " VerticalAlignment="Center" Margin="2" Grid.Row="12" Grid.Column="0" />
+                    <CheckBox Grid.Column="1" Grid.Row="12" Margin="2" IsChecked="{Binding EnableRecup, Mode=TwoWay}" />
                 </Grid>
             </ScrollViewer>
         </layoutToolkit:AccordionItem>

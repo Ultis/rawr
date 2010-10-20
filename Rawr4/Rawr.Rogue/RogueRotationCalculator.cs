@@ -38,6 +38,7 @@ namespace Rawr.Rogue
         public RogueAbilityStats EnvenomStats { get; set; }
         public RogueAbilityStats EvisStats { get; set; }
         public RogueAbilityStats SnDStats { get; set; }
+        public RogueAbilityStats RecupStats { get; set; }
         public RogueAbilityStats EAStats { get; set; }
         public RogueAbilityStats IPStats { get; set; }
         public RogueAbilityStats DPStats { get; set; }
@@ -64,6 +65,7 @@ namespace Rawr.Rogue
         public float KSBonusDamage { get; set; }
         public float EnergyOnBelow35BS { get; set; }
         public float EnergyOnOHAttack { get; set; }
+        public float EnergyOnRecupTick { get; set; }
         public float EnergyRegenMultiplier { get; set; }
         public float EnergyRegenTimeOnDamagingCP { get; set; }
         public float EACPCostReduction { get; set; }
@@ -82,7 +84,7 @@ namespace Rawr.Rogue
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
-            RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats eAStats,
+            RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats eAStats,
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats aPStats)
 		{
             Char = character;
@@ -117,6 +119,7 @@ namespace Rawr.Rogue
             EnvenomStats = envenomStats;
             EvisStats = evisStats;
             SnDStats = snDStats;
+            RecupStats = recupStats;
             EAStats = eAStats;
             IPStats = iPStats;
             DPStats = dPStats;
@@ -134,6 +137,7 @@ namespace Rawr.Rogue
             EnergyOnBelow35BS = 15f * Talents.MurderousIntent;
             EnergyRegenTimeOnDamagingCP = (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * Talents.AdrenalineRush * Talents.RestlessBlades;
             EnergyOnOHAttack = 0.2f * 5f * Talents.CombatPotency;
+            EnergyOnRecupTick = 3f * Talents.EnergeticRecovery;
             EnergyRegenMultiplier = (spec == 1 ? 0.25f : 0f) + (15f + (Talents.GlyphOfAdrenalineRush ? 5f : 0f)) / 180f * Talents.AdrenalineRush; //Vitality
             IPFrequencyMultiplier = spec == 0 ? 0.5f : 0f;
             BonusStealthEnergyRegen = 0.3f * Talents.Overkill;
@@ -142,7 +146,7 @@ namespace Rawr.Rogue
             KSBonusDamage = (Talents.GlyphOfKillingSpree ? 0.1f : 0f);
             RSBonus = 1f + (0.2f + (Talents.GlyphOfRevealingStrike ? 0.1f : 0f)) * Talents.RevealingStrike;
             ToTTCostReduction = (Talents.GlyphOfTricksOfTheTrade ? 15f : 0f);
-            VanishCDReduction = 30 * Talents.Elusiveness;           
+            VanishCDReduction = 30 * Talents.Elusiveness;
             #endregion
 
             #region Probability tables
@@ -175,13 +179,15 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, bool useRupt, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
+        public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, bool useRecup, bool useRupt, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
 		{
             float duration = Duration * durationMultiplier;
+            float numberOfStealths = 1f + duration / (180f - VanishCDReduction);
             float energyRegen = 10f * (1f + EnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + BonusMaxEnergy +
                                          energyRegen * duration +
-                                         ((duration - 20f) / (180f - VanishCDReduction)) * 20f * energyRegen * BonusStealthEnergyRegen +
+                                         (useRecup ? duration / 3 * EnergyOnRecupTick : 0f) + 
+                                         numberOfStealths * 20f * energyRegen * BonusStealthEnergyRegen +
                                          (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCostReduction)) * (duration - 5f) / (30f - ToTTCDReduction) : 0f) +
                                          (useRupt ? 0.02f * (duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          25 * Talents.ColdBlood * duration / 120f +
@@ -224,6 +230,26 @@ namespace Rawr.Rogue
             float cpgToUse = snDCPRequired / CPPerCPG;
             cpgCount += cpgToUse;
             totalEnergyAvailable -= cpgToUse * cpgEnergy + snDTotalEnergy;
+            #endregion
+
+            #region Recuperate
+            float recupCount = 0f;
+            if (useRecup)
+            {
+                float averageRecupCP = _averageCP[5];
+
+                //Lose some time due to SnD/Rupt conflicts ???Add more
+                float recupRuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
+
+                float recupDuration = RecupStats.DurationAverage + RecupStats.DurationPerCP * Math.Min(5f, averageRecupCP)
+                                    - recupRuptConflict;
+                recupCount = duration / recupDuration;
+                float recupTotalEnergy = recupCount * (RecupStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageRecupCP));
+                float recupCPRequired = recupCount * (averageRecupCP - CPOnFinisher);
+                cpgToUse = recupCPRequired / CPPerCPG;
+                cpgCount += cpgToUse;
+                totalEnergyAvailable -= cpgToUse * cpgEnergy + recupTotalEnergy;
+            }
             #endregion
 
             #region Expose Armor
@@ -448,6 +474,10 @@ namespace Rawr.Rogue
                 float guileBonus = 0.05f / buildupTime + 0.1f / buildupTime + 0.15f / 15f;
                 damageTotal *= 1f + guileBonus;
             }
+            if (Spec == 2) //Master of Subtlety specialization
+            {
+                damageTotal *= 1f + 0.1f * numberOfStealths * 6f / duration;
+            }
             #endregion
 
             return new RogueRotationCalculation()
@@ -469,6 +499,7 @@ namespace Rawr.Rogue
                 EvisCount = evisCount,
                 EnvenomCount = envenomCount,
                 SnDCount = snDCount,
+                RecupCount = recupCount,
                 EACount = eACount,
                 IPCount = iPCount,
                 DPCount = dPCount,
@@ -507,6 +538,7 @@ namespace Rawr.Rogue
             public float EvisCount { get; set; }
             public float EnvenomCount { get; set; }
             public float SnDCount { get; set; }
+            public float RecupCount { get; set; }
             public float EACount { get; set; }
             public float IPCount { get; set; }
             public float DPCount { get; set; }
@@ -544,6 +576,7 @@ namespace Rawr.Rogue
                 if (!MultipleSegments) rotation.Append("*");
                 else rotation.Append("\r\n");
 
+                if (RecupCount > 0) rotation.Append("Keep 5cp Recuperate up.\r\n");
                 if (EACount > 0 && RStrikeCount == 0) rotation.Append("Keep 5cp Expose Armor up.\r\n");
                 else if (EACount > 0 && RStrikeCount > 0) rotation.Append("Keep 5cp Expose Armor up, lengthened with Revealing Strike.\r\n");
                 if (EnvenomCount > 0 && CutToTheChase == 1) rotation.AppendFormat("Use {0}cp Slice and Dice, kept up with Envenom.\r\n", SnDCP);
@@ -590,6 +623,7 @@ namespace Rawr.Rogue
                 c.EvisCount = a.EvisCount + b.EvisCount;
                 c.EnvenomCount = a.EnvenomCount + b.EnvenomCount;
                 c.SnDCount = a.SnDCount + b.SnDCount;
+                c.RecupCount = a.RecupCount + b.RecupCount;
                 c.IPCount = a.IPCount + b.IPCount;
                 c.DPCount = a.DPCount + b.DPCount;
                 c.WPCount = a.WPCount + b.WPCount;

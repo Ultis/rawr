@@ -170,6 +170,18 @@ namespace Rawr.Rogue
         }
     }
 
+    public class RogueRecupStats : RogueAbilityStats
+    {
+        public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
+        {
+            string usage = string.Format("{0}x*Use Count: {0}",
+                useCount);
+            string stats = string.Format("{0}sec, {1}cp*Duration: {0}\r\nTarget Combo Points: {1}%",
+                DurationUptime + (cp * DurationPerCP), cp);
+            return usage + stats;
+        }
+    }
+
     public class RogueEAStats : RogueAbilityStats
     {
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)

@@ -68,6 +68,12 @@ namespace Rawr.Rogue
             get { return _forceCustom; }
             set { if (_forceCustom != value) { _forceCustom = value; OnPropertyChanged("ForceCustom"); } }
         }
+        private bool _customUseRecup = false;
+        public bool CustomUseRecup
+        {
+            get { return _customUseRecup; }
+            set { if (_customUseRecup != value) { _customUseRecup = value; OnPropertyChanged("CustomUseRecup"); } }
+        }
         private bool _customUseRupt = false;
         public bool CustomUseRupt
         {
@@ -175,6 +181,12 @@ namespace Rawr.Rogue
         {
             get { return _enableRupt; }
             set { if (_enableRupt != value) { _enableRupt = value; OnPropertyChanged("EnableRupt"); } }
+        }
+        private bool _enableRecup = true;
+        public bool EnableRecup
+        {
+            get { return _enableRecup; }
+            set { if (_enableRecup != value) { _enableRecup = value; OnPropertyChanged("EnableRecup"); } }
         }
         private bool _enableEvis = true;
         public bool EnableEvis

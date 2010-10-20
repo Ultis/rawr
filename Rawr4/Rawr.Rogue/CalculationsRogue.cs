@@ -416,7 +416,7 @@ namespace Rawr.Rogue
             float CPGCritDamageMultiplier = 0.1f * talents.Lethality;
             float ambushBackstabCostReduction = 4 * talents.SlaughterFromTheShadows;
             float armorReduction = 0.03f * talents.SerratedBlades;
-            float BSDamageMultiplier = 0.05f * talents.Aggression;
+            float BSDamageMultiplier = 0.05f * talents.Aggression + 0.1f * talents.Opportunity;
             float bonusBackstabCrit = 0.1f * talents.PuncturingWounds;
             float bonusEvisCrit = talents.GlyphOfEviscerate ? 0.1f : 0f;
             float bonusMutiCrit = 0.05f * talents.PuncturingWounds;
@@ -431,6 +431,7 @@ namespace Rawr.Rogue
             float meleeDamageMultiplier = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? 0.15f : 0f;
             float meleeSpeedMultiplier = 0.02f * talents.LightningReflexes + 0.2f * 15f / 180f * talents.AdrenalineRush;
             float mutiCostReduction = talents.GlyphOfMutilate ? 5f : 0;
+            float mutiDamageMultiplier = 0.1f * talents.Opportunity;
             float offhandDamageMultiplier = spec == 1 ? 0.5f : 0f;
             float poisonDamageMultiplier = (spec == 0 ? 0.2f + 0.025f * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f) + (talents.VilePoisons == 3 ? 0.2f : 0.07f * talents.VilePoisons);
             float sStrikeCostReduction = 2f * talents.ImprovedSinisterStrike;
@@ -619,6 +620,7 @@ namespace Rawr.Rogue
             float ruptDurationUptime = 16f + bonusRuptDuration;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
             float snDBonusDuration = bonusSnDDuration - lagVariance;
+            float recupBonusDuration = -lagVariance;
             float eABonusDuration = bonusEADuration - lagVariance;
             #endregion
 
@@ -700,6 +702,7 @@ namespace Rawr.Rogue
             float evisEnergyRaw = 35f;
             float envenomEnergyRaw = 35f;
             float snDEnergyRaw = 25f;
+            float recupEnergyRaw = 30f;
             float eAEnergyRaw = 25f;
 
             //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
@@ -714,6 +717,7 @@ namespace Rawr.Rogue
             float evisEnergyAverage = evisEnergyRaw * finisherEnergyCostMultiplier;
             float envenomEnergyAverage = envenomEnergyRaw * finisherEnergyCostMultiplier;
             float snDEnergyAverage = snDEnergyRaw * finisherEnergyCostMultiplier;
+            float recupEnergyAverage = recupEnergyRaw * finisherEnergyCostMultiplier;
             float eAEnergyAverage = eAEnergyRaw * finisherEnergyCostMultiplier;
             #endregion
 
@@ -813,10 +817,17 @@ namespace Rawr.Rogue
                 EnergyCost = snDEnergyAverage,
                 DurationPerCP = 3f,
             };
+            RogueAbilityStats recupStats = new RogueRecupStats()
+            {
+                DurationUptime = recupBonusDuration,
+                DurationAverage = 6f + recupBonusDuration,
+                EnergyCost = recupEnergyAverage,
+                DurationPerCP = 6f,
+            };
             RogueAbilityStats eAStats = new RogueEAStats()
             {
                 DurationUptime = eABonusDuration,
-                DurationAverage = (10f + eABonusDuration),
+                DurationAverage = 10f + eABonusDuration,
                 EnergyCost = eAEnergyAverage,
                 DurationPerCP = 10f,
             };
@@ -847,7 +858,7 @@ namespace Rawr.Rogue
                 maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
                 chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * CPonCPGCrit, (1f - chanceHitMuti * chanceHitMuti) * CPonCPGCrit,
                 mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
-                ruptStats, evisStats, envenomStats, snDStats, eAStats, iPStats, dPStats, wPStats, aPStats);
+                ruptStats, evisStats, envenomStats, snDStats, recupStats, eAStats, iPStats, dPStats, wPStats, aPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationOptimal = new RogueRotationCalculator.RogueRotationCalculation();
 
             bool bleedIsUp = calcOpts.BleedIsUp;
@@ -891,11 +902,15 @@ namespace Rawr.Rogue
                                                 for (int useRupt = 0; useRupt < 2; useRupt++)
                                                 {
                                                     if (useRupt == 1 && !calcOpts.EnableRupt) continue;
-                                                    bool useTotT = stats.BonusToTTEnergy > 0;
-                                                    RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                        rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, useRupt == 1, useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
-                                                    if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-                                                        rotationCalculationDPS = rotationCalculation;
+                                                    for (int useRecup = 0; useRecup < 2; useRecup++)
+                                                    {
+                                                        if (useRecup == 1 && !calcOpts.EnableRecup) continue;
+                                                        bool useTotT = stats.BonusToTTEnergy > 0;
+                                                        RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                                            rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, useRecup == 1, useRupt == 1, useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                        if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                                            rotationCalculationDPS = rotationCalculation;
+                                                    }
                                                 }
                                             }
                                         }
@@ -917,7 +932,7 @@ namespace Rawr.Rogue
                 else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = 0.35f;
                 RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
                 rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                    durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomUseRupt, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                    durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomUseRecup, calcOpts.CustomUseRupt, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
                 if (numberOfSegments == 2) calculatedStats.CustomRotation = rotationCalculationDPS;
                 else if (segmentedOptimize) calculatedStats.CustomRotation += rotationCalculationDPS;
                 else calculatedStats.CustomRotation = rotationCalculationDPS;
