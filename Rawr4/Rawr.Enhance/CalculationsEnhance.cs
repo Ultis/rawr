@@ -86,7 +86,8 @@ namespace Rawr.Enhance
                     "Attacks:Earth Shock",
                     "Attacks:Flame Shock",
                     "Attacks:Lightning Bolt",
-                    "Attacks:Unleash Elements",
+                    "Attacks:Unleash Wind",
+                    "Attacks:Unleash Flame",
                     "Attacks:Lightning Shield",
                     "Attacks:Chain Lightning",
                     "Attacks:Fire Nova",
@@ -306,10 +307,10 @@ namespace Rawr.Enhance
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
-            float mastery = 1f + (.2f + ((StatConversion.GetMasteryFromRating(stats.MasteryRating)) * .025f));
+            float mastery = 1f + ((8f + (StatConversion.GetMasteryFromRating(stats.MasteryRating) * 100f)) * 2.5f);
             float wdpsMH = character.MainHand == null ? 46.3f : (stats.WeaponDamage + (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed;
             float wdpsOH = character.OffHand == null ? 46.3f : (stats.WeaponDamage + (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f) / character.OffHand.Speed;
-            float dualWieldSpecialization = .6f; //Hit portion of Dual Wield
+            float dualWieldSpecialization = .06f; //Hit portion of Dual Wield
             float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;  //CATA where do these values come from (274, 211)? 211 Flametongue sp? 274 Flametongue damage?
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
@@ -567,31 +568,30 @@ namespace Rawr.Enhance
             #endregion
 
             #region Unleash Elements DPS
-            float dpsUEW = 0f;
-            float dpsUEF = 0f;
-            float dpsUE = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements))
+            #region Unleash Windfury
+            float dpsUW = 0f;
+            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.MainhandImbue == "Windfury")
             {
-                if (calcOpts.MainhandImbue == "Windfury")
-                {
-                    float damageUEWHit = dpsMHMeleeNormal * .5f;
-                    float UEWdps = damageUEWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
-                    float UEWnormal = UEWdps * cs.YellowCritModifierMH;
-                    float UEWCrit = UEWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
-                    dpsUEW = (UEWnormal + UEWCrit) * cs.DamageReduction * bonusPhysicalDamage;
-                }
-                if (calcOpts.OffhandImbue == "Flametongue")
-                {
-                    float damageUEFBase = 1070f;
-                    float damageUEFCoef = 0.43f;
-                    float damageUEF = damageUEFBase + damageUEFCoef * spellPower;
-                    float uefdps = damageUEF / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
-                    float uefnormal = uefdps * cs.SpellHitModifier;
-                    float uefcrit = uefdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                    dpsUEF = (uefnormal + uefcrit) * mastery * bonusFireDamage * bossFireResistance;
-                }
-                dpsUE = dpsUEW + dpsUEF;
+                float damageUWHit = dpsMHMeleeNormal * .5f;
+                float UWdps = damageUWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
+                float UWnormal = UWdps * cs.YellowCritModifierMH;
+                float UWcrit = UWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
+                dpsUW = (UWnormal + UWcrit) * cs.DamageReduction * bonusPhysicalDamage;
             }
+            #endregion
+            #region Unleash Flametongue
+            float dpsUF = 0f;
+            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.OffhandImbue == "Flametongue")
+            {
+                float damageUFBase = 1070f;
+                float damageUFCoef = 0.43f;
+                float damageUF = damageUFBase + damageUFCoef * spellPower;
+                float UFdps = damageUF / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
+                float UFnormal = UFdps * cs.SpellHitModifier;
+                float UFcrit = UFdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
+                dpsUF = (UFnormal + UFcrit) * mastery * bonusFireDamage * bossFireResistance;
+            }
+            #endregion
             #endregion
 
             #region Pet calculations
@@ -673,6 +673,7 @@ namespace Rawr.Enhance
             calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
             calculatedStats.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
             calculatedStats.MasteryRating = stats.MasteryRating;  //CATA FIXME!!
+            calculatedStats.AttackPower = attackPower;
             calculatedStats.SpellPower = spellPower;
             calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
             calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
@@ -702,7 +703,8 @@ namespace Rawr.Enhance
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
             calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
-            calculatedStats.UnleashElements = new DPSAnalysis(dpsUE, 1, -1, -1, 1, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements)); //CATA FIXME!
+            calculatedStats.UnleashWind = new DPSAnalysis(dpsUW, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
+            calculatedStats.UnleashFlame = new DPSAnalysis(dpsUF, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
 
 #if RAWR3 || RAWR4
             calculatedStats.Version = VERSION;
@@ -775,7 +777,7 @@ namespace Rawr.Enhance
         #endregion
 
         #region Buff Functions
-        public override void SetDefaults(Character character)
+        /*public override void SetDefaults(Character character)
         {
             // add shaman buffs
             character.ActiveBuffsAdd("Strength of Earth Totem");
@@ -821,7 +823,7 @@ namespace Rawr.Enhance
             }
 
             character.EnforceGemRequirements = true; // set default to be true for Enhancement Shaman
-        }
+        }*/
 
         private Item RemoveAddedBuffs(Stats addedBuffs)
         {

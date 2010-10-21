@@ -14,8 +14,9 @@ namespace Rawr.Enhance
         // Boss parameters
         private BossHandler _boss = new BossHandler();
         private string _bossName = "Custom";
+        //private int _targetLevel = 88;  //Index was outside the bounds of the array.
         private int _targetLevel = 83;
-        private float _targetArmor = StatConversion.NPC_ARMOR[83 - 80];
+        private float _targetArmor = StatConversion.NPC_ARMOR[88 - 85];
         private bool _inBack = true;
         private int _inBackPerc = 100;
 
@@ -196,7 +197,7 @@ namespace Rawr.Enhance
                 priorityList.Add(EnhanceAbility.StormStrike, new Priority("Stormstrike", EnhanceAbility.StormStrike, "Use Stormstrike", true, ++priority, "SS"));
                 priorityList.Add(EnhanceAbility.LavaLash, new Priority("Lava Lash", EnhanceAbility.LavaLash, "Use Lava Lash", true, ++priority, "LL"));
                 priorityList.Add(EnhanceAbility.FlameShock, new Priority("Flame Shock", EnhanceAbility.FlameShock, "Use Flame Shock if no Flame Shock debuff on target", true, ++priority, "FS"));
-                priorityList.Add(EnhanceAbility.UnleashElements, new Priority("Unleash Elements", EnhanceAbility.UnleashElements, "Use Unleash Elements", false, ++priority, "UE"));
+                priorityList.Add(EnhanceAbility.UnleashElements, new Priority("Unleash Elements", EnhanceAbility.UnleashElements, "Use Unleash Elements", true, ++priority, "UE"));
                 priorityList.Add(EnhanceAbility.LightningBolt, new Priority("Lightning Bolt on 5 stacks of MW", EnhanceAbility.LightningBolt, "Use Lightning Bolt when you have 5 stacks of Maelstrom Weapon", true, ++priority, "MW5_LB"));
                 priorityList.Add(EnhanceAbility.EarthShock, new Priority("Earth Shock", EnhanceAbility.EarthShock, "Use Earth Shock", true, ++priority, "ES"));
                 priorityList.Add(EnhanceAbility.FireElemental, new Priority("Fire Elemental", EnhanceAbility.FireElemental, "Drop Fire Elemental Totem", true, ++priority, "FE"));

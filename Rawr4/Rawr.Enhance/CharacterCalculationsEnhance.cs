@@ -344,11 +344,18 @@ namespace Rawr.Enhance
             set { _lavaLash = value; }
         }
 
-        private DPSAnalysis _unleashElements;
-        public DPSAnalysis UnleashElements
+        private DPSAnalysis _unleashWind;
+        public DPSAnalysis UnleashWind
         {
-            get { return _unleashElements; }
-            set { _unleashElements = value; }
+            get { return _unleashWind; }
+            set { _unleashWind = value; }
+        }
+
+        private DPSAnalysis _unleashFlame;
+        public DPSAnalysis UnleashFlame
+        {
+            get { return _unleashFlame; }
+            set { _unleashFlame = value; }
         }
 
         private string _version;
@@ -427,9 +434,11 @@ namespace Rawr.Enhance
 
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Mastery Rating", String.Format("{0}*{1} Mastery",
+
+            dictValues.Add("Mastery Rating", String.Format("{0}*{1} Mastery\r\nIncreases Fire, Frost and Nature Damage by {2}%",
                 BasicStats.MasteryRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (8f + (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f)).ToString("F2", CultureInfo.InvariantCulture),
+                ((8f + (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f)) * 2.5f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (YellowHit < 100f && TotalExpertiseMH < 26)
@@ -530,7 +539,8 @@ namespace Rawr.Enhance
             dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock, DPSPoints, false));
             dictValues.Add("Flame Shock", dpsOutputFormat(FlameShock, DPSPoints, false));
             dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt, DPSPoints, false));
-            dictValues.Add("Unleash Elements", dpsOutputFormat(UnleashElements, DPSPoints, false));
+            dictValues.Add("Unleash Wind", dpsOutputFormat(UnleashWind, DPSPoints, true));
+            dictValues.Add("Unleash Flame", dpsOutputFormat(UnleashFlame, DPSPoints, false));
             dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield, DPSPoints, false));
             dictValues.Add("Chain Lightning", dpsOutputFormat(ChainLightning, DPSPoints, false));
             dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
