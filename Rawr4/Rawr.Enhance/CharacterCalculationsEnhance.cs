@@ -435,10 +435,20 @@ namespace Rawr.Enhance
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
 
-            dictValues.Add("Mastery Rating", String.Format("{0}*{1} Mastery\r\nIncreases Fire, Frost and Nature Damage by {2}%",
+            dictValues.Add("Mastery", String.Format("{0}*{1} Mastery Rating\r\nIncreases Fire, Frost and Nature Damage by {2}%",
+                (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating)).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.MasteryRating.ToString("F0", CultureInfo.InvariantCulture),
-                (8f + (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f)).ToString("F2", CultureInfo.InvariantCulture),
-                ((8f + (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) * 100f)) * 2.5f).ToString("F2", CultureInfo.InvariantCulture)));
+                ((8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating)) * 2.5f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste",
+                BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+
+            dictValues.Add("Total Expertise", getExpertiseString());
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit",
+                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (YellowHit < 100f && TotalExpertiseMH < 26)
@@ -493,15 +503,6 @@ namespace Rawr.Enhance
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
-            dictValues.Add("Total Expertise", getExpertiseString());
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit",
-                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste", 
-                BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Boss Parried\r\n{3}% Spell Misses\r\n{4}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 

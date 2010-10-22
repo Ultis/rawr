@@ -54,17 +54,17 @@ namespace Rawr.Enhance
                     "Basic Stats:Agility",
                     "Basic Stats:Intellect",
                     //"Basic Stats:Spirit",
-                    "Basic Stats:Mastery Rating",
 					"Basic Stats:Attack Power",
 					"Basic Stats:Spell Power",
+                    "Basic Stats:Mastery",
+                    "Basic Stats:Haste Rating",
+                    "Basic Stats:Total Expertise",
+   				    "Basic Stats:Hit Rating",
 					"Basic Stats:White Hit",
                     "Basic Stats:Yellow Hit",
                     "Basic Stats:Spell Hit",
                     "Basic Stats:Melee Crit",
                     "Basic Stats:Spell Crit",
-                    "Basic Stats:Total Expertise",
-   				    "Basic Stats:Hit Rating",
-					"Basic Stats:Haste Rating",
 					"Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
 					"Complex Stats:Avg MH Speed",
                     "Complex Stats:Avg OH Speed",
@@ -307,7 +307,7 @@ namespace Rawr.Enhance
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
-            float mastery = 1f + ((8f + (StatConversion.GetMasteryFromRating(stats.MasteryRating) * 100f)) * 2.5f);
+            float mastery = 1f + ((8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 2.5f);
             float wdpsMH = character.MainHand == null ? 46.3f : (stats.WeaponDamage + (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed;
             float wdpsOH = character.OffHand == null ? 46.3f : (stats.WeaponDamage + (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f) / character.OffHand.Speed;
             float dualWieldSpecialization = .06f; //Hit portion of Dual Wield
@@ -572,7 +572,7 @@ namespace Rawr.Enhance
             float dpsUW = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.MainhandImbue == "Windfury")
             {
-                float damageUWHit = dpsMHMeleeNormal * .5f;
+                float damageUWHit = damageMHSwing * .5f;
                 float UWdps = damageUWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
                 float UWnormal = UWdps * cs.YellowCritModifierMH;
                 float UWcrit = UWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
@@ -884,8 +884,8 @@ namespace Rawr.Enhance
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
 					{
 						ItemType.None,
-                        ItemType.Cloth,
-						ItemType.Leather,
+                        //ItemType.Cloth,
+						//ItemType.Leather,
                         ItemType.Mail,
 						ItemType.Totem,
 					//	ItemType.Staff,
