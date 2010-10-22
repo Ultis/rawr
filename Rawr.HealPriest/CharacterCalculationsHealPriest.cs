@@ -68,7 +68,7 @@ namespace Rawr.HealPriest
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             Stats baseStats = BaseStats.GetBaseStats(character);
-
+            /*
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             float ResilienceCap = 0.15f, ResilienceFromRating = StatConversion.GetCritReductionFromResilience(1);
@@ -191,12 +191,13 @@ namespace Rawr.HealPriest
                 dictValues.Add("Gift of the Naaru", "-");
             dictValues.Add("Divine Hymn", new DivineHymn(BasicStats, character).ToString());
             dictValues.Add("Resurrection", new Resurrection(BasicStats, character).ToString());
-
+            */
             return dictValues;
         }
 
         public override float GetOptimizableCalculationValue(string calculation)
 		{
+            /*
 			switch (calculation)
 			{
                 case "Health": return basicStats.Health;
@@ -218,7 +219,7 @@ namespace Rawr.HealPriest
                 case "Frost Resistance": return basicStats.FrostResistance + basicStats.FrostResistance;
                 case "Nature Resistance": return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
                 case "Shadow Resistance": return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
-            }
+            }*/
 			return 0f;
 		}
     }

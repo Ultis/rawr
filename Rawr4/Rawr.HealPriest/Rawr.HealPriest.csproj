@@ -96,12 +96,6 @@
     <Compile Include="..\..\Rawr.HealPriest\ComparisonCalculationHealPriest.cs">
       <Link>ComparisonCalculationHealPriest.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.HealPriest\Solver.cs">
-      <Link>Solver.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.HealPriest\Spell.cs">
-      <Link>Spell.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.HealPriest\CalculationOptionsPanelHealPriest.xaml.cs">
       <Link>CalculationOptionsPanelHealPriest.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelHealPriest.xaml</DependentUpon>
@@ -109,6 +103,8 @@
     <Compile Include="..\..\Rawr3\Rawr.HealPriest\HealPriestConverters.cs">
       <Link>HealPriestConverters.cs</Link>
     </Compile>
+    <Compile Include="PriestInformation.cs" />
+    <Compile Include="SpellCata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

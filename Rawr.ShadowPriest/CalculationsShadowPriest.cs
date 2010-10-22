@@ -388,7 +388,7 @@ namespace Rawr.ShadowPriest
         
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             ComparisonCalculationBase comparison;
 
             _currentChartTotal = 0;
@@ -461,7 +461,8 @@ namespace Rawr.ShadowPriest
                     //_customChartNames = null;
                     _currentChartName = null;
                     return new ComparisonCalculationBase[0];
-            }
+            }*/
+            return null;
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -479,8 +480,8 @@ namespace Rawr.ShadowPriest
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
 
-            SolverBase solver = calculatedStats.GetSolver(character, stats);
-            solver.Calculate(calculatedStats);
+            //SolverBase solver = calculatedStats.GetSolver(character, stats);
+            //solver.Calculate(calculatedStats);
 
             return calculatedStats;
         }
@@ -491,16 +492,16 @@ namespace Rawr.ShadowPriest
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            float SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.04f;
+            //float SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.04f;
 
             Stats statsTotal = new Stats()
-            {
+            {/*
                 BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
                 SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
-                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
+                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,*/
             };
 
             statsTotal.Accumulate(statsBaseGear);
@@ -510,8 +511,8 @@ namespace Rawr.ShadowPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
+            //statsTotal.SpellPower += SpellDamageFromSpiritPercentage * statsTotal.Spirit
+            //    + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
@@ -590,14 +591,14 @@ namespace Rawr.ShadowPriest
                 InnerFireSpellPowerBonus = 120;
             else if (character.Level >= 71)
                 InnerFireSpellPowerBonus = 95;
-            return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public static float GetInnerFireArmorBonus(Character character)
         {
             float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1);
 
-            return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return ArmorBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public override Stats GetRelevantStats(Stats stats)

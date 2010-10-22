@@ -65,18 +65,10 @@ namespace Rawr.ShadowPriest
             set { _subPoints[1] = value; }
         }
 
-        public SolverBase GetSolver(Character character, Stats stats)
-        {
-            if (character.PriestTalents.MindFlay > 0)
-                return new SolverShadow(stats, character);
-            else
-                return new SolverHoly(stats, character);
-        }
-
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
+            /*CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
             BossOptions BossOpts = character.BossOptions;
             Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
             bool Ptr = calcOpts.PTR;
@@ -96,7 +88,7 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Spell Power", String.Format("{0}*{1} Bonus Shadow\r\n{2} Bonus Holy\r\n{3} from Inner Fire", 
                 Math.Floor(BasicStats.SpellPower), 
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating), 
-                Math.Floor(BasicStats.SpellPower /*+ BasicStats.SpellHolyDamageRating*/),
+                Math.Floor(BasicStats.SpellPower),
                 BasicStats.PriestInnerFire * CalculationsShadowPriest.GetInnerFireSpellPowerBonus(character)));
             dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
 
@@ -253,13 +245,13 @@ namespace Rawr.ShadowPriest
                 dictValues.Add("Penance", new Penance(BasicStats, character, baseMana, Ptr).ToString());
             else
                 dictValues.Add("Penance", "- *No required talents");
-
+            */
             return dictValues;
         }
 
         public override float GetOptimizableCalculationValue(string calculation)
         {
-            switch (calculation)
+            /*switch (calculation)
             {
                 case "Health": return basicStats.Health;
                 case "Resilience": return basicStats.Resilience;
@@ -276,7 +268,7 @@ namespace Rawr.ShadowPriest
                 case "Frost Resistance": return basicStats.FrostResistance + basicStats.FrostResistance;
                 case "Nature Resistance": return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
                 case "Shadow Resistance": return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
-            }
+            }*/
             return 0f;
         }
     }

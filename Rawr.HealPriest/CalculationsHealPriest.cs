@@ -448,9 +448,10 @@ namespace Rawr.HealPriest
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            CharacterCalculationsHealPriest calculatedStats = new CharacterCalculationsHealPriest();
+            /*
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
-            CharacterCalculationsHealPriest calculatedStats = new CharacterCalculationsHealPriest();
             CalculationOptionsHealPriest calculationOptions = character.CalculationOptions as CalculationOptionsHealPriest;
             if (calculationOptions == null)
                 return null;
@@ -469,7 +470,7 @@ namespace Rawr.HealPriest
             else
                 solver = new Solver(stats, character);
             solver.Calculate(calculatedStats);
-
+            */
             return calculatedStats;
         }
 
@@ -480,18 +481,19 @@ namespace Rawr.HealPriest
                 InnerFireSpellPowerBonus = 120;
             else if (character.Level >= 71)
                 InnerFireSpellPowerBonus = 95;
-            return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return InnerFireSpellPowerBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public static float GetInnerFireArmorBonus(Character character)
         {
             float ArmorBonus = 2440 * (character.PriestTalents.GlyphofInnerFire ? 1.5f : 1f);
 
-            return ArmorBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+            return ArmorBonus; // *(1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            
             CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -500,13 +502,13 @@ namespace Rawr.HealPriest
 
             Stats statsTalents = new Stats()
             {
-                BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
+                /*BonusStaminaMultiplier = character.PriestTalents.ImprovedPowerWordFortitude * 0.02f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.02f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
                 SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
                 SpellHaste = character.PriestTalents.Enlightenment * 0.02f,
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.5f / 3f,
-                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,
+                SpellCrit = character.PriestTalents.FocusedWill * 0.01f,*/
             };
 
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
@@ -529,7 +531,8 @@ namespace Rawr.HealPriest
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            return null;
+            /*List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
             ComparisonCalculationBase comparison;
             CharacterCalculationsHealPriest p;
             List<Spell> spellList;
@@ -738,7 +741,7 @@ namespace Rawr.HealPriest
                 default:
                     _currentChartName = null;
                     return new ComparisonCalculationBase[0];
-            }
+            }*/
         }
 
         public override Stats GetRelevantStats(Stats stats)
