@@ -210,7 +210,7 @@ namespace Rawr
 			foreach (ClassData classData in classes)
 			{
 				ProcessTalentDataJSON(new StreamReader(System.Net.HttpWebRequest.Create(
-					string.Format("http://www.wowtal.com/static/js/talents/{0}-{1}.js",
+                    string.Format("http://static.mmo-champion.com/db/js/talents/{0}-{1}.js",
 					textBoxUrl.Text, classData.Name.ToLower())).GetResponse().GetResponseStream()).ReadToEnd(), classData);
 			}
 			textBoxCode.Text += "}";
