@@ -290,6 +290,7 @@
       <Link>XMLUtils.cs</Link>
     </Compile>
     <Compile Include="Buff.cs" />
+    <Compile Include="AltoholicImporter.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
