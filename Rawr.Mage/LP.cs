@@ -5573,6 +5573,7 @@ namespace Rawr.Mage
             int round = 0;
             int updateCount = 0;
             int redecompose = 0;
+            int numericCycling = 0;
             int maxj, mini;
             const int maxRedecompose = 50;
             bool changeBasis;
@@ -5653,8 +5654,12 @@ namespace Rawr.Mage
 
                     double infeasibility;
                     ComputePhaseIQReducedCosts(out infeasibility, eps);
-                    if (infeasibility < lowestInfeasibility) lowestInfeasibility = infeasibility;
-                    else if (infeasibility > lowestInfeasibility + eps)
+                    if (infeasibility < lowestInfeasibility)
+                    {
+                        lowestInfeasibility = infeasibility;
+                        numericCycling = 0;
+                    }
+                    else if (infeasibility > lowestInfeasibility + eps || numericCycling > 10)
                     {
                         // we're not using a shifting strategy for primal so the only way to combat
                         // numerical cycling is to lower the tolerances
@@ -5662,12 +5667,17 @@ namespace Rawr.Mage
                         {
                             eps *= 10.0;
                             lowestInfeasibility = double.PositiveInfinity;
+                            numericCycling = 0;
                         }
                         if (redecompose < maxRedecompose)
                         {
                             redecompose = 0;
                             goto DECOMPOSE;
                         }
+                    }
+                    else
+                    {
+                        numericCycling++;
                     }
                     // for establishing feasibility we don't need quadratic part, just do a simplex step
                     PhaseIQStep(out maxj, eps, out mini, out bound, out changeBasis);
@@ -5723,6 +5733,7 @@ namespace Rawr.Mage
                             // we lost feasibility, go to phase I
                             feasible = false;
                             lowestInfeasibility = double.PositiveInfinity;
+                            numericCycling = 0;
                             redecompose = 0;
                             goto DECOMPOSE;
                         }
@@ -5802,6 +5813,7 @@ namespace Rawr.Mage
                             // we lost feasibility, go to phase I
                             feasible = false;
                             lowestInfeasibility = double.PositiveInfinity;
+                            numericCycling = 0;
                             redecompose = 0;
                             goto DECOMPOSE;
                         }
@@ -5820,6 +5832,7 @@ namespace Rawr.Mage
                                 // we lost feasibility, go to phase I
                                 feasible = false;
                                 lowestInfeasibility = double.PositiveInfinity;
+                                numericCycling = 0;
                                 redecompose = 0;
                                 goto DECOMPOSE;
                             }
@@ -6082,6 +6095,7 @@ namespace Rawr.Mage
                     // we lost feasibility, go to phase I
                     feasible = false;
                     lowestInfeasibility = double.PositiveInfinity;
+                    numericCycling = 0;
                     redecompose = 0;
                     goto DECOMPOSE;
                 }
@@ -6120,6 +6134,7 @@ namespace Rawr.Mage
                         // we lost feasibility, go to phase I
                         feasible = false;
                         lowestInfeasibility = double.PositiveInfinity;
+                        numericCycling = 0;
                         redecompose = 0;
                         goto DECOMPOSE;
                     }
