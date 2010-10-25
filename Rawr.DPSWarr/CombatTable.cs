@@ -17,18 +17,8 @@ namespace Rawr.DPSWarr
         public bool isWhite;
         public bool isMH;
 
-        public int levelDif
-        {
-            get {
-                return
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                    bossOpts.Level
-#else
-                    calcOpts.TargetLevel
-#endif
-                    - Char.Level;
-            }
-        }
+        /// <summary>The Level Difference between you and the Target. Ranges from 0 to +3 (Cata: 85-88)</summary>
+        public int levelDif { get { return bossOpts.Level - Char.Level; } }
         
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
@@ -40,7 +30,9 @@ namespace Rawr.DPSWarr
 
         private float _anyLand = 0f;
         private float _anyNotLand = 1f;
+        /// <summary>Any attack that lands: 1f - AnyNotLand</summary>
         public float AnyLand { get { return _anyLand; } }
+        /// <summary>Any attack that does not land: Dodges, Parries or Misses</summary>
         public float AnyNotLand { get { return _anyNotLand; } }
         private bool _alwaysHit = false;
 

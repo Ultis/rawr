@@ -27,11 +27,8 @@ namespace Rawr.DPSWarr
         }
 
         #region FuryRotVariables
-        
         private const float ROTATION_LENGTH = 8.0f;
         private const float FREE_GCDS = 1.0f;
-        
-        //float _bloodsurgeRPS;
         private float percHS, percCL;
         private float timeLostPerc = 0f;
         #endregion
@@ -42,17 +39,12 @@ namespace Rawr.DPSWarr
             // doIterations();
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = 
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-#else
-                CalcOpts.MultipleTargets
-#endif
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
 
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 //percHS -= (float)BossOpts.MultiTargsPerc;
                 {
                     float time = 0;
@@ -63,9 +55,6 @@ namespace Rawr.DPSWarr
                     float perc = time / BossOpts.BerserkTimer;
                     percHS -= Math.Max(0f, Math.Min(1f, perc)); 
                 }
-#else
-                percHS -= CalcOpts.MultipleTargetsPerc / 100f;
-#endif
             }
             percCL = (clok ? 1f - percHS : 0f);
         }
@@ -76,17 +65,12 @@ namespace Rawr.DPSWarr
             
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok =
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-#else
-                CalcOpts.MultipleTargets
-#endif
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
             BloodSurge _BS = GetWrapper<BloodSurge>().ability as BloodSurge;
             percHS = (hsok ? 1f : 0f);
             if (clok)
             {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 //percHS -= (float)BossOpts.MultiTargsPerc;
                 {
                     float time = 0;
@@ -98,9 +82,6 @@ namespace Rawr.DPSWarr
                     float perc = time / BossOpts.BerserkTimer;
                     percHS -= Math.Max(0f, Math.Min(1f, perc));
                 }
-#else
-                percHS -= (float)CalcOpts.MultipleTargetsPerc / 100f;
-#endif
             }
             percCL = (clok ? 1f - percHS : 0f);
             if (_BS != null) _BS.maintainActs = MaintainCDs;
@@ -142,43 +123,12 @@ namespace Rawr.DPSWarr
                 base.doIterations();
                 // Fury Iteration
                 BloodSurge BS = GetWrapper<BloodSurge>().ability as BloodSurge;
-#if !RAWR4
-                AbilWrapper HS = GetWrapper<HeroicStrike>();
-                AbilWrapper CL = GetWrapper<Cleave>();
-                OnAttack _HS = HS.ability as OnAttack;
-                OnAttack _CL = CL.ability as OnAttack;
-#endif
-
-#if !RAWR4
-                float ovdRage, hsRageUsed, clRageUsed;
-                float oldBS, oldHS, oldCL;
-#else
                 float ovdRage;
                 float oldBS;
-#endif
-                do
-                {
+                do {
                     oldBS = BS.Activates;
-#if !RAWR4
-                    oldHS = HS.allNumActivates;
-                    oldCL = CL.allNumActivates;
-#endif
-
                     ovdRage = FreeRageOverDur;
-#if !RAWR4
-                    hsRageUsed = ovdRage * percHS;
-                    clRageUsed = ovdRage * percCL;
-                    WhiteAtks.HSOverridesOverDur = HS.numActivates = Math.Min(hsRageUsed / _HS.FullRageCost, WhiteAtks.MhActivatesNoHS);
-                    WhiteAtks.CLOverridesOverDur = CL.numActivates = Math.Min(clRageUsed / _CL.FullRageCost, WhiteAtks.MhActivatesNoHS - WhiteAtks.HSOverridesOverDur);
-                    BS.hsActivates = HS.allNumActivates;
-#endif
-                } while (Math.Abs(1f - (BS.Activates       != 0 ? oldBS / BS.Activates       : 1f)) > 0.005f
-#if !RAWR4
-                      || Math.Abs(1f - (HS.allNumActivates <= 0 ? oldHS / HS.allNumActivates : 1f)) > 0.005f
-                      || Math.Abs(1f - (CL.allNumActivates <= 0 ? oldCL / CL.allNumActivates : 1f)) > 0.005f
-#endif
-                        );
-
+                } while (Math.Abs(1f - (BS.Activates       != 0 ? oldBS / BS.Activates       : 1f)) > 0.005f);
             } catch (Exception ex) {
                 ErrorBox eb = new ErrorBox("Error in performing Fury Iterations",
                     ex.Message, "doIterations()", "No Additional Info", ex.StackTrace);
@@ -343,9 +293,7 @@ namespace Rawr.DPSWarr
             AbilWrapper WW = GetWrapper<WhirlWind>();
             AbilWrapper BT = GetWrapper<BloodThirst>();
             AbilWrapper BS = GetWrapper<BloodSurge>();
-#if RAWR4
             AbilWrapper RB = GetWrapper<RagingBlow>();
-#endif
             AbilWrapper HS = GetWrapper<HeroicStrike>();
             AbilWrapper CL = GetWrapper<Cleave>();
 
@@ -383,7 +331,6 @@ namespace Rawr.DPSWarr
             rageadd = BS.allRage;
             availRage -= rageadd;
             
-#if RAWR4
             // Priority 4 : Raging Blow if available
             float RB_GCDs = Math.Min(availGCDs, RB.ability.Activates) * (1f - timeLostPerc);
             RB.numActivates = RB_GCDs;
@@ -394,7 +341,6 @@ namespace Rawr.DPSWarr
             HPS_TTL += RB.HPS;
             rageadd = RB.allRage;
             availRage -= rageadd;
-#endif
 
             InvalidateCache();
             //Sword Spec, Doesn't eat GCDs
@@ -405,7 +351,6 @@ namespace Rawr.DPSWarr
             // TODO: Add Rage since it's a white hit
 
             //doIterations();
-#if RAWR4
             // Heroic Strike/Cleave now that they are on GCDs. These should be rage dumps
             // Computing them together as you use HS for single, CL for Multiple
             if (/*PercFailRage == 1f &&*/ (HS.ability.Validated || CL.ability.Validated))
@@ -420,7 +365,6 @@ namespace Rawr.DPSWarr
             }
             //HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
             //CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
-#endif
 
             // Priority 4 : Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
             // Alternate to Cleave is MultiTargs is active
@@ -430,11 +374,7 @@ namespace Rawr.DPSWarr
 
             /*bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool CLok = 
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-#else
-                CalcOpts.MultipleTargets
-#endif
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];*/
 
             WhiteAtks.Slam_ActsOverDur = 0f;// _SL_GCDs;

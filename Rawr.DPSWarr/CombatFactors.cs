@@ -24,13 +24,8 @@ namespace Rawr.DPSWarr {
                     if (Talents == null) { return false; } // wait till there is one
                     int armsCounter = 0, furyCounter = 0;
                     int[] talentData = Talents.Data;
-#if !RAWR4
-                    for (int i =  0; i <= 30; i++) { armsCounter += talentData[i]; }
-                    for (int i = 31; i <= 57; i++) { furyCounter += talentData[i]; }
-#else
                     for (int i =  0; i <= 19; i++) { armsCounter += talentData[i]; }
                     for (int i = 20; i <= 40; i++) { furyCounter += talentData[i]; }
-#endif
                     if (armsCounter >= furyCounter) _FuryStance = false;
                     else if(armsCounter <  furyCounter) _FuryStance = true;
                 }
@@ -116,17 +111,7 @@ namespace Rawr.DPSWarr {
         public float _c_ohycrit { get; private set; }
         public float _c_glance { get; private set; }
 
-        public int levelDif {
-            get {
-                return
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                    BossOpts.Level
-#else
-                    CalcOpts.TargetLevel
-#endif
-                    - Char.Level;
-            }
-        }
+        public int levelDif { get { return BossOpts.Level - Char.Level; } }
         #endregion
 
         public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
@@ -160,34 +145,19 @@ namespace Rawr.DPSWarr {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs =
-#if !RAWR4
-                        ((_c_mhItemType == ItemType.TwoHandMace) ? Talents.MaceSpecialization * 0.03f : 0.00f) +
-#endif
                         (!FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
-#if RAWR3 || RAWR4 || SILVERIGHT
                         BossOpts.Armor,
-#else
-                        CalcOpts.TargetArmor,
-#endif
                         StatS.TargetArmorReduction, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
                 }
                 return _DamageReduction;
             }
         }
-        public float HealthBonus {
-            get {
-                return 1f + StatS.BonusHealingReceived;
-            }
-        }
+        public float HealthBonus { get { return 1f + StatS.BonusHealingReceived; } }
         #endregion
         #region Weapon Damage
-#if !RAWR4
-        public float OHDamageReduc { get { return 0.5f * (1f + Talents.DualWieldSpecialization * 0.05f); } }
-#else
-        public float OHDamageReduc { get { return 0.5f/* * (1f + Talents.DualWieldSpecialization * 0.05f)*/; } }
-#endif
+        public float OHDamageReduc { get { return 0.5f; } }
         public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH) : 0f; } }
         public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) { return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage; }
@@ -201,35 +171,19 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-#if !RAWR4
-                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) *  (1f + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f));
-#else
                     _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) * (1f /*+ ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)*/);
-#endif
                 }
                 return _BonusWhiteCritDmg;
             }
         }
-#if !RAWR4
-        public float BonusYellowCritDmg { get { return BonusWhiteCritDmg * (1f + Talents.Impale * 0.1f); } }
-#else
         public float BonusYellowCritDmg { get { return BonusWhiteCritDmg; } } // Cata: Impale only affects MS, SL, OP(TFB)
-#endif
         #endregion
         #region Weapon Blocked Damage
-        public float ReducWhBlockedDmg {
-            get {
-                return 0.70f;// 70% damage
-            }
-        }
+        public float ReducWhBlockedDmg { get { return 0.70f; } } // 70% damage
         public float ReducYwBlockedDmg { get { return ReducWhBlockedDmg; } }
         #endregion
         #region Weapon Glanced Damage
-        public float ReducWhGlancedDmg {
-            get {
-                return 0.70f;
-            }
-        }
+        public float ReducWhGlancedDmg { get { return 0.70f; } }
         #endregion
         #region Speed
         private float _TotalHaste = -1f;
@@ -334,34 +288,21 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Dodge
         private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[levelDif]; } }
-#if !RAWR4
-        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
-        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) - Talents.WeaponMastery * 0.01f); } }
-#else
         private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
         private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
-#endif
         #endregion
         #region Parry
         private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[levelDif]; } }
         private float MhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior);
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
-#else
-                return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
-#endif
             }
         }
         private float OhParryChance {
             get {
                 float ParryChance = ParryChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior);
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? ParryChance * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : ParryChance);
-#else
-                return Math.Max(0f, CalcOpts.InBack ? ParryChance * (1f - CalcOpts.InBackPerc / 100f) : ParryChance);
-#endif
             }
         }
         #endregion
@@ -374,20 +315,12 @@ namespace Rawr.DPSWarr {
         private float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
         private float MhBlockChance {
             get {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
-#else
-                return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
-#endif
             }
         }
         private float OhBlockChance {
             get {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
-#else
-                return Math.Max(0f, CalcOpts.InBack ? BlockChanceCap * (1f - CalcOpts.InBackPerc / 100f) : BlockChanceCap);
-#endif
             }
         }
         #endregion
@@ -395,42 +328,25 @@ namespace Rawr.DPSWarr {
         private float MhWhCritChance {
             get {
                 if (!useMH) { return 0f; }
-#if !RAWR4
-                return StatS.PhysicalCrit + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#else
                 return StatS.PhysicalCrit;// +((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#endif
-                //return crit;
             }
         }
         private float MhYwCritChance {
             get {
                 if (!useMH) { return 0f; }
-#if !RAWR4
-                return StatS.PhysicalCrit + ((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#else
                 return StatS.PhysicalCrit;// +((_c_mhItemType == ItemType.TwoHandAxe || _c_mhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#endif
             }
         }
         private float OhWhCritChance {
             get {
                 if (!useOH) { return 0f; }
-#if !RAWR4
-                return StatS.PhysicalCrit + ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#else
                 return StatS.PhysicalCrit;// +((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#endif
             }
         }
         private float OhYwCritChance {
             get {
                 if (!useOH) { return 0f; }
-#if !RAWR4
-                return StatS.PhysicalCrit + ((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#else
                 return StatS.PhysicalCrit;// +((_c_ohItemType == ItemType.TwoHandAxe || _c_ohItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f);
-#endif
             }
         }
         #endregion
@@ -447,24 +363,8 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Attackers Stats against you
-        private float LevelModifier {
-            get {
-                return (levelDif) * 0.002f;
-            }
-        }
-        private float NPC_CritChance
-        {
-            get
-            {
-                return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit,
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                    BossOpts.Level
-#else
-                    CalcOpts.TargetLevel
-#endif
-                    ));
-            }
-        }
+        private float LevelModifier { get { return levelDif * 0.002f; } }
+        private float NPC_CritChance { get { return Math.Max(0f, 0.05f + LevelModifier - StatConversion.GetDRAvoidanceChance(Char, StatS, HitResult.Crit, BossOpts.Level)); } }
         #endregion
     }
 }

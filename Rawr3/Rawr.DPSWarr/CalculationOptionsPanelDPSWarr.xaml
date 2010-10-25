@@ -78,8 +78,7 @@
                     <CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                     <CheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                     <CheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_SD" Content="Sudden Death" IsChecked="{Binding M_SuddenDeath, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_CS" Content="Colossus Smash" IsChecked="{Binding M_ColossusSmash, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_CS" Content="Colossus Smash" IsChecked="{Binding M_ColossusSmash, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                     <CheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                     <CheckBox x:Name="CK_M_A_VR" Content="Victory Rush" IsChecked="{Binding M_VictoryRush, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                 </StackPanel>

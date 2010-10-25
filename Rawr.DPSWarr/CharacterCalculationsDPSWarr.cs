@@ -28,9 +28,6 @@ namespace Rawr.DPSWarr {
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
         public string floorstring { get; set; }
-#if (!RAWR3 && !RAWR4 && DEBUG)
-        public long calculationTime { get; set; }
-#endif
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
@@ -197,19 +194,11 @@ namespace Rawr.DPSWarr {
                 string theFormat = "";
 
                 float[] passiveContrsVals = new float[] {
-#if !RAWR4
-                    combatFactors.Char.WarriorTalents.StrengthOfArms * 0.02f,
-                    (combatFactors.FuryStance ? combatFactors.Char.WarriorTalents.ImprovedBerserkerStance * 0.04f : 0f),
-#endif
                     BuffsStats.Strength,
                     BuffsStats.BonusStrengthMultiplier,
                 };
 
                 string[] passiveContrs = new string[] {
-#if !RAWR4
-                    "Strength of Arms",
-                    "Improved Berserker Stance",
-#endif
                     "Buffs : Simple",
                     "Buffs : Multi",
                 };
@@ -218,15 +207,8 @@ namespace Rawr.DPSWarr {
                 theFormat += "The Pane shows Averaged Values";
                 theFormat += "\r\n";
                 theFormat += "\r\n= Your Passive Contributions =";
-#if !RAWR4
-                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[0]; formIter++;
-                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
-                theFormat += "\r\n{" + formIter.ToString() + ":0.#} : "   + passiveContrs[2]; formIter++;
-                theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[3]; formIter++;
-#else
                 theFormat += "\r\n{" + formIter.ToString() + ":0.#} : "   + passiveContrs[0]; formIter++;
                 theFormat += "\r\n{" + formIter.ToString() + ":00.#%} : " + passiveContrs[1]; formIter++;
-#endif
                 theFormat += "\r\n";
                 theFormat += "\r\n= UnProc'd =";
                 theFormat += "\r\nValue: {" + formIter.ToString() + ":0.#}"; formIter++;
@@ -241,9 +223,6 @@ namespace Rawr.DPSWarr {
                     AverageStats.Strength,
                     // Passive Contributions
                     passiveContrsVals[0], passiveContrsVals[1],
-#if !RAWR4
-                    passiveContrsVals[2], passiveContrsVals[3],
-#endif
                     // UnProc'd Stats
                     BuffedStats.Strength,
                     BuffedStats.Strength * 2f,
@@ -320,20 +299,12 @@ namespace Rawr.DPSWarr {
                 }
                 float useRamp = 0f;
                 if (combatFactors.Char.WarriorTalents.Rampage > 0f) 
-#if RAWR4
                     useRamp = 0.05f + 0.02f;
-#else
-                    useRamp = 0.05f;
-#endif
                 float[] passiveContrsVals = new float[] {
                     0.03192f,
                     AgilityCritBonus,
                     StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc),
-#if RAWR4
                     0f,
-#else
-                    combatFactors.Char.WarriorTalents.Cruelty * 0.01f,
-#endif
                     (combatFactors.FuryStance ? 0.03f : 0f),
                     (combatFactors.FuryStance ? AverageStats.BonusWarrior_T9_2P_Crit : 0f),
                     BonusCritPercPoleAxeSpec,
@@ -539,9 +510,7 @@ namespace Rawr.DPSWarr {
                 if      (aw.ability.GetType() == typeof(Skills.BloodSurge)) { name = Skills.BloodSurge.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.BloodThirst)) { name = Skills.BloodThirst.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.WhirlWind)) { name = Skills.WhirlWind.SName; }
-                #if RAWR4
                 else if (aw.ability.GetType() == typeof(Skills.RagingBlow)) { name = Skills.RagingBlow.SName; }
-#endif
                 #endregion
                 #region Arms
                 else if (aw.ability.GetType() == typeof(Skills.Bladestorm)) { name = Skills.Bladestorm.SName; }
@@ -549,16 +518,9 @@ namespace Rawr.DPSWarr {
                 else if (aw.ability.GetType() == typeof(Skills.Rend)) { name = Skills.Rend.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.OverPower)) { name = Skills.OverPower.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.TasteForBlood)) { name = Skills.TasteForBlood.SName; }
-#if !RAWR4
-                else if (aw.ability.GetType() == typeof(Skills.SuddenDeath)) { name = Skills.SuddenDeath.SName; }
-#else
+                else if (aw.ability.GetType() == typeof(Skills.Slam)) { name = Skills.Slam.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.ColossusSmash)) { name = Skills.ColossusSmash.SName; }
                 else if (aw.ability.GetType() == typeof(Skills.VictoryRush)) { name = Skills.VictoryRush.SName; }
-#endif
-                else if (aw.ability.GetType() == typeof(Skills.Slam)) { name = Skills.Slam.SName; }
-#if !RAWR4
-                else if (aw.ability.GetType() == typeof(Skills.Swordspec)) { name = Skills.Swordspec.SName; }
-#endif
                 #endregion
                 #region Maintenance
                 else if (aw.ability.GetType() == typeof(Skills.ThunderClap)) { name = Skills.ThunderClap.SName; }
@@ -578,17 +540,14 @@ namespace Rawr.DPSWarr {
             // General
             // DPS General
             dictValues.Add("White DPS",             string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
-            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize,Rot.DW.TickSize/TotalDPS));
-            dictValues.Add("Special DMG Procs",     string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS / TotalDPS));
-            dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+Rot.GCDUsage,TotalDPS,TotalDPS*Duration));
+            dictValues.Add("Deep Wounds",           string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize, Rot.DW.TickSize <= 0f || TotalDPS <= 0f ? 0f : Rot.DW.TickSize/TotalDPS));
+            dictValues.Add("Special DMG Procs",     string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
+            dictValues.Add("Total DPS",             string.Format("{0:#,##0} : {1:#,###,##0}*"+(Rot.GCDUsage != "" ? Rot.GCDUsage : "No GCD Usage"),TotalDPS,TotalDPS*Duration));
             // Rage
             format = "{0:0000}";
             dictValues.Add("Total Generated Rage",      string.Format("{0:00} = {1:0} + {2:0}", WhiteRage + OtherRage, WhiteRage, OtherRage));
             dictValues.Add("Needed Rage for Abilities", string.Format(format,NeedyRage));
             dictValues.Add("Available Free Rage",       string.Format(format,FreeRage ));
-#if (!RAWR3 && !RAWR4 && DEBUG)
-            dictValues.Add("Calculation Time", string.Format("{0}", calculationTime));
-#endif
             return dictValues;
         }
 
@@ -601,7 +560,7 @@ namespace Rawr.DPSWarr {
                 case "Agility": return AverageStats.Agility;
                 case "Crit %": return combatFactors._c_mhycrit * 100f;
                 case "Haste %": return combatFactors.TotalHaste * 100f;
-                case "ArP %": return AverageStats.ArmorPenetration * 100f;
+                //case "ArP %": return AverageStats.ArmorPenetration * 100f;
                 case "% Chance to Miss (White)": return combatFactors._c_wmiss * 100f;
                 case "% Chance to Miss (Yellow)": return combatFactors._c_ymiss * 100f;
                 case "% Chance to be Dodged": return combatFactors._c_mhdodge * 100f;

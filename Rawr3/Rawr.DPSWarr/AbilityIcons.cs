@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Media.Imaging;
-//using log4net;
 
 namespace Rawr.DPSWarr
 {

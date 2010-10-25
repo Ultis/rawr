@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Text;
 
 namespace Rawr.ShadowPriest {
@@ -322,7 +318,7 @@ namespace Rawr.ShadowPriest {
             new SpellData(13, 79, 992, 1048)
         };
         public MindBlast(Stats stats, Character character, float baseMana, bool ptr)
-			: base("Mind Blast", stats, character, SpellRankTable, 17, 1.5f, 1.5f, 0, 1.5f / 3.5f, 30, 8f, Color.FromArgb(255, 255, 192, 0), baseMana, ptr)
+            : base("Mind Blast", stats, character, SpellRankTable, 17, 1.5f, 1.5f, 0, 1.5f / 3.5f, 30, 8f, Color.FromArgb(255, 255, 192, 0), baseMana, ptr)
         {
             Calculate(stats, character);
         }

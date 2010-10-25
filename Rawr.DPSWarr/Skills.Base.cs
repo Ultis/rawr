@@ -22,23 +22,11 @@ namespace Rawr.DPSWarr.Skills
             BossOpts = bossOpts;
             MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false);
             OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false);
-            FightDuration =
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                    BossOpts.BerserkTimer;
-#else
-                    CalcOpts.Duration;
-#endif
+            FightDuration = BossOpts.BerserkTimer;
             //
             Slam_ActsOverDur = 0f;
-#if !RAWR4
-            HSOverridesOverDur = 0f;
-            CLOverridesOverDur = 0f;
-            _uwProcValue_mh = combatFactors._c_mhItemSpeed * Talents.UnbridledWrath / 20.0f;
-            _uwProcValue_oh = combatFactors._c_ohItemSpeed * Talents.UnbridledWrath / 20.0f;
-#else
             _uwProcValue_mh = combatFactors._c_mhItemSpeed;// *Talents.UnbridledWrath / 20.0f;
             _uwProcValue_oh = combatFactors._c_ohItemSpeed;// *Talents.UnbridledWrath / 20.0f;
-#endif
         }
         public void InvalidateCache()
         {
@@ -62,7 +50,6 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 /*if (BossOpts.MultiTargs) {
                     return 1f + (Math.Min((float)BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc + StatS.BonusTargets;
                 }*/
@@ -76,30 +63,17 @@ namespace Rawr.DPSWarr.Skills
                     }
                     return 1f + value;
                 }
-#else
-                if (CalcOpts.MultipleTargets) { return 1f + (Math.Min(CalcOpts.MultipleTargetsMax, 1f) - 1f) * CalcOpts.MultipleTargetsPerc / 100f + StatS.BonusTargets; }
-#endif
                 else { return 1f; }
             }
         }
         // Get/Set
-#if !RAWR4
-        public float HSOverridesOverDur { get; set; }
-        public float CLOverridesOverDur { get; set; }
-#endif
         public float Slam_ActsOverDur;
         #endregion
         // bah
         private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
         // Main Hand
         public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
-        public float MhDamage
-        {
-            get
-            {
-                return combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets;
-            }
-        }
+        public float MhDamage { get { return combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets; } }
         private float _MhDamageOnUse = -1f;
         public float MhDamageOnUse
         {
@@ -142,11 +116,7 @@ namespace Rawr.DPSWarr.Skills
                 {
                     // floating point arithmetic fail, need to do it this way or we get negative numbers at 100% override
                     float f = FightDuration / MhEffectiveSpeed;
-#if !RAWR4
-                    return f - HSOverridesOverDur - CLOverridesOverDur;
-#else
                     return f;
-#endif
                 }
                 else return 0f;
             }
@@ -257,36 +227,16 @@ namespace Rawr.DPSWarr.Skills
         }
         public float MHRageGenOverDur { get { return MhActivates * (MHSwingRage + MHUWProcValue); } }
         public float MHRageGenOverDurNoHS { get { return MhActivatesNoHS * (MHSwingRage + MHUWProcValue); } }
-        public float OHRageGenOverDur
-        {
-            get
-            {
-                if (combatFactors.useOH)
-                {
-                    return OhActivates * (OHSwingRage + OHUWProcValue);
-                }
-                return 0f;
-            }
-        }
+        public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f; } }
         // Rage generated per second
-        private float MHRageRatio
-        {
-            get
-            {
-                return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur);
-            }
-        }
+        private float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }
         public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
         public float whiteRageGenOverDurNoHS { get { return MHRageGenOverDurNoHS + OHRageGenOverDur; } }
 
         private const float c_const = 0.016545334215751158173395102581072f; //7.5f / 453.3f;
         private const float c_const2 = 0.033090668431502316346790205162144f; // 2*c_const
         private const float c_const3 = 0.049636002647253474520185307743216f; // 3*c_const
-#if !RAWR4
-        private float RageFormula(float d, float fs) { return (4f + Talents.EndlessRage) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
-#else
-        private float RageFormula(float d, float fs) { return (4f /*+ Talents.EndlessRage*/) / 4f * ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
-#endif
+        private float RageFormula(float d, float fs) { return ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
         // Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
         public float LandedAtksOverDurMH { get { return MhActivates * MHAtkTable.AnyLand; } }
@@ -297,7 +247,7 @@ namespace Rawr.DPSWarr.Skills
         // Other
         public float RageSlip(float abilInterval, float rageCost) {
             if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
-            return (MHAtkTable.Miss * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
+            return ((MHAtkTable.AnyNotLand) * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);
@@ -448,9 +398,9 @@ namespace Rawr.DPSWarr.Skills
         public static string SName { get { return "Invalid"; } }
         public static string SDesc { get { return "Invalid"; } }
         public static string SIcon { get { return "trade_engineering"; } }
-        public string Name { get { return SName; } }
-        public string Description { get { return SDesc; } }
-        public string Icon { get { return SIcon; } }
+        public virtual string Name { get { return SName; } }
+        public virtual string Desc { get { return SDesc; } }
+        public virtual string Icon { get { return SIcon; } }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
         public bool ReqMeleeWeap { get; set; }
@@ -462,7 +412,6 @@ namespace Rawr.DPSWarr.Skills
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
                 if (_AvgTargets == -1f)
                 {
-#if RAWR3 || RAWR4 || SILVERLIGHT
                     //_AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
                     if (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0)
                     {
@@ -475,9 +424,6 @@ namespace Rawr.DPSWarr.Skills
                         }
                         _AvgTargets = 1f + value;
                     } else { _AvgTargets = 1f; }
-#else
-                    _AvgTargets = 1f + (CalcOpts.MultipleTargets ? StatS.BonusTargets + CalcOpts.MultipleTargetsPerc / 100f * (Math.Min(CalcOpts.MultipleTargetsMax, Targets) - 1f) : 0f);
-#endif
                 }
                 return _AvgTargets;
             }
@@ -540,16 +486,7 @@ namespace Rawr.DPSWarr.Skills
         public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
         public bool SwingsOffHand { get; protected set; }
         public float SwingsPerActivate { get; protected set; }
-        protected float FightDuration {
-            get {
-                return
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                    BossOpts.BerserkTimer;
-#else
-                    CalcOpts.Duration;
-#endif
-            }
-        }
+        protected float FightDuration { get { return BossOpts.BerserkTimer; } }
         protected bool UseSpellHit { get; set; }
         protected bool UseHitTable { get; set; }
         public bool isMaint { get; protected set; }
@@ -569,11 +506,7 @@ namespace Rawr.DPSWarr.Skills
             {
                 validatedSet = false;
             }
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
-#else
-            else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
-#endif
+            else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.Targets == null || BossOpts.Targets.Count <= 0))
             {
                 validatedSet = false;
             }
@@ -756,22 +689,8 @@ namespace Rawr.DPSWarr.Skills
     }
     public class NullAbility : Ability
     {
-        public override CombatTable MHAtkTable
-        {
-            get
-            {
-                return CombatTable.NULL;
-            }
-            protected set { ; }
-        }
-        public override CombatTable OHAtkTable
-        {
-            get
-            {
-                return CombatTable.NULL;
-            }
-            protected set { ; }
-        }
+        public override CombatTable MHAtkTable { get { return CombatTable.NULL; } protected set { ; } }
+        public override CombatTable OHAtkTable { get { return CombatTable.NULL; } protected set { ; } }
         public override float RageUseOverDur { get { return 0; } }
         protected override float ActivatesOverride { get { return 0; } }
         public override float DamageOnUseOverride { get { return 0; } }
@@ -782,27 +701,6 @@ namespace Rawr.DPSWarr.Skills
         public override float Activates { get { return 0; } }
         public override float GetDPS(float acts) { return 0; }
     }
-#if !RAWR4
-    public class OnAttack : Ability
-    {
-        // Constructors
-        public OnAttack() { OverridesOverDur = 0f; UsesGCD = false; }
-        // Get/Set
-        public float OverridesOverDur { get; set; }
-        public virtual float FullRageCost { get { return RageCost + Whiteattacks.MHSwingRage - Whiteattacks.MHUWProcValue * MHAtkTable.AnyLand; } }
-        // Functions
-        protected override float ActivatesOverride
-        {
-            get
-            {
-                if (!Validated || OverridesOverDur <= 0f) { return 0f; }
-                //return Acts * (1f - Whiteattacks.AvoidanceStreak);
-                return OverridesOverDur * (1f - Whiteattacks.RageSlip(FightDuration / OverridesOverDur, RageCost));
-            }
-        }
-        public float DPS { get { return DamageOnUse * ActivatesOverride / FightDuration; } }
-    };
-#endif
     public class DoT : Ability
     {
         // Constructors
@@ -853,21 +751,18 @@ namespace Rawr.DPSWarr.Skills
     #endregion
 
     #region Unused
-#if RAWR4
     public class HeroicThrow : Ability
     {
         /// <summary>
         /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
         /// Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability
         /// causes high threat.
-        /// </summary>
         /// <para>Talents: </para>
         /// <para>Glyphs: </para>
-        ///  - (Talents.FocusedRage * 1f)
+        /// </summary>
         public static new string SName { get { return "Heroic Throw"; } }
         public static new string SDesc { get { return "Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability causes high threat."; } }
         public static new string SIcon { get { return "inv_axe_66"; } }
     }
-#endif
     #endregion
 }

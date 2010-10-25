@@ -57,14 +57,6 @@ namespace Rawr.DPSWarr {
             try {
                 InitializeComponent();
                 //
-#if RAWR4
-                CK_M_A_SD.Visibility = Visibility.Collapsed;
-#else
-                CK_M_A_CS.Visibility = Visibility.Collapsed;
-                CK_M_F_RB.Visibility = Visibility.Collapsed;
-                CK_M_A_VR.Visibility = Visibility.Collapsed;
-#endif
-                //
                 SetUpFAQ();
                 SetUpPatchNotes();
                 SetUpOther();
@@ -1044,11 +1036,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_A_RD);
             settooltip(CK_M_A_OP);
             settooltip(CK_M_A_TB);
-#if !RAWR4
-            settooltip(CK_M_A_SD);
-#else
             settooltip(CK_M_A_CS);
-#endif
             settooltip(CK_M_A_SL);
             //
             settooltip(CK_M_A_TH);
@@ -1058,9 +1046,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_F_WW);
             settooltip(CK_M_F_BT);
             settooltip(CK_M_F_BS);
-#if RAWR4
             settooltip(CK_M_F_RB);
-#endif
             //
             settooltip(CK_M_F_DW);
             settooltip(CK_M_F_RK);
@@ -1093,12 +1079,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == CK_M_A_RD ) tooltip.Setup(Skills.Rend.SName, Skills.Rend.SDesc, Skills.Rend.SIcon, "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
             else if (sender == CK_M_A_OP ) tooltip.Setup(Skills.OverPower.SName, Skills.OverPower.SDesc, Skills.OverPower.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
             else if (sender == CK_M_A_TB) tooltip.Setup(Skills.TasteForBlood.SName, Skills.TasteForBlood.SDesc, Skills.TasteForBlood.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-#if !RAWR4
-            else if (sender == CK_M_A_SD) tooltip.Setup(Skills.SuddenDeath.SName, Skills.SuddenDeath.SDesc, Skills.SuddenDeath.SIcon, "A GCD is consumed and Damage is put out.");
-#else
             else if (sender == CK_M_A_CS) tooltip.Setup(Skills.ColossusSmash.SName, Skills.ColossusSmash.SDesc, Skills.ColossusSmash.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_A_VR) tooltip.Setup(Skills.VictoryRush.SName, Skills.VictoryRush.SDesc, Skills.VictoryRush.SIcon, "A GCD is consumed and Damage is put out.");
-#endif
             else if (sender == CK_M_A_SL) tooltip.Setup(Skills.Slam.SName, Skills.Slam.SDesc, Skills.Slam.SIcon, "A GCD is consumed and Damage is put out.");
             //
             else if (sender == CK_M_A_TH) tooltip.Setup(Skills.ThunderClap.SName, Skills.ThunderClap.SDesc, Skills.ThunderClap.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period. " + DeActivatesBuff + " " + MultiTargets);
@@ -1110,9 +1092,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == CK_M_F_WW) tooltip.Setup(Skills.WhirlWind.SName, Skills.WhirlWind.SDesc, Skills.WhirlWind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
             else if (sender == CK_M_F_BT) tooltip.Setup(Skills.BloodThirst.SName, Skills.BloodThirst.SDesc, Skills.BloodThirst.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_F_BS) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
-#if RAWR4
             else if (sender == CK_M_F_RB) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
-#endif
             //
             else if (sender == CK_M_F_DW) tooltip.Setup(Skills.DeathWish.SName, Skills.DeathWish.SDesc, Skills.DeathWish.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
             else if (sender == CK_M_F_RK) tooltip.Setup(Skills.Recklessness.SName, Skills.Recklessness.SDesc, Skills.Recklessness.SIcon, "A GCD will be consumed and the buff will become active after each cooldown period");
@@ -1165,7 +1145,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                                 false, // Commanding Shout
                             false, // Demoralizing Shout
                             false, // Sunder Armor
-                            false, // Thunder Clap
+                            true,  // Thunder Clap
                             false, // Hamstring
                         true,  // == Periodics ==
                             true,  // Shattering Throw
@@ -1178,21 +1158,15 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                                 true,  // Whirlwind
                                 true,  // Bloodthirst
                                 true,  // Bloodsurge
-#if RAWR4
                                 true,  // Raging Blow
-#endif
                             true,  // Arms
                                 true,  // Bladestorm
                                 true,  // Mortal Strike
                                 true,  // Rend
                                 true,  // Overpower
                                 true,  // Taste for Blood
-#if !RAWR4
-                                true,  // Sudden Death
-#else
                                 true,  // Colossus Smash
                                 true,  // Victory Rush
-#endif
                                 true,  // Slam
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
@@ -1219,9 +1193,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_F_WW.IsChecked = Checked;
                 CK_M_F_BT.IsChecked = Checked;
                 CK_M_F_BS.IsChecked = Checked;
-#if RAWR4
                 CK_M_F_RB.IsChecked = Checked;
-#endif
                 // Fury Special
                 CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
                 CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
@@ -1231,12 +1203,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CK_M_A_RD.IsChecked = Checked;
                 CK_M_A_OP.IsChecked = Checked;
                 CK_M_A_TB.IsChecked = Checked;
-#if !RAWR4
-                CK_M_A_SD.IsChecked = Checked;
-#else
                 CK_M_A_CS.IsChecked = Checked;
                 CK_M_A_VR.IsChecked = Checked;
-#endif
                 CK_M_A_SL.IsChecked = Checked;
                 // Arms Special
                 CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && Checked;
