@@ -96,6 +96,9 @@
     <Compile Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
       <Link>ComparisonCalculationShadowPriest.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.ShadowPriest\Spell.cs">
+      <Link>Spell.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.xaml.cs">
       <Link>CalculationOptionsPanelShadowPriest.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelShadowPriest.xaml</DependentUpon>

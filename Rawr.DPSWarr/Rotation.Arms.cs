@@ -229,96 +229,55 @@ namespace Rawr.DPSWarr {
                  * These should be rage dumps and will replace Slam in the rotation when used
                  * Computing them together as you use HS for single, CL for Multiple */
 
-                /*// 0 If is for no rage to Slam or HS/CL
-                if (availRage <= 0) {
+                // For no rage to Slam or HS/CL
+                if (availRage <= 0f) {
                     CL.numActivates = 0f;
                     HS.numActivates = 0f;
                     SL.numActivates = 0f;
-                } else {*/
-                    /*RageDumpMethod method = RageDumpMethod.NoRageDumping;
-                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
-                    float AvailRagePerGCD = availRage / GCDsAvailable;
-                    // We need to determine the best method for dumping rage
-                    if (availRage <= 0f)
-                    {
-                        // There's no rage to dump, you suck dude!
-                        method = RageDumpMethod.NoRageDumping;
-                    }
-                    else if (CL.ability.Validated
-                         && (MultTargsPerc >= 1f)
-                         && (AvailRagePerGCD >= CL.ability.RageCost))
-                    {
-                        // Wow! There's a constant Multiple Targets! And there's plenty of rage to go nuts on Cleaves!
-                        method = RageDumpMethod.CleaveOnly;
-                    }
-                    else if (CL.ability.Validated && HS.ability.Validated
-                         && (MultTargsPerc >= 1f)
-                         && (AvailRagePerGCD <  CL.ability.RageCost)
-                         && (AvailRagePerGCD >= HS.ability.RageCost))
-                    {
-                        // Wow! There's a constant Multiple Targets! But there's not enough rage to go nuts on Cleaves, so we're gonna throw a few Heroic Strikes in
-                        method = RageDumpMethod.CleaveAndHeroicStrike;
-                    }
-
-                    // Individual, none affect the other
-                    float CLAtTtl = CL.ability.RageCost * GCDsAvailable;
-                    float HSAtTtl = HS.ability.RageCost * GCDsAvailable;
-                    float SLAtTtl          = SL.ability.RageCost * GCDsAvailable;
-                    // HS/CL together in Mix
-                    float CLAtTtlMix       = CL.ability.RageCost * GCDsAvailable * (     MultTargsPerc);
-                    float HSAtTtlMix       = HS.ability.RageCost * GCDsAvailable * (1f - MultTargsPerc);
-                    // HS/CL and Slam all together
-                    float CLAtTtlMixWithSL = CL.ability.RageCost * GCDsAvailable * (     MultTargsPerc);
-                    float HSAtTtlMixWithSL = HS.ability.RageCost * GCDsAvailable * (1f - MultTargsPerc);
-                    float SLAtTtlMixWithSL = SL.ability.RageCost * GCDsAvailable;*/
-
-                    // First If contains total HS/CL conversion from Slams, because we have tons of rage and we are awesome
-                    if (PercFailRage == 1f && (HS.ability.Validated || CL.ability.Validated)) {
-                        acts = GCDsAvailable * percTimeInDPSAndOver20;
-                        Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                        //float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
-                        //float clActs = (availRage * MultTargsPerc) / CL.ability.RageCost;
-                        //float hsActs = (availRage * (1f - MultTargsPerc)) / HS.ability.RageCost;
-                        CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
-                        HS.numActivates = Abil_GCDs - CL.numActivates;
-                        SL.numActivates = 0f;
-                        availRage -= HS.Rage + CL.Rage;
-
-                    // Second If contains partial HS/CL conversion from Slams because there wasn't enough rage for total conversion
-                    } else if (PercFailRage != 1f && (HS.ability.Validated || CL.ability.Validated) && SL.ability.Validated) {
+                } else {
+                    // Heroic Strikes/Cleaves
+                    if (PercFailRage == 1f && (HS.ability.Validated && CL.ability.Validated)) {
                         acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndOver20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
-                        CL.numActivates = (Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration)) * (PercFailRage);
-                        HS.numActivates = (Abil_GCDs - CL.numActivates) * (PercFailRage);
-                        SL.numActivates = Abil_GCDs * (1f - PercFailRage);
-                        availRage -= HS.Rage + CL.Rage + SL.Rage;
-                    
-                    // Third If contains no HS/CL conversion from Slams when there is enough rage to maintain this
-                    } else if (PercFailRage == 1f && SL.ability.Validated){
-                        acts = Math.Min(GCDsAvailable, GCDsAvailable/*SL.Activates*/ * percTimeInDPS);
+                        float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                        // We are trying to limit this cause to whatever rage is remaining and
+                        // not go overboard to make this thing think we are PercFailRaging
+                        float clActs = availRage / CL.ability.RageCost * (MultTargsPerc);
+                        float hsActs = availRage / HS.ability.RageCost * (1f - MultTargsPerc);
+                        CL.numActivates = Math.Min(clActs, Abil_GCDs * (MultTargsPerc));
+                        HS.numActivates = Math.Min(hsActs, Abil_GCDs * (1f - MultTargsPerc));
+                        availRage -= HS.Rage + CL.Rage;
+                    } else if (PercFailRage == 1f && (HS.ability.Validated && !CL.ability.Validated)) {
+                        acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndOver20);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                        float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                        // We are trying to limit this cause to whatever rage is remaining and
+                        // not go overboard to make this thing think we are PercFailRaging
+                        float hsActs = availRage / HS.ability.RageCost;
                         CL.numActivates = 0f;
+                        HS.numActivates = Math.Min(hsActs, Abil_GCDs);
+                        availRage -= HS.Rage;
+                    } else if (PercFailRage == 1f && (!HS.ability.Validated && CL.ability.Validated)) {
+                        acts = Math.Min(GCDsAvailable, CL.ability.Activates * percTimeInDPSAndOver20);
+                        Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                        float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                        // We are trying to limit this cause to whatever rage is remaining and
+                        // not go overboard to make this thing think we are PercFailRaging
+                        float clActs = availRage / CL.ability.RageCost * MultTargsPerc;
+                        CL.numActivates = Math.Min(clActs, Abil_GCDs * MultTargsPerc);
                         HS.numActivates = 0f;
-                        SL.numActivates = Abil_GCDs;
-                        availRage -= SL.Rage;
+                        availRage -= CL.Rage;
+                    } else { CL.numActivates = HS.numActivates = 0f; }
 
-                    // Fourth If contains no HS/CL conversion from Slams but there is NOT enough rage to maintain this, so we dumb down Slams too
-                    } else if (SL.ability.Validated){
+                    // Slam
+                    if (SL.ability.Validated) {
                         acts = Math.Min(GCDsAvailable, GCDsAvailable/*SL.Activates*/ * percTimeInDPS);
                         Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
                         if (SL.ability.GetRageUseOverDur(Abil_GCDs) > availRage) Abil_GCDs = Math.Max(0f, availRage) / SL.ability.RageCost;
-                        CL.numActivates = 0f;
-                        HS.numActivates = 0f;
                         SL.numActivates = Abil_GCDs;
                         availRage -= SL.Rage;
-
-                    // Final If contains no HS/CL's and no Slams either because your toon sux
-                    } else {
-                        CL.numActivates = 0f;
-                        HS.numActivates = 0f;
-                        SL.numActivates = 0f;
-                    }
-                //}
+                    } else { SL.numActivates = 0f; }
+                }
 
                 HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
                 CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
