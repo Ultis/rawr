@@ -152,12 +152,12 @@ namespace Rawr
         HSorSLHit,
         /// <summary>The Warrior's Deep Wounds ability ticks on the target</summary>
         DeepWoundsTick,
-#if RAWR4
         /// <summary>The Warrior crits with a Mortal Strike</summary>
         MortalStrikeCrit,
         /// <summary>The Warrior hits with an Execute</summary>
         ExecuteHit,
-#endif
+        /// <summary>The Warrior hits with a Colossus Smash</summary>
+        ColossusSmashHit,
         #endregion
         #region Added by Warlock
         /// <summary>The Warlock's Corruption DoT ticks</summary>

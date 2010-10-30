@@ -112,15 +112,8 @@ namespace Rawr
     }
 
     public partial class WarriorTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-        , ICloneable 
-    {
-        public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             WarriorTalents clone = (WarriorTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
@@ -131,10 +124,7 @@ namespace Rawr
         private int[] _data = new int[61];
         public override int[] Data { get { return _data; } }
         public WarriorTalents() { }
-        public WarriorTalents(string talents)
-        {
-            LoadString(talents);
-        }
+        public WarriorTalents(string talents) { LoadString(talents); }
         public static string[] TreeNames = new[] { @"Arms", @"Fury", @"Protection", };
 
 #region Arms
@@ -312,10 +302,9 @@ public int SuddenDeath { get { return _data[16]; } set { _data[16] = value; } }
 /// Your Mortal Strike critical hits have a [100 / 3 * Pts]% chance to Enrage you, increasing all damage caused by [10 / 3 * Pts]% for 12 sec.
 /// <para>CataCheck: I think I did this right, but need to verify the numbers</para>
 /// </summary>
-[TalentData(index: 17, name: "Wrecking Crew", maxPoints: 3, icon: "ability_warrior_trauma",
+[TalentData(index: 17, name: "Wrecking Crew", maxPoints: 2, icon: "ability_warrior_trauma",
 tree: 0, column: 1, row: 6, prerequisite: -1, description: new[] {
-@"Your Mortal Strike critical hits have a 33% chance to Enrage you, increasing all damage caused by 3% for 12 sec.",
-@"Your Mortal Strike critical hits have a 66% chance to Enrage you, increasing all damage caused by 6% for 12 sec.",
+@"Your Mortal Strike critical hits have a 50% chance to Enrage you, increasing all damage caused by 5% for 12 sec.",
 @"Your Mortal Strike critical hits have a 100% chance to Enrage you, increasing all damage caused by 10% for 12 sec.",})]
 public int WreckingCrew { get { return _data[17]; } set { _data[17] = value; } }
 /// <summary>

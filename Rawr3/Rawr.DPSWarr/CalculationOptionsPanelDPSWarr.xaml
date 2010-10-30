@@ -126,7 +126,6 @@
                     <TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
                     <CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
                     <CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" />
-                    <CheckBox x:Name="CK_Flooring" Height="19" Margin="0" Content="Allow Flooring *" IsChecked="{Binding AllowFlooring, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 </StackPanel>
                 </Grid>
             </controls:TabItem>
@@ -186,14 +185,14 @@
                     <CheckBox x:Name="CK_Stats_4" Grid.Row="12" Grid.Column="1" Margin="4,2" Content="Hit Rating" IsChecked="{Binding SG_Hit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_5" Grid.Row="13" Grid.Column="1" Margin="4,2" Content="Expertise Rating" IsChecked="{Binding SG_Exp, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_6" Grid.Row="14" Grid.Column="1" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay, UpdateSourceTrigger=Default}" />
-                    <CheckBox x:Name="CK_Stats_7" Grid.Row="15" Grid.Column="1" Margin="4,2" Content="ArP Rating" IsChecked="{Binding SG_ArP, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_7" Grid.Row="15" Grid.Column="1" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <TextBlock Grid.Row="16" Grid.Column="0" Margin="4,2" Text="Rating to Graph:" />
                     <ComboBox x:Name="CB_CalculationToGraph" Grid.Row="16" Grid.Column="1" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay, UpdateSourceTrigger=Default}">
                         <System:String>DPS Rating</System:String>
                         <System:String>Survivability</System:String>
                     </ComboBox>
                     <TextBlock Grid.Row="17" Grid.Column="0" Margin="4,2" Text="Increment:" />
-                    <inputToolkit:NumericUpDown Grid.Row="17" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <inputToolkit:NumericUpDown Grid.Row="17" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="5000" />
                     <Button x:Name="BT_StatsGraph" Grid.Row="18" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
                 </Grid>
             </controls:TabItem>

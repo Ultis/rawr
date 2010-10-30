@@ -22,7 +22,7 @@ namespace Rawr.DPSWarr
             WhiteAtks = wa;
 
             _cachedLatentGCD = 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact;
-            _cachedNumGCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(FightDuration / LatentGCD) : FightDuration / LatentGCD;
+            _cachedNumGCDs = FightDuration / LatentGCD;
             // Initialize();
         }
 
@@ -356,7 +356,7 @@ namespace Rawr.DPSWarr
             if (/*PercFailRage == 1f &&*/ (HS.ability.Validated || CL.ability.Validated))
             {
                 float acts = Math.Min(GCDsAvailable, HS.ability.Activates /** percTimeInDPSAndOver20*/);
-                float Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(acts) : acts;
+                float Abil_GCDs = acts;
                 CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
                 HS.numActivates = Abil_GCDs - CL.numActivates;
                 (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivates);

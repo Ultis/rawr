@@ -303,8 +303,6 @@ namespace Rawr {
         BonusWarrior_T7_4P_RageProc,
         BonusWarrior_T8_2P_HasteProc,
         BonusWarrior_T8_4P_MSBTCritIncrease,
-        BonusWarrior_T9_2P_Crit,
-        BonusWarrior_T9_2P_ArP,
         BonusWarrior_T9_4P_SLHSCritIncrease,
         BonusWarrior_T10_2P_DWAPProc,
         BonusWarrior_T10_4P_BSSDProcChange,
@@ -3807,28 +3805,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease] = value; }
-        }
-
-        /// <summary>Berserker Stance grants an additional 2% crit chance.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased Berserker Stance Crit Bonus")]
-        public float BonusWarrior_T9_2P_Crit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_Crit] = value; }
-        }
-
-        /// <summary>Battle Stance grants an additional 6% armor penetration.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased Battle Stance ArP Bonus")]
-        public float BonusWarrior_T9_2P_ArP
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_2P_ArP] = value; }
         }
 
         /// <summary>Increases the critical strike chance of your Slam and Heroic Strike abilities by 5%.</summary>

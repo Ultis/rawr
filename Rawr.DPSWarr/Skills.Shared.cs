@@ -206,7 +206,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
             MaxRange = 30f; // In Yards 
-            Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f/* * (1f + Talents.BoomingVoice * 0.25f)*/;
+            Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
             Cd = Duration;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -243,8 +243,8 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
-            MaxRange = 30f/* * (1f + Talents.BoomingVoice * 0.25f)*/; // In Yards 
-            Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f/* * (1f + Talents.BoomingVoice * 0.25f)*/;
+            MaxRange = 30f * (1f + (Talents.GlyphOfCommand ? 0.50f : 0f)); // In Yards 
+            Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
             Cd = Duration;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
@@ -347,9 +347,9 @@ namespace Rawr.DPSWarr.Skills
             ReqMultiTargs = true;
             Cd = FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact));
                 //BossOpts.MultiTargsPerc != 0 ? 30f / ((float)BossOpts.MultiTargsPerc/* / 100f*/) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
-            RageCost = 30f;
             Duration = 10f;
             if (Cd < 60) Cd = 60;
+            RageCost = 30f;
             RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
             StanceOkFury = StanceOkArms = true;
             UseHitTable = false;
@@ -444,7 +444,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 20f - (Talents.GlyphOfResonatingPower ? 5f : 0f);
             StanceOkArms = StanceOkDef = true;
             DamageBase = 300f + StatS.AttackPower * 0.12f;
-            UseSpellHit = true;
+            UseRangedHit = true;
             CanBeDodged = CanBeParried = false;
             //
             Initialize();
@@ -464,13 +464,6 @@ namespace Rawr.DPSWarr.Skills
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                 //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                 //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
-
-                if (CalcOpts.AllowFlooring)
-                {
-                    addMisses = (float)Math.Ceiling(addMisses);
-                    //addDodges = (float)Math.Ceiling(addDodges);
-                    //addParrys = (float)Math.Ceiling(addParrys);
-                }
 
                 result = Base + addMisses + addDodges + addParrys;
 
@@ -503,8 +496,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = 30f; // In Seconds
             Cd = 1.5f;
             CanCrit = false;
-            RageCost = 15f
-                * (1f - (Talents.GlyphOfFuriousSundering ? 0.50f : 0f));
+            RageCost = 15f * (1f - (Talents.GlyphOfFuriousSundering ? 0.50f : 0f));
             Targets = 1f + (Talents.GlyphOfSunderArmor ? 1f : 0f);
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
@@ -522,16 +514,14 @@ namespace Rawr.DPSWarr.Skills
                 // twice in a row, may consider doing a settler
                 float result = 0f;
                 float Base = base.ActivatesOverride;
+
+                // Glyph of Colossus Smash makes that ability refresh Sunder, so we no longer need to
+                // spend tons of GCDs Maintaining Sunder Armor, just the initial 3 to stack it up
+                if (Talents.GlyphOfColossusSmash && CalcOpts.M_ColossusSmash) { Base = 3f; }
+
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                 addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                 addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
-
-                if (CalcOpts.AllowFlooring)
-                {
-                    addMisses = (float)Math.Ceiling(addMisses);
-                    addDodges = (float)Math.Ceiling(addDodges);
-                    addParrys = (float)Math.Ceiling(addParrys);
-                }
 
                 result = Base + addMisses + addDodges + addParrys;
 
@@ -566,6 +556,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 25f;// -(Talents.FocusedRage * 1f);
             StanceOkArms = true;
             DamageBase = 12f + StatS.AttackPower * 0.50f;
+            UseRangedHit = true;
             //
             Initialize();
         }
@@ -580,8 +571,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Icon { get { return SIcon; } }
         /// <summary>
         /// Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.
-        /// <para>Talents: none</para>
-        /// <para>Glyphs: none</para>
+        /// <para>Talents: Drums of War [-50% Rage Cost/Pt]</para>
+        /// <para>Glyphs: Demo Shout [+15s Dur, +50% AoE]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public DemoralizingShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -589,12 +580,10 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
-            ReqMeleeWeap = false;
-            ReqMeleeRange = false;
-            MaxRange = 10f; // In Yards 
-            Duration = 30f * (1f + 0.05f * Talents.BoomingVoice);
-            RageCost = 10f;
-            RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
+            ReqMeleeWeap = ReqMeleeRange = false;
+            MaxRange = 10f * (1f + (Talents.GlyphOfDemoralizingShout ? 0.50f : 0f)); // In Yards 
+            Duration = 30f + (Talents.GlyphOfDemoralizingShout ? 15f : 0f); // Booming Voice doesn't boost this shout
+            RageCost = 10f * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
             StanceOkArms = StanceOkFury = true;
             UseSpellHit = true;
             //
@@ -606,24 +595,15 @@ namespace Rawr.DPSWarr.Skills
             {
                 // Since this has to be up according to Debuff Maintenance Rules
                 // this override has the intention of taking the baseline
-                // activates and forcing the char to use Rend again to ensure it's up
-                // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
+                // activates and forcing the char to use Demo Shout again to ensure it's up
+                // in the event that the attemtped activate didn't land (it Missed)
                 // We're only doing the additional check once so it will at most do this
                 // twice in a row, may consider doing a settler
-                float result = 0f;
                 float Base = base.ActivatesOverride;
+
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
-                //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
-                //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
 
-                if (CalcOpts.AllowFlooring)
-                {
-                    addMisses = (float)Math.Ceiling(addMisses);
-                    //addDodges = (float)Math.Ceiling(addDodges);
-                    //addParrys = (float)Math.Ceiling(addParrys);
-                }
-
-                result = Base + addMisses + addDodges + addParrys;
+                float result = Base + addMisses + addDodges + addParrys;
 
                 return result;
             }
@@ -676,13 +656,6 @@ namespace Rawr.DPSWarr.Skills
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                 addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                 addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
-
-                if (CalcOpts.AllowFlooring)
-                {
-                    addMisses = (float)Math.Ceiling(addMisses);
-                    addDodges = (float)Math.Ceiling(addDodges);
-                    addParrys = (float)Math.Ceiling(addParrys);
-                }
 
                 result = Base + addMisses + addDodges + addParrys;
 

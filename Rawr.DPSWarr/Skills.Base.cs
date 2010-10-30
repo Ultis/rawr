@@ -20,8 +20,8 @@ namespace Rawr.DPSWarr.Skills
             combatFactors = cf;
             CalcOpts = calcOpts;
             BossOpts = bossOpts;
-            MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false);
-            OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false);
+            MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false, false);
+            OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false, false);
             FightDuration = BossOpts.BerserkTimer;
             //
             Slam_ActsOverDur = 0f;
@@ -384,6 +384,7 @@ namespace Rawr.DPSWarr.Skills
             BonusCritChance = 0.00f;
             BonusCritDamage = 1f;
             UseSpellHit = false;
+            UseRangedHit = false;
             UseHitTable = true;
             validatedSet = false;
             SwingsOffHand = false;
@@ -467,7 +468,9 @@ namespace Rawr.DPSWarr.Skills
         public float DamageBonus { get; set; }
         protected float HealingBase { get; set; }
         protected float HealingBonus { get; set; }
+        /// <summary>Percentage Based Crit Chance Bonus (0.5 = 50% Crit Chance, capped between 0%-100%, factoring Boss Level Offsets)</summary>
         public float BonusCritChance { get; set; }
+        /// <summary>Percentage Based Crit Damage Bonus (1.5 = 150% damage)</summary>
         public float BonusCritDamage { get; set; }
         protected bool StanceOkFury { get; set; }
         protected bool StanceOkArms { get; set; }
@@ -488,6 +491,7 @@ namespace Rawr.DPSWarr.Skills
         public float SwingsPerActivate { get; protected set; }
         protected float FightDuration { get { return BossOpts.BerserkTimer; } }
         protected bool UseSpellHit { get; set; }
+        protected bool UseRangedHit { get; set; }
         protected bool UseHitTable { get; set; }
         public bool isMaint { get; protected set; }
         public bool UsesGCD { get; protected set; }
@@ -583,15 +587,15 @@ namespace Rawr.DPSWarr.Skills
         #region Functions
         protected void Initialize()
         {
-            if (!UseSpellHit && UseHitTable && CanBeDodged && CanCrit && BonusCritChance == 0f)
+            if (!UseSpellHit && !UseRangedHit && UseHitTable && CanBeDodged && CanCrit && BonusCritChance == 0f)
             {
                 MHAtkTable = combatFactors.AttackTableBasicMH;
                 OHAtkTable = combatFactors.AttackTableBasicOH;
             }
             else
             {
-                MHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, true, UseSpellHit, !UseHitTable);
-                OHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, false, UseSpellHit, !UseHitTable);
+                MHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, true, UseSpellHit, UseRangedHit, !UseHitTable);
+                OHAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, BossOpts, this, false, UseSpellHit, UseRangedHit, !UseHitTable);
             }
             setValidation();
         }

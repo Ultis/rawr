@@ -144,8 +144,8 @@ namespace Rawr.DPSWarr {
         public float DamageReduction {
             get {
                 if (_DamageReduction == -1f) {
-                    float arpenBuffs =
-                        (!FuryStance ? (0.10f + StatS.BonusWarrior_T9_2P_ArP) : 0.0f);
+                    float arpenBuffs = 0.0f;
+                    if (CalcOpts.M_ColossusSmash) { arpenBuffs = 1.00f; }
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
                         BossOpts.Armor,
@@ -219,7 +219,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicMH == null)
                 {
-                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, true, false, false);
+                    _AttackTableBasicMH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, true, false, false, false);
                 }
                 return _AttackTableBasicMH;
             }
@@ -230,7 +230,7 @@ namespace Rawr.DPSWarr {
             {
                 if (_AttackTableBasicOH == null)
                 {
-                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, false, false, false);
+                    _AttackTableBasicOH = new AttackTable(Char, StatS, this, CalcOpts, BossOpts, Skills.Ability.NULL, false, false, false, false);
                 }
                 return _AttackTableBasicOH;
             }

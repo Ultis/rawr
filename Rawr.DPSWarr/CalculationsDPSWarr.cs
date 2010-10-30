@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr {
                 //Red slots
                 int[] red_str = { 39996, 40111, 42142 };
                 int[] red_exp = { 40003, 40118, 42154 };
-                //Blue slots -- All the stat+sta, No haste because str or arp should always be better
+                //Blue slots -- All the stat+sta, No haste because str should always be better
                 int[] blu_str = { 40022, 40129, 40129 };
                 int[] blu_exp = { 40034, 40141, 40141 };
                 int[] blu_hit = { 40088, 40166, 40166 };
@@ -188,18 +188,9 @@ namespace Rawr.DPSWarr {
         }
         
         public ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-        {
-            get {
-                if (_calculationOptionsPanel == null) {
-                    _calculationOptionsPanel = new CalculationOptionsPanelDPSWarr();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSWarr()); } }
 
         private string[] _characterDisplayCalculationLabels = null;
-
         public override string GetCharacterStatsString(Character character)
         {
             StringBuilder stats = new StringBuilder();
@@ -255,6 +246,7 @@ Strength of Arms
 2 |426
 
 These numbers to do not include racial bonuses.",
+"Base Stats:Mastery*Since this is new, it may be off on how it's implemented for a while",
 #endregion
             
 #region Fury
@@ -276,6 +268,7 @@ These numbers to do not include racial bonuses.",
 "DPS Breakdown (Arms):Colossus Smash",
 "DPS Breakdown (Arms):Victory Rush",
 "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
+"DPS Breakdown (Arms):Strikes Of Opportunity*The Arms Mastery Rating based ability",
 #endregion
 
 #region Maintenance
@@ -457,21 +450,6 @@ These numbers to do not include racial bonuses.",
             if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>() {
                     #region Prime
-                    "Glyph of Cleaving", //@"Increases the number of targets your Cleave hits by 1.")]
-                    "Glyph of Hamstring", //@"Gives your Hamstring ability a 10% chance to immobilize the target for 5 sec.")]
-                    "Glyph of Heroic Throw", //@"Your Heroic Throw applies a stack of Sunder Armor.")]
-                    "Glyph of Long Charge", //@"Increases the range of your Charge ability by 5 yards.")]
-                    "Glyph of Rapid Charge", //@"Reduces the cooldown of your Charge ability by 7%.")]
-                    "Glyph of Resonating Power", //@"Reduces the rage cost of your Thunder Clap ability by 5.")]
-                    //"Glyph of Shield Wall", //@"Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.")]
-                    //"Glyph of Shockwave", //@"Reduces the cooldown on Shockwave by 3 sec.")]
-                    //"Glyph of Spell Reflection", //@"Reduces the cooldown on Spell Reflection by 1 sec.")]
-                    //"Glyph of Sunder Armor", //@"Your Sunder Armor ability effects a second nearby target.")]
-                    "Glyph of Sweeping Strikes", //@"Reduces the rage cost of Sweeping Strikes ability by 100%.")]
-                    "Glyph of Thunder Clap", //@"Increases the radius of your Thunder Clap ability by 2 yards.")]
-                    "Glyph of Victory Rush", //@"Increases the total healing provided by your Victory Rush by 50%.")]
-                    #endregion
-                    #region Major
                     "Glyph of Bladestorm", //@"Reduces the cooldown on Bladestorm by 15 sec.")]
                     "Glyph of Bloodthirst", //@"Increases the healing your recieve from Bloodthirst ability by 100%.")]
                     //"Glyph of Devastate", //@"Your Devastate ability now applies two stacks of Sunder Armor.")]
@@ -481,6 +459,25 @@ These numbers to do not include racial bonuses.",
                     //"Glyph of Revenge", //@"After using Revenge, your next Heroic Strike costs no rage.")]
                     //"Glyph of Shield Slam", //@"Increases the damage of your Shield Slam by 10%.")]
                     "Glyph of Slam", //@"Increases the critical strike chance of Slam by 5%.")]
+                    #endregion
+                    #region Major
+                    "Glyph of Cleaving", // Increases the number of targets your Cleave hits by 1.
+                    "Glyph of Colossus Smash", // Your Colossus Smash refreshes the duration of Sunder Armor stacks on a target.
+                    "Glyph of Death Wish", // Death Wish no longer increases damage taken.
+                    "Glyph of Heroic Throw", // Your Heroic Throw applies a stack of Sunder Armor.
+                    "Glyph of Intercept", // Increases the duration of your Intercept stun by 1 sec.
+                    //"Glyph of Intervene", // Increases the number of attacks you intercept for your Intervene target by 1.
+                    "Glyph of Long Charge", // Increases the range of your Charge ability by 5 yards.
+                    "Glyph of Piercing Howl", // Increases the radius of Piercing Howl by 50%.
+                    "Glyph of Rapid Charge", // Reduces the cooldown of your Charge ability by 7%.
+                    "Glyph of Resonating Power", // Reduces the rage cost of your Thunder Clap ability by 5.
+                    //"Glyph of Shield Wall", // Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.
+                    //"Glyph of Shockwave", // Reduces the cooldown on Shockwave by 3 sec.
+                    //"Glyph of Spell Reflection", // Reduces the cooldown on Spell Reflection by 1 sec.
+                    //"Glyph of Sunder Armor", // Your Sunder Armor ability effects a second nearby target.
+                    "Glyph of Sweeping Strikes", // Reduces the rage cost of Sweeping Strikes ability by 100%.
+                    "Glyph of Thunder Clap", // Increases the radius of your Thunder Clap ability by 2 yards.
+                    "Glyph of Victory Rush", // Increases the total healing provided by your Victory Rush by 50%.
                     #endregion
                     #region Minor
                     "Glyph of Battle", //@"Increases the duration of your Battle Shout by 2 min.")]
@@ -507,6 +504,7 @@ These numbers to do not include racial bonuses.",
             get {
                 return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
                     Trigger.Use,
+                    Trigger.MeleeAttack,
                     Trigger.MeleeCrit,
                     Trigger.MeleeHit,
                     Trigger.PhysicalCrit,
@@ -517,6 +515,7 @@ These numbers to do not include racial bonuses.",
                     Trigger.DamageAvoided,
                     Trigger.HSorSLHit,
                     Trigger.DamageOrHealingDone,
+                    Trigger.ColossusSmashHit,
                 });
             }
             set { _RelevantTriggers = value; }
@@ -538,6 +537,7 @@ These numbers to do not include racial bonuses.",
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 Resilience = stats.Resilience,
+                MasteryRating = stats.MasteryRating,
                 // Bonuses
                 BonusArmor = stats.BonusArmor,
                 WeaponDamage = stats.WeaponDamage,
@@ -592,8 +592,6 @@ These numbers to do not include racial bonuses.",
                 BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
                 BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
                 BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
-                BonusWarrior_T9_2P_Crit = stats.BonusWarrior_T9_2P_Crit,
-                BonusWarrior_T9_2P_ArP = stats.BonusWarrior_T9_2P_ArP,
                 BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
                 BonusWarrior_T10_2P_DWAPProc = stats.BonusWarrior_T10_2P_DWAPProc,
                 BonusWarrior_T10_4P_BSSDProcChange = stats.BonusWarrior_T10_4P_BSSDProcChange,
@@ -624,7 +622,6 @@ These numbers to do not include racial bonuses.",
                 stats.Agility +
                 stats.Strength +
                 stats.AttackPower +
-                stats.Armor +
                 // Ratings
                 stats.CritRating +
                 stats.HitRating +
@@ -632,8 +629,8 @@ These numbers to do not include racial bonuses.",
                 stats.ExpertiseRating +
                 stats.ArmorPenetrationRating +
                 stats.Resilience +
+                stats.MasteryRating +
                 // Bonuses
-                stats.BonusArmor +
                 stats.WeaponDamage +
                 stats.ArmorPenetration +
                 stats.TargetArmorReduction +
@@ -677,15 +674,11 @@ These numbers to do not include racial bonuses.",
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusCritMultiplier +
                 stats.BonusCritChance +
-                stats.BaseArmorMultiplier +
-                stats.BonusArmorMultiplier +
                 // Set Bonuses
                 stats.BonusWarrior_T7_2P_SlamDamage +
                 stats.BonusWarrior_T7_4P_RageProc +
                 stats.BonusWarrior_T8_2P_HasteProc +
                 stats.BonusWarrior_T8_4P_MSBTCritIncrease +
-                stats.BonusWarrior_T9_2P_Crit +
-                stats.BonusWarrior_T9_2P_ArP +
                 stats.BonusWarrior_T9_4P_SLHSCritIncrease +
                 stats.BonusWarrior_T10_2P_DWAPProc +
                 stats.BonusWarrior_T10_4P_BSSDProcChange +
@@ -711,6 +704,10 @@ These numbers to do not include racial bonuses.",
                 + stats.BonusStaminaMultiplier
                 + stats.HealthRestore
                 + stats.HealthRestoreFromMaxHealth
+                + stats.Armor
+                + stats.BonusArmor
+                + stats.BaseArmorMultiplier
+                + stats.BonusArmorMultiplier
                 ) > 0) {
                     relevant = true;
             }
@@ -878,8 +875,6 @@ These numbers to do not include racial bonuses.",
             if (character.WarriorTalents.BloodFrenzy > 0)
             {
                 buffGroup.Clear();
-                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
-                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
                 buffGroup.Add(Buff.GetBuffByName("Trauma"));
                 buffGroup.Add(Buff.GetBuffByName("Mangle"));
                 buffGroup.Add(Buff.GetBuffByName("Hemorrhage"));
@@ -887,6 +882,8 @@ These numbers to do not include racial bonuses.",
                 buffGroup.Add(Buff.GetBuffByName("Gore"));
                 buffGroup.Add(Buff.GetBuffByName("Stampede"));
                 //
+                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
+                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
                 buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
                 buffGroup.Add(Buff.GetBuffByName("Ravage"));
                 buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
@@ -1119,8 +1116,8 @@ These numbers to do not include racial bonuses.",
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
                         comparison.Description = string.Format("Costs {0} Rage\r\n{1}",aw.ability.RageCost,aw.ability.Desc);
-                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / aw.ability.RageCost;
-                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / aw.ability.RageCost;
+                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / (aw.ability.RageCost != 0 ? aw.ability.RageCost : 1f);
+                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / (aw.ability.RageCost != 0 ? aw.ability.RageCost : 1f);
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
@@ -1177,10 +1174,27 @@ These numbers to do not include racial bonuses.",
 
         #region Character Calcs
 
-        //private WarriorTalents _cachedTalents = null;
+        private bool ValidatePlateSpec(DPSWarrCharacter dpswarchar) {
+            // Null Check
+            if (dpswarchar.Char == null) { return false; }
+            // Item Type Fails
+            if (dpswarchar.Char.Head == null || dpswarchar.Char.Head.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Shoulders == null || dpswarchar.Char.Shoulders.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Chest == null || dpswarchar.Char.Chest.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Wrist == null || dpswarchar.Char.Wrist.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Hands == null || dpswarchar.Char.Hands.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Waist == null || dpswarchar.Char.Waist.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Legs == null || dpswarchar.Char.Legs.Type != ItemType.Plate) { return false; }
+            if (dpswarchar.Char.Feet == null || dpswarchar.Char.Feet.Type != ItemType.Plate) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
             CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
-            try {
+            try
+            {
+                #region Object Creation
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
                 if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
                 
@@ -1203,25 +1217,7 @@ These numbers to do not include racial bonuses.",
                 };
 
                 WarriorTalents talents = character.WarriorTalents;
-                //WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
-                //CombatFactors combatFactors = new CombatFactors(character, stats, calcOpts);
 
-                /*if (_cachedTalents == null || talents != _cachedTalents) {
-                    _cachedTalents = talents;
-                    int armsCounter = 0, furyCounter = 0, protCounter = 0;
-                    for (int i = 0; i <= 30; i++) { armsCounter += int.Parse(talents.ToString()[i].ToString()); }
-                    for (int i = 31; i <= 57; i++) { furyCounter += int.Parse(talents.ToString()[i].ToString()); }
-                    for (int i = 58; i < talents.ToString().IndexOf("."); i++) { protCounter += int.Parse(talents.ToString()[i].ToString()); }
-                    if (protCounter >= armsCounter && protCounter >= furyCounter) {
-                        calculatedStats.combatFactors = combatFactors;
-                        calculatedStats.Rot = Rot;
-                        calculatedStats.TotalDPS = 0;
-                        calculatedStats.TotalHPS = 0;
-                        calculatedStats.OverallPoints = 0;
-                        return calculatedStats;
-                    }
-                }*/
-                 
                 if (calcOpts.UseMarkov)
                 {
                     //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
@@ -1231,6 +1227,7 @@ These numbers to do not include racial bonuses.",
                 }
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+                #endregion
 
                 /*Rotation Rot;
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
@@ -1266,23 +1263,23 @@ These numbers to do not include racial bonuses.",
                     calculatedStats.OhCrit = combatFactors._c_ohycrit;
                 } 
                 // Offensive
-                calculatedStats.ArmorPenetrationStance = ((!combatFactors.FuryStance) ? (0.10f + stats.BonusWarrior_T9_2P_ArP) : 0.00f);
                 calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
                 calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
-                calculatedStats.ArmorPenetration = Math.Min(1f, calculatedStats.ArmorPenetrationMaceSpec
-                    + calculatedStats.ArmorPenetrationStance
-                    + calculatedStats.ArmorPenetrationRating2Perc);
+                calculatedStats.ArmorPenetration = Math.Min(1f, calculatedStats.ArmorPenetrationRating2Perc);
                 calculatedStats.HasteRating = stats.HasteRating;
                 calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
+                calculatedStats.MasteryVal = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior);
                 
                 // DPS
                 Rot.Initialize(calculatedStats);
+
+                calculatedStats.PlateSpecValid = ValidatePlateSpec(charStruct);
                 
                 // Neutral
                 // Defensive
                 calculatedStats.Armor = stats.Armor; 
 
-                calculatedStats.floorstring = calcOpts.AllowFlooring ? "000" : "000.00"; 
+                calculatedStats.floorstring = "000.00"; 
 
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
@@ -1341,9 +1338,7 @@ These numbers to do not include racial bonuses.",
                     {
                         maxArp += effect.Stats.ArmorPenetrationRating;
                     }
-                    calculatedStats.MaxArmorPenetration = calculatedStats.ArmorPenetrationMaceSpec
-                        + calculatedStats.ArmorPenetrationStance
-                        + StatConversion.GetArmorPenetrationFromRating(maxArp);
+                    calculatedStats.MaxArmorPenetration = StatConversion.GetArmorPenetrationFromRating(maxArp);
                 }
 
             } catch (Exception ex) {
@@ -1384,11 +1379,11 @@ These numbers to do not include racial bonuses.",
             new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 0, 6),
         };
 
-        /*private static SpecialEffect[] _SE_BloodFrenzy = { // Cata has BF take over Trauma's job
+        private static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
             null,
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = 1 * 0.02f, BonusBleedDamageMultiplier = 1 * 0.15f, }, 15, 0),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = 2 * 0.02f, BonusBleedDamageMultiplier = 2 * 0.15f, }, 15, 0),
-        };*/
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
+        };
 
         private static SpecialEffect[] _SE_DeathWish = {
             new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),
@@ -1416,6 +1411,8 @@ These numbers to do not include racial bonuses.",
             new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
             new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
         };
+
+        private static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
         #endregion
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
@@ -1436,21 +1433,24 @@ These numbers to do not include racial bonuses.",
             Stats statsOptionsPanel = new Stats()
             {
                 //BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
-                PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
-
-                DamageTakenMultiplier = (dpswarchar.combatFactors.FuryStance ? 0.05f : 0f),
+                //PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
+                // Stance Related Damage Given/Taken mods
+                DamageTakenMultiplier = (!dpswarchar.combatFactors.FuryStance ? -0.05f : 0f),
+                BonusDamageMultiplier = (!dpswarchar.combatFactors.FuryStance ?  0.10f : 0f),
 
                 // Battle Shout
-                AttackPower = (dpswarchar.calcOpts.M_BattleShout ? (548f/* * (1f + talents.CommandingPresence * 0.05f)*/) : 0f),
+                Strength = (dpswarchar.calcOpts.M_BattleShout ? 549f : 0f),
+                Agility  = (dpswarchar.calcOpts.M_BattleShout ? 549f : 0f),
                 // Commanding Shout
-                Health = (dpswarchar.calcOpts.M_CommandingShout ? (2255f/* * (1f + talents.CommandingPresence * 0.05f)*/) : 0f),
+                Stamina = (dpswarchar.calcOpts.M_CommandingShout ? 585f : 0f),
                 // Demo Shout
-                BossAttackPower = (dpswarchar.calcOpts.M_DemoralizingShout ? (-411f/* * (1f + talents.ImprovedDemoralizingShout * 0.08f)*/) : 0f),
+                PhysicalDamageTakenMultiplier = (dpswarchar.calcOpts.M_DemoralizingShout ? -0.10f : 0f),
                 // Sunder Armor
-                ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 5f : 0f),
+                ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 3f : 0f),
                 // Thunder Clap
-                BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f * (1f/* + talents.ImprovedThunderClap * (10f / 3f)*/) : 0f),
+                BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f : 0f),
             };
+            if (dpswarchar.calcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(_SE_ColossusSmash); }
             #endregion
             #region From Talents
             Stats statsTalents = new Stats() {
@@ -1462,13 +1462,13 @@ These numbers to do not include racial bonuses.",
                     * ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
                     // Convert it back a simple mod number
                     - 1f),
-                BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
+                BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
-                BonusBleedDamageMultiplier = (dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] // Have Rend up
+                BonusBleedDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
-                PhysicalHaste = talents.BloodFrenzy * 0.025f,
+                //PhysicalHaste = talents.BloodFrenzy * 0.025f,
                 PhysicalCrit = /*talents.Cruelty * 0.01f +*/ (talents.Rampage > 0 && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 //BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
                 //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
@@ -1480,6 +1480,7 @@ These numbers to do not include racial bonuses.",
                 //Dodge = talents.Anticipation * 0.01f,
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
+                BonusStrengthMultiplier = ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
@@ -1488,6 +1489,7 @@ These numbers to do not include racial bonuses.",
             if (talents.BloodCraze > 0) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.Executioner]); }
             if (talents.Enrage > 0) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
+            if (talents.BloodFrenzy > 0) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
             #endregion
             #region Mastery Related
             float MasteryValue = 0f;
@@ -1630,20 +1632,19 @@ These numbers to do not include racial bonuses.",
             #endregion
 
             #region ArPen Lists
-            List<float> tempArPenRatings = new List<float>();
+            /*List<float> tempArPenRatings = new List<float>();
             List<float> tempArPenRatingsCapLimited = new List<float>();
             List<float> tempArPenRatingUptimes = new List<float>();
             List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
             List<float> tempArPenEffectIntervals = new List<float>();
             List<float> tempArPenEffectChances = new List<float>();
-            List<float> tempArPenEffectScales = new List<float>();
-
-            List<SpecialEffect> critEffects = new List<SpecialEffect>(); 
+            List<float> tempArPenEffectScales = new List<float>();*/
             #endregion
+            List<SpecialEffect> critEffects = new List<SpecialEffect>(); 
 
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
-            bool doubleExecutioner = false;
+            //bool doubleExecutioner = false;
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
                 effect.Stats.GenerateSparseData();
@@ -1654,7 +1655,7 @@ These numbers to do not include racial bonuses.",
                     critEffects.Add(effect);
                     if (effect.Stats.DeathbringerProc > 0f) secondPass.Add(effect); // for strength only
                 }
-                else if (effect.Stats.ArmorPenetrationRating > 0f)
+                /*else if (effect.Stats.ArmorPenetrationRating > 0f)
                 {
                     if (doubleExecutioner) continue;
                     Trigger realTrigger;
@@ -1679,7 +1680,7 @@ These numbers to do not include racial bonuses.",
                     tempArPenEffectIntervals.Add(triggerIntervals[realTrigger]);
                     tempArPenEffectChances.Add(triggerChances[realTrigger]);
                     tempArPenEffectScales.Add(1f);
-                }
+                }*/
                 else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
                    (effect.Stats.DeathbringerProc > 0f ||
                     effect.Stats.Agility > 0f ||
@@ -1698,7 +1699,7 @@ These numbers to do not include racial bonuses.",
                 }
             }
 
-            if (tempArPenEffects.Count == 0)
+            /*if (tempArPenEffects.Count == 0)
             {
                 //tempArPenRatings.Add(0.0f);
                 //tempArPenRatingUptimes.Add(1.0f);
@@ -1727,33 +1728,30 @@ These numbers to do not include racial bonuses.",
                     tempArPenRatings.Add(arPenWeights[i].Value);
                     tempArPenRatingUptimes.Add(arPenWeights[i].Chance);
                 }
-            }
+            }*/
             // Get the average Armor Pen Rating across all procs
-            if (tempArPenRatings.Count > 0f)
+            /*if (tempArPenRatings.Count > 0f)
             {
                 Stats originalStats = charStruct.combatFactors.StatS;
                 int LevelDif = charStruct.bossOpts.Level- charStruct.Char.Level;
 
-                float arpenBuffs = (!charStruct.combatFactors.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
+                float arpenBuffs = 0.0f;
 
-                /*float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating));*/
+                //float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif], originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating));
                 float AverageArmorPenRatingsFromProcs = 0f;
                 float tempCap = StatConversion.RATING_PER_ARMORPENETRATION - StatConversion.GetRatingFromArmorPenetration(arpenBuffs);
 
                 for (int i = 0; i < tempArPenRatings.Count; i++)
                 {
                     tempArPenRatingsCapLimited.Add(Math.Max(0f, Math.Min(tempCap - originalStats.ArmorPenetrationRating, tempArPenRatings[i])));
-                    /*float bah = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                                    originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating + tempArPenRatingsCapLimited[i]));*/
+                    //float bah = StatConversion.GetArmorDamageReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif], originalStats.TargetArmorReduction, arpenBuffs, Math.Max(0f, originalStats.ArmorPenetrationRating + tempArPenRatingsCapLimited[i]));
                     AverageArmorPenRatingsFromProcs += tempArPenRatingUptimes[i] * tempArPenRatingsCapLimited[i];
                 }
                 Stats dummyStats = new Stats();
                 
-                /*float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
-                    originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);*/
+                //float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif], originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);
                 originalStats.ArmorPenetrationRating += AverageArmorPenRatingsFromProcs;//(procArp - originalStats.ArmorPenetrationRating);                
-            }
+            }*/
 
             IterativeSpecialEffectsStats(charStruct, firstPass, critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
             IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
@@ -1832,6 +1830,9 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.Use] = 0f;
                 triggerChances[Trigger.Use] = 1f;
 
+                triggerIntervals[Trigger.MeleeAttack] = attemptedAtkInterval;
+                triggerChances[Trigger.MeleeAttack] = 1f;
+
                 triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.PhysicalHit] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.PhysicalHit] = hitRate;
 
@@ -1868,6 +1869,12 @@ These numbers to do not include racial bonuses.",
                 foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.MHAtkTable.Crit; break; } }
                 triggerIntervals[Trigger.MortalStrikeCrit] = MSActs / fightDuration; // need to verify this worked
                 triggerChances[Trigger.MortalStrikeCrit] = MSCritChance;
+
+                float CSLandChance = 0f, CSActs = 0f;
+                foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.ColossusSmash) { CSActs = aw.allNumActivates; CSLandChance = aw.ability.MHAtkTable.AnyLand; break; } }
+                triggerIntervals[Trigger.ColossusSmashHit] = CSActs / fightDuration;
+                triggerChances[Trigger.ColossusSmashHit] = CSLandChance;
+                
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
                 new ErrorBox("Error Calculating Triggers", ex.Message, "CalculateTriggers(...)", addInfo, ex.StackTrace);
@@ -2066,43 +2073,37 @@ These numbers to do not include racial bonuses.",
             if (effect.Stats.TargetArmorReduction > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
                 //int j = 0;
             }
-            if (effect.Trigger == Trigger.Use)
-            {
-                    if (effect.Stats._rawSpecialEffectDataSize == 1) {
-                        upTime = effect.GetAverageUptime(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass);
-                        //float uptime =  (effect.Cooldown / fightDuration);
-                        List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
-                        nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
-                        Stats _stats2 = new Stats();
-                        ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], charStruct, triggerIntervals, triggerChances, ref _stats2);
-                        effectStats = _stats2;
-                    } else {
-                        upTime = effect.GetAverageStackSize(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass); 
-                    }
-            }
-            else if (effect.Duration == 0f)
-            {
+            if (effect.Trigger == Trigger.Use) {
+                if (effect.Stats._rawSpecialEffectDataSize == 1) {
+                    upTime = effect.GetAverageUptime(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    //float uptime =  (effect.Cooldown / fightDuration);
+                    List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
+                    nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
+                    Stats _stats2 = new Stats();
+                    ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], charStruct, triggerIntervals, triggerChances, ref _stats2);
+                    effectStats = _stats2;
+                } else {
+                    upTime = effect.GetAverageStackSize(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass); 
+                }
+            } else if (effect.Duration == 0f) {
                 upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
                                                          charStruct.combatFactors._c_mhItemSpeed,
                                                          fightDuration2Pass);
-            }
-            else if (triggerIntervals.ContainsKey(effect.Trigger))
-            {
+            } else if (triggerIntervals.ContainsKey(effect.Trigger)) {
                 upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
                                                          charStruct.combatFactors._c_mhItemSpeed,
                                                          fightDuration2Pass);
             }
 
-            if (effect.Stats.DeathbringerProc > 0) 
-                upTime /= 3;
+            if (effect.Stats.DeathbringerProc > 0) { upTime /= 3; }
             if (upTime > 0f) {
-                if (effect.Duration == 0f)
+                if (effect.Duration == 0f) {
                     applyTo.ShadowDamage = upTime;
-                else if (upTime <= effect.MaxStack)
+                } else if (upTime <= effect.MaxStack) {
                     applyTo.Accumulate(effectStats, upTime);
-
+                }
                 return upTime;
             }
             return 0f;
@@ -2144,7 +2145,7 @@ These numbers to do not include racial bonuses.",
                 retVal.Armor /= 1f + retVal.BonusArmorMultiplier;
                 retVal.Armor -= retVal.BonusArmor;
                 retVal.Armor /= 1f + retVal.BaseArmorMultiplier;
-                retVal.BonusArmor -= retVal.Agility * 2f;
+                //retVal.BonusArmor -= retVal.Agility * 2f;
                 
                 // Agi is multed, remove it from PhysicalCrit for now
                 retVal.PhysicalCrit -= StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
@@ -2163,7 +2164,7 @@ These numbers to do not include racial bonuses.",
 
             if (retVal != null)
             {
-                // change retvals to use the new mults.  Combines Stat/=oldMult; Stat*=newMult
+                // change retvals to use the new mults. Combines Stat/=oldMult; Stat*=newMult
                 retVal.Stamina *= newStaMult / (1f + retVal.BonusStaminaMultiplier);
                 retVal.Strength *= newStrMult / (1f + retVal.BonusStrengthMultiplier);
                 retVal.Agility *= newAgiMult / (1f + retVal.BonusAgilityMultiplier);
@@ -2182,11 +2183,11 @@ These numbers to do not include racial bonuses.",
             #endregion
 
             #region Armor
-            statsToAdd.BonusArmor += statsToAdd.Agility * 2f;
+            //statsToAdd.BonusArmor += statsToAdd.Agility * 2f;
             statsToAdd.Armor = (statsToAdd.Armor * newBaseArmMult + statsToAdd.BonusArmor) * newArmMult;
             if (retVal != null)
             {
-                retVal.BonusArmor += retVal.Agility * 2f;
+                //retVal.BonusArmor += retVal.Agility * 2f;
                 retVal.Armor = (retVal.Armor * newBaseArmMult + retVal.BonusArmor) * newArmMult;
             }
             #endregion
@@ -2196,8 +2197,7 @@ These numbers to do not include racial bonuses.",
             statsToAdd.AttackPower += (statsToAdd.Strength * 2f);
             statsToAdd.AttackPower *= newAtkMult;
             // reset retval
-            if (retVal != null)
-            {
+            if (retVal != null) {
                 // already rolled back AP's oldmult, so not combining
                 retVal.AttackPower += (retVal.Strength * 2f);
                 retVal.AttackPower *= newAtkMult;
@@ -2207,10 +2207,10 @@ These numbers to do not include racial bonuses.",
             // Crit
             statsToAdd.PhysicalCrit += StatConversion.GetCritFromAgility(statsToAdd.Agility, character.Class);
             statsToAdd.PhysicalCrit += StatConversion.GetCritFromRating(statsToAdd.CritRating, character.Class);
-            if (retVal != null)
-            {
+            if (retVal != null) {
                 retVal.PhysicalCrit += StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
             }
+
             // Haste
             statsToAdd.PhysicalHaste = (1f + statsToAdd.PhysicalHaste)
                                      * (1f + StatConversion.GetPhysicalHasteFromRating(Math.Max(0, statsToAdd.HasteRating), character.Class))
@@ -2230,12 +2230,8 @@ These numbers to do not include racial bonuses.",
                     } else {
                         return UpdateStatsAndAdd(new Stats { Agility = paragonValue }, retVal, character);
                     }
-                } else {
-                    return retVal;
-                }
-            } else { // Just processing one, not adding two
-                return statsToAdd;
-            }
+                } else { return retVal; }
+            } else { return statsToAdd; } // Just processing one, not adding two
         }
 
         #endregion

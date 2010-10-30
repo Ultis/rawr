@@ -27,6 +27,12 @@ namespace Rawr.DPSWarr {
             public float allHPS { get { return HPS + HPSU20; } }
             protected bool _cachedIsDamaging = false;
             public bool isDamaging { get { return _cachedIsDamaging; } }
+
+            public override string ToString()
+            {
+                if (ability == null) return "NULLed";
+                return string.Format("{0} : Rage {1:0.##} : DPS {2:0.##} : HPS {3:0.##}", ability.Name, allRage, allDPS, allHPS);
+            }
         }
         // Constructors
         public Rotation()
@@ -197,6 +203,7 @@ namespace Rawr.DPSWarr {
             AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, WW)));
             AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+            AddAbility(new AbilWrapper(new Skills.StrikesOfOpportunity(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
             AddAbility(new AbilWrapper(new Skills.ColossusSmash(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
@@ -334,9 +341,13 @@ namespace Rawr.DPSWarr {
 
         public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.MH, AttackType.Yellow); } }
         public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.OH, AttackType.Yellow); } }
-        
+
+        public float DodgedAttacksOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, Hand.Both, AttackType.Both); } }
         public float DodgedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, Hand.Both, AttackType.Yellow); } }
+
+        public float ParriedAttacksOverDur { get { return GetAttackOverDuration(SwingResult.Parry, Hand.Both, AttackType.Both); } }
         public float ParriedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Parry, Hand.Both, AttackType.Yellow); } }
+
         public virtual float CritHsSlamOverDur {
             get {
                 AbilWrapper HS = GetWrapper<HeroicStrike>();
@@ -467,11 +478,10 @@ namespace Rawr.DPSWarr {
             if (!aw.ability.Validated) return 0f;
 
             float Abil_GCDs = Math.Min(GCDsAvailable, aw.ability.Activates * (1f - totalPercTimeLost));
-            Abil_GCDs = CalcOpts.AllowFlooring ? (float)Math.Floor(Abil_GCDs) : Abil_GCDs;
             aw.numActivates = Abil_GCDs;
-            //availGCDs -= Abil_GCDs;
-            if (_needDisplayCalcs && Abil_GCDs > 0)
-                GCDUsage += Abil_GCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " : " + aw.ability.Name + (aw.ability.UsesGCD ? "\n" : "(Doesn't use GCDs)\n");
+            if (_needDisplayCalcs && Abil_GCDs > 0) {
+                GCDUsage += string.Format("{0:000.000} : {1}{2}\n", Abil_GCDs, aw.ability.Name, (!aw.ability.UsesGCD ? " (Doesn't use GCDs)" : ""));
+            }
 
             _HPS_TTL += aw.allHPS;
             _DPS_TTL += aw.allDPS;
@@ -510,17 +520,17 @@ namespace Rawr.DPSWarr {
                       MaxTimeRegain = 0f,
                       ChanceYouAreRooted = 1f;
                 AbilWrapper HF = GetWrapper<HeroicFury>();
-                float HFMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(HF.ability.Activates) : HF.ability.Activates;
+                float HFMaxActs = HF.ability.Activates;
                 float HFActualActs = 0f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMMaxActs = EM.ability.Activates - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesRooted = 0f;
                 foreach (Impedance r in BossOpts.Roots)
                 {
                     ChanceYouAreRooted = r.Chance;
                     BaseRootDur = Math.Max(0f, (r.Duration / 1000f * (1f - StatS.SnareRootDurReduc)));
-                    rootActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / r.Frequency) : FightDuration / r.Frequency;
+                    rootActs = FightDuration / r.Frequency;
                     if (rootActs > 0f)
                     {
                         TimesRooted += rootActs;
@@ -539,7 +549,7 @@ namespace Rawr.DPSWarr {
                         {
                             MaxTimeRegain = Math.Max(0f, (BaseRootDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                            float availEMacts = EM.ability.Activates - EM.allNumActivates;
                             float EMNewActs = Math.Min(rootActs, availEMacts);
                             EM.numActivates += EMNewActs;
                             _emActs = EM.allNumActivates;
@@ -550,9 +560,7 @@ namespace Rawr.DPSWarr {
                             float percEMdVsUnEMd = EMNewActs / rootActs;
                             timelostwhilerooted += (reducedDur * rootActs * percEMdVsUnEMd * ChanceYouAreRooted)
                                                  + (BaseRootDur * rootActs * (1f - percEMdVsUnEMd) * ChanceYouAreRooted);
-                        }
-                        else
-                        {
+                        } else {
                             timelostwhilerooted += BaseRootDur * rootActs * ChanceYouAreRooted;
                         }
                     }
@@ -560,15 +568,14 @@ namespace Rawr.DPSWarr {
                 HF.numActivates = HFActualActs;
                 if (_needDisplayCalcs)
                 {
-                    GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseRootDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (HF.allNumActivates > 0 ? HF.allNumActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + HF.ability.Name + "\n" : "");
-                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (TimesRooted > 0 ? TimesRooted.ToString("000.00") + " x " + BaseRootDur.ToString("0.00") + "secs : Lost to Roots\n" : "");
+                    GCDUsage += (HF.allNumActivates > 0 ? HF.allNumActivates.ToString("000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + HF.ability.Name + "\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString("000.00") + " x " + (BaseRootDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
-                TimeLostGCDs += Math.Min(NumGCDs, (BaseRootDur * TimesFeared) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseRootDur * TimesRooted) / LatentGCD);
                 TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * HF.allNumActivates) / LatentGCD);
                 TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
-                timelostwhilerooted = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilerooted) : timelostwhilerooted;
                 percTimeInRoot = timelostwhilerooted / FightDuration;
             }
             SecondWind SndW = GetWrapper<SecondWind>().ability as SecondWind;
@@ -586,21 +593,21 @@ namespace Rawr.DPSWarr {
                       MaxTimeRegain = 0f,
                       ChanceYouAreStunned = 1f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMMaxActs = EM.ability.Activates - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
-                TimesFeared = 0f;
+                TimesStunned = 0f;
                 foreach (Impedance s in BossOpts.Stuns)
                 {
                     ChanceYouAreStunned = s.Chance;
                     BaseStunDur = Math.Max(0f, (s.Duration / 1000f * (1f - StatS.StunDurReduc)));
-                    stunActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / s.Frequency) : FightDuration / s.Frequency;
+                    stunActs = FightDuration / s.Frequency;
                     if (stunActs > 0f)
                     {
-                        TimesFeared += stunActs;
+                        TimesStunned += stunActs;
                         if (Char.Race == CharacterRace.Human && EMMaxActs - EM.allNumActivates > 0f) {
                             MaxTimeRegain = Math.Max(0f, (BaseStunDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                            float availEMacts = EM.ability.Activates - EM.allNumActivates;
                             float EMNewActs = Math.Min(stunActs, availEMacts);
                             EM.numActivates += EMNewActs;
                             _emActs = EM.allNumActivates;
@@ -618,13 +625,12 @@ namespace Rawr.DPSWarr {
                 }
                 if (_needDisplayCalcs)
                 {
-                    GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseStunDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseStunDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (TimesStunned > 0 ? TimesStunned.ToString("000.00") + " x " + BaseStunDur.ToString("0.00") + "secs : Lost to Stuns\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString("000.00") + " x " + (BaseStunDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
-                TimeLostGCDs += Math.Min(NumGCDs, (BaseStunDur * TimesFeared) / LatentGCD);
+                TimeLostGCDs += Math.Min(NumGCDs, (BaseStunDur * TimesStunned) / LatentGCD);
                 TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
-                timelostwhilestunned = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilestunned) : timelostwhilestunned;
                 percTimeInStun = timelostwhilestunned / FightDuration;
 
                 SecondWind SndW = GetWrapper<SecondWind>().ability as SecondWind;
@@ -644,17 +650,17 @@ namespace Rawr.DPSWarr {
                       MaxTimeRegain = 0f,
                       ChanceYouAreFeared = 1f;
                 AbilWrapper BZ = GetWrapper<BerserkerRage>();
-                float BZMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(BZ.ability.Activates) : BZ.ability.Activates;
+                float BZMaxActs = BZ.ability.Activates;
                 float BZActualActs = 0f;
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();
-                float EMMaxActs = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                float EMMaxActs = EM.ability.Activates - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
                 foreach (Impedance f in BossOpts.Fears)
                 {
                     ChanceYouAreFeared = f.Chance;
                     BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
-                    fearActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / f.Frequency) : FightDuration / f.Frequency;
+                    fearActs = FightDuration / f.Frequency;
                     if (fearActs > 0f)
                     {
                         TimesFeared += fearActs;
@@ -673,7 +679,7 @@ namespace Rawr.DPSWarr {
                         {
                             MaxTimeRegain = Math.Max(0f, (BaseFearDur - LatentGCD - CalcOpts.React / 1000f));
 
-                            float availEMacts = (CalcOpts.AllowFlooring ? (float)Math.Floor(EM.ability.Activates) : EM.ability.Activates) - EM.allNumActivates;
+                            float availEMacts = EM.ability.Activates - EM.allNumActivates;
                             float EMNewActs = Math.Min(fearActs, availEMacts);
                             EM.numActivates += EMNewActs;
                             _emActs = EM.allNumActivates;
@@ -694,15 +700,14 @@ namespace Rawr.DPSWarr {
                 BZ.numActivates = BZActualActs;
                 if (_needDisplayCalcs)
                 {
-                    GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseFearDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
-                    GCDUsage += (BZ.allNumActivates > 0 ? BZ.allNumActivates.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.ability.Name + "\n" : "");
-                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
+                    GCDUsage += (TimesFeared > 0 ? TimesFeared.ToString("000.00") + " x " + BaseFearDur.ToString("0.00") + "secs : Lost to Fears\n" : "");
+                    GCDUsage += (BZ.allNumActivates > 0 ? BZ.allNumActivates.ToString("000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + BZ.ability.Name + "\n" : "");
+                    GCDUsage += (EM.allNumActivates - EMOldActs > 0 ? (EM.allNumActivates - EMOldActs).ToString("000.00") + " x " + (BaseFearDur - reducedDur).ToString("0.00") + "secs : - " + EM.ability.Name + "\n" : "");
                 }
                 TimeLostGCDs += Math.Min(NumGCDs, (BaseFearDur * TimesFeared) / LatentGCD);
                 TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * BZ.allNumActivates) / LatentGCD);
                 TimeLostGCDs -= Math.Min(TimeLostGCDs, (reducedDur * _emActs) / LatentGCD);
 
-                timelostwhilefeared = CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilefeared) : timelostwhilefeared;
                 percTimeInFear = timelostwhilefeared / FightDuration;
             }
             
@@ -752,7 +757,7 @@ namespace Rawr.DPSWarr {
                 float BaseMoveDur = 0f, movedActs = 0f, reducedDur = 0f,
                       MinMovementTimeRegain = 0f, MaxMovementTimeRegain = 0f,
                       ChanceYouHaveToMove = 1f;
-                float ChargeMaxActs = CalcOpts.AllowFlooring ? (float)Math.Floor(CH.ability.Activates) : CH.ability.Activates;
+                float ChargeMaxActs = CH.ability.Activates;
                 if (CombatFactors.FuryStance && HF.ability.Validated)
                 {
                     ChargeMaxActs += HF.ability.Activates - HF.allNumActivates;
@@ -764,7 +769,7 @@ namespace Rawr.DPSWarr {
                 {
                     ChanceYouHaveToMove = m.Chance;
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
-                    moveGCDs += movedActs = CalcOpts.AllowFlooring ? (float)Math.Ceiling(FightDuration / m.Frequency) : FightDuration / m.Frequency;
+                    moveGCDs += movedActs = FightDuration / m.Frequency;
 
                     if ((ChargeMaxActs - ChargeActualActs > 0f) && (movedActs > 0f))
                     {
@@ -800,9 +805,9 @@ namespace Rawr.DPSWarr {
                 HF.numActivates += actsHF;
                 if (_needDisplayCalcs)
                 {
-                    GCDUsage += (moveGCDs > 0 ? moveGCDs.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + BaseMoveDur.ToString("0.00") + "secs : Lost to Movement\n" : "");
-                    GCDUsage += (actsCharge > 0 ? actsCharge.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " x " + (BaseMoveDur - reducedDur).ToString("0.00") + "secs : - " + CH.ability.Name + "\n" : "");
-                    GCDUsage += (actsHF > 0 ? actsHF.ToString(CalcOpts.AllowFlooring ? "000" : "000.00") + " activates of " + HF.ability.Name + " to refresh " + CH.ability.Name : "");
+                    GCDUsage += (moveGCDs > 0 ? moveGCDs.ToString("000.00") + " x " + BaseMoveDur.ToString("0.00") + "secs : Lost to Movement\n" : "");
+                    GCDUsage += (actsCharge > 0 ? actsCharge.ToString("000.00") + " x " + (BaseMoveDur - reducedDur).ToString("0.00") + "secs : - " + CH.ability.Name + "\n" : "");
+                    GCDUsage += (actsHF > 0 ? actsHF.ToString("000.00") + " activates of " + HF.ability.Name + " to refresh " + CH.ability.Name : "");
                 }
                 //RageGainedWhileMoving += CH.Rage;
                 // Need to add the special effect from Juggernaut to Mortal Strike, not caring about Slam right now
@@ -818,7 +823,6 @@ namespace Rawr.DPSWarr {
                     MS.BonusCritChance = stats.BonusWarrior_T8_4P_MSBTCritIncrease;
                     //MS = new Skills.MortalStrike(Char, stats, CombatFactors, WhiteAtks, CalcOpts);
                 }
-                timelostwhilemoving = (CalcOpts.AllowFlooring ? (float)Math.Ceiling(timelostwhilemoving) : timelostwhilemoving);
                 percTimeInMovement = timelostwhilemoving / FightDuration;
             }
             return percTimeInMovement;
@@ -873,7 +877,7 @@ namespace Rawr.DPSWarr {
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
         private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
         private static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
-        private static Dictionary<float, SpecialEffect[]> _SE_ThunderClap = new Dictionary<float, SpecialEffect[]>();
+        private static Dictionary<float, SpecialEffect> _SE_ThunderClap = new Dictionary<float, SpecialEffect>();
         private static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
         private static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
         #endregion
@@ -881,67 +885,87 @@ namespace Rawr.DPSWarr {
 
         public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
         {
-            Ability ST = GetWrapper<ShatteringThrow>().ability,
-                    BTS = GetWrapper<BattleShout>().ability,
-                    CS = GetWrapper<CommandingShout>().ability,
-                    DS = GetWrapper<DemoralizingShout>().ability,
-                    TH = GetWrapper<ThunderClap>().ability,
-                    SN = GetWrapper<SunderArmor>().ability,
-                    SW = GetWrapper<SweepingStrikes>().ability,
-                    RK = GetWrapper<Recklessness>().ability;
-            if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
-            if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
-            if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
-            if (ST.Validated)
+            try
             {
-                float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
-                if (!_SE_ShatteringThrow.ContainsKey(value)) {
-                    _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                Ability ST = GetWrapper<ShatteringThrow>().ability,
+                        BTS = GetWrapper<BattleShout>().ability,
+                        CS = GetWrapper<CommandingShout>().ability,
+                        DS = GetWrapper<DemoralizingShout>().ability,
+                        TH = GetWrapper<ThunderClap>().ability,
+                        SN = GetWrapper<SunderArmor>().ability,
+                        SW = GetWrapper<SweepingStrikes>().ability,
+                        RK = GetWrapper<Recklessness>().ability;
+                if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+                if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+                if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
+                if (ST.Validated)
+                {
+                    float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
+                    if (!_SE_ShatteringThrow.ContainsKey(value))
+                    {
+                        try {
+                            _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                    }
+                    statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
                 }
-                statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
-            }
-            if (TH.Validated) {
-                float value = (float)Math.Round(TH.MHAtkTable.AnyLand, 3);
-                if (!_SE_ThunderClap.ContainsKey(value)) {
-                    _SE_ThunderClap.Add(value, new SpecialEffect[] {
-                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 0 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
-                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 1 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
-                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 2 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
-                        new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = (-0.10f * (1f + 3 / 30f)), }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand),
-                    });
+                if (TH.Validated)
+                {
+                    float value = (int)((float)Math.Round(TH.MHAtkTable.AnyLand, 3)*1000);
+                    if (!_SE_ThunderClap.ContainsKey(value)) {
+                        try {
+                            _SE_ThunderClap.Add(value, new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand));
+                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                    }
+                    statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
                 }
-                statsTotal.AddSpecialEffect(_SE_ThunderClap[value][0]);
-            }
-            if (SN.Validated) {
-                float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
-                if (!_SE_SunderArmor.ContainsKey(value)) {
-                    _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                if (SN.Validated)
+                {
+                    float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
+                    if (!_SE_SunderArmor.ContainsKey(value))
+                    {
+                        try {
+                            _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                    }
+                    statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
                 }
-                statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
-            }
-            float landedAtksInterval = LandedAtksOverDur / FightDuration;
-            float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
-            if (SW.Validated) {
-                float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
-                if (!_SE_SweepingStrikes.ContainsKey(interval)) {
-                    _SE_SweepingStrikes.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
+                float landedAtksInterval = LandedAtksOverDur / FightDuration;
+                float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
+                if (SW.Validated)
+                {
+                    float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
+                    if (!_SE_SweepingStrikes.ContainsKey(interval))
+                    {
+                        try {
+                            _SE_SweepingStrikes.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
+                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                    }
+                    statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
                 }
-                statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
-            }
-            if (RK.Validated && CombatFactors.FuryStance) {
-                float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
-                if (!_SE_Recklessness.ContainsKey(interval)) {
-                    _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f /*- critRate*/ }, landedAtksInterval * 3f, RK.Cd));
+                if (RK.Validated && CombatFactors.FuryStance)
+                {
+                    float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
+                    if (!_SE_Recklessness.ContainsKey(interval))
+                    {
+                        try {
+                            _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f /*- critRate*/ }, landedAtksInterval * 3f, RK.Cd));
+                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                    }
+                    statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
                 }
-                statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
+                /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
+                { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above
+                    //float value = talents.Flurry * 0.05f;
+                    SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
+                        new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
+                    statsTotal.AddSpecialEffect(flurry);
+                }*/
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Special Effects Caches",
+                    ex.Message, "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace);
+                eb.Show();
             }
-            /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
-            { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above
-                //float value = talents.Flurry * 0.05f;
-                SpecialEffect flurry = new SpecialEffect(Trigger.MeleeCrit,
-                    new Stats() { PhysicalHaste = talents.Flurry * 0.05f, }, landedAtksInterval * 3f, 0f);
-                statsTotal.AddSpecialEffect(flurry);
-            }*/
         }
 
         internal void ResetHitTables()

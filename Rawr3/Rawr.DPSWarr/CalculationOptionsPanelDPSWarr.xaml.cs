@@ -1037,6 +1037,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_A_OP);
             settooltip(CK_M_A_TB);
             settooltip(CK_M_A_CS);
+            settooltip(CK_M_A_VR);
             settooltip(CK_M_A_SL);
             //
             settooltip(CK_M_A_TH);
@@ -1067,7 +1068,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             // Other
             settooltip(CK_EnragedRegen);
             settooltip(CK_ExecSpam);
-            settooltip(CK_Flooring);
         }
         private void Element_MouseEntered(object sender, MouseEventArgs e)
         {
@@ -1118,10 +1118,6 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #region Other
             else if (sender == CK_EnragedRegen) tooltip.Setup(Skills.EnragedRegeneration.SName, Skills.EnragedRegeneration.SDesc, Skills.EnragedRegeneration.SIcon, "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
             else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes\nNOTE: This check is presently non-functional due to calculational reasons. We do not presently have an ETA for Execute Spam support. It IS still what you want to be doing during Execute Phase.");
-            else if (sender == CK_Flooring) tooltip.Setup("Flooring Activations",
-                "Flooring changes the way Rotations are calculated. Normally, an ability can have 94.7 activates in a rotation, this allows a more smooth calc for things like Haste and Expertise (due to Overpower Procs).",
-                "Invalid",
-                "Flooring forces any partial activate off the table, 94.7 becomes 94. This is to better simulate reality, however it isn't fully factored in everywhere that it should be.\nUse Flooring at your own risk.");
             #endregion
             //tooltip.Setup();
             tooltip.Show((UIElement)sender);
@@ -1225,7 +1221,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (CK_Stats_4.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HitRating = 1f }); }
             if (CK_Stats_5.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { ExpertiseRating = 1f }); }
             if (CK_Stats_6.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HasteRating = 1f }); }
-            if (CK_Stats_7.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { ArmorPenetrationRating = 1f }); }
+            if (CK_Stats_7.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { MasteryRating = 1f }); }
             return statsList.ToArray();
         }
         private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)

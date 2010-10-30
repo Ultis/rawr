@@ -13,6 +13,7 @@ namespace Rawr.DPSWarr
         protected Stats StatS;
         protected Skills.Ability Abil;
         protected bool useSpellHit = false;
+        protected bool useRangedHit = false;
 
         public bool isWhite;
         public bool isMH;
@@ -50,7 +51,7 @@ namespace Rawr.DPSWarr
         }
 
         protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
-            Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit)
+            Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
         {
             Char = character;
             StatS = stats;
@@ -61,6 +62,7 @@ namespace Rawr.DPSWarr
             isWhite = (Abil == null);
             isMH = ismh;
             this.useSpellHit = useSpellHit;
+            this.useRangedHit = useRangedHit;
             /*// Defaults
             Miss 
             Dodge
@@ -97,28 +99,29 @@ namespace Rawr.DPSWarr
 
             // Miss
             if (useSpellHit) {
-                Miss = Math.Min(1f - tableSize, Math.Max(0.17f - (StatConversion.GetHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
+                Miss = Math.Min(1f - tableSize, Math.Max(StatConversion.GetSpellMiss(levelDif,false)
+                                                         - (StatConversion.GetSpellHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
             } else {
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
             }
             tableSize += Miss;
             // Dodge
-            if (isWhite || Abil.CanBeDodged) {
+            if (!useRangedHit && (isWhite || Abil.CanBeDodged)) {
                 Dodge = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhdodge : combatFactors._c_ohdodge);
                 tableSize += Dodge;
             } else { Dodge = 0f; }
             // Parry
-            if (isWhite || Abil.CanBeParried) {
+            if (!useRangedHit && (isWhite || Abil.CanBeParried)) {
                 Parry = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhparry : combatFactors._c_ohparry);
                 tableSize += Parry;
             } else { Parry = 0f; }
             // Block
-            if (isWhite || Abil.CanBeBlocked) {
+            if (!useRangedHit && (isWhite || Abil.CanBeBlocked)) {
                 Block = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhblock : combatFactors._c_ohblock);
                 tableSize += Block;
             } else { Block = 0f; }
             // Glancing Blow
-            if (isWhite) {
+            if (!useRangedHit && isWhite) {
                 Glance = Math.Min(1f - tableSize, combatFactors._c_glance);
                 tableSize += Glance;
             } else { Glance = 0f; }
@@ -151,12 +154,14 @@ namespace Rawr.DPSWarr
 
         public AttackTable() { }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,bool ismh, bool useSpellHit, bool alwaysHit) {
-            Initialize(character, stats, cf, co, bo, null, ismh, useSpellHit, alwaysHit);
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        {
+            Initialize(character, stats, cf, co, bo, null, ismh, useSpellHit, useRangedHit, alwaysHit);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool alwaysHit) {
-            Initialize(character, stats, cf, co, bo, ability, ismh, useSpellHit, alwaysHit);
+        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        {
+            Initialize(character, stats, cf, co, bo, ability, ismh, useSpellHit, useRangedHit, alwaysHit);
         }
     }
 }

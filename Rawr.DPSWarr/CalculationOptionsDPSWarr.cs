@@ -13,7 +13,6 @@ namespace Rawr.DPSWarr {
         #region Constructors
         public CalculationOptionsDPSWarr()
         {
-            AllowFlooring = false;
             SE_UseDur = true;
             UseMarkov = false;
             PTRMode = false;
@@ -67,12 +66,6 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Variables
         #region Basics
-        private bool _AllowFlooring;
-        public bool AllowFlooring
-        {
-            get { return _AllowFlooring; }
-            set { _AllowFlooring = value; OnPropertyChanged("AllowFlooring"); }
-        }
         private bool _SE_UseDur;
         public bool SE_UseDur
         {
@@ -150,7 +143,7 @@ namespace Rawr.DPSWarr {
         [XmlIgnore]
         public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
         [XmlIgnore]
-        public bool SG_ArP { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_ArP"); } }
+        public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
         #endregion
         #region Abilities to Maintain
         private bool[] _Maintenance;
