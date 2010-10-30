@@ -440,11 +440,7 @@ namespace Rawr
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-#if RAWR3 || RAWR4
         public abstract Dictionary<string, System.Windows.Media.Color> SubPointNameColors { get; }
-#else
-        public abstract Dictionary<string, System.Drawing.Color> SubPointNameColors { get; }
-#endif
         
         /// <summary>
         /// An array of strings which will be used to build the calculation display.
@@ -482,11 +478,7 @@ namespace Rawr
         /// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
         /// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
         /// </summary>
-#if RAWR3 || RAWR4
         public abstract ICalculationOptionsPanel CalculationOptionsPanel { get; }
-#else
-        public abstract CalculationOptionsPanelBase CalculationOptionsPanel { get; }
-#endif
 
         /// <summary>
         /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
@@ -581,7 +573,6 @@ namespace Rawr
         /// <returns>The data for the custom chart.</returns>
         public abstract ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName);
 
-#if RAWR3 || RAWR4
         /// <summary>
         /// Gets control to use for display of chart data, based on the chart name, as defined in CustomChartNames.
         /// If you return null a default comparison graph will be used and GetCustomChartData will be called to
@@ -603,7 +594,6 @@ namespace Rawr
         public virtual void UpdateCustomChartData(Character character, string chartName, System.Windows.Controls.Control control)
         {
         }
-#endif
 
 #if !RAWR3 && !RAWR4
         /// <summary>
@@ -673,6 +663,12 @@ namespace Rawr
                 character.ActiveBuffsAdd("Master of Anatomy");
             } else if (character.ActiveBuffsContains("Master of Anatomy") && !character.HasProfession(Profession.Skinning)) {
                 character.ActiveBuffs.Remove(Buff.GetBuffByName("Master of Anatomy"));
+            }
+            // Herbalists should always have this buff activated, others shouldn't have this buff
+            if (character.HasProfession(Profession.Herbalism) & !character.ActiveBuffsContains("Lifeblood")) {
+                character.ActiveBuffsAdd("Lifeblood");
+            } else if (character.ActiveBuffsContains("Lifeblood") && !character.HasProfession(Profession.Herbalism)) {
+                character.ActiveBuffs.Remove(Buff.GetBuffByName("Lifeblood"));
             }
             // Engineers should always have this buff activated IF the Primary is
             if (character.HasProfession(Profession.Engineering))
