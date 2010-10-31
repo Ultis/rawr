@@ -133,29 +133,18 @@ namespace Rawr.Moonkin
             RotationData.AverageInstantCast = mf.CastTime;
             float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
             float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
+
+            float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
+            float starsurgeCooldownBase = 15f + ss.CastTime + RotationData.AverageInstantCast;
+            float starsurgeCooldownWithSSProcs = talents.ShootingStars > 0 ? 1 / shootingStarsProcFrequency * (1 - (float)Math.Exp(-starsurgeCooldownBase * shootingStarsProcFrequency)) : starsurgeCooldownBase;
+            float starSurgeRatio = ss.CastTime / starsurgeCooldownWithSSProcs;
+
             float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
                 (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
+                (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starSurgeRatio : 0) +
                 (talents.Starfall == 1 ? RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast) : 0) +
                 (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
                 (3 * 0.5f / 10f);
-
-            float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
-                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
-                (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0));
-            RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
-            RotationData.MoonfireTicks = RotationData.MoonfireCasts * mf.DotEffect.NumberOfTicks;
-            RotationData.MoonfireDuration = mf.DotEffect.Duration;
-
-            float insectSwarmTime = (RotationData.InsectSwarmRefreshMode == DotMode.Always) ? RotationData.Duration * insectSwarmRatio :
-                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
-                (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0));
-            RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
-            RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
-            RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;
-
-            float shootingStarsProcFrequency = (iSw.DotEffect.TickLength + mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
-            float starsurgeCooldownBase = 15f + ss.CastTime;
-            float starsurgeCooldownWithSSProcs = 1 / (shootingStarsProcFrequency + 1 / (starsurgeCooldownBase * (1 + starsurgeCooldownBase * shootingStarsProcFrequency / 2)));
 
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
@@ -192,7 +181,7 @@ namespace Rawr.Moonkin
             else
             {
                 lunarCasts = (barHalfSize + eclipseSFAverageEnergy / 2) / eclipseSFAverageEnergy * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate / starfireEclipseEnergyRate : 0));
-                preLunarCasts = (barHalfSize - starfireEclipseEnergyRate / 2) * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / starfireEnergyRate) / sf.AverageEnergy + 0.12f * talents.Euphoria;
+                preSolarCasts = (barHalfSize - starfireEclipseEnergyRate / 2) * (1 - (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starsurgeEnergyRate : 0) / starfireEnergyRate) / sf.AverageEnergy + 0.12f * talents.Euphoria;
             }
 
             float preLunarTime = preLunarCasts * w.CastTime;
@@ -201,40 +190,56 @@ namespace Rawr.Moonkin
             float solarTime = solarCasts * w.CastTime;
 
             float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
-            float nukesAndNotOnCDDuration = mainNukeDuration +
-                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
-                    (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0)) +
-                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
-                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0));
-
-            RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
-            float insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
 
             RotationData.WrathAvgCast = w.CastTime;
             RotationData.WrathAvgEnergy = w.AverageEnergy;
 
             RotationData.StarfireAvgCast = sf.CastTime;
             RotationData.StarfireAvgEnergy = sf.AverageEnergy;
-            float starSurgeRatio = ss.CastTime / (starsurgeCooldownWithSSProcs + RotationData.AverageInstantCast);
+
             float starSurgeTime = 0;
+            if (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse || RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse)
+            {
+                starSurgeTime = ss.CastTime * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
+            }
+
+            float nukesAndNotOnCDDuration = mainNukeDuration +
+                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
+                    (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0)) +
+                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
+                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0)) +
+                    starSurgeTime;
+
+            RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
+
             if (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown)
             {
                 starSurgeTime = RotationData.Duration * starSurgeRatio;
-            }
-            else if (RotationData.StarsurgeCastMode != StarsurgeMode.Unused)
-            {
-                starSurgeTime = ss.CastTime * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
             }
 
             if (talents.Starfall == 1 && RotationData.StarsurgeCastMode != StarsurgeMode.Unused && talents.GlyphOfStarsurge)
             {
                 totalNonNukeRatio -= RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast);
                 totalNonNukeRatio += RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) - (starSurgeTime / ss.CastTime * 5f) + RotationData.AverageInstantCast);
-
+                
                 RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
-                insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
             }
 
+            float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
+                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
+                (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0));
+            RotationData.MoonfireCasts = moonfireTime / mf.CastTime;
+            RotationData.MoonfireTicks = RotationData.MoonfireCasts * mf.DotEffect.NumberOfTicks;
+            RotationData.MoonfireDuration = mf.DotEffect.Duration;
+
+            float insectSwarmTime = (RotationData.InsectSwarmRefreshMode == DotMode.Always) ? RotationData.Duration * insectSwarmRatio :
+                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
+                (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0));
+            RotationData.InsectSwarmCasts = insectSwarmTime / iSw.CastTime;
+            RotationData.InsectSwarmTicks = RotationData.InsectSwarmCasts * iSw.DotEffect.NumberOfTicks;
+            RotationData.InsectSwarmDuration = iSw.DotEffect.Duration;
+
+            float insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
 
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;

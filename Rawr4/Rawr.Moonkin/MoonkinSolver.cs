@@ -801,8 +801,8 @@ namespace Rawr.Moonkin
             // Moonfire: Direct damage +(0.03 * Blessing of the Grove)
             Moonfire.AllDamageModifier *= 1 + 0.03f * talents.BlessingOfTheGrove;
             // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
-            Moonfire.DotEffect.BaseDuration += 0.2f * talents.Genesis;
-            InsectSwarm.DotEffect.BaseDuration += 0.2f * talents.Genesis;
+            Moonfire.DotEffect.BaseDuration += 2f * talents.Genesis;
+            InsectSwarm.DotEffect.BaseDuration += 2f * talents.Genesis;
 
             // Add spell-specific critical strike damage
             // Chaotic Skyflare Diamond

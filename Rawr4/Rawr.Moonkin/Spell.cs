@@ -86,7 +86,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                return (int)Math.Floor(BaseDuration / TickLength);
+                return (int)Math.Round(BaseDuration / TickLength, 0);
             }
         }
         public float SpellDamageModifierPerTick { get; set; }
