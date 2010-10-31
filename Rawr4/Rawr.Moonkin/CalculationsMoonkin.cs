@@ -13,7 +13,7 @@ namespace Rawr.Moonkin
         /// <param name="character">The Character to set buffs for.</param>
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Arcane Empowerment"));
+            character.ActiveBuffsAdd(("Arcane Tactics"));
             character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
             character.ActiveBuffsAdd(("Arcane Brilliance (SP%)"));
             character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
@@ -27,7 +27,7 @@ namespace Rawr.Moonkin
             character.ActiveBuffsAdd(("Heroism/Bloodlust"));
             character.ActiveBuffsAdd(("Power Infusion"));
             character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
-            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd(("Intellect Food"));
         }
         private string[] _optimizableCalculationLabels = null;
         /// <summary>

@@ -72,7 +72,6 @@ namespace Rawr.Moonkin
             overallDamageModifier *= mainNuke.School == SpellSchool.Arcane ? (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) :
                 (mainNuke.School == SpellSchool.Nature ? (1 + calcs.BasicStats.BonusNatureDamageMultiplier) :
                 (1 + (calcs.BasicStats.BonusArcaneDamageMultiplier > calcs.BasicStats.BonusNatureDamageMultiplier ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier)));
-            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -93,10 +92,8 @@ namespace Rawr.Moonkin
             float schoolMultiplier = dotSpell.School == SpellSchool.Arcane ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier;
 
             float overallDamageModifier = dotSpell.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
-            overallDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
-            dotEffectDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - calcs.PlayerLevel);
 
             float gcd = 1.5f / (1.0f + spellHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
@@ -203,6 +200,16 @@ namespace Rawr.Moonkin
             float preSolarTime = preSolarCasts * sf.CastTime;
             float solarTime = solarCasts * w.CastTime;
 
+            float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
+            float nukesAndNotOnCDDuration = mainNukeDuration +
+                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
+                    (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0)) +
+                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
+                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0));
+
+            RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
+            float insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
+
             RotationData.WrathAvgCast = w.CastTime;
             RotationData.WrathAvgEnergy = w.AverageEnergy;
 
@@ -223,17 +230,10 @@ namespace Rawr.Moonkin
             {
                 totalNonNukeRatio -= RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast);
                 totalNonNukeRatio += RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) - (starSurgeTime / ss.CastTime * 5f) + RotationData.AverageInstantCast);
+
+                RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
+                insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
             }
-
-            float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
-            float nukesAndNotOnCDDuration = mainNukeDuration +
-                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? iSw.CastTime :
-                    (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 2 * iSw.CastTime : 0)) +
-                (RotationData.MoonfireRefreshMode == DotMode.Once ? mf.CastTime :
-                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0));
-
-            RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
-            float insectSwarmUptime = insectSwarmTime * iSw.DotEffect.Duration / iSw.CastTime / RotationData.Duration;
 
 
             RotationData.SolarUptime = solarTime / mainNukeDuration;
