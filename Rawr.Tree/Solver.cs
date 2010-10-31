@@ -408,7 +408,7 @@ namespace Rawr.Tree
         }
         public float SwiftmendCPS { get { return SwiftmendCPM / 60f; } }
         private float swiftmendCPM;
-        public float SwiftmendCPM { get { return swiftmendCPM; } set { if (cacheCharacter.DruidTalents.Swiftmend > 0) swiftmendCPM = value; else swiftmendCPM = 0; } }
+        public float SwiftmendCPM { get { return swiftmendCPM; } set { /*if (cacheCharacter.DruidTalents.Swiftmend > 0) swiftmendCPM = value; else*/ swiftmendCPM = 0; } }
         public float SwiftmendAvg { get { return swiftmend == null ? 0 : SwiftmendCPS * swiftmend.Duration; } }
         public float SwiftmendHPS
         {

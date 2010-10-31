@@ -904,7 +904,7 @@ applied and result is scaled down by 100)",
             // Add spellpower from spirit, intellect and... agility :)
             statsTotal.SpellPower = (float)Math.Round( statsTotal.SpellPower
                                                     + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)
-                                                    + (statsTotal.Intellect * talents.LunarGuidance * 0.04)
+                                                    //+ (statsTotal.Intellect * talents.LunarGuidance * 0.04)
                                                     + (talents.NurturingInstinct * 0.35f * statsTotal.Agility));
 
             statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
@@ -915,8 +915,8 @@ applied and result is scaled down by 100)",
 
             statsTotal.SpellCrit = (float)Math.Round((StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                                                    + (statsTotal.SpellCrit)
-                                                    + 0.01f * talents.NaturalPerfection) * 100f, 2);
+                                                    + (statsTotal.SpellCrit)), 2);
+                                                    //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
 
             return statsTotal;
         }

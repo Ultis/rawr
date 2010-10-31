@@ -162,7 +162,7 @@ namespace Rawr.Tree {
             manaCost *= manaCostModifier;
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            manaCostModifier *= 1 - (druidTalents.Moonglow * 0.03f + druidTalents.TranquilSpirit * 0.02f);
+            //manaCostModifier *= 1 - (druidTalents.Moonglow * 0.03f + druidTalents.TranquilSpirit * 0.02f);
 
             castTimeBeforeHaste -= 0.1f * druidTalents.Naturalist;
 
@@ -172,22 +172,22 @@ namespace Rawr.Tree {
             extraCritModifier = 0.1f * druidTalents.LivingSeed * calcOpts.Current.LivingSeedEfficiency / 100f;
 
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1 - 0.06f * druidTalents.OmenOfClarity;
 
             minHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH += (0.2f * druidTalents.EmpoweredTouch);     // ET is additive from http://elitistjerks.com/f73/t37038-restoration_glyphs/p8/#post1240879 
 
             coefDH *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
         }
@@ -247,11 +247,11 @@ namespace Rawr.Tree {
             critModifier += extraCritModifier;
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            periodicTicks += 2 * druidTalents.NaturesSplendor;
+            //periodicTicks += 2 * druidTalents.NaturesSplendor;
 
             manaCostModifier *= (1 - 0.03f * druidTalents.Moonglow - 0.2f * druidTalents.TreeOfLife);
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             extraCritPercent += 5f * druidTalents.NaturesBounty;
             //Living Seed
@@ -280,13 +280,13 @@ namespace Rawr.Tree {
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             periodicTick *=
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefHoT *= 
-                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
         }
@@ -361,32 +361,32 @@ namespace Rawr.Tree {
             if (hasteTicks) applyHasteToPeriodicTickTime();
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            extraTicks += 1 * druidTalents.NaturesSplendor;
+            //extraTicks += 1 * druidTalents.NaturesSplendor;
 
             manaCostModifier *= 1 - 0.2f * druidTalents.TreeOfLife - 0.03f * druidTalents.Moonglow;
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1 - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1 - 0.06f * druidTalents.OmenOfClarity;
 
             periodicTickModifier *=
                 (1 + 0.01f * druidTalents.Genesis + 
-                 0.05f * druidTalents.ImprovedRejuvenation + 
-                 0.02f * druidTalents.GiftOfNature) *
+                 0.05f * druidTalents.ImprovedRejuvenation) + 
+                 //0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
 
             coefHoT *= 
-                (1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                //(1 + 0.04f * druidTalents.EmpoweredRejuvenation) *
                 (1 + 0.01f * druidTalents.Genesis + 
-                 0.05f * druidTalents.ImprovedRejuvenation + 
-                 0.02f * druidTalents.GiftOfNature) *
+                 0.05f * druidTalents.ImprovedRejuvenation) + 
+                 //0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1 + 0.06f * druidTalents.TreeOfLife);
 
             #region Glyph of Rapid Rejuvenation
-            if (druidTalents.GlyphOfRapidRejuvenation)
+            /*if (druidTalents.GlyphOfRapidRejuvenation)
             {
                 hasteTicks = true;
-            }
+            }*/
             #endregion
         }
     }
@@ -487,39 +487,39 @@ namespace Rawr.Tree {
             idolHoTBonus = stats.LifebloomTickHealBonus; // Idol of the Emerald Queen
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            periodicTicks += 2f * druidTalents.NaturesSplendor;
+            //periodicTicks += 2f * druidTalents.NaturesSplendor;
 
             gcdBeforeHaste -= 1.5f * 0.02f * druidTalents.GiftOfTheEarthmother;
 
             manaCostModifier *= (1f - 0.2f * druidTalents.TreeOfLife);
 
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             periodicTick *=
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefHoT *= 
-                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             minHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             coefDH *=
-                (1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.04f * druidTalents.EmpoweredRejuvenation) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
@@ -589,19 +589,19 @@ namespace Rawr.Tree {
             manaCostModifier *= (1f - 0.2f * druidTalents.TreeOfLife);
 
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
 
             // Glyph of Wild Growth
             if (druidTalents.GlyphOfWildGrowth)
               maxTargets += 1;
 
             coefHoT *=
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.06f * druidTalents.TreeOfLife) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife);
 
             periodickTickModifier *= 
-                (1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.06f * druidTalents.TreeOfLife) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter);
         }
@@ -654,7 +654,7 @@ namespace Rawr.Tree {
             critModifier += extraCritModifier;
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
-            manaCostModifier *= (1f - druidTalents.TranquilSpirit * 0.02f - druidTalents.Moonglow * 0.03f);
+            //manaCostModifier *= (1f - druidTalents.TranquilSpirit * 0.02f - druidTalents.Moonglow * 0.03f);
 
             extraCritPercent += 2f * druidTalents.NaturesMajesty;
             extraCritPercent += 5f * druidTalents.NaturesBounty;
@@ -664,15 +664,15 @@ namespace Rawr.Tree {
             extraCritModifier += 0.1f * druidTalents.LivingSeed * calcOpts.Current.LivingSeedEfficiency / 100f;
 
             // 6% chance to get Omen of Clarity...
-            manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
+            //manaCostModifier *= 1f - 0.06f * druidTalents.OmenOfClarity;
                 
             minHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
             maxHeal *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
@@ -681,11 +681,11 @@ namespace Rawr.Tree {
             // This is also the value TreeCalcs uses at the moment (8th december 2009)
 
             coefDH *=
-                (1f + 0.02f * druidTalents.GiftOfNature) *
+                //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
                 (1f + 0.06f * druidTalents.TreeOfLife);
 
-            if (druidTalents.GlyphOfNourish) { NourishBonusPerHoTGlyphs = 0.06f; }
+            //if (druidTalents.GlyphOfNourish) { NourishBonusPerHoTGlyphs = 0.06f; }
         }
     }
     public class Swiftmend : Spell {
@@ -707,11 +707,11 @@ namespace Rawr.Tree {
             maxHeal = 0f;
             #endregion
 
-            if (character.DruidTalents.Swiftmend == 0)
+            /*if (character.DruidTalents.Swiftmend == 0)
             {
                 Rejuv = null;
                 Regrowth = null;
-            }
+            }*/
 
             if (Rejuv == null) {
                 if (Regrowth == null) {
