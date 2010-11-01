@@ -139,17 +139,19 @@ namespace Rawr.Moonkin
             float starsurgeCooldownWithSSProcs = talents.ShootingStars > 0 ? 1 / shootingStarsProcFrequency * (1 - (float)Math.Exp(-starsurgeCooldownBase * shootingStarsProcFrequency)) : starsurgeCooldownBase;
             float starSurgeRatio = ss.CastTime / starsurgeCooldownWithSSProcs;
 
+            float starSurgeFrequency = 1 / starsurgeCooldownWithSSProcs;
+            float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 0;
+
             float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
                 (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
                 (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starSurgeRatio : 0) +
-                (talents.Starfall == 1 ? RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast) : 0) +
+                (talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0) +
                 (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
                 (3 * 0.5f / 10f);
 
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
 
-            float starSurgeCD = 15.0f + ss.CastTime;
             float eclipseWAverageEnergy = w.AverageEnergy;
             w.AverageEnergy *= 1 + 0.12f * talents.Euphoria;
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
@@ -215,14 +217,6 @@ namespace Rawr.Moonkin
             if (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown)
             {
                 starSurgeTime = RotationData.Duration * starSurgeRatio;
-            }
-
-            if (talents.Starfall == 1 && RotationData.StarsurgeCastMode != StarsurgeMode.Unused && talents.GlyphOfStarsurge)
-            {
-                totalNonNukeRatio -= RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) + RotationData.AverageInstantCast);
-                totalNonNukeRatio += RotationData.AverageInstantCast / (90f - (talents.GlyphOfStarfall ? 30f : 0f) - (starSurgeTime / ss.CastTime * 5f) + RotationData.AverageInstantCast);
-                
-                RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
             }
 
             float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
