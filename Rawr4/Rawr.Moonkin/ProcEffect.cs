@@ -101,7 +101,7 @@ namespace Rawr.Moonkin
                     if (r.RotationData.InsectSwarmTicks == 0) return 0.0f;
                     Spell newSF = new Spell(r.Solver.Starfire);
                     newSF.BaseCastTime = 1.5f;
-                    r.DoMainNuke(c, ref newSF, sp, sHi, sc, sHa);
+                    r.DoMainNuke(c, ref newSF, sp, sHi, sc, sHa, 0, 0);
                     float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.BaseTickLength / Effect.Chance;
                     float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
                     float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);

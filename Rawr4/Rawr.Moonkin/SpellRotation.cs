@@ -63,7 +63,7 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a single, direct-damage spell.
-        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        public void DoMainNuke(CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime)
         {
             float latency = calcs.Latency;
 
@@ -74,10 +74,14 @@ namespace Rawr.Moonkin
                 (1 + (calcs.BasicStats.BonusArcaneDamageMultiplier > calcs.BasicStats.BonusNatureDamageMultiplier ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier)));
 
             float gcd = 1.5f / (1.0f + spellHaste);
+            float ngGcd = gcd / (1 + naturesGraceBonusHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
+            float instantCastNG = (float)Math.Max(ngGcd, 1.0f) + latency;
 
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
-            mainNuke.CastTime = (float)Math.Max(mainNuke.BaseCastTime / (1 + spellHaste), instantCast);
+            float baseCastTime = (float)Math.Max(mainNuke.BaseCastTime / (1 + spellHaste), instantCast);
+            float ngCastTime = (float)Math.Max(mainNuke.BaseCastTime / (1 + spellHaste) / (1 + naturesGraceBonusHaste), instantCastNG);
+            mainNuke.CastTime = naturesGraceUptime * ngCastTime + (1 - naturesGraceUptime) * baseCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * spellPower) * overallDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
@@ -86,7 +90,7 @@ namespace Rawr.Moonkin
         }
 
         // Calculate damage and casting time for a damage-over-time effect.
-        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        public void DoDotSpell(CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste, float naturesGraceBonusHaste, float naturesGraceUptime)
         {
             float latency = calcs.Latency;
             float schoolMultiplier = dotSpell.School == SpellSchool.Arcane ? calcs.BasicStats.BonusArcaneDamageMultiplier : calcs.BasicStats.BonusNatureDamageMultiplier;
@@ -96,10 +100,26 @@ namespace Rawr.Moonkin
             float dotEffectDamageModifier = dotSpell.DotEffect.AllDamageModifier * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + schoolMultiplier);
 
             float gcd = 1.5f / (1.0f + spellHaste);
+            float ngGcd = gcd / (1 + naturesGraceBonusHaste);
             float instantCast = (float)Math.Max(gcd, 1.0f) + latency;
-            dotSpell.CastTime = instantCast;
+            float instantCastNG = (float)Math.Max(ngGcd, 1.0f) + latency;
+            dotSpell.CastTime = naturesGraceUptime * instantCastNG + (1 - naturesGraceUptime) * instantCast;
 
-            dotSpell.DotEffect.TickLength = dotSpell.DotEffect.BaseTickLength / (1 + spellHaste);
+            float baseTickRate = dotSpell.DotEffect.BaseTickLength / (1 + spellHaste);
+            float ngTickRate = baseTickRate / (1 + naturesGraceBonusHaste);
+
+            int baseTicks = (int)Math.Round(dotSpell.DotEffect.BaseDuration / baseTickRate, 0);
+            int ngTicks = (int)Math.Round(dotSpell.DotEffect.BaseDuration / ngTickRate, 0);
+
+            dotSpell.DotEffect.NumberOfTicks = naturesGraceUptime * ngTicks + (1 - naturesGraceUptime) * baseTicks;
+
+            float baseDuration = baseTickRate * baseTicks;
+            float ngDuration = ngTickRate * ngTicks;
+
+            dotSpell.DotEffect.Duration = naturesGraceUptime * ngDuration + (1 - naturesGraceUptime) * baseDuration;
+
+            dotSpell.DotEffect.TickLength = (1 - naturesGraceUptime) * dotSpell.DotEffect.BaseTickLength / (1 + spellHaste) +
+                naturesGraceUptime * dotSpell.DotEffect.BaseTickLength / (1 + spellHaste) / (1 + naturesGraceBonusHaste);
 
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * spellPower) * overallDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
@@ -122,17 +142,17 @@ namespace Rawr.Moonkin
 
             float eclipseBonus = 1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus;
 
-            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste);
-            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste);
-            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste);
-            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
             float barHalfSize = 100f;
 
             RotationData.AverageInstantCast = mf.CastTime;
-            float moonfireRatio = mf.CastTime / mf.DotEffect.Duration;
-            float insectSwarmRatio = iSw.CastTime / iSw.DotEffect.Duration;
+            float moonfireRatio = RotationData.AverageInstantCast / mf.DotEffect.Duration;
+            float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
             float starsurgeCooldownBase = 15f + ss.CastTime + RotationData.AverageInstantCast;
@@ -258,7 +278,7 @@ namespace Rawr.Moonkin
             {
                 Spell mfExtended = new Spell(mf);
                 mfExtended.DotEffect.BaseDuration += 9.0f;
-                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste);
+                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
                 switch (RotationData.MoonfireRefreshMode)
                 {

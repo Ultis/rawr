@@ -53,20 +53,11 @@ namespace Rawr.Moonkin
             this.BaseDuration = copy.BaseDuration;
             this.TickDamage = copy.TickDamage;
             this.BaseTickLength = copy.BaseTickLength;
+            this.TickLength = copy.TickLength;
             this.SpellDamageModifierPerTick = copy.SpellDamageModifierPerTick;
         }
         public float BaseDuration { get; set; }
-        public float Duration
-        {
-            get
-            {
-                return TickLength * NumberOfTicks;
-            }
-            set
-            {
-                TickLength = (value / BaseDuration) * BaseTickLength;
-            }
-        }
+        public float Duration { get; set; }
         public float BaseTickLength { get; set; }
         public float TickLength { get; set; }
         public float TickDamage { get; set; }
@@ -82,13 +73,7 @@ namespace Rawr.Moonkin
             }
         }
         public float AllDamageModifier { get; set; }
-        public int NumberOfTicks
-        {
-            get
-            {
-                return (int)Math.Round(BaseDuration / TickLength, 0);
-            }
-        }
+        public float NumberOfTicks { get; set; }
         public float SpellDamageModifierPerTick { get; set; }
         // Section for variables which get filled in during rotation calcs
         public float DamagePerHit { get; set; }
