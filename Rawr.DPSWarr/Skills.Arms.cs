@@ -67,7 +67,7 @@ namespace Rawr.DPSWarr.Skills
         }
         // Variables
         private static readonly SpecialEffect[/*Talents.SuddenDeath*/] _buff = {
-            new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 0 * 0.03f),
+            null,
             new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 1 * 0.03f),
             new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 2 * 0.03f),
         };
@@ -76,9 +76,9 @@ namespace Rawr.DPSWarr.Skills
         public float GetActivates(float landedatksoverdur)
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            float actsUnderSD = Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f, combatFactors._c_mhItemSpeed, FightDuration);
-            float actsNormal = FightDuration / Cd;
-            float acts = Math.Max(actsUnderSD, actsNormal);
+            float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f, combatFactors._c_mhItemSpeed, FightDuration) * FightDuration : 0f;
+            float min = FightDuration / Cd; // If it follows it's cooldown, no SD procs
+            float acts = Math.Max(actsUnderSD, min);
 
             return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost));
         }
@@ -230,7 +230,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             MaxRange = WW.MaxRange; // In Yards
             Targets = WW.Targets; // Handled in WW
-            DamageBase = WW.DamageBase;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f;
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f;
             CastTime = 6f; // In Seconds // Channeled
@@ -264,48 +264,31 @@ namespace Rawr.DPSWarr.Skills
         /// Attempt to finish off a wounded foe, causing (10+AP*0.25) physical damage and
         /// consumes up to 20 additional rage to deal up to (AP*0.5-1) additional damage.
         /// Only usable on enemies that have less than 20% health.
-        /// </summary>
         /// <para>Talents: Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</para>
         /// <para>Glyphs: Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</para>
+        /// </summary>
         public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = ReqMeleeRange = true;
-            RageCost = 10f;
+            RageCost = 10f - (Talents.SuddenDeath * 5f);
             DamageBonus = 1f + StatS.BonusExecOPMSDamageMultiplier;
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
-            PercTimeUnder20 = 0.17f;
             //
             Initialize();
         }
         public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
         public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
         private float FREERAGE;
-        public float FreeRage
-        {
-            get { return FREERAGE; }
-            set
-            {
-                FREERAGE = value;
-                UsedExtraRage = Math.Max(0f, Math.Min(20f, FreeRage));
-            }
-        }
-        public float UsedExtraRage;
-        public float PercTimeUnder20;
-        protected override float ActivatesOverride { get { return base.ActivatesOverride * PercTimeUnder20; } }
-        public override float DamageOverride
-        {
-            get
-            {
-                //UsedExtraRage = Math.Max(0f, Math.Min(30f, FreeRage));
-                float executeRage = UsedExtraRage;
-
-                float Damage = 1456f + StatS.AttackPower * 0.25f + executeRage * (StatS.AttackPower*0.5f-1);
-
-                return Damage * AvgTargets;
+        public float FreeRage { get { return FREERAGE; } set { FREERAGE = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
+        public float UsedExtraRage { get { return Math.Min(20f, FreeRage / (ActivatesOverride * (float)BossOpts.Under20Perc)); } }
+        public override float DamageOverride {
+            get {
+                float damageBase = (10f + StatS.AttackPower * 0.25f) + (UsedExtraRage * (StatS.AttackPower * 0.5f - 1f));
+                return damageBase * DamageBonus * AvgTargets;
             }
         }
         public override float GetRageUseOverDur(float acts)
@@ -376,7 +359,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             //
-            DamageBase = StatS.AttackPower * 45f / 100f;
+            DamageBase = StatS.AttackPower * 56f / 100f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             HealingBase = StatS.Health * 0.20f * (1f + (Talents.GlyphOfVictoryRush ? 0.50f : 0f)); // 20% of Max Health Restored
             //
@@ -507,6 +490,7 @@ namespace Rawr.DPSWarr.Skills
         protected float addDodges;
         protected float addParrys;
         public float ThunderApps = 0f;
+        public float ThunderAppsU20 = 0f;
         protected override float ActivatesOverride
         {
             get

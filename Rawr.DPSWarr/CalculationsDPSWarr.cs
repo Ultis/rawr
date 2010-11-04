@@ -221,8 +221,6 @@ namespace Rawr.DPSWarr {
 "Base Stats:Attack Power",
 "Base Stats:Agility",
 "Base Stats:Crit",
-"Base Stats:Haste",
-@"Base Stats:Armor Penetration*Cata no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
 @"Base Stats:Hit*8.00% chance to miss base for Yellow Attacks (LVL 83 Targ)
 Precision 0- 8%-0%=8%=264 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
@@ -246,6 +244,8 @@ Strength of Arms
 2 |426
 
 These numbers to do not include racial bonuses.",
+"Base Stats:Haste",
+"Base Stats:Armor Penetration*Cata no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
 "Base Stats:Mastery*Since this is new, it may be off on how it's implemented for a while",
 #endregion
             
@@ -516,6 +516,7 @@ These numbers to do not include racial bonuses.",
                     Trigger.HSorSLHit,
                     Trigger.DamageOrHealingDone,
                     Trigger.ColossusSmashHit,
+                    Trigger.ExecuteHit,
                 });
             }
             set { _RelevantTriggers = value; }
@@ -1118,8 +1119,9 @@ These numbers to do not include racial bonuses.",
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
                         comparison.Description = string.Format("Costs {0} Rage\r\n{1}",aw.ability.RageCost,aw.ability.Desc);
-                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / (aw.ability.RageCost != 0 ? aw.ability.RageCost : 1f);
-                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / (aw.ability.RageCost != 0 ? aw.ability.RageCost : 1f);
+                        float extraRage = (aw.ability is Skills.Execute) ? (aw.ability as Skills.Execute).UsedExtraRage : 0f;
+                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
+                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
@@ -1312,7 +1314,7 @@ These numbers to do not include racial bonuses.",
 
                 // Survivability
                 if (stats.HealthRestoreFromMaxHealth > 0) {
-                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth / 100f * stats.Health * bossOpts.BerserkTimer;
+                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth/* / 100f*/ * stats.Health * bossOpts.BerserkTimer;
                 }
 
                 float Health2Surv  = (stats.Health) / 100f; 
@@ -1403,9 +1405,9 @@ These numbers to do not include racial bonuses.",
 
         private static SpecialEffect[] _SE_BloodCraze = {
             null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f, 0.10f),
         };
 
         private static SpecialEffect[] _SE_Executioner = {
@@ -1485,13 +1487,13 @@ These numbers to do not include racial bonuses.",
                 BonusStrengthMultiplier = ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
             };
             // Add Talents that give SpecialEffects
-            if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.DeathWish > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_]) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_]) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
-            if (talents.BloodCraze > 0) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
-            if (talents.Executioner > 0 && dpswarchar.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.Executioner]); }
-            if (talents.Enrage > 0) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
-            if (talents.BloodFrenzy > 0) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
+            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
+            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      ) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
+            if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
+            if (talents.Enrage              > 0                                         ) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
+            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
             #endregion
             #region Mastery Related
             float MasteryValue = 0f;
@@ -1864,6 +1866,9 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.HSorSLHit] = fightDuration / charStruct.Rot.CritHsSlamOverDur;
                 triggerChances[Trigger.HSorSLHit] = 1f;
 
+                triggerIntervals[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().allNumActivates;
+                triggerChances[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().ability.MHAtkTable.AnyLand;
+
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
 
@@ -1953,11 +1958,11 @@ These numbers to do not include racial bonuses.",
                         // effect.Duration = 0, so GetAverageStats won't work
                         numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.ManaorEquivRestore += effect.Stats.ManaorEquivRestore * numProcs;
-                    } /*else if (effect.Stats.HealthRestoreFromMaxHealth > 0f) {
+                    } else if (effect.Stats.HealthRestoreFromMaxHealth > 0f) {
                         // effect.Duration = 0, so GetAverageStats won't work
                         numProcs = effect.GetAverageProcsPerSecond(dmgTakenInterval, originalStats.Dodge + originalStats.Parry, 0f, 0f) * fightDuration;
                         statsProcs.HealthRestoreFromMaxHealth += effect.Stats.HealthRestoreFromMaxHealth * numProcs;
-                    }*/ else {
+                    } else {
                         ApplySpecialEffect(effect, charStruct, triggerIntervals, triggerChances, ref statsProcs);
                     }
                 }

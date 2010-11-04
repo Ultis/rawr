@@ -436,14 +436,14 @@ namespace Rawr.DPSWarr {
                     if (aw.allRage > 0f) {
                         if (aw.ability.GetType() == typeof(MortalStrike)
                             || aw.ability.GetType() == typeof(BloodThirst)
-                            || aw.ability.GetType() == typeof(Slam))
+                            /*|| aw.ability.GetType() == typeof(Slam)*/)
                         {
                             rage += aw.allRage * (1f - Talents.BattleTrance * 0.05f);
                         } else
                             rage += aw.allRage;
                     }
                 }
-                if (Talents.DeadlyCalm > 0) { rage *= 1f - 10/120; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+                if (Talents.DeadlyCalm > 0) { rage *= 1f - 10f/120f; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
                 return rage;
             }
         }

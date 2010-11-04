@@ -95,6 +95,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
+            Targets = -1;
             UseReact = true;
             //
             Initialize();
@@ -123,6 +124,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
             Cd = 3f * 60f; // In Seconds
             RageCost = 15f;
+            Targets = -1;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             HealingBase = StatS.Health * 0.30f;
             HealingBonus = 1f + Talents.FieldDressing * 0.10f;
@@ -147,7 +149,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Last Stand [-1 min Cd]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public LastStand() { }
+        public LastStand() { Targets = -1; }
     }
     public class Bloodrage : BuffEffect
     {
@@ -175,6 +177,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -(20f // Base
                         + 10f) // Over Time
                         ;
+            Targets = -1;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             Stats Base = BaseStats.GetBaseStats(Char.Level, CharacterClass.Warrior, Char.Race);
             float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);
@@ -209,6 +212,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
             Cd = Duration;
+            Targets = -1;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
             //
@@ -247,6 +251,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
             Cd = Duration;
+            Targets = -1;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
             //
@@ -286,6 +291,7 @@ namespace Rawr.DPSWarr.Skills
             Talent2ChksValue = Talents.DeathWish;
             Cd = 3f * 60f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 30f;
+            Targets = -1;
             RageCost = 10f;
             StanceOkArms = StanceOkFury = true;
             UseHitTable = false;
@@ -316,6 +322,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = (5f * 60f /*- Talents.ImprovedDisciplines * 30f*/) * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
             StanceOkFury = true;
+            Targets = -1;
             //Effect = new SpecialEffect(Trigger.Use, new Stats { PhysicalCrit = 1f, DamageTakenMultiplier = 0.20f, }, Duration, Cd);
             UseHitTable = false;
             Initialize();
@@ -324,15 +331,15 @@ namespace Rawr.DPSWarr.Skills
     public class SweepingStrikes : BuffEffect
     {
         public static new string SName { get { return "Sweeping Strikes"; } }
-        public static new string SDesc { get { return "Your next 5 melee attacks strike an additional nearby opponent."; } }
+        public static new string SDesc { get { return "Your melee attacks strike an additional nearby opponent. Lasts 10 sec."; } }
         public static new string SIcon { get { return "ability_rogue_slicedice"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Your next 5 melee attacks strike an additional nearby opponent.
+        /// Your melee attacks strike an additional nearby opponent. Lasts 10 sec.
         /// <para>Talents: Sweeping Strikes [Requires Talent]</para>
-        /// <para>Glyphs: Glyph of Sweeping Strikes [-100% Rage cost]</para>
+        /// <para>Glyphs: Glyph of Sweeping Strikes [-100% RageCost]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -340,21 +347,34 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
-            ReqTalent = true;
-            Talent2ChksValue = Talents.SweepingStrikes;
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
-            ReqMultiTargs = true;
-            Cd = FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact));
-                //BossOpts.MultiTargsPerc != 0 ? 30f / ((float)BossOpts.MultiTargsPerc/* / 100f*/) : FightDuration + (1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.React / 1000f : CalcOpts.AllowedReact)); // In Seconds
-            Duration = 10f;
-            if (Cd < 60) Cd = 60;
-            RageCost = 30f;
-            RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : RageCost);
+            ReqTalent = true; Talent2ChksValue = Talents.SweepingStrikes;
+            ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = true;
+            ReqMultiTargs = true;
+            Targets = -1;
+            Cd = 60f;
+            Duration = 10f;
+            RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : 30f);
             UseHitTable = false;
             //
             Initialize();
+        }
+        protected override float ActivatesOverride
+        {
+            get {
+                // We should only be activating this when MultiTargets occurs
+                if (!BossOpts.MultiTargs || BossOpts.Targets.Count < 1) { return 0f; }
+                // First, let's determine our cap
+                float result = 0f, cap = base.ActivatesOverride;
+                // Next, let's figure out how often we see MultiTargs
+                foreach (TargetGroup tg in BossOpts.Targets) {
+                    if (tg.Validated) {
+                        result += FightDuration / tg.Frequency;
+                    }
+                }
+                // Finally, let's return the result, limited by the cap
+                return Math.Min(cap, result);
+            }
         }
     }
     public class SecondWind : BuffEffect
@@ -380,6 +400,7 @@ namespace Rawr.DPSWarr.Skills
             ReqTalent = true;
             Talent2ChksValue = Talents.SecondWind;
             Cd = -1f;
+            Targets = -1;
             NumStunsOverDur = 0f;
             Duration = 10f; // Using 4 seconds to sim consume time
             RageCost = -10f * Talents.SecondWind;
@@ -408,17 +429,16 @@ namespace Rawr.DPSWarr.Skills
     public class ThunderClap : BuffEffect
     {
         public static new string SName { get { return "Thunder Clap"; } }
-        public static new string SDesc { get { return "Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec and doing [300+AP*0.12] damage to them. Damage increased by attack power. This ability causes additional threat."; } }
+        public static new string SDesc { get { return "Blasts enemies within 8 yards for 302 damage, and increases the time between their attacks by 20% for 30 sec. Damage increased by attack power."; } }
         public static new string SIcon { get { return "spell_nature_thunderclap"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Blasts nearby enemies increasing the time between their attacks by 10% for 30 sec
-        /// and doing [300+AP*0.12] damage to them. Damage increased by attack power.
-        /// This ability causes additional threat.
+        /// Blasts enemies within 8 yards for 302 damage, and increases the time between
+        /// their attacks by 20% for 30 sec. Damage increased by attack power.
         /// <para>TODO: BonusCritDamage to 2x instead of 1.5x as it's now considered a ranged attack (3.3.3 notes) other parts implemented already</para>
-        /// <para>Talents: Improved Thunder Clap [-(1/2/4) rage cost, +(10*Pts)% Damage, +(ROUNDUP(10-10/3*Pts))% Slowing Effect], Incite [+(5*Pts)% Critical Strike chance]</para>
+        /// <para>Talents: none</para>
         /// <para>Glyphs: Glyph of Thunder Clap [+2 yds MaxRange], Glyph of Resonating Power [-5 RageCost]</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -427,23 +447,23 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
-            ReqMeleeRange = true;
+            ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             isMaint = false;
-            {
+            /*{ // OK, SERIOUSLY, I THINK THIS WAS BEING USED WRONG SO I'M INSTIUTING TARGETS AS A "MAX" and letting AvgTargets deal with the rest
                 float value = 0;
                 foreach (TargetGroup tg in BossOpts.Targets) {
                     if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
-                    float upTime = tg.Frequency / BossOpts.BerserkTimer * tg.Duration * tg.Chance;
+                    float upTime = tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance;
                     value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1))) * upTime;
                 }
                 Targets += value;
-            }
+            }*/
+            Targets = 10;
             MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
             Cd = 6f; // In Seconds
             Duration = 30f; // In Seconds
             RageCost = 20f - (Talents.GlyphOfResonatingPower ? 5f : 0f);
-            StanceOkArms = StanceOkDef = true;
-            DamageBase = 300f + StatS.AttackPower * 0.12f;
+            DamageBase = 303f + StatS.AttackPower * 0.12f;
             UseRangedHit = true;
             CanBeDodged = CanBeParried = false;
             //
@@ -453,21 +473,77 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-                // Since this has to be up according to Debuff Maintenance Rules
-                // this override has the intention of taking the baseline
-                // activates and forcing the char to use Rend again to ensure it's up
-                // in the event that the attemtped activate didn't land (it Missed, was Dodged or Parried)
-                // We're only doing the additional check once so it will at most do this
-                // twice in a row, may consider doing a settler
-                float result = 0f;
-                float Base = base.ActivatesOverride;
-                addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
-                //addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
-                //addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
+                /* We have 3 different things that would cause us to want to Thunderclap
+                 * - Maintaining the Debuff, must be refreshed every 30 seconds
+                 * - Multiple Mobs showing up, so we can damage all of them at once, based on BossHandler
+                 * - Blood and Thunder Talent lets us refresh Rend duration with Thunderclap (YAY!), must
+                 *   be done every 15-1=14 seconds. If it falls off then it's no good.
+                 * Basically, we'll just take the total of them up to the most that's possible,
+                 * which is no more than every 6 sec.
+                 */
 
-                result = Base + addMisses + addDodges + addParrys;
+                float cap = 0, fromBuff = 0, fromMultiTargs = 0, fromBnT = 0;
+                float LatentGCD = 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact;
+                float GCDPerc = LatentGCD / (Cd + CalcOpts.Latency + CalcOpts.AllowedReact);
+                float maxTCpersec = 0f;
 
-                return result;
+                {
+                    // First, let's see our Cap
+                    float result = 0f;
+                    //
+                    result = Math.Max(0f, FightDuration / (LatentGCD / GCDPerc));
+                    //
+                    cap = result;
+                    maxTCpersec = cap / FightDuration;
+                }
+
+                {
+                    // Second, lets do Buff Maintenance
+                    /* Since this has to be up according to Debuff Maintenance Rules
+                     * this override has the intention of taking the baseline
+                     * activates and forcing the char to use TC again to ensure it's up
+                     * in the event that the attempted activate didn't land (it Missed)
+                     * We're only doing the additional check once so it will at most do this
+                     * twice in a row, may consider doing a settler*/
+                    float result = 0f;
+                    //
+                    float Base = base.ActivatesOverride;
+                    addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
+                    result = Base + addMisses;
+                    //
+                    fromBuff = result;
+                }
+
+                {
+                    // Third, let's do MultiMobs
+                    float result = 0f;
+                    //
+                    foreach (TargetGroup g in BossOpts.Targets) {
+                        if (g.NumTargs > 0 && g.Frequency != -1 && g.Chance > 0f && g.Duration > 0) { // Validate it first
+                            result += (g.Duration / 1000f) / (LatentGCD / GCDPerc) * (FightDuration / g.Frequency);
+                        }
+                    }
+                    //
+                    fromMultiTargs = result;
+                }
+
+                {
+                    // Fourth, let's do Blood n Thunder
+                    // But remember, we're already doing the Buff Maintenance and
+                    // MultiMobs, so we may not need to do this all that much
+                    // Oh, and we need the addMisses again, because we need to force it up
+                    float result = 0f;
+                    //
+                    GCDPerc = LatentGCD / (14f + CalcOpts.Latency + CalcOpts.AllowedReact); // 15-1=14
+                    result = Math.Max(0f, FightDuration / (LatentGCD / GCDPerc));
+                    addMisses = (MHAtkTable.Miss > 0) ? result * MHAtkTable.Miss : 0f;
+                    result += addMisses;
+                    //
+                    fromBnT = Math.Max(0f, result - (fromBuff + fromMultiTargs));
+                }
+
+                GCDPerc = LatentGCD / (Cd + CalcOpts.Latency + CalcOpts.AllowedReact);
+                return Math.Min(cap, fromBuff + fromMultiTargs + fromBnT) * (1f - Whiteattacks.RageSlip(LatentGCD / GCDPerc, RageCost));
             }
         }
     }
@@ -689,6 +765,7 @@ namespace Rawr.DPSWarr.Skills
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
             UseReact = true;
+            Targets = -1;
             //
             Initialize();
         }
@@ -714,6 +791,7 @@ namespace Rawr.DPSWarr.Skills
             ReqTalent = true;
             Talent2ChksValue = Talents.HeroicFury;
             Cd = 45f;
+            Targets = -1;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
             UseReact = true;
@@ -748,8 +826,8 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -(15f + (Talents.Blitz * 5f));
             Cd = (15f + Talents.Juggernaut * 5f) * (1f - (Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
             Duration = 1.5f;
-            if (Talents.Warbringer == 1)
-            {
+            Targets = -1;
+            if (Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
             } else if (Talents.Juggernaut == 1) {
                 StanceOkArms = true;
@@ -781,6 +859,7 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = 25f; // In Yards 
             Cd = 30f /*- (Talents.ImprovedIntercept * 5f)*/ - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
             RageCost = 10f;// -Talents.Precision * 1f;
+            Targets = -1;
             Duration = 3f;
             StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
             DamageBase = 380f;
@@ -809,6 +888,7 @@ namespace Rawr.DPSWarr.Skills
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
             Cd = 30f;// * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+            Targets = -1;
             RageCost = 10f;
             StanceOkDef = true; StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
             UseHitTable = false;

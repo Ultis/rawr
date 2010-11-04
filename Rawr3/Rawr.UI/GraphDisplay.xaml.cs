@@ -537,7 +537,7 @@ namespace Rawr.UI
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
                 ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
                 #endregion
-            } else if (subgraph == "Glyphs") {
+            } else if (subgraph == "Glyphs : All") {
                 #region
                 List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
                 Character newChar = Character.Clone();
@@ -546,24 +546,132 @@ namespace Rawr.UI
                 ComparisonCalculationBase compare;
                 List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
 
-                foreach (PropertyInfo pi in Character.CurrentTalents.GetType().GetProperties())
-                {
+                foreach (PropertyInfo pi in Character.CurrentTalents.GetType().GetProperties()) {
                     GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
                     bool orig;
-                    if (glyphDatas.Length > 0)
-                    {
+                    if (glyphDatas.Length > 0) {
                         GlyphDataAttribute glyphData = glyphDatas[0];
-                        if (relevant == null || relevant.Contains(glyphData.Name))
-                        {
+                        if (relevant == null || relevant.Contains(glyphData.Name)) {
                             orig = Character.CurrentTalents.GlyphData[glyphData.Index];
-                            if (orig)
-                            {
+                            if (orig) {
                                 newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
                                 newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                                 compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig, false);
+                            } else {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig, false);
                             }
-                            else
-                            {
+                            // JOTHAY: WTB Tooltips that show info on these charts
+                            compare.Description = glyphData.Description;
+                            compare.Item = null;
+                            glyphCalculations.Add(compare);
+                            newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
+                        }
+                    }
+                }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                #endregion
+            } else if (subgraph == "Glyphs : Prime") {
+                #region
+                List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
+                Character newChar = Character.Clone();
+                CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(Character, null, false, true, false);
+                CharacterCalculationsBase newCalc;
+                ComparisonCalculationBase compare;
+                List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
+
+                foreach (PropertyInfo pi in Character.CurrentTalents.GetType().GetProperties()) {
+                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    bool orig;
+                    if (glyphDatas.Length > 0) {
+                        GlyphDataAttribute glyphData = glyphDatas[0];
+                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Prime)) {
+                            orig = Character.CurrentTalents.GlyphData[glyphData.Index];
+                            if (orig) {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig, false);
+                            } else {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig, false);
+                            }
+                            // JOTHAY: WTB Tooltips that show info on these charts
+                            compare.Description = glyphData.Description;
+                            compare.Item = null;
+                            glyphCalculations.Add(compare);
+                            newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
+                        }
+                    }
+                }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                #endregion
+            } else if (subgraph == "Glyphs : Major") {
+                #region
+                List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
+                Character newChar = Character.Clone();
+                CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(Character, null, false, true, false);
+                CharacterCalculationsBase newCalc;
+                ComparisonCalculationBase compare;
+                List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
+
+                foreach (PropertyInfo pi in Character.CurrentTalents.GetType().GetProperties()) {
+                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    bool orig;
+                    if (glyphDatas.Length > 0) {
+                        GlyphDataAttribute glyphData = glyphDatas[0];
+                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Major)) {
+                            orig = Character.CurrentTalents.GlyphData[glyphData.Index];
+                            if (orig) {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig, false);
+                            } else {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig, false);
+                            }
+                            // JOTHAY: WTB Tooltips that show info on these charts
+                            compare.Description = glyphData.Description;
+                            compare.Item = null;
+                            glyphCalculations.Add(compare);
+                            newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
+                        }
+                    }
+                }
+                CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+                ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                #endregion
+            } else if (subgraph == "Glyphs : Minor") {
+                #region
+                List<ComparisonCalculationBase> glyphCalculations = new List<ComparisonCalculationBase>();
+                Character newChar = Character.Clone();
+                CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(Character, null, false, true, false);
+                CharacterCalculationsBase newCalc;
+                ComparisonCalculationBase compare;
+                List<string> relevant = Calculations.GetModel(Character.CurrentModel).GetRelevantGlyphs();
+
+                foreach (PropertyInfo pi in Character.CurrentTalents.GetType().GetProperties()) {
+                    GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    bool orig;
+                    if (glyphDatas.Length > 0) {
+                        GlyphDataAttribute glyphData = glyphDatas[0];
+                        if (relevant == null || (relevant.Contains(glyphData.Name) && glyphData.Type == GlyphType.Minor)) {
+                            orig = Character.CurrentTalents.GlyphData[glyphData.Index];
+                            if (orig) {
+                                newChar.CurrentTalents.GlyphData[glyphData.Index] = false;
+                                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                                compare = Calculations.GetCharacterComparisonCalculations(newCalc, currentCalc, glyphData.Name, orig, false);
+                            } else {
                                 newChar.CurrentTalents.GlyphData[glyphData.Index] = true;
                                 newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
                                 compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newCalc, glyphData.Name, orig, false);

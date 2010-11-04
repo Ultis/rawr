@@ -199,6 +199,7 @@ namespace Rawr {
         public bool NearBoss = false;
         #endregion
         #region Functions
+        public bool Validated { get { return Frequency != -1 && Duration > 0 && Chance > 0 && NumTargs > 1; } }
         public override string ToString()
         {
             if (Frequency <= 0) return "None";

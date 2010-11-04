@@ -145,7 +145,12 @@ namespace Rawr.DPSWarr {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs = 0.0f;
-                    if (CalcOpts.M_ColossusSmash) { arpenBuffs = 1.00f; }
+                    if (CalcOpts.M_ColossusSmash) {
+                        if      (Talents.SuddenDeath == 0) { arpenBuffs =  6f/20f; // 6 sec every 20 sec because we have nothing to make it go faster
+                        }else if(Talents.SuddenDeath == 1) { arpenBuffs = 12f/20f; // Doubling it because I don't have a solid calc here but want to show measure
+                        }else if(Talents.SuddenDeath == 2) { arpenBuffs =   1.00f; // 100% uptime, because we are now awesome
+                        }
+                    }
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
                         BossOpts.Armor,

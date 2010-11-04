@@ -39,7 +39,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Enchants", "Head", "Shoulders", "Back", "Chest", "Wrist", "Hands", "Legs", "Feet", "Finger 1", "Finger 2", "Main Hand", "Off Hand", "Ranged"));
             Items.Add(new ChartPickerItem("Gems", "All Normal", "Red", "Blue", "Yellow", "Meta"));
             Items.Add(new ChartPickerItem("Buffs", "All", "Food", "Elixirs and Flasks", "Scrolls", "Potion", "Raid Buffs", "Raid Debuffs", "Set Bonuses"));
-            Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Individual Talents (Full)", "Talent Specs", "Glyphs"));
+            Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Individual Talents (Full)", "Talent Specs", "Glyphs : All", "Glyphs : Prime", "Glyphs : Major", "Glyphs : Minor"));
             Items.Add(new ChartPickerItem("Equipped", "All", "Gear", "Enchants", "Buffs"));
             Items.Add(new ChartPickerItem("Available", "Gear", "Enchants"));
             Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Gear / Cost", "Enchants"));
@@ -50,9 +50,9 @@ namespace Rawr.UI
 
             this.DataContext = this;
 
-			_timer = new DispatcherTimer();
-			_timer.Interval = TimeSpan.FromMilliseconds(150);
-			_timer.Tick += new EventHandler(_timer_Tick);
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(150);
+            _timer.Tick += new EventHandler(_timer_Tick);
         }
 
         void Calculations_ModelChanged(object sender, EventArgs e)
@@ -77,30 +77,30 @@ namespace Rawr.UI
         {
             ChartPickerItem mousedOverItem = ((FrameworkElement)sender).DataContext as ChartPickerItem;
             _timer.Stop();
-			_lastMousedOverItem = mousedOverItem;
-			_timer.Start();
-		}
+            _lastMousedOverItem = mousedOverItem;
+            _timer.Start();
+        }
 
-		private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-		{
-			ChartPickerItem mousedOverItem = ((FrameworkElement)sender).DataContext as ChartPickerItem;
-			if (_lastMousedOverItem == mousedOverItem)
-			{
-				_lastMousedOverItem = null;
-				_timer.Stop();
-			}
-		}
+        private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ChartPickerItem mousedOverItem = ((FrameworkElement)sender).DataContext as ChartPickerItem;
+            if (_lastMousedOverItem == mousedOverItem)
+            {
+                _lastMousedOverItem = null;
+                _timer.Stop();
+            }
+        }
 
-		private DispatcherTimer _timer;
-		private ChartPickerItem _lastMousedOverItem;
-		private void _timer_Tick(object sender, EventArgs e)
-		{
-			_timer.Stop();
-			if (_lastMousedOverItem == null) return;
+        private DispatcherTimer _timer;
+        private ChartPickerItem _lastMousedOverItem;
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            _timer.Stop();
+            if (_lastMousedOverItem == null) return;
 
-			PrimaryItem = _lastMousedOverItem;
-			ListBoxSecondary.SelectedItem = PrimaryItem.SelectedItem;
-		}
+            PrimaryItem = _lastMousedOverItem;
+            ListBoxSecondary.SelectedItem = PrimaryItem.SelectedItem;
+        }
 
         private void Grid_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

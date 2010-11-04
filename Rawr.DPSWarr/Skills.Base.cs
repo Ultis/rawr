@@ -411,17 +411,17 @@ namespace Rawr.DPSWarr.Skills
         public float AvgTargets {
             get {
                 //float extraTargetsHit = Math.Min(CalcOpts.MultipleTargetsMax, TARGETS) - 1f;
-                if (_AvgTargets == -1f)
+                if (_AvgTargets == -1f && Targets != -1)
                 {
                     //_AvgTargets = 1f + (BossOpts.MultiTargs ? StatS.BonusTargets + (float)BossOpts.MultiTargsPerc * (Math.Min((float)BossOpts.MaxNumTargets, Targets) - 1f) : 0f);
                     if (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0)
                     {
                         float value = 0;
-                        foreach (TargetGroup tg in BossOpts.Targets)
-                        {
+                        foreach (TargetGroup tg in BossOpts.Targets) {
                             if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
-                            float upTime = (tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance) / BossOpts.BerserkTimer;
-                            value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + StatS.BonusTargets)) * upTime;
+                            //float upTime = (tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance)/* / BossOpts.BerserkTimer*/;
+                            float upTime = (tg.Duration / 1000f) / tg.Frequency;//(tg.Frequency / BossOpts.BerserkTimer *  * tg.Chance)/* / BossOpts.BerserkTimer*/;
+                            value += (Math.Min(10 - (tg.NearBoss ? 1 : 0), Math.Min(Targets - (tg.NearBoss ? 1 : 0), tg.NumTargs - (tg.NearBoss ? 1 : 0))) + StatS.BonusTargets) * upTime;
                         }
                         _AvgTargets = 1f + value;
                     } else { _AvgTargets = 1f; }

@@ -43,14 +43,14 @@ namespace Rawr.DPSWarr.Skills
     public class WhirlWind : Ability
     {
         public static new string SName { get { return "Whirlwind"; } }
-        public static new string SDesc { get { return "In a whirlwind of steel you attack up to 4 enemies in 8 yards, causing weapon damage from both melee weapons to each enemy."; } }
+        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing 46% weapon damage from both melee weapons to each enemy."; } }
         public static new string SIcon { get { return "ability_whirlwind"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// In a whirlwind of steel you attack up to 4 enemies in 8 yards,
-        /// causing weapon damage from both melee weapons to each enemy.
+        /// In a whirlwind of steel you attack all enemies within 8 yards,
+        /// causing 46% weapon damage from both melee weapons to each enemy.
         /// <para>Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
         /// <para>Sets: none</para>
@@ -64,10 +64,10 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             MaxRange = 8f; // In Yards
-            Targets += (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ? 3f : 0f);
+            Targets = /*(BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ?*/ 10f /*: 0f)*/;
             Cd = 10f; // In Seconds
             RageCost = 25f;
-            //DamageBonus = (1f + Talents.ImprovedWhirlwind * 0.10f) * (1f + Talents.UnendingFury * 0.02f);
+            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * 0.46f;
             //
             Initialize();
         }
@@ -380,11 +380,11 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Miss   // no damage when being missed
                     - MHAtkTable.Dodge  // no damage when being dodged
                     - MHAtkTable.Parry  // no damage when being parried
-                    - MHAtkTable.Glance // glancing handled below
+                    //- MHAtkTable.Glance // glancing handled below
                     - MHAtkTable.Block  // blocked handled below
                     - (MHAtkTable.Crit/* + bonusForcedCritsPerc*/)); // crits   handled below
 
-                float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                //float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
                 float dmgCrit = dmg * (MHAtkTable.Crit/* + bonusForcedCritsPerc*/) * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus   Damage when critting
 
@@ -419,7 +419,7 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds
             RageCost = 30f;
-            Targets += (BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ? 1f + (Talents.GlyphOfCleaving ? 1f : 0f) : 0f);
+            Targets = /*(BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ?*/ 2f + (Talents.GlyphOfCleaving ? 1f : 0f)/* : 0f)*/;
             DamageBase = 6f + StatS.AttackPower * 0.45f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             //
