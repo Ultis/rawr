@@ -113,7 +113,7 @@ namespace Rawr.ProtWarr
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Base Stats:Health",
+                    "Base Stats:Health",
                     "Base Stats:Strength",
                     "Base Stats:Agility",
                     "Base Stats:Stamina",
@@ -128,43 +128,43 @@ namespace Rawr.ProtWarr
                     "Defensive Stats:Resilience",
                     "Defensive Stats:Chance to be Crit",
                     "Defensive Stats:Guaranteed Reduction",
-					"Defensive Stats:Avoidance",
-					"Defensive Stats:Total Mitigation",
+                    "Defensive Stats:Avoidance",
+                    "Defensive Stats:Total Mitigation",
                     "Defensive Stats:Attacker Speed",
-					"Defensive Stats:Damage Taken",
+                    "Defensive Stats:Damage Taken",
 
                     "Offensive Stats:Weapon Speed",
                     "Offensive Stats:Attack Power",
                     "Offensive Stats:Hit",
-					"Offensive Stats:Haste",
-					"Offensive Stats:Armor Penetration",
-					"Offensive Stats:Crit",
+                    "Offensive Stats:Haste",
+                    "Offensive Stats:Armor Penetration",
+                    "Offensive Stats:Crit",
                     "Offensive Stats:Expertise",
                     // Never really used in current WoW itemization, just taking up space
-					//"Offensive Stats:Weapon Damage",
+                    //"Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
                     "Offensive Stats:Total Damage/sec",
                     "Offensive Stats:Total Threat/sec",
                     "Offensive Stats:Rotation",
 
                     "Resistances:Nature Resist",
-					"Resistances:Fire Resist",
-					"Resistances:Frost Resist",
-					"Resistances:Shadow Resist",
-					"Resistances:Arcane Resist",
+                    "Resistances:Fire Resist",
+                    "Resistances:Frost Resist",
+                    "Resistances:Shadow Resist",
+                    "Resistances:Arcane Resist",
                     "Complex Stats:Ranking Mode*The currently selected ranking mode. Ranking modes can be changed in the Options tab.",
-					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+                    @"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
 Survival Points individually may be important.",
-					@"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
+                    @"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
 on average, through armor mitigation and avoidance. It is directly 
 relational to your Damage Taken. Ideally, you want to maximize 
 Mitigation Points, while maintaining 'enough' Survival Points 
 (see Survival Points). If you find yourself dying due to healers 
 running OOM, or being too busy healing you and letting other 
 raid members die, then focus on Mitigation Points.",
-					@"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
+                    @"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
 (pre-avoidance/block) you can take before dying. Unlike 
 Mitigation Points, you should not attempt to maximize this, 
 but rather get 'enough' of it, and then focus on Mitigation. 
@@ -178,7 +178,7 @@ threat and limited threat scaled by the threat scale.",
                     "Complex Stats:Frost Survival",
                     "Complex Stats:Shadow Survival",
                     "Complex Stats:Arcane Survival",
-					};
+                    };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -190,9 +190,9 @@ threat and limited threat scaled by the threat scale.",
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "% Total Mitigation",
-					"% Guaranteed Reduction",
+                    "% Guaranteed Reduction",
                     "% Chance to be Crit",
                     "% Avoidance",
                     "% Avoidance+Block",
@@ -208,7 +208,7 @@ threat and limited threat scaled by the threat scale.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -224,9 +224,9 @@ threat and limited threat scaled by the threat scale.",
                     "Ability Threat",
                     //"Rotation Damage",
                     //"Rotation Threat",
-					"Combat Table",
-					"Item Budget",
-					};
+                    "Combat Table",
+                    "Item Budget",
+                    };
                 return _customChartNames;
             }
         }
@@ -273,8 +273,8 @@ threat and limited threat scaled by the threat scale.",
                 if (_relevantItemTypes == null)
                 {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
-						ItemType.None,
+                    {
+                        ItemType.None,
                         ItemType.Plate,
                         ItemType.Bow,
                         ItemType.Crossbow,
@@ -288,7 +288,7 @@ threat and limited threat scaled by the threat scale.",
                         ItemType.OneHandMace,
                         ItemType.OneHandSword,
                         ItemType.Shield
-					});
+                    });
                 }
                 return _relevantItemTypes;
             }
@@ -945,56 +945,56 @@ threat and limited threat scaled by the threat scale.",
 
                     return new ComparisonCalculationBase[] { 
                         comparisonStr,
-						comparisonAgi,
-						comparisonAC,
-						comparisonSta,
-						comparisonDef,
-						new ComparisonCalculationProtWarr() { Name = "10 Dodge Rating",
+                        comparisonAgi,
+                        comparisonAC,
+                        comparisonSta,
+                        comparisonDef,
+                        new ComparisonCalculationProtWarr() { Name = "10 Dodge Rating",
                             OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcDodgeValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Parry Rating",
                             OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Block Rating",
                             OverallPoints = (calcBlockValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcBlockValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcBlockValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Haste Rating",
                             OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHasteValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Expertise Rating",
                             OverallPoints = (calcExpertiseValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcExpertiseValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcExpertiseValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Hit Rating",
                             OverallPoints = (calcHitValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "30.76 Block Value",
                             OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcBlockValueValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-						new ComparisonCalculationProtWarr() { Name = "150 Health",
+                        new ComparisonCalculationProtWarr() { Name = "150 Health",
                             OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHealthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-						new ComparisonCalculationProtWarr() { Name = "10 Resilience",
+                        new ComparisonCalculationProtWarr() { Name = "10 Resilience",
                             OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
-							MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-					};
+                    };
                 #endregion
                 default:
                     return new ComparisonCalculationBase[0];
@@ -1068,6 +1068,7 @@ threat and limited threat scaled by the threat scale.",
                 BattlemasterHealth = stats.BattlemasterHealth,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
                 PhysicalDamageTakenMultiplier = stats.PhysicalDamageTakenMultiplier,
                 Miss = stats.Miss,
                 ArcaneResistance = stats.ArcaneResistance,
@@ -1137,7 +1138,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusArmor + stats.BonusArmorMultiplier + 
                     stats.BonusStaminaMultiplier + stats.DefenseRating + stats.Dodge + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BonusHealthMultiplier +
-                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.Miss +
+                    stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.BossPhysicalDamageDealtMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +

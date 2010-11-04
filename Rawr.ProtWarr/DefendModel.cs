@@ -35,10 +35,10 @@ namespace Rawr.ProtWarr
             float baseAttack            = Options.BossAttackValue * guaranteedReduction;
             float absorbed              = Stats.DamageAbsorbed;
 
-            DamagePerHit = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
-            DamagePerCrit = baseAttack * 2.0f * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
-            DamagePerBlock = Math.Max(0.0f, baseAttack - Stats.BlockValue) * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
-            DamagePerCritBlock = Math.Max(0.0f, baseAttack - (Stats.BlockValue * 2.0f)) * (1.0f + Stats.PhysicalDamageTakenMultiplier) - absorbed;
+            DamagePerHit = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
+            DamagePerCrit = baseAttack * 2.0f * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
+            DamagePerBlock = Math.Max(0.0f, baseAttack - Stats.BlockValue) * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
+            DamagePerCritBlock = Math.Max(0.0f, baseAttack - (Stats.BlockValue * 2.0f)) * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
 
 #if !RAWR4
             AverageDamagePerHit =

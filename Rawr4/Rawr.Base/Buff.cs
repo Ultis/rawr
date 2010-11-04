@@ -1006,7 +1006,7 @@ namespace Rawr
                 Name = "Demoralizing Shout",
                 Group = "Target Physical Damage Reduction",
                 Source = "Warrior",
-                Stats = { PhysicalDamageTakenMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1014,7 +1014,7 @@ namespace Rawr
                 Name = "Demoralizing Roar",
                 Group = "Target Physical Damage Reduction",
                 Source = "Bear Druid OR Hunter w/ Bear",
-                Stats = { PhysicalDamageTakenMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1022,7 +1022,7 @@ namespace Rawr
                 Name = "Vindication",
                 Group = "Target Physical Damage Reduction",
                 Source = "Protection Paladin",
-                Stats = { PhysicalDamageTakenMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1030,7 +1030,7 @@ namespace Rawr
                 Name = "Curse of Weakness",
                 Group = "Target Physical Damage Reduction",
                 Source = "Warlock",
-                Stats = { PhysicalDamageTakenMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
                 IsTargetDebuff = true,
             });
             defaultBuffs.Add(new Buff()
@@ -1038,7 +1038,7 @@ namespace Rawr
                 Name = "Scarlet Fever",
                 Group = "Target Physical Damage Reduction",
                 Source = "Blood Death Knight",
-                Stats = { PhysicalDamageTakenMultiplier = -0.1f },
+                Stats = { BossPhysicalDamageDealtMultiplier = -0.1f },
                 IsTargetDebuff = true,
             });
             #endregion

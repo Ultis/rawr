@@ -83,7 +83,7 @@ namespace Rawr.ProtPaladin
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
             PaladinTalents talents = character.PaladinTalents;
 
-            float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier);
+            float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
             //Talents
             if (talents.GlyphOfDivinePlea) { damageTaken *= (1f - 0.03f); }
             			

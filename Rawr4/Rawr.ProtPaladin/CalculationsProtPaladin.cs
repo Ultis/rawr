@@ -1249,6 +1249,7 @@ focus on Survival Points.",
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
+                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
 
                 BonusShieldOfRighteousnessDamage = stats.BonusShieldOfRighteousnessDamage,
                 HolyShieldBlockValue = stats.HolyShieldBlockValue,
@@ -1349,6 +1350,7 @@ focus on Survival Points.",
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusHolyDamageMultiplier +
                 stats.DamageTakenMultiplier +
+                stats.BossPhysicalDamageDealtMultiplier +
 
                 // Resistances
                 stats.ArcaneResistance + 

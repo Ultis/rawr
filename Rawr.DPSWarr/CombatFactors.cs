@@ -312,17 +312,10 @@ namespace Rawr.DPSWarr {
         #region Block
         // DPSWarr Dev Team has decided to remove Block from the Attack Table
         // until evidence can show specific bosses that do block
-        private float BlockChanceCap { get { return 0f/*StatConversion.WHITE_BLOCK_CHANCE_CAP[CalcOpts.TargetLevel - Char.Level]*/; } }
-        private float MhBlockChance {
-            get {
-                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
-            }
-        }
-        private float OhBlockChance {
-            get {
-                return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee/* / 100f*/) : BlockChanceCap);
-            }
-        }
+        // Congrats, on 2010.10.30, Jothay found evidence that bosses block now!
+        private float BlockChanceCap { get { return StatConversion.WHITE_BLOCK_CHANCE_CAP[levelDif]; } }
+        private float MhBlockChance { get { return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee) : BlockChanceCap); } }
+        private float OhBlockChance { get { return Math.Max(0f, BossOpts.InBack ? BlockChanceCap * (1f - (float)BossOpts.InBackPerc_Melee) : BlockChanceCap); } }
         #endregion
         #region Crit
         private float MhWhCritChance {

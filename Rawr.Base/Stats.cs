@@ -466,6 +466,7 @@ namespace Rawr {
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
+        BossPhysicalDamageDealtMultiplier,
         #endregion
     }
 
@@ -3500,6 +3501,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BossAttackSpeedMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Boss Physical Damage Dealt")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BossPhysicalDamageDealtMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BossPhysicalDamageDealtMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BossPhysicalDamageDealtMultiplier] = value; }
         }
 
         [Percentage]

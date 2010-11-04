@@ -4,8 +4,8 @@ using System.IO;
 
 namespace Rawr
 {
-	public class AltoholicImporter
-	{
+    public class AltoholicImporter
+    {
 
         public const string cxHead      = "1";
         public const string cxNeck      = "2";
@@ -29,38 +29,38 @@ namespace Rawr
 
         public AltoholicSavedVariables SavedVariables;
 
-		public AltoholicImporter(AltoholicSavedVariables Variables)
-		{
-			SavedVariables = Variables;
-		}
+        public AltoholicImporter(AltoholicSavedVariables Variables)
+        {
+            SavedVariables = Variables;
+        }
 
-		public AltoholicImporter(SavedVariablesDictionary SVCharacters,
-								 SavedVariablesDictionary SVSkills,
-								 SavedVariablesDictionary SVTalents,
-								 SavedVariablesDictionary SVInventory,
-								 SavedVariablesDictionary SVStats)
-		{
-			SavedVariables = new AltoholicSavedVariables(SVCharacters,
-														 SVSkills,
-														 SVTalents,
-														 SVInventory,
-														 SVStats);
-		}
+        public AltoholicImporter(SavedVariablesDictionary SVCharacters,
+                                 SavedVariablesDictionary SVSkills,
+                                 SavedVariablesDictionary SVTalents,
+                                 SavedVariablesDictionary SVInventory,
+                                 SavedVariablesDictionary SVStats)
+        {
+            SavedVariables = new AltoholicSavedVariables(SVCharacters,
+                                                         SVSkills,
+                                                         SVTalents,
+                                                         SVInventory,
+                                                         SVStats);
+        }
 
-		public List<String> GetCaracterList()
-		{
-			List<string> result = new List<string>();
+        public List<String> GetCaracterList()
+        {
+            List<string> result = new List<string>();
 
-			if (SavedVariables != null)
-			{
-				SavedVariablesDictionary Chars = (SavedVariablesDictionary)((SavedVariablesDictionary)SavedVariables.Characters["global"])["Characters"];
-				foreach (string Char in Chars.Values)
-				{
-					result.Add(Char);
-				}
-			}
-			return result;
-		}
+            if (SavedVariables != null)
+            {
+                SavedVariablesDictionary Chars = (SavedVariablesDictionary)((SavedVariablesDictionary)SavedVariables.Characters["global"])["Characters"];
+                foreach (string Char in Chars.Values)
+                {
+                    result.Add(Char);
+                }
+            }
+            return result;
+        }
 
         public void addItemToCharacter(KeyValuePair<IComparable, object> item, Character oCharacter)
         {
@@ -129,25 +129,25 @@ namespace Rawr
         }
 
 
-		public Character GetCharacter(string cCharacterString)
-		{
-			Character result = new Character();
+        public Character GetCharacter(string cCharacterString)
+        {
+            Character result = new Character();
 
-			char[] acSplitCharacters = { '.' };
-			string[] asCharInfo = cCharacterString.Split(acSplitCharacters);
+            char[] acSplitCharacters = { '.' };
+            string[] asCharInfo = cCharacterString.Split(acSplitCharacters);
 
-			result.Realm = asCharInfo[asCharInfo.Length - 2];
+            result.Realm = asCharInfo[asCharInfo.Length - 2];
 
-			//Pull base stats Gender, Class, Level ets out of Character File
-			SavedVariablesDictionary CharBase = (SavedVariablesDictionary)(
-													(SavedVariablesDictionary)(
-														(SavedVariablesDictionary)SavedVariables.Characters["global"])
-													["Characters"])
-												[cCharacterString];
-			//result.Level = (int)CharBase["level"]; // Level not setable
-			result.Name = CharBase["name"] as string;
-			result.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), CharBase["englishClass"] as string, true);
-			result.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), CharBase["englishRace"] as string, true); //This sets faction
+            //Pull base stats Gender, Class, Level ets out of Character File
+            SavedVariablesDictionary CharBase = (SavedVariablesDictionary)(
+                                                    (SavedVariablesDictionary)(
+                                                        (SavedVariablesDictionary)SavedVariables.Characters["global"])
+                                                    ["Characters"])
+                                                [cCharacterString];
+            //result.Level = (int)CharBase["level"]; // Level not setable
+            result.Name = CharBase["name"] as string;
+            result.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), CharBase["englishClass"] as string, true);
+            result.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), CharBase["englishRace"] as string, true); //This sets faction
 
             //Pull Equipped Invenotry out of Character File
             SavedVariablesDictionary Equiped = (SavedVariablesDictionary)(
@@ -163,36 +163,36 @@ namespace Rawr
             }
 
             return result;
-		}
-		
+        }
+        
 
-		/*
-		 * SavedVariable Container for Easy Use
-		 */ 
-		public class AltoholicSavedVariables
-		{
-			public SavedVariablesDictionary Characters;
-			public SavedVariablesDictionary Skills;
-			public SavedVariablesDictionary Talents;
-			public SavedVariablesDictionary Inventory;
-			public SavedVariablesDictionary Stats;
+        /*
+         * SavedVariable Container for Easy Use
+         */ 
+        public class AltoholicSavedVariables
+        {
+            public SavedVariablesDictionary Characters;
+            public SavedVariablesDictionary Skills;
+            public SavedVariablesDictionary Talents;
+            public SavedVariablesDictionary Inventory;
+            public SavedVariablesDictionary Stats;
 
-			public  AltoholicSavedVariables(SavedVariablesDictionary SVCharacters,
-											SavedVariablesDictionary SVSkills,
-											SavedVariablesDictionary SVTalents,
-											SavedVariablesDictionary SVInventory,
-											SavedVariablesDictionary SVStats)
-			{
-				
-				Characters = SVCharacters;
-				Skills = SVSkills;
-				Talents = SVTalents;
-				Inventory = SVInventory;
-				Stats = SVStats;
-			}
-			
-		}
+            public  AltoholicSavedVariables(SavedVariablesDictionary SVCharacters,
+                                            SavedVariablesDictionary SVSkills,
+                                            SavedVariablesDictionary SVTalents,
+                                            SavedVariablesDictionary SVInventory,
+                                            SavedVariablesDictionary SVStats)
+            {
+                
+                Characters = SVCharacters;
+                Skills = SVSkills;
+                Talents = SVTalents;
+                Inventory = SVInventory;
+                Stats = SVStats;
+            }
+            
+        }
 
-	}
+    }
 
 }

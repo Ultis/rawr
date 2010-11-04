@@ -583,6 +583,7 @@ These numbers to do not include racial bonuses.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusCritChance = stats.BonusCritChance,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
@@ -672,6 +673,7 @@ These numbers to do not include racial bonuses.",
                 stats.BonusDamageMultiplier +
                 stats.DamageTakenMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
+                stats.BossPhysicalDamageDealtMultiplier +
                 stats.BonusCritMultiplier +
                 stats.BonusCritChance +
                 // Set Bonuses
@@ -1314,8 +1316,8 @@ These numbers to do not include racial bonuses.",
                 }
 
                 float Health2Surv  = (stats.Health) / 100f; 
-                      Health2Surv += (stats.HealthRestore) / 1000f; 
-                float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * 100f;
+                      Health2Surv += (stats.HealthRestore) / 1000f;
+                float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
                 calculatedStats.TotalHPS = Rot._HPS_TTL;
@@ -1444,7 +1446,7 @@ These numbers to do not include racial bonuses.",
                 // Commanding Shout
                 Stamina = (dpswarchar.calcOpts.M_CommandingShout ? 585f : 0f),
                 // Demo Shout
-                PhysicalDamageTakenMultiplier = (dpswarchar.calcOpts.M_DemoralizingShout ? -0.10f : 0f),
+                BossPhysicalDamageDealtMultiplier = (dpswarchar.calcOpts.M_DemoralizingShout ? -0.10f : 0f),
                 // Sunder Armor
                 ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 3f : 0f),
                 // Thunder Clap
