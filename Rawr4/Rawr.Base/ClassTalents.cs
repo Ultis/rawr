@@ -293,8 +293,8 @@ public int Juggernaut { get { return _data[15]; } set { _data[15] = value; } }
 /// </summary>
 [TalentData(index: 16, name: "Sudden Death", maxPoints: 2, icon: "ability_warrior_improveddisciplines",
 tree: 0, column: 4, row: 5, prerequisite: -1, description: new[] {
-@"Your melee hits have a 5% chance of resetting the cooldown on your Colossus Smash, and you keep 5 rage after using Execute.",
-@"Your melee hits have a 10% chance of resetting the cooldown on your Colossus Smash, and you keep 10 rage after using Execute.",})]
+@"Your melee hits have a 3% chance of resetting the cooldown on your Colossus Smash, and you keep 5 rage after using Execute.",
+@"Your melee hits have a 6% chance of resetting the cooldown on your Colossus Smash, and you keep 10 rage after using Execute.",})]
 public int SuddenDeath { get { return _data[16]; } set { _data[16] = value; } }
 #endregion
 #region Tier 6
