@@ -107,7 +107,18 @@
       <Link>SpellPriorityForm.xaml.cs</Link>
       <DependentUpon>SpellPriorityForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="4CalculationsShadowPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spells\DevouringPlauge.cs" />
+    <Compile Include="Spells\ISpellArgs.cs" />
+    <Compile Include="Spells\MindBlast.cs" />
+    <Compile Include="Spells\MindFlay.cs" />
+    <Compile Include="Spells\MindSear.cs" />
+    <Compile Include="Spells\MindSpike.cs" />
+    <Compile Include="Spells\ShadowFiend.cs" />
+    <Compile Include="Spells\ShadowWordDeath.cs" />
+    <Compile Include="Spells\ShadowWordPain.cs" />
+    <Compile Include="Spells\Spell.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
