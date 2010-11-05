@@ -64,10 +64,10 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             MaxRange = 8f; // In Yards
-            Targets = /*(BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ?*/ 10f /*: 0f)*/;
+            Targets = 10f;
             Cd = 10f; // In Seconds
             RageCost = 25f;
-            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * 0.46f;
+            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * 0.65f;
             //
             Initialize();
         }
@@ -327,13 +327,13 @@ namespace Rawr.DPSWarr.Skills
     public class HeroicStrike : Ability
     {
         public static new string SName { get { return "Heroic Strike"; } }
-        public static new string SDesc { get { return "A strong attack that increases melee damage by 495 and causes a high amount of threat. Causes 173.25 additional damage against Dazed targets."; } }
+        public static new string SDesc { get { return "An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage."; } }
         public static new string SIcon { get { return "ability_rogue_ambush"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// An attack that instantly deals (8+AP*0.6) physical damage. A good attack for moments of excess rage.
+        /// An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage.
         /// <para>Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
         /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
         /// <para>Sets: none</para>
@@ -347,7 +347,7 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds
             RageCost = 30f;
-            DamageBase = 8f + StatS.AttackPower * 0.6f;
+            DamageBase = 8f + StatS.AttackPower * 0.75f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             //
@@ -399,7 +399,7 @@ namespace Rawr.DPSWarr.Skills
     public class Cleave : Ability
     {
         public static new string SName { get { return "Cleave"; } }
-        public static new string SDesc { get { return "A sweeping attack that does your weapon damage plus 222 to the target and his nearest ally."; } }
+        public static new string SDesc { get { return "A sweeping attack that strikes the target and a nearby ally, dealing (6 + AP * 0.562) physical damage."; } }
         public static new string SIcon { get { return "ability_warrior_cleave"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -419,8 +419,8 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds
             RageCost = 30f;
-            Targets = /*(BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0 ?*/ 2f + (Talents.GlyphOfCleaving ? 1f : 0f)/* : 0f)*/;
-            DamageBase = 6f + StatS.AttackPower * 0.45f;
+            Targets = 2f + (Talents.GlyphOfCleaving ? 1f : 0f);
+            DamageBase = 6f + StatS.AttackPower * 0.562f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             //
             Initialize();

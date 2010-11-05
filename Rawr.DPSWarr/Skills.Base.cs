@@ -1,4 +1,4 @@
-﻿/**********
+/**********
  * Owner: Shared
  **********/
 using System;
@@ -233,10 +233,10 @@ namespace Rawr.DPSWarr.Skills
         public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
         public float whiteRageGenOverDurNoHS { get { return MHRageGenOverDurNoHS + OHRageGenOverDur; } }
 
-        private const float c_const = 0.016545334215751158173395102581072f; //7.5f / 453.3f;
+        private const float c_const1 = 0.016545334215751158173395102581072f; // 7.5f / 453.3f;
         private const float c_const2 = 0.033090668431502316346790205162144f; // 2*c_const
         private const float c_const3 = 0.049636002647253474520185307743216f; // 3*c_const
-        private float RageFormula(float d, float fs) { return ((fs > c_const3 * d) ? (c_const2 * d) : (c_const * d + fs) / 2.0f); }
+        private float RageFormula(float d, float fs) { return ((fs > c_const3 * d) ? (c_const2 * d) : (c_const1 * d + fs) / 2.0f); }
         // Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
         public float LandedAtksOverDurMH { get { return MhActivates * MHAtkTable.AnyLand; } }
@@ -247,7 +247,7 @@ namespace Rawr.DPSWarr.Skills
         // Other
         public float RageSlip(float abilInterval, float rageCost) {
             if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
-            return ((MHAtkTable.AnyNotLand) * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
+            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);
@@ -754,19 +754,4 @@ namespace Rawr.DPSWarr.Skills
     }
     #endregion
 
-    #region Unused
-    public class HeroicThrow : Ability
-    {
-        /// <summary>
-        /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
-        /// Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability
-        /// causes high threat.
-        /// <para>Talents: </para>
-        /// <para>Glyphs: </para>
-        /// </summary>
-        public static new string SName { get { return "Heroic Throw"; } }
-        public static new string SDesc { get { return "Throws your weapon at the enemy causing 1595 dmg (based upon attack power). This ability causes high threat."; } }
-        public static new string SIcon { get { return "inv_axe_66"; } }
-    }
-    #endregion
 }

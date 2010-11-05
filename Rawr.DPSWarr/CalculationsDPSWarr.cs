@@ -1417,6 +1417,11 @@ These numbers to do not include racial bonuses.",
         };
 
         private static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
+        /*private static SpecialEffect[] _SE_ColossusSmash_Outer = {
+            null,//new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 20, 0f * 0.03f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
+        };*/
         #endregion
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
@@ -1873,13 +1878,17 @@ These numbers to do not include racial bonuses.",
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
 
                 float MSCritChance = 0f, MSActs = 0f;
-                foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.MHAtkTable.Crit; break; } }
-                triggerIntervals[Trigger.MortalStrikeCrit] = MSActs / fightDuration; // need to verify this worked
+                Rotation.AbilWrapper ms = charStruct.Rot.GetWrapper<Skills.MortalStrike>();
+                MSActs = ms.allNumActivates; MSCritChance = ms.ability.MHAtkTable.Crit;
+                //foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.MHAtkTable.Crit; break; } }
+                triggerIntervals[Trigger.MortalStrikeCrit] = fightDuration / MSActs; // need to verify this worked
                 triggerChances[Trigger.MortalStrikeCrit] = MSCritChance;
 
                 float CSLandChance = 0f, CSActs = 0f;
-                foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.ColossusSmash) { CSActs = aw.allNumActivates; CSLandChance = aw.ability.MHAtkTable.AnyLand; break; } }
-                triggerIntervals[Trigger.ColossusSmashHit] = CSActs / fightDuration;
+                Rotation.AbilWrapper cs = charStruct.Rot.GetWrapper<Skills.ColossusSmash>();
+                CSActs = cs.allNumActivates; CSLandChance = cs.ability.MHAtkTable.AnyLand;
+                //foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.ColossusSmash) { CSActs = aw.allNumActivates; CSLandChance = aw.ability.MHAtkTable.AnyLand; break; } }
+                triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / CSActs;
                 triggerChances[Trigger.ColossusSmashHit] = CSLandChance;
                 
                 addInfo += "\r\nFinished";

@@ -91,7 +91,8 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             Cd = 30f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
-            RageCost = 0f - (Talents.GlyphOfBerserkerRage ? 5f : 0f); // This is actually reversed in the rotation
+            Duration = 10f;
+            RageCost = 0f - (Talents.GlyphOfBerserkerRage ? 5f : 0f); // This is reversed in the rotation
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
@@ -192,15 +193,15 @@ namespace Rawr.DPSWarr.Skills
     public class BattleShout : BuffEffect
     {
         public static new string SName { get { return "Battle Shout"; } }
-        public static new string SDesc { get { return "The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min."; } }
+        public static new string SDesc { get { return "The warrior shouts, increasing the Strength and Agility of all raid and party members within 30 yards by 549. Lasts 2 min."; } }
         public static new string SIcon { get { return "ability_warrior_battleshout"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
         /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
-        /// <para>Talents: Booming Voice [+(25*Pts)% AoE and Duration], Commanding Presence [+(5*Pts)% to the AP Bonus]</para>
-        /// <para>Glyphs: Glyph of Battle [+1 min duration]</para>
+        /// <para>Talents: Booming Voice [-15*Pts Cd, +5*Pts Rage Gen]</para>
+        /// <para>Glyphs: Glyph of Battle [+1*Pts min duration, +(25*Pts)% AoE]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public BattleShout(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -211,7 +212,7 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = 30f; // In Yards 
             Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
-            Cd = Duration;
+            Cd = 60f - Talents.BoomingVoice * 15f;
             Targets = -1;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
@@ -231,13 +232,13 @@ namespace Rawr.DPSWarr.Skills
     public class CommandingShout : BuffEffect
     {
         public static new string SName { get { return "Commanding Shout"; } }
-        public static new string SDesc { get { return "The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min."; } }
+        public static new string SDesc { get { return "Increases Stamina of all party and raid members within 30 yards by 584 and gaining 20 rage. Lasts 2 min."; } }
         public static new string SIcon { get { return "ability_warrior_rallyingcry"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// The warrior shouts, increasing the maximum health of all raid and party members within 20 yards by 2255. Lasts 2 min.
+        /// Increases Stamina of all party and raid members within 30 yards by 584 and gaining 20 rage. Lasts 2 min.
         /// <para>Talents: Booming Voice [+(25*Pts)% AoE and Duration], Commanding Presence [+(5*Pts)% to the Health Bonus]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
@@ -250,7 +251,7 @@ namespace Rawr.DPSWarr.Skills
             MaxRange = 30f * (1f + (Talents.GlyphOfCommand ? 0.50f : 0f)); // In Yards 
             Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
-            Cd = Duration;
+            Cd = 60f - Talents.BoomingVoice * 15f;
             Targets = -1;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             UseHitTable = false;
@@ -640,13 +641,13 @@ namespace Rawr.DPSWarr.Skills
     public class DemoralizingShout : BuffEffect
     {
         public static new string SName { get { return "Demoralizing Shout"; } }
-        public static new string SDesc { get { return "Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec."; } }
+        public static new string SDesc { get { return "Reduces the physical damage caused by all enemies within 10 yards by 10% for 30 sec."; } }
         public static new string SIcon { get { return "ability_warrior_warcry"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Reduces the melee attack power of all enemies within 10 yards by 411 for 30 sec.
+        /// Reduces the physical damage caused by all enemies within 10 yards by 10% for 30 sec.
         /// <para>Talents: Drums of War [-50% Rage Cost/Pt]</para>
         /// <para>Glyphs: Demo Shout [+15s Dur, +50% AoE]</para>
         /// <para>Sets: none</para>
@@ -805,15 +806,15 @@ namespace Rawr.DPSWarr.Skills
     public class Charge : Ability
     {
         public static new string SName { get { return "Charge"; } }
-        public static new string SDesc { get { return "Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat."; } }
+        public static new string SDesc { get { return "Charge an enemy, generate 15 rage, and stun it for 1 sec. Cannot be used in combat."; } }
         public static new string SIcon { get { return "ability_warrior_charge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
         /// Instant, 15 sec cd, 0 Rage, 8-25 yds, (Battle)
-        /// Charge an enemy, generate 15 rage, and stun it for 1.50 sec. Cannot be used in combat.
-        /// <para>Talents: Warbringer [Usable in combat and any stance], Juggernaut [Usable in combat], Improved Charge [+(5*Pts) RageGen]</para>
+        /// Charge an enemy, generate 15 rage, and stun it for 1 sec. Cannot be used in combat.
+        /// <para>Talents: Warbringer [Usable in combat and any stance], Juggernaut [Usable in combat]</para>
         /// <para>Glyphs: Glyph of Rapid Charge [-7% Cd], Glyph of Charge [+5 yds MaxRange]</para>
         /// <para>Sets: none</para>
         /// </summary>

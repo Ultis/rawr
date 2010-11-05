@@ -248,6 +248,10 @@ namespace Rawr
         {
             return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly);
         }
+        public static List<ComparisonCalculationBase> GetReforgeCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        {
+            return Instance.GetReforgeCalculations(slot, character, currentCalcs, equippedOnly);
+        }
         public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, string filter)
         {
             return Instance.GetBuffCalculations(character, currentCalcs, filter);
@@ -927,6 +931,81 @@ namespace Rawr
                 }
             }
             return enchantCalcs;
+        }
+
+        public virtual List<ComparisonCalculationBase> GetReforgeCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        {
+            ClearCache();
+            List<ComparisonCalculationBase> reforgeCalcs = new List<ComparisonCalculationBase>();
+            if (!equippedOnly)
+            {
+                CharacterCalculationsBase calcsEquipped = null;
+                CharacterCalculationsBase calcsUnequipped = null;
+                // only need to get unequipped value once not every time around the loop
+                Character charUnequipped = character.Clone();
+                charUnequipped.SetReforgingBySlot(slot, null);
+                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                /*Item toReforge = character.GetItems()[(int)slot];
+                List<Reforging> possibleReforges = Reforging.GetReforgingOptions(toReforge slot, character);
+                foreach (Reforging reforge in possibleReforges)
+                {
+                    bool isEquipped = character.GetReforgingBySlot(slot) == reforge;
+                    Character charEquipped = character.Clone();
+                    charEquipped.SetReforgingBySlot(slot, reforge);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+                    enchantCalc.Name = reforge.Name;
+                    enchantCalc.Item = new Item(reforge.Name, ItemQuality.Temp, ItemType.None,
+                        -1 * (reforge.Id + (10000 * (int)reforge.Slot)), null, ItemSlot.None, null,
+                        false, reforge.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
+                    enchantCalc.Item.Name = reforge.Name;
+                    enchantCalc.Item.Stats = reforge.Stats;
+                    enchantCalc.Equipped = isEquipped;
+                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    enchantCalc.SubPoints = subPoints;
+                    reforgeCalcs.Add(enchantCalc);
+                }*/
+            } else {
+                CharacterCalculationsBase calcsEquipped = null;
+                CharacterCalculationsBase calcsUnequipped = null;
+                // only need to get unequipped value once not every time around the loop
+                Character charUnequipped = character.Clone();
+                charUnequipped.SetReforgingBySlot(slot, null);
+                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                /*foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
+                {
+                    bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
+                    if (!isEquipped) continue;
+                    Character charEquipped = character.Clone();
+                    charEquipped.SetEnchantBySlot(slot, enchant);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+                    enchantCalc.Name = string.Format("{0} ({1})", enchant.Name, slot);
+                    enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
+                        -1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
+                        false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
+                    enchantCalc.Item.Name = string.Format("{0} ({1})", enchant.Name, slot);
+                    enchantCalc.Item.Stats = enchant.Stats;
+                    enchantCalc.Equipped = isEquipped;
+                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    enchantCalc.SubPoints = subPoints;
+                    reforgeCalcs.Add(enchantCalc);
+                    if (isEquipped) break;
+                }*/
+            }
+            return reforgeCalcs;
         }
 
         public static void RemoveConflictingBuffs(List<Buff> activeBuffs, Buff buff)

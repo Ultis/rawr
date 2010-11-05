@@ -52,6 +52,7 @@ namespace Rawr.DPSWarr {
                         true,  // Overpower
                         true,  // Taste for Blood
                         true,  // Colossus Smash
+                        true,  // Victory Rush
                         true,  // Slam
                     true,  // <20% Execute Spamming
                 true,  // == Rage Dumps ==

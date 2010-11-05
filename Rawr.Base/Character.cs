@@ -756,6 +756,34 @@ namespace Rawr //O O . .
         public Enchant OffHandEnchant { get { return GetEnchantBySlot(CharacterSlot.OffHand); } set { SetEnchantBySlot(CharacterSlot.OffHand, value); } }
         [XmlIgnore]
         public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
+
+
+        [XmlIgnore]
+        public Reforging HeadReforging { get { return GetReforgingBySlot(CharacterSlot.Head); } set { SetReforgingBySlot(CharacterSlot.Head, value); } }
+        [XmlIgnore]
+        public Reforging ShouldersReforging { get { return GetReforgingBySlot(CharacterSlot.Shoulders); } set { SetReforgingBySlot(CharacterSlot.Shoulders, value); } }
+        [XmlIgnore]
+        public Reforging BackReforging { get { return GetReforgingBySlot(CharacterSlot.Back); } set { SetReforgingBySlot(CharacterSlot.Back, value); } }
+        [XmlIgnore]
+        public Reforging ChestReforging { get { return GetReforgingBySlot(CharacterSlot.Chest); } set { SetReforgingBySlot(CharacterSlot.Chest, value); } }
+        [XmlIgnore]
+        public Reforging WristReforging { get { return GetReforgingBySlot(CharacterSlot.Wrist); } set { SetReforgingBySlot(CharacterSlot.Wrist, value); } }
+        [XmlIgnore]
+        public Reforging HandsReforging { get { return GetReforgingBySlot(CharacterSlot.Hands); } set { SetReforgingBySlot(CharacterSlot.Hands, value); } }
+        [XmlIgnore]
+        public Reforging LegsReforging { get { return GetReforgingBySlot(CharacterSlot.Legs); } set { SetReforgingBySlot(CharacterSlot.Legs, value); } }
+        [XmlIgnore]
+        public Reforging FeetReforging { get { return GetReforgingBySlot(CharacterSlot.Feet); } set { SetReforgingBySlot(CharacterSlot.Feet, value); } }
+        [XmlIgnore]
+        public Reforging Finger1Reforging { get { return GetReforgingBySlot(CharacterSlot.Finger1); } set { SetReforgingBySlot(CharacterSlot.Finger1, value); } }
+        [XmlIgnore]
+        public Reforging Finger2Reforging { get { return GetReforgingBySlot(CharacterSlot.Finger2); } set { SetReforgingBySlot(CharacterSlot.Finger2, value); } }
+        [XmlIgnore]
+        public Reforging MainHandReforging { get { return GetReforgingBySlot(CharacterSlot.MainHand); } set { SetReforgingBySlot(CharacterSlot.MainHand, value); } }
+        [XmlIgnore]
+        public Reforging OffHandReforging { get { return GetReforgingBySlot(CharacterSlot.OffHand); } set { SetReforgingBySlot(CharacterSlot.OffHand, value); } }
+        [XmlIgnore]
+        public Reforging RangedReforging { get { return GetReforgingBySlot(CharacterSlot.Ranged); } set { SetReforgingBySlot(CharacterSlot.Ranged, value); } }
         #endregion
 
         [XmlIgnore]
@@ -1173,7 +1201,6 @@ namespace Rawr //O O . .
             if (clone)
             {
                 WarriorTalents = (WarriorTalents)character.WarriorTalents.Clone();
-                //WarriorTalentsCata = (WarriorTalentsCata)character.WarriorTalentsCata.Clone();
                 PaladinTalents = (PaladinTalents)character.PaladinTalents.Clone();
                 HunterTalents = (HunterTalents)character.HunterTalents.Clone();
                 RogueTalents = (RogueTalents)character.RogueTalents.Clone();
@@ -1187,7 +1214,6 @@ namespace Rawr //O O . .
             else
             {
                 _warriorTalents = character._warriorTalents;
-                //_warriorTalentsCata = character._warriorTalentsCata;
                 _paladinTalents = character._paladinTalents;
                 _hunterTalents = character._hunterTalents;
                 _rogueTalents = character._rogueTalents;
@@ -1537,6 +1563,13 @@ namespace Rawr //O O . .
             return item.Enchant;
         }
 
+        public Reforging GetReforgingBySlot(CharacterSlot slot)
+        {
+            ItemInstance item = this[slot];
+            if ((object)item == null) return null;
+            return item.Reforging;
+        }
+
         public bool IsEnchantable(CharacterSlot slot)
         {
             switch (slot)
@@ -1581,6 +1614,47 @@ namespace Rawr //O O . .
                     return true;
                 default:
                     return false;
+            }
+        }
+
+        public void SetReforgingBySlot(ItemSlot slot, Reforging reforge)
+        {
+            switch (slot)
+            {
+                case Rawr.ItemSlot.Head: HeadReforging = reforge; break;
+                case Rawr.ItemSlot.Shoulders: ShouldersReforging = reforge; break;
+                case Rawr.ItemSlot.Back: BackReforging = reforge; break;
+                case Rawr.ItemSlot.Chest: ChestReforging = reforge; break;
+                case Rawr.ItemSlot.Wrist: WristReforging = reforge; break;
+                case Rawr.ItemSlot.Hands: HandsReforging = reforge; break;
+                case Rawr.ItemSlot.Legs: LegsReforging = reforge; break;
+                case Rawr.ItemSlot.Feet: FeetReforging = reforge; break;
+                case Rawr.ItemSlot.Finger: Finger1Reforging = reforge; break;
+                case Rawr.ItemSlot.MainHand:
+                case Rawr.ItemSlot.OneHand:
+                case Rawr.ItemSlot.TwoHand: MainHandReforging = reforge; break;
+                case Rawr.ItemSlot.OffHand: OffHandReforging = reforge; break;
+                case Rawr.ItemSlot.Ranged: RangedReforging = reforge; break;
+            }
+        }
+
+        public void SetReforgingBySlot(CharacterSlot slot, Reforging reforge)
+        {
+            switch (slot)
+            {
+                case Rawr.CharacterSlot.Head: HeadReforging = reforge; break;
+                case Rawr.CharacterSlot.Shoulders: ShouldersReforging = reforge; break;
+                case Rawr.CharacterSlot.Back: BackReforging = reforge; break;
+                case Rawr.CharacterSlot.Chest: ChestReforging = reforge; break;
+                case Rawr.CharacterSlot.Wrist: WristReforging = reforge; break;
+                case Rawr.CharacterSlot.Hands: HandsReforging = reforge; break;
+                case Rawr.CharacterSlot.Legs: LegsReforging = reforge; break;
+                case Rawr.CharacterSlot.Feet: FeetReforging = reforge; break;
+                case Rawr.CharacterSlot.Finger1: Finger1Reforging = reforge; break;
+                case Rawr.CharacterSlot.Finger2: Finger2Reforging = reforge; break;
+                case Rawr.CharacterSlot.MainHand: MainHandReforging = reforge; break;
+                case Rawr.CharacterSlot.OffHand: OffHandReforging = reforge; break;
+                case Rawr.CharacterSlot.Ranged: RangedReforging = reforge; break;
             }
         }
 
@@ -1718,7 +1792,6 @@ namespace Rawr //O O . .
                 return nonjewelerGemRequirementsInvalid;
             }
         }
-
 
         public bool IsMetaGemActive
         {

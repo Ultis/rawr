@@ -144,13 +144,12 @@ namespace Rawr.DPSWarr {
         public float DamageReduction {
             get {
                 if (_DamageReduction == -1f) {
-                    float arpenBuffs = 0.0f;
-                    if (CalcOpts.M_ColossusSmash) {
-                        if      (Talents.SuddenDeath == 0) { arpenBuffs =  6f/20f; // 6 sec every 20 sec because we have nothing to make it go faster
-                        }else if(Talents.SuddenDeath == 1) { arpenBuffs = 12f/20f; // Doubling it because I don't have a solid calc here but want to show measure
-                        }else if(Talents.SuddenDeath == 2) { arpenBuffs =   1.00f; // 100% uptime, because we are now awesome
-                        }
-                    }
+                    float arpenBuffs = StatS.ArmorPenetration;
+                    /*if (CalcOpts.M_ColossusSmash) {
+                        if      (Talents.SuddenDeath == 0) { arpenBuffs = 6f/20.0f; // 6 sec every 20.0 sec. Because we have nothing to make it go faster
+                        }else if(Talents.SuddenDeath == 1) { arpenBuffs = 6f/13.3f; // 6 sec every 13.3 sec. According to my rough calcs, this is appropriate
+                        }else if(Talents.SuddenDeath == 2) { arpenBuffs = 6f/ 7.0f;}// 6 sec every  7.0 sec. According to my rough calcs, this is appropriate (it's not 100% uptime sadly)
+                    }*/
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
                         BossOpts.Armor,
@@ -293,8 +292,8 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Dodge
         private float DodgeChanceCap { get { return StatConversion.WHITE_DODGE_CHANCE_CAP[levelDif]; } }
-        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
-        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior) /*- Talents.WeaponMastery * 0.01f*/); } }
+        private float MhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_mhexpertise, CharacterClass.Warrior)); } }
+        private float OhDodgeChance { get { return Math.Max(0f, DodgeChanceCap - StatConversion.GetDodgeParryReducFromExpertise(_c_ohexpertise, CharacterClass.Warrior)); } }
         #endregion
         #region Parry
         private float ParryChanceCap { get { return StatConversion.WHITE_PARRY_CHANCE_CAP[levelDif]; } }

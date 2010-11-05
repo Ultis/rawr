@@ -65,7 +65,7 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Abilities
         // Markov Work
-        public Skills.FakeWhite FW { get; set; }
+        //public Skills.FakeWhite FW { get; set; }
         #endregion
         #region Neutral
         public float BaseHealth { get; set; }
@@ -352,9 +352,9 @@ namespace Rawr.DPSWarr {
                 #region Armor Penetration
                 {
                     float ArPCap = 1.00f;
-                    float[] passiveContrsVals = new float[] { };
-                    float passiveContrsTtlVal = 0f; // passiveContrsVals[0];
-                    string[] passiveContrs = new string[] { };
+                    float[] passiveContrsVals = new float[] { 1.00f };
+                    float passiveContrsTtlVal = passiveContrsVals[0];
+                    string[] passiveContrs = new string[] { "Colossus Smash (6 sec/20 sec). Sudden Death resets cooldown sooner." };
                     float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating);
                     float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating);
                     bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > ArPCap;
@@ -364,9 +364,9 @@ namespace Rawr.DPSWarr {
                     string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
                     dictValues.Add("Armor Penetration", string.Format(theFormat,
                         // Averaged Stats
-                        ArmorPenetration, AverageStats.ArmorPenetrationRating,
+                        ArmorPenetration + AverageStats.ArmorPenetration, AverageStats.ArmorPenetrationRating,
                         // Passive Contributions
-                        0f, //passiveContrsVals[0], 
+                        passiveContrsVals[0], 
                         // UnProc'd Stats
                         BuffedStats.ArmorPenetrationRating,
                         Math.Min(ArPCap, passiveContrsTtlVal + UnProcdArP),
@@ -438,7 +438,7 @@ namespace Rawr.DPSWarr {
                     float sec2lastNumA2 = (convcapA2 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
                     //float lastNumA2   = StatConversion.GetRatingFromExpertise((sec2lastNumA2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
                     dictValues.Add("Hit",
-                        string.Format("{0:00.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
+                        string.Format("{0:000.00%} : {1}*" + "{2:0.00%} : From Other Bonuses" +
                                         "\r\n{3:0.00%} : Total Hit % Bonus" +
                                         "\r\n\r\nWhite Two-Hander Cap: " +
                                         (sec2lastNumA1 > 0 ? "You can free {4:0} Rating"
@@ -469,7 +469,7 @@ namespace Rawr.DPSWarr {
                     float sec2lastNumB2 = (convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1;
                     float lastNumB2 = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
                     dictValues.Add("Expertise",
-                        string.Format("{0:00.00%} : {1:00.00} : {2}*" +
+                        string.Format("{0:000.00%} : {1:00.00} : {2}*" +
                         "Following includes Racial bonus and Strength of Arms" +
                         "\r\n{3:00.00%} : {4:00.00} : MH" +
                         "\r\n{5:00.00%} : {6:00.00} : OH" +
@@ -493,7 +493,7 @@ namespace Rawr.DPSWarr {
                 {
                     //if (MasteryVal == null) MasteryVal = 0;
                     dictValues.Add("Mastery",
-                        string.Format("{0:00.00} : {1:00.00}*" +
+                        string.Format("{0:000.00} : {1:00.00}*" +
                         "The Pane shows Averaged Values" +
                         // TODO: Make this next message dynamic for Spec
                         "\r\nAs an Arms Warrior, you are being granted the Strikes of Opportunity ability." +

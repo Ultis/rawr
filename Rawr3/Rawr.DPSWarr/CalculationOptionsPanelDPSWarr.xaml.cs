@@ -1182,30 +1182,13 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         {
             if (_loadingCalculationOptions) { return; }
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
-            if (e.PropertyName == "FuryStance") {
-                // Change Rotations if stance changes
-                bool Checked = true;// CalcOpts.FuryStance;
-                // Fury
-                CK_M_F_WW.IsChecked = Checked;
-                CK_M_F_BT.IsChecked = Checked;
-                CK_M_F_BS.IsChecked = Checked;
-                CK_M_F_RB.IsChecked = Checked;
-                // Fury Special
-                CK_M_F_DW.IsChecked = calcOpts.M_DeathWish && Checked;
-                CK_M_F_RK.IsChecked = calcOpts.M_Recklessness && Checked;
-                // Arms
-                CK_M_A_BLS.IsChecked = Checked;
-                CK_M_A_MS.IsChecked = Checked;
-                CK_M_A_RD.IsChecked = Checked;
-                CK_M_A_OP.IsChecked = Checked;
-                CK_M_A_TB.IsChecked = Checked;
-                CK_M_A_CS.IsChecked = Checked;
-                CK_M_A_VR.IsChecked = Checked;
-                CK_M_A_SL.IsChecked = Checked;
-                // Arms Special
-                CK_M_A_TH.IsChecked = calcOpts.M_ThunderClap && Checked;
-                CK_M_A_ST.IsChecked = calcOpts.M_ShatteringThrow && Checked;
-                CK_M_A_SW.IsChecked = calcOpts.M_SweepingStrikes && Checked;
+            if (e.PropertyName.Contains("SG_")
+                || e.PropertyName == "StatsList"
+                || e.PropertyName == "StatsIncrement"
+                || e.PropertyName == "CalculationToGraph")
+            {
+                // These fields shouldn't be forcing new calcs on each click
+                return;
             }
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }

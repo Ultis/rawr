@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Rawr.DPSWarr.Skills
 {
-    #region Instants
+    // Melee
     public class MortalStrike : Ability
     {
         public static new string SName { get { return "Mortal Strike"; } }
@@ -48,8 +48,8 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// Smashes a target for 150% weapon damage plus 120 and weakens their defenses,
         /// allowing your attacks to entirely bypass their armor for 6 sec.
-        /// <para>Talents: none</para>
-        /// <para>Glyphs: none</para>
+        /// <para>Talents: Sudden Death [MeleeHits reset cooldown, (3*Pts)% Chance]</para>
+        /// <para>Glyphs: Colossus Smash [Refreshes Sunder Armor on target]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public ColossusSmash(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -86,7 +86,7 @@ namespace Rawr.DPSWarr.Skills
     public class OverPower : Ability
     {
         public static new string SName { get { return "Overpower"; } }
-        public static new string SDesc { get { return "Instantly overpower the enemy, causing weapon damage.  Only useable after the target dodges.  The Overpower cannot be blocked, dodged or parried."; } }
+        public static new string SDesc { get { return "Instantly overpower the enemy, causing weapon damage. Only useable after the target dodges. The Overpower cannot be blocked, dodged or parried."; } }
         public static new string SIcon { get { return "ability_meleedamage"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -110,7 +110,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;
             //Targets += StatS.BonusTargets;
             StanceOkArms = true;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfOverpower ? 0.10f : 0f));
             BonusCritChance = 0.20f * Talents.TasteForBlood;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -168,16 +168,13 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
             ReqTalent = true;
             Talent2ChksValue = Talents.TasteForBlood;
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
-            CanBeDodged = false;
-            CanBeParried = false;
-            CanBeBlocked = false;
+            ReqMeleeWeap = ReqMeleeRange = true;
+            CanBeDodged = CanBeParried = CanBeBlocked = false;
             GCDTime = 1f;
             Cd = 5f; // In Seconds
             RageCost = 5f;
             StanceOkArms = true;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfOverpower ? 0.10f : 0f));
             BonusCritChance = 0.20f * Talents.TasteForBlood;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -198,57 +195,6 @@ namespace Rawr.DPSWarr.Skills
                 }
 
                 return acts;
-            }
-        }
-    }
-    public class Bladestorm : Ability
-    {
-        public static new string SName { get { return "Bladestorm"; } }
-        public static new string SDesc { get { return "You become a whirling storm of destructive force, instantly striking all nearby targets for 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities."; } }
-        public static new string SIcon { get { return "ability_warrior_bladestorm"; } }
-        public override string Name { get { return SName; } }
-        public override string Desc { get { return SDesc; } }
-        public override string Icon { get { return SIcon; } }
-        /// <summary>
-        /// You become a whirling storm of destructive force, instantly striking all nearby targets for
-        /// 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.
-        /// While under the effects of Bladestorm, you do not feel pity or remorse or fear and you
-        /// cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.
-        /// <para>Talents: Bladestorm [Requires Talent]</para>
-        /// <para>Glyphs: Glyph of Bladestorm [-15 sec Cd]</para>
-        /// <para>Sets: none</para>
-        /// </summary>
-        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ww)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
-            //
-            WW = ww;
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
-            ReqTalent = true;
-            Talent2ChksValue = Talents.Bladestorm;
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
-            MaxRange = WW.MaxRange; // In Yards
-            Targets = WW.Targets; // Handled in WW
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f;
-            Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
-            RageCost = 25f;
-            CastTime = 6f; // In Seconds // Channeled
-            GCDTime = CastTime;
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
-            SwingsOffHand = true;
-            SwingsPerActivate = 7f;
-            //
-            Initialize();
-        }
-        // Variables
-        public Ability WW;
-        // Functions
-        public override float DamageOnUseOverride {
-            get {
-                if (!Validated) { return 0f; }
-                float Damage = (WW.DamageOnUseOverride / 0.75f) * 1.50f; // Negate WW's 75% penalty then give it BS's 150%
-                return Damage * 7f; // it WW's 7 times
             }
         }
     }
@@ -320,7 +266,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 1.5f;
             BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             RageCost = 15f;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * 1.50f + 277f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f + 430f;
             DamageBonus = 1f + StatS.BonusWarrior_T7_2P_SlamDamage;
             DamageBonus *= 1f + Talents.WarAcademy * 0.05f;
             DamageBonus *= 1f + Talents.ImprovedSlam * 0.10f;
@@ -364,50 +310,59 @@ namespace Rawr.DPSWarr.Skills
             HealingBase = StatS.Health * 0.20f * (1f + (Talents.GlyphOfVictoryRush ? 0.50f : 0f)); // 20% of Max Health Restored
             //
             Initialize();
+            MHAtkTable = Whiteattacks.MHAtkTable;
         }
         protected override float ActivatesOverride { get { return BossOpts.MultiTargs ? FightDuration / BossOpts.MultiTargsFreq : 0f; } }
     }
-    public class StrikesOfOpportunity : Ability
+    // Area of Effect
+    public class Bladestorm : Ability
     {
-        public static new string SName { get { return "Strikes Of Opportunity"; } }
-        public static new string SDesc { get { return "Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 115% of normal damage."; } }
-        public static new string SIcon { get { return "inv_sword_27"; } }
+        public static new string SName { get { return "Bladestorm"; } }
+        public static new string SDesc { get { return "You become a whirling storm of destructive force, instantly striking all nearby targets for 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities."; } }
+        public static new string SIcon { get { return "ability_warrior_bladestorm"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 115% of normal damage.
+        /// You become a whirling storm of destructive force, instantly striking all nearby targets for
+        /// 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.
+        /// While under the effects of Bladestorm, you do not feel pity or remorse or fear and you
+        /// cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.
+        /// <para>Talents: Bladestorm [Requires Talent]</para>
+        /// <para>Glyphs: Glyph of Bladestorm [-15 sec Cd]</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <para>Talents: </para>
-        /// <para>Glyphs: </para>
-        public StrikesOfOpportunity(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ww)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            //ReqTalent = true;
-            //Targets += StatS.BonusTargets;
-            ReqMeleeRange = ReqMeleeWeap = true;
-            //Cd = 6f; // In Seconds
+            WW = ww;
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
+            ReqTalent = true;
+            Talent2ChksValue = Talents.Bladestorm;
+            ReqMeleeWeap = true;
+            ReqMeleeRange = true;
+            MaxRange = WW.MaxRange; // In Yards
+            Targets = WW.Targets; // Handled in WW
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f;
+            Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
+            RageCost = 25f;
+            CastTime = 6f; // In Seconds // Channeled
+            GCDTime = CastTime;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * 1.15f; // 115% normal damage
-            RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
-            UsesGCD = false;
+            SwingsOffHand = true;
+            SwingsPerActivate = 7f;
             //
             Initialize();
-            MHAtkTable = Whiteattacks.MHAtkTable;
         }
-
-        private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
-
-        public float GetActivates(float YellowsThatLandOverDur)
-        {
-            if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
-                try {
-                    _SE_StrikesOfOpportunity.Add(StatS.MasteryRating,
-                        new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
-                            (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
-                        ));
-                } catch (Exception) { }
+        // Variables
+        public Ability WW;
+        // Functions
+        public override float DamageOnUseOverride {
+            get {
+                if (!Validated) { return 0f; }
+                float Damage = (WW.DamageOnUseOverride / 0.75f) * 1.50f; // Negate WW's 75% penalty then give it BS's 150%
+                return Damage * 7f; // it WW's 7 times
             }
             // This attack doesn't consume GCDs and doesn't affect the swing timer
             float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
@@ -453,8 +408,108 @@ namespace Rawr.DPSWarr.Skills
             return tooltip;
         }
     }
-    #endregion
+    // Ranged
+    public class HeroicThrow : Ability
+    {
+        /// <summary>
+        /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
+        /// Throws your weapon at the enemy causing 12 damage (based on attack power). This ability causes high threat.
+        /// <para>Talents: </para>
+        /// <para>Glyphs: </para>
+        /// </summary>
+        public static new string SName { get { return "Heroic Throw"; } }
+        public static new string SDesc { get { return "Throws your weapon at the enemy causing 12 damage (based on attack power). This ability causes high threat."; } }
+        public static new string SIcon { get { return "inv_axe_66"; } }
+    }
+    // Passive Melee
+    public class StrikesOfOpportunity : Ability
+    {
+        public static new string SName { get { return "Strikes Of Opportunity"; } }
+        public static new string SDesc { get { return "Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 100% of normal damage."; } }
+        public static new string SIcon { get { return "ability_backstab"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        /// <summary>
+        /// Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 100% of normal damage.
+        /// <para>Talents: Passive Arms Benefit</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public StrikesOfOpportunity(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            //ReqTalent = true;
+            //Targets += StatS.BonusTargets;
+            ReqMeleeRange = ReqMeleeWeap = true;
+            //Cd = 6f; // In Seconds
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.00f; // 100% normal damage
+            RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
+            UsesGCD = false;
+            //
+            Initialize();
+            MHAtkTable = Whiteattacks.MHAtkTable;
+        }
 
+        private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
+
+        public float GetActivates(float MeleeAttemptsOverDur)
+        {
+            if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
+                try {
+                    _SE_StrikesOfOpportunity.Add(StatS.MasteryRating,
+                        new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
+                            (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
+                        ));
+                } catch (Exception) { }
+            }
+            // This attack doesn't consume GCDs and doesn't affect the swing timer
+            float rawActs = (MeleeAttemptsOverDur /*+ Whiteattacks.LandedAtksOverDur*/) / FightDuration;
+            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
+            effectActs *= FightDuration;
+            return effectActs;
+        }
+        public override string GenTooltip(float acts, float ttldpsperc)
+        {
+            float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
+            float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
+            float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
+            float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
+            float glance = GetXActs(AttackTableSelector.Glance, acts), glancePerc = (acts == 0f ? 0f : glance / acts);
+            float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
+            float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
+
+            bool showmisss = misses > 0f;
+            bool showdodge = CanBeDodged && dodges > 0f;
+            bool showparry = CanBeParried && parrys > 0f;
+            bool showblock = CanBeBlocked && blocks > 0f;
+            bool showglance = true && glance > 0f;
+            bool showcrits = CanCrit && crits > 0f;
+
+            string tooltip = "*" + Name +
+                Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
+                                    + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
+                                    + ", Rage Generated: " + (RageCost != -1 ? (-1f * RageCost).ToString() : "None") +
+            Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
+            (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed "  : "") +
+            (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
+            (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
+            (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
+            (showglance? Environment.NewLine + "- " + glance.ToString("000.00") + " : " + glancePerc.ToString("00.00%") + " : Glanced " : "") +
+            (showcrits ? Environment.NewLine + "- " + crits.ToString( "000.00") + " : " + critsPerc.ToString( "00.00%") + " : Crit "    : "") +
+                         Environment.NewLine + "- " + hits.ToString(  "000.00") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
+                Environment.NewLine +
+                //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
+                Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
+                Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
+                Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
+
+            return tooltip;
+        }
+    }
+    // DoTs
     public class Rend : DoT
     {
         public static new string SName { get { return "Rend"; } }
@@ -482,7 +537,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
-            DamageBase = 635f;
+            DamageBase = 525f;
             //
             Initialize();
         }
@@ -525,7 +580,7 @@ namespace Rawr.DPSWarr.Skills
 
                 float DmgBonusBase = (StatS.AttackPower * combatFactors._c_mhItemSpeed) / 14f
                                    + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
-                DmgBonusBase *= 0.2f * 6f; // Not sure where the 0.2 * 5 (now 6) was so adding it in now
+                DmgBonusBase *= 0.25f * 6f; // Not sure where the 0.25 * 5 (now 6) was so adding it in now
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
                              * (1f + StatS.BonusDamageMultiplier)
                              * DamageBonus;
@@ -543,8 +598,8 @@ namespace Rawr.DPSWarr.Skills
             return result;
         }
     }
-
-    public class FakeWhite : Ability
+    // Used for... something
+    /*public class FakeWhite : Ability
     {
         public static new string SName { get { return "MH White Swing"; } }
         public static new string SDesc { get { return "White Damage"; } }
@@ -566,5 +621,5 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
             MHAtkTable = Whiteattacks.MHAtkTable;
         }
-    }
+    }*/
 }

@@ -28,9 +28,7 @@ namespace Rawr
             };
         }
 
-        public Reforging()
-        {
-        }
+        public Reforging() { }
 
         public Reforging(Item baseItem, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
         {

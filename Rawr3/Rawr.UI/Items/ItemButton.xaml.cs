@@ -23,6 +23,7 @@ namespace Rawr.UI
             {
                 slot = value;
                 ComparisonItemList.Slot = slot;
+                //ComparisonListReforge.Slot = slot;
             }
         }
 
@@ -39,6 +40,7 @@ namespace Rawr.UI
                 ComparisonItemListGem1.Character = character;
                 ComparisonItemListGem2.Character = character;
                 ComparisonItemListGem3.Character = character;
+                ComparisonListReforge.Character = character;
                 if (character != null)
                 {
                     character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
@@ -109,9 +111,11 @@ namespace Rawr.UI
             // Required to initialize variables
             InitializeComponent();
             PopupUtilities.RegisterPopup(this, ListPopup, Close);
+            ComparisonListReforge.IsReforgeList = true;
             PopupUtilities.RegisterPopup(this, ListPopupGem1, Close);
             PopupUtilities.RegisterPopup(this, ListPopupGem2, Close);
             PopupUtilities.RegisterPopup(this, ListPopupGem3, Close);
+            PopupUtilities.RegisterPopup(this, ReforgePopup, Close);
         }
 
         private void Close()
@@ -120,6 +124,7 @@ namespace Rawr.UI
             if (ListPopupGem1.IsOpen) { ListPopupGem1.IsOpen = false; }
             if (ListPopupGem2.IsOpen) { ListPopupGem2.IsOpen = false; }
             if (ListPopupGem3.IsOpen) { ListPopupGem3.IsOpen = false; }
+            if (ReforgePopup.IsOpen) { ReforgePopup.IsOpen = false; }
         }
 
         #region Popup Lists
@@ -158,6 +163,15 @@ namespace Rawr.UI
                 ListPopupGem3.VerticalOffset = distBetweenBottomOfPopupAndBottomOfWindow;
             }
         }
+        private void EnsureReforgePopupsVisible()
+        {
+            GeneralTransform transform = TransformToVisual(App.Current.RootVisual);
+            double distBetweenBottomOfPopupAndBottomOfWindow = App.Current.RootVisual.RenderSize.Height - transform.Transform(new Point(0, ComparisonListReforge.Height)).Y;
+            if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+            {
+                ReforgePopup.VerticalOffset = distBetweenBottomOfPopupAndBottomOfWindow;
+            }
+        }
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
         {
@@ -191,12 +205,21 @@ namespace Rawr.UI
             ListPopupGem3.IsOpen = true;
             ComparisonItemListGem3.Focus();
         }
+        private void ReforgeButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Tooltip.Hide();
+            EnsureReforgePopupsVisible();
+            ComparisonListReforge.IsShown = true;
+            ReforgePopup.IsOpen = true;
+            ComparisonListReforge.Focus();
+        }
         #endregion
 
-        #region Returning Gem Events
+        #region Returning Gem/Reforge Events
         public void ComparisonItemListGem1_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem1 = ComparisonItemListGem1.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
         public void ComparisonItemListGem2_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem2 = ComparisonItemListGem2.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
         public void ComparisonItemListGem3_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem3 = ComparisonItemListGem3.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
+        //public void ComparisonListReforge_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Reforging = ComparisonListReforge.SelectedReforging; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
         #endregion
 
         #region ToolTips
@@ -231,6 +254,14 @@ namespace Rawr.UI
                 MainPage.Tooltip.Item = Item.Gem3;
                 MainPage.Tooltip.Show(GemButton3, 22, 0);
             }
+        }
+        private void ReforgeButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            /*if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen && !ReforgePopup.IsOpen)
+            {
+                MainPage.Tooltip.Item = Item.Reforging;
+                MainPage.Tooltip.Show(GemButton3, 22, 0);
+            }*/
         }
 
         private void AnyButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)

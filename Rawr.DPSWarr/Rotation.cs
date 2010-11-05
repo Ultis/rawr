@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Rawr.DPSWarr.Skills;
@@ -426,7 +426,10 @@ namespace Rawr.DPSWarr {
                 return rage;
             }
         }
-        
+
+        protected float RageMOD_DeadlyCalm { get { return 1f - (Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
+        protected float RageMOD_Total { get { return RageMOD_DeadlyCalm; } }
+
         public int FightDuration { get { return BossOpts.BerserkTimer; } }
 
         protected float RageNeededOverDur {
@@ -485,7 +488,7 @@ namespace Rawr.DPSWarr {
 
             _HPS_TTL += aw.allHPS;
             _DPS_TTL += aw.allDPS;
-            return aw.ability.GetRageUseOverDur(Abil_GCDs);
+            return aw.ability.GetRageUseOverDur(Abil_GCDs) * RageMOD_Total;
         }
         #endregion
 

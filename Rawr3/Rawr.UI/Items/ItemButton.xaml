@@ -7,29 +7,33 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.ItemButton"
-    Width="90" Height="70">
+    Width="90" Height="88">
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <!-- Popups -->
-        <Popup x:Name="ListPopup" HorizontalOffset="72" Grid.ColumnSpan="3" Grid.RowSpan="2">
+        <Popup x:Name="ListPopup" HorizontalOffset="92" Grid.ColumnSpan="3" Grid.RowSpan="2">
             <local:ItemListControl x:Name="ComparisonItemList"/>
         </Popup>
-        <Popup x:Name="ListPopupGem1" HorizontalOffset="92" Grid.Row="1" Grid.Column="0">
+        <Popup x:Name="ListPopupGem1" HorizontalOffset="22" Grid.Row="0" Grid.Column="1">
             <local:ItemListControl x:Name="ComparisonItemListGem1"/>
         </Popup>
-        <Popup x:Name="ListPopupGem2" HorizontalOffset="92" Grid.Row="1" Grid.Column="1">
+        <Popup x:Name="ListPopupGem2" HorizontalOffset="22" Grid.Row="1" Grid.Column="1">
             <local:ItemListControl x:Name="ComparisonItemListGem2"/>
         </Popup>
-        <Popup x:Name="ListPopupGem3" HorizontalOffset="92" Grid.Row="1" Grid.Column="2">
+        <Popup x:Name="ListPopupGem3" HorizontalOffset="22" Grid.Row="2" Grid.Column="1">
             <local:ItemListControl x:Name="ComparisonItemListGem3"/>
+        </Popup>
+        <Popup x:Name="ReforgePopup" HorizontalOffset="92" Grid.Row="4" Grid.Column="0">
+            <local:ItemListControl x:Name="ComparisonListReforge"/>
         </Popup>
         <!-- Buttons -->
         <Button x:Name="MainButton" Click="MainButton_Click" MouseEnter="MainButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.RowSpan="3" Grid.Column="0" Width="70">
@@ -44,5 +48,6 @@
         <Button x:Name="GemButton3" Click="GemButton3_Click" MouseEnter="GemButton3_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="2" MinHeight="20" MinWidth="20" MaxWidth="20" MaxHeight="20" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <Image CacheMode="BitmapCache" x:Name="IconImageGem3" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Button>
+        <Button x:Name="ReforgeButton" Height="18" Width="70" VerticalAlignment="Center" FontSize="10" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="3" Margin="0" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>
