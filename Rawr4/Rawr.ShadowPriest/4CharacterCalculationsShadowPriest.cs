@@ -6,6 +6,7 @@ using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
 {
+    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
         #region Variable Declarations and Definitions
@@ -13,8 +14,6 @@ namespace Rawr.ShadowPriest
         public Stats BasicStats { get; set; }
         public Stats CombatStats { get; set; }
         public int TargetLevel { get; set; }
-
-        public Spell LightningBolt;
 
         public float ManaRegen;
         public float ReplenishMP5;
@@ -70,7 +69,43 @@ namespace Rawr.ShadowPriest
         {
             Dictionary<string, string> dictValues
                 = new Dictionary<string, string>();
-            dictValues.Add("Test Value", "0.01*A Value");
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Hit+Spirit", (BasicStats.HitRating + BasicStats.Spirit).ToString());
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
+            dictValues.Add("Crit", BasicStats.CritRating.ToString());
+            dictValues.Add("Haste", BasicStats.HasteRating.ToString());
+            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
+
+            dictValues.Add("Vampiric Touch", new VampiricTouch().AvgHit.ToString());
+            dictValues.Add("SW Pain", new ShadowWordPain().AvgHit.ToString());
+            dictValues.Add("Devouring Plague", new DevouringPlauge().AvgHit.ToString());
+            dictValues.Add("Imp. Devouring Plague", "TBD");
+            dictValues.Add("SW Death", new DevouringPlauge().AvgHit.ToString());
+            dictValues.Add("Mind Blast", new MindBlast().AvgHit.ToString());
+            dictValues.Add("Mind Flay", new MindFlay().AvgHit.ToString());
+            dictValues.Add("Shadow Fiend", new ShadowFiend().AvgHit.ToString());
+            dictValues.Add("Mind Spike", new MindSpike().AvgHit.ToString());
+            dictValues.Add("Mind Sear", new MindSear().AvgHit.ToString());
+
+            dictValues.Add("PW Shield", new PowerWordShield().AvgHit.ToString());
+            dictValues.Add("Smite", new Smite().AvgHit.ToString());
+            dictValues.Add("Holy Fire", new HolyFire().AvgHit.ToString());
+            dictValues.Add("Penance", new Penance().AvgHit.ToString());
+
+            /*
+                    "Simulation:Rotation",
+                    "Simulation:Castlist",
+                    "Simulation:DPS",
+//                    "Simulation:SustainDPS",
+
+                    "Holy:PW Shield",
+                    "Holy:Smite",
+                    "Holy:Holy Fire",
+                    "Holy:Penance"
+             */
             return dictValues;
         }
         #endregion

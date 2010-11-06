@@ -50,7 +50,7 @@ namespace Rawr.ShadowPriest
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
                     //_subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Sustained DPS", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 0, 0, 255));
                 }
                 return _subPointNameColors;
             }
@@ -73,18 +73,14 @@ namespace Rawr.ShadowPriest
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
 					"Basic Stats:Health",
-                    "Basic Stats:Resilience",
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
-					"Basic Stats:Spirit",
+					"Basic Stats:Hit+Spirit",
 					"Basic Stats:Spell Power",
-					"Basic Stats:Regen",
 					"Basic Stats:Crit",
-					"Basic Stats:Hit",
 					"Basic Stats:Haste",
-                    "Basic Stats:Armor",
-                    "Basic Stats:Resistance",
+                    "Basic Stats:Mastery",
                     "Simulation:Rotation",
                     "Simulation:Castlist",
                     "Simulation:DPS",
@@ -97,6 +93,8 @@ namespace Rawr.ShadowPriest
                     "Shadow:Mind Blast",
                     "Shadow:Mind Flay",
                     "Shadow:Shadowfiend",
+                    "Shadow:Mind Spike",
+                    "Shadow:Mind Sear",
                     "Holy:PW Shield",
                     "Holy:Smite",
                     "Holy:Holy Fire",
@@ -173,17 +171,17 @@ namespace Rawr.ShadowPriest
                 return _relevantItemTypes;
             }
         }
-        #endregion
+     
         //9
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationShadowPriest(); }
         //10
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsShadowPriest(); }
+        #endregion
 
         public override CharacterClass TargetClass
         {
             get { throw new NotImplementedException(); }
         }
-
         public override Stats GetRelevantStats(Stats stats)
         {
             throw new NotImplementedException();
@@ -202,6 +200,7 @@ namespace Rawr.ShadowPriest
         }
 
     }
+
     public static class Constants
     {
         // Source: http://bobturkey.wordpress.com/2010/09/28/priest-base-mana-pool-and-mana-regen-coefficient-at-85/

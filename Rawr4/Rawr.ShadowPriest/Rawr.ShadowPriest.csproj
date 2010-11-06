@@ -84,18 +84,18 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
+    <None Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
       <Link>CalculationOptionsShadowPriest.cs</Link>
-    </Compile>
+    </None>
     <None Include="..\..\Rawr.ShadowPriest\CalculationsShadowPriest.cs">
       <Link>CalculationsShadowPriest.cs</Link>
     </None>
     <None Include="..\..\Rawr.ShadowPriest\CharacterCalculationsShadowPriest.cs">
       <Link>CharacterCalculationsShadowPriest.cs</Link>
     </None>
-    <Compile Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
+    <None Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
       <Link>ComparisonCalculationShadowPriest.cs</Link>
-    </Compile>
+    </None>
     <None Include="..\..\Rawr.ShadowPriest\Spell.cs">
       <Link>Spell.cs</Link>
     </None>
@@ -110,18 +110,23 @@
     <Compile Include="4CalculationOptionsShadowPriest.cs" />
     <Compile Include="4CalculationsShadowPriest.cs" />
     <Compile Include="4CharacterCalculationsShadowPriest.cs" />
+    <Compile Include="4ComparisonCalculationShadowPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spells\DevouringPlauge.cs" />
+    <Compile Include="Spells\Holy\HolyFire.cs" />
+    <Compile Include="Spells\Holy\Penance.cs" />
+    <Compile Include="Spells\Holy\PowerWordShield.cs" />
+    <Compile Include="Spells\Holy\Smite.cs" />
+    <Compile Include="Spells\Shadow\DevouringPlauge.cs" />
     <Compile Include="Spells\ISpellArgs.cs" />
-    <Compile Include="Spells\MindBlast.cs" />
-    <Compile Include="Spells\MindFlay.cs" />
-    <Compile Include="Spells\MindSear.cs" />
-    <Compile Include="Spells\MindSpike.cs" />
-    <Compile Include="Spells\ShadowFiend.cs" />
-    <Compile Include="Spells\ShadowWordDeath.cs" />
-    <Compile Include="Spells\ShadowWordPain.cs" />
+    <Compile Include="Spells\Shadow\MindBlast.cs" />
+    <Compile Include="Spells\Shadow\MindFlay.cs" />
+    <Compile Include="Spells\Shadow\MindSear.cs" />
+    <Compile Include="Spells\Shadow\MindSpike.cs" />
+    <Compile Include="Spells\Shadow\ShadowFiend.cs" />
+    <Compile Include="Spells\Shadow\ShadowWordDeath.cs" />
+    <Compile Include="Spells\Shadow\ShadowWordPain.cs" />
     <Compile Include="Spells\Spell.cs" />
-    <Compile Include="Spells\VampiricTouch.cs" />
+    <Compile Include="Spells\Shadow\VampiricTouch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
