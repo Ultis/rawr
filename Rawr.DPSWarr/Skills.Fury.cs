@@ -9,13 +9,13 @@ namespace Rawr.DPSWarr.Skills
     public class BloodThirst : Ability
     {
         public static new string SName { get { return "Bloodthirst"; } }
-        public static new string SDesc { get { return "Instantly attack the target causing [AP*50/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
+        public static new string SDesc { get { return "Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
         public static new string SIcon { get { return "spell_nature_bloodlust"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Instantly attack the target causing [AP*75/100] damage. In addition, the next 3 successful melee
+        /// Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 0.5% health. This effect lasts 8 sec. Damage is based on your attack power.
         /// <para>Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
@@ -32,7 +32,7 @@ namespace Rawr.DPSWarr.Skills
             //Duration = 8f;
             RageCost        = 20f;
             BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease + Talents.Cruelty * 0.05f;
-            DamageBase      = StatS.AttackPower * 75f / 100f;
+            DamageBase      = StatS.AttackPower * 62f / 100f;
             DamageBonus     = 1f + (Talents.GlyphOfBloodthirst ? 0.10f : 0f);
             HealingBase     = StatS.Health * 0.005f * 3f;
             HealingBonus    = 1f + (Talents.GlyphOfBloodyHealing ? 1f : 0f);
@@ -43,14 +43,14 @@ namespace Rawr.DPSWarr.Skills
     public class WhirlWind : Ability
     {
         public static new string SName { get { return "Whirlwind"; } }
-        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing 46% weapon damage from both melee weapons to each enemy."; } }
+        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing 65% weapon damage from both melee weapons to each enemy."; } }
         public static new string SIcon { get { return "ability_whirlwind"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
         /// In a whirlwind of steel you attack all enemies within 8 yards,
-        /// causing 46% weapon damage from both melee weapons to each enemy.
+        /// causing 65% weapon damage from both melee weapons to each enemy.
         /// <para>Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
         /// <para>Sets: none</para>
@@ -80,7 +80,7 @@ namespace Rawr.DPSWarr.Skills
         /// <returns>Unmitigated damage of a single hit</returns>
         private float GetDamage(bool isOffHand) {
             return (isOffHand ? combatFactors.NormalizedOhWeaponDmg : combatFactors.NormalizedMhWeaponDmg)
-                * 0.75f * DamageBonus;
+                * 0.65f * DamageBonus;
         }
         public override float DamageOnUseOverride
         {
@@ -235,13 +235,13 @@ namespace Rawr.DPSWarr.Skills
     public class RagingBlow : Ability
     {
         public static new string SName { get { return "Raging Blow"; } }
-        public static new string SDesc { get { return "A mighty blow that deals 150% weapon damage from both melee weapons. Can only be used while Enraged."; } }
+        public static new string SDesc { get { return "A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged."; } }
         public static new string SIcon { get { return "ability_hunter_swiftstrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// A mighty blow that deals 150% weapon damage from both melee weapons. Can only be used while Enraged.
+        /// A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged.
         /// <para>Talents: none</para>
         /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
         /// <para>Sets: none</para>
@@ -262,7 +262,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
+        // Raging Blow while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
         /// <param name="Override">When true, do not check for Bers Stance</param>
@@ -319,7 +319,7 @@ namespace Rawr.DPSWarr.Skills
 
                 // ==== RESULT ====
                 float Damage = DamageMH + DamageOH;
-                return Damage * AvgTargets * 1.50f;
+                return Damage * AvgTargets * 1.10f;
             }
         }
     }
