@@ -332,18 +332,17 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Bladestorm [-15 sec Cd]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo, Ability ww)
+        public Bladestorm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            WW = ww;
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bladestorm;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
-            MaxRange = WW.MaxRange; // In Yards
-            Targets = WW.Targets; // Handled in WW
+            MaxRange = 8; // In Yards
+            Targets = 10; // Handled in WW
             DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f;
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f;
@@ -356,56 +355,37 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         // Variables
-        public Ability WW;
         // Functions
-        public override float DamageOnUseOverride {
-            get {
-                if (!Validated) { return 0f; }
-                float Damage = (WW.DamageOnUseOverride / 0.75f) * 1.50f; // Negate WW's 75% penalty then give it BS's 150%
-                return Damage * 7f; // it WW's 7 times
-            }
-            // This attack doesn't consume GCDs and doesn't affect the swing timer
-            float rawActs = (YellowsThatLandOverDur + Whiteattacks.LandedAtksOverDur) / FightDuration;
-            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
-            effectActs *= FightDuration;
-            return effectActs;
-        }
-        public override string GenTooltip(float acts, float ttldpsperc)
+        public override float DamageOnUseOverride
         {
-            float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
-            float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
-            float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
-            float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
-            float glance = GetXActs(AttackTableSelector.Glance, acts), glancePerc = (acts == 0f ? 0f : glance / acts);
-            float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
-            float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
+            get
+            {
+                if (!Validated) { return 0f; }
+                // ==== MAIN HAND ====
+                float Damage = combatFactors.NormalizedOhWeaponDmg * DamageBonus; // Base Damage
+                Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
+                Damage *= combatFactors.DamageReduction; // Global Damage Penalties
 
-            bool showmisss = misses > 0f;
-            bool showdodge = CanBeDodged && dodges > 0f;
-            bool showparry = CanBeParried && parrys > 0f;
-            bool showblock = CanBeBlocked && blocks > 0f;
-            bool showglance = true && glance > 0f;
-            bool showcrits = CanCrit && crits > 0f;
+                // Work the Attack Table
+                float dmgDrop = (1f
+                    - MHAtkTable.Miss   // no damage when being missed
+                    - MHAtkTable.Dodge  // no damage when being dodged
+                    - MHAtkTable.Parry  // no damage when being parried
+                    //- MHAtkTable.Glance // glancing handled below
+                    - MHAtkTable.Block  // blocked handled below
+                    - MHAtkTable.Crit); // crits   handled below
 
-            string tooltip = "*" + Name +
-                Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
-                                    + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
-                                    + ", Rage Generated: " + (RageCost != -1 ? (-1f * RageCost).ToString() : "None") +
-            Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
-            (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed "  : "") +
-            (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged "  : "") +
-            (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
-            (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
-            (showglance? Environment.NewLine + "- " + glance.ToString("000.00") + " : " + glancePerc.ToString("00.00%") + " : Glanced " : "") +
-            (showcrits ? Environment.NewLine + "- " + crits.ToString( "000.00") + " : " + critsPerc.ToString( "00.00%") + " : Crit "    : "") +
-                         Environment.NewLine + "- " + hits.ToString(  "000.00") + " : " + hitsPerc.ToString(  "00.00%") + " : Hit " +
-                Environment.NewLine +
-                //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
-                Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
-                Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
+                //float dmgGlance = Damage * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                float dmgBlock = Damage * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+                float dmgCrit = Damage * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
-            return tooltip;
+                Damage *= dmgDrop;
+
+                Damage += /*dmgGlance +*/ dmgBlock + dmgCrit;
+
+                // ==== RESULT ====
+                return Damage * AvgTargets * 7f;
+            }
         }
     }
     // Ranged
