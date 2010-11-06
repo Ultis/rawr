@@ -9,7 +9,7 @@ namespace Rawr.ShadowPriest
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public class CalculationOptionsShadowPriest : ICalculationOptionBase, INotifyPropertyChanged
+    public class CalculationOptionsShadowPriestOld : ICalculationOptionBase, INotifyPropertyChanged
     {
         public string GetXml()
         {
@@ -19,7 +19,7 @@ namespace Rawr.ShadowPriest
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-
+        /*
 #if !RAWR3 && !RAWR4 && !SILVERLIGHT // Boss Handler Options
         private int _TargetLevel = 3;
         private float _FightLength = 6f;
@@ -54,6 +54,7 @@ namespace Rawr.ShadowPriest
 
 		private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 }; // TODO: Remove
         public int ManaAmt { get { return manaAmt[ManaPot]; } } // TODO: Remove
+        */
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

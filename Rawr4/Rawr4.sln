@@ -32,6 +32,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtWarr", "Rawr.ProtWarr\Rawr.ProtWarr.csproj", "{4F5BF0A3-A747-4DDD-9258-943752FC939C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight", "Rawr.Silverlight\Rawr.Silverlight.csproj", "{F4FE754B-7C2B-43E4-89C3-A839DA09D072}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6E5BC92F-AAA0-4C14-B25A-1A39196291E4} = {6E5BC92F-AAA0-4C14-B25A-1A39196291E4}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Web", "Rawr.Silverlight.Web\Rawr.Silverlight.Web.csproj", "{039EB027-018A-4422-B51E-9ED81879465F}"
 EndProject

@@ -87,27 +87,29 @@
     <Compile Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
       <Link>CalculationOptionsShadowPriest.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.ShadowPriest\CalculationsShadowPriest.cs">
+    <None Include="..\..\Rawr.ShadowPriest\CalculationsShadowPriest.cs">
       <Link>CalculationsShadowPriest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.ShadowPriest\CharacterCalculationsShadowPriest.cs">
+    </None>
+    <None Include="..\..\Rawr.ShadowPriest\CharacterCalculationsShadowPriest.cs">
       <Link>CharacterCalculationsShadowPriest.cs</Link>
-    </Compile>
+    </None>
     <Compile Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
       <Link>ComparisonCalculationShadowPriest.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.ShadowPriest\Spell.cs">
+    <None Include="..\..\Rawr.ShadowPriest\Spell.cs">
       <Link>Spell.cs</Link>
-    </Compile>
+    </None>
     <Compile Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.xaml.cs">
       <Link>CalculationOptionsPanelShadowPriest.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelShadowPriest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml.cs">
+    <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml.cs">
       <Link>SpellPriorityForm.xaml.cs</Link>
       <DependentUpon>SpellPriorityForm.xaml</DependentUpon>
-    </Compile>
+    </None>
+    <Compile Include="4CalculationOptionsShadowPriest.cs" />
     <Compile Include="4CalculationsShadowPriest.cs" />
+    <Compile Include="4CharacterCalculationsShadowPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spells\DevouringPlauge.cs" />
     <Compile Include="Spells\ISpellArgs.cs" />
@@ -150,11 +152,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml">
+    <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml">
       <Link>SpellPriorityForm.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

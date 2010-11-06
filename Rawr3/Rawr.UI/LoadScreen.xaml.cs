@@ -123,7 +123,7 @@ namespace Rawr.UI
                 Calculations.RegisterModel(typeof(Rawr.RestoSham.CalculationsRestoSham));
                 Calculations.RegisterModel(typeof(Rawr.Retribution.CalculationsRetribution));
                 Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
-                //Calculations.RegisterModel(typeof(Rawr.ShadowPriest.CalculationsShadowPriest));
+                Calculations.RegisterModel(typeof(Rawr.ShadowPriest.CalculationsShadowPriest));
                 Calculations.RegisterModel(typeof(Rawr.TankDK.CalculationsTankDK));
                 //Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
                 Calculations.RegisterModel(typeof(Rawr.Warlock.CalculationsWarlock));
