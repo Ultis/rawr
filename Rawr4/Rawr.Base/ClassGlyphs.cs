@@ -431,66 +431,75 @@ namespace Rawr
 
     public partial class PriestTalents
     {
-        private bool[] _glyphData = new bool[33];
+        private bool[] _glyphData = new bool[37];
         public override bool[] GlyphData { get { return _glyphData; } }
-
-        // Major
+        #region Prime
+        [GlyphData(2, "Glyph of Dispersion", GlyphType.Prime, @"Reduces the cooldown of your Dispersion by 45 sec.")]
+        public bool GlyphofDispersion { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        [GlyphData(5, "Glyph of Flash Heal", GlyphType.Prime, @"Reduces the mana cost of Flash Heal by 10%.")]
+        public bool GlyphofFlashHeal { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(6, "Glyph of Guardian Spirit", GlyphType.Prime, @"If your Guardian Spirit lasts its entire duration without being triggered, the cooldown is reset to 1 min.")]
+        public bool GlyphofGuardianSpirit { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        [GlyphData(10, "Glyph of Lightwell", GlyphType.Prime, @"Increases the amount healed by your Lightwell by 20%.")]
+        public bool GlyphofLightwell { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        [GlyphData(13, "Glyph of Mind Flay", GlyphType.Prime, @"Increases the damage done by your Mind Flay spell by 10% when your target is afflicted with Shadow Word: Pain.")]
+        public bool GlyphofMindFlay { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        [GlyphData(16, "Glyph of Penance", GlyphType.Prime, @"Reduces the cooldown of Penance by 2 sec.")]
+        public bool GlyphofPenance { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        [GlyphData(33, "Glyph of Power Word: Barrier", GlyphType.Prime, @"Increases the healing received while under the Barrier by 10%.")]
+        public bool GlyphofPowerWordBarrier { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
+        [GlyphData(17, "Glyph of Power Word: Shield", GlyphType.Prime, @"Your Power Word: Shield also heals the target for 20% of absorption amount.")]
+        public bool GlyphofPowerWordShield { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(18, "Glyph of Prayer of Healing", GlyphType.Prime, @"Your Prayer of Healing spell also heals an additional 20% of its initial heal over 6 sec.")]
+        public bool GlyphofPrayerofHealing { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        [GlyphData(20, "Glyph of Renew", GlyphType.Prime, @"Reduces the duration of your Renew by 3 sec. but increases the amount healed each tick by 25%.")]
+        public bool GlyphofRenew { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
+        [GlyphData(23, "Glyph of Shadow Word: Death", GlyphType.Prime, @"Targets below 35% health take an additional 10% damage from your Shadow Word: Death spell.")]
+        public bool GlyphofShadowWordDeath { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        [GlyphData(24, "Glyph of Shadow Word: Pain", GlyphType.Prime, @"The periodic damage ticks of your Shadow Word: Pain spell restore 1% of your base mana.")]
+        public bool GlyphofShadowWordPain { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        #endregion
+        #region Major
         [GlyphData(0, "Glyph of Circle of Healing", GlyphType.Major, @"Your Circle of Healing spell heals 1 additional target.")]
         public bool GlyphofCircleOfHealing { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         [GlyphData(1, "Glyph of Dispel Magic", GlyphType.Major, @"Your Dispel Magic spell also heals your target for 3% maximum health.")]
         public bool GlyphofDispelMagic { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        [GlyphData(2, "Glyph of Dispersion", GlyphType.Major, @"Reduces the cooldown of your Dispersion by 45 sec.")]
-        public bool GlyphofDispersion { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         [GlyphData(3, "Glyph of Fade", GlyphType.Major, @"Reduces the cooldown of your Fade spell by 9 sec.")]
         public bool GlyphofFade { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
         [GlyphData(4, "Glyph of Fear Ward", GlyphType.Major, @"Reduces the cooldown and duration of Fear Ward by 60 sec.")]
         public bool GlyphofFearWard { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
-        [GlyphData(5, "Glyph of Flash Heal", GlyphType.Major, @"Reduces the mana cost of Flash Heal by 10%.")]
-        public bool GlyphofFlashHeal { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
-        [GlyphData(6, "Glyph of Guardian Spirit", GlyphType.Major, @"If your Guardian Spirit lasts its entire duration without being triggered, the cooldown is reset to 1 min.")]
-        public bool GlyphofGuardianSpirit { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
         [GlyphData(7, "Glyph of Holy Nova", GlyphType.Major, @"Increases the damage and healing of your Holy Nova spell by an additional 20%.")]
         public bool GlyphofHolyNova { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         [GlyphData(8, "Glyph of Hymn of Hope", GlyphType.Major, @"Your Hymn of Hope lasts an additional 2 sec.")]
         public bool GlyphofHymnofHope { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
         [GlyphData(9, "Glyph of Inner Fire", GlyphType.Major, @"Increases the armor from your Inner Fire spell by 50%.")]
         public bool GlyphofInnerFire { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
-        [GlyphData(10, "Glyph of Lightwell", GlyphType.Major, @"Increases the amount healed by your Lightwell by 20%.")]
-        public bool GlyphofLightwell { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
         [GlyphData(11, "Glyph of Mass Dispel", GlyphType.Major, @"Reduces the mana cost of Mass Dispel by 30%.")]
         public bool GlyphofMassDispel { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
         [GlyphData(12, "Glyph of Mind Control", GlyphType.Major, @"Reduces the chance targets will resist or break Mind Control spell by an additional 17%.")]
         public bool GlyphofMindControl { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(13, "Glyph of Mind Flay", GlyphType.Major, @"Increases the damage done by your Mind Flay spell by 10% when your target is afflicted with Shadow Word: Pain.")]
-        public bool GlyphofMindFlay { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
         [GlyphData(14, "Glyph of Mind Sear", GlyphType.Major, @"Increases the radius of effect on Mind Sear by 5 yards.")]
         public bool GlyphofMindSear { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         [GlyphData(15, "Glyph of Pain Suppression", GlyphType.Major, @"Allows Pain Suppression to be cast while stunned.")]
         public bool GlyphofPainSuppression { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-        [GlyphData(16, "Glyph of Penance", GlyphType.Major, @"Reduces the cooldown of Penance by 2 sec.")]
-        public bool GlyphofPenance { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
-        [GlyphData(17, "Glyph of Power Word: Shield", GlyphType.Major, @"Your Power Word: Shield also heals the target for 20% of absorption amount.")]
-        public bool GlyphofPowerWordShield { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
-        [GlyphData(18, "Glyph of Prayer of Healing", GlyphType.Major, @"Your Prayer of Healing spell also heals an additional 20% of its initial heal over 6 sec.")]
-        public bool GlyphofPrayerofHealing { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
         [GlyphData(19, "Glyph of Psychic Scream", GlyphType.Major, @"Increases the duration of your Pscychic Scream by 2 sec. and increases its cooldown by 8 sec.")]
         public bool GlyphofPsychicScream { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
-        [GlyphData(20, "Glyph of Renew", GlyphType.Major, @"Reduces the duration of your Renew by 3 sec. but increases the amount healed each tick by 25%.")]
-        public bool GlyphofRenew { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
         [GlyphData(21, "Glyph of Scourge Imprisonment", GlyphType.Major, @"Reduces the cast time of your Shackle Undead by 0.5 sec.")]
         public bool GlyphofScourgeImprisonment { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
         [GlyphData(22, "Glyph of Shadow", GlyphType.Major, @"While in Shadowform, your spell critical strikes increase your spell power by 30% of your Spirit for 10 sec.")]
         public bool GlyphofShadow { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
-        [GlyphData(23, "Glyph of Shadow Word: Death", GlyphType.Major, @"Targets below 35% health take an additional 10% damage from your Shadow Word: Death spell.")]
-        public bool GlyphofShadowWordDeath { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
-        [GlyphData(24, "Glyph of Shadow Word: Pain", GlyphType.Major, @"The periodic damage ticks of your Shadow Word: Pain spell restore 1% of your base mana.")]
-        public bool GlyphofShadowWordPain { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
         [GlyphData(25, "Glyph of Smite", GlyphType.Major, @"Your Smite spell inflicts an additional 20% damage against targets afflicted by Holy Fire.")]
         public bool GlyphofSmite { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         [GlyphData(26, "Glyph of Spirit of Redemption", GlyphType.Major, @"Increases the duration of Spirit of Redemption by 6 sec.")]
         public bool GlyphofSpiritofRedemption { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
-
-        // Minor
+        [GlyphData(34, "Glyph of Divine Accuracy", GlyphType.Major, @"Increases your chance to hit with your Smite by 18%.")]
+        public bool GlyphofDivineAccuracy { get { return _glyphData[34]; } set { _glyphData[34] = value; } }
+        [GlyphData(35, "Glyph of Psychic Horror", GlyphType.Major, @"Reduces the cooldown of your Psychic Horror by 60 sec.")]
+        public bool GlyphofPsychicHorror { get { return _glyphData[35]; } set { _glyphData[35] = value; } }
+        [GlyphData(36, "Glyph of Spirit Tap", GlyphType.Major, @"When you kill a target with your Shadow Word: Death and yield experience or honor, you instantly receive 12% of your total mana over 12 sec.")]
+        public bool GlyphofSpiritTap { get { return _glyphData[36]; } set { _glyphData[36] = value; } }
+        #endregion
+        #region Minor
         [GlyphData(27, "Glyph of Fading", GlyphType.Minor, @"Reduces the mana cost of your Fade spell by 30%.")]
         public bool GlyphofFading { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
         [GlyphData(28, "Glyph of Fortitude", GlyphType.Minor, @"Reduces the mana cost of your Power Word: Fortitude and Prayer of Fortitude by 50%.")]
@@ -503,7 +512,7 @@ namespace Rawr
         public bool GlyphofShadowProtection { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
         [GlyphData(32, "Glyph of Shadowfiend", GlyphType.Minor, @"Receive 5% of your maximum mana if your Shadowfiend dies from damage.")]
         public bool GlyphofShadowfiend { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
-
+        #endregion
 
     }
 
