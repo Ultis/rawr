@@ -158,6 +158,8 @@ namespace Rawr
         ExecuteHit,
         /// <summary>The Warrior hits with a Colossus Smash</summary>
         ColossusSmashHit,
+        /// <summary>The Warrior does damage with Cleave or Whirlwind</summary>
+        WWorCleaveHit,
         #endregion
         #region Added by Warlock
         /// <summary>The Warlock's Corruption DoT ticks</summary>

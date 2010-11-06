@@ -463,6 +463,7 @@ namespace Rawr {
         BonusShockwaveDamage,
         BonusWarrior_T7_2P_SlamDamage,
         BonusExecOPMSDamageMultiplier,
+        BonusCleaveDamageMultiplier,
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
@@ -2287,6 +2288,15 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Bonus Cleave / WW Damage")]
+        public float BonusCleaveWWDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier] = value; }
         }
         #endregion
         #region Added by Rawr.Mage

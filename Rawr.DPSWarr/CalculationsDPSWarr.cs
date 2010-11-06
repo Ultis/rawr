@@ -1422,7 +1422,17 @@ These numbers to do not include racial bonuses.",
             new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
             new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
         };*/
+
+        private static SpecialEffect[] _SE_MeatCleaver = {
+            null, //0 Talents
+            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
+            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
+        };
+
+        
         #endregion
+
+
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
@@ -1499,6 +1509,7 @@ These numbers to do not include racial bonuses.",
             if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
             if (talents.Enrage              > 0                                         ) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
             if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
+            if (talents.MeatCleaver > 0 && (dpswarchar.calcOpts.M_Whirlwind || dpswarchar.calcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
             #region Mastery Related
             float MasteryValue = 0f;
@@ -1877,6 +1888,9 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
 
+                triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.WhirlWind>().allNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().allNumActivates);
+                triggerChances[Trigger.WWorCleaveHit] = 1f;
+                
                 float MSCritChance = 0f, MSActs = 0f;
                 Rotation.AbilWrapper ms = charStruct.Rot.GetWrapper<Skills.MortalStrike>();
                 MSActs = ms.allNumActivates; MSCritChance = ms.ability.MHAtkTable.Crit;

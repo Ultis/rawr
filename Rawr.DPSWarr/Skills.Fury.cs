@@ -68,6 +68,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 10f; // In Seconds
             RageCost = 25f;
             DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * 0.65f;
+            DamageBonus = 1f + StatS.BonusCleaveWWDamageMultiplier;
             //
             Initialize();
         }
@@ -421,7 +422,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 30f;
             Targets = 2f + (Talents.GlyphOfCleaving ? 1f : 0f);
             DamageBase = 6f + StatS.AttackPower * 0.562f;
-            DamageBonus = 1f + Talents.WarAcademy * 0.05f;
+            DamageBonus = 1f + Talents.WarAcademy * 0.05f + StatS.BonusCleaveWWDamageMultiplier;
             //
             Initialize();
         }
