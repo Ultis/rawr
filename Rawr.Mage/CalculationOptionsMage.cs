@@ -721,6 +721,13 @@ namespace Rawr.Mage
             CooldownRestrictionList = null;
         }
 
+        private bool _Beta;
+        public bool Beta
+        {
+            get { return _Beta; }
+            set { _Beta = value; OnPropertyChanged("Beta"); }
+        }
+
         private bool _ReconstructSequence;
         public bool ReconstructSequence
         {

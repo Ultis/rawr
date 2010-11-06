@@ -2164,6 +2164,8 @@ namespace Rawr //O O . .
         {
             Initialize();
             _activeBuffs = new List<Buff>();
+
+            EnforceGemRequirements = true;
         }
 
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,

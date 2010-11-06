@@ -435,11 +435,7 @@ namespace Rawr.Mage
             DirectDamageModifier = template.BaseDirectDamageModifier;
             DotDamageModifier = template.BaseDotDamageModifier;
             if (castingState.PowerInfusion) CostModifier -= 0.2f; // don't have any information on this, going by best guess
-#if RAWR4
             if (castingState.ArcanePower) CostModifier += 0.1f;
-#else
-            if (castingState.ArcanePower) CostModifier += 0.2f;
-#endif
             InterruptProtection = template.BaseInterruptProtection;
 
             SpellModifier = template.BaseSpellModifier * castingState.StateSpellModifier;
@@ -758,21 +754,13 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
-#if !RAWR4
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * solver.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
-#endif
-
             cost *= (1 - solver.ClearcastingChance);
 
             // from what I know MOE works on base cost
             // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
             if (!solver.CalculationOptions.EffectDisableManaSources)
             {
-#if RAWR4
                 cost -= CritRate * BaseCost * 0.15f * solver.MageTalents.MasterOfElements;
-#else
-                cost -= CritRate * BaseCost * 0.1f * solver.MageTalents.MasterOfElements;
-#endif
                 // Judgement of Wisdom
                 // this is actually a PPM
                 cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
@@ -792,10 +780,6 @@ namespace Rawr.Mage
                 cost = (float)Math.Floor(BaseCost * CostAmplifier * CostModifier);
             }
 
-#if !RAWR4
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * solver.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
-#endif
-
             if (!manualClearcasting || clearcastingAveraged)
             {
                 cost *= (1 - solver.ClearcastingChance);
@@ -809,11 +793,7 @@ namespace Rawr.Mage
             // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
             if (!solver.CalculationOptions.EffectDisableManaSources)
             {
-#if RAWR4
                 cost -= CritRate * BaseCost * 0.15f * solver.MageTalents.MasterOfElements;
-#else
-                cost -= CritRate * BaseCost * 0.1f * solver.MageTalents.MasterOfElements;
-#endif
                 // Judgement of Wisdom
                 // this is actually a PPM
                 cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;

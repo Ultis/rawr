@@ -734,33 +734,6 @@ namespace Rawr.Mage
                 }
             }
             //threatPerSecond += (baseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
-            // 3.2 mode Empowered Fire ignite return
-#if !RAWR4
-            if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
-            {
-                // on average we have IgniteProcs per CastTime
-                double rate = IgniteProcs / CastTime;
-                // using an exponential distribution approximation for time between ignite procs
-                // we obtain chances for 0, 1 or 2 ignite ticks from each ignite
-                // using cummulative distribution function
-                // Pr(T <= 2) = 1 - e ^ -2*rate
-                // Pr(T <= 4) = 1 - e ^ -4*rate
-                // Pr(T >= 4) = e ^ -4*rate
-                // number of ticks from an ignite proc is then
-                // 2 * e ^ -4*rate + 1 * (1 - e ^ -4*rate - (1 - e ^ -2*rate))
-                // = 2 * e ^ -4*rate + e ^ -2*rate - e ^ -4*rate
-                // = e ^ -2*rate * (1 + e ^ -2*rate)
-                // an alternative would be to use geometric distribution approximation instead
-                // it is not clear which one more closely matches real data
-                double k = Math.Exp(-2 * rate);
-                double ticks = k * (1 + k);
-                // we now obtain average number of ticks per second
-                // as average number of ignite procs per second times average number of ticks per proc
-                double ticksPerSecond = rate * ticks;
-                // finally using the proc of the ability we get the mps bonus
-                manaRegenPerSecond += 0.02f * 3268f * CastingState.MageTalents.EmpoweredFire / 3.0f * (float)ticksPerSecond;
-            }
-#endif
         }
 
         public virtual void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
@@ -861,16 +834,6 @@ namespace Rawr.Mage
                         break;
                 }
             }
-#if !RAWR4
-            if (IgniteProcs > 0 && CastingState.MageTalents.EmpoweredFire > 0)
-            {
-                double rate = IgniteProcs / CastTime;
-                double k = Math.Exp(-2 * rate);
-                double ticks = k * (1 + k);
-                double ticksPerSecond = rate * ticks;
-                dict["Other"] += duration * 0.02f * 3268f * CastingState.MageTalents.EmpoweredFire / 3.0f * (float)ticksPerSecond;
-            }
-#endif
         }
 
         public void AddEffectContribution(Dictionary<string, SpellContribution> dict, float duration)

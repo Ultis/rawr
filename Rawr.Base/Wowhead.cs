@@ -220,7 +220,7 @@ namespace Rawr
         public static Item GetItem(int id) { return GetItem("www", id.ToString(), true); }
         public static Item GetItem(int id, bool filter) { return GetItem("www", id.ToString(), filter); }
         public static Item GetItem(int id, bool filter, string locale) { return GetItem(locale, id.ToString(), filter); }
-        public static Item GetItem(string query, bool filter) { return GetItem("www", query, filter); }
+        public static Item GetItem(string query, bool filter) { return GetItem("cata", query, filter); }
         public static Item GetItem(string site, string query, bool filter)
         {
             if (site.Equals("en")) site = "www";
@@ -403,6 +403,10 @@ namespace Rawr
             if (json.TryGetValue("hastertng", out tmp) || json.TryGetValue("mlehastertng", out tmp) || json.TryGetValue("rgdhastertng", out tmp) || json.TryGetValue("splhastertng", out tmp))
             {
                 item.Stats.HasteRating += Convert.ToSingle(tmp);
+            }
+            if (json.TryGetValue("mastrtng", out tmp))
+            {
+                item.Stats.MasteryRating += Convert.ToSingle(tmp);
             }
             if (json.TryGetValue("splpwr", out tmp) || json.TryGetValue("splheal", out tmp) || json.TryGetValue("spldmg", out tmp))
             {

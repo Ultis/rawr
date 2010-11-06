@@ -23,18 +23,24 @@ namespace Rawr.Mage
                 if (_defaultGemmingTemplates == null)
                 {
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 40113, 40152, 40155, 40153);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 42144, 40152, 40155, 40153);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old", false, 40113, 40152, 40155, 0, 40153, 41285);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old (Jewelcrafting)", false, 42144, 40152, 40155, 0, 40153, 41285);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 52207, 52239, 52208, 52205, 52217, 52296);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52217, 52296);
                 }
                 return _defaultGemmingTemplates;
             }
         }
 
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int potent, int reckless, int blue)
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int potent, int reckless, int artful, int blue, int meta)
         {
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = potent, BlueId = blue, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = reckless, BlueId = blue, PrismaticId = brilliant, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = potent, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = reckless, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            if (artful != 0)
+            {
+                list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = brilliant, YellowId = artful, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            }
         }
 
         public static CalculationsMage instance;
@@ -117,9 +123,6 @@ namespace Rawr.Mage
                     "Solution:Threat Reduction",
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
-#if !RAWR4
-                    "Spell Info:MBAM*Missile Barrage Arcane Missiles",
-#endif
                     "Spell Info:Arcane Blast(4)*Full debuff stack",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
                     "Spell Info:Arcane Barrage*Requires talent points",
@@ -147,22 +150,12 @@ namespace Rawr.Mage
                     "Spell Info:FrBFBIL*Fireball on Brain Freeze, Ice Lance on shatter combo, use Brain Freeze on shatter combo when available",
                     "Spell Info:FrBILFB*Fireball on Brain Freeze, always Ice Lance on shatter combo",
                     "Spell Info:FrBDFFFB*Frostfire Bolt on non-FOF Brain Freeze, on shatter combo Deep Freeze > BF Frostfire Bolt",
-#if RAWR4
                     "Spell Info:ArcaneManaNeutral*Mana neutral mix of arcane cycles",
                     "Spell Info:AB2ABar12AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 1 or 2 stack",
                     "Spell Info:AB2ABar02AMABABar*AB-AB-ABar, wait on ABar cooldown if needed, AM-AB-ABar on 0 or 2 stack",
                     "Spell Info:AB23ABar023AM*AB-AB-(AB-)-ABar, ABar on 2 stack if off cooldown, AM on 0, 2 or 3 stack",
                     "Spell Info:AB3ABar023AM*AB-AB-AB-ABar, AM on 0, 2 or 3 stack",
                     "Spell Info:ABSpam234AM*Spam AB, AM on 2, 3 or 4 stack",
-#else
-                    "Spell Info:AB2AM*AB-AB-AM regardless of procs",
-                    "Spell Info:AB3AM023MBAM*AB-AB-AB-AM, MBAM on 0, 2 or 3 stack",
-                    "Spell Info:AB4AM0234MBAM*AB-AB-AB-AB-AM, MBAM on 0, 2, 3 or 4 stack",
-                    "Spell Info:ABSpam0234MBAM*Spam AB, MBAM on 0, 2, 3 or 4 stack",
-                    "Spell Info:ABSpam024MBAM*Spam AB, MBAM on 0, 2 or 4 stack",
-                    "Spell Info:ABSpam034MBAM*Spam AB, MBAM on 0, 3 or 4 stack",
-                    "Spell Info:ABSpam04MBAM*Spam AB, MBAM on 0 or 4 stack",
-#endif
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
                     "Spell Info:Cone of Cold",
@@ -928,13 +921,26 @@ namespace Rawr.Mage
                     statsRaceSpirit = 180f;
                     break;
                 case 85:
-                    statsRaceHealth = 13418f;
-                    statsRaceMana = 6102f;
-                    statsRaceStrength = 31f;
-                    statsRaceAgility = 46f;
-                    statsRaceStamina = 60f;
-                    statsRaceIntellect = 191f;
-                    statsRaceSpirit = 180f;
+                    statsRaceHealth = 36853f;
+                    statsRaceMana = 17138f;
+                    switch (character.Race)
+                    {
+                        case CharacterRace.NightElf:
+                            statsRaceStrength = 33f;
+                            statsRaceAgility = 50f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 198f;
+                            statsRaceSpirit = 190f;
+                            break;
+                        case CharacterRace.Gnome:
+                        default:
+                            statsRaceStrength = 31f;
+                            statsRaceAgility = 46f;
+                            statsRaceStamina = 60f;
+                            statsRaceIntellect = 191f;
+                            statsRaceSpirit = 180f;
+                            break;
+                    }
                     break;
             }
             MageTalents talents = character.MageTalents;
@@ -943,17 +949,9 @@ namespace Rawr.Mage
             float statsRaceBonusManaMultiplier = 0.0f;
             if (character.Race == CharacterRace.Gnome)
             {
-#if RAWR4
                 statsRaceBonusManaMultiplier = 0.05f;
-#else
-                statsRaceBonusIntellectMultiplier = 0.05f;
-#endif
             }
-#if RAWR4
             float statsTalentBonusIntellectMultiplier = 0f;
-#else
-            float statsTalentBonusIntellectMultiplier = 0.03f * talents.ArcaneMind;
-#endif
             float statsRaceBonusSpiritMultiplier = 0.0f;
             if (character.Race == CharacterRace.Human)
             {
@@ -961,22 +959,14 @@ namespace Rawr.Mage
             }
 
             float statsWizardryBonusIntellectMultiplier = 0.0f;
-#if RAWR4
             if (calculationOptions.PlayerLevel >= 50)
             {
                 statsWizardryBonusIntellectMultiplier = 0.05f;
             }
-#endif
 
             Stats statsTotal = rawStats;
 
             float statsTalentBonusSpiritMultiplier = 0.0f;
-#if !RAWR4
-            if (talents.StudentOfTheMind > 0)
-            {
-                statsTalentBonusSpiritMultiplier = 0.01f + 0.03f * talents.StudentOfTheMind;
-            }
-#endif
             if (calculationOptions.EffectSpiritMultiplier != 1.0f)
             {
                 statsTotal.BonusSpiritMultiplier = (1 + statsTotal.BonusSpiritMultiplier) * calculationOptions.EffectSpiritMultiplier - 1;
@@ -987,13 +977,9 @@ namespace Rawr.Mage
             statsTotal.Stamina = (float)Math.Round((statsRaceStamina + statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier) - 0.00001);
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
-            statsTotal.Health = (float)Math.Round((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 10f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) * (1 + statsTotal.BonusHealthMultiplier));
+            statsTotal.Health = (float)Math.Round((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 14f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) * (1 + statsTotal.BonusHealthMultiplier));
             statsTotal.Mana = (float)Math.Round((statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect) * (1 + statsRaceBonusManaMultiplier));
-#if RAWR4
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
-#else
-            statsTotal.Armor = (float)Math.Round(statsTotal.Armor + statsTotal.Agility * 2f + 0.5f * statsTotal.Intellect * talents.ArcaneFortitude);
-#endif
 
             if (character.Race == CharacterRace.BloodElf)
             {
@@ -1001,7 +987,6 @@ namespace Rawr.Mage
             }
 
             float allResist = 0;
-#if RAWR4
             if (statsTotal.MageIceArmor > 0)
             {
                 statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + (talents.GlyphOfIceArmor ? 0.5f : 0.0f) + statsTotal.Mage2T9 * 0.2f));
@@ -1012,28 +997,9 @@ namespace Rawr.Mage
                 statsTotal.ManaRestoreFromMaxManaPerSecond += 0.006f * (talents.GlyphOfMageArmor ? 1.2f : 1.0f);
                 allResist += calculationOptions.GetSpellValueRound(0.048f);
             }
-#else
-            allResist += 0.5f * calculationOptions.PlayerLevel * talents.MagicAbsorption;
-            int frostWarding = talents.FrostWarding;
-
-            if (statsTotal.MageIceArmor > 0)
-            {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding + (talents.GlyphOfIceArmor ? 0.5f : 0.0f) + statsTotal.Mage2T9 * 0.2f));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding + (talents.GlyphOfIceArmor ? 0.5f : 0.0f)));
-            }
-            if (statsTotal.MageMageArmor > 0)
-            {
-                statsTotal.SpellCombatManaRegeneration += 0.5f + (talents.GlyphOfMageArmor ? 0.2f : 0.0f) + 0.1f * statsTotal.Mage2T9;
-                allResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + talents.ArcaneShielding * 0.25f);
-            }
-#endif
             if (statsTotal.MageMoltenArmor > 0)
             {
-#if RAWR4
                 statsTotal.SpellCrit += 0.03f + (talents.GlyphOfMoltenArmor ? 0.02f : 0.0f);
-#else
-                statsTotal.CritRating += (0.35f + (talents.GlyphOfMoltenArmor ? 0.2f : 0.0f) + 0.15f * statsTotal.Mage2T9) * statsTotal.Spirit;
-#endif
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
@@ -1044,48 +1010,13 @@ namespace Rawr.Mage
                 statsTotal.BonusManaGem += 0.4f;
             }
 
-#if !RAWR4
-            switch (talents.ArcaneMeditation)
-            {
-                case 1:
-                    statsTotal.SpellCombatManaRegeneration += 0.17f;
-                    break;
-                case 2:
-                    statsTotal.SpellCombatManaRegeneration += 0.33f;
-                    break;
-                case 3:
-                    statsTotal.SpellCombatManaRegeneration += 0.5f;
-                    break;
-            }
-            switch (talents.Pyromaniac)
-            {
-                case 1:
-                    statsTotal.SpellCombatManaRegeneration += 0.17f;
-                    break;
-                case 2:
-                    statsTotal.SpellCombatManaRegeneration += 0.33f;
-                    break;
-                case 3:
-                    statsTotal.SpellCombatManaRegeneration += 0.5f;
-                    break;
-            }
-
-            if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
-#endif
-
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
-#if RAWR4
             float spellDamageFromIntellectPercentage = 0f;
-#else
-            float spellDamageFromIntellectPercentage = 0.03f * talents.MindMastery;
-#endif
 
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.BonusSpellPowerDemonicPactMultiplier * calculationOptions.WarlockSpellPower);
             statsTotal.SpellPower += (float)Math.Floor(spellDamageFromIntellectPercentage * statsTotal.Intellect);
-#if RAWR4
             statsTotal.SpellPower += statsTotal.Intellect - 10;
-#endif
             //statsTotal.SpellPower += spellDamageFromSpiritPercentage * statsTotal.Spirit;
 
             statsTotal.CritBonusDamage += calculationOptions.EffectCritDamageBonus;
@@ -1115,9 +1046,6 @@ namespace Rawr.Mage
             fullResistRate += calculationOptions.EffectHolyOther * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowManaDrainFrequency * (1 - bossHitRate);
             fullResistRate += calculationOptions.EffectShadowSilenceFrequency * (1 - bossHitRate * StatConversion.GetAverageResistance(calculationOptions.TargetLevel, calculationOptions.PlayerLevel, statsTotal.ShadowResistance, 0));
-#if !RAWR4
-            statsTotal.Mp5 += 5 * Math.Min(1f, fullResistRate) * 0.01f * talents.MagicAbsorption * statsTotal.Mana;
-#endif
 
             return statsTotal;
         }

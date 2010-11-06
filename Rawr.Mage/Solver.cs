@@ -1718,7 +1718,6 @@ namespace Rawr.Mage
             BaseStats = calculations.GetCharacterStats(Character, additionalItem, rawStats, CalculationOptions);
 
             int[] talentData = MageTalents.Data;
-#if RAWR4
             int arcane = 0;
             for (int i = 0; i <= 20; i++)
             {
@@ -1734,23 +1733,6 @@ namespace Rawr.Mage
             {
                 frost += talentData[i];
             }
-#else
-            int arcane = 0;
-            for (int i = 0; i <= 29; i++)
-            {
-                arcane += talentData[i];
-            }
-            int fire = 0;
-            for (int i = 30; i <= 57; i++)
-            {
-                fire += talentData[i];
-            }
-            int frost = 0;
-            for (int i = 58; i <= 85; i++)
-            {
-                frost += talentData[i];
-            }
-#endif
             if (arcane > fire && arcane > frost)
             {
                 MaxTalents = arcane;
@@ -1794,8 +1776,6 @@ namespace Rawr.Mage
             mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImageEnabled;
 #if RAWR4
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
-#else
-            manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && BaseStats.ContainsSpecialEffect(effect => effect.Trigger == Trigger.ManaGem);
 #endif
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
@@ -2155,12 +2135,7 @@ namespace Rawr.Mage
             }
 
             EvocationCooldown = (240.0f - 60.0f * MageTalents.ArcaneFlows);
-#if RAWR4
             ColdsnapCooldown = (8 * 60);
-#else
-            ColdsnapCooldown = (8 * 60) * (1 - 0.1f * MageTalents.ColdAsIce);
-#endif
-#if RAWR4
             switch (MageTalents.ArcaneFlows)
             {
                 case 0:
@@ -2173,16 +2148,9 @@ namespace Rawr.Mage
                     ArcanePowerCooldown = 120.0f * (1 - 0.25f);
                     break;
             }
-#else
-            ArcanePowerCooldown = 120.0f * (1 - 0.15f * MageTalents.ArcaneFlows);
-#endif
             ArcanePowerDuration = 15.0f + (MageTalents.GlyphOfArcanePower ? 3.0f : 0.0f);
             IcyVeinsCooldown = 180.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
-#if RAWR4
             WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f));
-#else
-            WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f)) * (1 - 0.1f * MageTalents.ColdAsIce);
-#endif
             if (MageTalents.GlyphOfEternalWater)
             {
                 WaterElementalDuration = float.PositiveInfinity;
@@ -2383,7 +2351,6 @@ namespace Rawr.Mage
 
             if (manaGemEffectAvailable)
             {
-#if RAWR4
                 EffectCooldown cooldown = NewEffectCooldown();
                 cooldown.StandardEffect = StandardEffect.ManaGemEffect;
                 cooldown.SpecialEffect = null;
@@ -2399,26 +2366,6 @@ namespace Rawr.Mage
                 cooldown.Color = Color.FromArgb(0xFF, 0x00, 0x64, 0x00); //DarkGreen
                 CooldownList.Add(cooldown);
                 ManaGemEffectDuration = 10f;
-#else
-                foreach (SpecialEffect effect in BaseStats.SpecialEffects(e => e.Trigger == Trigger.ManaGem))
-                {
-                    EffectCooldown cooldown = NewEffectCooldown();
-                    cooldown.StandardEffect = 0;
-                    cooldown.SpecialEffect = effect;
-                    cooldown.Mask = (int)StandardEffect.ManaGemEffect;
-                    cooldown.HasteEffect = false;
-                    cooldown.ItemBased = true;
-                    cooldown.Name = "Mana Gem Effect";
-                    cooldown.Cooldown = 120f;
-                    cooldown.Duration = effect.Duration;
-                    cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, effect.Duration, 120);
-                    cooldown.AutomaticConstraints = false;
-                    cooldown.AutomaticStackingConstraints = true;
-                    cooldown.Color = Color.FromArgb(0xFF, 0x00, 0x64, 0x00); //DarkGreen
-                    CooldownList.Add(cooldown);
-                    ManaGemEffectDuration = effect.Duration;
-                }
-#endif
             }
             else
             {
@@ -2461,21 +2408,13 @@ namespace Rawr.Mage
         private void CalculateBaseStateStats()
         {
             Stats baseStats = BaseStats;            
-#if RAWR4
             BaseSpellHit = baseStats.HitRating * CalculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit;
-#else
-            BaseSpellHit = baseStats.HitRating * CalculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit + 0.01f * MageTalents.Precision;
-#endif
 
             int targetLevel = CalculationOptions.TargetLevel;
             int playerLevel = CalculationOptions.PlayerLevel;
 
             float hitRate = ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + BaseSpellHit;
-#if RAWR4
             RawArcaneHitRate = hitRate;
-#else
-            RawArcaneHitRate = hitRate + 0.01f * MageTalents.ArcaneFocus;
-#endif
             RawFireHitRate = hitRate;
             RawFrostHitRate = hitRate;
             hitRate = Math.Min(Spell.MaxHitRate, hitRate);
@@ -2490,7 +2429,6 @@ namespace Rawr.Mage
 
             float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
 
-#if RAWR4
             ArcaneThreatMultiplier = threatFactor;
             FireThreatMultiplier = threatFactor;
             FrostThreatMultiplier = threatFactor;
@@ -2498,21 +2436,8 @@ namespace Rawr.Mage
             NatureThreatMultiplier = threatFactor;
             ShadowThreatMultiplier = threatFactor;
             HolyThreatMultiplier = threatFactor;
-#else
-            ArcaneThreatMultiplier = threatFactor * (1 - MageTalents.ArcaneSubtlety * 0.2f);
-            FireThreatMultiplier = threatFactor * (1 - MageTalents.BurningSoul * 0.1f);
-            FrostThreatMultiplier = threatFactor * (1 - ((MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * MageTalents.FrostChanneling) : 0f));
-            FrostFireThreatMultiplier = threatFactor * Math.Min(1 - MageTalents.BurningSoul * 0.05f, 1 - ((MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * MageTalents.FrostChanneling) : 0f));
-            NatureThreatMultiplier = threatFactor;
-            ShadowThreatMultiplier = threatFactor;
-            HolyThreatMultiplier = threatFactor;
-#endif
 
-#if RAWR4
             float baseSpellModifier = (1 + baseStats.BonusDamageMultiplier) * CalculationOptions.EffectDamageMultiplier;
-#else
-            float baseSpellModifier = (1 + 0.01f * MageTalents.ArcaneInstability) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier) * CalculationOptions.EffectDamageMultiplier;
-#endif
             float baseAdditiveSpellModifier = 1.0f;
             BaseSpellModifier = baseSpellModifier;
             BaseAdditiveSpellModifier = baseAdditiveSpellModifier;
@@ -2520,11 +2445,7 @@ namespace Rawr.Mage
             BaseArcaneAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseFireSpellModifier = baseSpellModifier * (1 + baseStats.BonusFireDamageMultiplier);
             BaseFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * MageTalents.FirePower;
-#if RAWR4
             BaseFrostSpellModifier = baseSpellModifier * (1 + baseStats.BonusFrostDamageMultiplier);
-#else
-            BaseFrostSpellModifier = baseSpellModifier * (1 + 0.02f * MageTalents.PiercingIce) * (1 + 0.01f * MageTalents.ArcticWinds) * (1 + baseStats.BonusFrostDamageMultiplier);
-#endif
             BaseFrostAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseNatureSpellModifier = baseSpellModifier * (1 + baseStats.BonusNatureDamageMultiplier);
             BaseNatureAdditiveSpellModifier = baseAdditiveSpellModifier;
@@ -2532,13 +2453,8 @@ namespace Rawr.Mage
             BaseShadowAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseHolySpellModifier = baseSpellModifier * (1 + baseStats.BonusHolyDamageMultiplier);
             BaseHolyAdditiveSpellModifier = baseAdditiveSpellModifier;
-#if RAWR4
             BaseFrostFireSpellModifier = baseSpellModifier * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
-#else
-            BaseFrostFireSpellModifier = baseSpellModifier * (1 + 0.02f * MageTalents.PiercingIce) * (1 + 0.01f * MageTalents.ArcticWinds) * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
-#endif
             BaseFrostFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * MageTalents.FirePower;
-#if RAWR4
             switch (Specialization)
             {
                 case Specialization.Arcane:
@@ -2553,12 +2469,11 @@ namespace Rawr.Mage
                     BaseFrostFireSpellModifier *= 1.25f;
                     break;
             }
-#endif
 
             float spellCritPerInt = 0f;
             float spellCritBase = 0.9075f;
             float baseRegen = 0f;
-            float baseCombatRegen = 0f;
+            float baseCombatRegen = SpellTemplate.BaseMana[playerLevel] * 0.01f;
             switch (playerLevel)
             {
                 case 70:
@@ -2603,41 +2518,30 @@ namespace Rawr.Mage
                     break;
                 case 80:
                     baseRegen = 0.003345f;
-#if RAWR4
-                    baseCombatRegen = 32.681f;
                     spellCritPerInt = 0.00601838000875432f;
-#else
-                    spellCritPerInt = 0.006f;
-#endif
                     break;
                 case 81:
                     spellCritPerInt = 0.00458338981843553f;
                     baseRegen = 0.003345f;
-                    baseCombatRegen = 32.681f; // FIX
                     break;
                 case 82:
                     spellCritPerInt = 0.00349034016835503f;
                     baseRegen = 0.003345f;
-                    baseCombatRegen = 63.821f;
                     break;
                 case 83:
                     spellCritPerInt = 0.00265689996012952f;
                     baseRegen = 0.003345f;
-                    baseCombatRegen = 63.821f; // FIX
                     break;
                 case 84:
                     spellCritPerInt = 0.0020234600015101f;
                     baseRegen = 0.003345f;
-                    baseCombatRegen = 63.821f; // FIX
                     break;
                 case 85:
                     spellCritPerInt = 0.00154105000547133f;
                     baseRegen = 0.003345f;
-                    baseCombatRegen = 63.821f; // FIX
                     break;
             }
 
-#if RAWR4
             if (MageTalents.ArcaneConcentration == 3)
             {
                 ClearcastingChance = 0.1f;
@@ -2646,13 +2550,9 @@ namespace Rawr.Mage
             {
                 ClearcastingChance = 0.03f * MageTalents.ArcaneConcentration;
             }
-#else
-            ClearcastingChance = 0.02f * MageTalents.ArcaneConcentration;
-#endif
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
             // arcane potency is not exactly accurate because AM waves have lower chance to proc clearcasting
             // spell following AM should have lower crit chance
-#if RAWR4
             float arcanePotency;
             switch (MageTalents.ArcanePotency)
             {
@@ -2670,9 +2570,6 @@ namespace Rawr.Mage
             float potencyChance = 1f - (1f - ClearcastingChance) * (1f - ClearcastingChance);
             ArcanePotencyCrit = potencyChance * arcanePotency;
             float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + ArcanePotencyCrit + MageTalents.PiercingIce * 0.01f + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
-#else
-            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * MageTalents.ArcaneInstability + 0.15f * ClearcastingChance * MageTalents.ArcanePotency + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
-#endif
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;
@@ -2728,13 +2625,8 @@ namespace Rawr.Mage
 
             IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * 0.08f * MageTalents.Ignite;
 
-#if RAWR4
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
-#else
-            float mult = (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
-            float baseAddMult = (1 + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage);
-#endif
             BaseArcaneCritBonus = (1 + mult * baseAddMult);
             BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
             BaseFrostCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f));
@@ -2753,15 +2645,10 @@ namespace Rawr.Mage
             CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
 #endif
 
-#if RAWR4
             CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
-#else
-            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.02f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
-#endif
             BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * CastingSpeedMultiplier;
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
 
-#if RAWR4
             IncomingDamageAmpMelee = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - MeleeMitigation) * (1 - Dodge) * (1 - DamageTakenReduction);
             IncomingDamageAmpPhysical = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - MeleeMitigation) * (1 - DamageTakenReduction);
             IncomingDamageAmpArcane = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ArcaneResistance, 0)) * (1 - DamageTakenReduction);
@@ -2770,16 +2657,6 @@ namespace Rawr.Mage
             IncomingDamageAmpNature = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.NatureResistance, 0)) * (1 - DamageTakenReduction);
             IncomingDamageAmpShadow = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ShadowResistance, 0)) * (1 - DamageTakenReduction);
             IncomingDamageAmpHoly = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - DamageTakenReduction);
-#else
-            IncomingDamageAmpMelee = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - 0.01f * MageTalents.ArcticWinds) * (1 - MeleeMitigation) * (1 - Dodge) * (1 - DamageTakenReduction);
-            IncomingDamageAmpPhysical = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - 0.01f * MageTalents.ArcticWinds) * (1 - MeleeMitigation) * (1 - DamageTakenReduction);
-            IncomingDamageAmpArcane = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ArcaneResistance, 0)) * (1 - DamageTakenReduction);
-            IncomingDamageAmpFire = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FireResistance, 0)) * (1 - DamageTakenReduction);
-            IncomingDamageAmpFrost = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.FrostResistance, 0)) * (1 - DamageTakenReduction);
-            IncomingDamageAmpNature = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.NatureResistance, 0)) * (1 - DamageTakenReduction);
-            IncomingDamageAmpShadow = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - StatConversion.GetAverageResistance(targetLevel, playerLevel, baseStats.ShadowResistance, 0)) * (1 - DamageTakenReduction);
-            IncomingDamageAmpHoly = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 + 0.01f * MageTalents.PlayingWithFire) * (1 - 0.02f * MageTalents.FrozenCore) * (1 - DamageTakenReduction);
-#endif
 
             IncomingDamageDpsMelee = IncomingDamageAmpMelee * (CalculationOptions.MeleeDps * (1 + Math.Max(0, CalculationOptions.MeleeCrit / 100.0f - PhysicalCritReduction) * (2 * (1 - CritDamageReduction) - 1)) + CalculationOptions.MeleeDot);
             IncomingDamageDpsPhysical = IncomingDamageAmpPhysical * (CalculationOptions.PhysicalDps * (1 + Math.Max(0, CalculationOptions.PhysicalCrit / 100.0f - PhysicalCritReduction) * (2 * (1 - CritDamageReduction) - 1)) + CalculationOptions.PhysicalDot);
@@ -2810,14 +2687,12 @@ namespace Rawr.Mage
 
             Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;
-#if RAWR4
             if (Specialization == Specialization.Arcane)
             {
                 ManaAdeptBonus = 0.015f * Mastery;
                 needsQuadratic = true;
                 needsSolutionVariables = true;
             }
-#endif
         }
 
         private void InitializeSpellTemplates()
@@ -3697,10 +3572,7 @@ namespace Rawr.Mage
                     evoBaseState = BaseState.Tier10TwoPieceState;
                 }
                 int evocationSegments = (restrictManaUse) ? SegmentList.Count : 1;
-                float evocationDuration = (8f/* + baseStats.EvocationExtension*/) / evoBaseState.CastingSpeed;
-#if RAWR4
-                evocationDuration = 6f / evoBaseState.CastingSpeed;
-#endif
+                float evocationDuration = 6f / evoBaseState.CastingSpeed;
                 EvocationDuration = evocationDuration;
                 EvocationDurationIV = evocationDuration / 1.2f;
                 EvocationDurationHero = evocationDuration / 1.3f;

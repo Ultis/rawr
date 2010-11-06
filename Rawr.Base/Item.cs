@@ -522,7 +522,7 @@ namespace Rawr
 
         internal static bool IsJewelersGemId(int id)
         {
-            return (id == 42142 || id == 36766 || id == 42148 || id == 42143 || id == 42152 || id == 42153 || id == 42146 || id == 42158 || id == 42154 || id == 42150 || id == 42156 || id == 42144 || id == 42149 || id == 36767 || id == 42145 || id == 42155 || id == 42151 || id == 42157);
+            return (id == 42142 || id == 36766 || id == 42148 || id == 42143 || id == 42152 || id == 42153 || id == 42146 || id == 42158 || id == 42154 || id == 42150 || id == 42156 || id == 42144 || id == 42149 || id == 36767 || id == 42145 || id == 42155 || id == 42151 || id == 42157 || id == 52296);
         }
 
         private void UpdateGemInformation()
@@ -816,7 +816,11 @@ namespace Rawr
 						volatileRequirements = true; //2 reds
 						meetsRequirements = redGems >= 2;
 						break;
-					case 25896:
+                    case 52296:
+                        volatileRequirements = true; //2 yellows
+                        meetsRequirements = yellowGems >= 2;
+                        break;
+                    case 25896:
 					case 44087:
 						volatileRequirements = true; //3 blues
 						meetsRequirements = blueGems >= 3;
@@ -920,7 +924,7 @@ namespace Rawr
 
 		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, Rawr.Properties.GeneralSettings.Default.Locale); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, locale, "www"); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, locale, "cata"); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
@@ -1338,6 +1342,7 @@ namespace Rawr
             }
 		}
 
+#if RAWR4
         [XmlIgnore]
         private Reforging _reforging;
         [XmlIgnore]
@@ -1353,8 +1358,9 @@ namespace Rawr
                 OnIdsChanged();
             }
         }
+#endif
 
-		// 1-based index
+        // 1-based index
 		public Item GetGem(int index)
 		{
 			switch (index)
