@@ -7,7 +7,7 @@ namespace Rawr.ShadowPriest.Spells
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
-
+            
             manaCost = 0.25f * Constants.BaseMana;
             shortName = "DP";
         }

@@ -10,7 +10,7 @@ using Rawr;
 namespace Rawr.ShadowPriest
 {
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
-    public class CalculationsShadowPriest : CalculationsBase 
+    public class CalculationsShadowPriestOld : CalculationsBase 
     {
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
