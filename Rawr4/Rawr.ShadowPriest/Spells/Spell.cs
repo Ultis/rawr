@@ -24,13 +24,15 @@ namespace Rawr.ShadowPriest.Spells
         protected float spCoef = 0f;
         protected float dotBaseCoef = 1f;
         protected float dotSpCoef = 0f;
-        protected float dotCanCrit = 0f;
         protected float dotCritModifier = 1f;
 
         protected float spellPower = 0f;
 
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
+
+        protected string shortName = "Spell";
+
 
         /// <summary>
         /// This Constructor calls SetBaseValues.
@@ -63,7 +65,6 @@ namespace Rawr.ShadowPriest.Spells
             dotSpCoef = 0f;
             dotCritModifier = 1f;
             directCoefBonus = 0f;
-            dotCanCrit = 0f;
             spellPower = 0f;
         }
 
@@ -72,8 +73,6 @@ namespace Rawr.ShadowPriest.Spells
             SetBaseValues();
             Initialize(args);
         }
-
-        protected string shortName = "Spell";
 
         protected static void add(Spell sp1, Spell sp2, Spell nS)
         {
@@ -219,7 +218,7 @@ namespace Rawr.ShadowPriest.Spells
         { get { return spellPower * spCoef * totalCoef; } }
 
         public float PeriodicTick
-        { get { return totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * dotCritModifier * CritChance); } }
+        { get { return totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCritModifier * CritChance); } }
 
         public float PeriodicTicks
         {
@@ -301,11 +300,11 @@ namespace Rawr.ShadowPriest.Spells
             spellPower += args.Stats.SpellPower;
             crit += args.Stats.SpellCrit;
             missChance -= args.Stats.SpellHit;
-            totalCoef *= 1 + args.Stats.BonusDamageMultiplier; //ret + bm buff
+            totalCoef *= 1 + args.Stats.BonusDamageMultiplier; //ret + bm + arcane buff
             if (missChance < 0) missChance = 0;
             manaCost = (float)Math.Floor(manaCost);
-            //base resistance by level
-            totalCoef *= 1f - StatConversion.GetAverageResistance(80, 83, 0, 0);
+            //TODO: base resistance by level depending on what bossis being battled
+            totalCoef *= 1f - StatConversion.GetAverageResistance(85, 87, 0, 0);
         }
 
         public void ApplyDotHaste(ISpellArgs args)

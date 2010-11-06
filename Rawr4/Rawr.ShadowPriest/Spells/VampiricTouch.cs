@@ -1,20 +1,17 @@
 ﻿using System;
 
-
 namespace Rawr.ShadowPriest.Spells
 {
-    public class ShadowWordPain : Spell
+    public class VampiricTouch : Spell
     {
         /// <summary>
-        /// Shadow Word Pain is a dot that lasts for 18 seconds.
+        /// Shadow Word Pain is a dot that lasts for 15 seconds.
         /// It Benifits from:
         /// Talents:
-        /// Twin Disciplines, Mental Agility, Dark Evangelism, Darkness (to be handeled in Char stats), Improved Shadow Word:Pain, Shadowform, Pain And suffering, Shadowy Apparition, Harnessed Shadows
-        /// Glyphs:
-        /// Prime-Shadow Word: Pain
-        //TODO: Pain and suffering, Shadowy Apparition, Get base Values from Beta, Harnessed Shadows (mastery)
+        /// Twin Disciplines, Dark Evangelism, Darkness (to be handeled in Char stats), Shadowform, Sin and punishment.
+        //TODO: Get base Values from Beta, fear from Sin and Punishment (Might not be needed)
         /// </summary>
-        public ShadowWordPain() : base()
+        public VampiricTouch() : base()
         { 
         }
 
@@ -29,8 +26,8 @@ namespace Rawr.ShadowPriest.Spells
             periodicTick = 556f / 4f; //Check
             periodicTicks = 6f; //Check
             periodicTickTime = 3f; //Check
-            manaCost = 0.22f * Constants.BaseMana;
-            shortName = "SW:P"; 
+            manaCost = 0.16f * Constants.BaseMana;
+            shortName = "VT"; 
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)
@@ -38,40 +35,35 @@ namespace Rawr.ShadowPriest.Spells
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
 
-            totalCoef += .01f * args.Talents.ImprovedShadowWordPain;
-            manaCost *= 1 - .2f * args.Talents.MentalAgility;
             totalCoef += .01f + args.Talents.TwinDisciplines;
             totalCoef += .01f + args.Talents.Evangelism;
-            totalCoef += .01f + args.Talents.ImprovedShadowWordPain;
             totalCoef += .01f + args.Talents.Shadowform;
-
-            if (args.Talents.GlyphofShadowWordPain)
-                periodicTick *= 1.1f; //Add 10% periodic damage
             
             ApplyDotHaste(args);
             base.Initialize(args);
         }
 
         #region hide
-        public ShadowWordPain (ISpellArgs args)
+        public VampiricTouch(ISpellArgs args)
             : this()
         {
             Initialize(args);
         }
 
-        public static ShadowWordPain operator +(ShadowWordPain A, ShadowWordPain B)
+        public static VampiricTouch operator +(VampiricTouch A, VampiricTouch B)
         {
-            ShadowWordPain C = (ShadowWordPain)A.MemberwiseClone();
+            VampiricTouch C = (VampiricTouch)A.MemberwiseClone();
             add(A, B, C);
             return C;
         }
 
-        public static ShadowWordPain operator *(ShadowWordPain A, float b)
+        public static VampiricTouch operator *(VampiricTouch A, float b)
         {
-            ShadowWordPain C = (ShadowWordPain)A.MemberwiseClone();
+            VampiricTouch C = (VampiricTouch)A.MemberwiseClone();
             multiply(A, b, C);
             return C;
         }
         #endregion
+
     }
 }

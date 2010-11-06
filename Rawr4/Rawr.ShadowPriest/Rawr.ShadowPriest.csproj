@@ -119,6 +119,7 @@
     <Compile Include="Spells\ShadowWordDeath.cs" />
     <Compile Include="Spells\ShadowWordPain.cs" />
     <Compile Include="Spells\Spell.cs" />
+    <Compile Include="Spells\VampiricTouch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
