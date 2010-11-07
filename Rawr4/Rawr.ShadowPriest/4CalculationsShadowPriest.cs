@@ -20,12 +20,14 @@ namespace Rawr.ShadowPriest
                     // Meta
                     int chaotic = 41285;
 
+                    /* NYI
                     //Cogwheel
                     int fracturedGW = 59480; //mastery
                     int ridgidGW = 59493; //hit
                     int smoothGW = 59378; //crit
                     int quickGW = 59479; //haste
                     int sparklingGW = 59496; //spirit
+                    */
 
                     // [0] uncommon
                     // [1] rare
@@ -181,9 +183,28 @@ namespace Rawr.ShadowPriest
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            Stats statsTotal = statsRace + statsItems + statsBuffs;
+            Stats statsTotal = new Stats();
+
+            statsTotal.Accumulate(statsRace);
+            statsTotal.Accumulate(statsItems);
+            statsTotal.Accumulate(statsBuffs);
+
+            #region Spec Modifiers
             //Assume all equiped items are cloth
             statsTotal.BonusIntellectMultiplier += .05f;
+
+            //Talents
+            //statsTotal.HitRating += (.5f * character.PriestTalents.TwistedFaith) * statsTotal.Spirit;
+            statsTotal.HitRating += character.PriestTalents.TwistedFaith;
+            statsTotal.SpellHaste *= 1 + (.01f * character.PriestTalents.Darkness);
+            statsTotal.SpellPower *= 1 + (.02f * character.PriestTalents.TwinDisciplines);
+            statsTotal.ShadowDamage *= 1 + (.01f * character.PriestTalents.TwistedFaith);
+
+            //Assume Shadow Spec
+            //Shadow Power
+            statsTotal.BonusSpellPowerMultiplier += 0.25f;
+            statsTotal.BonusSpellCritMultiplier += 1f;
+            #endregion
 
             statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
             statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
@@ -205,17 +226,13 @@ namespace Rawr.ShadowPriest
 
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.SpellHaste);
 
-            //talents
-            statsTotal.HitRating += (.5f * character.PriestTalents.TwistedFaith) * statsTotal.Spirit;
-            statsTotal.SpellHaste *= 1 + (.01f * character.PriestTalents.Darkness);
-            statsTotal.SpellPower *= 1 + (.02f * character.PriestTalents.TwinDisciplines);
-            statsTotal.ShadowDamage *= 1 + (.01f * character.PriestTalents.TwistedFaith);
 
-            //Assume Shadow Spec
-            //Shadow Power
-            statsTotal.BonusSpellPowerMultiplier += 0.25f;
-            statsTotal.BonusSpellCritMultiplier += 1f;
 
+            //Innerfire
+            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.Armor * 1.6f);
+
+            //Draenei
+            if (character.Race == CharacterRace.Draenei) statsTotal.HitRating += StatConversion.RATING_PER_SPELLHIT;
             statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             return statsTotal;

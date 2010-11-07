@@ -11,6 +11,7 @@ namespace Rawr.ShadowPriest.Spells
             manaCost = 0.12f * Constants.BaseMana;
             cooldown = 10f;
             shortName = "SW:D";
+            name = "Shadow Word: Death";
         }
     }
 }

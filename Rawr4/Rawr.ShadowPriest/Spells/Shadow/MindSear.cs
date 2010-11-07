@@ -22,6 +22,7 @@ namespace Rawr.ShadowPriest.Spells
             baseMaxDamage = 97;
             manaCost = 0.28f * Constants.BaseMana;
             shortName = "Sear";
+            name = "Mind Sear";
         }
     }
 }

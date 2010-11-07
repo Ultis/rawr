@@ -28,6 +28,7 @@ namespace Rawr.ShadowPriest.Spells
             periodicTickTime = 3f; //Check          
             manaCost = 0.25f * Constants.BaseMana;
             shortName = "DP";
+            name = "Devouring Plauge";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)

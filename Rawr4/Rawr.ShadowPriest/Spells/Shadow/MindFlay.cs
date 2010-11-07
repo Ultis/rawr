@@ -31,6 +31,7 @@ namespace Rawr.ShadowPriest.Spells
             baseCastTime = 3f;
             manaCost = 0.22f * Constants.BaseMana;
             shortName = "MF";
+            name = "Mind Flay";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)

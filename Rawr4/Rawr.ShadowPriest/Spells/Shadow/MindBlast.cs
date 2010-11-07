@@ -24,6 +24,7 @@ namespace Rawr.ShadowPriest.Spells
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
             shortName = "MB";
+            name = "Mind Blast";
         }
 
         public override void Initialize(ISpellArgs args)

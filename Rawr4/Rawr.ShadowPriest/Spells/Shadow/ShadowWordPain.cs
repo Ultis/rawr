@@ -30,7 +30,8 @@ namespace Rawr.ShadowPriest.Spells
             periodicTicks = 6f; //Check
             periodicTickTime = 3f; //Check
             manaCost = 0.22f * Constants.BaseMana;
-            shortName = "SW:P"; 
+            shortName = "SW:P";
+            name = "Shadow Word: Pain";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)

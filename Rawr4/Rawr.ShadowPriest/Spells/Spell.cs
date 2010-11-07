@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public abstract class Spell
+    public class SpellListShadowPriest
     {
+        public static readonly List<Spell> ShadowSpellList = new List<Spell>() { new VampiricTouch(), new DevouringPlauge(), new MindBlast(), new ShadowWordPain(), new MindFlay(), new MindSpike(), new ShadowWordDeath()};
+        //public static readonly List<Spell> HolySpellList = new List<Spell>() { "Penance", "Holy Fire", "Devouring Plague", "Shadow Word: Pain", "Mind Blast", "Shadow Word: Death", "Smite" };
+
+    }
+    public abstract class Spell
+    {   
+
         protected float baseMinDamage = 0f;
         protected float baseMaxDamage = 0f;
         protected float baseCastTime = 0f;
@@ -31,8 +40,8 @@ namespace Rawr.ShadowPriest.Spells
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
 
-        protected string shortName = "Spell";
-
+        public string shortName = "ShortSpellName";
+        public string name = "SpellName";
 
         /// <summary>
         /// This Constructor calls SetBaseValues.

@@ -9,6 +9,7 @@ namespace Rawr.ShadowPriest.Spells
             base.SetBaseValues();
 
             shortName = "SF";
+            name = "Shadow Fiend";
         }
     }
 }

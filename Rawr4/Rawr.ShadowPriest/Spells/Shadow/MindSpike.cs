@@ -13,6 +13,7 @@ namespace Rawr.ShadowPriest.Spells
             baseCastTime = 1.5f;
             manaCost = 0.12f * Constants.BaseMana;
             shortName = "Spike";
+            name = "Mind Spike";
         }
     }
 }

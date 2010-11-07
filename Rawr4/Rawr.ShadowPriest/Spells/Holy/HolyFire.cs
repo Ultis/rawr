@@ -26,6 +26,9 @@ namespace Rawr.ShadowPriest.Spells
             baseCastTime = 1.5f;
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
+            shortName = "HF";
+            name = "Holy Fire";
+
         }
 
         public override void Initialize(ISpellArgs args)

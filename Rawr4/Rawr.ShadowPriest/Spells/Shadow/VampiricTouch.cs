@@ -27,7 +27,8 @@ namespace Rawr.ShadowPriest.Spells
             periodicTicks = 6f; //Check
             periodicTickTime = 3f; //Check
             manaCost = 0.16f * Constants.BaseMana;
-            shortName = "VT"; 
+            shortName = "VT";
+            name = "Vampiric Touch";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)

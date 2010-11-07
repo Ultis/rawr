@@ -9,17 +9,30 @@ namespace Rawr.ShadowPriest
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
-        #region Variable Declarations and Definitions
-
-        public Stats BasicStats { get; set; }
+        private Stats basicStats;
 
         public Character LocalCharacter { get; set; }
+        
+        public Stats BasicStats
+        {
+            get { return basicStats; }
+            set { basicStats = value; }
+        }
 
-        private float _overallPoints = 0f;
+        public Spell DevouringPlauge;
+        public Spell MindBlast;
+        public Spell MindFlay;
+
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get
+            {
+                float f = 0f;
+                foreach (float f2 in _subPoints)
+                    f += f2;
+                return f;
+            }
+            set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f };
@@ -29,7 +42,18 @@ namespace Rawr.ShadowPriest
             set { _subPoints = value; }
         }
 
-        #endregion
+        public float DpsPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
+
 
         #region the overridden method (GetCharacterDisplayCalculationValues)
         /// <summary>
@@ -55,7 +79,7 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Hit", BasicStats.HitRating.ToString());
+            dictValues.Add("Hit", BasicStats.SpellHit.ToString());
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
             dictValues.Add("Crit", BasicStats.CritRating.ToString());
             dictValues.Add("Haste", BasicStats.HasteRating.ToString());

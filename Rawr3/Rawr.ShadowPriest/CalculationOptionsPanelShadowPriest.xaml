@@ -17,9 +17,7 @@
     <UserControl.Resources>
         <local:CalculationOptionsShadowPriest x:Key="CalculationOptionsShadowPriestDataSource" d:IsDataSource="True"/>
     </UserControl.Resources>
-
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsShadowPriestDataSource}}">
-        <!--
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -75,6 +73,6 @@
         <CheckBox Content="PTR Mode *" Grid.ColumnSpan="3" Grid.Row="17" Name="ckPTRMode" Margin="4,2" IsChecked="{Binding Path=PTRMode, Mode=TwoWay}" FontWeight="Bold" />
         <ListBox Grid.Column="1" Grid.Row="19" Name="lsSpellPriopity" Grid.ColumnSpan="2" Margin="4,2" MinHeight="90" ItemsSource="{Binding Path=SpellPriority}" />
         <TextBlock Grid.Column="1" Grid.Row="18" Name="LB_SpellPrio" Text="Spell Priority" Margin="4,2" Grid.ColumnSpan="2" FontWeight="Bold" Padding="0,2,0,0" />
-        --></Grid>
+</Grid>
 
 </UserControl>

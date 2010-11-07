@@ -26,6 +26,9 @@ namespace Rawr.ShadowPriest.Spells
             baseCastTime = 1.5f;
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
+            shortName = "SM";
+            name = "Smite";
+
         }
 
         public override void Initialize(ISpellArgs args)
