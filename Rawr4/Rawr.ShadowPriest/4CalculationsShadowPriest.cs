@@ -17,22 +17,52 @@ namespace Rawr.ShadowPriest
             {
                 if (_defaultGemmingTemplates == null)
                 {
-                    //Meta
-                    int chaotic = 0;
+                    // Meta
+                    int chaotic = 41285;
+
+                    //Cogwheel
+                    int fracturedGW = 59480; //mastery
+                    int ridgidGW = 59493; //hit
+                    int smoothGW = 59378; //crit
+                    int quickGW = 59479; //haste
+                    int sparklingGW = 59496; //spirit
 
                     // [0] uncommon
-                    // [1] perfect uncommon
-                    // [2] rare
-                    // [3] epic
-                    // [4] jewelcrafting
+                    // [1] rare
+                    // [2] jewelcrafting
+                    
+                    // Reds
+                    int[] brilliant = { 52084, 52207, 52257}; //int
+                    // Blue
+                    int[] sparkling = { 52087 };//spirit
+                    int[] rigid = { 0, 0, 52264 };//hit
+                    // Yellow
+                    int[] fractured = { 52094, 0, 52269 }; //mastery 
+                    int[] quick = { 0, 0, 52268  }; //haste
+                    int[] smooth = { 0, 0, 52266 }; //crit
+                    // Purple
+                    int[] veiled = { 52104 }; //int+hit
+                    int[] timeless = { 52098, 52248 }; //int+stam
+                    int[] purified = { 0, 52236 }; //int+spirit
+                    // Green
+                    int[] senseis = { 52128, 52237 }; //mastery+hit
+                    int[] piercing = { 52122, 52228 }; //crit+hit
+                    int[] lightning = { 0, 52225 }; //haste+hit
+                    int[] zen = { 52127, 52250 }; //mastery+spirit
+                    int[] puissant = { 52126, 52231 }; //mastery+stam
+                    int[] jagged = { 52121 }; //crit+stam
+                    int[] forceful = { 52124, 52218 }; //haste+stam
+                    // Orange
+                    int[] artful = { 52117, 52205 }; //int+mastery
+                    int[] reckless = { 52113 }; //int+haste
+                    int[] potent = { 0, 52239 }; //int+crit
 
-                    //Red
-                    //Blue
-                    //Yellow
-                    //Purple
-                    //Green
-                    //Orange
-              
+
+                    /*
+                     * red: runed, royal
+                     * yellow: reckless, quick
+                     * blue: royal, dazzling(, lustrous)
+                     */              
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     //AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], rigid[0], veiled[0], lambent[0], chaotic);
                 }
