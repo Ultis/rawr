@@ -858,7 +858,7 @@ namespace Rawr.DPSWarr.Skills
             //
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
-            Cd = 30f /*- (Talents.ImprovedIntercept * 5f)*/ - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
+            Cd = 30f - Talents.Skirmisher * 5f /*- (Talents.ImprovedIntercept * 5f)*/ - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
             RageCost = 10f;// -Talents.Precision * 1f;
             Targets = -1;
             Duration = 3f;
@@ -896,6 +896,37 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+    }
+
+    public class HeroicLeap : Ability
+    {
+        public static new string SName { get { return "Heroic Leap"; } }
+        public static new string SDesc { get { return "Leap through the air towards a targeted location, slamming down with destructive force to deal 100% weapon damage to all enemies within 5 yards, stunning them for 2 sec."; } }
+        public static new string SIcon { get { return "ability_heroicleap"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+
+        /// <summary>
+        /// Instant, 40 sec Cd, 
+        /// </summary>
+        /// <para>Talents: Skirmisher [Decreases Cooldown [10s * pts] Max: 2</para>
+        public HeroicLeap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            MinRange = 8f;
+            MaxRange = 25f;
+            Cd = 40f - 10f * Talents.Skirmisher;
+            RageCost = 0f;
+            StanceOkArms = StanceOkDef = StanceOkFury = true;
+            /*
+            //When calculating is ability going to include any targets between 8 and 25 range? It should be all targets within 8 yards of a point between 8 - 25 range.
+            DamageBase = combatFactors.NormalizedMhWeaponDmg;
+            Targets = 10f;
+            */
+
+        }
+
     }
     #endregion
     #region Other Abilities
