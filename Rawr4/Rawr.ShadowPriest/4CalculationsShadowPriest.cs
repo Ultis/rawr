@@ -195,7 +195,7 @@ namespace Rawr.ShadowPriest
 
             //Talents
             //statsTotal.HitRating += (.5f * character.PriestTalents.TwistedFaith) * statsTotal.Spirit;
-            statsTotal.HitRating += character.PriestTalents.TwistedFaith;
+            statsTotal.HitRating = character.PriestTalents.TwistedFaith;
             statsTotal.SpellHaste *= 1 + (.01f * character.PriestTalents.Darkness);
             statsTotal.SpellPower *= 1 + (.02f * character.PriestTalents.TwinDisciplines);
             statsTotal.ShadowDamage *= 1 + (.01f * character.PriestTalents.TwistedFaith);

@@ -86,26 +86,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
-      <Link>CalculationOptionsShadowPriest.cs</Link>
+      <Link>Old\CalculationOptionsShadowPriest.cs</Link>
     </None>
     <None Include="..\..\Rawr.ShadowPriest\CalculationsShadowPriest.cs">
-      <Link>CalculationsShadowPriest.cs</Link>
+      <Link>Old\CalculationsShadowPriest.cs</Link>
     </None>
     <None Include="..\..\Rawr.ShadowPriest\CharacterCalculationsShadowPriest.cs">
-      <Link>CharacterCalculationsShadowPriest.cs</Link>
+      <Link>Old\CharacterCalculationsShadowPriest.cs</Link>
     </None>
     <None Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
-      <Link>ComparisonCalculationShadowPriest.cs</Link>
+      <Link>Old\ComparisonCalculationShadowPriest.cs</Link>
     </None>
     <None Include="..\..\Rawr.ShadowPriest\Spell.cs">
-      <Link>Spell.cs</Link>
+      <Link>Old\Spell.cs</Link>
     </None>
     <None Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.xaml.cs">
-      <Link>CalculationOptionsPanelShadowPriest.xaml.cs</Link>
+      <Link>Old\CalculationOptionsPanelShadowPriest.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelShadowPriest.xaml</DependentUpon>
     </None>
     <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml.cs">
-      <Link>SpellPriorityForm.xaml.cs</Link>
+      <Link>Old\SpellPriorityForm.xaml.cs</Link>
       <DependentUpon>SpellPriorityForm.xaml</DependentUpon>
     </None>
     <Compile Include="4CalculationOptionsPanelShadowPriest.xaml.cs">
@@ -131,6 +131,7 @@
     <Compile Include="Spells\Shadow\ShadowWordPain.cs" />
     <Compile Include="Spells\Spell.cs" />
     <Compile Include="Spells\Shadow\VampiricTouch.cs" />
+    <None Include="4ClassDiagramShadowPriest.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
@@ -161,12 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.xaml">
-      <Link>CalculationOptionsPanelShadowPriest.xaml</Link>
+      <Link>Old\CalculationOptionsPanelShadowPriest.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
     <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml">
-      <Link>SpellPriorityForm.xaml</Link>
+      <Link>Old\SpellPriorityForm.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
