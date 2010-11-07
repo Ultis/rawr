@@ -384,7 +384,7 @@ namespace Rawr
         public bool GlyphofLightningBolt { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
         [GlyphData(2, "Glyph of Shocking", GlyphType.Prime, @"Reduces the global cooldown triggered by your shock spells to 1 sec.")]
         public bool GlyphofShocking { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        [GlyphData(22, "Glyph of Stormstrike", GlyphType.Prime, @"Increases the Nature damage bonus from your Stormstrike ability by an additional 8%.")]
+        [GlyphData(22, "Glyph of Stormstrike", GlyphType.Prime, @"Increases the critical strike chance bonus from your Stormstrike ability by an additional 10%.")]
         public bool GlyphofStormstrike { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         [GlyphData(13, "Glyph of Windfury Weapon", GlyphType.Prime, @"Increases the chance per swing for Windfury Weapon to trigger by 2%.")]
         public bool GlyphofWindfuryWeapon { get { return _glyphData[13]; } set { _glyphData[13] = value; } }

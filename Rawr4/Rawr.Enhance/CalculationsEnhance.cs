@@ -77,6 +77,7 @@ namespace Rawr.Enhance
                     "Complex Stats:Trinket 1 Uptime",
                     "Complex Stats:Trinket 2 Uptime",
                     "Complex Stats:Fire Totem Uptime",
+                    "Complex Stats:Mana Regen*In combat Mp5",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
                     "Attacks:Flametongue Attack",
@@ -311,7 +312,7 @@ namespace Rawr.Enhance
             float wdpsMH = character.MainHand == null ? 46.3f : (stats.WeaponDamage + (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed;
             float wdpsOH = character.OffHand == null ? 46.3f : (stats.WeaponDamage + (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f) / character.OffHand.Speed;
             float dualWieldSpecialization = .06f; //Hit portion of Dual Wield
-            float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;  //CATA where do these values come from (274, 211)? 211 Flametongue sp? 274 Flametongue damage?
+            //float AP_SP_Ratio = (spellPower - 274f - 211f) / attackPower;  //CATA where do these values come from (274, 211)? 211 Flametongue sp? 274 Flametongue damage?
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
@@ -360,7 +361,7 @@ namespace Rawr.Enhance
 
             #region Stormstrike DPS
             float dpsSS = 0f;
-            if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike))
+            if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike) && character.MainHand != null)
             {
                 float swingDPSMH = (damageMHSwing + bonusSSDamage) * 1.25f * cs.HitsPerSMHSS;
                 float swingDPSOH = (damageOHSwing + bonusSSDamage) * 1.25f * cs.HitsPerSOHSS;
@@ -374,15 +375,15 @@ namespace Rawr.Enhance
             //200% Weapon Damage; 40% bonus if FT imbued; 15/30% from talent; 10/20% per searing flames stack (max 5); 20% bonus from glyph; 20% bonus from Mastery(base) + 2.5%  per mastery
             //Much more testing is required to get an accurate model for Lava Lash.  Below is a current good approximation.
             float dpsLL = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.LavaLash) && cs.HastedOHSpeed != 0)
+            if (calcOpts.PriorityInUse(EnhanceAbility.LavaLash) && character.OffHand != null)
             {
                 float impLL = character.ShamanTalents.ImprovedLavaLash * 0.15f;
                 float searingFlames = 0f;
                 float flametongue = 0f;
                 float glyphLL = 0f;
-                if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
+                if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem) && character.ShamanTalents.SearingFlames != 0)
                 {
-                    searingFlames = character.ShamanTalents.ImprovedLavaLash * 5f * 0.1f; //5f = number of stacks of searing flames (takes 8.25s to hit 5 stacks, LL CD is 10s).
+                    searingFlames = character.ShamanTalents.ImprovedLavaLash * 5f * 0.1f; //5f = number of stacks of searing flames (takes app. 8.25s to hit 5 stacks, LL CD is 10s).
                 }
                 if (calcOpts.OffhandImbue == "Flametongue")
                 {
@@ -421,7 +422,7 @@ namespace Rawr.Enhance
             float dpsES = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.EarthShock))
             {
-                float damageESBase = 872f;
+                float damageESBase = 931f;
                 float coefES = .3858f;
                 float damageES = concussionMultiplier * (damageESBase + coefES * spellPower);
                 float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
@@ -436,8 +437,8 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.FlameShock))
             {
                 float FSBaseNumTick = 18f / 3f;
-                float damageFSBase = 500f;
-                float damageFSDoTTickBase = 834f / FSBaseNumTick;
+                float damageFSBase = 531f;
+                float damageFSDoTTickBase = 852f / FSBaseNumTick;
                 float FSNumTick = cs.AverageFSDotTime / cs.AverageFSTickTime;
                 float coefFS = 1.5f / 3.5f / 2f;
                 float coefFSDoT = .6f;
@@ -456,7 +457,7 @@ namespace Rawr.Enhance
             float dpsLB = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningBolt))
             {
-                float damageLBBase = 765f;
+                float damageLBBase = 770f;
                 float coefLB = .7143f;
                 // LightningSpellPower is for totem of hex/the void/ancestral guidance
                 float damageLB = concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
@@ -486,7 +487,7 @@ namespace Rawr.Enhance
 
             #region Windfury DPS
             float dpsWF = 0f;
-            if (calcOpts.MainhandImbue == "Windfury")
+            if (calcOpts.MainhandImbue == "Windfury" && character.MainHand != null)
             {
                 float damageWFHit = damageMHSwing + (windfuryWeaponBonus / 14 * cs.UnhastedMHSpeed);
                 float WFdps = damageWFHit * cs.HitsPerSWF;
@@ -500,12 +501,12 @@ namespace Rawr.Enhance
             float dpsLS = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningShield))
             {
-                float damageLSBase = 380f;
+                float damageLSBase = 391f;
                 float damageLSCoef = 0.267f; // co-efficient from EnhSim
                 float damageLS = shieldBonus * (damageLSBase + damageLSCoef * spellPower);
                 float lsdps = damageLS * cs.StaticShockProcsPerS;
-                float lsNormal = lsdps * cs.NatureSpellHitModifier;  // CATA
-                float lsCrit = lsdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;  // CATA
+                float lsNormal = lsdps * cs.NatureSpellHitModifier;
+                float lsCrit = lsdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsLS = (lsNormal + lsCrit) * mastery * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
@@ -514,7 +515,7 @@ namespace Rawr.Enhance
             float dpsFireTotem = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.MagmaTotem))
             {
-                float damageFireTotem = (371f + .1f * spellPower) * callofFlameBonus;
+                float damageFireTotem = (268f + .067f * spellPower) * callofFlameBonus;
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -522,7 +523,7 @@ namespace Rawr.Enhance
             }
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
-                float damageFireTotem = (105f + .1667f * spellPower) * callofFlameBonus;
+                float damageFireTotem = (96f + .1667f * spellPower) * callofFlameBonus;
                 float FireTotemdps = damageFireTotem / 1.65f * cs.SearingTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -535,7 +536,7 @@ namespace Rawr.Enhance
             float dpsFireNova = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.FireNova))
             {
-                float damageFireNova = (945.0f + 0.2142f * spellPower) * callofFlameBonus * fireNovaBonus;
+                float damageFireNova = (686.0f + 0.143f * spellPower) * callofFlameBonus * fireNovaBonus;
                 float FireNovadps = (damageFireNova / cs.AbilityCooldown(EnhanceAbility.FireNova)) * cs.FireTotemUptime;
                 float FireNovaNormal = FireNovadps * cs.SpellHitModifier;
                 float FireNovaCrit = FireNovadps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -555,24 +556,24 @@ namespace Rawr.Enhance
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
                 dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
             }*/
-            if (calcOpts.OffhandImbue == "Flametongue")
+            if (calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
-                float damageFTBase = 274f * cs.UnhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.03811f * cs.UnhastedOHSpeed;
+                float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
+                float damageFTCoef = 0.15244f * cs.UnhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * spellPower;
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit)/* * mastery*/ * bonusFireDamage * bossFireResistance;
             }
             #endregion
 
             #region Unleash Elements DPS
             #region Unleash Windfury
             float dpsUW = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.MainhandImbue == "Windfury")
+            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.MainhandImbue == "Windfury" && character.MainHand != null)
             {
-                float damageUWHit = damageMHSwing * .5f;
+                float damageUWHit = damageMHSwing * 1.25f;
                 float UWdps = damageUWHit / cs.AbilityCooldown(EnhanceAbility.UnleashElements);
                 float UWnormal = UWdps * cs.YellowCritModifierMH;
                 float UWcrit = UWdps * cs.YellowCritModifierMH * cs.CritMultiplierMelee;
@@ -581,7 +582,7 @@ namespace Rawr.Enhance
             #endregion
             #region Unleash Flametongue
             float dpsUF = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.OffhandImbue == "Flametongue")
+            if (calcOpts.PriorityInUse(EnhanceAbility.UnleashElements) && calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
                 float damageUFBase = 1070f;
                 float damageUFCoef = 0.43f;
@@ -686,6 +687,7 @@ namespace Rawr.Enhance
             calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
             calculatedStats.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;  //CATA
+            calculatedStats.ManaRegen = cs.ManaRegen * 5f;
             
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);

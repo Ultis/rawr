@@ -70,8 +70,8 @@ namespace Rawr.Enhance
         public bool Searing { get { return PriorityInUse(EnhanceAbility.SearingTotem); } }
         public bool FireElemental { get { return PriorityInUse(EnhanceAbility.FireElemental); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
-        //public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
-        public bool UseMana { get { return _useMana; } set { _useMana = false; OnPropertyChanged("UseMana"); } }
+        public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
+        //public bool UseMana { get { return _useMana; } set { _useMana = false; OnPropertyChanged("UseMana"); } }
         public bool ShowExportMessageBox { get { return _showExportMessageBox; } set { _showExportMessageBox = value; OnPropertyChanged("ShowExportMessageBox"); } }
         public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
         public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }

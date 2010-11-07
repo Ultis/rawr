@@ -76,6 +76,7 @@ namespace Rawr.Enhance
         }
         #endregion
 
+        //Click="btnExport_Click"
         private void btnExport_Click(Object sender,RoutedEventArgs e)
         {
             if (!_loadingCalculationOptions)

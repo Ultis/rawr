@@ -926,9 +926,9 @@ namespace Rawr.UI
                     classAllowableRaces.Add("HealPriest", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", "Night Elf", "Blood Elf", /*"Orc",*/ /*"Tauren",*/ "Troll", "Undead", });
                     classAllowableRaces.Add("ShadowPriest", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", "Night Elf", "Blood Elf", /*"Orc",*/ /*"Tauren",*/ "Troll", "Undead", });
                     classAllowableRaces.Add("Rogue", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", });
-                    classAllowableRaces.Add("Enhance", new List<string>() { "Draenei", /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
-                    classAllowableRaces.Add("Elemental", new List<string>() { "Draenei", /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
-                    classAllowableRaces.Add("RestoSham", new List<string>() { "Draenei", /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
+                    classAllowableRaces.Add("Enhance", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
+                    classAllowableRaces.Add("Elemental", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
+                    classAllowableRaces.Add("RestoSham", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ });
                     classAllowableRaces.Add("Warlock", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ "Gnome", "Human", /*"Night Elf",*/ "Blood Elf", "Orc", /*"Tauren",*/ /*"Troll",*/ "Undead", });
                     classAllowableRaces.Add("DPSWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", /*"Blood Elf",*/ "Orc", "Tauren", "Troll", "Undead", });
                     classAllowableRaces.Add("ProtWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", /*"Blood Elf",*/ "Orc", "Tauren", "Troll", "Undead", });

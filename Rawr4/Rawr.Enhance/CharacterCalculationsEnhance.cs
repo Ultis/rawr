@@ -400,6 +400,13 @@ namespace Rawr.Enhance
             set { _fireTotemUptime = value; }
         }
 
+        private float _manaRegen;
+        public float ManaRegen
+        {
+            get { return _manaRegen; }
+            set { _manaRegen = value; }
+        }
+
 #if !RAWR4
         private float _t10_2Uptime;
         public float T10_2Uptime
@@ -526,6 +533,7 @@ namespace Rawr.Enhance
             dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Mana Regen", ManaRegen.ToString("F2", CultureInfo.InvariantCulture));
 #if !RAWR4
             dictValues.Add("Tier 10 2 pc Uptime", T10_2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Tier 10 4 pc Uptime", T10_4Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");

@@ -58,6 +58,8 @@ namespace Rawr.Enhance
         private float hitsPerSLL = 0f;
 
         private float flurryUptime = 1f;
+        private float uWUptime = 0f;
+        private float uFUptime = 0f;
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
@@ -133,7 +135,7 @@ namespace Rawr.Enhance
         public float SecondsToFiveStack { get { return secondsToFiveStack; } }
         public float AverageFSDotTime { get { return averageFSDotTime; } }
         public float AverageFSTickTime { get { return averageFSTickTime; } } 
-        public float BaseShockSpeed { get { return 6f - .2f * _talents.Reverberation; } }
+        public float BaseShockSpeed { get { return 6f - .5f * _talents.Reverberation; } }
         public float BaseFireNovaSpeed { get { return 10f - 2f * _talents.ImprovedFireNova; } }
         public float StaticShockProcsPerS { get { return staticShocksPerSecond; } }
         public float StaticShockAvDuration { get { return /*StaticShockProcsPerS == 0 ? 600f : (3f / StaticShockProcsPerS)*/600f; } }  //FIXME Static Chock no longer consumes charges
@@ -155,6 +157,8 @@ namespace Rawr.Enhance
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
+        public float UWUptime { get { return uWUptime; } }
+        public float UFUptime { get { return uFUptime; } }
         public float FireTotemUptime { get { return fireTotemUptime; } }
         public float SearingTotemUptime { get { return searingTotemUptime; } }
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
@@ -197,21 +201,21 @@ namespace Rawr.Enhance
             levelDifference = 3;  //CATA 88 - 85 Hardcode for now
             whiteCritDepression = 0.03f + 0.006f * levelDifference;
             yellowCritDepression = 0.006f * levelDifference;
-            SetManaRegen();
             UpdateCalcs(true);
+            SetManaRegen();
             _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
             _rotation.CalculateAbilities();
             UpdateCalcs(false); // second pass to revise calcs based on new ability cooldowns
         }
 
         #region Calculate Regen
-        public void SetManaRegen()
+        public void SetManaRegen()  //Check
         {
             baseMana = BaseStats.GetBaseStats(_character).Mana;
-            float spiRegen = StatConversion.GetSpiritRegenSec(_stats.Spirit, _stats.Intellect);
+            //float spiRegen = StatConversion.GetSpiritRegenSec(_stats.Spirit, _stats.Intellect);
             float replenishRegen = _stats.Mana * _stats.ManaRestoreFromMaxManaPerSecond;
-            float judgementRegen = _stats.ManaRestoreFromBaseManaPPM / 60f * baseMana;
-            manaRegen = _stats.Mp5 / 5 + spiRegen + replenishRegen + judgementRegen;
+            float primalWisdomRegen = ((hitsPerSMH + hitsPerSOH) * 0.40f) * (baseMana * 0.05f);
+            manaRegen = _stats.Mp5 / 5 + replenishRegen + primalWisdomRegen;
         }
         #endregion
 
@@ -227,7 +231,7 @@ namespace Rawr.Enhance
                 stormstrikeBonusCrit = 0f;
             }
 
-            critMultiplierSpell = (1.5f) * (1 + _stats.BonusSpellCritMultiplier);
+            critMultiplierSpell = 1.5f * (1 + _stats.BonusSpellCritMultiplier);
             critMultiplierMelee = 2f * (1 + _stats.BonusCritMultiplier);
             
             // Melee
@@ -241,18 +245,18 @@ namespace Rawr.Enhance
                 ItemType mhType = _character.MainHand == null ? ItemType.None : _character.MainHand.Type;
                 ItemType ohType = _character.OffHand == null ? ItemType.None : _character.OffHand.Type;
                 if (mhType == ItemType.OneHandAxe || mhType == ItemType.FistWeapon)
-                    expertiseBonusMH += 0.0125f;
+                    expertiseBonusMH += 0.0075f;
                 if (ohType == ItemType.OneHandAxe || ohType == ItemType.FistWeapon)
-                    expertiseBonusOH += 0.0125f;
+                    expertiseBonusOH += 0.0075f;
             }
             if (_character.Race == CharacterRace.Dwarf)
             {
                 ItemType mhType = _character.MainHand == null ? ItemType.None : _character.MainHand.Type;
                 ItemType ohType = _character.OffHand == null ? ItemType.None : _character.OffHand.Type;
                 if (mhType == ItemType.OneHandMace)
-                    expertiseBonusMH += 0.0125f;
+                    expertiseBonusMH += 0.0075f;
                 if (ohType == ItemType.OneHandMace)
-                    expertiseBonusOH += 0.0125f;
+                    expertiseBonusOH += 0.0075f;
             }
 
             float meleeCritModifier = _stats.PhysicalCrit;
@@ -302,6 +306,8 @@ namespace Rawr.Enhance
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
             //--------------
             flurryUptime = 1f;
+            uWUptime = 0f;  //FLAG
+            uFUptime = 0f;  //FLAG
             edUptime = 0f;
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);
@@ -314,8 +320,9 @@ namespace Rawr.Enhance
             else if (_calcOpts.PriorityInUse(EnhanceAbility.RefreshTotems)) // if no Searing or Magma totem use refresh of Flametongue totem.
                 fireTotemUptime = firstPass ? 1.0f : 300f / AbilityCooldown(EnhanceAbility.RefreshTotems); 
             
-            float mwPPM = 2 * _talents.MaelstromWeapon * (1 + _stats.Enhance4T8 * 0.2f);
-            float flurryHasteBonus = .06f * _talents.Flurry + _stats.Enhance4T7;
+            float mwPPM = 2 * _talents.MaelstromWeapon;  //Check
+            float flurryHasteBonus = .10f * _talents.Flurry;
+            float uWHasteBonus = .4f + .1f * _talents.ElementalWeapons;
             float edCritBonus = .03f * _talents.ElementalDevastation;
             float staticShockChance = .15f * _character.ShamanTalents.StaticShock;
             hitsPerSMHSS = 0f;
@@ -346,7 +353,7 @@ namespace Rawr.Enhance
             for (int i = 0; i < 5; i++)
             {
                 // float bonusHaste = (1f + (flurryUptime * flurryHasteBonus));
-                float bonusHaste = 1 / (1 - flurryUptime + flurryUptime / (1 + flurryHasteBonus)); // use time based not proc based flurryUptime
+                float bonusHaste = 1 / (1 - flurryUptime + flurryUptime / (1 + flurryHasteBonus)) / (1 - uWUptime + uWUptime / (1 + uWHasteBonus)); // use time based not proc based flurryUptime
                 hastedMHSpeed = baseHastedMHSpeed / bonusHaste;
                 hastedOHSpeed = baseHastedOHSpeed / bonusHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
@@ -377,6 +384,7 @@ namespace Rawr.Enhance
 //                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
 //                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);  // old formulae
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
+                uWUptime = (float)Math.Max(12f / 15f, 1f);  //FIXME!!!!
 
                 // Maelstrom Weapon time to 5 stacks calc
                 if (unhastedOHSpeed != 0f)

@@ -529,7 +529,7 @@ namespace Rawr
 					#endregion
 					#region Shaman
 					case CharacterClass.Shaman:
-						// Draenei, Orc, Tauren, Troll
+						// Draenei, Dwarf, Orc, Tauren, Troll
 						S.Mana = 4396;
 						S.Health = 6960;
 						S.Armor = 0;
@@ -548,6 +548,13 @@ namespace Rawr
 								S.Intellect = 128;
 								S.Spirit = 145;
 								break;
+                            case CharacterRace.Dwarf:
+                                S.Strength = 121;
+                                S.Agility = 70;
+                                S.Stamina = 138;
+                                S.Intellect = 129;
+                                S.Spirit = 142;
+                                break;
 							case CharacterRace.Orc:
 								S.Strength = 123;
 								S.Agility = 71;
