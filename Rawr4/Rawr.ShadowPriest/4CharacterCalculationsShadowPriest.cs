@@ -12,25 +12,6 @@ namespace Rawr.ShadowPriest
         #region Variable Declarations and Definitions
 
         public Stats BasicStats { get; set; }
-        public Stats CombatStats { get; set; }
-        public int TargetLevel { get; set; }
-
-        public float ManaRegen;
-        public float ReplenishMP5;
-
-        public float TimeToOOM;
-        public float CastRegenFraction;
-        public float RotationDPS;
-        public float TotalDPS;
-        public float RotationMPS;
-        public float CastsPerSecond;
-        public float CritsPerSecond;
-        public float MissesPerSecond;
-
-        public float LatencyPerSecond;
-
-        public string Rotation;
-        public string RotationDetails;
 
         public Character LocalCharacter { get; set; }
 
@@ -73,7 +54,8 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Hit+Spirit", (BasicStats.HitRating + BasicStats.Spirit).ToString());
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
+            dictValues.Add("Hit", BasicStats.HitRating.ToString());
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
             dictValues.Add("Crit", BasicStats.CritRating.ToString());
             dictValues.Add("Haste", BasicStats.HasteRating.ToString());

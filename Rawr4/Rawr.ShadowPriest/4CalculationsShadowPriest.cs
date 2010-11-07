@@ -9,7 +9,7 @@ namespace Rawr.ShadowPriest
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase
     {    
-        #region started
+        #region Gemming
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -32,16 +32,16 @@ namespace Rawr.ShadowPriest
                     // [2] jewelcrafting
                     
                     // Reds
-                    int[] brilliant = { 52084, 52207, 52257}; //int
+                    int[] brilliant = { 52084, 52207, 52257 }; //int
                     // Blue
-                    int[] sparkling = { 52087 };//spirit
+                    int[] sparkling = { 52087, 0, 0 };//spirit
                     int[] rigid = { 0, 0, 52264 };//hit
                     // Yellow
                     int[] fractured = { 52094, 0, 52269 }; //mastery 
                     int[] quick = { 0, 0, 52268  }; //haste
                     int[] smooth = { 0, 0, 52266 }; //crit
                     // Purple
-                    int[] veiled = { 52104 }; //int+hit
+                    int[] veiled = { 52104, 0 }; //int+hit
                     int[] timeless = { 52098, 52248 }; //int+stam
                     int[] purified = { 0, 52236 }; //int+spirit
                     // Green
@@ -50,27 +50,34 @@ namespace Rawr.ShadowPriest
                     int[] lightning = { 0, 52225 }; //haste+hit
                     int[] zen = { 52127, 52250 }; //mastery+spirit
                     int[] puissant = { 52126, 52231 }; //mastery+stam
-                    int[] jagged = { 52121 }; //crit+stam
+                    int[] jagged = { 52121, 0 }; //crit+stam
                     int[] forceful = { 52124, 52218 }; //haste+stam
                     // Orange
                     int[] artful = { 52117, 52205 }; //int+mastery
-                    int[] reckless = { 52113 }; //int+haste
+                    int[] reckless = { 52113, 0 }; //int+haste
                     int[] potent = { 0, 52239 }; //int+crit
 
-
-                    /*
-                     * red: runed, royal
-                     * yellow: reckless, quick
-                     * blue: royal, dazzling(, lustrous)
-                     */              
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    //AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], rigid[0], veiled[0], lambent[0], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, brilliant[0], sparkling[0], rigid[0], quick[0], smooth[0], veiled[0], timeless[0], purified[0], senseis[0], piercing[0], lightning[0], zen[0], puissant[0], jagged[0], forceful[0],artful[0], reckless[0], potent[0], chaotic);
+
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, brilliant[2], sparkling[2], rigid[2], fractured[2], quick[2], smooth[2], chaotic);
                 }
              return _defaultGemmingTemplates;
             }
         }
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int sparkling, int rigid, int quick, int smooth, int veiled, int timeless, int purified, int senseis, int piercing, int lightning, int zen, int puissant, int jagged, int forceful, int artful, int reckless, int potent, int meta)
+        {
+            //int only
+            list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+        }
 
-        //0
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int sparkling, int rigid, int fractured, int quick, int smooth, int meta)
+        {
+            //int only
+            list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+        }
+        #endregion
+        #region DeserializeDataObject
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =
@@ -79,7 +86,10 @@ namespace Rawr.ShadowPriest
             CalculationOptionsShadowPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsShadowPriest;
             return calcOpts;
         }
-        //1
+        #endregion
+        #region Charts
+        #region Subpoints
+        //shows bar for each on graphs
         private Dictionary<string, Color> _subPointNameColors = null;
         public override Dictionary<string, Color> SubPointNameColors
         {
@@ -88,13 +98,13 @@ namespace Rawr.ShadowPriest
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    //_subPointNameColors.Add("Burst DPS", Color.FromArgb(255, 255, 0, 0));
                     _subPointNameColors.Add("DPS", Color.FromArgb(255, 0, 0, 255));
                 }
                 return _subPointNameColors;
             }
         }
-        //2
+        #endregion
+        #region Custom charts
         private string[] _customChartNames = {};
         public override string[] CustomChartNames
         {
@@ -103,7 +113,9 @@ namespace Rawr.ShadowPriest
                 return _customChartNames;
             }
         }
-         //3
+        #endregion
+        #endregion
+        #region CharacterDisplayCalculationLabels
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
@@ -115,7 +127,8 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
-					"Basic Stats:Hit+Spirit",
+					"Basic Stats:Spirit",
+					"Basic Stats:Hit",
 					"Basic Stats:Spell Power",
 					"Basic Stats:Crit",
 					"Basic Stats:Haste",
@@ -143,7 +156,8 @@ namespace Rawr.ShadowPriest
                 return _characterDisplayCalculationLabels;
             }
         }
-        //4
+        #endregion
+        #region CalculationsOptionsPanel
         public ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel {
             get
@@ -155,21 +169,78 @@ namespace Rawr.ShadowPriest
                 return _calculationOptionsPanel;
             }
         }
-        //5
+        #endregion
+        #region Character
+        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
+        #region Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
 
             Stats statsRace = BaseStats.GetBaseStats(character);
-            //Stats statsItems = GetItemStats(character, additionalItem);
-            //Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            //Stats statsTalents = GetTalentStats(character.ShamanTalents);
+            Stats statsItems = GetItemStats(character, additionalItem);
+            Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            Stats statsTotal = statsRace; //+ statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsRace + statsItems + statsBuffs;
+            //Assume all equiped items are cloth
+            statsTotal.BonusIntellectMultiplier += .05f;
+
+            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
+            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
+            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
+
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect);
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
+
+            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
+            statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
+
+            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
+            statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusHealthMultiplier);
+
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
+
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.SpellHaste);
+
+            //talents
+            statsTotal.HitRating += (.5f * character.PriestTalents.TwistedFaith) * statsTotal.Spirit;
+            statsTotal.SpellHaste *= 1 + (.01f * character.PriestTalents.Darkness);
+            statsTotal.SpellPower *= 1 + (.02f * character.PriestTalents.TwinDisciplines);
+            statsTotal.ShadowDamage *= 1 + (.01f * character.PriestTalents.TwistedFaith);
+
+            //Assume Shadow Spec
+            //Shadow Power
+            statsTotal.BonusSpellPowerMultiplier += 0.25f;
+            statsTotal.BonusSpellCritMultiplier += 1f;
+
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             return statsTotal;
         }
-        //6
+        public Stats GetBuffsStats(Character character, CalculationOptionsShadowPriest calcOpts)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+
+            foreach (Buff b in removedBuffs)
+            {
+                character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs)
+            {
+                character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
+        }
+
+        #endregion
+        #region Character Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
@@ -184,12 +255,8 @@ namespace Rawr.ShadowPriest
 
             return calculatedStats;
         }
-        //7
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            return new ComparisonCalculationBase[0];
-        }  
-        //8
+        #endregion
+        #region Relevant Items
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
         {
@@ -209,14 +276,17 @@ namespace Rawr.ShadowPriest
                 return _relevantItemTypes;
             }
         }
-        //9
+        #endregion
+        #endregion
+        #region CalculationBase
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            return new ComparisonCalculationBase[0];
+        }  
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationShadowPriest(); }
-        //10
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsShadowPriest(); }
         #endregion
-        //11
-        public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
-        //12-CataPass Needed
+        #region Stats
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
@@ -227,7 +297,6 @@ namespace Rawr.ShadowPriest
                 Intellect = stats.Intellect,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
-                Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
                 CritRating = stats.CritRating,
@@ -286,7 +355,6 @@ namespace Rawr.ShadowPriest
 
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
-                Agility = stats.Agility,
                 ArcaneResistance = stats.ArcaneResistance,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistance = stats.FireResistance,
@@ -301,12 +369,11 @@ namespace Rawr.ShadowPriest
 
             return s;
         }
-        //13-CataPass Needed
         public override bool HasRelevantStats(Stats stats)
         {
             #region Yes
             bool Yes = (
-                stats.Intellect + stats.Mana + stats.Spirit + stats.Mp5 + stats.SpellPower
+                stats.Intellect + stats.Mana + stats.Spirit + stats.SpellPower
                 + stats.SpellShadowDamageRating + stats.CritRating
                 + stats.SpellCrit + stats.HitRating + stats.SpellHit + stats.SpellCritOnTarget
                 + stats.SpellHaste + stats.HasteRating
@@ -362,7 +429,7 @@ namespace Rawr.ShadowPriest
             #endregion
             return Yes || (Maybe && !No);
         }
-
+        #endregion
     }
 
     public static class Constants
