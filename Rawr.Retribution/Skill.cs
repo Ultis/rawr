@@ -150,7 +150,7 @@ namespace Rawr.Retribution
             damage *= (1f + .01f * Talents.Crusade);
             if (CalcOpts.Mob != MobType.Other) damage *= (1f + .01f * Talents.Crusade);
             damage *= Combats.AvengingWrathMulti;
-            damage *= (Talents.GlyphOfSenseUndead && CalcOpts.Mob == MobType.Undead ? 1.01f : 1f);
+            // damage *= (Talents.GlyphOfSenseUndead && CalcOpts.Mob == MobType.Undead ? 1.01f : 1f); // 11/7/10 roncli - Removed calculations for removed glyph of sense undead
             return damage;
         }
 
@@ -509,7 +509,7 @@ namespace Rawr.Retribution
         {
             return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower) * (1f
                 + .03f * Talents.SealsOfThePure
-                + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f)
+                // + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f) // 11/7/10 roncli - Removed calculation for removed Glyph of Seal of Righteousness
                 + Stats.BonusSealOfRighteousnessDamageMultiplier)
                 + Stats.SealMultiplier;
         }

@@ -566,7 +566,7 @@ namespace Rawr.Retribution
 
             // Adjust expertise for racial passive and for using Seal of Vengeance combined with the SoV glyph.
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
-            if (talents.GlyphOfSealOfVengeance && calcOpts.Seal == SealOf.Vengeance)
+            if (talents.GlyphOfSealOfTruth && calcOpts.Seal == SealOf.Vengeance) // 11/7/10 roncli - GlyphOfSealOfVengeance changed to GlyphOfSealOfTruth
                 statsRace.Expertise += 10f;
 
             // Combine stats

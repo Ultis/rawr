@@ -366,23 +366,30 @@ public enum CreatureType
 */
     public enum Ability
     {
-        None,
-        ShieldOfRighteousness,
-        HammerOfTheRighteous,
-        SealOfVengeance, 
-        HolyVengeance,
-        JudgementOfVengeance,
-        SealOfRighteousness,
-        JudgementOfRighteousness,
-        Exorcism,
-        HammerOfWrath,
+        // Spells
         AvengersShield,
-        HolyShield,
-        RetributionAura,
-        Consecration,
-        RighteousDefense,
+        HammerOfWrath,
         HolyWrath,
-        HandOfReckoning,
+
+        // Melee & melee procs
+        CrusaderStrike,
+        HammerOfTheRighteous,
+        HammerOfTheRighteousProc,
+        Judgement,
+        JudgementOfRighteousness,
+        JudgementOfTruth,
+        MeleeSwing,
+        SealOfRighteousness,
+        SealOfTruth,
+        CensureProc,
+        ShieldOfTheRighteous,
+
+        // Damage over Time
+        Censure,
+        Consecration,
+
+        // Defensive
+        RetributionAura,
     }
     
     /*public enum HitResult

@@ -41,19 +41,19 @@ namespace Rawr.ProtPaladin
                     Description = "9-6-9-6 Rotation";
                     modelLength = 18.0f;
                     modelThreat = 
-                        Abilities[Ability.ShieldOfRighteousness].Threat * 3 + 
+                        Abilities[Ability.ShieldOfTheRighteous].Threat * 3 + 
                         Abilities[Ability.HammerOfTheRighteous].Threat * 3 + 
-                        Abilities[Ability.JudgementOfVengeance].Threat * 2 +
+                        Abilities[Ability.JudgementOfTruth].Threat * 2 +
                         Abilities[Ability.Consecration].Threat * 2;
                     modelDamage =
-                        Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
+                        Abilities[Ability.ShieldOfTheRighteous].Damage * 3 +
                         Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
-                        Abilities[Ability.JudgementOfVengeance].Damage * 2 +
+                        Abilities[Ability.JudgementOfTruth].Damage * 2 +
                         Abilities[Ability.Consecration].Damage * 2;
                     modelCrits  =
-                        Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
+                        Abilities[Ability.ShieldOfTheRighteous].CritPercentage * 3 +
                         Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
-                        Abilities[Ability.JudgementOfVengeance].CritPercentage * 2 +
+                        Abilities[Ability.JudgementOfTruth].CritPercentage * 2 +
                         Abilities[Ability.Consecration].CritPercentage * 2;
                     break;
                 }
@@ -63,17 +63,17 @@ namespace Rawr.ProtPaladin
                     Description = "9-6-9-6 Rotation";
                     modelLength = 18.0f;
                     modelThreat =
-                        Abilities[Ability.ShieldOfRighteousness].Threat * 3 +
+                        Abilities[Ability.ShieldOfTheRighteous].Threat * 3 +
                         Abilities[Ability.HammerOfTheRighteous].Threat * 3 +
                         Abilities[Ability.JudgementOfRighteousness].Threat * 2 +
                         Abilities[Ability.Consecration].Threat * 2;
                     modelDamage =
-                        Abilities[Ability.ShieldOfRighteousness].Damage * 3 +
+                        Abilities[Ability.ShieldOfTheRighteous].Damage * 3 +
                         Abilities[Ability.HammerOfTheRighteous].Damage * 3 +
                         Abilities[Ability.JudgementOfRighteousness].Damage * 2 +
                         Abilities[Ability.Consecration].Damage * 2;
                     modelCrits =
-                        Abilities[Ability.ShieldOfRighteousness].CritPercentage * 3 +
+                        Abilities[Ability.ShieldOfTheRighteous].CritPercentage * 3 +
                         Abilities[Ability.HammerOfTheRighteous].CritPercentage * 3 +
                         Abilities[Ability.JudgementOfRighteousness].CritPercentage * 2 +
                         Abilities[Ability.Consecration].CritPercentage * 2;
@@ -84,9 +84,9 @@ namespace Rawr.ProtPaladin
             // White Damage
             float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.AnyHit), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / ParryModel.BossAttackSpeed));
             float weaponHits = modelLength / ParryModel.WeaponSpeed / (1 - reckoningUptime); //Lookup.WeaponSpeed(Character, Stats);
-            modelThreat += Abilities[Ability.None].Threat * weaponHits;
-            modelDamage += Abilities[Ability.None].Damage * weaponHits;
-            modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;
+            modelThreat += Abilities[Ability.MeleeSwing].Threat * weaponHits;
+            modelDamage += Abilities[Ability.MeleeSwing].Damage * weaponHits;
+            modelCrits  += Abilities[Ability.MeleeSwing].CritPercentage * weaponHits;
             
             // Seals
             weaponHits += modelLength / 6.0f; // Add Seal Damage from Hammer of the Righteous
@@ -97,26 +97,16 @@ namespace Rawr.ProtPaladin
                     modelDamage += Abilities[Ability.SealOfRighteousness].Damage * weaponHits;
                     modelCrits  += Abilities[Ability.SealOfRighteousness].CritPercentage * weaponHits;
                     break;
-                //Seal of Vengeance Mode
-                case "Seal of Vengeance":
-                    modelThreat += Abilities[Ability.SealOfVengeance].Threat * weaponHits;
-                    modelDamage += Abilities[Ability.SealOfVengeance].Damage * weaponHits;
-                    modelCrits  += Abilities[Ability.SealOfVengeance].CritPercentage * weaponHits;
-                    
-                    //Holy Vengeance (Seal of Vengeance DOT)
-                    modelThreat += Abilities[Ability.HolyVengeance].Threat;
-                    modelDamage += Abilities[Ability.HolyVengeance].Damage;
-                    break;
-            }
+                //Seal of Truth Mode
+                case "Seal of Truth":
+                    modelThreat += Abilities[Ability.SealOfTruth].Threat * weaponHits;
+                    modelDamage += Abilities[Ability.SealOfTruth].Damage * weaponHits;
+                    modelCrits  += Abilities[Ability.SealOfTruth].CritPercentage * weaponHits;
 
-            if (Character.PaladinTalents.HolyShield != 0)
-            {
-                // Holy Shield
-                // TODO: Model Holy Shield Charges
-                float attackerBlocks = DefendTable.Block * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
-                modelThreat += Abilities[Ability.HolyShield].Threat * attackerBlocks;
-                modelDamage += Abilities[Ability.HolyShield].Damage * attackerBlocks;
-                modelCrits += Abilities[Ability.HolyShield].CritPercentage * attackerBlocks;
+                    //Censure (Seal of Truth DOT)
+                    modelThreat += Abilities[Ability.Censure].Threat;
+                    modelDamage += Abilities[Ability.Censure].Damage;
+                    break;
             }
 
             float attackerHits = DefendTable.AnyHit * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
@@ -136,18 +126,16 @@ namespace Rawr.ProtPaladin
             ParryModel       = new ParryModel(character, stats, calcOpts, bossOpts);
             _attackModelMode = attackModelMode;
 
-            Abilities.Add(Ability.None, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.ShieldOfRighteousness, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.MeleeSwing, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.ShieldOfTheRighteous, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.HammerOfTheRighteous, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.SealOfVengeance, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HolyVengeance, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.JudgementOfVengeance, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.SealOfTruth, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.Censure, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.JudgementOfTruth, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.SealOfRighteousness, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.JudgementOfRighteousness, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Exorcism, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.HammerOfWrath, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.AvengersShield, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HolyShield, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.RetributionAura, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.HolyWrath, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.Consecration, character, stats, calcOpts, bossOpts);

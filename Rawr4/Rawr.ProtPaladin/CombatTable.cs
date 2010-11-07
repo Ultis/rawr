@@ -93,7 +93,7 @@ namespace Rawr.ProtPaladin
         public DefendTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
         {
             UseHolyShield = useHolyShield;
-            Initialize(character, stats, Ability.None, calcOpts, bossOpts);
+            Initialize(character, stats, Ability.MeleeSwing, calcOpts, bossOpts);
         }
     }
 /*
@@ -170,13 +170,13 @@ namespace Rawr.ProtPaladin
                     tableSize += Parry;
                 }
                 // Glancing Blow
-                if (Ability == Ability.None)
+                if (Ability == Ability.MeleeSwing)
                 {
                     Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, targetLevel)));
                     tableSize += Glance;
                 }
                 // Block
-                if (Ability == Ability.None || Ability == Ability.HammerOfTheRighteous)
+                if (Ability == Ability.MeleeSwing || Ability == Ability.HammerOfTheRighteous)
                 {
                     Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block, targetLevel)));
                     tableSize += Block;
@@ -188,17 +188,11 @@ namespace Rawr.ProtPaladin
 
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
-
-            // Partial Resist TODO: Partial Resists don't belong in the combat table, they're not an avoidance type but a damage multiplier.
-            if (Lookup.HasPartials(Ability))
-            {
-                Resist = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Resist, targetLevel)));
-            }
         }
 
         public AttackTable(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
-            Initialize(character, stats, Ability.None, calcOpts, bossOpts);
+            Initialize(character, stats, Ability.MeleeSwing, calcOpts, bossOpts);
         }
 
         public AttackTable(Character character, Stats stats, Ability ability, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)

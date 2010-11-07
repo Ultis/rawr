@@ -33,8 +33,19 @@ namespace Rawr.ProtPaladin {
 
             #region Ability Base Damage
             switch (Ability) {
-                // White Damage
-                case Ability.None:
+                /************
+                 * Spells
+                 ************/
+                case Ability.AvengersShield:
+                    baseDamage = 3113.187994f + (0.2099f * SP) + (0.419f * AP);
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (Talents.GlyphOfFocusedShield ? 1.3f : 1.0f);
+
+                    critMultiplier = 1.0f;
+                    break;
+
+                case Ability.MeleeSwing:
                     baseDamage        = Stats.WeaponDamage;
 
                     DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
@@ -42,8 +53,8 @@ namespace Rawr.ProtPaladin {
                                       * (1.0f - ArmorReduction);
 
                     critMultiplier    = 1.0f;
-                    break;               
-                case Ability.ShieldOfRighteousness:
+                    break;
+                case Ability.ShieldOfTheRighteous:
                     float blockValue  = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue + Stats.HolyShieldBlockValue;
 
                     float blockValueDRStart = 30 * Character.Level;
@@ -78,7 +89,7 @@ namespace Rawr.ProtPaladin {
                     break;
                 // Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
                 // While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
-                case Ability.SealOfVengeance:
+                case Ability.SealOfTruth:
                     baseDamage        = Stats.WeaponDamage * 0.33f;
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
@@ -89,7 +100,7 @@ namespace Rawr.ProtPaladin {
                     break;
                 // 5 stacks of Holy Vengeance are assumed
                 // TODO: implement stacking mechanic for beginning-of-fight TPS
-                case Ability.HolyVengeance:
+                case Ability.Censure:
                     baseDamage        = 5f * (0.016f * SP + 0.032f * AP);
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
@@ -99,7 +110,7 @@ namespace Rawr.ProtPaladin {
                     critMultiplier    = 0.0f;
                     break;
                 // Judgement of Vengeance assumes 5 stacks of Holy Vengeance
-                case Ability.JudgementOfVengeance:
+                case Ability.JudgementOfTruth:
                     float holyVengeanceStacks = 5;
 
                     baseDamage        = (0.22f * SP + 0.14f * AP) * (1.0f + 0.1f * holyVengeanceStacks);
@@ -115,8 +126,7 @@ namespace Rawr.ProtPaladin {
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
                                       * (1.0f + 0.03f * Talents.SealsOfThePure)
-                                      * (1.0f + Stats.BonusSealOfRighteousnessDamageMultiplier)
-                                      * (Talents.GlyphOfSealOfRighteousness ? 1.1f : 1.0f);
+                                      * (1.0f + Stats.BonusSealOfRighteousnessDamageMultiplier);
 
                     critMultiplier    = 0.0f;
                     break;
@@ -129,39 +139,11 @@ namespace Rawr.ProtPaladin {
 
                     critMultiplier    = 1.0f;
                     break;
-                case Ability.HolyShield:
-                    if (Talents.HolyShield == 0)
-                    {
-                        Damage = 0.0f;
-                        return;
-                    }
-
-                    baseDamage        = (211f + (0.056f * AP) + (0.09f * SP)) * 1.3f;
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
-                    critMultiplier    = 0.0f;
-                    break;
                 case Ability.Consecration:
                     baseDamage        = 113f + (0.04f * (SP + Stats.ConsecrationSpellPower)) + (0.04f * AP);
                     duration          = (Talents.GlyphOfConsecration ? 10.0f : 8.0f);
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier    = 0.0f;
-                    break;
-                case Ability.Exorcism:
-                    baseDamage        = 1087f + (0.15f * SP) + (0.15f * AP);
-
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + Talents.SanctityOfBattle * 0.05f)
-                                      * (Talents.GlyphOfExorcism ? 1.2f : 1.0f);
-
-                    critMultiplier    = 0.5f;
-                    break;
-                case Ability.AvengersShield:
-                    baseDamage        = 1222f + (0.07f * SP) + (0.07f * AP);
-
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (Talents.GlyphOfAvengersShield ? 2.0f : 1.0f);
-
-                    critMultiplier    = 1.0f;
                     break;
                 case Ability.HolyWrath:
                     baseDamage        = 1142f + (AP * 0.07f) + (SP * 0.07f); 
@@ -205,23 +187,6 @@ namespace Rawr.ProtPaladin {
             }
             #endregion
 
-            #region Partial Resists
-            // Partial Resists
-            if (Lookup.HasPartials(Ability))
-            {
-                // Detailed table of Partial slices.
-                float[] partialChanceTable = StatConversion.GetResistanceTable(Character.Level, targetLevel, 0.0f, Stats.SpellPenetration);
-
-                // Here goes nothing, Damage averaged over the different partial slices that can happen.
-                float partialDamage = 0.0f;
-                
-                for (int i = 0; i < 11; i++)
-                    partialDamage += partialChanceTable[i] * (1.0f - 0.1f * (float)i) * baseDamage;
-                
-                baseDamage = partialDamage;
-            }
-            #endregion
-
             // Average critical strike bonuses
             if (Lookup.CanCrit(Ability))
                 baseDamage += baseDamage * critMultiplier * AttackTable.Critical;
@@ -236,17 +201,15 @@ namespace Rawr.ProtPaladin {
             float holyThreatModifier = 1.8f;
 
             switch (Ability) {
-                case Ability.ShieldOfRighteousness:
+                case Ability.ShieldOfTheRighteous:
                 case Ability.HammerOfTheRighteous:
-                case Ability.SealOfVengeance: 
-                case Ability.HolyVengeance:
-                case Ability.JudgementOfVengeance:
+                case Ability.SealOfTruth: 
+                case Ability.Censure:
+                case Ability.JudgementOfTruth:
                 case Ability.SealOfRighteousness:
                 case Ability.JudgementOfRighteousness:
-                case Ability.Exorcism:
                 case Ability.HammerOfWrath:
                 case Ability.AvengersShield:
-                case Ability.HolyShield:
                 case Ability.RetributionAura:
                 case Ability.Consecration:
                 case Ability.HolyWrath:

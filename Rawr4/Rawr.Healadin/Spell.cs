@@ -57,7 +57,7 @@ namespace Rawr.Healadin
         {
             float heal = AbilityHealed();
 
-            heal *= Talents.GlyphOfSealOfLight ? 1.05f : 1; // TODO: Change to Glyph of Seal of Insight
+            heal *= Talents.GlyphOfSealOfInsight ? 1.05f : 1;
             heal *= 1f + Stats.HealingReceivedMultiplier;
             heal *= 1f - Rotation.DivinePleas * 15f / Rotation.FightLength * .5f;
             heal *= 1f + .01f * Talents.Divinity;

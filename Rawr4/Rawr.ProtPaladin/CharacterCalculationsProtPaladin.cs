@@ -73,7 +73,7 @@ namespace Rawr.ProtPaladin
         public float DPSTaken { get; set; }
         public float DamageTakenPerHit { get; set; }
         public float DamageTakenPerCrit { get; set; }
-		
+        
         public float TankPoints { get; set; }
         public float BurstTime { get; set; }
 
@@ -241,7 +241,7 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Spell Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
                                                        SpellCrit, BasicStats.CritRating, TargetLevel));
             dictValues.Add("Weapon Damage", string.Format("{0:0.00}*As average damage per {1}" + Environment.NewLine + "Before Armor", 
-                                                          BasicStats.WeaponDamage, Lookup.Name(Ability.None)));
+                                                          BasicStats.WeaponDamage, Lookup.Name(Ability.MeleeSwing)));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine +
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));

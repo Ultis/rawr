@@ -72,7 +72,7 @@ namespace Rawr.ProtPaladin
         public static float CreatureTypeDamageMultiplier(Character character, string targetType) {
             switch (targetType) {
                 case "Humanoid": case "Demon": case "Elemental": return (1f + character.PaladinTalents.Crusade * 0.01f);
-                case "Undead": return (1f + character.PaladinTalents.Crusade * 0.01f) * (1f + (character.PaladinTalents.GlyphOfSenseUndead ? 0.01f : 0f));
+                case "Undead": return (1f + character.PaladinTalents.Crusade * 0.01f);
                 default: return 1f;
             }
         }
@@ -161,33 +161,22 @@ namespace Rawr.ProtPaladin
             switch (ability)
             {                
                 case Ability.Consecration:
-                case Ability.HolyShield:
-                case Ability.HolyVengeance:
+                case Ability.Censure:
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
-            	case Ability.RighteousDefense:
                     abilityCritChance = 0.0f;// can't crit
                     break;
-                case Ability.None:
+                case Ability.MeleeSwing:
                 case Ability.JudgementOfRighteousness:
-                case Ability.JudgementOfVengeance:
+                case Ability.JudgementOfTruth:
                 case Ability.AvengersShield:
                 case Ability.HammerOfTheRighteous:
-                case Ability.ShieldOfRighteousness:
+                case Ability.ShieldOfTheRighteous:
                 case Ability.HammerOfWrath:
                     abilityCritChance *= 1.0f;// crit chance = melee
                     break;
                 case Ability.HolyWrath:
-                case Ability.SealOfVengeance:
-                case Ability.HandOfReckoning:
-                    abilityCritChance = spellCritChance;// crit chance = spell
-                    break;
-                case Ability.Exorcism:
-                    if (targetType == "Undead" || targetType == "Demon") {
-                        // 100% chance the spell will crit, if it hits.
-                        abilityCritChance = SpellHitChance(character, stats, targetLevel);
-                        break;
-                    }
+                case Ability.SealOfTruth:
                     abilityCritChance = spellCritChance;// crit chance = spell
                     break;
             }
@@ -324,7 +313,7 @@ namespace Rawr.ProtPaladin
         {
             switch (ability)
             {
-                case Ability.None:
+                case Ability.MeleeSwing:
                 case Ability.HammerOfTheRighteous:
               //case Ability.SealOfCommand:
               //case Ability.SealOfBlood:
@@ -334,40 +323,14 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        public static bool HasPartials(Ability ability)
-        {   
-            switch (ability)
-            {
-                case Ability.ShieldOfRighteousness:
-                case Ability.HammerOfTheRighteous:
-                case Ability.SealOfVengeance: 
-                case Ability.HolyVengeance:
-                case Ability.JudgementOfVengeance:
-                case Ability.SealOfRighteousness:
-                case Ability.JudgementOfRighteousness:
-                case Ability.Exorcism:
-                case Ability.HammerOfWrath:
-                case Ability.AvengersShield:
-                case Ability.HolyShield:
-                case Ability.RetributionAura:
-                case Ability.Consecration:
-            	case Ability.HolyWrath:
-                    return true;
-                default:
-                return false;
-            }
-        }
-
         public static bool CanCrit(Ability ability)
         {   
             switch (ability)
             {
                 case Ability.Consecration:
-                case Ability.HolyShield:
-                case Ability.HolyVengeance:
+                case Ability.Censure:
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
-                case Ability.RighteousDefense:
                     return false;
                 default:
                 return true;
@@ -378,16 +341,11 @@ namespace Rawr.ProtPaladin
         {   
             switch (ability)
             {
-                case Ability.SealOfVengeance: 
-                case Ability.HolyVengeance:
-                case Ability.Exorcism:
+                case Ability.SealOfTruth: 
+                case Ability.Censure:
             	case Ability.HolyWrath:
-                case Ability.HolyShield:
                 case Ability.RetributionAura:
                 case Ability.Consecration:
-                case Ability.HandOfReckoning:
-                case Ability.RighteousDefense:
-                //case Ability.SealOfRighteousness:
                     return true;
                 default:
                 return false;
@@ -398,22 +356,20 @@ namespace Rawr.ProtPaladin
         {
             switch (ability)
             {
-                case Ability.None: return "Swing";
+                case Ability.MeleeSwing: return "Melee Swing";
                 case Ability.HolyWrath: return "Holy Wrath";
-                case Ability.HandOfReckoning: return "Hand of Reckoning";
-                case Ability.ShieldOfRighteousness: return "Shield of Righteousness";
+                case Ability.ShieldOfTheRighteous: return "Shield of the Righteous";
                 case Ability.HammerOfTheRighteous: return "Hammer of the Righteous";
-                case Ability.SealOfVengeance: return "Seal of Vengeance";
-                case Ability.HolyVengeance: return "Holy Vengeance";
-                case Ability.JudgementOfVengeance: return "Judgement of Vengeance";
+                case Ability.SealOfTruth: return "Seal of Truth";
+                case Ability.Censure: return "Censure";
+                case Ability.JudgementOfTruth: return "Judgement of Truth";
                 case Ability.SealOfRighteousness: return "Seal of Righteousness";
                 case Ability.JudgementOfRighteousness: return "Judgement of Righteousness";
-                case Ability.Exorcism: return "Exorcism";
                 case Ability.HammerOfWrath: return "Hammer of Wrath";
                 case Ability.AvengersShield: return "Avenger's Shield";
-                case Ability.HolyShield: return "Holy Shield";
                 case Ability.RetributionAura: return "Retribution Aura";
                 case Ability.Consecration: return "Consecration";
+                case Ability.CrusaderStrike: return "Crusader Strike";
                 default: return "";
             }
         }

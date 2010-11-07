@@ -389,13 +389,13 @@ focus on Survival Points.",
                 calculatedStats.EffectiveArmorPenetrationRating = (float)Math.Max(0.0f,
                     (calculatedStats.ArmorPenetrationFromRating * calculatedStats.ArmorPenetrationCap) / (calculatedStats.ArmorPenetrationFromRating * calculatedStats.TargetArmor));
             float test = calculatedStats.EffectiveTargetArmorDamageReduction / calculatedStats.TargetArmorDamageReduction;
-            calculatedStats.AvoidedAttacks = am.Abilities[Ability.None].AttackTable.AnyMiss;
-            calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
-            calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
-            calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
-            calculatedStats.GlancingAttacks = am.Abilities[Ability.None].AttackTable.Glance;
+            calculatedStats.AvoidedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.AnyMiss;
+            calculatedStats.MissedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Miss;
+            calculatedStats.DodgedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Dodge;
+            calculatedStats.ParriedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Parry;
+            calculatedStats.GlancingAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Glance;
             calculatedStats.GlancingReduction = Lookup.GlancingReduction(character, calculatedStats.TargetLevel);
-            calculatedStats.BlockedAttacks = am.Abilities[Ability.None].AttackTable.Block;
+            calculatedStats.BlockedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Block;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
@@ -555,7 +555,7 @@ focus on Survival Points.",
             //{
             //    statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
             //}
-            if (talents.GlyphOfSealOfVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
+            if (talents.GlyphOfSealOfTruth && calcOpts.SealChoice == "Seal of Truth") 
             {
                 statsTotal.Expertise += 10.0f;
             }
