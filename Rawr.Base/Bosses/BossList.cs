@@ -15,157 +15,197 @@ namespace Rawr {
             #region Instance Declarations
             #region ==== Tier 7 Content ====
             // Naxxramas
-            AnubRekhan anubrekhan = new AnubRekhan();
-            GrandWidowFaerlina grandwidow = new GrandWidowFaerlina();
-            Maexxna maexxna = new Maexxna();
-            NoththePlaguebringer noth = new NoththePlaguebringer();
-            HeigantheUnclean heigantheUnclean = new HeigantheUnclean();
-            Loatheb loatheb = new Loatheb();
-            InstructorRazuvious instructorRazuvious = new InstructorRazuvious();
-            GothiktheHarvester gothiktheHarvester = new GothiktheHarvester();
-            FourHorsemen fourHorsemen = new FourHorsemen();
-            Patchwerk patchwerk = new Patchwerk();
-            Grobbulus grobbulus = new Grobbulus();
-            Gluth gluth = new Gluth();
-            Thaddius thaddius = new Thaddius();
-            Sapphiron sapphiron = new Sapphiron();
-            KelThuzad kelThuzad = new KelThuzad();
+            //AnubRekhan anubrekhan = new AnubRekhan();
+            //GrandWidowFaerlina grandwidow = new GrandWidowFaerlina();
+            //Maexxna maexxna = new Maexxna();
+            //NoththePlaguebringer noth = new NoththePlaguebringer();
+            //HeigantheUnclean heigantheUnclean = new HeigantheUnclean();
+            //Loatheb loatheb = new Loatheb();
+            //InstructorRazuvious instructorRazuvious = new InstructorRazuvious();
+            //GothiktheHarvester gothiktheHarvester = new GothiktheHarvester();
+            //FourHorsemen fourHorsemen = new FourHorsemen();
+            //Patchwerk patchwerk = new Patchwerk();
+            //Grobbulus grobbulus = new Grobbulus();
+            //Gluth gluth = new Gluth();
+            //Thaddius thaddius = new Thaddius();
+            //Sapphiron sapphiron = new Sapphiron();
+            //KelThuzad kelThuzad = new KelThuzad();
             // The Obsidian Sanctum
-            Shadron shadron = new Shadron();
-            Tenebron tenebron = new Tenebron();
-            Vesperon vesperon = new Vesperon();
-            Sartharion sartharion = new Sartharion();
+            //Shadron shadron = new Shadron();
+            //Tenebron tenebron = new Tenebron();
+            //Vesperon vesperon = new Vesperon();
+            //Sartharion sartharion = new Sartharion();
             // The Vault of Archavon
-            ArchavonTheStoneWatcher archavon = new ArchavonTheStoneWatcher();
+            //ArchavonTheStoneWatcher archavon = new ArchavonTheStoneWatcher();
             // The Eye of Eternity
-            Malygos malygos = new Malygos();
+            //Malygos malygos = new Malygos();
             #endregion
             #region ==== Tier 8 Content ====
             // Ulduar
-            IgnistheFurnaceMaster IgnistheFurnaceMaster = new IgnistheFurnaceMaster();
-            Razorscale Razorscale = new Razorscale();
-            XT002Deconstructor XT002Deconstructor = new XT002Deconstructor();
-            AssemblyofIron AssemblyofIron = new AssemblyofIron();
-            Kologarn Kologarn = new Kologarn();
-            Auriaya Auriaya = new Auriaya();
-            Mimiron Mimiron = new Mimiron();
-            Freya Freya = new Freya();
-            Thorim Thorim = new Thorim();
-            Hodir Hodir = new Hodir();
-            GeneralVezax GeneralVezax = new GeneralVezax();
-            YoggSaron YoggSaron = new YoggSaron();
-            AlgalontheObserver AlgalontheObserver = new AlgalontheObserver();
+            //IgnistheFurnaceMaster IgnistheFurnaceMaster = new IgnistheFurnaceMaster();
+            //Razorscale Razorscale = new Razorscale();
+            //XT002Deconstructor XT002Deconstructor = new XT002Deconstructor();
+            //AssemblyofIron AssemblyofIron = new AssemblyofIron();
+            //Kologarn Kologarn = new Kologarn();
+            //Auriaya Auriaya = new Auriaya();
+            //Mimiron Mimiron = new Mimiron();
+            //Freya Freya = new Freya();
+            //Thorim Thorim = new Thorim();
+            //Hodir Hodir = new Hodir();
+            //GeneralVezax GeneralVezax = new GeneralVezax();
+            //YoggSaron YoggSaron = new YoggSaron();
+            //AlgalontheObserver AlgalontheObserver = new AlgalontheObserver();
             // Vault of Archavon
-            EmalonTheStormWatcher EmalonTheStormWatcher = new EmalonTheStormWatcher();
+            //EmalonTheStormWatcher EmalonTheStormWatcher = new EmalonTheStormWatcher();
             #endregion
             #region ==== Tier 9 Content ====
             // The Vault of Archavon
-            KoralonTheFlameWatcher KoralonTheFlameWatcher = new KoralonTheFlameWatcher();
+            //KoralonTheFlameWatcher KoralonTheFlameWatcher = new KoralonTheFlameWatcher();
             // Trial of the Crusader
-            NorthrendBeasts NorthrendBeasts = new NorthrendBeasts();
-            LordJaraxxus LordJaraxxus = new LordJaraxxus();
-            FactionChampions FactionChampions = new FactionChampions();
-            TwinValkyr TwinValkyr = new TwinValkyr();
-            Anubarak Anubarak = new Anubarak();
+            //NorthrendBeasts NorthrendBeasts = new NorthrendBeasts();
+            //LordJaraxxus LordJaraxxus = new LordJaraxxus();
+            //FactionChampions FactionChampions = new FactionChampions();
+            //TwinValkyr TwinValkyr = new TwinValkyr();
+            //Anubarak Anubarak = new Anubarak();
             #endregion
             #region ==== Tier 10 Content ====
             // The Vault of Archavon
-            ToravonTheIceWatcher ToravonTheIceWatcher = new ToravonTheIceWatcher();
+            //ToravonTheIceWatcher ToravonTheIceWatcher = new ToravonTheIceWatcher();
             // Icecrown Citadel
-            LordMarrowgar LordMarrowgar = new LordMarrowgar();
-            LadyDeathwhisper LadyDeathwhisper = new LadyDeathwhisper();
-            DeathbringerSaurfang DeathbringerSaurfang = new DeathbringerSaurfang();
-            Festergut Festergut = new Festergut();
-            Rotface Rotface = new Rotface();
-            ProfessorPutricide ProfessorPutricide = new ProfessorPutricide();
-            BloodPrinceCouncil BloodPrinceCouncil = new BloodPrinceCouncil();
-            BloodQueenLanathel BloodQueenLanathel = new BloodQueenLanathel();
-            ValathriaDreamwalker ValathriaDreamwalker = new ValathriaDreamwalker();
-            Sindragosa Sindragosa = new Sindragosa();
-            TheLichKing TheLichKing = new TheLichKing();
+            //LordMarrowgar LordMarrowgar = new LordMarrowgar();
+            //LadyDeathwhisper LadyDeathwhisper = new LadyDeathwhisper();
+            //DeathbringerSaurfang DeathbringerSaurfang = new DeathbringerSaurfang();
+            //Festergut Festergut = new Festergut();
+            //Rotface Rotface = new Rotface();
+            //ProfessorPutricide ProfessorPutricide = new ProfessorPutricide();
+            //BloodPrinceCouncil BloodPrinceCouncil = new BloodPrinceCouncil();
+            //BloodQueenLanathel BloodQueenLanathel = new BloodQueenLanathel();
+            //ValathriaDreamwalker ValathriaDreamwalker = new ValathriaDreamwalker();
+            //Sindragosa Sindragosa = new Sindragosa();
+            //TheLichKing TheLichKing = new TheLichKing();
             // Ruby Sanctum
-            Baltharus Baltharus = new Baltharus();
-            SavianaRagefire SavianaRagefire = new SavianaRagefire();
-            GeneralZarithrian GeneralZarithrian = new GeneralZarithrian();
-            Halion Halion = new Halion();
+            //Baltharus Baltharus = new Baltharus();
+            //SavianaRagefire SavianaRagefire = new SavianaRagefire();
+            //GeneralZarithrian GeneralZarithrian = new GeneralZarithrian();
+            //Halion Halion = new Halion();
+            #endregion
+            #region ==== Tier 11 Content ====
+            // Baradin Hold
+            Argaloth Argaloth = new Argaloth();
+            // Blackwing Descent
+            Magmaw Magmaw = new Magmaw();
+            OmnitronDefenseSystem OmnitronDefenseSystem = new OmnitronDefenseSystem();
+            Maloriak Maloriak = new Maloriak();
+            Atramedes Atramedes = new Atramedes();
+            Chimaron Chimaron = new Chimaron();
+            Nefarian Nefarian = new Nefarian();
+            // The Bastion of Twilight
+            ValionaAndTheralion ValionaAndTheralion = new ValionaAndTheralion();
+            HalfusWyrmbreaker HalfusWyrmbreaker = new HalfusWyrmbreaker();
+            TwilightAscendantCouncil TwilightAscendantCouncil = new TwilightAscendantCouncil();
+            Chogall Chogall = new Chogall();
+            Sinestra Sinestra = new Sinestra();
+            // Throne of the Four Winds
+            ConclaveOfWind ConclaveOfWind = new ConclaveOfWind();
+            AlAkir AlAkir = new AlAkir();
             #endregion
             #endregion
             list = new BossHandler[] {
                 #region ==== Tier 7 Content ====
                 // Naxxramas
-                anubrekhan[0],anubrekhan[1],
-                grandwidow[0],grandwidow[1],
-                maexxna[0],maexxna[1],
-                noth[0],noth[1],
-                heigantheUnclean[0],heigantheUnclean[1],
-                loatheb[0],loatheb[1],
-                instructorRazuvious[0],instructorRazuvious[1],
-                gothiktheHarvester[0],gothiktheHarvester[1],
-                fourHorsemen[0],fourHorsemen[1],
-                patchwerk[0],patchwerk[1],
-                grobbulus[0],grobbulus[1],
-                gluth[0],gluth[1],
-                thaddius[0],thaddius[1],
-                sapphiron[0],sapphiron[1],
-                kelThuzad[0],kelThuzad[1],
+                //anubrekhan[0],anubrekhan[1],
+                //grandwidow[0],grandwidow[1],
+                //maexxna[0],maexxna[1],
+                //noth[0],noth[1],
+                //heigantheUnclean[0],heigantheUnclean[1],
+                //loatheb[0],loatheb[1],
+                //instructorRazuvious[0],instructorRazuvious[1],
+                //gothiktheHarvester[0],gothiktheHarvester[1],
+                //fourHorsemen[0],fourHorsemen[1],
+                //patchwerk[0],patchwerk[1],
+                //grobbulus[0],grobbulus[1],
+                //gluth[0],gluth[1],
+                //thaddius[0],thaddius[1],
+                //sapphiron[0],sapphiron[1],
+                //kelThuzad[0],kelThuzad[1],
                 // The Obsidian Sanctum
-                shadron[0],shadron[1],
-                tenebron[0],tenebron[1],
-                vesperon[0],vesperon[1],
-                sartharion[0],sartharion[1],
+                //shadron[0],shadron[1],
+                //tenebron[0],tenebron[1],
+                //vesperon[0],vesperon[1],
+                //sartharion[0],sartharion[1],
                 // Vault of Archavon
-                archavon[0],archavon[1],
+                //archavon[0],archavon[1],
                 // The Eye of Eternity
-                malygos[0],malygos[1],
+                //malygos[0],malygos[1],
                 #endregion
                 #region ==== Tier 8 Content ====
                 // Ulduar
-                IgnistheFurnaceMaster[0],IgnistheFurnaceMaster[1],
-                Razorscale[0],Razorscale[1],
-                XT002Deconstructor[0],XT002Deconstructor[1],
-                AssemblyofIron[0],AssemblyofIron[1],
-                Kologarn[0],Kologarn[1],
-                Auriaya[0],Auriaya[1],
-                Mimiron[0],Mimiron[1],
-                Freya[0],Freya[1],
-                Thorim[0],Thorim[1],
-                Hodir[0],Hodir[1],
-                GeneralVezax[0],GeneralVezax[1],
-                YoggSaron[0],YoggSaron[1],
-                AlgalontheObserver[0],AlgalontheObserver[1],
+                //IgnistheFurnaceMaster[0],IgnistheFurnaceMaster[1],
+                //Razorscale[0],Razorscale[1],
+                //XT002Deconstructor[0],XT002Deconstructor[1],
+                //AssemblyofIron[0],AssemblyofIron[1],
+                //Kologarn[0],Kologarn[1],
+                //Auriaya[0],Auriaya[1],
+                //Mimiron[0],Mimiron[1],
+                //Freya[0],Freya[1],
+                //Thorim[0],Thorim[1],
+                //Hodir[0],Hodir[1],
+                //GeneralVezax[0],GeneralVezax[1],
+                //YoggSaron[0],YoggSaron[1],
+                //AlgalontheObserver[0],AlgalontheObserver[1],
                 // Vault of Archavon
-                EmalonTheStormWatcher[0], EmalonTheStormWatcher[1],
+                //EmalonTheStormWatcher[0], EmalonTheStormWatcher[1],
                 #endregion
                 #region ==== Tier 9 Content ====
                 // Vault of Archavon
-                KoralonTheFlameWatcher[0],KoralonTheFlameWatcher[1],
+                //KoralonTheFlameWatcher[0],KoralonTheFlameWatcher[1],
                 // Trial of the Crusader
-                NorthrendBeasts[0],NorthrendBeasts[1],NorthrendBeasts[2],NorthrendBeasts[3],
-                LordJaraxxus[0],LordJaraxxus[1],LordJaraxxus[2],LordJaraxxus[3],
-                FactionChampions[0],FactionChampions[1],FactionChampions[2],FactionChampions[3],
-                TwinValkyr[0],TwinValkyr[1],TwinValkyr[2],TwinValkyr[3],
-                Anubarak[0],Anubarak[1],Anubarak[2],Anubarak[3],
+                //NorthrendBeasts[0],NorthrendBeasts[1],NorthrendBeasts[2],NorthrendBeasts[3],
+                //LordJaraxxus[0],LordJaraxxus[1],LordJaraxxus[2],LordJaraxxus[3],
+                //FactionChampions[0],FactionChampions[1],FactionChampions[2],FactionChampions[3],
+                //TwinValkyr[0],TwinValkyr[1],TwinValkyr[2],TwinValkyr[3],
+                //Anubarak[0],Anubarak[1],Anubarak[2],Anubarak[3],
                 #endregion
                 #region ==== Tier 10 Content ====
                 // Vault of Archavon
-                ToravonTheIceWatcher[0],ToravonTheIceWatcher[1],
+                //ToravonTheIceWatcher[0],ToravonTheIceWatcher[1],
                 // Icecrown Citadel
-                LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
-                LadyDeathwhisper[0],LadyDeathwhisper[1],LadyDeathwhisper[2],LadyDeathwhisper[3],
-                DeathbringerSaurfang[0], DeathbringerSaurfang[1], DeathbringerSaurfang[2], DeathbringerSaurfang[3],
-                Festergut[0], Festergut[1], Festergut[2], Festergut[3],
-                Rotface[0], Rotface[1], Rotface[2], Rotface[3],
-                ProfessorPutricide[0], ProfessorPutricide[1], ProfessorPutricide[2], ProfessorPutricide[3],
-                BloodPrinceCouncil[0], BloodPrinceCouncil[1], BloodPrinceCouncil[2], BloodPrinceCouncil[3],
-                BloodQueenLanathel[0], BloodQueenLanathel[1], BloodQueenLanathel[2], BloodQueenLanathel[3],
-                ValathriaDreamwalker[0], ValathriaDreamwalker[1], ValathriaDreamwalker[2], ValathriaDreamwalker[3],
-                Sindragosa[0], Sindragosa[1], Sindragosa[2], Sindragosa[3],
-                TheLichKing[0], TheLichKing[1], TheLichKing[2], TheLichKing[3],
+                //LordMarrowgar[0],LordMarrowgar[1],LordMarrowgar[2],LordMarrowgar[3],
+                //LadyDeathwhisper[0],LadyDeathwhisper[1],LadyDeathwhisper[2],LadyDeathwhisper[3],
+                //DeathbringerSaurfang[0], DeathbringerSaurfang[1], DeathbringerSaurfang[2], DeathbringerSaurfang[3],
+                //Festergut[0], Festergut[1], Festergut[2], Festergut[3],
+                //Rotface[0], Rotface[1], Rotface[2], Rotface[3],
+                //ProfessorPutricide[0], ProfessorPutricide[1], ProfessorPutricide[2], ProfessorPutricide[3],
+                //BloodPrinceCouncil[0], BloodPrinceCouncil[1], BloodPrinceCouncil[2], BloodPrinceCouncil[3],
+                //BloodQueenLanathel[0], BloodQueenLanathel[1], BloodQueenLanathel[2], BloodQueenLanathel[3],
+                //ValathriaDreamwalker[0], ValathriaDreamwalker[1], ValathriaDreamwalker[2], ValathriaDreamwalker[3],
+                //Sindragosa[0], Sindragosa[1], Sindragosa[2], Sindragosa[3],
+                //TheLichKing[0], TheLichKing[1], TheLichKing[2], TheLichKing[3],
                 // Ruby Sanctum
-                Baltharus[0],Baltharus[1],Baltharus[2],Baltharus[3],
-                SavianaRagefire[0],SavianaRagefire[1],SavianaRagefire[2],SavianaRagefire[3],
-                GeneralZarithrian[0],GeneralZarithrian[1],GeneralZarithrian[2],GeneralZarithrian[3],
-                Halion[0],Halion[1],Halion[2],Halion[3],
+                //Baltharus[0],Baltharus[1],Baltharus[2],Baltharus[3],
+                //SavianaRagefire[0],SavianaRagefire[1],SavianaRagefire[2],SavianaRagefire[3],
+                //GeneralZarithrian[0],GeneralZarithrian[1],GeneralZarithrian[2],GeneralZarithrian[3],
+                //Halion[0],Halion[1],Halion[2],Halion[3],
+                #endregion
+                #region ==== Tier 11 Content ====
+                // Baradin Hold
+                Argaloth[0],Argaloth[1],
+                // Blackwing Descent
+                Magmaw[0],Magmaw[1],Magmaw[2],Magmaw[3],
+                OmnitronDefenseSystem[0],OmnitronDefenseSystem[1],OmnitronDefenseSystem[2],OmnitronDefenseSystem[3],
+                Maloriak[0], Maloriak[1], Maloriak[2], Maloriak[3],
+                Atramedes[0], Atramedes[1], Atramedes[2], Atramedes[3],
+                Chimaron[0], Chimaron[1], Chimaron[2], Chimaron[3],
+                Nefarian[0], Nefarian[1], Nefarian[2], Nefarian[3],
+                // The Bastion of Twilight
+                ValionaAndTheralion[0], ValionaAndTheralion[1], ValionaAndTheralion[2], ValionaAndTheralion[3],
+                HalfusWyrmbreaker[0], HalfusWyrmbreaker[1], HalfusWyrmbreaker[2], HalfusWyrmbreaker[3],
+                TwilightAscendantCouncil[0], TwilightAscendantCouncil[1], TwilightAscendantCouncil[2], TwilightAscendantCouncil[3],
+                Chogall[0], Chogall[1], Chogall[2], Chogall[3],
+                Sinestra[0], Sinestra[1], Sinestra[2], Sinestra[3],
+                // Throne of the Four Winds
+                ConclaveOfWind[0],ConclaveOfWind[1],ConclaveOfWind[2],ConclaveOfWind[3],
+                AlAkir[0],AlAkir[1],AlAkir[2],AlAkir[3],
                 #endregion
             };
             TheEZModeBoss  = GenTheEZModeBoss(list);

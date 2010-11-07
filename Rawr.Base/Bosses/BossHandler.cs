@@ -484,6 +484,9 @@ namespace Rawr {
             "Tier 10.0",
             "Tier 10.5",
             "Tier 10.9",
+            "Tier 11.0",
+            "Tier 11.5",
+            "Tier 12.0",
         };
         protected readonly static string[] BossVersionStrings = new string[] {
             "10 Man",
@@ -492,7 +495,7 @@ namespace Rawr {
             "25 Man (H)",
         };
         public enum Versions   : int { V_10N = 0, V_25N = 1, V_10H = 2, V_25H = 3, V_10 = 0, V_25 = 1 } // last two are for file compatibility between versions
-        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9 }
+        public enum TierLevels : int { T7_0 = 0, T7_5, T8_0, T8_5, T9_0, T9_5, T10_0, T10_5, T10_9, T11_0, T11_5, T12_0 }
         public static readonly float[] StandardMeleePerHit = new float[] {
                  5000f*2f, //T7_0,
                 10000f*2f, //T7_5,
@@ -503,13 +506,16 @@ namespace Rawr {
                 60000f*2f, //T10_0,
                 70000f*2f, //T10_5,
                 80000f*2f, //T10_9,
+                100000f*2f, //T11_0,
+                110000f*2f, //T11_5,
+                120000f*2f, //T12_0,
         };
         #endregion
         #region ==== Info ====
         private string NAME = "Generic",
             INSTANCE = "None",
             COMMENT = "No comments have been written for this Boss.";
-        private TierLevels CONTENT = TierLevels.T7_0;
+        private TierLevels CONTENT = TierLevels.T11_0;
         private Versions VERSION = Versions.V_10N;
         #endregion
         #region ==== Basics ====
