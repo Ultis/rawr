@@ -68,17 +68,7 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        // Creature Type Damage Bonus from Crusade
-        public static float CreatureTypeDamageMultiplier(Character character, string targetType) {
-            switch (targetType) {
-                case "Humanoid": case "Demon": case "Elemental": return (1f + character.PaladinTalents.Crusade * 0.01f);
-                case "Undead": return (1f + character.PaladinTalents.Crusade * 0.01f);
-                default: return 1f;
-            }
-        }
-
         public static float StanceDamageMultipler(Character character, Stats stats) { return (1.0f + stats.BonusDamageMultiplier); }
-        public static float StanceThreatMultipler(Character character, Stats stats) { return (1.42f * (1.0f + stats.ThreatIncreaseMultiplier)); }
         public static float StanceDamageReduction(Character character, Stats stats) { return StanceDamageReduction(character, stats, DamageType.Physical); }
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
             PaladinTalents talents = character.PaladinTalents;
