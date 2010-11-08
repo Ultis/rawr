@@ -4,12 +4,6 @@ using System.Collections.Generic;
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class SpellListShadowPriest
-    {
-        public static readonly List<Spell> ShadowSpellList = new List<Spell>() { new VampiricTouch(), new DevouringPlauge(), new MindBlast(), new ShadowWordPain(), new MindFlay(), new MindSpike(), new ShadowWordDeath()};
-        //public static readonly List<Spell> HolySpellList = new List<Spell>() { "Penance", "Holy Fire", "Devouring Plague", "Shadow Word: Pain", "Mind Blast", "Shadow Word: Death", "Smite" };
-
-    }
     public abstract class Spell
     {   
 

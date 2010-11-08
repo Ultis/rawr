@@ -135,13 +135,6 @@
       <FileName>Spells\Shadow\VampiricTouch.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Rawr.ShadowPriest.Spells.SpellListShadowPriest">
-    <Position X="6.75" Y="12.75" Width="3.25" />
-    <TypeIdentifier>
-      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Spells\Spell.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Rawr.ShadowPriest.Spells.Spell">
     <Position X="0.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>

@@ -25,7 +25,10 @@ namespace Rawr.ShadowPriest
             tbModuleNotes.Text =
                 "Notes:\r\n" +
                "Shadow Priest Notes";
-            foreach (Spell s in SpellListShadowPriest.ShadowSpellList)
+            SpellBox spellBox = new SpellBox();
+
+
+            foreach (Spell s in spellBox.Spells)
             {
                 lsSpellPriority.Items.Add(s.name);
             }

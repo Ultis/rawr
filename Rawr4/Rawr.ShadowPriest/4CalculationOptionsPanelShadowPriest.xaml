@@ -15,6 +15,7 @@
 
     <UserControl.Resources>
         <local:CalculationOptionsShadowPriest x:Key="CalculationOptionsShadowPriestDataSource" d:IsDataSource="True"/>
+        <local:MillisecConverter x:Key="MillisecConverter" />
     </UserControl.Resources>
     
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsShadowPriestDataSource}}">
@@ -41,14 +42,13 @@
                         <ColumnDefinition />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Margin="4,2" Name="LB_NumTargs" Text="Number of Targets:" Grid.Row="2" FontWeight="Bold" />
-                    <TextBlock Grid.Column="2" Margin="4,2" Name="LB_NumTargsVal" Text="{Binding Path=NumberOfTargets, StringFormat=\{0:0\} target(s)}" Grid.Row="2" />
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" Margin="4,2" Name="trk_NumTargs" SmallChange="1" Value="{Binding Path=NumberOfTargets, Mode=TwoWay}" />
-                    <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="4" Margin="4,2" Name="textBox1" Value="{Binding Path=LatencyCast, Mode=TwoWay, StringFormat=\{0:0\}}" Maximum="1000" Increment="25" />
+                    <TextBlock Grid.Column="0" Margin="4,2" Name="NumTargs" Text="Number of Targets:" Grid.Row="2" FontWeight="Bold" />
+                    <TextBlock Grid.Column="2" Margin="4,2" Name="NumTargsVal" Text="{Binding Path=NumberOfTargets, StringFormat=\{0:0\} target(s)}" Grid.Row="2" />
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" Margin="4,2" Name="trk_NumTargs" SmallChange="1" Minimum="1" Maximum="3" Value="{Binding Path=NumberOfTargets, Mode=TwoWay}" />
+                    <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="4" Margin="4,2" Name="textBox1" Value="{Binding Path=LatencyCast, Converter={StaticResource MillisecConverter}, Mode=TwoWay, StringFormat=\{0:0\}}" Maximum="1000" Increment="25" />
                     <TextBlock Grid.Row="5" Margin="4,2" Name="textBlock1" Text="GCD Latency" FontWeight="Bold" Padding="0,2,0,0" />
-                    <inputToolkit:NumericUpDown Grid.Row="5" Margin="4,2" Name="textBox2" Grid.Column="1" Value="{Binding Path=LatencyGcd, Mode=TwoWay, StringFormat=\{0:0\}}" Maximum="1000" Increment="25" />
+                    <inputToolkit:NumericUpDown Grid.Row="5" Margin="4,2" Name="textBox2" Grid.Column="1" Value="{Binding Path=LatencyGcd,Converter={StaticResource MillisecConverter}, Mode=TwoWay, StringFormat=\{0:0\}}" Maximum="1000" Increment="25" />
                     <TextBlock Grid.Row="4" Margin="4,2" Name="textBlock2" Text="Cast Latency" FontWeight="Bold" Padding="0,2,0,0" />
-                    <TextBlock Grid.Row="6" Margin="4,2" Name="textBlock3" Text="Rotation" Grid.ColumnSpan="3" FontWeight="Bold" />
                     <TextBlock Grid.Column="2" Grid.Row="4" Margin="4,2" Name="textBlock5" Text="ms" Padding="0,2,0,0" />
                     <TextBlock Grid.Column="2" Grid.Row="5" Margin="4,2" Name="textBlock6" Text="ms" Padding="0,2,0,0" />
                 </Grid>

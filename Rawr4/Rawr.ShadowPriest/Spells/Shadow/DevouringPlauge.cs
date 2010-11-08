@@ -4,13 +4,14 @@ namespace Rawr.ShadowPriest.Spells
 {
     public class DevouringPlauge : Spell
     {
-         /// <summary>
-        /// Shadow Word Pain is a dot that lasts for 24 seconds.
+        /// <summary>
+        /// Devouring Plauge is a dot that lasts for 24 seconds.
+        /// </summary>
         /// It Benifits from:
         /// Talents:
         /// Twin Disciplines, Mental Agility, Dark Evangelism, Darkness (to be handeled in Char stats), Improved Devouring Plauge, Shadowform.
         //TODO: Get base Values from Beta, Imp Devouring Plauge (Instant 15% of total periodic damage), Healing Effect
-        /// </summary>
+        
         public DevouringPlauge() : base()
         { 
         }

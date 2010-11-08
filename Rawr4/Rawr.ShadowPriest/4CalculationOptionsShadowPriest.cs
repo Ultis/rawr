@@ -16,6 +16,32 @@ namespace Rawr.ShadowPriest
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
+        [XmlIgnore]
+        public Character calculatedStats = null;
+
+        //latency in s
+        private float _LatencyGcd = .15f;
+        public float LatencyGcd
+        {
+            get { return _LatencyGcd; }
+            set { _LatencyGcd = value; OnPropertyChanged("LatencyGcd"); }
+        }
+
+        private float _LatencyCast = .075f;
+        public float LatencyCast
+        {
+            get { return _LatencyCast; }
+            set { _LatencyCast = value; OnPropertyChanged("LatencyCast"); }
+        }
+        
+        private int _NumberOfTargets = 1;
+        public int NumberOfTargets
+        {
+            get { return _NumberOfTargets; }
+            set { _NumberOfTargets = value; OnPropertyChanged("NumberOfTargets"); }
+        }
+
+        //get values for rotation
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
