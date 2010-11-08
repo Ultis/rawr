@@ -4106,6 +4106,10 @@ namespace Rawr.Mage
                     {
                         AddSegmentTicks(ticks, 120.0);
                     }
+                    if (evocationAvailable)
+                    {
+                        AddSegmentTicks(ticks, EvocationCooldown);
+                    }
                     if (arcanePowerAvailable)
                     {
                         AddSegmentTicks(ticks, ArcanePowerCooldown);
@@ -5423,11 +5427,15 @@ namespace Rawr.Mage
                     {
                         case Specialization.Arcane:
                             spellList.Add(CycleId.ArcaneBlastSpam);
-                            spellList.Add(CycleId.ABSpam234AM);
+                            spellList.Add(CycleId.ABSpam0234AMABar);
+                            spellList.Add(CycleId.ABSpam0234AMABABar);
+                            spellList.Add(CycleId.AB2ABar2AMABar0AMABABar);
+                            //spellList.Add(CycleId.ABSpam234AM);
                             spellList.Add(CycleId.AB3ABar023AM);
                             spellList.Add(CycleId.AB23ABar023AM);
                             spellList.Add(CycleId.AB2ABar02AMABABar);
                             spellList.Add(CycleId.AB2ABar12AMABABar);
+                            spellList.Add(CycleId.ABABar1AM);
                             if (CalculationOptions.IncludeManaNeutralCycleMix)
                             {
                                 spellList.Add(CycleId.ArcaneManaNeutral);

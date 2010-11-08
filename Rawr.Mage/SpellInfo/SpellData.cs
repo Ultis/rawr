@@ -635,7 +635,6 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
@@ -646,13 +645,11 @@ namespace Rawr.Mage
         }
 
         float fingersOfFrostCritRate;
-        float tormentTheWeak;
 
         public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
@@ -788,12 +785,9 @@ namespace Rawr.Mage
             {
                 spell.CostAmplifier = 0;
             }
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom || brainFreeze, true);
             return spell;
         }
-
-        float tormentTheWeak;
 
         public void Initialize(Solver solver)
         {
@@ -843,14 +837,12 @@ namespace Rawr.Mage
             return SpellDataBeta[options.PlayerLevel - 80];
         }
 
-        private float tormentFactor;
         private float fingersOfFrostCritRate;
 
         public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost, bool brainFreeze)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.SpellModifier *= (1 + tormentFactor * castingState.SnaredTime);
             if (averageFingersOfFrost)
             {
                 spell.CritRate += fingersOfFrostCritRate;
@@ -917,7 +909,6 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom, spammedDot);
             return spell;
         }
@@ -926,12 +917,9 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CalculateDerivedStats(castingState, false, pom, false, false, false, false, true);
             return spell;
         }
-
-        float tormentTheWeak;
 
         public void Initialize(Solver solver)
         {

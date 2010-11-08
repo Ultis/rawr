@@ -1073,6 +1073,11 @@ namespace Rawr.Mage
                 }
             }
 
+            if (perturbColumns.Count == 0)
+            {
+                return;
+            }
+
             while (steps > 0)
             {
                 steps--;
@@ -1906,9 +1911,9 @@ namespace Rawr.Mage
             return value;
         }
 
-        private int SelectPrimalIncoming(out double direction, bool prepareForDual)
+        private int SelectPrimalIncoming(out double direction, double eps)
         {
-            double maxc = (prepareForDual) ? epsDualI : epsDual;
+            double maxc = eps;
             int maxj = -1;
             direction = 0.0;
             double dir = 0.0;
@@ -3899,7 +3904,7 @@ namespace Rawr.Mage
 
             MINISTEP:
                 double direction;
-                int maxj = SelectPrimalIncoming(out direction, prepareForDual);
+            int maxj = SelectPrimalIncoming(out direction, (prepareForDual) ? epsDualI : epsDual);
 
                 if (maxj == -1)
                 {
@@ -4177,7 +4182,7 @@ namespace Rawr.Mage
                 }
 
                 double direction;
-                int maxj = SelectPrimalIncoming(out direction, false);
+                int maxj = SelectPrimalIncoming(out direction, epsDual);
 
                 if (maxj == -1)
                 {
@@ -5581,6 +5586,7 @@ namespace Rawr.Mage
             bool checkTermination;
             //bool stall;
             bool needsReducedGradientStep = false;
+            int forcedReducedGradientCount = 0;
             osbDirty = true;
 
             //int verificationAttempts = 0;
@@ -5620,7 +5626,12 @@ namespace Rawr.Mage
                 {
                     Decompose();
                     redecompose = maxRedecompose; // decompose every 50 iterations to maintain stability
-                    feasible = false; // when refactoring basis recompute the solution
+                    if (feasible)
+                    {
+                        feasible = false; // when refactoring basis recompute the solution
+                        lowestInfeasibility = double.PositiveInfinity;
+                        numericCycling = 0;
+                    }
                 }
                 if (lu.Singular)
                 {
@@ -5764,7 +5775,7 @@ namespace Rawr.Mage
 
                     ComputeReducedCostGradient();
 
-                    maxj = SelectPrimalIncoming(out direction, false);
+                    maxj = SelectPrimalIncoming(out direction, eps);
 
                     if (maxj == -1)
                     {
@@ -5784,7 +5795,7 @@ namespace Rawr.Mage
                         }
                         if (retry)
                         {
-                            maxj = SelectPrimalIncoming(out direction, false);
+                            maxj = SelectPrimalIncoming(out direction, epsDual);
                         }
 
                         if (maxj == -1)
@@ -5807,6 +5818,22 @@ namespace Rawr.Mage
                         // but since we're working with unit step in reduced space the solving with
                         // basis shouldn't give too many problems due to zero snapping
 
+                        // when needsReducedGradientStep is true we're expecting to be close to optimal
+                        // and that just a few reduced gradient steps should get us there
+                        // however if we have numerical problems we might just circle in loops without
+                        // making any progress
+                        // for this reason compute actual value and make sure we're not going backwards
+                        // if we are we need to lower tolerances to escape infinite loop
+                        double beforeReducedGradient = 0;
+                        if (needsReducedGradientStep)
+                        {
+                            forcedReducedGradientCount++;
+                            if (forcedReducedGradientCount > 10)
+                            {
+                                beforeReducedGradient = ComputeValueQuadratic();
+                            }
+                        }
+
                         updateCount++;
                         if (!ReducedGradientStep(maxj, direction, eps, out mini, out bound, out changeBasis, out checkTermination/*, out stall*/))
                         {
@@ -5816,6 +5843,19 @@ namespace Rawr.Mage
                             numericCycling = 0;
                             redecompose = 0;
                             goto DECOMPOSE;
+                        }
+
+                        if (needsReducedGradientStep && forcedReducedGradientCount > 10)
+                        {
+                            if (ComputeValueQuadratic() < beforeReducedGradient)
+                            {
+                                // we're in trouble
+                                // reduce tolerances
+                                if (eps < 1.0)
+                                {
+                                    eps *= 10.0;
+                                }
+                            }
                         }
 
                         if (checkTermination)
@@ -5858,7 +5898,7 @@ namespace Rawr.Mage
 
                             ComputeReducedCostGradient();
 
-                            maxj = SelectPrimalIncoming(out direction, false);
+                            maxj = SelectPrimalIncoming(out direction, epsDual);
 
                             if (maxj == -1)
                             {
@@ -6080,7 +6120,7 @@ namespace Rawr.Mage
                     }
                     if (retry)
                     {
-                        maxj = SelectPrimalIncoming(out direction, false);
+                        maxj = SelectPrimalIncoming(out direction, epsDual);
                     }
 
                     if (maxj == -1)
@@ -6523,7 +6563,7 @@ namespace Rawr.Mage
 
                     ComputeReducedCostGradient();
 
-                    maxj = SelectPrimalIncoming(out direction, false);
+                    maxj = SelectPrimalIncoming(out direction, epsDual);
 
                     if (maxj == -1)
                     {
@@ -6543,7 +6583,7 @@ namespace Rawr.Mage
                         }
                         if (retry)
                         {
-                            maxj = SelectPrimalIncoming(out direction, false);
+                            maxj = SelectPrimalIncoming(out direction, epsDual);
                         }
 
                         if (maxj == -1)
@@ -6616,7 +6656,7 @@ namespace Rawr.Mage
 
                             ComputeReducedCostGradient();
 
-                            maxj = SelectPrimalIncoming(out direction, false);
+                            maxj = SelectPrimalIncoming(out direction, epsDual);
 
                             if (maxj == -1)
                             {
@@ -6802,7 +6842,7 @@ namespace Rawr.Mage
                 // so pretend superbasics are fixed and do a single direction change
                 ComputeReducedCostGradient();
 
-                maxj = SelectPrimalIncoming(out direction, false);
+                maxj = SelectPrimalIncoming(out direction, epsDual);
 
                 if (maxj == -1)
                 {
@@ -6822,7 +6862,7 @@ namespace Rawr.Mage
                     }
                     if (retry)
                     {
-                        maxj = SelectPrimalIncoming(out direction, false);
+                        maxj = SelectPrimalIncoming(out direction, epsDual);
                     }
 
                     if (maxj == -1)
@@ -7079,7 +7119,7 @@ namespace Rawr.Mage
 
                 ComputeReducedCostGradient();
 
-                maxj = SelectPrimalIncoming(out direction, false);
+                maxj = SelectPrimalIncoming(out direction, epsDual);
 
                 if (maxj == -1)
                 {
@@ -7099,7 +7139,7 @@ namespace Rawr.Mage
                     }
                     if (retry)
                     {
-                        maxj = SelectPrimalIncoming(out direction, false);
+                        maxj = SelectPrimalIncoming(out direction, epsDual);
                     }
 
                     if (maxj == -1)
@@ -7294,7 +7334,7 @@ namespace Rawr.Mage
                             // so pretend superbasics are fixed and do a single direction change
                             ComputeReducedCostGradient();
 
-                            maxj = SelectPrimalIncoming(out direction, false);
+                            maxj = SelectPrimalIncoming(out direction, epsDual);
 
                             if (maxj == -1)
                             {
@@ -7314,7 +7354,7 @@ namespace Rawr.Mage
                                 }
                                 if (retry)
                                 {
-                                    maxj = SelectPrimalIncoming(out direction, false);
+                                    maxj = SelectPrimalIncoming(out direction, epsDual);
                                 }
 
                                 if (maxj == -1)
@@ -7462,7 +7502,7 @@ namespace Rawr.Mage
         private void PhaseIQStep(out int maxj, double eps, out int mini, out int bound, out bool changeBasis)
         {
             double direction;
-            maxj = SelectPrimalIncoming(out direction, true);
+            maxj = SelectPrimalIncoming(out direction, epsDualI);
 
 
             mini = -1;

@@ -665,6 +665,15 @@ namespace Rawr.Mage
                 case CycleId.ABSpam234AM:
                     c = ABSpam234AM.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.ABSpam0234AMABar:
+                    c = ABSpam0234AMABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam0234AMABABar:
+                    c = ABSpam0234AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AB2ABar2AMABar0AMABABar:
+                    c = AB2ABar2AMABar0AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.AB3ABar023AM:
                     c = AB3ABar023AM.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
@@ -673,6 +682,9 @@ namespace Rawr.Mage
                     break;
                 case CycleId.AB2ABar02AMABABar:
                     c = AB2ABar02AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABABar1AM:
+                    c = ABABar1AM.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.AB2ABar12AMABABar:
                     c = AB2ABar12AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);

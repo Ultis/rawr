@@ -499,6 +499,36 @@ namespace Rawr.Mage
         }
     }
 
+    public static class ABABar1AM
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "ABABar1AM";
+
+            // S0:
+            // AB0-ABar         => S0    (1-MB)*(1-MB)
+            // AB0-ABar-AB0-AM  => S0    (1-MB)*MB
+            // AB0-AM           => S0    MB
+
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+
+            float MB = 0.4f;
+            float K2 = (1 - MB) * (1 - MB);
+            float K3 = MB * (1 - MB);
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, 1 + K3);
+            cycle.AddSpell(needsDisplayCalculations, ABar, 1 - MB);
+            cycle.AddSpell(needsDisplayCalculations, AM, 1 - K2);
+            cycle.AddPause(ABar.Cooldown - ABar.CastTime - AB0.CastTime, 1 - MB);
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
     public static class AB2ABar02AMABABar
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
@@ -785,7 +815,7 @@ namespace Rawr.Mage
                     ABcast = AB.CastTime;
                 }
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K4);
-                cycle.AddSpell(needsDisplayCalculations, ABar, K4);
+                cycle.AddSpell(needsDisplayCalculations, ABar, K2);
                 // a bit overkill on pause, but make sure we respect the ABar cooldown
                 if (3 * ABcast + ABar.CastTime < 5)
                 {
@@ -2515,7 +2545,10 @@ namespace Rawr.Mage
             cycles.Add(castingState.GetCycle(CycleId.AB3ABar023AM));
             cycles.Add(castingState.GetCycle(CycleId.AB23ABar023AM));
             cycles.Add(castingState.GetCycle(CycleId.AB2ABar02AMABABar));
-            cycles.Add(castingState.GetCycle(CycleId.AB2ABar12AMABABar));
+            cycles.Add(castingState.GetCycle(CycleId.ABSpam0234AMABar));
+            cycles.Add(castingState.GetCycle(CycleId.ABSpam0234AMABABar));
+            cycles.Add(castingState.GetCycle(CycleId.AB2ABar2AMABar0AMABABar));
+            cycles.Add(castingState.GetCycle(CycleId.ABABar1AM));
 
             cycles.Sort((c1, c2) => c1.ManaPerSecond.CompareTo(c2.ManaPerSecond));
 
@@ -2560,6 +2593,394 @@ namespace Rawr.Mage
                 }
             }
             return null;
+        }
+    }
+
+    public static class ABSpam0234AMABar
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "ABSpam0234AMABar";
+
+            // ABar on cooldown only, assume we get into S0 from ABar, we'll incorrectly skip ABar sometimes
+            // but it should be close enough, redo the math later if it's not
+            // S0:
+            // AB0-AB1-AM => S2/0               MB                         first AB procs
+            // AB0-AB1-AB2-AM => S2/0           (1-MB)*MB                  2nd AB procs
+            // AB0-AB1-AB2-AB3-AM => S2/0       (1-MB)*(1-MB)*MB           3rd AB procs
+            // AB0-AB1-AB2-AB3-AB4-AM => S2/0   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+            // AB0-AB1-AB2-AB3 => S1               (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+            // S1:
+            // AB4-AB4-AM => S2   MB      proc
+            // AB4 => S1                  (1-MB)  no proc
+            // S2:
+            // ABar => S0     (1-MB)
+            // ABar-AM => S0  MB
+
+            // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+            // K1 = (1-MB)*..*(1-MB) depending on which cases fall into cooldown block
+
+            // S0 = (1 - K1) * S0 + S2
+            // S1 = K0 * S0 + (1-MB) * S1
+            // S2 = (K1 - K0) * S0 + MB * S1
+            // S0 + S1 + S2 = 1
+
+            // S0=MB/(K1*MB+MB+K0)
+            // S1=K0/(K1*MB+MB+K0)
+            // S2=(K1*MB)/(K1*MB+MB+K0)
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+            Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+            float K1;
+
+            float cool = ABar.Cooldown;
+            cool -= ABar.CastTime;
+            cool -= AB0.CastTime;
+            cool -= AB1.CastTime;
+            cool -= AM.CastTime;
+            if (cool < 0)
+            {
+                K1 = 1;
+            }
+            else
+            {
+                cool -= AB2.CastTime;
+                if (cool < 0)
+                {
+                    K1 = (1 - MB);
+                }
+                else
+                {
+                    cool -= AB3.CastTime;
+                    if (cool < 0)
+                    {
+                        K1 = (1 - MB) * (1 - MB);
+                    }
+                    else
+                    {
+                        cool -= AB4.CastTime;
+                        if (cool < 0)
+                        {
+                            K1 = (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                        else
+                        {
+                            K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                    }
+                }
+            }
+
+            float S0 = MB / (K1 * MB + MB + K0);
+            float S1 = K0 / (K1 * MB + MB + K0);
+            float S2 = (K1 * MB) / (K1 * MB + MB + K0);
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+            cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+            cycle.AddSpell(needsDisplayCalculations, AB2, S0 * (1 - MB));
+            cycle.AddSpell(needsDisplayCalculations, AB3, S0 * (1 - MB) * (1 - MB));
+            cycle.AddSpell(needsDisplayCalculations, AB4, S0 * (1 - MB) * (1 - MB) * (1 - MB) * MB + S1 * (1 + MB));
+            cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB + S2 * MB);
+            cycle.AddSpell(needsDisplayCalculations, ABar, S2);
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    /*public static class AB2ABar02AMABABar
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB2ABar02AMABABar";
+
+            // S0: no proc
+            // AB0-AB1-ABar     => S0    (1-MB)*(1-MB)*(1-MB)         nothing procs
+            //                  => S1    (1-MB)*(1 - (1-MB)*(1-MB))   AB0 doesn't proc, AB1 or ABar procs
+            // AB0-AB1  => S1    MB                    AB0 procs
+            // S1: proc
+            // AM-AB0-ABar      => S0    (1-MB)*(1-MB)       nothing procs
+            //                  => S1    1 - (1-MB)*(1-MB)   either AB0 or ABar procs
+
+            // K0 = (1-MB)*(1-MB)*(1-MB)
+            // K1 = (1-MB)*(1-MB)
+
+            // S0 = S0 * K0 + S1 * K1
+            // S1 = S0 * (1 - K0) + S1 * (1 - K1)
+            // S0 + S1 = 1
+
+            // S0 = K1/(K1-K0+1)
+            // S1 = 1 - S0
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float K0 = (1 - MB) * (1 - MB) * (1 - MB);
+            float K1 = (1 - MB) * (1 - MB);
+            float S0 = K1 / (K1 - K0 + 1);
+            float S1 = 1 - S0;
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+            cycle.AddSpell(needsDisplayCalculations, AM, S1);
+            cycle.AddSpell(needsDisplayCalculations, ABar, S0 * (1 - MB) + S1);
+
+            float pause = ABar.Cooldown - 2 * AB0.CastTime - AB1.CastTime - AM.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S1 * K1);
+            }
+            pause = ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S0 * (1 - MB));
+            }
+            pause = ABar.Cooldown - AB0.CastTime - AM.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S1 * (1 - K1));
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }*/
+
+    public static class AB2ABar2AMABar0AMABABar
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB2ABar2AMABar0AMABABar";
+
+            // S0: no proc
+            // AB0-AB1-ABar     => S0    (1-MB)*(1-MB)*(1-MB)         nothing procs
+            //                  => S1    (1-MB)*(1 - (1-MB)*(1-MB))   AB0 doesn't proc, AB1 or ABar procs
+            // AB0-AB1-AM-ABar  => S0    MB*(1-MB)                    AB0 procs, ABar doesn't proc
+            //                  => S1    MB*MB                        AB0 and ABar both proc
+            // S1: proc
+            // AM-AB0-ABar      => S0    (1-MB)*(1-MB)       nothing procs
+            //                  => S1    1 - (1-MB)*(1-MB)   either AB0 or ABar procs
+
+            // S0 = (1 - MB) * (1 - MB) / (1 - MB*MB*(1-MB))
+            // S1 = 1 - S0
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float S0 = (1 - MB) * (1 - MB) / (1 - MB * MB * (1 - MB));
+            float S1 = 1 - S0;
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+            cycle.AddSpell(needsDisplayCalculations, AM, S0 * MB + S1);
+            cycle.AddSpell(needsDisplayCalculations, ABar, 1);
+
+            float pause = ABar.Cooldown - AB0.CastTime - AB1.CastTime - AM.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S0 * MB);
+            }
+            pause = ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S0 * (1 - MB));
+            }
+            pause = ABar.Cooldown - AB0.CastTime - AM.CastTime - ABar.CastTime;
+            if (pause > 0)
+            {
+                cycle.AddPause(pause, S1);
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class ABSpam0234AMABABar
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "ABSpam0234AM[AB]ABar";
+
+            // ABar on cooldown only, assume we get into S0 from ABar, we'll incorrectly skip ABar sometimes
+            // but it should be close enough, redo the math later if it's not
+            // S0:
+            // AB0-AB1-AM => S3/2/0               MB                         first AB procs
+            // AB0-AB1-AB2-AM => S3/2/0           (1-MB)*MB                  2nd AB procs
+            // AB0-AB1-AB2-AB3-AM => S3/2/0       (1-MB)*(1-MB)*MB           3rd AB procs
+            // AB0-AB1-AB2-AB3-AB4-AM => S3/2/0   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+            // AB0-AB1-AB2-AB3 => S1              (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+            // S1:
+            // AB4-AB4-AM => S2   MB      proc
+            // AB4 => S1                  (1-MB)  no proc
+            // S2:
+            // ABar => S0     (1-MB)
+            // ABar-AM => S0/3  MB
+            // S3:
+            // AB0-ABar => S0     (1-MB)*(1-MB)
+            // AB0-ABar-AM => S0/3  1 - (1-MB)*(1-MB)
+
+            // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+            // K1 = (1-MB)*..*(1-MB) depending on which cases fall into S2
+            // K2 = (1-MB)*..*(1-MB) depending on which cases fall into S3
+            // K3 = (1-MB)*(1-MB)
+
+            // S0 = (1 - K2) * S0 + S2 + S3
+            // S1 = K0 * S0 + (1-MB) * S1
+            // S2 = (K1 - K0) * S0 + MB * S1
+            // S3 = (K2 - K1) * S0
+            // S0 + S1 + S2 + S3 = 1
+
+            // S0=MB/(K2*MB+MB+K0)
+            // S1=K0/(K2*MB+MB+K0)
+            // S2=(K1*MB)/(K2*MB+MB+K0)
+            // S3=(K2*MB-K1*MB)/(K2*MB+MB+K0)
+
+            // low haste
+            // S0 = (1 - K2) * S0 + S2*(1-MB) + S3*K3
+            // S1 = K0 * S0 + (1-MB) * S1
+            // S2 = (K1 - K0) * S0 + MB * S1
+            // S3 = (K2 - K1) * S0 + S2 * MB + S3 * (1 - K3)
+
+            // S0 = K3*MB
+            // S1 = K0*K3
+            // S2 = K1*K3*MB
+            // S3 = K1*MB^2+(K2-K1)*MB
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+            Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float K0 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+            float K1, K2;
+
+            float cool = ABar.Cooldown;
+            cool -= ABar.CastTime;
+            cool -= AB0.CastTime;
+            cool -= AB1.CastTime;
+            cool -= AM.CastTime;
+            if (cool < 0)
+            {
+                K1 = 1;
+            }
+            else
+            {
+                cool -= AB2.CastTime;
+                if (cool < 0)
+                {
+                    K1 = (1 - MB);
+                }
+                else
+                {
+                    cool -= AB3.CastTime;
+                    if (cool < 0)
+                    {
+                        K1 = (1 - MB) * (1 - MB);
+                    }
+                    else
+                    {
+                        cool -= AB4.CastTime;
+                        if (cool < 0)
+                        {
+                            K1 = (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                        else
+                        {
+                            K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                    }
+                }
+            }
+
+            cool = ABar.Cooldown;
+            cool -= ABar.CastTime;
+            cool -= 2 * AB0.CastTime;
+            cool -= AB1.CastTime;
+            cool -= AM.CastTime;
+            if (cool < 0)
+            {
+                K2 = 1;
+            }
+            else
+            {
+                cool -= AB2.CastTime;
+                if (cool < 0)
+                {
+                    K2 = (1 - MB);
+                }
+                else
+                {
+                    cool -= AB3.CastTime;
+                    if (cool < 0)
+                    {
+                        K2 = (1 - MB) * (1 - MB);
+                    }
+                    else
+                    {
+                        cool -= AB4.CastTime;
+                        if (cool < 0)
+                        {
+                            K2 = (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                        else
+                        {
+                            K2 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+                        }
+                    }
+                }
+            }
+
+            float S0, S1, S2, S3;
+
+            if (AB0.CastTime + AM.CastTime + ABar.CastTime < ABar.Cooldown)
+            {
+                S0 = MB / (K2 * MB + MB + K0);
+                S1 = K0 / (K2 * MB + MB + K0);
+                S2 = (K1 * MB) / (K2 * MB + MB + K0);
+                S3 = (K2 * MB - K1 * MB) / (K2 * MB + MB + K0);
+            }
+            else
+            {
+                float K3 = (1 - MB) * (1 - MB);
+                S0 = K3 * MB;
+                S1 = K0 * K3;
+                S2 = K1 * K3 * MB;
+                S3 = K1 * MB * MB + (K2 - K1) * MB;
+            }
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, S0 + S3);
+            cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+            cycle.AddSpell(needsDisplayCalculations, AB2, S0 * (1 - MB));
+            cycle.AddSpell(needsDisplayCalculations, AB3, S0 * (1 - MB) * (1 - MB));
+            cycle.AddSpell(needsDisplayCalculations, AB4, S0 * (1 - MB) * (1 - MB) * (1 - MB) * MB + S1 * (1 + MB));
+            cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB + S2 * MB + S3 * (1 - (1 - MB) * (1 - MB)));
+            cycle.AddSpell(needsDisplayCalculations, ABar, S2 + S3);
+
+            cycle.Calculate();
+            return cycle;
         }
     }
 
@@ -3855,7 +4276,6 @@ w = remaining time on 2T10 effect";
         private int maxStack;
         private bool T10;
         private float channelLatency;
-        private bool beta;
 
         private bool ABarAllowed;
         private bool ABarOnCooldownOnly;

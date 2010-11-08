@@ -5203,6 +5203,64 @@ namespace Rawr.Mage
                             }
                             lp.ForceRecalculation(true);
                             HeapPush(lp);
+                            return false;
+                        }
+                    }
+                }
+
+
+                double[] msegAllCount = GetManaSegmentCooldownCount((int)StandardEffect.None, VariableType.None);
+
+                // validate evocation cooldown taking advantage of mana segment semantics
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    if (evoCount[seg] > eps && (seg == 0 || evoCount[seg - 1] < eps))
+                    {
+                        // this is where we start evocation, we already validated all crossings
+                        // check if there is a tight start of evocation after cooldown and if so validate
+                        // that cooldown is respected
+
+                        for (int nextSeg = seg + 1; nextSeg < SegmentList.Count; nextSeg++)
+                        {
+                            if (evoCount[nextSeg] > eps && !InCooldownDistance(seg, nextSeg, EvocationDuration, EvocationCooldown))
+                            {
+                                if (SegmentList[nextSeg].TimeEnd - SegmentList[seg].TimeStart - msegAllCount[seg * 2 + 0] - msegAllCount[nextSeg * 2 + 1] < EvocationCooldown - eps)
+                                {
+                                    // either make sure there is enough room for cooldown
+                                    SolverLP branchlp = lp.Clone();
+                                    if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce evocation cooldown at " + seg);
+                                    int row = branchlp.AddConstraint();
+                                    branchlp.SetConstraintRHS(row, SegmentList[nextSeg].TimeEnd - SegmentList[seg].TimeStart - EvocationCooldown);
+                                    for (int index = 0; index < SolutionVariable.Count; index++)
+                                    {
+                                        int s = SolutionVariable[index].Segment;
+                                        int ms = SolutionVariable[index].ManaSegment;
+                                        if ((s == seg && ms == 0) || (s == nextSeg && ms == 1))
+                                        {
+                                            branchlp.SetConstraintElement(row, index, 1);
+                                        }
+                                    }
+                                    branchlp.ForceRecalculation(true);
+                                    HeapPush(branchlp);
+                                    // or there is no activation here
+                                    // this means that either there is evo before or it isn't here
+                                    if (seg > 0)
+                                    {
+                                        branchlp = lp.Clone();
+                                        if (branchlp.Log != null) branchlp.Log.AppendLine("Evocation starts before " + seg);
+                                        row = branchlp.AddConstraint();
+                                        SetCooldownElements(branchlp, row, (int)StandardEffect.Evocation, seg - 1, 1.0);
+                                        branchlp.SetConstraintRHS(row, SegmentList[seg - 1].Duration);
+                                        branchlp.SetConstraintLHS(row, 0.1);
+                                        branchlp.ForceRecalculation(true);
+                                        HeapPush(branchlp);
+                                    }
+                                    if (lp.Log != null) lp.Log.AppendLine("No evocation at " + seg);
+                                    DisableCooldown(lp, (int)StandardEffect.Evocation, seg);
+                                    HeapPush(lp);
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }
@@ -5263,14 +5321,17 @@ namespace Rawr.Mage
                         HeapPush(branchlp);
                         // or there is no activation here
                         // this means that either there is evo before or it isn't here
-                        branchlp = lp.Clone();
-                        if (branchlp.Log != null) branchlp.Log.AppendLine("Evocation starts before " + seg);
-                        row = branchlp.AddConstraint();
-                        SetCooldownElements(branchlp, row, (int)StandardEffect.Evocation, seg - 1, 1.0);
-                        branchlp.SetConstraintRHS(row, SegmentList[seg - 1].Duration);
-                        branchlp.SetConstraintLHS(row, 0.1);
-                        branchlp.ForceRecalculation(true);
-                        HeapPush(branchlp);
+                        if (seg > 0)
+                        {
+                            branchlp = lp.Clone();
+                            if (branchlp.Log != null) branchlp.Log.AppendLine("Evocation starts before " + seg);
+                            row = branchlp.AddConstraint();
+                            SetCooldownElements(branchlp, row, (int)StandardEffect.Evocation, seg - 1, 1.0);
+                            branchlp.SetConstraintRHS(row, SegmentList[seg - 1].Duration);
+                            branchlp.SetConstraintLHS(row, 0.1);
+                            branchlp.ForceRecalculation(true);
+                            HeapPush(branchlp);
+                        }
                         if (lp.Log != null) lp.Log.AppendLine("No evocation at " + seg);
                         DisableCooldown(lp, (int)StandardEffect.Evocation, seg);
                         HeapPush(lp);
