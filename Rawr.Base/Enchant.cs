@@ -355,6 +355,7 @@ namespace Rawr
             // Level 85 (Cataclysm)
             defaultEnchants.Add(new Enchant(4100, "Greater Critical Strike", ItemSlot.Back, new Stats() { CritRating = 65 }));
             defaultEnchants.Add(new Enchant(4096, "Greater Intellect", ItemSlot.Back, new Stats() { Intellect = 50 }));
+            defaultEnchants.Add(new Enchant(4064, "Greater Spell Piercing", ItemSlot.Back, new Stats() { SpellPenetration = 70 }));
             defaultEnchants.Add(new Enchant(4090, "Protection", ItemSlot.Back, new Stats() { Armor = 250 }));
             defaultEnchants.Add(new Enchant(4087, "Critical Strike", ItemSlot.Back, new Stats() { CritRating = 50 }));
             defaultEnchants.Add(new Enchant(4072, "Intellect", ItemSlot.Back, new Stats() { Intellect = 30 }));
@@ -370,7 +371,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3831, "Greater Speed", ItemSlot.Back, new Stats() { HasteRating = 23 }));
             defaultEnchants.Add(new Enchant(3294, "Mighty Armor", ItemSlot.Back, new Stats() { BonusArmor = 225 }));
             defaultEnchants.Add(new Enchant(1951, "Titanweave", ItemSlot.Back, new Stats() { DodgeRating = 16 }));
-            defaultEnchants.Add(new Enchant(4064, "Greater Spell Piercing", ItemSlot.Back, new Stats() { SpellPenetration = 70 }));
             defaultEnchants.Add(new Enchant(3256, "Shadow Armor", ItemSlot.Back, new Stats() { Agility = 10, Armor = 40 }));
             defaultEnchants.Add(new Enchant(3296, "Wisdom", ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }));
             // Level 70 (BC)
@@ -410,6 +410,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4102, "Peerless Stats", ItemSlot.Chest, new Stats() { Agility = 20, Strength = 20, Stamina = 20, Intellect = 20, Spirit = 20 }));
             defaultEnchants.Add(new Enchant(4077, "Mighty Resilience", ItemSlot.Chest, new Stats() { Resilience = 40 }));
             defaultEnchants.Add(new Enchant(4063, "Mighty Stats", ItemSlot.Chest, new Stats() { Agility = 15, Strength = 15, Stamina = 15, Intellect = 15, Spirit = 15 }));
+            defaultEnchants.Add(new Enchant(4070, "Stamina", ItemSlot.Chest, new Stats() { Stamina = 55 }));
             // Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(1951, "Defense", ItemSlot.Chest, new Stats() { DodgeRating = 16 }));
             defaultEnchants.Add(new Enchant(1953, "Greater Defense", ItemSlot.Chest, new Stats() { DodgeRating = 22 }));
@@ -421,7 +422,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3297, "Super Health", ItemSlot.Chest, new Stats() { Health = 275 }));
             defaultEnchants.Add(new Enchant(3245, "Exceptional Resilience", ItemSlot.Chest, new Stats() { Resilience = 20 }));
             defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Mp5 = 10f }));
-            defaultEnchants.Add(new Enchant(4070, "Stamina", ItemSlot.Chest, new Stats() { Stamina = 55 }));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", ItemSlot.Chest, new Stats() { Spirit = 15 }));
             defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", ItemSlot.Chest, new Stats() { Mana = 250 }));
             defaultEnchants.Add(new Enchant(2933, "Major Resilience", ItemSlot.Chest, new Stats() { Resilience = 15 }));
@@ -440,13 +440,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4095, "Greater Expertise", ItemSlot.Wrist, new Stats() { ExpertiseRating = 50 }));
             defaultEnchants.Add(new Enchant(4101, "Greater Critical Strike", ItemSlot.Wrist, new Stats() { CritRating = 65 }));
             defaultEnchants.Add(new Enchant(4108, "Greater Speed", ItemSlot.Wrist, new Stats() { HasteRating = 65 }));
+            defaultEnchants.Add(new Enchant(4065, "Speed", ItemSlot.Wrist, new Stats() { HasteRating = 50 }));
             // Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(2326, "Greater Spellpower", ItemSlot.Wrist, new Stats() { SpellPower = 23 }));
             defaultEnchants.Add(new Enchant(2661, "Greater Stats", ItemSlot.Wrist, new Stats() { Agility = 6, Strength = 6, Stamina = 6, Intellect = 6, Spirit = 6 }));
             defaultEnchants.Add(new Enchant(1147, "Major Spirit", ItemSlot.Wrist, new Stats() { Spirit = 18 }));
             defaultEnchants.Add(new Enchant(3231, "Expertise", ItemSlot.Wrist, new Stats() { ExpertiseRating = 15 }));
             defaultEnchants.Add(new Enchant(3845, "Greater Assault", ItemSlot.Wrist, new Stats() { AttackPower = 50 }));
-            defaultEnchants.Add(new Enchant(4065, "Speed", ItemSlot.Wrist, new Stats() { HasteRating = 50 }));
             defaultEnchants.Add(new Enchant(2332, "Superior Spellpower", ItemSlot.Wrist, new Stats() { SpellPower = 30 }));
             defaultEnchants.Add(new Enchant(3850, "Major Stamina", ItemSlot.Wrist, new Stats() { Stamina = 40 }));
             // Level 70 (BC)

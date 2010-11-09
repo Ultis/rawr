@@ -104,7 +104,7 @@ namespace Rawr {
             HalfusWyrmbreaker HalfusWyrmbreaker = new HalfusWyrmbreaker();
             TwilightAscendantCouncil TwilightAscendantCouncil = new TwilightAscendantCouncil();
             Chogall Chogall = new Chogall();
-            Sinestra Sinestra = new Sinestra();
+            LadySinestra LadySinestra = new LadySinestra();
             // Throne of the Four Winds
             ConclaveOfWind ConclaveOfWind = new ConclaveOfWind();
             AlAkir AlAkir = new AlAkir();
@@ -202,7 +202,7 @@ namespace Rawr {
                 HalfusWyrmbreaker[0], HalfusWyrmbreaker[1], HalfusWyrmbreaker[2], HalfusWyrmbreaker[3],
                 TwilightAscendantCouncil[0], TwilightAscendantCouncil[1], TwilightAscendantCouncil[2], TwilightAscendantCouncil[3],
                 Chogall[0], Chogall[1], Chogall[2], Chogall[3],
-                Sinestra[0], Sinestra[1], Sinestra[2], Sinestra[3],
+                LadySinestra[0], LadySinestra[1],
                 // Throne of the Four Winds
                 ConclaveOfWind[0],ConclaveOfWind[1],ConclaveOfWind[2],ConclaveOfWind[3],
                 AlAkir[0],AlAkir[1],AlAkir[2],AlAkir[3],
@@ -515,7 +515,7 @@ namespace Rawr {
             float value = 0f;
             #region Info
             retboss.Name = "The Easiest Boss";
-            value = (int)BossHandler.TierLevels.T10_9; foreach (BossHandler boss in passedList) { value = Math.Min(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Floor(value);
+            value = (int)BossHandler.TierLevels.T11_0; foreach (BossHandler boss in passedList) { value = Math.Min(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Floor(value);
             // Instance, Version, Comment Skipped
             #endregion
             #region Basics
@@ -664,7 +664,7 @@ namespace Rawr {
             float value = 0f;
             #region Info
             retboss.Name = "The Average Boss";
-            value = (int)BossHandler.TierLevels.T7_0; foreach (BossHandler boss in passedList) { value += (int)boss.Content; } retboss.Content = (BossHandler.TierLevels)Math.Floor(value / (float)passedList.Length);
+            value = (int)BossHandler.TierLevels.T11_5; foreach (BossHandler boss in passedList) { value += (int)boss.Content; } retboss.Content = (BossHandler.TierLevels)Math.Floor(value / (float)passedList.Length);
             // Instance, Version, Comment Skipped
             #endregion
             #region Basics
@@ -864,7 +864,7 @@ namespace Rawr {
             float value = 0f;
             #region Info
             retboss.Name = "The Hardest Boss";
-            value = (int)BossHandler.TierLevels.T7_0; foreach (BossHandler boss in passedList) { value = Math.Max(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Ceiling(value);
+            value = (int)BossHandler.TierLevels.T11_9; foreach (BossHandler boss in passedList) { value = Math.Max(value, (int)boss.Content); } retboss.Content = (BossHandler.TierLevels)Math.Ceiling(value);
             // Instance, Version, Comment Skipped
             #endregion
             #region Basics

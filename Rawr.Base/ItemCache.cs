@@ -390,7 +390,7 @@ namespace Rawr
 			if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
 			{
 				// find all items in item cache with same name
-				Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null;
+				Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item359 = null, item372 = null;
 
 				lock (Items)
 				{
@@ -432,7 +432,15 @@ namespace Rawr
 							else if (i.ItemLevel == 284)
 							{
 								item284 = i;
-							}
+                            }
+                            else if (i.ItemLevel == 359)
+                            {
+                                item359 = i;
+                            }
+                            else if (i.ItemLevel == 372)
+                            {
+                                item372 = i;
+                            }
 						}
 					}
 				}
@@ -464,8 +472,15 @@ namespace Rawr
 					item271.UniqueId = new List<int>() { item271.Id, item284.Id };
 					item284.UniqueId = new List<int>() { item271.Id, item284.Id };
 				}
-				
-				// special rules for Ashen Verdict Rings
+
+                // normal/heroic pair Blackwing Descent/The Bastion of Twilight/Throne of the Four Winds with same name
+                if ((object)item359 != null && (object)item372 != null)
+                {
+                    item359.UniqueId = new List<int>() { item359.Id, item372.Id };
+                    item372.UniqueId = new List<int>() { item359.Id, item372.Id };
+                }
+
+                // special rules for Ashen Verdict Rings
 				// Ashen Band of Courage
 				if (item.Id == 50375 || item.Id == 50404 || item.Id == 50388 || item.Id == 50403)
 				{
