@@ -970,7 +970,8 @@ These numbers to do not include racial bonuses.",
             get {
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
-                        "Ability DPS+Damage",
+                        "Ability DPS",
+                        "Ability Damage",
                         //"Ability Maintenance Changes",
                         "Rage Cost per Damage",
                         "Execute Spam",
@@ -1020,14 +1021,14 @@ These numbers to do not include racial bonuses.",
             };
 
             switch (chartName) {
-                #region Ability DPS+Damage
-                case "Ability DPS+Damage": {
-                    if(_subPointNameColors_DPSDMG == null){
+                #region Ability DPS
+                case "Ability DPS": {
+                    /*if(_subPointNameColors_DPSDMG == null){
                         _subPointNameColors_DPSDMG = new Dictionary<string, Color>();
                         _subPointNameColors_DPSDMG.Add("DPS", Color.FromArgb(255, 255, 0, 0));
                         _subPointNameColors_DPSDMG.Add("Damage Per Hit", Color.FromArgb(255, 0, 0, 255));
                     }
-                    _subPointNameColors = _subPointNameColors_DPSDMG;
+                    _subPointNameColors = _subPointNameColors_DPSDMG;*/
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
                     {
@@ -1036,7 +1037,7 @@ These numbers to do not include racial bonuses.",
                         comparison.Name = aw.ability.Name;
                         comparison.Description = aw.ability.Desc;
                         comparison.DPSPoints = aw.allDPS;
-                        comparison.SurvPoints = aw.ability.DamageOnUse;
+                        comparison.SurvPoints = aw.allHPS;
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
@@ -1046,6 +1047,35 @@ These numbers to do not include racial bonuses.",
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
+                #endregion
+                #region Ability Damage
+                case "Ability Damage":
+                    {
+                        /*if (_subPointNameColors_DPSDMG == null) {
+                            _subPointNameColors_DPSDMG = new Dictionary<string, Color>();
+                            _subPointNameColors_DPSDMG.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                            _subPointNameColors_DPSDMG.Add("Damage Per Hit", Color.FromArgb(255, 0, 0, 255));
+                        }
+                        _subPointNameColors = _subPointNameColors_DPSDMG;*/
+                        List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                        foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
+                        {
+                            if (aw.ability.DamageOnUse == 0) { continue; }
+                            ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                            comparison.Name = aw.ability.Name;
+                            comparison.Description = aw.ability.Desc;
+                            comparison.DPSPoints = aw.ability.DamageOnUse;
+                            comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
+                            comparisons.Add(comparison);
+                        }
+                        foreach (ComparisonCalculationDPSWarr comp in comparisons)
+                        {
+                            comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
+                        }
+                        calcOpts.Maintenance = origMaints;
+                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                        return comparisons.ToArray();
+                    }
                 #endregion
                 #region Ability Maintenance Changes
                 case "Ability Maintenance Changes": {

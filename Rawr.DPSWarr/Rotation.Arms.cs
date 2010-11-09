@@ -136,13 +136,14 @@ namespace Rawr.DPSWarr {
                 if (repassAvailRage < 0f || PercFailRage != 1f) {
                     // total the amount of rage you really need and turn it into a percentage that we failed
                     PercFailRage *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                    if (PercFailRage > 1f) PercFailRage = 1f;
                 } else { PercFailRage = 1f; }
                 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDur) * percTimeInDPSAndOver20 * PercFailRage);
                     CS.numActivates = acts;
-                    availRage -= CS.Rage * RageMOD_Total;
+                    availRage -= CS.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 CSspace = CS.numActivates / NumGCDs * CS.ability.UseTime / LatentGCD;
 
@@ -150,7 +151,7 @@ namespace Rawr.DPSWarr {
                 if (RD.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, RD.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     RD.numActivates = acts;
-                    availRage -= RD.Rage * RageMOD_Total;
+                    availRage -= RD.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 RDspace = RD.numActivates / NumGCDs * RD.ability.UseTime / LatentGCD;
 
@@ -159,7 +160,7 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(GCDsAvailable, TH.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     TH.numActivates = acts * (1f - RDspace);
                     (RD.ability as Rend).ThunderApps = TH.numActivates * Talents.BloodAndThunder * 0.50f;
-                    availRage -= TH.Rage * RageMOD_Total;
+                    availRage -= TH.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 THspace = TH.numActivates / NumGCDs * TH.ability.UseTime / LatentGCD;
 
@@ -167,7 +168,7 @@ namespace Rawr.DPSWarr {
                 if (BLS.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, BLS.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     BLS.numActivates = acts * (1f - RDspace);
-                    availRage -= BLS.Rage * RageMOD_Total;
+                    availRage -= BLS.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 BLSspace = BLS.numActivates / NumGCDs * BLS.ability.UseTime / LatentGCD;
 
@@ -175,7 +176,7 @@ namespace Rawr.DPSWarr {
                 if (MS.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, MS.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     MS.numActivates = acts * (1f - BLSspace);
-                    availRage -= MS.Rage * RageMOD_Total;
+                    availRage -= MS.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 MSspace = MS.numActivates / NumGCDs * MS.ability.UseTime / LatentGCD;
 
@@ -184,7 +185,7 @@ namespace Rawr.DPSWarr {
                 if (TB.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, TB.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     TB.numActivates = acts * (1f - BLSspace);
-                    availRage -= TB.Rage * RageMOD_Total;
+                    availRage -= TB.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 TFBspace = TB.numActivates / NumGCDs * TB.ability.UseTime / LatentGCD;
 
@@ -192,7 +193,7 @@ namespace Rawr.DPSWarr {
                 if (OP.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivates) * percTimeInDPSAndOver20 * PercFailRage);
                     OP.numActivates = acts * (1f - TFBspace - RDspace - BLSspace - MSspace);
-                    availRage -= OP.Rage * RageMOD_Total;
+                    availRage -= OP.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 }
                 OPspace = OP.numActivates / NumGCDs * OP.ability.UseTime / LatentGCD;
 
@@ -223,13 +224,13 @@ namespace Rawr.DPSWarr {
                     float hsActs = availRage / HS.ability.RageCost * (1f - MultTargsPerc);
                     CL.numActivates = Math.Min(clActs, acts * (MultTargsPerc));
                     HS.numActivates = Math.Min(hsActs, acts * (1f - MultTargsPerc));
-                    availRage -= (HS.Rage + CL.Rage) * RageMOD_Total;
+                    availRage -= (HS.Rage + CL.Rage) * RageMOD_Total * RageMOD_BattleTrance;
                 } else if (PercFailRage == 1f && (HS.ability.Validated && !CL.ability.Validated)) {
                     acts = Math.Min(GCDsAvailable, HS.ability.Activates * percTimeInDPSAndOver20);
                     float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
-                    float hsActs = availRage / HS.ability.RageCost;
+                    float hsActs = availRage / HS.ability.RageCost * RageMOD_BattleTrance;
                     CL.numActivates = 0f;
                     HS.numActivates = Math.Min(hsActs, acts);
                     availRage -= HS.Rage * RageMOD_Total;
@@ -241,7 +242,7 @@ namespace Rawr.DPSWarr {
                     float clActs = availRage / CL.ability.RageCost * MultTargsPerc;
                     CL.numActivates = Math.Min(clActs, acts * MultTargsPerc);
                     HS.numActivates = 0f;
-                    availRage -= CL.Rage * RageMOD_Total;
+                    availRage -= CL.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 } else { CL.numActivates = HS.numActivates = 0f; }
 
                 // Slam
@@ -249,11 +250,11 @@ namespace Rawr.DPSWarr {
                     acts = Math.Min(GCDsAvailable, GCDsAvailable/*SL.Activates*/ * percTimeInDPS);
                     if (SL.ability.GetRageUseOverDur(acts) > availRage) acts = Math.Max(0f, availRage) / SL.ability.RageCost;
                     SL.numActivates = acts;
-                    availRage -= SL.Rage * RageMOD_Total;
+                    availRage -= SL.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 } else if (SL.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, GCDsAvailable/*SL.Activates*/ * percTimeInDPS);
                     SL.numActivates = acts;
-                    availRage -= SL.Rage * RageMOD_Total;
+                    availRage -= SL.Rage * RageMOD_Total * RageMOD_BattleTrance;
                 } else { SL.numActivates = 0f; }
 
                 HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
@@ -265,7 +266,7 @@ namespace Rawr.DPSWarr {
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {
                     SoO.numActivates = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDur) * percTimeOver20;
-                    availRage -= SoO.Rage; // Not sure if it should affect Rage
+                    //availRage -= SoO.Rage; // Not sure if it should affect Rage
                 }
 
                 float TotalSpace = (RDspace + THspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace + VRspace);
@@ -504,7 +505,7 @@ namespace Rawr.DPSWarr {
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {
                     SoO.numActivatesU20 = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDur) * percTimeUnder20;
-                    availRage -= SoO.RageU20; // Not sure if it should affect Rage
+                    //availRage -= SoO.RageU20; // Not sure if it should affect Rage
                 }
 
                 float TotalSpace = (CSspace + RDspace + THspace + BLSspace /*+ MSspace*/ + OPspace + TFBspace /*+ SLspace*/ + EXspace /*+ HSspace + CLspace*/);

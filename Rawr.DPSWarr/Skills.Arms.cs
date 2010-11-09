@@ -76,9 +76,10 @@ namespace Rawr.DPSWarr.Skills
         public float GetActivates(float landedatksoverdur)
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond(landedatksoverdur / FightDuration, 1f, combatFactors._c_mhItemSpeed, FightDuration) * FightDuration : 0f;
+            float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond(FightDuration / Math.Max(0, landedatksoverdur), 1f, combatFactors._c_mhItemSpeed, FightDuration) * FightDuration : 0f;
             float min = FightDuration / Cd; // If it follows it's cooldown, no SD procs
-            float acts = Math.Max(actsUnderSD, min);
+            //float acts = Math.Max(actsUnderSD, min);
+            float acts = actsUnderSD + min;
 
             return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost));
         }
@@ -360,9 +361,9 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-                if (!Validated) { return 0f; }
+                //if (!Validated) { return 0f; }
                 // ==== MAIN HAND ====
-                float Damage = combatFactors.NormalizedOhWeaponDmg * DamageBonus; // Base Damage
+                float Damage = DamageBase * DamageBonus; // Base Damage
                 Damage *= combatFactors.DamageBonus; // Global Damage Bonuses
                 Damage *= combatFactors.DamageReduction; // Global Damage Penalties
 
@@ -405,13 +406,15 @@ namespace Rawr.DPSWarr.Skills
     public class StrikesOfOpportunity : Ability
     {
         public static new string SName { get { return "Strikes Of Opportunity"; } }
-        public static new string SDesc { get { return "Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 100% of normal damage."; } }
+        public static new string SDesc { get { return "Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger an additional melee attack for 100% normal damage. Each point of Mastery increases this chance by 2%."; } }
         public static new string SIcon { get { return "ability_backstab"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Gives a (16+2*Mastery)% chance to get an extra attack on the same target dealing 100% of normal damage.
+        /// Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger
+        /// an additional melee attack for 100% normal damage. Each point of Mastery
+        /// increases this chance by 2%.
         /// <para>Talents: Passive Arms Benefit</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
@@ -426,7 +429,7 @@ namespace Rawr.DPSWarr.Skills
             //Cd = 6f; // In Seconds
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.00f; // 100% normal damage
-            RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
+            //RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
             UsesGCD = false;
             //
             Initialize();
@@ -446,7 +449,7 @@ namespace Rawr.DPSWarr.Skills
                 } catch (Exception) { }
             }
             // This attack doesn't consume GCDs and doesn't affect the swing timer
-            float rawActs = (MeleeAttemptsOverDur /*+ Whiteattacks.LandedAtksOverDur*/) / FightDuration;
+            float rawActs = MeleeAttemptsOverDur / FightDuration;
             float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
             effectActs *= FightDuration;
             return effectActs;

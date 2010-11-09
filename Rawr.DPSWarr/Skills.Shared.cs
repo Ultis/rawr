@@ -342,6 +342,14 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Talents: Sweeping Strikes [Requires Talent]</para>
         /// <para>Glyphs: Glyph of Sweeping Strikes [-100% RageCost]</para>
         /// <para>Sets: none</para>
+        /// <remarks>
+        /// Notes from wowhead site:
+        /// * Sweeping Strikes hits cannot be dodged, missed or parried.
+        /// * SS is off the GCD, so you can macro it into pretty much every skill to have 5 free hits every 30
+        ///   seconds. Just make a macro, name it something, and dump /cast sweeping strikes into it somewhere,
+        ///   along with whatever other ability you would normally use
+        /// * Sweeping Strikes does not trigger the GCD.
+        /// </remarks>
         /// </summary>
         public SweepingStrikes(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
@@ -357,6 +365,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = 10f;
             RageCost = (Talents.GlyphOfSweepingStrikes ? 0f : 30f);
             UseHitTable = false;
+            UsesGCD = false;
             //
             Initialize();
         }

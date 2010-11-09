@@ -56,9 +56,9 @@ namespace Rawr.UI
                 Item = character[Slot];
                 if (Item == null) {
                     IconImage.Source = null;
-                    IconImageGem1.Source = null; GemButton1.Visibility = Visibility.Collapsed;
-                    IconImageGem2.Source = null; GemButton2.Visibility = Visibility.Collapsed;
-                    IconImageGem3.Source = null; GemButton3.Visibility = Visibility.Collapsed;
+                    IconImageGem1.Source = null; GemButton1.IsEnabled = false;
+                    IconImageGem2.Source = null; GemButton2.IsEnabled = false;
+                    IconImageGem3.Source = null; GemButton3.IsEnabled = false;
                 } else {
                     IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
                     // There are several special sockets, we need to account for them
@@ -69,15 +69,9 @@ namespace Rawr.UI
                     bool BSSlot_Glove = Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled && (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing);
                     bool BSSlot_Waist = Slot == CharacterSlot.Waist && Character.WaistBlacksmithingSocketEnabled;
                     // If there is no gem socket there, hide the selector
-                    GemButton1.Visibility = Item.Item.SocketColor1 != ItemSlot.None
-                                            || (nonBSSocketCount == 0 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist))
-                        ? Visibility.Visible : Visibility.Collapsed;
-                    GemButton2.Visibility = Item.Item.SocketColor2 != ItemSlot.None
-                                            || (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist))
-                        ? Visibility.Visible : Visibility.Collapsed;
-                    GemButton3.Visibility = Item.Item.SocketColor3 != ItemSlot.None
-                                            || (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist))
-                        ? Visibility.Visible : Visibility.Collapsed;
+                    GemButton1.IsEnabled = Item.Item.SocketColor1 != ItemSlot.None || (nonBSSocketCount == 0 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
+                    GemButton2.IsEnabled = Item.Item.SocketColor2 != ItemSlot.None || (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
+                    GemButton3.IsEnabled = Item.Item.SocketColor3 != ItemSlot.None || (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
                     // Use the Gem's image if it exists
                     IconImageGem1.Source = Item.Gem1 != null ? Icons.ItemIcon(Item.Gem1.IconPath) : null;
                     IconImageGem2.Source = Item.Gem2 != null ? Icons.ItemIcon(Item.Gem2.IconPath) : null;
