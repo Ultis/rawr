@@ -180,6 +180,8 @@ namespace Rawr.UI
         private void GemmingsShownChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Properties.GeneralSettings.Default.CountGemmingsShown = (int)e.NewValue;
+            string format = "Rawr will show the top {0} gemmings for an item, plus any equipped or custom gemmings, if not already included in the top {0}.";
+            LB_GemInfo.Text = string.Format(format, Properties.GeneralSettings.Default.CountGemmingsShown);
         }
 
         private void AddTemplate(object sender, RoutedEventArgs e)
