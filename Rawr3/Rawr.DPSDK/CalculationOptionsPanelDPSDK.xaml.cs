@@ -42,8 +42,6 @@ namespace Rawr.DPSDK
                 // Model Specific Code
                 // Set the Data Context
                 LayoutRoot.DataContext = calcOpts;
-                RotationTab.DataContext = calcOpts.rotation;
-                //OptionsTab.DataContext = calcOpts;
                 // Add new event connections
                 calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsPanelDPSDK_PropertyChanged);
                 // Run it once for any special UI config checks
