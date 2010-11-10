@@ -30,13 +30,7 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 221; //check
-            baseMaxDamage = 221; //check
             spCoef = 1.5f / 3.5f / 2f; //Check
-            dotSpCoef = .1f; //Check
-            periodicTick = 556f / 4f; //Check
-            periodicTicks = 6f; //Check
-            periodicTickTime = 3f; //Check
             manaCost = 0.22f * Constants.BaseMana;
             shortName = "SW:P";
             name = "Shadow Word: Pain";
@@ -47,17 +41,15 @@ namespace Rawr.ShadowPriest.Spells
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
 
-            totalCoef += .01f * args.Talents.ImprovedShadowWordPain;
+            //totalCoef += .01f * args.Talents.ImprovedShadowWordPain;
             manaCost *= 1 - .2f * args.Talents.MentalAgility;
-            totalCoef += .01f + args.Talents.TwinDisciplines;
-            totalCoef += .01f + args.Talents.Evangelism;
-            totalCoef += .01f + args.Talents.ImprovedShadowWordPain;
-            totalCoef += .01f + args.Talents.Shadowform;
+            //totalCoef += .01f + args.Talents.TwinDisciplines;
+            //totalCoef += .01f + args.Talents.Evangelism;
+            //totalCoef += .01f + args.Talents.ImprovedShadowWordPain;
+            //totalCoef += .01f + args.Talents.Shadowform;
 
             if (args.Talents.GlyphofShadowWordPain)
-                periodicTick *= 1.1f; //Add 10% periodic damage
-            
-            ApplyDotHaste(args);
+                //periodicTick *= 1.1f; //Add 10% periodic damage
             base.Initialize(args);
         }
 

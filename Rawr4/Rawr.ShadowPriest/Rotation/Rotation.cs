@@ -300,7 +300,7 @@ namespace Rawr.ShadowPriest
                 return lastBaseCastTime;
             float time = 0f;
             for (int j = 0; j < spells.Count; j++)
-                time += spells[j].BaseCastTime;
+                time += spells[j].CastTime;
             return lastBaseCastTime = time;
         }
 

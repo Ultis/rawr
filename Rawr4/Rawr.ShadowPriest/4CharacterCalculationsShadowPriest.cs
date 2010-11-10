@@ -50,7 +50,6 @@ namespace Rawr.ShadowPriest
             set { _subPoints[1] = value; }
         }
 
-
         #region the overridden method (GetCharacterDisplayCalculationValues)
         /// <summary>
         /// Builds a dictionary containing the values to display for each of the
@@ -70,32 +69,29 @@ namespace Rawr.ShadowPriest
         {
             Dictionary<string, string> dictValues
                 = new Dictionary<string, string>();
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Hit", BasicStats.SpellHit.ToString());
-            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
-            dictValues.Add("Crit", BasicStats.CritRating.ToString());
-            dictValues.Add("Haste", BasicStats.HasteRating.ToString());
-            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
+            dictValues.Add("Health", basicStats.Health.ToString());
+            dictValues.Add("Mana", basicStats.Mana.ToString());
+            dictValues.Add("Stamina", basicStats.Stamina.ToString());
+            dictValues.Add("Intellect", basicStats.Intellect.ToString());
+            dictValues.Add("Spirit", basicStats.Spirit.ToString());
+            dictValues.Add("Hit", basicStats.HitRating.ToString());
+            dictValues.Add("Spell Power", basicStats.SpellPower.ToString());
+            dictValues.Add("Crit", basicStats.CritRating.ToString());
+            dictValues.Add("Haste", basicStats.HasteRating.ToString());
+            dictValues.Add("Mastery", basicStats.MasteryRating.ToString());
 
-            dictValues.Add("Vampiric Touch", new VampiricTouch().AvgHit.ToString());
-            dictValues.Add("SW Pain", new ShadowWordPain().AvgHit.ToString());
-            dictValues.Add("Devouring Plague", new DevouringPlauge().AvgHit.ToString());
+            dictValues.Add("Vampiric Touch", new VampiricTouch().AverageDamage.ToString());
+            dictValues.Add("SW Pain", new ShadowWordPain().AverageDamage.ToString());
+            dictValues.Add("Devouring Plague", new DevouringPlauge().AverageDamage.ToString());
             dictValues.Add("Imp. Devouring Plague", "TBD");
-            dictValues.Add("SW Death", new DevouringPlauge().AvgHit.ToString());
-            dictValues.Add("Mind Blast", new MindBlast().AvgHit.ToString());
-            dictValues.Add("Mind Flay", new MindFlay().AvgHit.ToString());
-            dictValues.Add("Shadow Fiend", new ShadowFiend().AvgHit.ToString());
-            dictValues.Add("Mind Spike", new MindSpike().AvgHit.ToString());
-            dictValues.Add("Mind Sear", new MindSear().AvgHit.ToString());
+            dictValues.Add("SW Death", new DevouringPlauge().AverageDamage.ToString());
+            dictValues.Add("Mind Blast", new MindBlast().AverageDamage.ToString());
+            dictValues.Add("Mind Flay", new MindFlay().AverageDamage.ToString());
+            dictValues.Add("Shadow Fiend", new ShadowFiend().AverageDamage.ToString());
+            dictValues.Add("Mind Spike", new MindSpike().AverageDamage.ToString());
+            dictValues.Add("Mind Sear", new MindSear().AverageDamage.ToString());
+            dictValues.Add("PW Shield", new PowerWordShield().AverageDamage.ToString());
 
-            dictValues.Add("PW Shield", new PowerWordShield().AvgHit.ToString());
-            dictValues.Add("Smite", new Smite().AvgHit.ToString());
-            dictValues.Add("Holy Fire", new HolyFire().AvgHit.ToString());
-            dictValues.Add("Penance", new Penance().AvgHit.ToString());
             Rotation r = new Rotation(new SpellBox());
 
             dictValues.Add("Rotation", r.ToString() + "*" + r.ToDetailedString() );

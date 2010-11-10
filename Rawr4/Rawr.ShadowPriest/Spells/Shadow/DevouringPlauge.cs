@@ -27,13 +27,7 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
         
-            baseMinDamage = 221; //check
-            baseMaxDamage = 221; //check
             spCoef = 1.5f / 3.5f / 2f; //Check
-            dotSpCoef = .1f; //Check
-            periodicTick = 556f / 4f; //Check
-            periodicTicks = 6f; //Check
-            periodicTickTime = 3f; //Check          
             manaCost = 0.25f * Constants.BaseMana;
             shortName = "DP";
             name = "Devouring Plauge";
@@ -45,11 +39,7 @@ namespace Rawr.ShadowPriest.Spells
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
 
             manaCost *= 1 - .2f * args.Talents.MentalAgility;
-            totalCoef += .01f + args.Talents.TwinDisciplines;
-            totalCoef += .01f + args.Talents.Evangelism;
-            totalCoef += .01f + args.Talents.Shadowform;
             
-            ApplyDotHaste(args);
             base.Initialize(args);
         }
 

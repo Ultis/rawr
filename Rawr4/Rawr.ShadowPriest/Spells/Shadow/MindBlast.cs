@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class MindBlast : Spell
+    public class MindBlast : DD
     {
         public MindBlast() : base()
         {
@@ -19,9 +19,6 @@ namespace Rawr.ShadowPriest.Spells
             base.SetBaseValues();
 
             cooldown = 8f;
-            baseMinDamage = 1028f;
-            baseMaxDamage = 1086f;
-            baseCastTime = 1.5f;
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
             shortName = "MB";
@@ -30,9 +27,9 @@ namespace Rawr.ShadowPriest.Spells
 
         public override void Initialize(ISpellArgs args)
         {
-            totalCoef += .01f * args.Talents.TwinDisciplines;
+            //totalCoef += .01f * args.Talents.TwinDisciplines;
             cooldown -= .5f * args.Talents.ImprovedMindBlast;
-            totalCoef += .01f + args.Talents.Shadowform;
+            //totalCoef += .01f + args.Talents.Shadowform;
 
             base.Initialize(args);
         }

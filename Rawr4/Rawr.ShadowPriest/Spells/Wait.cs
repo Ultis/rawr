@@ -24,14 +24,12 @@ namespace Rawr.ShadowPriest.Spells
 
             gcd = 0f;
             missChance = 0f;
-            totalCoef = 0f;
             spCoef = 0f;
         }
 
         public void Initialize(float duration)
         {
             castTime = duration;
-            baseCastTime = duration;
             latencyCast = 0;
             latencyGcd = 0;
         }

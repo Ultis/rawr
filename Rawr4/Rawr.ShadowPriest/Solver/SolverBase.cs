@@ -45,6 +45,7 @@ namespace Rawr.ShadowPriest
             }
         }
 
+        /*
         public class SpellComparerDpCT : IComparer<Spell>
         {
             public int Compare(Spell a, Spell b)
@@ -60,6 +61,7 @@ namespace Rawr.ShadowPriest
                 return (int)Math.Round(b.DpCT - a.DpCT);
             }
         }
+        */
 
         protected float _GetDirectDamage(Stats stats)
         {
@@ -124,100 +126,6 @@ namespace Rawr.ShadowPriest
         public virtual void Calculate(CharacterCalculationsShadowPriest calculatedStats)
         {
             DPS = 0;
-        }
-        /*
-        public Spell GetCastSpell(float timer)
-        {   // FIXME: Rewrite this freaking crappy shit.
-            /*
-            foreach (Spell spell in SpellPriority)
-            {
-                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
-                    return spell;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
-                //if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
-                if (spell.SpellStatistics.CooldownReset <= timer)
-                    return spell;
-                if (spell.SpellStatistics.CooldownReset > 0
-                    && (spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer < spell.GlobalCooldown * 0.2f))
-                    return null;
-                if (spell.SpellStatistics.CooldownReset <= timer)
-                    return spell;
-            }
-             /
-            return null;
-        }
-
-        public float OldGetCastSpell(float timer, out Spell castSpell, Spell SWD)
-        {   // FIXME: Rewrite this freaking crappy shit.
-            /*
-            castSpell = null;
-            foreach (Spell spell in SpellPriority)
-            {
-                castSpell = spell;
-                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
-                    return 0;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
-                //if (spell.SpellStatistics.CooldownReset <= timer && spell.Cooldown > 0)
-                if (spell.SpellStatistics.CooldownReset <= timer)
-                    return 0;
-                if (spell.SpellStatistics.CooldownReset > 0)
-                {
-                    float nextCast = spell.SpellStatistics.CooldownReset - (spell.DebuffDuration > 0 ? spell.CastTime : 0) - timer;
-                    if (nextCast < 0.5f)
-                        return nextCast;
-                    /if (nextCast <= spell.GlobalCooldown && SWD != null & SWD.SpellStatistics.CooldownReset <= timer)
-                    {
-                        castSpell = SWD;
-                        return 0f;
-                    }/
-                }
-                if (spell.SpellStatistics.CooldownReset <= timer)
-                    return 0;
-            }/
-            castSpell = null;
-             
-            return 0;
-        }
-
-        public Spell NewGetCastSpell(float timer)
-        {
-            float[] nextRelativeCastTime = new float[SpellPriority.Count];
-
-            int cnt = 0;
-            foreach (Spell spell in SpellPriority)
-            {
-                if (spell.DebuffDuration > 0)
-                    nextRelativeCastTime[cnt++] = spell.SpellStatistics.CooldownReset - spell.CastTime - timer;
-                else if (spell.Cooldown > 0)
-                    nextRelativeCastTime[cnt++] = spell.SpellStatistics.CooldownReset - timer;
-                else
-                {   // This is our filler.
-                    nextRelativeCastTime[cnt++] = 0;
-                    break;
-                }
-            }
-
-            for (int x = 0; x < cnt; x++)
-                if (nextRelativeCastTime[x] < 0)
-                    return SpellPriority[x];
-
-            Spell spellCastNext = SpellPriority[cnt - 1];
-            float fillerDPS = spellCastNext.DpCT;
-            float nextDelayCost = fillerDPS;
-            for (int x = 0; x < cnt - 1; x++)
-            {
-                float delayCost = SpellPriority[x].DpCT - nextRelativeCastTime[x] * fillerDPS;
-                if (delayCost > nextDelayCost)
-                {
-                    nextDelayCost = delayCost;
-                    spellCastNext = SpellPriority[x];
-                }
-            }
-            return spellCastNext;
-        }
-        */
-        public void RecalculateHaste(Stats stats, float addedHasteRating)
-        {
-            foreach (Spell spell in SpellPriority)
-                spell.RecalcHaste(stats, addedHasteRating);
         }
 
         public void UpTrinket(float timer)

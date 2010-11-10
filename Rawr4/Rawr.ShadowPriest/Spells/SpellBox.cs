@@ -12,10 +12,8 @@ namespace Rawr.ShadowPriest.Spells
         ShadowWordDeath,
         ShadowWordPain,
         VampiricTouch,
-        HolyFire,
-        Penance,
         PowerWordShield,
-        Smite,
+        MindSpike,
     }
 
     /// <summary>
@@ -25,11 +23,10 @@ namespace Rawr.ShadowPriest.Spells
     public class SpellBox
     {
         private Spell[] spells;
-        private bool EMapplied = false;
 
         public SpellBox() //ISpellArgs args)
         {
-            spells = new Spell[12];
+            spells = new Spell[10];
             spells[(int)SpellIndex.DevouringPlauge] = new DevouringPlauge();
             spells[(int)SpellIndex.MindBlast] = new MindBlast();
             spells[(int)SpellIndex.MindFlay] = new MindFlay();
@@ -38,10 +35,8 @@ namespace Rawr.ShadowPriest.Spells
             spells[(int)SpellIndex.ShadowWordDeath] = new ShadowWordDeath();
             spells[(int)SpellIndex.ShadowWordPain] = new ShadowWordPain();
             spells[(int)SpellIndex.VampiricTouch] = new VampiricTouch();
-            spells[(int)SpellIndex.HolyFire] = new HolyFire();
-            spells[(int)SpellIndex.Penance] = new Penance();
             spells[(int)SpellIndex.PowerWordShield] = new PowerWordShield();
-            spells[(int)SpellIndex.Smite] = new Smite();
+            spells[(int)SpellIndex.MindSpike] = new MindSpike();
 
         }
 
@@ -52,20 +47,6 @@ namespace Rawr.ShadowPriest.Spells
                 if (s != null)
                     s.Update(args);
             }
-            EMapplied = false;
-        }
-
-        public void ApplyEM(float modifier)
-        {
-            if (EMapplied)
-                return;
-
-            foreach (Spell s in spells)
-            {
-                if (s != null)
-                    s.ApplyEM(modifier);
-            }
-            EMapplied = true;
         }
         
         public Spell Get(SpellIndex spellIndex)
@@ -123,24 +104,9 @@ namespace Rawr.ShadowPriest.Spells
             get { return (VampiricTouch)spells[(int)SpellIndex.VampiricTouch]; }
         }
 
-        public HolyFire HF
-        {
-            get { return (HolyFire)spells[(int)SpellIndex.HolyFire]; }
-        }
-
-        public Penance Pen
-        {
-            get { return (Penance)spells[(int)SpellIndex.Penance]; }
-        }
-
         public PowerWordShield PWS
         {
             get { return (PowerWordShield)spells[(int)SpellIndex.PowerWordShield]; }
-        }
-
-        public Smite Smite
-        {
-            get { return (Smite)spells[(int)SpellIndex.Smite]; }
         }
         #endregion
     }

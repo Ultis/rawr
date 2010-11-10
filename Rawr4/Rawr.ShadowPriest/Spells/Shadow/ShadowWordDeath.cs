@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class ShadowWordDeath : Spell
+    public class ShadowWordDeath : DD
     {
         protected override void SetBaseValues()
         {

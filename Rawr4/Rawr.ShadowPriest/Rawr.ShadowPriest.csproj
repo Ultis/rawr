@@ -87,9 +87,10 @@
   <ItemGroup>
     <Compile Include="4ShadowPriestConverters.cs" />
     <Compile Include="CombatFactors.cs" />
-    <Compile Include="IRotationOptions.cs" />
-    <Compile Include="Rotation.cs" />
-    <Compile Include="RotationOptions.cs" />
+    <Compile Include="Rotation\IRotationOptions.cs" />
+    <Compile Include="Rotation\Rotation.cs" />
+    <Compile Include="Rotation\RotationOptions.cs" />
+    <Compile Include="Spells\DD.cs" />
     <Compile Include="Spells\Wait.cs" />
     <None Include="Old\Solver.cs" />
     <Compile Include="Solver\SolverBase.cs" />
@@ -127,10 +128,7 @@
     <Compile Include="4CharacterCalculationsShadowPriest.cs" />
     <Compile Include="4ComparisonCalculationShadowPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spells\Holy\HolyFire.cs" />
-    <Compile Include="Spells\Holy\Penance.cs" />
     <Compile Include="Spells\Holy\PowerWordShield.cs" />
-    <Compile Include="Spells\Holy\Smite.cs" />
     <Compile Include="Spells\Shadow\DevouringPlauge.cs" />
     <Compile Include="Spells\ISpellArgs.cs" />
     <Compile Include="Spells\Shadow\MindBlast.cs" />

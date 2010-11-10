@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class ShadowFiend : Spell
+    public class ShadowFiend : DD
     {
         protected override void SetBaseValues()
         {

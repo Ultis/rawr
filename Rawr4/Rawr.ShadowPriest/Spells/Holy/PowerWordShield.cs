@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class PowerWordShield :Spell
+    public class PowerWordShield : DD
     {
          public PowerWordShield()
             : base()
@@ -21,9 +21,6 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 1028;
-            baseMaxDamage = 1086;
-            baseCastTime = 1.5f;
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
             shortName = "PW:D";

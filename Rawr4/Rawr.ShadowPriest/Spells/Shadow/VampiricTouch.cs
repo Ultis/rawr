@@ -26,13 +26,7 @@ namespace Rawr.ShadowPriest.Spells
             base.SetBaseValues();
 
             castTime = 1.5f;
-            baseMinDamage = 221; //check
-            baseMaxDamage = 221; //check
             spCoef = 1.5f / 3.5f / 2f; //Check
-            dotSpCoef = .1f; //Check
-            periodicTick = 556f / 4f; //Check
-            periodicTicks = 6f; //Check
-            periodicTickTime = 3f; //Check
             manaCost = 0.16f * Constants.BaseMana;
             shortName = "VT";
             name = "Vampiric Touch";
@@ -43,11 +37,7 @@ namespace Rawr.ShadowPriest.Spells
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
 
-            totalCoef += .01f + args.Talents.TwinDisciplines;
-            totalCoef += .01f + args.Talents.Evangelism;
-            totalCoef += .01f + args.Talents.Shadowform;
             
-            ApplyDotHaste(args);
             base.Initialize(args);
         }
 

@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class MindSear : Spell
+    public class MindSear : DD
     {
         /// <summary>
         /// Mind Sear is a Cahnnelled AOE.
@@ -18,8 +18,6 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 91;
-            baseMaxDamage = 97;
             manaCost = 0.28f * Constants.BaseMana;
             shortName = "Sear";
             name = "Mind Sear";

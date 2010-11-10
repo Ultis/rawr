@@ -150,9 +150,6 @@ namespace Rawr.ShadowPriest
                     "Shadow:Mind Spike",
                     "Shadow:Mind Sear",
                     "Holy:PW Shield",
-                    "Holy:Smite",
-                    "Holy:Holy Fire",
-                    "Holy:Penance"
                      
                 };
                 return _characterDisplayCalculationLabels;
@@ -179,61 +176,58 @@ namespace Rawr.ShadowPriest
         {
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
 
-            Stats statsRace = BaseStats.GetBaseStats(character);
-            Stats statsItems = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
             Stats statsTotal = new Stats();
+            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin));
 
-            statsTotal.Accumulate(statsRace);
-            statsTotal.Accumulate(statsItems);
-            statsTotal.Accumulate(statsBuffs);
+            // Get the gear/enchants/buffs stats loaded in
+            statsTotal.Accumulate(GetItemStats(character, additionalItem));
+            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
 
-            #region Spec Modifiers
-            //Assume all equiped items are cloth
-            statsTotal.BonusIntellectMultiplier += .05f;
-
-            //Talents
-            //statsTotal.HitRating += (.5f * character.PriestTalents.TwistedFaith) * statsTotal.Spirit;
-            statsTotal.HitRating = character.PriestTalents.TwistedFaith;
-            statsTotal.SpellHaste *= 1 + (.01f * character.PriestTalents.Darkness);
-            statsTotal.SpellPower *= 1 + (.02f * character.PriestTalents.TwinDisciplines);
-            statsTotal.ShadowDamage *= 1 + (.01f * character.PriestTalents.TwistedFaith);
-
-            //Assume Shadow Spec
-            //Shadow Power
-            statsTotal.BonusSpellPowerMultiplier += 0.25f;
-            statsTotal.BonusSpellCritMultiplier += 1f;
-            #endregion
-
-            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
-            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
-            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
-
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect);
-            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
-
-            statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
-            statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
-
-            statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
-            statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusHealthMultiplier);
-
-            statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
-            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
-            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
-
-            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.SpellHaste);
+            bool clothSpecialization = character.Head != null && character.Head.Type == ItemType.Cloth &&
+                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Cloth &&
+                                            character.Chest != null && character.Chest.Type == ItemType.Cloth &&
+                                            character.Wrist != null && character.Wrist.Type == ItemType.Cloth &&
+                                            character.Hands != null && character.Hands.Type == ItemType.Cloth &&
+                                            character.Waist != null && character.Waist.Type == ItemType.Cloth &&
+                                            character.Legs != null && character.Legs.Type == ItemType.Cloth &&
+                                            character.Feet != null && character.Feet.Type == ItemType.Cloth;
 
 
+            // Talented bonus multipliers
 
-            //Innerfire
-            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.Armor * 1.6f);
+            Stats statsTalents = new Stats()
+            {
+                BonusIntellectMultiplier = (clothSpecialization ? 1.05f : 1f) - 1,
+                BonusShadowDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) *
+                                              (1 + 0.02f * character.PriestTalents.TwistedFaith) - 1,
+                BonusHolyDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) - 1
+            };
 
-            //Draenei
-            if (character.Race == CharacterRace.Draenei) statsTotal.HitRating += StatConversion.RATING_PER_SPELLHIT;
-            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+            statsTotal.Accumulate(statsTalents);
+
+            // Base stats: Intellect, Stamina, Spirit, Agility
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+
+            // Derived stats: Health, mana pool, armor
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
+            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect));
+            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana * (1f + statsTotal.BonusManaMultiplier));
+            // Armor
+            statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
+            statsTotal.BonusArmor += statsTotal.Agility * 2f;
+            statsTotal.BonusArmor = statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier);
+            statsTotal.Armor += statsTotal.BonusArmor;
+            statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
+
+            // Crit rating
+            // Application order: Stats, Talents, Gear
+            // All spells: Haste% + (0.01 * Darkness)
+            statsTotal.SpellHaste += 0.02f * character.PriestTalents.Darkness;
+            // All spells: Hit rating + 0.5f * Twisted Faith * Spirit
+            statsTotal.HitRating += 0.5f * character.PriestTalents.TwistedFaith * statsTotal.Spirit;
 
             return statsTotal;
         }
