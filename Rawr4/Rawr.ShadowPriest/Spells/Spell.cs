@@ -5,20 +5,28 @@ using System.Collections.Generic;
 namespace Rawr.ShadowPriest.Spells
 {
     public abstract class Spell
-    {   
+    {
+
+        protected float gcd = 1.5f;
+        protected float castTime = 0f;
+        protected float cooldown = 0f;
+        public int priority = 0;
+        public string shortName = "ShortSpellName";
+        public string name = "SpellName";
+        public string type;
+
 
         protected float baseMinDamage = 0f;
         protected float baseMaxDamage = 0f;
         protected float baseCastTime = 0f;
-        protected float castTime = 0f;
+        
         protected float periodicTick = 0f;
         protected float periodicTicks = 0f;
         protected float periodicTickTime = 3f;
         protected float manaCost = 0f;
-        protected float gcd = 1.5f;
+
         protected float crit = 0f;
         protected float critModifier = 1f;
-        protected float cooldown = 0f;
         protected float missChance = .17f;
 
         protected float totalCoef = 1f;
@@ -34,8 +42,7 @@ namespace Rawr.ShadowPriest.Spells
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
 
-        public string shortName = "ShortSpellName";
-        public string name = "SpellName";
+
 
         /// <summary>
         /// This Constructor calls SetBaseValues.
@@ -47,6 +54,10 @@ namespace Rawr.ShadowPriest.Spells
 
         protected virtual void SetBaseValues()
         {
+            priority = 0;
+            type = "dot";
+
+
             baseMinDamage = 0f;
             baseMaxDamage = 0f;
             baseCastTime = 0f;
@@ -139,6 +150,9 @@ namespace Rawr.ShadowPriest.Spells
 
         public float AvgHit
         { get { return (MinHit + MaxHit) / 2; } }
+
+        public float DpCT
+        { get { return AvgDamage / castTime ; } }
 
         public float AvgCrit
         { get { return (MinCrit + MaxCrit) / 2; } }
@@ -234,21 +248,21 @@ namespace Rawr.ShadowPriest.Spells
             }
         }
 
-        public float PeriodicDamage()
-        {
-            return PeriodicDamage(Duration);
-        }
+        //public float PeriodicDamage()
+        //{
+        //    return PeriodicDamage(Duration);
+        //}
 
-        public float PeriodicDamage(float duration)
-        {
-            if (PeriodicTickTime <= 0 || duration <= 0)
-                return 0;
-            int effectiveTicks = (int)Math.Floor(Math.Min(duration, Duration) / PeriodicTickTime);
-            return PeriodicTick * effectiveTicks;
-        }
+        //public float PeriodicDamage(float duration)
+        //{
+        //    if (PeriodicTickTime <= 0 || duration <= 0)
+        //        return 0;
+        //    int effectiveTicks = (int)Math.Floor(Math.Min(duration, Duration) / PeriodicTickTime);
+        //    return PeriodicTick * effectiveTicks;
+        //}
 
-        public virtual float TotalDamage
-        { get { return AvgDamage + PeriodicDamage(); } }
+        //public virtual float TotalDamage
+        //{ get { return AvgDamage + PeriodicDamage(); } }
 
         public virtual float DirectDpS
         { get { return AvgDamage / CastTime; } }
@@ -259,29 +273,29 @@ namespace Rawr.ShadowPriest.Spells
         public float PeriodicTickTime
         { get { return periodicTickTime; } }
 
-        public float DpM
-        { get { return TotalDamage / manaCost; } }
+        //public float DpM
+        //{ get { return TotalDamage / manaCost; } }
 
-        public float DpCT
-        { get { return TotalDamage / CastTime; } }
+        //public float DpCT
+        //{ get { return TotalDamage / CastTime; } }
 
-        public float DpPR
-        { get { return TotalDamage / PeriodicRefreshTime; } }
+        //public float DpPR
+        //{ get { return TotalDamage / PeriodicRefreshTime; } }
 
-        public float DpCDR
-        { get { return TotalDamage / CDRefreshTime; } }
+        //public float DpCDR
+        //{ get { return TotalDamage / CDRefreshTime; } }
 
-        public float CTpDuration
-        { get { return Duration > 0 ? CastTime / Duration : 1f; } }
+        //public float CTpDuration
+        //{ get { return Duration > 0 ? CastTime / Duration : 1f; } }
 
-        public float Duration
-        { get { return periodicTicks * periodicTickTime; } }
+        //public float Duration
+        //{ get { return periodicTicks * periodicTickTime; } }
 
         public float Cooldown
         { get { return cooldown; } }
 
-        public float PeriodicRefreshTime
-        { get { return (Duration > CDRefreshTime ? Duration : CDRefreshTime); } }
+        //public float PeriodicRefreshTime
+        //{ get { return (Duration > CDRefreshTime ? Duration : CDRefreshTime); } }
 
         public float CDRefreshTime
         { get { return cooldown > CastTime ? cooldown + castTime : CastTime; } }
@@ -314,6 +328,19 @@ namespace Rawr.ShadowPriest.Spells
         {
             float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
             periodicTickTime = (float)Math.Round(periodicTickTime / Speed, 4);
+        }
+
+        public virtual void RecalcHaste(Stats stats, float addedHasteRating)
+        {
+            float newHaste = 1f + stats.SpellHaste;
+            if (addedHasteRating > 0f)
+            {
+                newHaste /= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
+                newHaste *= (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating + addedHasteRating));
+            }
+            if (CastTime > 0f)
+                castTime = (float)Math.Max(1f, BaseCastTime / newHaste);
+            gcd = (float)Math.Max(1f, 1.5f / newHaste);
         }
 
         public void ApplyEM(float modifier)

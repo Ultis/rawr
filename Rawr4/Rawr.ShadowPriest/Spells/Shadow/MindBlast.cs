@@ -18,8 +18,9 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 1028;
-            baseMaxDamage = 1086;
+            cooldown = 8f;
+            baseMinDamage = 1028f;
+            baseMaxDamage = 1086f;
             baseCastTime = 1.5f;
             spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;

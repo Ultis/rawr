@@ -15,7 +15,7 @@ namespace Rawr.ShadowPriest.Spells
         HolyFire,
         Penance,
         PowerWordShield,
-        Smite
+        Smite,
     }
 
     /// <summary>
@@ -42,6 +42,7 @@ namespace Rawr.ShadowPriest.Spells
             spells[(int)SpellIndex.Penance] = new Penance();
             spells[(int)SpellIndex.PowerWordShield] = new PowerWordShield();
             spells[(int)SpellIndex.Smite] = new Smite();
+
         }
 
         public void Update(ISpellArgs args)
@@ -66,7 +67,7 @@ namespace Rawr.ShadowPriest.Spells
             }
             EMapplied = true;
         }
-
+        
         public Spell Get(SpellIndex spellIndex)
         {
             return spells[(int)spellIndex];
@@ -137,7 +138,7 @@ namespace Rawr.ShadowPriest.Spells
             get { return (PowerWordShield)spells[(int)SpellIndex.PowerWordShield]; }
         }
 
-        public Smite FE
+        public Smite Smite
         {
             get { return (Smite)spells[(int)SpellIndex.Smite]; }
         }

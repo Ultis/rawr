@@ -10,6 +10,7 @@ namespace Rawr.ShadowPriest.Spells
 
             shortName = "SF";
             name = "Shadow Fiend";
+            cooldown = 180f;
         }
     }
 }

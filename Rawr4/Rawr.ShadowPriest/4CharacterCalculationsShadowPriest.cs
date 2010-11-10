@@ -19,10 +19,6 @@ namespace Rawr.ShadowPriest
             set { basicStats = value; }
         }
 
-        public Spell DevouringPlauge;
-        public Spell MindBlast;
-        public Spell MindFlay;
-
         public override float OverallPoints
         {
             get
@@ -100,6 +96,9 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Smite", new Smite().AvgHit.ToString());
             dictValues.Add("Holy Fire", new HolyFire().AvgHit.ToString());
             dictValues.Add("Penance", new Penance().AvgHit.ToString());
+            Rotation r = new Rotation(new SpellBox());
+
+            dictValues.Add("Rotation", r.ToString() + "*" + r.ToDetailedString() );
 
             /*
                     "Simulation:Rotation",

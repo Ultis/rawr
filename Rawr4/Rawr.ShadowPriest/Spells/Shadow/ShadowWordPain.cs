@@ -3,7 +3,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class ShadowWordPain : Spell
+    public class ShadowWordPain : Dot
     {
         /// <summary>
         /// Shadow Word Pain is a dot that lasts for 18 seconds.
@@ -16,6 +16,14 @@ namespace Rawr.ShadowPriest.Spells
         /// </summary>
         public ShadowWordPain() : base()
         { 
+        }
+
+        protected override void SetDotValues()
+        {
+            base.SetDotValues();
+
+            debuffDuration = 21;
+            tickPeriod = 3f;
         }
 
         protected override void SetBaseValues()

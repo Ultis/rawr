@@ -86,6 +86,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="4ShadowPriestConverters.cs" />
+    <Compile Include="CombatFactors.cs" />
+    <Compile Include="IRotationOptions.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="RotationOptions.cs" />
+    <Compile Include="Spells\Wait.cs" />
+    <None Include="Old\Solver.cs" />
+    <Compile Include="Solver\SolverBase.cs" />
+    <Compile Include="Solver\SolverShadow.cs" />
+    <Compile Include="Spells\Dot.cs" />
     <Compile Include="Spells\SpellBox.cs" />
     <None Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
       <Link>Old\CalculationOptionsShadowPriest.cs</Link>

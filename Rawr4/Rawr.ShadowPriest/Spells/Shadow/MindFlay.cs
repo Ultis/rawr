@@ -21,6 +21,7 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
+            castTime = 3f;
             baseMinDamage = 221; //check
             baseMaxDamage = 221; //check
             spCoef = 1.5f / 3.5f / 2f; //Check
@@ -32,6 +33,7 @@ namespace Rawr.ShadowPriest.Spells
             manaCost = 0.22f * Constants.BaseMana;
             shortName = "MF";
             name = "Mind Flay";
+            type = "MF";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)

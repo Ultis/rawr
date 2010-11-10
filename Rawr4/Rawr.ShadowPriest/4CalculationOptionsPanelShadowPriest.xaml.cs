@@ -27,7 +27,7 @@ namespace Rawr.ShadowPriest
                "Shadow Priest Notes";
             SpellBox spellBox = new SpellBox();
 
-
+            
             foreach (Spell s in spellBox.Spells)
             {
                 lsSpellPriority.Items.Add(s.name);
