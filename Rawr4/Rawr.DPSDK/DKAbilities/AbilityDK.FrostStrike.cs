@@ -22,6 +22,8 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 1.1f;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.AbilityIndex = (int)DKability.FrostStrike;
+
         }
 
         private int m_iToT = 0;
@@ -50,6 +52,14 @@ namespace Rawr.DK
                 }
                 return WDam;
             }
+        }
+
+        public override int GetTotalDamage()
+        {
+            if (CState.m_Spec == Rotation.Type.Frost)
+                return base.GetTotalDamage();
+            else
+                return 0;
         }
     }
 }

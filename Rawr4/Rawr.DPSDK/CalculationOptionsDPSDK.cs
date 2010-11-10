@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
+using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
@@ -20,14 +21,27 @@ namespace Rawr.DPSDK
 			return xml.ToString();
 		}
 
-		public enum Presence
-		{
-			None = 0,
-            Blood, 
-            Unholy, 
-            Frost
-		}
-		
+        private Presence _presence = Presence.Frost;
+        public Presence presence
+        {
+            get { return _presence; }
+            set { _presence = value; }
+        }
+
+        private int _presenceByIndex = (int)Presence.Frost;
+        public int PresenceByIndex
+        {
+            get { return _presenceByIndex; }
+            set
+            {
+                _presenceByIndex = value;
+                if (_presenceByIndex == 0) presence = Presence.None;
+                if (_presenceByIndex == 1) presence = Presence.Blood;
+                if (_presenceByIndex == 2) presence = Presence.Frost;
+                if (_presenceByIndex == 3) presence = Presence.Unholy;
+            }
+        }
+
 		private float _GhoulUptime = 1f;
 		public float GhoulUptime
 		{
@@ -35,13 +49,6 @@ namespace Rawr.DPSDK
 			set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
 		}
 
-        private Presence _Presence = Presence.None;
-        public Presence CurrentPresence
-        {
-            get { return _Presence; }
-            set { _Presence = value; }
-        }
-		
 		private float _KMProcUsage = 1f;
 		public float KMProcUsage
 		{
@@ -91,32 +98,13 @@ namespace Rawr.DPSDK
             set { _m_bExperimental = value; OnPropertyChanged("m_bExperimental"); }
         }
 
-		private Rotation _rotation = null;
-		public Rotation rotation
-		{
-            get { if (_rotation == null) _rotation = new Rotation(); return _rotation; }
-            set
-            {
-                if (_rotation == null) 
-                    _rotation = new Rotation();
-                _rotation = value; OnPropertyChanged("rotation"); 
-            }
-		}
-		/*
-		private bool _TalentsSaved = false;
-		public bool TalentsSaved
-		{
-			get { return _TalentsSaved; }
-			set { _TalentsSaved = value; OnPropertyChanged("TalentsSaved"); }
-		}
-
-        private double _weightScale = .01;
-        public double WeightScale
-        {
-            get { return _weightScale; }
-            set { _weightScale = value; }
+        private string _szRotReport = "";
+        public string szRotReport 
+        { 
+            get { return _szRotReport; }
+            set { _szRotReport = value; }
         }
-        */
+
 		#region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)

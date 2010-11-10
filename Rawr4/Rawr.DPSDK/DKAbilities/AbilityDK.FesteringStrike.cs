@@ -24,6 +24,8 @@ namespace Rawr.DK
             this.bWeaponRequired = true;
             this.bTriggersGCD = true;
             this.uRange = MELEE_RANGE;
+            this.AbilityIndex = (int)DKability.FesteringStrike;
+
         }
     }
 }

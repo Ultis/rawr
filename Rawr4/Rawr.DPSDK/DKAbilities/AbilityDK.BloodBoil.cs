@@ -23,6 +23,7 @@ namespace Rawr.DK
             this.uRange = 0;
             this.uArea = (uint)(10 + (CS.m_Talents.GlyphofBloodBoil ? 5 : 0));
             this.bAOE = true;
+            this.AbilityIndex = (int)DKability.BloodBoil;
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -45,6 +46,18 @@ namespace Rawr.DK
                 _DamageAdditiveModifer = value;
             }
         }
-        
+
+        override public float DamageMultiplierModifer
+        {
+            get
+            {
+                if (CState.m_Talents.CrimsonScourge > 0)
+                {
+                    return base.DamageMultiplierModifer + (CState.m_Talents.CrimsonScourge * .2f);
+                }
+                else
+                    return base.DamageMultiplierModifer;
+            }
+        }
     }
 }

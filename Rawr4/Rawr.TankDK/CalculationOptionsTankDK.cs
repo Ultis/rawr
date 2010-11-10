@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Xml.Serialization;
+using Rawr.DK;
 
 namespace Rawr.TankDK
 {
@@ -12,18 +13,23 @@ namespace Rawr.TankDK
 	public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
 	{
         #region Options
-        private int _TargetLevel = 83;
-        public int TargetLevel
+        private Presence _presence = Presence.Blood;
+        public Presence presence
         {
-            get 
-            {
-                if ( _TargetLevel < 80 || _TargetLevel > 83)
-                {
-                    _TargetLevel = 83;
-                }
-                return _TargetLevel; 
-            }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
+            get { return _presence; }
+        }
+
+        private int _presenceByIndex = (int)Presence.Blood;
+        public int PresenceByIndex
+        {
+            get { return _presenceByIndex; }
+        }
+
+        private float _VengenceWeight = 1;
+        public float VengenceWeight
+        {
+            get { return _VengenceWeight; }
+            set { _VengenceWeight = value; OnPropertyChanged("VengenceWeight"); }
         }
         private float _ThreatWeight = 1;
         public float ThreatWeight
@@ -51,7 +57,7 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
-        private float _MitigationWeight = 4;
+        private float _MitigationWeight = 6;
         public float MitigationWeight
         {
             get 
@@ -64,119 +70,8 @@ namespace Rawr.TankDK
             }
             set { _MitigationWeight = value; OnPropertyChanged("MitigationWeight"); }
         }
-        #region Physical Damage
-        private uint _IncomingDamage = 60000u;
-        public uint IncomingDamage
-        {
-            get 
-            {
-                if ( _IncomingDamage <= 0)
-                {
-                    _IncomingDamage = 10000u;
-                }
-                return _IncomingDamage; 
-            }
-            set { _IncomingDamage = value; OnPropertyChanged("IncomingDamage"); }
-        }
-        private float _BossAttackSpeed = 2f;
-        public float BossAttackSpeed
-        {
-            get
-            {
-                if (_BossAttackSpeed < 0f)
-                {
-                    _BossAttackSpeed = 2f;
-                }
-                return _BossAttackSpeed;
-            }
-            set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
-        }
-        #endregion
-        #region Magic Damage
-        private uint _IncomingMagicDamage = 15000;
-        public uint IncomingMagicDamage
-        {
-            get
-            {
-                if (_IncomingMagicDamage <= 0)
-                {
-                    _IncomingMagicDamage = 0;
-                }
-                return _IncomingMagicDamage;
-            }
-            set { _IncomingMagicDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
-        }
-        private float _IncomingFromMagicFrequency = 20;
-        public float IncomingFromMagicFrequency
-        {
-            get 
-            {
-                if (_IncomingFromMagicFrequency < 0)
-                {
-                    _IncomingFromMagicFrequency = .0f;
-                }
-                return _IncomingFromMagicFrequency; 
-            }
-            set { _IncomingFromMagicFrequency = value; OnPropertyChanged("numIncFromMagicFrequency"); }
-        }
-        #endregion
-        #region Bleed Damage
-        private uint _IncomingBleedDamage = 4000;
-        public uint IncomingBleedDamage
-        {
-            get
-            {
-                if (_IncomingBleedDamage <= 0)
-                {
-                    _IncomingBleedDamage = 0;
-                }
-                return _IncomingBleedDamage;
-            }
-            set { _IncomingBleedDamage = value; OnPropertyChanged("IncomingMagicDamage"); }
-        }
-        private float _IncomingBleedTickFrequency = 2;
-        public float BleedTickFrequency
-        {
-            get
-            {
-                if (_IncomingBleedTickFrequency < 0)
-                {
-                    _IncomingBleedTickFrequency = .0f;
-                }
-                return _IncomingBleedTickFrequency;
-            }
-            set { _IncomingBleedTickFrequency = value; OnPropertyChanged("BleedTickFrequency"); }
-        }
-        #endregion
 
-        private float _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
-        public float BossArmor 
-        {
-            get 
-            {
-                if (_BossArmor < 0)
-                {
-                    _BossArmor = StatConversion.NPC_ARMOR[83 - 80];
-                }
-                return _BossArmor; 
-            }
-            set { _BossArmor = value; OnPropertyChanged("BossArmor"); }
-        }
 		public bool Bloodlust = false;
-
-        private float _fightLength = 10;
-        public float FightLength
-        {
-            get 
-            {
-                if ( _fightLength < 1f)
-                {
-                    _fightLength = 10f;
-                }
-                return _fightLength; 
-            }
-            set { _fightLength = value; OnPropertyChanged("FightLength"); }
-        }
 
         private uint _uNumberTargets = 1;
         public uint uNumberTargets
@@ -368,18 +263,6 @@ namespace Rawr.TankDK
         }
         #endregion
 #endif
-        #region BossHandler
-        private BossHandler _hCurrentBoss = new Bosses.LordMarrowgar()[(int)BossHandler.Versions.V_10N];
-        public BossHandler hCurrentBoss
-        {
-            get
-            {
-                return _hCurrentBoss;
-            }
-            set { _hCurrentBoss = value; OnPropertyChanged("BossHandler"); }
-        }
-        #endregion
-
         public DeathKnightTalents talents;
 
         #region XML IO

@@ -9,7 +9,7 @@ namespace Rawr.TankDK {
         Burst = 1,
     }
 
-    class CharacterCalculationsTankDK : CharacterCalculationsBase 
+    public  class CharacterCalculationsTankDK : CharacterCalculationsBase 
     {
         public CalculationType cType;
         public override float OverallPoints 

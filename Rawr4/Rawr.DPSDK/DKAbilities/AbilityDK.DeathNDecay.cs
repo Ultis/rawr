@@ -26,6 +26,7 @@ namespace Rawr.DK
             this.uDuration = (uint)(10 * 1000 * (CS.m_Talents.GlyphofDeathandDecay ? 1.5 : 1));
             this.Cooldown = 30 * 1000;
             this.bAOE = true;
+            this.AbilityIndex = (int)DKability.DeathNDecay;
 
         }
 

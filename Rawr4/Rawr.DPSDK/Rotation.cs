@@ -2,31 +2,29 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr.DPSDK
+namespace Rawr.DK
 {
     public class Rotation
     {
+        public enum Type
+        {
+            Custom, Blood, Frost, Unholy, Unknown,
+        }
+
+        #region Variables
+        public CombatTable2 m_CT;
+        /// <summary>
+        /// The rotation list of abilities.
+        /// </summary>
+        List<AbilityDK_Base> ml_Rot;
+
+        /// <summary>
+        /// Set to prioritize threat over DPS.
+        /// </summary>
+        private bool m_bThreat; 
+
         public Type curRotationType = Type.Custom;
 
-        private CalculationOptionsDPSDK.Presence _presence = CalculationOptionsDPSDK.Presence.Blood;
-        public CalculationOptionsDPSDK.Presence presence
-        {
-            get { return _presence; }
-            set { _presence = value; }
-        }
-
-        private int _presenceByIndex = 0;
-        public int PresenceByIndex
-        {
-            get { return _presenceByIndex; }
-            set
-            {
-                _presenceByIndex = value;
-                if (_presenceByIndex == 0) presence = CalculationOptionsDPSDK.Presence.Blood;
-                if (_presenceByIndex == 1) presence = CalculationOptionsDPSDK.Presence.Unholy;
-                if (_presenceByIndex == 2) presence = CalculationOptionsDPSDK.Presence.Frost;
-            }
-        }
         private double _curRotationDuration = 0f;  // rotation duration in seconds
         public double CurRotationDuration
         {
@@ -36,112 +34,32 @@ namespace Rawr.DPSDK
 
         //disease info
         private double _avgDiseaseMult = 0f;
-
         public double AvgDiseaseMult
         {
             get { return _avgDiseaseMult; }
             set { _avgDiseaseMult = value; }
         }
+        
         private double _numDisease = 0f;
-
         public double NumDisease
         {
             get { return _numDisease; }
             set { _numDisease = value; }
         }
-        private double _diseaseUptime = 0f;
 
+        private double _diseaseUptime = 0f;
         public double DiseaseUptime
         {
             get { return _diseaseUptime; }
             set { _diseaseUptime = value; }
         }
-        private double _gargoyleDuration = 0f;
 
+        private double _gargoyleDuration = 0f;
         public double GargoyleDuration
         {
             get { return _gargoyleDuration; }
             set { _gargoyleDuration = value; }
         }
-        
-        private double _deathCoil = 0f;
-
-        public double DeathCoil
-        {
-            get { return _deathCoil; }
-            set { _deathCoil = value; }
-        }
-        private double _icyTouch = 0f;
-
-        public double IcyTouch
-        {
-            get { return _icyTouch; }
-            set { _icyTouch = value; }
-        }
-        private double _plagueStrike = 0f;
-
-        public double PlagueStrike
-        {
-            get { return _plagueStrike; }
-            set { _plagueStrike = value; }
-        }
-        private double _frostFever = 0f;
-
-        public double FrostFever
-        {
-            get { return _frostFever; }
-            set { _frostFever = value; }
-        }
-        private double _bloodPlague = 0f;
-
-        public double BloodPlague
-        {
-            get { return _bloodPlague; }
-            set { _bloodPlague = value; }
-        }
-        private double _scourgeStrike = 0f;
-
-        public double ScourgeStrike
-        {
-            get { return _scourgeStrike; }
-            set { _scourgeStrike = value; }
-        }
-        private double _frostStrike = 0f;
-
-        public double FrostStrike
-        {
-            get { return _frostStrike; }
-            set { _frostStrike = value; }
-        }
-        private double _howlingBlast = 0f;
-
-        public double HowlingBlast
-        {
-            get { return _howlingBlast; }
-            set { _howlingBlast = value; }
-        }
-        private double _obliterate = 0f;
-
-        public double Obliterate
-        {
-            get { return _obliterate; }
-            set { _obliterate = value; }
-        }
-        private double _deathStrike = 0f;
-
-        public double DeathStrike
-        {
-            get { return _deathStrike; }
-            set { _deathStrike = value; }
-        }
-        private double _bloodStrike = 0f;
-
-        public double BloodStrike
-        {
-            get { return _bloodStrike; }
-            set { _bloodStrike = value; }
-        }
-        private double _bloodBoil = 0f;
 
         private double _KMFS;
         public double KMFS
@@ -157,194 +75,53 @@ namespace Rawr.DPSDK
             set { _KMRime = value; }
         }
 
-        private double _FFTick;
-        public double FFTick
-        {
-            get { return _FFTick; }
-            set { _FFTick = value; }
-        }
-
-        private double _BPTick;
-        public double BPTick
-        {
-            get { return _BPTick; }
-            set { _BPTick = value; }
-        }
-
-        public double BloodBoil
-        {
-            get { return _bloodBoil; }
-            set { _bloodBoil = value; }
-        }
-        private double _heartStrike = 0f;
-
-        public double HeartStrike
-        {
-            get { return _heartStrike; }
-            set { _heartStrike = value; }
-        }
         private double _dancingRuneWeapon = 0f;
-
         public double DancingRuneWeapon
         {
             get { return _dancingRuneWeapon; }
             set { _dancingRuneWeapon = value; }
         }
-        private double _horn = 0f;
 
-        public double Horn
-        {
-            get { return _horn; }
-            set { _horn = value; }
-        }
         private double _ghoulFrenzy = 0f;
-
         public double GhoulFrenzy
         {
             get { return _ghoulFrenzy; }
             set { _ghoulFrenzy = value; }
         }
-        private double _pestilence = 0f;
-
-        public double Pestilence
-        {
-            get { return _pestilence; }
-            set { _pestilence = value; }
-        }
 
         private Boolean _managedRP = false;
-
         public Boolean ManagedRP
         {
             get { return _managedRP; }
             set { _managedRP = value; }
         }
-        private Boolean _pTRCalcs = false;
 
+        private Boolean _pTRCalcs = false;
         public Boolean PTRCalcs
         {
             get { return _pTRCalcs; }
             set { _pTRCalcs = value; }
         }
-        private double _gCDTime;
+        #endregion
 
-        public double GCDTime
+        // TODO: Need to figure out a way to build in the TYPEs of rotation.
+        // Types currently in theorycrafting looks like:
+        // Blood: Diseased or Disease-less (Tanking) So this would be sorted by threat.
+        // Frost:
+        // Unholy: 
+
+        public Rotation(CombatTable2 ct, bool bThreat = false)
         {
-            get { return _gCDTime; }
-            set { _gCDTime = value; }
-        }
-        private double _rP;
-
-        public double RP
-        {
-            get { return _rP; }
-            set { _rP = value; }
+            m_CT = ct;
+            List<AbilityDK_Base> ml_Rot = m_CT.ml_Rot;
+            m_bThreat = bThreat;
         }
 
-        private double _weight;
-        public double Weight
-        {
-            get { return _weight; }
-            set { _weight = value; }
-        }
-
-        public void applyWeight(double weight)
-        {
-            Weight = weight;
-            AvgDiseaseMult *= weight;
-            BloodBoil *= weight;
-            BloodPlague *= weight;
-            BloodStrike *= weight;
-            BPTick *= weight;
-            this.DeathCoil *= weight;
-            this.DeathStrike *= weight;
-            this.FFTick *= weight;
-            this.FrostFever *= weight;
-            this.FrostStrike *= weight;
-            this.GhoulFrenzy *= weight;
-            this.HeartStrike *= weight;
-            this.Horn *= weight;
-            this.HowlingBlast *= weight;
-            this.IcyTouch *= weight;
-            this.KMFS *= weight;
-            this.KMRime *= weight;
-            this.Obliterate *= weight;
-            this.Pestilence *= weight;
-            this.PlagueStrike *= weight;
-            this.ScourgeStrike *= weight;
-            this.NumDisease *= weight;
-        }
-
-        public void addRotation(Rotation other)
-        {
-            this.Weight += other.Weight;
-            this.AvgDiseaseMult += other.AvgDiseaseMult;
-            this.BloodBoil += other.BloodBoil;
-            this.BloodPlague += other.BloodPlague;
-            this.BloodStrike += other.BloodStrike;
-            this.BPTick += other.BPTick;
-            this.DancingRuneWeapon += other.DancingRuneWeapon;
-            this.DeathCoil += other.DeathCoil;
-            this.DeathStrike += other.DeathStrike;
-            this.FFTick += other.FFTick;
-            this.FrostFever += other.FrostFever;
-            this.FrostStrike += other.FrostStrike;
-            this.GhoulFrenzy += other.GhoulFrenzy;
-            this.HeartStrike += other.HeartStrike;
-            this.Horn += other.Horn;
-            this.HowlingBlast += other.HowlingBlast;
-            this.IcyTouch += other.IcyTouch;
-            this.KMFS += other.KMFS;
-            this.KMRime += other.KMRime;
-            this.NumDisease += other.NumDisease;
-            this.Obliterate += other.Obliterate;
-            this.Pestilence += other.Pestilence;
-            this.PlagueStrike += other.PlagueStrike;
-            this.ScourgeStrike += other.ScourgeStrike;
-        }
-
-        public void copyRotation(Rotation other)
-        {
-            this.Weight = other.Weight;
-            this.CurRotationDuration = other.CurRotationDuration;
-            this.AvgDiseaseMult = other.AvgDiseaseMult;
-            this.BloodBoil = other.BloodBoil;
-            this.BloodPlague = other.BloodPlague;
-            this.BloodStrike = other.BloodStrike;
-            this.BPTick = other.BPTick;
-            this.DancingRuneWeapon = other.DancingRuneWeapon;
-            this.DeathCoil = other.DeathCoil;
-            this.DeathStrike = other.DeathStrike;
-            this.FFTick = other.FFTick;
-            this.FrostFever = other.FrostFever;
-            this.FrostStrike = other.FrostStrike;
-            this.GhoulFrenzy = other.GhoulFrenzy;
-            this.HeartStrike = other.HeartStrike;
-            this.Horn = other.Horn;
-            this.HowlingBlast = other.HowlingBlast;
-            this.IcyTouch = other.IcyTouch;
-            this.KMFS = other.KMFS;
-            this.KMRime = other.KMRime;
-            this.NumDisease = other.NumDisease;
-            this.Obliterate = other.Obliterate;
-            this.Pestilence = other.Pestilence;
-            this.PlagueStrike = other.PlagueStrike;
-            this.ScourgeStrike = other.ScourgeStrike;
-            this.presence = other.presence;
-            this.NumDisease = other.NumDisease;
-        }
-
-        public enum Type
-        {            
-            Custom, Blood, Frost, Unholy, Unknown,
-        }
-
-        public Rotation()
-        {
-
-            setRotation(Type.Unholy);
-        }
-
+        /// <summary>
+        /// Use the Talent spec to determine which type of rotation we should be looking towards.
+        /// </summary>
+        /// <param name="t">DeathKnightTalents</param>
+        /// <returns>Enum "Type" [Custom, Blood, Frost, Unholy, Unknown]</returns>
         public Type GetRotationType(DeathKnightTalents t)
         {
             curRotationType = Type.Custom;
@@ -391,185 +168,230 @@ namespace Rawr.DPSDK
             return curRotationType;
         }
 
+        private float _TotalDamage;
+        public float TotalDamage
+        {
+            get
+            {
+                return _TotalDamage;
+            }
+            set
+            {
+                _TotalDamage = value;
+            }
+        }
+        private float _TotalThreat;
+        public float TotalThreat
+        {
+            get
+            {
+                return _TotalThreat;
+            }
+            set
+            {
+                _TotalThreat = value;
+            }
+        }
+
+        public float m_TPS // readonly
+        {
+            get
+            {
+                float tps = 0;
+                if (m_RotationDuration > 0)
+                    tps = _TotalThreat / (m_RotationDuration / 1000);
+                return tps;
+            }
+        }
+        public float m_DPS // readonly
+        {
+            get
+            {
+                float dps = 0;
+                if (m_RotationDuration > 0)
+                    dps = _TotalDamage / (m_RotationDuration / 1000);
+                return dps;
+            }
+        }
+
+        public float m_RotationDuration 
+        { 
+            get
+            {
+                // Min Duration is total GCDs used so let's start there.
+                float dur = GCDTime;
+                return Math.Max(dur, m_CastDuration);
+            }
+        }
+        public float m_CooldownDuration { get; set; }
+        public float m_CastDuration { get; set; }
+        public float m_DurationDuration { get; set; }
+        public int m_BloodRunes { get; set; }
+        public int m_BloodRuneCD { get; set; }
+        public int m_FrostRunes { get; set; }
+        public int m_FrostRuneCD { get; set; }
+        public int m_UnholyRunes { get; set; }
+        public int m_UnholyRuneCD { get; set; }
+        public int m_DeathRunes { get; set; }
+        /// <summary>
+        /// Total RP generated/Spent for rotation.
+        /// </summary>
+        public int m_RunicPower { get; set; }
+        
+        private int _GCDs = 0;
+        public int m_GCDs
+        {
+            get { return _GCDs; }
+            set { _GCDs = value; }
+        }
+        public int GetGCDs
+        {
+            get { return _GCDs; }
+        }
+        /// <summary>
+        /// Return time spent in GCDs in MS.
+        /// </summary>
+        public int GCDTime
+        {
+            get
+            {
+                if (m_CT.m_Opts.presence == Presence.Unholy)
+                    return (int)((float)_GCDs * 1000);
+                else
+                    return (int)((float)_GCDs * 1500);
+            }
+        }
+
+        private int _meleeSpecials;
+        public int m_MeleeSpecials
+        {
+            get { return _meleeSpecials; }
+            set { _meleeSpecials = value; }
+        }
+        public float GetMeleeSpecialsPerSecond()
+        {
+            return m_MeleeSpecials / (m_RotationDuration / 1000);
+        }
+        private int _spellSpecials;
+        public int m_SpellSpecials
+        {
+            get { return _spellSpecials; }
+            set { _spellSpecials = value; }
+        }
         public float getMeleeSpecialsPerSecond()
         {
-            double temp;
-            temp = PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike + BloodStrike + HeartStrike;
-            temp = temp / CurRotationDuration;
-            return (float)temp;
+            return m_SpellSpecials / (m_RotationDuration / 1000);
         }
-
         public float getSpellSpecialsPerSecond()
         {
-            float temp;
-            temp = (float)(DeathCoil + IcyTouch + HowlingBlast);
-            temp = temp / (float)CurRotationDuration;
-            return temp;
+            return m_MeleeSpecials + m_SpellSpecials / (m_RotationDuration / 1000);
         }
 
-
-        public float getRP(DeathKnightTalents talents, Character character)
+        public void ResetRotation()
         {
-            bool fourT7 = character.ActiveBuffsContains("Scourgeborne Battlegear 4 Piece Bonus");
-            bool GlyphofIT = talents.GlyphofIcyTouch;
-            bool GlyphofFS = talents.GlyphofFrostStrike;
+            ml_Rot = new List<AbilityDK_Base>();
+        }
 
-            RP = ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.ChillOfTheGrave) * (Obliterate)) +
-//                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (ScourgeStrike)) +
-//                ((15 + (fourT7 ? 5 : 0) + 2.5f * talents.Dirge) * (DeathStrike)) +
-//                ((10 + 2.5f * talents.Dirge) * (PlagueStrike)) +
-                (10 * (BloodStrike + HeartStrike + Pestilence + GhoulFrenzy)) +
-                ((10 + 2.5f * talents.ChillOfTheGrave) * (IcyTouch)) +
-                ((15 + 2.5f * talents.ChillOfTheGrave) * HowlingBlast) +
-                (10 * Horn) +
-                ((CurRotationDuration / 5f)*talents.Butchery);
+        public void Solver()
+        {
+            ResetRotation();
+            // Setup an instance of each ability.
+            // No runes:
+            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
+            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
+            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
+            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
+            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
+            // Multi Runes:
+            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
+            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
+            // RP:
+            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
 
-            if (ManagedRP)
+            // For now, let's just blow everything in here one each.
+            ml_Rot.Add(IT);
+            ml_Rot.Add(FF);
+            ml_Rot.Add(PS);
+            ml_Rot.Add(BP);
+            ml_Rot.Add(BS);
+            ml_Rot.Add(HS);
+            ml_Rot.Add(BB);
+            ml_Rot.Add(NS);
+            ml_Rot.Add(HB);
+            ml_Rot.Add(SS);
+            ml_Rot.Add(DnD);
+
+            ml_Rot.Add(DS);
+            ml_Rot.Add(OB);
+            ml_Rot.Add(Fest);
+
+            ml_Rot.Add(RS);
+            ml_Rot.Add(DC);
+            ml_Rot.Add(FS);
+
+            if (m_bThreat)
             {
-                RP = manageRPDumping(talents, (float)RP);
+                ml_Rot.Sort(AbilityDK_Base.CompareByTotalThreat);
             }
             else
             {
-                RP -= ((40 * DeathCoil) +
-                    ((GlyphofFS ? 32 : 40) * FrostStrike));
+                ml_Rot.Sort(AbilityDK_Base.CompareByTotalDamage);
             }
-            return (float)RP;
+
+            // Now we have the list of abilities sorted appropriately.
+            foreach (AbilityDK_Base ability in ml_Rot)
+            {
+                // Populate the costs here.
+                //m_CooldownDuration = ability.Cooldown; // CDs will overlap.
+                m_CastDuration += ability.CastTime;
+//                m_DurationDuration // Durations will overlap.
+                m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];
+                m_FrostRunes += ability.AbilityCost[(int)DKCostTypes.Frost];
+                m_UnholyRunes += ability.AbilityCost[(int)DKCostTypes.UnHoly]; 
+                m_DeathRunes += ability.AbilityCost[(int)DKCostTypes.Death];
+                m_RunicPower += ability.RunicPower; 
+
+                if (ability.bTriggersGCD)
+                    m_GCDs++;
+                TotalDamage += ability.GetTotalDamage();
+                TotalThreat += ability.GetTotalThreat();
+                if (ability.uRange == AbilityDK_Base.MELEE_RANGE)
+                {
+                    m_MeleeSpecials++;
+                }
+                else
+                {
+                    m_SpellSpecials++;
+                }
+            }
         }
 
-        public float manageRPDumping(DeathKnightTalents talents, float RP)
+        public string ReportRotation()
         {
-			if (talents.DancingRuneWeapon > 0f)
-			{
-				RP -= (float)CurRotationDuration * (60f / 90f);
-			}
-			if (talents.SummonGargoyle > 0f)
-			{
-                RP -= (float)(CurRotationDuration * (60f / 180f));
-			}
-			if (true/*talents.FrostStrike > 0f*/)
-			{
-				FrostStrike = RP / (talents.GlyphofFrostStrike ? 32f : 40f);
-				DeathCoil = 0f;
-				RP = 0f;
-			}
-			else
-			{
-				DeathCoil = RP / 40f;
-				FrostStrike = 0f;
-				RP = 0f;
-			}
-            return RP;
+            string szReport = "";
+            szReport += string.Format("Duration(sec): {0,6}\n", m_DurationDuration/1000);
+            szReport += string.Format("GCDs: {0,6}\n", m_GCDs);
+
+            szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", "Name", "Damage", "DPS", "Threat", "TPS");
+            foreach (AbilityDK_Base ability in ml_Rot)
+            {
+                szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", ability.ToString(), ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+            }
+
+            return szReport;
         }
 
-        public float getGCDTime()
-        {
-            if (presence.Equals(CalculationOptionsDPSDK.Presence.Unholy))
-            {
-                GCDTime = DeathCoil + IcyTouch + PlagueStrike + ScourgeStrike +
-                    FrostStrike + HowlingBlast + Obliterate + DeathStrike + BloodStrike +
-                    HeartStrike + Horn + Pestilence + GhoulFrenzy;
-            }
-            else if (presence.Equals(CalculationOptionsDPSDK.Presence.Blood))
-            {
-                GCDTime = 1.5f * (PlagueStrike + ScourgeStrike + FrostStrike + Obliterate + DeathStrike +
-                    BloodStrike + HeartStrike);
-                GCDTime += 1.5f * (DeathCoil + IcyTouch + HowlingBlast + Horn + Pestilence + GhoulFrenzy);
-                // this does not currently account for haste, and I don't think it is possible in the current design.
-            }
-            return (float)GCDTime;
-        }
-
-        public void setRotation(Type t)
-        {
-            curRotationType = t;
-            switch (curRotationType)
-            {
-                case Type.Blood:
-                    NumDisease = 2f;
-                    DiseaseUptime = 100f;
-                    DeathCoil = 3f;
-                    IcyTouch = 1f;
-                    PlagueStrike = 1f;
-                    ScourgeStrike = 0f;
-                    ManagedRP = true;
-                    Horn = 0f;
-                    FrostStrike = 0f;
-                    HowlingBlast = 0f;
-                    Obliterate = 0f;
-                    DeathStrike = 2f;
-                    BloodStrike = 0f;
-                    HeartStrike = 6f;
-                    CurRotationDuration = 360f;
-                    DancingRuneWeapon = 90f;
-                    GargoyleDuration = 0f;
-                    DeathStrike = 2f;
-                    GhoulFrenzy = 0f;
-                    Pestilence = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;
-                    break;
-                case Type.Frost:
-                    NumDisease = 2f;
-                    DiseaseUptime = 100f;
-                    DeathCoil = 0f;
-                    IcyTouch = 1f;
-                    PlagueStrike = 1f;
-                    ScourgeStrike = 0f;
-                    ManagedRP = true;
-                    Horn = 0f;
-                    FrostStrike = 3f;
-                    HowlingBlast = 0f;
-                    Obliterate = 4f;
-                    BloodStrike = 2f;
-                    HeartStrike = 0f;
-                    DancingRuneWeapon = 0f;
-                    CurRotationDuration = 360f;
-                    GargoyleDuration = 0f;
-                    DeathStrike = 0f;
-					Pestilence = 0f;
-                    GhoulFrenzy = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;
-                    break;
-                case Type.Unholy:
-                    NumDisease = 3f;
-                    DiseaseUptime = 100f;
-                    DeathCoil = 3.5f;
-                    IcyTouch = 1f;
-                    PlagueStrike = 1f;
-                    ScourgeStrike = 4f;
-                    ManagedRP = true;
-                    FrostStrike = 0f;
-                    HowlingBlast = 0f;
-                    Obliterate = 0f;
-                    BloodStrike = 2f;
-                    HeartStrike = 0f;
-                    DancingRuneWeapon = 0f;
-                    CurRotationDuration = 360f;
-                    Horn = 1f;
-                    GargoyleDuration = 30f;
-                    DeathStrike = 0f;
-                    GhoulFrenzy = 0f;
-                    Pestilence = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;
-                    break;
-                case Type.Custom:
-                   /* numDisease = 0f;
-                    diseaseUptime = 0f;
-                    DeathCoil = 0f;
-                    IcyTouch = 0f;
-                    PlagueStrike = 0f;
-                    ScourgeStrike = 0f;
-                    UnholyBlight = 0f;
-                    FrostStrike = 0f;
-                    HowlingBlast = 0f;
-                    Obliterate = 0f;
-                    BloodStrike = 0f;
-                    HeartStrike = 0f;
-                    DancingRuneWeapon = 0f;
-                    curRotationDuration = 0f;
-                    GargoyleDuration = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;*/
-                    break;
-            }
-        }
     }
 }

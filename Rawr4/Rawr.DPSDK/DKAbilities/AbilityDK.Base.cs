@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Rawr.DK
 {
-    enum DKCostTypes : int
+    public enum DKCostTypes : int
     {
-        Blood = 0,
+        None = 0,
+        Blood,
         Frost,
         UnHoly,
         Death, // Have abilities that convert runes to death runes provide a negative value here just like RP.
@@ -25,14 +26,15 @@ namespace Rawr.DK
     /// going on when the abilities are used.
     /// EG. IT * 2 should give us the values of 2 ITs in cost, damage, time, etc.
     /// </summary>
-    abstract class AbilityDK_Base
+    abstract public class AbilityDK_Base
     {
         // TODO: Setup a sub AbilityDK_Base object that contains any proc'd events.
         // This needs to then be calculated whenever someone calls for the value of a given ability.
         // Similar to the way special effects are handled w/ stats.
 
         #region Constants
-        public const uint MIN_GCD_MS = 1000;
+        public const uint MIN_GCD_MS_UH = 1000;
+        public const uint MIN_GCD_MS = 1500;
         public const uint INSTANT = 1;
         public const uint MELEE_RANGE = 5;
         #endregion
@@ -107,13 +109,13 @@ namespace Rawr.DK
         
         /// <summary>
         /// What is the cost of the ability?
-        /// 6 INTs representing the 3 Rune Types & Runic Power & Time
+        /// INTs representing the 3 Rune Types, Runic Power, Time
         /// Use enum (int)DKCostTypes for placement.
         /// Negative costs mean they grant that item.
         /// </summary>
         public int[] AbilityCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+        public int AbilityIndex;
 
-        // TODO: Apply Damage types.
         // Maybe Create a Damage object since we have abilities that return 2 types of damage.
         /// <summary>
         /// What min damage does the ability cause?
@@ -175,6 +177,21 @@ namespace Rawr.DK
         /// </summary>
         public ItemDamageType tDamageType  { get; set; }
 
+        public int RunicPower 
+        { 
+            get
+            {
+                int rp = this.AbilityCost[(int)DKCostTypes.RunicPower];
+                if (rp < 0)
+                    rp = (int)(rp * (1 + CState.m_Stats.BonusRPMultiplier));
+                return rp;
+            }
+            set
+            {
+                this.AbilityCost[(int)DKCostTypes.RunicPower] = value;
+            }
+        }
+
         #region Time Based Items
         ///////////////////////////////////////////////////////
         // Time based items.  
@@ -188,7 +205,7 @@ namespace Rawr.DK
         {
             get
             {
-                return (uint)this.AbilityCost[(int)DKCostTypes.CastTime];
+                return Math.Max(INSTANT, (uint)this.AbilityCost[(int)DKCostTypes.CastTime]);
             }
             set
             {
@@ -204,9 +221,13 @@ namespace Rawr.DK
         { 
             get 
             {
+                
+                uint cd = (uint)AbilityCost[(int)DKCostTypes.CooldownTime];
+                cd = (uint)(cd / (1 + CState.m_Stats.PhysicalHaste));
                 if (this.bTriggersGCD)
-                    return Math.Max(MIN_GCD_MS, (uint)AbilityCost[(int)DKCostTypes.CooldownTime]);
-                return (uint)AbilityCost[(int)DKCostTypes.CooldownTime];
+                    return Math.Max(( CState.m_Presence == Presence.Unholy ? MIN_GCD_MS_UH : MIN_GCD_MS ), cd);
+                else
+                    return cd;
             } 
             set
             { 
@@ -226,7 +247,17 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Max(INSTANT, (uint)AbilityCost[(int)DKCostTypes.DurationTime]);
+                // Factor in haste:
+                uint tr = Math.Max(1, (uint)AbilityCost[(int)DKCostTypes.DurationTime]);
+                if (this.bWeaponRequired)
+                {
+                    tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
+                }
+                else
+                {
+                    tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
+                }
+                return Math.Max(INSTANT, tr);
             }
             set
             {
@@ -245,7 +276,17 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Max(INSTANT, _uTickRate);
+                // Factor in haste:
+                uint tr = _uTickRate;
+                if (this.bWeaponRequired)
+                {
+                    tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
+                }
+                else
+                {
+                    tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
+                }
+                return Math.Max(INSTANT, tr);
             }
             set
             {
@@ -265,6 +306,7 @@ namespace Rawr.DK
         /// <summary>
         /// The Crit Chance for the ability.  
         /// </summary>
+        [Percentage]
         virtual public float CritChance 
         { 
             get
@@ -278,8 +320,9 @@ namespace Rawr.DK
 
         /// <summary>
         /// Chance for the ability to hit the target.  
-        /// TODO: Add Expertise/dodge/parry related info.
+        /// Includes Expertise
         /// </summary>
+        [Percentage]
         virtual public float HitChance
         {
             get
@@ -287,7 +330,6 @@ namespace Rawr.DK
 
                 if (this.bWeaponRequired)
                 {
-                    bool bAttackingFrominFront = false;
                     float ChanceToHit = 1;
                     // Determine Dodge chance
                     float fDodgeChanceForTarget = 0;
@@ -298,7 +340,7 @@ namespace Rawr.DK
                     float fMissChance = (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit);
                     ChanceToHit -= Math.Max(0, fMissChance);
                     ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
-                    if (bAttackingFrominFront)
+                    if (!CState.m_bAttackingFromBehind)
                         ChanceToHit -= Math.Max(0, fParryChanceForTarget);
                     return ChanceToHit;
                 }
@@ -307,6 +349,7 @@ namespace Rawr.DK
             }
         }
 
+        #region Damage
         /// <summary>
         /// Get the single instance damage of this ability.
         /// </summary>
@@ -321,6 +364,7 @@ namespace Rawr.DK
             return iDamage;
         }
 
+        virtual public int TotalDamage { get { return GetTotalDamage(); } }
         /// <summary>
         /// Get the full effect over the lifetime of the ability.
         /// </summary>
@@ -336,23 +380,39 @@ namespace Rawr.DK
             // Assuming full duration, or standard impact.
             // But I want this in whole numbers.
             // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
-            float fDamageCount = (float)(this.uDuration / this.uTickRate);
-            // To prevent divide by 0 errors.
-            if (float.IsNaN(fDamageCount))
-            {
-#if DEBUG
-//                throw new Exception("fDamageCount NaN");
-#endif
-                // Ensure that the Damage counts off at least once.
-                fDamageCount = 1;
-            }
+            float fDamageCount = (float)(this.uDuration / Math.Max(1, this.uTickRate));
+
             iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * HitChance);
             if (bAOE == true)
             {
                 // Need to ensure this value is reasonable for all abilities.
-                iDamage = (int)((float)iDamage * this.CState.m_NumberOfTargets);
+                iDamage = (int)((float)iDamage * Math.Max(1, this.CState.m_NumberOfTargets));
             }
             return iDamage;
+        }
+
+        public float GetDPS()
+        {
+            uint sub = 1000;
+            if (bTriggersGCD)
+            {
+                sub = (CState.m_Presence == Presence.Unholy) ? MIN_GCD_MS_UH : MIN_GCD_MS;
+            }
+            sub = Math.Max(sub, (uDuration + CastTime));
+            float dps = (float)(TotalDamage * 1000) / sub ;
+            return dps;
+        }
+
+        public float GetTPS()
+        {
+            uint sub = 1000;
+            if (bTriggersGCD)
+            {
+                sub = (CState.m_Presence == Presence.Unholy) ? MIN_GCD_MS_UH : MIN_GCD_MS;
+            }
+            sub = Math.Max(sub, (uDuration + CastTime));
+            float dps = (float)(TotalThreat * 1000) / sub;
+            return dps;
         }
 
         private int _DamageAdditiveModifer;
@@ -410,7 +470,9 @@ namespace Rawr.DK
                 _DamageMultiplierModifer = value;
             }
         }
+        #endregion
 
+        #region Threat
         /// <summary>
         /// How much to multiply the damage by to generate threat.
         /// </summary>
@@ -441,16 +503,26 @@ namespace Rawr.DK
             get
             {
                 float Threat = StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
-                return (StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier));
+                Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier);
+                return Threat;
             }
             set
             {
                 _ThreatAdditiveModifier = value;
             }
         }
+        #endregion
 
         #region Comparisons
-        public static int CompareByThreatPerCost(AbilityDK_Base a, AbilityDK_Base b, DKCostTypes t)
+        /// <summary>
+        /// Compare the output of an ability either Threat or Damage.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t">Using Death Runes will be total Rune Cost.</param>
+        /// <param name="bThreat">True if Threat, False if Damage</param>
+        /// <returns></returns>
+        public static int CompareXPerCost(AbilityDK_Base a, AbilityDK_Base b, DKCostTypes t, bool bThreat)
         {
             int ic = 0;
             float aRunes = 1;
@@ -476,14 +548,20 @@ namespace Rawr.DK
                     bRunes = b.AbilityCost[(int)DKCostTypes.Blood] + b.AbilityCost[(int)DKCostTypes.Frost] + b.AbilityCost[(int)DKCostTypes.UnHoly];
                     break;
                 case DKCostTypes.CastTime:
+                    aRunes = a.CastTime;
+                    bRunes = b.CastTime;
+                    break;
                 case DKCostTypes.CooldownTime:
+                    aRunes = a.Cooldown;
+                    bRunes = b.Cooldown;
+                    break;
                 case DKCostTypes.DurationTime:
-                    aRunes = a.AbilityCost[(int)t] / 1000;
-                    bRunes = b.AbilityCost[(int)t] / 1000;
+                    aRunes = a.uDuration;
+                    bRunes = b.uDuration;
                     break;
                 case DKCostTypes.RunicPower:
-                    aRunes = a.AbilityCost[(int)t];
-                    bRunes = b.AbilityCost[(int)t];
+                    aRunes = a.RunicPower;
+                    bRunes = b.RunicPower;
                     break;
                 default:
                     aRunes = 1;
@@ -495,8 +573,18 @@ namespace Rawr.DK
             {
                 if (aRunes != 0 && bRunes != 0)
                 {
-                    float avalue = a.GetTotalThreat() / aRunes;
-                    float bvalue = b.GetTotalThreat() / bRunes;
+                    float avalue = 0;
+                    float bvalue = 0;
+                    if (bThreat)
+                    {
+                        avalue = a.GetTotalThreat() / aRunes;
+                        bvalue = b.GetTotalThreat() / bRunes;
+                    }
+                    else
+                    {
+                        avalue = a.GetTotalDamage() / aRunes;
+                        bvalue = b.GetTotalDamage() / bRunes;
+                    }
                     if (avalue != bvalue)
                     {
                         // This is setup where we want a descending order.
@@ -516,27 +604,128 @@ namespace Rawr.DK
             }
             return ic;
         }
+        public static int CompareValuePSPerRune(AbilityDK_Base a, AbilityDK_Base b, DKCostTypes t, bool bThreat)
+        {
+            int ic = 0;
+            float aRunes = 1;
+            float bRunes = 1;
 
-//        public static int CompareByTotalThreat(AbilityDK_Base a, AbilityDK_Base b)
-//        {
-//            return CompareByThreatPerCost(a, b, null);            
-//        }
+            // Sum of cost:
+            switch (t)
+            {
+                case DKCostTypes.Blood:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Blood];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Blood];
+                    break;
+                case DKCostTypes.Frost:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Frost];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Frost];
+                    break;
+                case DKCostTypes.UnHoly:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.UnHoly];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.UnHoly];
+                    break;
+                case DKCostTypes.Death:
+                    aRunes = a.AbilityCost[(int)DKCostTypes.Blood] + a.AbilityCost[(int)DKCostTypes.Frost] + a.AbilityCost[(int)DKCostTypes.UnHoly];
+                    bRunes = b.AbilityCost[(int)DKCostTypes.Blood] + b.AbilityCost[(int)DKCostTypes.Frost] + b.AbilityCost[(int)DKCostTypes.UnHoly];
+                    break;
+                case DKCostTypes.RunicPower:
+                    aRunes = a.RunicPower;
+                    bRunes = b.RunicPower;
+                    break;
+                case DKCostTypes.CastTime:
+                case DKCostTypes.CooldownTime:
+                case DKCostTypes.DurationTime:
+                default:
+                    aRunes = 1;
+                    bRunes = 1;
+                    break;
+
+            }
+            if (aRunes != 0 || bRunes != 0)
+            {
+                if (aRunes != 0 && bRunes != 0)
+                {
+                    float avalue = 0;
+                    float bvalue = 0;
+                    if (bThreat)
+                    {
+                        avalue = a.GetTPS() / aRunes;
+                        bvalue = b.GetTPS() / bRunes;
+                    }
+                    else
+                    {
+                        avalue = a.GetDPS() / aRunes;
+                        bvalue = b.GetDPS() / bRunes;
+                    }
+                    if (avalue != bvalue)
+                    {
+                        // This is setup where we want a descending order.
+                        if (avalue > bvalue)
+                            ic = -1;
+                        else
+                            ic = 1;
+                    }
+                }
+                else // one of them are 0
+                {
+                    if (aRunes > bRunes)
+                        ic = -1;
+                    else
+                        ic = 1;
+                }
+            }
+            return ic;
+        }
+        #region Damage
+        public static int CompareByTotalDamage(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareXPerCost(a, b, DKCostTypes.None, false);            
+        }
+
+        public static int CompareDamageByCooldown(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareXPerCost(a, b, DKCostTypes.CooldownTime, false);
+        }
+
+        public static int CompareDamageByRunes(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareXPerCost(a, b, DKCostTypes.Death, false);
+        }
+
+        public static int CompareDamageByRP(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareXPerCost(a, b, DKCostTypes.RunicPower, false);
+        }
+
+        
+        #endregion
+        #region Threat
+        public static int CompareByTotalThreat(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareXPerCost(a, b, DKCostTypes.None, true);
+        }
 
         public static int CompareThreatByCooldown(AbilityDK_Base a, AbilityDK_Base b)
         {
-            return CompareByThreatPerCost(a, b, DKCostTypes.CooldownTime);
+            return CompareXPerCost(a, b, DKCostTypes.CooldownTime, true);
         }
 
         public static int CompareThreatByRunes(AbilityDK_Base a, AbilityDK_Base b)
         {
-            return CompareByThreatPerCost(a, b, DKCostTypes.Death);
+            return CompareXPerCost(a, b, DKCostTypes.Death, true);
         }
 
-        public static int CompareByRP(AbilityDK_Base a, AbilityDK_Base b)
+        public static int CompareThreatByRP(AbilityDK_Base a, AbilityDK_Base b)
         {
-            return CompareByThreatPerCost(a, b, DKCostTypes.RunicPower);
+            return CompareXPerCost(a, b, DKCostTypes.RunicPower, true);
         }
-
         #endregion
+        #endregion
+
+        public override string ToString()
+        {
+            return szName;
+        }
     }
 }

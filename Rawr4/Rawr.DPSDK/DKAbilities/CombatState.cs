@@ -9,9 +9,9 @@ namespace Rawr.DK
     /// This is a container for all the necessary stats that get passed around
     /// during rotation evaluation.
     /// </summary>
-    class CombatState
+    public class CombatState
     {
-        public Stats m_Stats;
+        public StatsDK m_Stats;
         // Why save a whole character when we only need the talents?
 //        public Character m_Char;
         public DeathKnightTalents m_Talents;
@@ -19,5 +19,8 @@ namespace Rawr.DK
         public float m_NumberOfTargets;
         public uint m_uDiseaseCount;
         public int m_CurrentRP;
+        public bool m_bAttackingFromBehind;
+        public Rotation.Type m_Spec;
+        public Presence m_Presence;
     }
 }

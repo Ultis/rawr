@@ -32,6 +32,8 @@ namespace Rawr.DK
             this.CastTime = 0;
             if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
                 CState.m_uDiseaseCount++;
+            this.AbilityIndex = (int)DKability.FrostFever;
+
         }
 
         private int _DamageAdditiveModifer = 0;

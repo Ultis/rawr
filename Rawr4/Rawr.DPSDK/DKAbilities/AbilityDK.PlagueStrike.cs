@@ -23,6 +23,7 @@ namespace Rawr.DK
             m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.ml_TriggeredAbility = new AbilityDK_Base[1];
             this.ml_TriggeredAbility[0] = new AbilityDK_BloodPlague(CS);
+            this.AbilityIndex = (int)DKability.PlagueStrike;
 
         }
 

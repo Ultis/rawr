@@ -31,6 +31,7 @@ namespace Rawr.DK
             this.Cooldown = 0;
             if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
                 CState.m_uDiseaseCount++;
+            this.AbilityIndex = (int)DKability.BloodPlague;
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -50,7 +51,6 @@ namespace Rawr.DK
             }
         }
 
-        private float _DamageMultiplierModifer = 0;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>

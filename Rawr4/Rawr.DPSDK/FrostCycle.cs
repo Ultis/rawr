@@ -5,6 +5,7 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
+#if false
     class FrostCycle
     {
         int currentTime;
@@ -453,4 +454,6 @@ namespace Rawr.DPSDK
             return occurence;
         }
     }
+#endif
+
 }

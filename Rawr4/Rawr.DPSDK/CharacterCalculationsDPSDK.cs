@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
@@ -26,9 +27,10 @@ namespace Rawr.DPSDK
             set { _subPoints[0] = value; }
         }
 
-        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
+        public float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] damSub = new float[EnumHelper.GetCount(typeof(DKability))];
         public float[] threatSub = new float[EnumHelper.GetCount(typeof(DKability))];
+        public float[] tpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
 
         public float WhiteDPS
         {
@@ -50,109 +52,95 @@ namespace Rawr.DPSDK
             set { _BCBDPS = value; }
         }
 
-        private float _DeathCoilDPS;
         public float DeathCoilDPS
         {
-            get { return _DeathCoilDPS; }
-            set { _DeathCoilDPS = value; }
+            get { return dpsSub[(int)DKability.DeathCoil]; }
+            set { dpsSub[(int)DKability.DeathCoil] = value; }
         }
 
-        private float _IcyTouchDPS;
         public float IcyTouchDPS
         {
-            get { return _IcyTouchDPS; }
-            set { _IcyTouchDPS = value; }
+            get { return dpsSub[(int)DKability.IcyTouch]; }
+            set { dpsSub[(int)DKability.IcyTouch] = value; }
         }
 
-        private float _PlagueStrikeDPS;
         public float PlagueStrikeDPS
         {
-            get { return _PlagueStrikeDPS; }
-            set { _PlagueStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.PlagueStrike]; }
+            set { dpsSub[(int)DKability.PlagueStrike] = value; }
         }
 
-        private float _FrostFeverDPS;
         public float FrostFeverDPS
         {
-            get { return _FrostFeverDPS; }
-            set { _FrostFeverDPS = value; }
+            get { return dpsSub[(int)DKability.FrostFever]; }
+            set { dpsSub[(int)DKability.FrostFever] = value; }
         }
 
-        private float _BloodPlagueDPS;
         public float BloodPlagueDPS
         {
-            get { return _BloodPlagueDPS; }
-            set { _BloodPlagueDPS = value; }
+            get { return dpsSub[(int)DKability.BloodPlague]; }
+            set { dpsSub[(int)DKability.BloodPlague] = value; }
         }
 
-        private float _ScourgeStrikeDPS;
         public float ScourgeStrikeDPS
         {
-            get { return _ScourgeStrikeDPS; }
-            set { _ScourgeStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.ScourgeStrike]; }
+            set { dpsSub[(int)DKability.ScourgeStrike] = value; }
         }
 
-        private float _UnholyBlightDPS;
         public float UnholyBlightDPS
         {
-            get { return _UnholyBlightDPS; }
-            set { _UnholyBlightDPS = value; }
+            get { return dpsSub[(int)DKability.UnholyBlight]; }
+            set { dpsSub[(int)DKability.UnholyBlight] = value; }
         }
 
-        private float _BloodparasiteDPS;
         public float BloodparasiteDPS
         {
-            get { return _BloodparasiteDPS; }
-            set { _BloodparasiteDPS = value; }
+            get { return dpsSub[(int)DKability.BloodParasite]; }
+            set { dpsSub[(int)DKability.BloodParasite] = value; }
         }
 
-        private float _OtherDPS;
+        // TODO: Fix this.
         public float OtherDPS
         {
-            get { return _OtherDPS; }
-            set { _OtherDPS = value; }
+            get { return dpsSub[(int)DKability.OtherArcane]; }
+            set { dpsSub[(int)DKability.OtherArcane] = value; }
         }
 
-        private float _FrostStrikeDPS;
         public float FrostStrikeDPS
         {
-            get { return _FrostStrikeDPS; }
-            set { _FrostStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.FrostStrike]; }
+            set { dpsSub[(int)DKability.FrostStrike] = value; }
         }
 
-        private float _HowlingBlastDPS;
         public float HowlingBlastDPS
         {
-            get { return _HowlingBlastDPS; }
-            set { _HowlingBlastDPS = value; }
+            get { return dpsSub[(int)DKability.HowlingBlast]; }
+            set { dpsSub[(int)DKability.HowlingBlast] = value; }
         }
 
-        private float _ObliterateDPS;
         public float ObliterateDPS
         {
-            get { return _ObliterateDPS; }
-            set { _ObliterateDPS = value; }
+            get { return dpsSub[(int)DKability.Obliterate]; }
+            set { dpsSub[(int)DKability.Obliterate] = value; }
         }
 
-        private float _DeathStrikeDPS;
         public float DeathStrikeDPS
         {
-            get { return _DeathStrikeDPS; }
-            set { _DeathStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.DeathStrike]; }
+            set { dpsSub[(int)DKability.DeathStrike] = value; }
         }
-
-        private float _BloodStrikeDPS;
+        
         public float BloodStrikeDPS
         {
-            get { return _BloodStrikeDPS; }
-            set { _BloodStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.BloodStrike]; }
+            set { dpsSub[(int)DKability.BloodStrike] = value; }
         }
 
-        private float _HeartStrikeDPS;
         public float HeartStrikeDPS
         {
-            get { return _HeartStrikeDPS; }
-            set { _HeartStrikeDPS = value; }
+            get { return dpsSub[(int)DKability.HeartStrike]; }
+            set { dpsSub[(int)DKability.HeartStrike] = value; }
         }
 
         private float _GargoyleDPS;
@@ -209,20 +197,6 @@ namespace Rawr.DPSDK
         {
             get { return _OHattackSpeed; }
             set { _OHattackSpeed = value; }
-        }
-
-        private float _critChance;
-        public float CritChance
-        {
-            get { return _critChance; }
-            set { _critChance = value; }
-        }
-
-        private float _SpellCritChance;
-        public float SpellCritChance
-        {
-            get { return _SpellCritChance; }
-            set { _SpellCritChance = value; }
         }
 
         private float _avoidedAttacks;
@@ -300,14 +274,12 @@ namespace Rawr.DPSDK
             set { _DRWStats = value; }
         }
 
-        private Stats _basicStats;
-        public Stats BasicStats
+        private StatsDK _basicStats;
+        public StatsDK BasicStats
         {
             get { return _basicStats; }
             set { _basicStats = value; }
         }
-
-        public float Mastery { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -326,56 +298,69 @@ namespace Rawr.DPSDK
             dictValues.Add("Haste Rating",      string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.DeathKnight)));
             dictValues.Add("Armor",             BasicStats.Armor.ToString("N0"));
             dictValues.Add("Resilience",        BasicStats.Resilience.ToString("F0"));
-            dictValues.Add("Mastery Rating",    BasicStats.MasteryRating.ToString("N0"));
-            dictValues.Add("Mastery",           Mastery.ToString());
+            dictValues.Add("Mastery",           string.Format("{0:N0}*Rating: {1:N0}", BasicStats.Mastery, BasicStats.MasteryRating));
 
             dictValues.Add("Weapon Damage",     MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed",      MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
-            dictValues.Add("Crit Chance",       string.Format("{0:P}", CritChance));
+            dictValues.Add("Crit Chance",       string.Format("{0:P}", BasicStats.PhysicalCrit));
             dictValues.Add("Avoided Attacks",   string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation",  string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, EffectiveArmor));
 
-            dictValues.Add("BCB",               string.Format("{0:N2}*{1:P}", BCBDPS, (float)BCBDPS/DPSPoints));
+/*            dictValues.Add("BCB", string.Format("{0:N2}*{1:P}", BCBDPS, (float)BCBDPS / DPSPoints));
+            dictValues.Add("Blood Boil", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.BloodBoil], (float)damSub[(int)DKability.BloodBoil] / DPSPoints));
             dictValues.Add("Blood Plague",      string.Format("{0:N2}*{1:P}", BloodPlagueDPS, (float)BloodPlagueDPS/DPSPoints));
             dictValues.Add("Blood Strike",      string.Format("{0:N2}*{1:P}", BloodStrikeDPS, (float)BloodStrikeDPS/DPSPoints));
             dictValues.Add("Death Coil",        string.Format("{0:N2}*{1:P}", DeathCoilDPS, (float)DeathCoilDPS / DPSPoints));
-            dictValues.Add("DRW",               string.Format("{0:N2}*{1:P}, wait for "+DRWStats+" proc", DRWDPS, (float)DRWDPS/DPSPoints));
-            dictValues.Add("Frost Fever",       string.Format("{0:N2}*{1:P}", FrostFeverDPS, (float)FrostFeverDPS/DPSPoints));
+            dictValues.Add("Death n Decay", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.DeathNDecay], (float)dpsSub[(int)DKability.DeathNDecay] / DPSPoints));
+            dictValues.Add("DRW", string.Format("{0:N2}*{1:P}, wait for " + DRWStats + " proc", DRWDPS, (float)DRWDPS / DPSPoints));
+            dictValues.Add("Festering Strike", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.FesteringStrike], (float)dpsSub[(int)DKability.FesteringStrike] / DPSPoints));
+            dictValues.Add("Frost Fever", string.Format("{0:N2}*{1:P}", FrostFeverDPS, (float)FrostFeverDPS / DPSPoints));
             dictValues.Add("Frost Strike",      string.Format("{0:N2}*{1:P}", FrostStrikeDPS, (float)FrostStrikeDPS/DPSPoints));
             dictValues.Add("Gargoyle",          string.Format("{0:N2}*{1:P}", GargoyleDPS, (float)GargoyleDPS / DPSPoints));
             dictValues.Add("Heart Strike",      string.Format("{0:N2}*{1:P}", HeartStrikeDPS, (float)HeartStrikeDPS / DPSPoints));
             dictValues.Add("Howling Blast",     string.Format("{0:N2}*{1:P}", HowlingBlastDPS, (float)HowlingBlastDPS / DPSPoints));
             dictValues.Add("Icy Touch",         string.Format("{0:N2}*{1:P}", IcyTouchDPS, (float)IcyTouchDPS / DPSPoints));
             dictValues.Add("Necrosis",          string.Format("{0:N2}*{1:P}", NecrosisDPS, (float)NecrosisDPS / DPSPoints));
-            dictValues.Add("Obliterate",        string.Format("{0:N2}*{1:P}", ObliterateDPS, (float)ObliterateDPS / DPSPoints));
+            dictValues.Add("Necrotic Strike", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.NecroticStrike], (float)dpsSub[(int)DKability.NecroticStrike] / DPSPoints));
+            dictValues.Add("Obliterate", string.Format("{0:N2}*{1:P}", ObliterateDPS, (float)ObliterateDPS / DPSPoints));
             dictValues.Add("Death Strike",      string.Format("{0:N2}*{1:P}", DeathStrikeDPS, (float)DeathStrikeDPS / DPSPoints));
             dictValues.Add("Plague Strike",     string.Format("{0:N2}*{1:P}", PlagueStrikeDPS, (float)PlagueStrikeDPS / DPSPoints));
-            dictValues.Add("Scourge Strike",    string.Format("{0:N2}*{1:P}", ScourgeStrikeDPS, (float)ScourgeStrikeDPS / DPSPoints));
+            dictValues.Add("Rune Strike", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.RuneStrike], (float)dpsSub[(int)DKability.RuneStrike] / DPSPoints));
+            dictValues.Add("Scourge Strike", string.Format("{0:N2}*{1:P}", ScourgeStrikeDPS, (float)ScourgeStrikeDPS / DPSPoints));
             dictValues.Add("Unholy Blight",     string.Format("{0:N2}*{1:P}", UnholyBlightDPS, (float)UnholyBlightDPS / DPSPoints));
             dictValues.Add("Wandering Plague",  string.Format("{0:N2}*{1:P}", WanderingPlagueDPS, (float)WanderingPlagueDPS / DPSPoints));
             dictValues.Add("White",             string.Format("{0:N2}*{1:P}", WhiteDPS, (float)WhiteDPS / DPSPoints));
             dictValues.Add("Ghoul",             string.Format("{0:N2}*{1:P}", GhoulDPS, (float)GhoulDPS / DPSPoints));
             dictValues.Add("Blood Parasite",    string.Format("{0:N2}*{1:P}", BloodparasiteDPS, (float)BloodparasiteDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
+*/
             dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
 
-            dictValues.Add("BB", damSub[(int)DKability.BloodBoil].ToString());
-            dictValues.Add("BS", damSub[(int)DKability.BloodStrike].ToString());
-            dictValues.Add("DC", damSub[(int)DKability.DeathCoil].ToString());
-            dictValues.Add("DnD", damSub[(int)DKability.DeathNDecay].ToString());
-            dictValues.Add("DS", damSub[(int)DKability.DeathStrike].ToString());
-            dictValues.Add("Fest", damSub[(int)DKability.FesteringStrike].ToString());
-            dictValues.Add("FS", damSub[(int)DKability.FrostStrike].ToString());
-            dictValues.Add("IT", damSub[(int)DKability.IcyTouch].ToString());
-            dictValues.Add("HS", damSub[(int)DKability.HeartStrike].ToString());
-            dictValues.Add("HB", damSub[(int)DKability.HowlingBlast].ToString());
-            dictValues.Add("NS", damSub[(int)DKability.NecroticStrike].ToString());
-            dictValues.Add("OB", damSub[(int)DKability.Obliterate].ToString());
-            dictValues.Add("PS", damSub[(int)DKability.PlagueStrike].ToString());
-            dictValues.Add("RS", damSub[(int)DKability.RuneStrike].ToString());
-            dictValues.Add("SS", damSub[(int)DKability.ScourgeStrike].ToString());
+            PopulateSingleUseValues(dictValues, "BB", DKability.BloodBoil);
+            PopulateSingleUseValues(dictValues, "BP", DKability.BloodPlague);
+            PopulateSingleUseValues(dictValues, "BS", DKability.BloodStrike);
+            PopulateSingleUseValues(dictValues, "DC", DKability.DeathCoil);
+            PopulateSingleUseValues(dictValues, "DnD", DKability.DeathNDecay);
+            PopulateSingleUseValues(dictValues, "DS", DKability.DeathStrike);
+            PopulateSingleUseValues(dictValues, "Fest", DKability.FesteringStrike);
+            PopulateSingleUseValues(dictValues, "FF", DKability.FrostFever);
+            PopulateSingleUseValues(dictValues, "FS", DKability.FrostStrike);
+            PopulateSingleUseValues(dictValues, "HS", DKability.HeartStrike);
+            PopulateSingleUseValues(dictValues, "HB", DKability.HowlingBlast);
+            PopulateSingleUseValues(dictValues, "IT", DKability.IcyTouch);
+            PopulateSingleUseValues(dictValues, "NS", DKability.NecroticStrike);
+            PopulateSingleUseValues(dictValues, "OB", DKability.Obliterate);
+            PopulateSingleUseValues(dictValues, "PS", DKability.PlagueStrike);
+            PopulateSingleUseValues(dictValues, "RS", DKability.RuneStrike);
+            PopulateSingleUseValues(dictValues, "SS", DKability.ScourgeStrike);
             return dictValues;
         }
+
+        private void PopulateSingleUseValues(Dictionary<string, string> dictValues, string szName, DKability eAbility)
+        {
+            dictValues.Add(szName, string.Format("{0:N0} ({1:N2} DPS)*{2:N0} ({3:N2} TPS)", damSub[(int)eAbility], dpsSub[(int)eAbility], threatSub[(int)eAbility], tpsSub[(int)eAbility]));
+        }
+
         public override float GetOptimizableCalculationValue(string calculation)
         {
             switch (calculation)
@@ -400,6 +385,8 @@ namespace Rawr.DPSDK
                     return BasicStats.HitRating;
                 case "Haste Rating":
                     return BasicStats.HasteRating;
+                case "Mastery":
+                    return BasicStats.Mastery;
                 case "Target Miss %":
                     return MissedAttacks * 100f;
                 case "Target Dodge %":

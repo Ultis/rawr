@@ -27,6 +27,8 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.ml_TriggeredAbility = new AbilityDK_Base[1];
             this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
+            this.AbilityIndex = (int)DKability.IcyTouch;
+
         }
 
         private int _DamageAdditiveModifer = 0;

@@ -87,12 +87,10 @@
       <Link>CalculationOptionsPanelDPSDK.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelDPSDK.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AbilityHandler.cs" />
     <Compile Include="BloodCycle.cs" />
     <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationsDPSDK.cs" />
     <Compile Include="CharacterCalculationsDPSDK.cs" />
-    <Compile Include="CombatTable.cs" />
     <Compile Include="ComparisonCalculationDPSDK.cs" />
     <Compile Include="DKAbilities\AbilityDK.Base.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodBoil.cs" />

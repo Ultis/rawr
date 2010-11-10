@@ -19,6 +19,7 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.uRange = 30;
             this.tDamageType = ItemDamageType.Shadow;
+            this.AbilityIndex = (int)DKability.DeathCoil;
         }
 
         private int _DamageAdditiveModifer = 0;

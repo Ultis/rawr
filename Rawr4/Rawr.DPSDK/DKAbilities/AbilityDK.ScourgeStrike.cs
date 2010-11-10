@@ -23,9 +23,10 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.tDamageType = ItemDamageType.Physical;
             // TODO: Physical Damage * .25 * # diseases on target as shadow.
+            this.AbilityIndex = (int)DKability.ScourgeStrike;
+
         }
 
-        private float _DamageMultiplierModifer = 0;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
@@ -35,6 +36,14 @@ namespace Rawr.DK
             {
                 return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
             }
+        }
+
+        public override int GetTotalDamage()
+        {
+            if (CState.m_Spec == Rotation.Type.Unholy)
+                return base.GetTotalDamage();
+            else
+                return 0;
         }
     }
 }

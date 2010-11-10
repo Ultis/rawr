@@ -15,6 +15,8 @@ namespace Rawr.DK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1;
             this.bTriggersGCD = false;
+            this.AbilityIndex = (int)DKability.White;
+
         }
     }
 }

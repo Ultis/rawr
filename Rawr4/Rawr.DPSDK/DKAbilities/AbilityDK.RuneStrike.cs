@@ -21,6 +21,8 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.AbilityIndex = (int)DKability.RuneStrike;
+
         }
 
         private int m_iToT = 0;

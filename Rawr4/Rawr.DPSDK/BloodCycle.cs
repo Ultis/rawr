@@ -5,6 +5,7 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
+#if false
     class BloodCycle
 {
         int currentTime;
@@ -402,4 +403,6 @@ namespace Rawr.DPSDK
             return occurence;
         }
     }
+#endif
+
 }

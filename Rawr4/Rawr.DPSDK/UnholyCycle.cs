@@ -5,6 +5,7 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
+#if false
     class UnholyCycle
     {
     int currentTime;
@@ -408,4 +409,5 @@ namespace Rawr.DPSDK
             return occurence;
         }
     }
+#endif
 }

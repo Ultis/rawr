@@ -23,6 +23,7 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             // Physical Damage * .125 * # diseases on target may consume the diseases.
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.AbilityIndex = (int)DKability.Obliterate;
 
         }
 

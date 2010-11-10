@@ -26,6 +26,8 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
 //            this.CState.m_Stats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.AbilityIndex = (int)DKability.DeathStrike;
+
         }
 
         /// <summary>

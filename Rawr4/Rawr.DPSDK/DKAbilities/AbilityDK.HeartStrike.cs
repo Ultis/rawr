@@ -17,11 +17,13 @@ namespace Rawr.DK
             this.szName = "Heart Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.DamageAdditiveModifer = 819;
+            this.DamageAdditiveModifer = 736;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
             this.bAOE = true;
+            this.AbilityIndex = (int)DKability.HeartStrike;
+
         }
 
         private float _DamageMultiplierModifer = 0;
@@ -34,12 +36,21 @@ namespace Rawr.DK
             {
                 _DamageMultiplierModifer += base.DamageMultiplierModifer + (this.CState.m_Talents.GlyphofHeartStrike ? .3f : 0);
                 float multiplier = (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer;
+                // TODO: Need to ensure that this is properly handled by AOE handler stuff.
                 if (CState.m_NumberOfTargets > 1)
                 { multiplier *= 1.75f; }
                 if (CState.m_NumberOfTargets > 2)
                 { multiplier *= 1.75f; }
                 return multiplier;
             }
+        }
+
+        public override int GetTotalDamage()
+        {
+            if (CState.m_Spec == Rotation.Type.Blood)
+                return base.GetTotalDamage();
+            else
+                return 0;
         }
     }
 }

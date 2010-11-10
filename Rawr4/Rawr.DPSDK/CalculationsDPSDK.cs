@@ -7,49 +7,10 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
-    public enum DKability
-    {
-        // Basic
-        White,
-        // Melee abilities
-        BloodStrike,
-        DeathStrike,
-        FesteringStrike,
-        FrostStrike,
-        HeartStrike,
-        NecroticStrike,
-        Obliterate,
-        PlagueStrike,
-        RuneStrike,
-        ScourgeStrike,
-        // Ranged/AOE abilities
-        BloodBoil,
-        DeathCoil,
-        DeathNDecay,
-        HowlingBlast,
-        IcyTouch,
-        // Others
-        BloodParasite,
-        BloodPlague,
-        DRW,
-        FrostFever,
-        Gargoyle,
-        Ghoul,
-        UnholyBlight,
-        WanderingPlague,
-        OtherPhysical,
-        OtherHoly,
-        OtherArcane,
-        OtherFire,
-        OtherFrost,
-        OtherNature,
-        OtherShadow,
-    }
-
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
+//        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
 
         //public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -173,7 +134,7 @@ namespace Rawr.DPSDK
 					    "Advanced Stats:Crit Chance",
 					    "Advanced Stats:Avoided Attacks",
 					    "Advanced Stats:Enemy Mitigation",
-                        "DPS Breakdown:White",
+/*                        "DPS Breakdown:White",
                         "DPS Breakdown:BCB*Blood Caked Blade",
                         "DPS Breakdown:Necrosis",
                         "DPS Breakdown:Death Coil",
@@ -195,20 +156,23 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Ghoul",
                         "DPS Breakdown:Blood Parasite",
                         "DPS Breakdown:Other",
+ * */
                         "DPS Breakdown:Total DPS",
                         "Damage Per Use:BB",
+                        "Damage Per Use:BP",
                         "Damage Per Use:BS",
                         "Damage Per Use:DC",
                         "Damage Per Use:DnD",
                         "Damage Per Use:DS",
                         "Damage Per Use:Fest",
+                        "Damage Per Use:FF",
                         "Damage Per Use:FS",
                         "Damage Per Use:HS",
                         "Damage Per Use:HB",
-                        "Damage Per Use:IT",
+                        "Damage Per Use:IT*Not Including FF",
                         "Damage Per Use:NS",
                         "Damage Per Use:OB",
-                        "Damage Per Use:PS",
+                        "Damage Per Use:PS*Not Including BP",
                         "Damage Per Use:RS",
                         "Damage Per Use:SS",
                     });
@@ -246,8 +210,9 @@ namespace Rawr.DPSDK
             get {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[] {
 						ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Mail,
+                        // Removing Leather & Mail items from default list as the extra 5% Plate Spec. is too significant.
+//                        ItemType.Leather,
+//                        ItemType.Mail,
                         ItemType.Plate,
                         ItemType.Sigil,
                         ItemType.Polearm,
@@ -298,18 +263,19 @@ namespace Rawr.DPSDK
             BossOptions hBossOptions = new BossOptions();
             int targetLevel = hBossOptions.Level;
 
-            stats = (StatsDK)GetCharacterStats(character, additionalItem);
-            calcs.BasicStats = stats.Clone(); // This is for what is on-display.
+            stats = GetCharacterStats(character, additionalItem) as StatsDK;
+            calcs.BasicStats = stats.Clone() as StatsDK; 
             AccumulateSpecialEffectStats(stats, character, calcOpts, calcs); // Now add in the special effects.
 
             CombatTable2 combatTable = new CombatTable2(character, stats, calcs, calcOpts);
+            combatTable.PostAbilitiesSingleUse(false);
+            Rotation rot = new Rotation(combatTable);
+            rot.Solver();
+//            calcOpts.szRotReport = rot.ReportRotation();
 
-            calcs.CritChance = stats.PhysicalCrit;
             calcs.EffectiveArmor = stats.Armor;
-            calcs.SpellCritChance = stats.SpellCrit;
-            calcs.Mastery = stats.Mastery;
 
-            calcs.OverallPoints = calcs.DPSPoints = combatTable.m_DPS; 
+            calcs.OverallPoints = calcs.DPSPoints = rot.m_DPS; 
             return calcs;
         }
 
@@ -318,12 +284,11 @@ namespace Rawr.DPSDK
             return BaseStats.GetBaseStats(character.Level, CharacterClass.DeathKnight, character.Race);
         }
 
-        public Stats GetPresenceStats(CalculationOptionsDPSDK.Presence p,  DeathKnightTalents t)
+        public static void AccumulatePresenceStats(StatsDK PresenceStats, Presence p, DeathKnightTalents t)
         {
-            StatsDK PresenceStats = new StatsDK();
             switch(p)
             {
-                case CalculationOptionsDPSDK.Presence.Blood:
+                case Presence.Blood:
                 {
                     if (t.ImprovedBloodPresence > 0)
                         PresenceStats.CritChanceReduction -= 0.03f * t.ImprovedBloodPresence;
@@ -337,10 +302,10 @@ namespace Rawr.DPSDK
                     PresenceStats.BaseArmorMultiplier += 0.6f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
-                    PresenceStats.ThreatIncreaseMultiplier += 2.5f; // TODO: NOT VERIFIED AT ALL
+                    PresenceStats.ThreatIncreaseMultiplier += 1f; // TODO: NOT VERIFIED AT ALL
                     break;
                 }
-                case CalculationOptionsDPSDK.Presence.Frost:
+                case Presence.Frost:
                 {
                     if (t.ImprovedBloodPresence > 0)
                         PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
@@ -353,7 +318,7 @@ namespace Rawr.DPSDK
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
                 }
-                case CalculationOptionsDPSDK.Presence.Unholy:
+                case Presence.Unholy:
                 {
                     if (t.ImprovedBloodPresence > 0)
                         PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
@@ -366,7 +331,6 @@ namespace Rawr.DPSDK
                     break;
                 }
             }
-            return PresenceStats;
         }
 
         /// <summary>
@@ -383,7 +347,6 @@ namespace Rawr.DPSDK
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             StatsDK statsTotal = new StatsDK();
-            statsTotal.Mastery += 8;
             if (null == character)
             {
 #if DEBUG
@@ -396,7 +359,7 @@ namespace Rawr.DPSDK
             if (null == calcOpts)
             {
 #if DEBUG
-                throw new Exception("calcOpts is Null");
+                //throw new Exception("calcOpts is Null");
 #else
                 return statsTotal;
 #endif
@@ -436,15 +399,16 @@ namespace Rawr.DPSDK
             }
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsPresence = GetPresenceStats(calcOpts.CurrentPresence, talents);
 
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
+            statsTotal = GetRelevantStats(statsTotal) as StatsDK; // GetRel removes any stats specific to the StatsDK object.
+            statsTotal.Mastery += 8;
+            AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
             AccumulateTalents(statsTotal, character);
-            statsTotal.Accumulate(statsPresence);
 
-            statsTotal = (StatsDK)GetRelevantStats(statsTotal);
+            // Apply ratings.
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
             statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc/3;
@@ -454,10 +418,10 @@ namespace Rawr.DPSDK
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+//            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+//            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
-            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
+//            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
             statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
@@ -481,7 +445,7 @@ namespace Rawr.DPSDK
 
         private void AccumulateSpecialEffectStats(Stats s, Character c, CalculationOptionsDPSDK calcOpts, CharacterCalculationsDPSDK calcs)
         {
-            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new CombatTable2(c, s, calcs, calcOpts));
+            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new CombatTable2(c, (StatsDK)s, calcs, calcOpts));
             Stats statSE = new Stats();
             foreach (SpecialEffect e in s.SpecialEffects())
             {
@@ -497,7 +461,7 @@ namespace Rawr.DPSDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    se = new StatsSpecialEffects(c, s, new CombatTable2(c, s, calcs, calcOpts));
+                    se = new StatsSpecialEffects(c, s, new CombatTable2(c, (StatsDK)s, calcs, calcOpts));
                     s.Accumulate(se.getSpecialEffects(calcOpts, effect));
                 }
             }
@@ -510,7 +474,7 @@ namespace Rawr.DPSDK
 
         }
 
-        public Rotation.Type GetSpec(DeathKnightTalents t)
+        public static Rotation.Type GetSpec(DeathKnightTalents t)
         {
             Rotation.Type curRotationType = Rotation.Type.Custom;
             const int indexBlood = 0; // start index of Blood Talents.
@@ -602,10 +566,10 @@ namespace Rawr.DPSDK
                 return true;
         }
         /// <summary>Build the talent effects.</summary>
-        private void AccumulateTalents(StatsDK FullCharacterStats, Character character)
+        public static void AccumulateTalents(StatsDK FullCharacterStats, Character character)
         {
             Stats newStats = new Stats();
-            FullCharacterStats.Mastery = StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
+            FullCharacterStats.Mastery += StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
 
             // Which talent tree focus?
             #region Talent Speciality
@@ -767,7 +731,7 @@ namespace Rawr.DPSDK
                 // Improved Blood Presence
                 // Reduces chance to be critically hit while in blood presence by 3/6%
                 // In addition while in Frost or Unholy, retain the 2/4% Damage reduction. 
-                // Implemented in GetPresenceStats()
+                // Implemented in AccumulatePresenceStats()
 
                 // Will of the Necropolis
                 // Damage that takes you below 35% health or while at less than 35% is reduced by 5% per point.  
@@ -1111,14 +1075,14 @@ namespace Rawr.DPSDK
 
                         // Set this to have no presence enabled.
                         Character baseCharacter = character.Clone();
-                        (baseCharacter.CalculationOptions as CalculationOptionsDPSDK).CurrentPresence = CalculationOptionsDPSDK.Presence.None;
+                        (baseCharacter.CalculationOptions as CalculationOptionsDPSDK).presence = Presence.None;
                         // replacing pre-factored base calc since this is different than the Item budget lists. 
                         baseCalc = GetCharacterCalculations(baseCharacter, null, true, false, false) as CharacterCalculationsDPSDK;
 
                         // Set these to have the key presence enabled.
                         for (int index = 1; index < listPresence.Length; index++)
                         {
-                            (character.CalculationOptions as CalculationOptionsDPSDK).CurrentPresence = (CalculationOptionsDPSDK.Presence)index;
+                            (character.CalculationOptions as CalculationOptionsDPSDK).presence = (Presence)index;
                             
                             calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsDPSDK;
 
@@ -1186,7 +1150,7 @@ namespace Rawr.DPSDK
 
         public override Stats GetRelevantStats(Stats stats)
         {
-            Stats s = new StatsDK()
+            StatsDK s = new StatsDK()
             {
                 // Core stats
                 Strength = stats.Strength,
@@ -1489,6 +1453,7 @@ namespace Rawr.DPSDK
                         "Expertise Rating",
                         "Hit Rating",
                         "Haste Rating",
+                        "Mastery",
                         "Target Miss %",
                         "Target Dodge %",
                         "Resilience",

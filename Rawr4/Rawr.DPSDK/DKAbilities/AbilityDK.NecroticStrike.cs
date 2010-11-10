@@ -23,6 +23,8 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 1f;
             // Absorbs healing on a target.
             this.bTriggersGCD = true;
+            this.AbilityIndex = (int)DKability.NecroticStrike;
+
         }
 
     }

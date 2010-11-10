@@ -29,7 +29,8 @@ namespace Rawr.DK
                 this.ml_TriggeredAbility = new AbilityDK_Base[1];
                 this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
             }
-            
+            this.AbilityIndex = (int)DKability.HowlingBlast;
+
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -49,16 +50,12 @@ namespace Rawr.DK
             }
         }
 
-        private float _DamageMultiplierModifer = 0;
-        /// <summary>
-        /// Setup the modifier formula for a given ability.
-        /// </summary>
-        override public float DamageMultiplierModifer
+        public override int GetTotalDamage()
         {
-            get
-            {
-                return CState.m_NumberOfTargets * (1 + base.DamageMultiplierModifer) - 1;
-            }
+            if (CState.m_Talents.HowlingBlast > 0)
+                return base.GetTotalDamage();
+            else
+                return 0;
         }
     }
 }

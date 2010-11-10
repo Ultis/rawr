@@ -22,6 +22,7 @@ namespace Rawr.DK
             this.bWeaponRequired = true;
             this.bTriggersGCD = true;
             m_iToT = CState.m_Talents.ThreatOfThassarian;
+            this.AbilityIndex = (int)DKability.BloodStrike;
 
         }
 

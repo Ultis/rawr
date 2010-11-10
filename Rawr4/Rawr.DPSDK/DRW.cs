@@ -5,6 +5,7 @@ using Rawr.DK;
 
 namespace Rawr.DPSDK
 {
+#if false
     class DRW
     {
 
@@ -269,4 +270,6 @@ namespace Rawr.DPSDK
             dpsDancingRuneWeapon *= 0.5f;
         }
     }
+#endif
+
 }
