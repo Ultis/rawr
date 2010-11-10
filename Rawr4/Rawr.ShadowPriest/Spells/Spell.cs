@@ -25,6 +25,11 @@ namespace Rawr.ShadowPriest.Spells
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
 
+        /// <summary>
+        /// Average Damage per Application
+        /// </summary>
+        protected float averageDamage = 0f;
+
 
 
         /// <summary>
@@ -139,6 +144,12 @@ namespace Rawr.ShadowPriest.Spells
         /// </summary>
         public float ManaCost
         { get { return manaCost; } }
+
+        /// <summary>
+        /// Average Damage
+        /// </summary>
+        public virtual float AverageDamage
+        { get { return averageDamage; } }
 
         /// <summary>
         /// Initialize Spell based on ISpellArgs (Current stats)

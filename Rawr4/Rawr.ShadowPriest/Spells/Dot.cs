@@ -31,10 +31,6 @@ namespace Rawr.ShadowPriest.Spells
         /// How long the dot stays on the target after haste
         /// </summary>
         protected float debuffDuration;
-        /// <summary>
-        /// Average Damage per Application
-        /// </summary>
-        protected float averageDamage;
 
         public Dot()
         {
@@ -61,10 +57,7 @@ namespace Rawr.ShadowPriest.Spells
         public float DebuffDuration
         { get { return debuffDuration; } }
 
-        /// <summary>
-        /// Average Damage
-        /// </summary>
-        public float AverageDamage
+        public override float AverageDamage
         { get { return averageDamage; } }
 
         public override void Initialize(ISpellArgs args)

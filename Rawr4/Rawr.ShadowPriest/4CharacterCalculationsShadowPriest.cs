@@ -9,26 +9,29 @@ namespace Rawr.ShadowPriest
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
-        private Stats basicStats;
+        public Stats BasicStats { get; set; }
+        public Stats CombatStats { get; set; }
+        public int TargetLevel { get; set; }
+
+        public Spell DevouringPlauge;
+        public Spell MindBlast;
+        public Spell MindFlay;
+        public Spell MindSear;
+        public Spell ShadowFiend;
+        public Spell ShadowWordDeath;
+        public Spell ShadowWordPain;
+        public Spell VampiricTouch;
+        public Spell PowerWordShield;
+        public Spell MindSpike;
 
         public Character LocalCharacter { get; set; }
         
-        public Stats BasicStats
-        {
-            get { return basicStats; }
-            set { basicStats = value; }
-        }
 
+        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get
-            {
-                float f = 0f;
-                foreach (float f2 in _subPoints)
-                    f += f2;
-                return f;
-            }
-            set { }
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f };
@@ -69,16 +72,16 @@ namespace Rawr.ShadowPriest
         {
             Dictionary<string, string> dictValues
                 = new Dictionary<string, string>();
-            dictValues.Add("Health", basicStats.Health.ToString());
-            dictValues.Add("Mana", basicStats.Mana.ToString());
-            dictValues.Add("Stamina", basicStats.Stamina.ToString());
-            dictValues.Add("Intellect", basicStats.Intellect.ToString());
-            dictValues.Add("Spirit", basicStats.Spirit.ToString());
-            dictValues.Add("Hit", basicStats.HitRating.ToString());
-            dictValues.Add("Spell Power", basicStats.SpellPower.ToString());
-            dictValues.Add("Crit", basicStats.CritRating.ToString());
-            dictValues.Add("Haste", basicStats.HasteRating.ToString());
-            dictValues.Add("Mastery", basicStats.MasteryRating.ToString());
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
+            dictValues.Add("Hit", BasicStats.HitRating.ToString());
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
+            dictValues.Add("Crit", BasicStats.CritRating.ToString());
+            dictValues.Add("Haste", BasicStats.HasteRating.ToString());
+            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
 
             dictValues.Add("Vampiric Touch", new VampiricTouch().AverageDamage.ToString());
             dictValues.Add("SW Pain", new ShadowWordPain().AverageDamage.ToString());
@@ -96,17 +99,9 @@ namespace Rawr.ShadowPriest
 
             dictValues.Add("Rotation", r.ToString() + "*" + r.ToDetailedString() );
 
-            /*
-                    "Simulation:Rotation",
-                    "Simulation:Castlist",
-                    "Simulation:DPS",
-//                    "Simulation:SustainDPS",
+            //"Simulation:Castlist",
+            //"Simulation:DPS",
 
-                    "Holy:PW Shield",
-                    "Holy:Smite",
-                    "Holy:Holy Fire",
-                    "Holy:Penance"
-             */
             return dictValues;
         }
         #endregion

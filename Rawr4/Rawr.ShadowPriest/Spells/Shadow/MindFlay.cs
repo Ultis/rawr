@@ -13,8 +13,9 @@ namespace Rawr.ShadowPriest.Spells
         /// Prime-Mind Flay
         //TODO: Archangel, Harnessed Shadows (Mastery), Sin and Punishment (cooldown of SF), Pain and suffering (refresh of SW:P)
         /// </summary>
-        public MindFlay() : base()
-        { 
+        public MindFlay()
+            : base()
+        {
         }
 
         protected override void SetBaseValues()
@@ -27,8 +28,7 @@ namespace Rawr.ShadowPriest.Spells
             shortName = "MF";
             name = "Mind Flay";
         }
-
-        public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)
+        public override void Initialize(ISpellArgs args)
         {
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
@@ -40,7 +40,31 @@ namespace Rawr.ShadowPriest.Spells
             if (args.Talents.GlyphofMindFlay)
                 //periodicTick *= 1.1f; //Add 10% periodic damage
 
-            base.Initialize(args);
+                base.Initialize(args);
         }
+
+        #region hide
+        public MindFlay(ISpellArgs args)
+            : this()
+        {
+            Initialize(args);
+        }
+
+        public static MindFlay operator +(MindFlay A, MindFlay B)
+        {
+            MindFlay C = (MindFlay)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static MindFlay operator *(MindFlay A, float b)
+        {
+            MindFlay C = (MindFlay)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+        #endregion
+
     }
 }
+

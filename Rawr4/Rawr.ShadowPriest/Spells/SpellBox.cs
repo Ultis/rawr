@@ -39,6 +39,22 @@ namespace Rawr.ShadowPriest.Spells
             spells[(int)SpellIndex.MindSpike] = new MindSpike();
 
         }
+        public SpellBox(ISpellArgs args)
+        {
+            spells = new Spell[10];
+            spells[(int)SpellIndex.DevouringPlauge] = new DevouringPlauge(args);
+            spells[(int)SpellIndex.MindBlast] = new MindBlast(args);
+            spells[(int)SpellIndex.MindFlay] = new MindFlay(args);
+            spells[(int)SpellIndex.MindSear] = new MindSear(args);
+            spells[(int)SpellIndex.ShadowFiend] = new ShadowFiend(args);
+            spells[(int)SpellIndex.ShadowWordDeath] = new ShadowWordDeath(args);
+            spells[(int)SpellIndex.ShadowWordPain] = new ShadowWordPain(args);
+            spells[(int)SpellIndex.VampiricTouch] = new VampiricTouch(args);
+            spells[(int)SpellIndex.PowerWordShield] = new PowerWordShield(args);
+            spells[(int)SpellIndex.MindSpike] = new MindSpike(args);
+
+        }
+
 
         public void Update(ISpellArgs args)
         {

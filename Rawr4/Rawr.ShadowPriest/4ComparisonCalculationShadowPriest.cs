@@ -6,15 +6,6 @@ namespace Rawr.ShadowPriest
 {
     public class ComparisonCalculationShadowPriest : ComparisonCalculationBase
     {
-        public ComparisonCalculationShadowPriest()
-            : base()
-        { }
-
-        public ComparisonCalculationShadowPriest(string name)
-            : base()
-        {
-            _name = name;
-        }
         private string _name = string.Empty;
         public override string Name
         {
@@ -28,7 +19,6 @@ namespace Rawr.ShadowPriest
             get { return _desc; }
             set { _desc = value; }
         }
-
         public override float OverallPoints
         {
             get
@@ -48,25 +38,6 @@ namespace Rawr.ShadowPriest
             }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
-        public override float[] SubPoints
-        {
-            get
-            {
-                for (int x = 0; x < _subPoints.Length; x++)
-                    if (_subPoints[x] < 0f)
-                        _subPoints[x] = 0f;
-                return _subPoints;
-            }
-            set
-            {
-                for (int x = 0; x < _subPoints.Length; x++)
-                    if (value[x] < 0f)
-                        value[x] = 0f;
-                _subPoints = value;
-            }
-        }
-
         public float DpsPoints
         {
             get { return _subPoints[0]; }
@@ -77,6 +48,13 @@ namespace Rawr.ShadowPriest
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = (value < 0f) ? 0f : value; }
+        }
+
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
         }
 
         private Item _item = null;
@@ -99,6 +77,11 @@ namespace Rawr.ShadowPriest
             get { return _equipped; }
             set { _equipped = value; }
         }
+
         public override bool PartEquipped { get; set; }
+        public override string ToString()
+        {
+            return string.Format("{0}: ({1})", Name, Math.Round(OverallPoints));
+        }
     }
 }

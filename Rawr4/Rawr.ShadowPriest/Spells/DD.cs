@@ -17,12 +17,7 @@ namespace Rawr.ShadowPriest.Spells
         {
             
         }
-
-        /// <summary>
-        /// Average Damage
-        /// </summary>
-        public float AverageDamage
-        { get { return dd; } }
-
+        public override float AverageDamage
+        { get { return averageDamage; } }
     }
 }

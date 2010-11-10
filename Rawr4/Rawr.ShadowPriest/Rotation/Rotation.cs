@@ -333,36 +333,13 @@ namespace Rawr.ShadowPriest
             lag = 0f;
             spelldps = new SerializableDictionary<Type, float>(); //dps broken up per spell type
             spelltype = new SerializableDictionary<Type, Spell>(); //all used spells by type
-            Dictionary<Type, int> count = new Dictionary<Type, int>(); //counting spells
             for (int i = -2; i < Casts.Count; i++)
             {
                 Spell s = getCast(i);
                 if (i >= 0)
-                {
-                    float thisdps = 0f;
-                    mps += s.ManaCost;
-
-                    //TODO: dps
-                    /*
-                    if (s.Duration > 0) //dot
-                    {
-                        int j = getSpellNumber(i);
-                        float durationActive = getNextCastTime(j) - (GetTime(j) + s.CastTimeWithoutGCD);
-                        thisdps = s.HitChance * (s.AvgDamage * (1 + .05f * Talents.ElementalOath * ccc) + s.PeriodicDamage(durationActive)); //bad for FS ticks.
-                    }
-                    else
-                        thisdps = s.HitChance * s.TotalDamage * (1 + .05f * Talents.ElementalOath * ccc); //bad for FS ticks.
-                    */
-
-                    dps += thisdps;
-                    spelldps[s.GetType()] += thisdps;
-                    lag += s.Latency;
-                    count[s.GetType()]++;
-                }
-            }
-            foreach (Type t in count.Keys)
-            {
-                spelldps[t] /= GetTime();
+                dps += s.AverageDamage;
+                mps += s.ManaCost;
+                lag += s.Latency;
             }
             mps /= Duration; //divide by rotation time
             dps /= Duration;

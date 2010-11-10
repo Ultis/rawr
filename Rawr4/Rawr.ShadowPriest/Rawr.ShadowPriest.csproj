@@ -92,6 +92,7 @@
     <Compile Include="Rotation\RotationOptions.cs" />
     <Compile Include="Spells\DD.cs" />
     <Compile Include="Spells\Wait.cs" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Old\Solver.cs" />
     <Compile Include="Solver\SolverBase.cs" />
     <Compile Include="Solver\SolverShadow.cs" />
@@ -140,7 +141,6 @@
     <Compile Include="Spells\Shadow\ShadowWordPain.cs" />
     <Compile Include="Spells\Spell.cs" />
     <Compile Include="Spells\Shadow\VampiricTouch.cs" />
-    <None Include="4ClassDiagramShadowPriest.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

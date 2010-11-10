@@ -264,6 +264,8 @@ namespace Rawr.ShadowPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.LocalCharacter = character;
 
+            Rawr.ShadowPriest.Solver.solve(calculatedStats, calcOpts, bossOpts);
+
             return calculatedStats;
         }
         #endregion
