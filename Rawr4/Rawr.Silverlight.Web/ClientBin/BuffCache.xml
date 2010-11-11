@@ -12272,9 +12272,7 @@
   <Buff>
     <Name>Redemption Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHammerOfTheRighteousMultiplier>0.1</BonusHammerOfTheRighteousMultiplier>
-    </Stats>
+    <Stats />
     <SetName>Redemption Plate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12484,21 +12482,7 @@
   <Buff>
     <Name>Aegis Plate 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>ShieldofRighteousness</Trigger>
-          <Stats>
-            <ShieldOfRighteousnessBlockValue>225</ShieldOfRighteousnessBlockValue>
-          </Stats>
-          <Duration>6</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
+    <Stats />
     <SetName>Aegis Plate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12648,9 +12632,7 @@
   <Buff>
     <Name>Turalyon's Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHammerOfTheRighteousMultiplier>0.05</BonusHammerOfTheRighteousMultiplier>
-    </Stats>
+    <Stats />
     <SetName>Turalyon's Plate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12768,9 +12750,7 @@
   <Buff>
     <Name>Lightsworn Garb 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <HolyLightCastTimeReductionFromHolyShock>0.3</HolyLightCastTimeReductionFromHolyShock>
-    </Stats>
+    <Stats />
     <SetName>Lightsworn Garb</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12798,9 +12778,7 @@
   <Buff>
     <Name>Lightsworn Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHammerOfTheRighteousMultiplier>0.2</BonusHammerOfTheRighteousMultiplier>
-    </Stats>
+    <Stats />
     <SetName>Lightsworn Plate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />

@@ -1419,11 +1419,11 @@ These numbers to do not include racial bonuses.",
             new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
         };
 
-        private static SpecialEffect[] _SE_DeathWish = {
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),
+        private static SpecialEffect[][] _SE_DeathWish = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),},
         };
 
         private static SpecialEffect[] _SE_Enrage = {
@@ -1533,7 +1533,7 @@ These numbers to do not include racial bonuses.",
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      ) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage]); }
+            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      ) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish?1:0]); }
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
             if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
@@ -2085,7 +2085,7 @@ These numbers to do not include racial bonuses.",
                             if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
                         }
                     }
-                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.MHAtkTable.Crit, numFlurryHits * mhPerc * charStruct.Rot.WhiteAtks.MhActivates / charStruct.Rot.WhiteAtks.MhActivatesNoHS);
+                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.MHAtkTable.Crit, numFlurryHits * mhPerc);
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
                     flurryUptime = 1f - flurryUptime;
                     statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste) * (1f + flurryHaste * flurryUptime) - 1f;
@@ -2115,7 +2115,7 @@ These numbers to do not include racial bonuses.",
 
                 return statsProcs;
             } catch (Exception ex) {
-                ErrorBox box = new ErrorBox("Error in creating SpecialEffects Stats", ex.Message, "GetSpecialEffectsStats()");
+                ErrorBox box = new ErrorBox("Error in creating SpecialEffects Stats", ex.Message, ex.InnerException.Message, "GetSpecialEffectsStats()");
                 box.Show();
                 return new Stats();
             }

@@ -13,6 +13,7 @@ namespace Rawr.Base
         {
             Title = "There was an Error";
             Message = "No Message";
+            InnerMessage = "No Inner Message";
             Function = "No Function Name";
             StackTrace = "No Stack Trace";
             Info = "No Additional Info";
@@ -22,13 +23,15 @@ namespace Rawr.Base
         /// </summary>
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="message">The Error Message itself</param>
+        /// <param name="innermessage">The Error Message of the inner message</param>
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
         /// <param name="stacktrace">The Stack Trace leading to this point</param>
-        public ErrorBox(string title, string message, string function, string info, string stacktrace)
+        public ErrorBox(string title, string message, string innermessage, string function, string info, string stacktrace)
         {
             Title = title;
             Message = message;
+            InnerMessage = innermessage;
             Function = function;
             StackTrace = stacktrace;
             Info = info;
@@ -39,12 +42,14 @@ namespace Rawr.Base
         /// </summary>
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="message">The Error Message itself</param>
+        /// <param name="innermessage">The Error Message of the inner message</param>
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
-        public ErrorBox(string title, string message, string function, string info)
+        public ErrorBox(string title, string message, string innermessage, string function, string info)
         {
             Title = title;
             Message = message;
+            InnerMessage = innermessage;
             Function = function;
             StackTrace = "No Stack Trace";
             Info = info;
@@ -55,11 +60,13 @@ namespace Rawr.Base
         /// </summary>
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="message">The Error Message itself</param>
+        /// <param name="innermessage">The Error Message of the inner message</param>
         /// <param name="function">The Function throwing this Error</param>
-        public ErrorBox(string title, string message, string function)
+        public ErrorBox(string title, string message, string innermessage, string function)
         {
             Title = title;
             Message = message;
+            InnerMessage = innermessage;
             Function = function;
             StackTrace = "No Stack Trace";
             Info = "No Additional Info";
@@ -67,6 +74,7 @@ namespace Rawr.Base
         }
         public string Title;
         public string Message;
+        public string InnerMessage;
         public string Function;
         public string Info;
         public string StackTrace;
@@ -76,6 +84,8 @@ namespace Rawr.Base
             retVal += Function;
             retVal += "\r\n\r\n";
             retVal += "Error Message: " + Message;
+            retVal += "\r\n";
+            retVal += "Inner Error Message: " + InnerMessage;
             retVal += "\r\n\r\n";
             retVal += "Info: " + Info;
             retVal += "\r\n\r\n";
