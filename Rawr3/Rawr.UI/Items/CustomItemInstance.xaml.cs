@@ -213,27 +213,27 @@ namespace Rawr.UI
             switch (slot)
             {
                 case ItemSlot.Blue:
-                    //button.Background = Color.FromKnownColor(KnownColor.Blue);
+                    button.Background = new SolidColorBrush(Colors.Blue);
                     button.Slot = CharacterSlot.Gems;
                     break;
                 case ItemSlot.Red:
-                    //button.Background = Color.FromKnownColor(KnownColor.Red);
+                    button.Background = new SolidColorBrush(Colors.Red);
                     button.Slot = CharacterSlot.Gems;
                     break;
                 case ItemSlot.Yellow:
-                    //button.Background = Color.FromKnownColor(KnownColor.Yellow);
+                    button.Background = new SolidColorBrush(Colors.Yellow);
                     button.Slot = CharacterSlot.Gems;
                     break;
                 case ItemSlot.Prismatic:
-                    //button.Background = Color.FromKnownColor(KnownColor.Silver);
+                    button.Background = new SolidColorBrush(Colors.LightGray);
                     button.Slot = CharacterSlot.Gems;
                     break;
                 case ItemSlot.Meta:
-                    //button.Background = Color.FromKnownColor(KnownColor.Gray);
+                    button.Background = new SolidColorBrush(Colors.Gray);
                     button.Slot = CharacterSlot.Metas;
                     break;
                 default:
-                    //button.Background = SystemColors.ControlColor;
+                    button.Background = new SolidColorBrush(SystemColors.ControlColor);
                     button.Slot = CharacterSlot.Gems;
                     break;
             }

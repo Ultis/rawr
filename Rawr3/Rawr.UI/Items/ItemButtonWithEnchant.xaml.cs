@@ -104,6 +104,8 @@ namespace Rawr.UI
                     ComparisonItemListGem1.Slot = Item.Item.SocketColor1 == ItemSlot.Meta ? CharacterSlot.Metas : CharacterSlot.Gems;
                     ComparisonItemListGem2.Slot = CharacterSlot.Gems;
                     ComparisonItemListGem3.Slot = CharacterSlot.Gems;
+                    // Update the socket colors
+                    SetSocketColors();
                     // Set the Gem lists' selected items to the core item's gems
                     ComparisonItemListGem1.SelectedItem = Item.Gem1;
                     ComparisonItemListGem2.SelectedItem = Item.Gem2;
@@ -118,6 +120,24 @@ namespace Rawr.UI
                     ComparisonItemListGem3.SelectedItemsGemChanged += new EventHandler(ComparisonItemListGem3_SelectedItemsGemChanged);
                 }
             }
+        }
+
+        private void SetSocketColor(Button button, ItemSlot slot) {
+            switch (slot)
+            {
+                case ItemSlot.Blue: button.Background = new SolidColorBrush(Colors.Blue); break;
+                case ItemSlot.Red: button.Background = new SolidColorBrush(Colors.Red); break;
+                case ItemSlot.Yellow: button.Background = new SolidColorBrush(Colors.Yellow); break;
+                case ItemSlot.Prismatic: button.Background = new SolidColorBrush(Colors.LightGray); break;
+                case ItemSlot.Meta: button.Background = new SolidColorBrush(Colors.DarkGray); break;
+                default: button.Background = new SolidColorBrush(SystemColors.ControlColor); break;
+            }
+        }
+        private void SetSocketColors()
+        {
+            SetSocketColor(GemButton1, Item.Item.SocketColor1);
+            SetSocketColor(GemButton2, Item.Item.SocketColor2);
+            SetSocketColor(GemButton3, Item.Item.SocketColor3);
         }
 
         public ItemButtonWithEnchant()
@@ -325,6 +345,11 @@ namespace Rawr.UI
             }
             set {
                 this.SetValue(BSSocketProperty, value);
+                // Update Character's slot check, if need be
+                if (Slot == CharacterSlot.Wrist && Character.WristBlacksmithingSocketEnabled != value) { Character.WristBlacksmithingSocketEnabled = value; }
+                else if (Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled != value) { Character.HandsBlacksmithingSocketEnabled = value; }
+                else if (Slot == CharacterSlot.Waist && Character.WaistBlacksmithingSocketEnabled != value) { Character.WaistBlacksmithingSocketEnabled = value; }
+                // Update the Checkbox, if need be
                 if (CK_BSSocket.IsChecked != value) { CK_BSSocket.IsChecked = value; }
             }
         }
