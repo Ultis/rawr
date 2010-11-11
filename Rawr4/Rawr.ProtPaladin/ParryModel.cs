@@ -44,7 +44,7 @@ namespace Rawr.ProtPaladin {
             Stats       = stats;
             CalcOpts    = calcOpts;
             AttackTable = new AttackTable(character, stats, calcOpts, bossOpts);
-            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, true);
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
             Calculate();
         }
     }

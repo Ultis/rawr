@@ -42,10 +42,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="Overall Scale: *" ToolTipService.ToolTip="Fight Healing is your overall HPS.  Burst Healing is your best possible Flash of Light HPS.  This scale weighs the two appropriately when calculating your overall score." />
                 <Slider Margin="2" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BurstScale}" />
@@ -64,22 +60,14 @@
                 <Slider Margin="2" Grid.Row="7" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=IoLHolyLight}" IsEnabled="{Binding Mode=TwoWay, Path=InfusionOfLight}" />
                 <Button Margin="2 2 2 10" x:Name="btnResetIoLHolyLight" Grid.Row="8" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset the IoL Holy Light Scale to 90% Holy Light, 10% Flash of Light." Click="btnResetIoLHolyLight_Click" />
                 <TextBlock Margin="2 2 2 10" Grid.Row="8" Grid.Column="1" Text="{Binding Mode=OneWay, Path=IoLHolyLightText}" />
-                <TextBlock Grid.Row="9" Grid.Column="0" Margin="2" Text="Sacred Shield: *" ToolTipService.ToolTip="The percent of time Sacred Shield will be active on your main healing target." />
-                <Slider Margin="2" Grid.Row="9" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=SSUptime}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetSSUptime" Grid.Row="10" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset sacred shield uptime to 100%." Click="btnResetSSUptime_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="10" Grid.Column="1" Text="{Binding Mode=OneWay, Path=SSUptime, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-                <TextBlock Grid.Row="11" Grid.Column="0" Margin="2" Text="FoL on SS Target: *" ToolTipService.ToolTip="The percent of Flash of Light that is cast on a target with Sacred Shield." />
-                <Slider Margin="2" Grid.Row="11" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=FoLOnTank}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetFoLOnTank" Grid.Row="12" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Flash of Light on Sacred Shield target to 25%." Click="btnResetFoLOnTank_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="12" Grid.Column="1" Text="{Binding Mode=OneWay, Path=FoLOnTank, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-                <TextBlock Grid.Row="13" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
-                <Slider Margin="2" Grid.Row="13" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetReplenishment" Grid.Row="14" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Replenishment Uptime to 90%." Click="btnResetReplenishment_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="14" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Replenishment, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
-                <TextBlock Grid.Row="15" Grid.Column="0" Margin="2" Text="Beacon of Light: *" ToolTipService.ToolTip="The percent of time Beacon of Light to be active an a target." />
-                <Slider Margin="2" Grid.Row="15" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BoLUp}" />
-                <Button Margin="2 2 2 10" x:Name="btnResetBoLUp" Grid.Row="16" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Beacon of Light Uptime to 100%." Click="btnResetBoLUp_Click" />
-                <TextBlock Margin="2 2 2 10" Grid.Row="16" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BoLUp, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="9" Grid.Column="0" Margin="2" Text="Replenishment: *" ToolTipService.ToolTip="The percent of time you expect Replenishment to be active on you." />
+                <Slider Margin="2" Grid.Row="9" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=Replenishment}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetReplenishment" Grid.Row="10" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Replenishment Uptime to 90%." Click="btnResetReplenishment_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="10" Grid.Column="1" Text="{Binding Mode=OneWay, Path=Replenishment, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                <TextBlock Grid.Row="11" Grid.Column="0" Margin="2" Text="Beacon of Light: *" ToolTipService.ToolTip="The percent of time Beacon of Light to be active an a target." />
+                <Slider Margin="2" Grid.Row="11" Grid.Column="1" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=BoLUp}" />
+                <Button Margin="2 2 2 10" x:Name="btnResetBoLUp" Grid.Row="12" Grid.Column="0" Content="Reset" ToolTipService.ToolTip="Click to reset Beacon of Light Uptime to 100%." Click="btnResetBoLUp_Click" />
+                <TextBlock Margin="2 2 2 10" Grid.Row="12" Grid.Column="1" Text="{Binding Mode=OneWay, Path=BoLUp, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="1">

@@ -63,9 +63,6 @@ namespace Rawr.Healadin
             heal *= 1f + .01f * Talents.Divinity;
             heal *= AbilityHealedMultiplier();
             heal *= (1f + Stats.BonusHealingDoneMultiplier);
-            if (DivineIllumination) {
-                heal *= (1f + Stats.DivineIlluminationHealingMultiplier);
-            }
 
             // Walk in the Light
             heal *= 0.15f; // TODO: Figure out a way to detect the character's main spec
@@ -132,15 +129,10 @@ namespace Rawr.Healadin
             return Stats.FlashOfLightCrit;
         }
 
-        protected override float AbilityHealedMultiplier()
-        {
-            return 1f + Stats.FlashOfLightMultiplier;
-        }
-
         protected override float AbilityHealed()
         {
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct
-            return (4830f + 5418f) / 2f + (Stats.SpellPower + Stats.FlashOfLightSpellPower) * fol_coef;
+            return (4830f + 5418f) / 2f + (Stats.SpellPower * fol_coef);
         }
     }
 
@@ -155,20 +147,14 @@ namespace Rawr.Healadin
 
         public float CastTimeReduction { get; set; }
 
-        protected override float AbilityCostReduction()
-        {
-            return Stats.HolyLightManaCostReduction;
-        }
-
-        protected override float AbilityCostMultiplier()
-        {
-            return 1f - Stats.HolyLightPercentManaReduction;
-        }
-
         protected override float AbilityHealed()
         {
             const float hl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct.  Since Holy Light is now a 3s cast time, I bumped the co-effecient up to 3 from 2.5.
-            return (2911f + 3243f) / 2f + (Stats.HolyLightSpellPower + Stats.SpellPower) * hl_coef;
+            return (2911f + 3243f) / 2f + (Stats.SpellPower * hl_coef);
+        }
+
+        protected override float AbilityCritChance() {
+            return Stats.HolyLightCrit;
         }
     }
 
@@ -229,7 +215,7 @@ namespace Rawr.Healadin
 
         protected override float AbilityCritMultiplier()
         {
-            return 1f + Stats.HolyShockHoTOnCrit + (Talents.GlyphOfHolyShock ? 0.05f : 0f) + (Talents.InfusionOfLight * 0.05f);
+            return 1f + (Talents.GlyphOfHolyShock ? 0.05f : 0f) + (Talents.InfusionOfLight * 0.05f);
         }
 
     }
@@ -291,58 +277,6 @@ namespace Rawr.Healadin
 
     }
 
-    public class SacredShield : Spell
-    {
-        public SacredShield(Rotation rotation)
-            : base(rotation)
-        {
-            Duration = 30f + Talents.DivineGuardian * 15f;
-            Uptime = Rotation.FightLength * Rotation.CalcOpts.SSUptime;
-            BaseCost = 527f;         
-        }
-
-        public float ICD()
-        {
-            return 6f - Stats.SacredShieldICDReduction;
-        }
-
-        public float ProcAbsorb()
-        {
-            return (500f + Stats.SpellPower * (Stats.SacredShieldICDReduction > 0 ? 0.85f : 0.75f) ) * (1f + Talents.DivineGuardian * .1f);
-        }
-
-        public float TotalAborb()
-        {
-            return Uptime / ICD() * ProcAbsorb();
-        }
-
-        public float CastAborb()
-        {
-            return Duration / ICD() * ProcAbsorb();
-        }
-
-        public float HPM()
-        {
-            return ProcAbsorb() * Duration / ICD() / Cost(); 
-        }
-
-        public float HPS()
-        {
-            return TotalAborb() / Time();
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Proc Absorb: {0:N0}\nCast Absorb: {1:N0}\nAverage Cost: {2:N0}\nHPS: {3:N0}\nHPM: {4:N2}\n",
-                ProcAbsorb(),
-                CastAborb(),
-                Cost(),
-                HPS(),
-                HPM());
-        }
-
-    }
-
     public class BeaconOfLight : Spell
     {
         public BeaconOfLight(Rotation rotation)
@@ -365,7 +299,7 @@ namespace Rawr.Healadin
         public JudgementsOfThePure(Rotation rotation, bool MaintainDebuff)
             : base(rotation)
         {
-            Duration = MaintainDebuff ? (20f + Stats.BonusJudgementDuration) : 60f;
+            Duration = MaintainDebuff ? 20f : 60f;
             Uptime = Rotation.CalcOpts.JotP ? Rotation.FightLength : 0f;
             BaseCost = 219f;
         }

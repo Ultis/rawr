@@ -122,7 +122,7 @@ namespace Rawr.ProtPaladin
             CalcOpts         = calcOpts;
             BossOpts         = bossOpts;
             Stats            = stats;
-            DefendTable      = new DefendTable(character, stats, calcOpts, bossOpts, true);
+            DefendTable      = new DefendTable(character, stats, calcOpts, bossOpts);
             ParryModel       = new ParryModel(character, stats, calcOpts, bossOpts);
             _attackModelMode = attackModelMode;
 

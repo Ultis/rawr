@@ -78,7 +78,7 @@ namespace Rawr.ProtPaladin
             */
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts, bool useHolyShield)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtPaladin calcOpts, BossOptions bossOpts)
         {
             Character   = character;
             Stats       = stats;
@@ -86,7 +86,7 @@ namespace Rawr.ProtPaladin
             BossOpts    = bossOpts;
 
             ParryModel = new ParryModel(character, stats, calcOpts, bossOpts);
-            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts, useHolyShield);
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
             Calculate();
         }
     }

@@ -235,7 +235,6 @@ focus on Survival Points.",
                     "Avoidance Points",
                     "% Avoid + Block Attacks",
                     "% Chance to be Crit",
-                    "% Chance to be Crit Without Holy Shield",
                     "Block Value",
                     "% Block Chance",
                     "Burst Time", 
@@ -245,7 +244,6 @@ focus on Survival Points.",
                     "Frost Survival",
                     "Shadow Survival",
                     "Arcane Survival",
-                    // "% Hit Chance",
                     "% Spell Hit Chance",
                     "% Chance to be Avoided",
                     "% Chance to be Missed",
@@ -314,8 +312,7 @@ focus on Survival Points.",
             if (calcOpts.SealChoice == "Seal of Righteousness")
                 amm = AttackModelMode.BasicSoR;
 
-            DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts, true);
-            DefendModel dmWithoutHolyShield = new DefendModel(character, stats, calcOpts, bossOpts, false);
+            DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
             AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
 
             calculatedStats.BasicStats = stats;
@@ -339,15 +336,12 @@ focus on Survival Points.",
 
             calculatedStats.Defense = stats.Defense + (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
             calculatedStats.DefenseRating = stats.DefenseRating;
-            calculatedStats.StaticBlockValue = stats.BlockValue;
-            calculatedStats.ActiveBlockValue = stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue;
+            calculatedStats.BlockValue = stats.BlockValue;
 
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
             calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calculatedStats.TargetLevel);
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
-            calculatedStats.CritVulnerabilityWithoutHolyShield = dmWithoutHolyShield.DefendTable.Critical;
-            calculatedStats.UsingHolyShield = calcOpts.UseHolyShield;
 
             calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calculatedStats.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
@@ -596,21 +590,6 @@ focus on Survival Points.",
             // Calculate Procs and Special Effects
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts, bossOpts));
 
-            if ((calcOpts.UseHolyShield) && character.OffHand != null && (character.OffHand.Type == ItemType.Shield))
-            {
-                statsTotal.HolyShieldBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
-                statsTotal.HolyShieldBlockValue = (float)Math.Floor(statsTotal.HolyShieldBlockValue);
-                statsTotal.JudgementBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
-                statsTotal.JudgementBlockValue = (float)Math.Floor(statsTotal.JudgementBlockValue);
-                statsTotal.ShieldOfRighteousnessBlockValue *= (1f + statsTotal.BonusBlockValueMultiplier);
-                statsTotal.ShieldOfRighteousnessBlockValue = (float)Math.Floor(statsTotal.ShieldOfRighteousnessBlockValue);
-            }
-            else {
-                statsTotal.HolyShieldBlockValue = 0.0f;
-                statsTotal.ShieldOfRighteousnessBlockValue = 0.0f;
-                statsTotal.JudgementBlockValue = 0.0f;
-            }
-
             return statsTotal;
         }
 
@@ -727,18 +706,6 @@ focus on Survival Points.",
                             break;
                         case Trigger.JudgementHit:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalJudgement));
-                            break;
-                        case Trigger.ShieldofRighteousness:
-                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalShoR));
-                            break;
-                        case Trigger.HammeroftheRighteous:
-                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalHotR));
-                            break;
-                        case Trigger.HolyShield:
-                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalHolyShield));
-                            break;
-                        case Trigger.DivinePlea:
-                            statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDivinePlea));
                             break;
                         case Trigger.SpellCast:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalSpellCast));
@@ -1184,11 +1151,10 @@ focus on Survival Points.",
                     trigger == Trigger.MeleeHit              || trigger == Trigger.PhysicalCrit         ||
                     trigger == Trigger.PhysicalHit           || trigger == Trigger.DoTTick              ||
                     trigger == Trigger.DamageDone            || trigger == Trigger.DamageOrHealingDone  ||
-                    trigger == Trigger.JudgementHit          || trigger == Trigger.HolyShield           ||
-                    trigger == Trigger.ShieldofRighteousness || trigger == Trigger.HammeroftheRighteous ||
+                    trigger == Trigger.JudgementHit          ||
                     trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
                     trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
-                    trigger == Trigger.DivinePlea            || trigger == Trigger.DamageTakenPhysical
+                    trigger == Trigger.DamageTakenPhysical
             );
         }
 
@@ -1250,16 +1216,6 @@ focus on Survival Points.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
-
-                BonusShieldOfRighteousnessDamage = stats.BonusShieldOfRighteousnessDamage,
-                HolyShieldBlockValue = stats.HolyShieldBlockValue,
-                JudgementBlockValue = stats.JudgementBlockValue,
-                BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
-                ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
-                BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
-                BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
-                BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
-                ConsecrationSpellPower = stats.ConsecrationSpellPower,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (IsTriggerRelevant(effect.Trigger) && HasRelevantStats(effect.Stats)) {
@@ -1321,15 +1277,6 @@ focus on Survival Points.",
                 stats.DeathbringerProc +
 
                 // Special Stats
-                stats.BonusShieldOfRighteousnessDamage +
-                stats.HolyShieldBlockValue +
-                stats.JudgementBlockValue +
-                stats.BonusHammerOfTheRighteousMultiplier +
-                stats.ShieldOfRighteousnessBlockValue +
-                stats.BonusSealOfCorruptionDamageMultiplier +
-                stats.BonusSealOfRighteousnessDamageMultiplier +
-                stats.BonusSealOfVengeanceDamageMultiplier +
-                stats.ConsecrationSpellPower +
                 stats.HighestStat +
                 stats.Paragon +
                 stats.ArcaneDamage +

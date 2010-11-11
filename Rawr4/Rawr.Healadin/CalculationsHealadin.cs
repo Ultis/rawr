@@ -231,14 +231,12 @@ namespace Rawr.Healadin
                     "Rotation Info:Holy Light Time",
                     "Rotation Info:Flash of Light Time",
                     "Rotation Info:Holy Shock Time",
-                    "Rotation Info:Sacred Shield Time",
                     "Rotation Info:Beacon of Light Time",
                     "Rotation Info:Judgement Time",
 
                     "Healing Breakdown:Holy Light Healed",
                     "Healing Breakdown:Flash of Light Healed",
                     "Healing Breakdown:Holy Shock Healed",
-                    "Healing Breakdown:Sacred Shield Healed",
                     "Healing Breakdown:Beacon of Light Healed",
                     "Healing Breakdown:Glyph of HL Healed",
                     "Healing Breakdown:Other Healed*From trinket procs",
@@ -246,7 +244,6 @@ namespace Rawr.Healadin
                     "Spell Information:Holy Light",
                     "Spell Information:Flash of Light",
                     "Spell Information:Holy Shock",
-                    "Spell Information:Sacred Shield",
 
                 };
                 return _characterDisplayCalculationLabels;
@@ -362,8 +359,6 @@ namespace Rawr.Healadin
                         trigger = 1.5f / calcOpts.Activity / (1f + stats.SpellHaste);
                         if (effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.SpellCrit)
                             trigger *= stats.SpellCrit;
-                        else if (effect.Trigger == Trigger.HolyShockCast)
-                            trigger = 6f / calcOpts.HolyShock;
                     }
                     else
                     {
@@ -375,8 +370,6 @@ namespace Rawr.Healadin
                             trigger = 1f / Rotation.GetSpellCastsPerSec(calc);
                         else if (effect.Trigger == Trigger.DamageOrHealingDone)
                             trigger = 1f / Rotation.GetHealingCastsPerSec(calc);
-                        else if (effect.Trigger == Trigger.HolyShockCast)
-                            trigger = 6f / calcOpts.HolyShock;
                         else if (effect.Trigger == Trigger.Use)
                         {
                             trigger = 0f;
@@ -396,7 +389,6 @@ namespace Rawr.Healadin
                                                             * childEffect.GetAverageStackSize(childTrigger, 1f, 1.5f, effect.Duration));
                             }
                         }
-                        else if (effect.Trigger == Trigger.HolyLightCast) trigger = 1f / Rotation.GetHolyLightCastsPerSec(calc);
                         else continue;
                     }
                     statsAverage.Accumulate(effect.GetAverageStats(trigger, 1f, 1.5f, fightLength));
@@ -486,16 +478,14 @@ namespace Rawr.Healadin
                 ComparisonCalculationHealadin HS = new ComparisonCalculationHealadin("Holy Shock");
                 ComparisonCalculationHealadin JotP = new ComparisonCalculationHealadin("Judgements and Seals");
                 ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
-                ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
 
                 FoL.OverallPoints = FoL.ThroughputPoints = calc.UsageFoL;
                 HL.OverallPoints = HL.ThroughputPoints = calc.UsageHL;
                 HS.OverallPoints = HS.ThroughputPoints = calc.UsageHS;
                 JotP.OverallPoints = JotP.ThroughputPoints = calc.UsageJotP;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.UsageBoL;
-                SS.OverallPoints = SS.ThroughputPoints = calc.UsageSS;
 
-                return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
+                return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
             }
             else if (chartName == "Healing Breakdown")
             {
@@ -507,16 +497,14 @@ namespace Rawr.Healadin
                 ComparisonCalculationHealadin HS = new ComparisonCalculationHealadin("Holy Shock");
                 ComparisonCalculationHealadin GHL = new ComparisonCalculationHealadin("Glyph of Holy Light");
                 ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
-                ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
 
                 FoL.OverallPoints = FoL.ThroughputPoints = calc.HealedFoL / calc.FightLength;
                 HL.OverallPoints = HL.ThroughputPoints = calc.HealedHL / calc.FightLength;
                 HS.OverallPoints = HS.ThroughputPoints = calc.HealedHS / calc.FightLength;
                 GHL.OverallPoints = GHL.ThroughputPoints = calc.HealedGHL / calc.FightLength;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.HealedBoL / calc.FightLength;
-                SS.OverallPoints = SS.ThroughputPoints = calc.HealedSS / calc.FightLength;
 
-                return new ComparisonCalculationBase[] { FoL, HL, HS, GHL, BoL, SS };
+                return new ComparisonCalculationBase[] { FoL, HL, HS, GHL, BoL };
             }
             else if (chartName == "Rotation Breakdown")
             {
@@ -528,16 +516,14 @@ namespace Rawr.Healadin
                 ComparisonCalculationHealadin HS = new ComparisonCalculationHealadin("Holy Shock");
                 ComparisonCalculationHealadin JotP = new ComparisonCalculationHealadin("Judgements and Seals");
                 ComparisonCalculationHealadin BoL = new ComparisonCalculationHealadin("Beacon of Light");
-                ComparisonCalculationHealadin SS = new ComparisonCalculationHealadin("Sacred Shield");
 
                 FoL.OverallPoints = FoL.ThroughputPoints = calc.RotationFoL;
                 HL.OverallPoints = HL.ThroughputPoints = calc.RotationHL;
                 HS.OverallPoints = HS.ThroughputPoints = calc.RotationHS;
                 JotP.OverallPoints = JotP.ThroughputPoints = calc.RotationJotP;
                 BoL.OverallPoints = BoL.ThroughputPoints = calc.RotationBoL;
-                SS.OverallPoints = SS.ThroughputPoints = calc.RotationSS;
 
-                return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL, SS };
+                return new ComparisonCalculationBase[] { FoL, HL, HS, JotP, BoL };
             }
             return new ComparisonCalculationBase[] {};
         }
@@ -622,11 +608,12 @@ namespace Rawr.Healadin
         private bool IsTriggerRelevant(Trigger trigger)
         {
             return (
-                trigger == Trigger.Use                 || trigger == Trigger.HolyLightCast     ||
+                trigger == Trigger.Use                 ||
                 trigger == Trigger.SpellCast           || trigger == Trigger.SpellCrit         ||
                 trigger == Trigger.SpellHit            || trigger == Trigger.HealingSpellCast  ||
                 trigger == Trigger.HealingSpellCrit    || trigger == Trigger.HealingSpellHit   ||
-                trigger == Trigger.DamageOrHealingDone || trigger == Trigger.HolyShockCast
+                trigger == Trigger.DamageOrHealingDone ||
+                trigger == Trigger.HolyRadianceActive
             );
         }
 
@@ -655,19 +642,9 @@ namespace Rawr.Healadin
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
                 FlashOfLightCrit = stats.FlashOfLightCrit,
-                FlashOfLightSpellPower = stats.FlashOfLightSpellPower,
-                FlashOfLightMultiplier = stats.FlashOfLightMultiplier,
-                HolyShockCrit = stats.HolyShockCrit,
-                HolyLightSpellPower = stats.HolyLightSpellPower,
                 HolyLightCrit = stats.HolyLightCrit,
-                HolyLightManaCostReduction = stats.HolyLightManaCostReduction,
-                HolyLightPercentManaReduction = stats.HolyLightPercentManaReduction,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
-                BonusJudgementDuration = stats.BonusJudgementDuration,
-                FlashOfLightHoTMultiplier = stats.FlashOfLightHoTMultiplier,
-                DivineIlluminationHealingMultiplier = stats.DivineIlluminationHealingMultiplier,
-                HolyLightCastTimeReductionFromHolyShock = stats.HolyLightCastTimeReductionFromHolyShock,
                 MovementSpeed = stats.MovementSpeed,
                 ShieldFromHealed = stats.ShieldFromHealed,
 
@@ -676,8 +653,6 @@ namespace Rawr.Healadin
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 SpellsManaReduction = stats.SpellsManaReduction,
-                SacredShieldICDReduction = stats.SacredShieldICDReduction,
-                HolyShockHoTOnCrit = stats.HolyShockHoTOnCrit,
 
                 // Ony Shiny Shard of the Flame
                 Healed = stats.Healed,
@@ -722,19 +697,9 @@ namespace Rawr.Healadin
                 stats.SpellCrit +
                 stats.SpellHaste +
                 stats.FlashOfLightCrit +
-                stats.FlashOfLightSpellPower +
-                stats.FlashOfLightMultiplier +
-                stats.HolyShockCrit +
-                stats.HolyLightSpellPower +
                 stats.HolyLightCrit +
-                stats.HolyLightManaCostReduction +
-                stats.HolyLightPercentManaReduction +
                 stats.HealingReceivedMultiplier +
                 stats.BonusHealingDoneMultiplier +
-                stats.BonusJudgementDuration +
-                stats.FlashOfLightHoTMultiplier +
-                stats.DivineIlluminationHealingMultiplier +
-                stats.HolyLightCastTimeReductionFromHolyShock +
                 stats.MovementSpeed +
                 stats.ShieldFromHealed +
                 stats.HighestStat +
@@ -743,8 +708,6 @@ namespace Rawr.Healadin
                 stats.BonusManaMultiplier +
                 stats.BonusCritHealMultiplier +
                 stats.SpellsManaReduction +
-                stats.SacredShieldICDReduction +
-                stats.HolyShockHoTOnCrit +
 
                 stats.Healed
                 ) != 0;

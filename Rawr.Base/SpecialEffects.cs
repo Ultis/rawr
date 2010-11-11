@@ -465,81 +465,6 @@ namespace Rawr {
             #endregion
             #region Added by Warrior: DPSWarr
             #endregion
-            #region Added by Paladin: Healadin
-            else if ((match = new Regex(@"Each time you cast Holy Light, you have a chance to gain (?<amount>\d\d*) spell power for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Libram of Veracity
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyLightCast,
-                    new Stats() { SpellPower = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 10f, 0.70f));
-            }
-            else if ((match = new Regex(@"Your Holy Shock heals grant (?<amount>\d\d*) spell power for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
-            {   // Libram of Blinding Light
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShockCast,
-                    new Stats() { SpellPower = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
-            }
-            else if ((match = new Regex(@"Reduces the mana cost of Holy Light by (?<amount>\d\d*)").Match(line)).Success)
-            {   // Libram of Renewal
-                stats.HolyLightManaCostReduction += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            else if ((match = new Regex(@"Increases spell power of Holy Light by (?<amount>\d\d*)").Match(line)).Success)
-            {   // Libram of Tolerance | the Resolute
-                stats.HolyLightSpellPower += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            
-            // Other
-            else if ((match = new Regex(@"Increases spell power of Flash of Light by (?<amount>\d\d*)").Match(line)).Success)
-            {
-                stats.FlashOfLightSpellPower += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            #endregion
-            #region Added by Paladin: Tankadin
-            else if ((match = new Regex(@"Your Judgement ability also increases your shield block value by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Libram of Obstruction
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit,
-                    new Stats() { JudgementBlockValue = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f));
-            }
-            else if ((match = new Regex(@"Increases your block value by (?<amount>\d\d*) for (?<dur>\d\d*) sec each time you use Holy Shield").Match(line)).Success)
-            {   // Libram of the Sacred Shield
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield,
-                    new Stats() { HolyShieldBlockValue = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f));
-            }
-            else if ((match = new Regex(@"Each time you use your Hammer of The Righteous ability, you have a chance to gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Libram of Defiance
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HammeroftheRighteous,
-                    new Stats() { DodgeRating = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 10f, 0.8f));
-            }
-            else if (line == "Increases the spell power of your Consecration spell by 141")
-            {   // Libram of Resurgence
-                stats.ConsecrationSpellPower = 141f;
-            }
-            else if ((match = new Regex(@"Your Shield of Righteousness ability grants (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
-            {   // Libram of the Eternal Tower
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.ShieldofRighteousness,
-                    new Stats() { DodgeRating = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
-            }
-            // Other
-            else if ((match = new Regex(@"Your Shield of Righteousness deals an additional (?<amount>\d\d*) damage").Match(line)).Success)
-            {
-                stats.BonusShieldOfRighteousnessDamage = (float)int.Parse(match.Groups["amount"].Value);
-            }
-            else if ((match = new Regex(@"Your Holy Shield ability also grants you (?<amount>\d\d*) resilience rating for (?<dur>\d\d*) sec").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.HolyShield,
-                    new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f));
-            }
-            else if ((match = new Regex(@"Your Judgement ability also grants you (?<amount>\d\d*) resilience rating for (?<dur>\d\d*) sec").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit,
-                    new Stats() { Resilience = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 1f));
-            }
-            #endregion
             #region Added by Paladin: Retadin
             else if ((match = new Regex(@"Your Crusader Strike ability also grants you (?<amount>\d\d*) attack power for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Gladiator's Libram of Fortitude
@@ -578,14 +503,6 @@ namespace Rawr {
             else if (line.StartsWith("Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec"))
             {
                 stats.DivineStormDamage = 81;
-            }
-            else if (line.StartsWith("Causes your Judgements to increase your Critical Strike rating by 53 for 5 sec"))
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = 53 }, 5f, 0f, 1f));
-            }
-            else if (line.StartsWith("Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec"))
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { CritRating = 61 }, 5f, 0f, 1f));
             }
             #endregion
             #region Added by Hunter

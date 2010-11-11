@@ -43,7 +43,6 @@ namespace Rawr.Healadin
         public FlashOfLight FoL { get; set; }
         public HolyLight HL { get; set; }
         public HolyShock HS { get; set; }
-        public SacredShield SS { get; set; }
         public BeaconOfLight BoL { get; set; }
         public JudgementsOfThePure JotP { get; set; }
 
@@ -52,21 +51,18 @@ namespace Rawr.Healadin
         public float RotationHS { get; set; }
         public float RotationJotP { get; set; }
         public float RotationBoL { get; set; }
-        public float RotationSS { get; set; }
 
         public float HealedFoL { get; set; }
         public float HealedHL { get; set; }
         public float HealedHS { get; set; }
         public float HealedGHL { get; set; }
         public float HealedBoL { get; set; }
-        public float HealedSS { get; set; }
         public float HealedOther { get; set; }
 
         public float UsageFoL { get; set; }
         public float UsageHL { get; set; }
         public float UsageHS { get; set; }
         public float UsageBoL { get; set; }
-        public float UsageSS { get; set; }
         public float UsageJotP { get; set; }
 
         public float ManaBase { get; set; }
@@ -112,7 +108,6 @@ namespace Rawr.Healadin
             dictValues["Holy Light Time"] = string.Format("{0} sec", RotationHL.ToString("N1"));
             dictValues["Flash of Light Time"] = string.Format("{0} sec", RotationFoL.ToString("N1"));
             dictValues["Holy Shock Time"] = string.Format("{0} sec", RotationHS.ToString("N1"));
-            dictValues["Sacred Shield Time"] = string.Format("{0} sec", RotationSS.ToString("N1"));
             dictValues["Beacon of Light Time"] = string.Format("{0} sec", RotationBoL.ToString("N1"));
             dictValues["Judgement Time"] = string.Format("{0} sec", RotationJotP.ToString("N1"));
 
@@ -120,7 +115,6 @@ namespace Rawr.Healadin
             dictValues["Holy Light Healed"] = string.Format("{0} healed", HealedHL.ToString("N00"));
             dictValues["Flash of Light Healed"] = string.Format("{0} healed", HealedFoL.ToString("N00"));
             dictValues["Holy Shock Healed"] = string.Format("{0} healed", HealedHS.ToString("N00"));
-            dictValues["Sacred Shield Healed"] = string.Format("{0} healed", HealedSS.ToString("N00"));
             dictValues["Beacon of Light Healed"] = string.Format("{0} healed", HealedBoL.ToString("N00"));
             dictValues["Glyph of HL Healed"] = string.Format("{0} healed", HealedGHL.ToString("N00"));
             dictValues["Other Healed"] = string.Format("{0} healed", HealedOther.ToString("N00"));
@@ -128,24 +122,23 @@ namespace Rawr.Healadin
             dictValues["Holy Light"] = "*" + HL.ToString();
             dictValues["Flash of Light"] = "*" + FoL.ToString();
             dictValues["Holy Shock"] = "*" + HS.ToString();
-            dictValues["Sacred Shield"] = "*" + SS.ToString();
 
             return dictValues;
         }
 
         public override float GetOptimizableCalculationValue(string calculation)
-		{
-			switch (calculation)
-			{
-				case "Health": return BasicStats.Health;
-				case "Holy Light Cast Time": return HL.CastTime();
+        {
+            switch (calculation)
+            {
+                case "Health": return BasicStats.Health;
+                case "Holy Light Cast Time": return HL.CastTime();
                 case "Holy Light HPS": return HL.HPS();
                 case "Holy Light Time": return RotationHL;
-				case "Flash of Light Cast Time": return FoL.CastTime();
+                case "Flash of Light Cast Time": return FoL.CastTime();
                 case "Flash of Light HPS": return FoL.HPS();
                 case "Flash of Light Time": return RotationFoL;
-			}
-			return 0f;
-		}
+            }
+            return 0f;
+        }
     }
 }

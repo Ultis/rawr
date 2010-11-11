@@ -81,13 +81,6 @@ namespace Rawr.ProtPaladin
             set { _RankingMode = value; OnPropertyChanged("RankingMode"); }
         }
 
-        private bool _UseHolyShield = true;
-        public bool UseHolyShield
-        {
-            get { return _UseHolyShield; }
-            set { _UseHolyShield = value; OnPropertyChanged("UseHolyShield"); }
-        }
-
         private string _SealChoice = "Seal of Vengeance";
         public string SealChoice
         {

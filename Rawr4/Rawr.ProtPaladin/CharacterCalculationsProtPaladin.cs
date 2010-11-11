@@ -61,8 +61,6 @@ namespace Rawr.ProtPaladin
         public float Miss { get; set; }
         public float CritReduction { get; set; }
         public float CritVulnerability { get; set; }
-        public float CritVulnerabilityWithoutHolyShield { get; set; }
-        public bool UsingHolyShield { get; set; }
         public float ArmorReduction { get; set; }
         public float GuaranteedReduction { get; set; }
         public float DodgePlusMissPlusParry { get; set; }
@@ -79,8 +77,7 @@ namespace Rawr.ProtPaladin
 
         // Shield Tank Defensive Stats
         public float Block { get; set; }
-        public float ActiveBlockValue { get; set; }
-        public float StaticBlockValue { get; set; }
+        public float BlockValue { get; set; }
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float DamageTakenPerBlock { get; set; }
 
@@ -142,7 +139,7 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Parry", string.Format("{0:0.0000%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
             dictValues.Add("Block", string.Format("{0:0.0000%}*Block Rating {1}", Block, BasicStats.BlockRating));
             dictValues.Add("Miss", string.Format("{0:0.0000%}", Miss));
-            dictValues.Add("Block Value", string.Format("{0}*{1} Active Block Value (Libram etc)", StaticBlockValue, ActiveBlockValue));
+            dictValues.Add("Block Value", string.Format("{0}", BlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.0000%}*Avoidance Points {1}", DodgePlusMissPlusParry, (DodgePlusMissPlusParry * 10000f)));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.0000%}", DodgePlusMissPlusParryPlusBlock));
@@ -177,23 +174,6 @@ namespace Rawr.ProtPaladin
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
-
-            if (UsingHolyShield)
-            {
-                if (CritVulnerabilityWithoutHolyShield > 0.0001f) {
-                    double defenseNeeded = Math.Ceiling((100 * CritVulnerabilityWithoutHolyShield / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * StatConversion.RATING_PER_DEFENSE);
-                    double resilienceNeeded = Math.Ceiling(CritVulnerability * StatConversion.RATING_PER_RESILIENCE);
-                    dictValues.Add("...Without Holy Shield",
-                        string.Format("{0:0.00%}*CRITTABLE! Short by approximately {1:0} defense rating or approximately {2:0} resilience rating to be uncrittable without holy shield.",
-                                        CritVulnerabilityWithoutHolyShield, defenseNeeded, resilienceNeeded));
-                }
-                else
-                    dictValues.Add("...Without Holy Shield", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerabilityWithoutHolyShield, CritReduction));
-            }
-            else
-            {
-                dictValues.Add("...Without Holy Shield", "N/A*Not applicable");
-            }
 
             dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.NatureResistance, NatureReduction));
             dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction", BasicStats.ArcaneResistance, ArcaneReduction));
@@ -298,20 +278,14 @@ namespace Rawr.ProtPaladin
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
+                case "Threat Per Second": return ThreatPerSecond;
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
+                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "Avoidance Points": return DodgePlusMissPlusParry * 10000.0f;
                 case "% Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
-                case "% Chance to be Crit Without Holy Shield": return ((float)Math.Round(CritVulnerabilityWithoutHolyShield * 100.0f, 2));
-                case "Block Value": return StaticBlockValue;
+                case "Block Value": return BlockValue;
                 case "% Block Chance": return Block * 100.0f;
-                case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
-                case "% Chance to be Missed": return MissedAttacks * 100.0f;
-                case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
-                case "% Chance to be Parried": return ParriedAttacks * 100.0f;
-                // case "% Hit Chance": return Hit * 100.0f;
-                case "% Spell Hit Chance": return SpellHit * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;
@@ -319,7 +293,11 @@ namespace Rawr.ProtPaladin
                 case "Frost Survival": return FrostSurvivalPoints;
                 case "Shadow Survival": return ShadowSurvivalPoints;
                 case "Arcane Survival": return ArcaneSurvivalPoints;
-                case "Threat Per Second": return ThreatPerSecond;
+                case "% Spell Hit Chance": return SpellHit * 100.0f;
+                case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
+                case "% Chance to be Missed": return MissedAttacks * 100.0f;
+                case "% Chance to be Dodged": return DodgedAttacks * 100.0f;
+                case "% Chance to be Parried": return ParriedAttacks * 100.0f;
             }
             return 0.0f;
         }

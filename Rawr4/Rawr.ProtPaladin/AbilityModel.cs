@@ -95,7 +95,6 @@ namespace Rawr.ProtPaladin {
                                 + (0.3f * (Talents.GlyphOfHammerOfTheRighteous ? 0.1f : 0f));
 
                     DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
-                                      * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier)
                                       * (1.0f - ArmorReduction);
 
                     critMultiplier = 1.0f;
@@ -111,8 +110,7 @@ namespace Rawr.ProtPaladin {
                                 + (Talents.Crusade * 0.1f)
                                 + (Talents.GlyphOfHammerOfTheRighteous ? 0.1f : 0f);
 
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + Stats.BonusHammerOfTheRighteousMultiplier);
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
 
                     critMultiplier = 1.0f;
                     break;
@@ -137,10 +135,26 @@ namespace Rawr.ProtPaladin {
                                 + (Talents.WrathOfTheLightbringer * 0.5f)
                                 + (Talents.GlyphOfJudgement ? 0.1f : 0f);
 
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (Talents.GlyphOfJudgement ? 1.1f : 1.0f);
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
 
                     critMultiplier = 1.0f;
+                    break;
+                case Ability.MeleeSwing:
+                    baseDamage = Stats.WeaponDamage;
+
+                    DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
+                                      * (1.0f - (Lookup.GlancingReduction(Character, targetLevel) * AttackTable.Glance))
+                                      * (1.0f - ArmorReduction);
+
+                    critMultiplier = 1.0f;
+                    break;
+                case Ability.SealOfRighteousness:
+                    baseDamage = Lookup.WeaponSpeed(Character, Stats) * ((0.022f * SP) + (0.011f * AP));
+
+                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
+                                      * (1.0f + 0.06f * Talents.SealsOfThePure);
+
+                    critMultiplier = 0.0f;
                     break;
 
                     // Leaving off here
@@ -149,17 +163,8 @@ namespace Rawr.ProtPaladin {
 
 
 
-                case Ability.MeleeSwing:
-                    baseDamage        = Stats.WeaponDamage;
-
-                    DamageMultiplier *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
-                                      * (1.0f - (Lookup.GlancingReduction(Character, targetLevel) * AttackTable.Glance))
-                                      * (1.0f - ArmorReduction);
-
-                    critMultiplier    = 1.0f;
-                    break;
                 case Ability.ShieldOfTheRighteous:
-                    float blockValue  = Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue + Stats.JudgementBlockValue + Stats.HolyShieldBlockValue;
+                    float blockValue  = Stats.BlockValue;
 
                     float blockValueDRStart = 30 * Character.Level;
 
@@ -171,8 +176,7 @@ namespace Rawr.ProtPaladin {
                         baseDamage    = blockValueDRStart + (0.95f * 9.5f * Character.Level) - (0.000625f * (float)Math.Pow(9.5 * Character.Level, 2));
                     }
 
-                    baseDamage       += 520f
-                                      + Stats.BonusShieldOfRighteousnessDamage;
+                    baseDamage += 520f;
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier    = 1.0f;
@@ -183,8 +187,7 @@ namespace Rawr.ProtPaladin {
                     baseDamage        = Stats.WeaponDamage * 0.33f;
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
-                                      * (1.0f + Stats.BonusSealOfVengeanceDamageMultiplier);
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure);
 
                     critMultiplier    = 1.0f;
                     break;
@@ -194,22 +197,12 @@ namespace Rawr.ProtPaladin {
                     baseDamage        = 5f * (0.016f * SP + 0.032f * AP);
 
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
-                                      * (1.0f + Stats.BonusSealOfVengeanceDamageMultiplier);
-
-                    critMultiplier    = 0.0f;
-                    break;
-                case Ability.SealOfRighteousness:
-                    baseDamage        = Lookup.WeaponSpeed(Character, Stats) * ((0.022f * AP) + (0.044f * SP));
-
-                    DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier)
-                                      * (1.0f + 0.03f * Talents.SealsOfThePure)
-                                      * (1.0f + Stats.BonusSealOfRighteousnessDamageMultiplier);
+                                      * (1.0f + 0.03f * Talents.SealsOfThePure);
 
                     critMultiplier    = 0.0f;
                     break;
                 case Ability.Consecration:
-                    baseDamage        = 113f + (0.04f * (SP + Stats.ConsecrationSpellPower)) + (0.04f * AP);
+                    baseDamage        = 113f + (0.04f * SP) + (0.04f * AP);
                     duration          = (Talents.GlyphOfConsecration ? 10.0f : 8.0f);
                     DamageMultiplier *= (1.0f + Stats.BonusHolyDamageMultiplier);
                     critMultiplier    = 0.0f;

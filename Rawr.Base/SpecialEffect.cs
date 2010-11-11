@@ -130,14 +130,9 @@ namespace Rawr
         #endregion
         #region Added by Paladin
         JudgementHit,
-        HolyShield,
-        HammeroftheRighteous,
-        ShieldofRighteousness,
-        DivinePlea,
         CrusaderStrikeHit,
         SealOfVengeanceTick,
-        HolyLightCast,
-        HolyShockCast,
+        HolyRadianceActive,
         #endregion
         #region Added by Shaman
         ShamanLightningBolt,
@@ -1638,12 +1633,6 @@ namespace Rawr
                         return "on Mage Nuke Cast";
                     case Trigger.JudgementHit:
                         return "on Judgement";
-                    case Trigger.HolyShield:
-                        return "on Holy Shield cast";
-                    case Trigger.HammeroftheRighteous:
-                        return "on HotR cast";
-                    case Trigger.ShieldofRighteousness:
-                        return "on ShoR cast";
                     case Trigger.CrusaderStrikeHit:
                         return "on Crusader Strike";
                     case Trigger.InsectSwarmTick :

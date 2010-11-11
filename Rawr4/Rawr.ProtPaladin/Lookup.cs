@@ -229,8 +229,7 @@ namespace Rawr.ProtPaladin
 
         public static float ActiveBlockReduction(Character character, Stats stats)
         {
-            // This formula assumes judging on cd, and needs to be modified as soon as we support custom rotations.
-            return (stats.BlockValue + stats.HolyShieldBlockValue + stats.JudgementBlockValue + stats.ShieldOfRighteousnessBlockValue);
+            return stats.BlockValue;
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)

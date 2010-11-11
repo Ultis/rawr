@@ -56,7 +56,6 @@ namespace Rawr.Healadin
         private FlashOfLight fol;
         private HolyLight hl;
         private HolyShock hs;
-        private SacredShield ss;
         private JudgementsOfThePure jotp;
         private BeaconOfLight bol;
 
@@ -68,7 +67,6 @@ namespace Rawr.Healadin
             fol = new FlashOfLight(this);
             hl = new HolyLight(this);
             hs = new HolyShock(this);
-            ss = new SacredShield(this);
             jotp = new JudgementsOfThePure(this, CalcOpts.Judgement);
             bol = new BeaconOfLight(this);
         }
@@ -110,8 +108,7 @@ namespace Rawr.Healadin
         {
             return GetHealingCastsPerSec(calc)
                 + (calc.RotationBoL / calc.BoL.CastTime()
-                + calc.RotationJotP / calc.JotP.CastTime()
-                + calc.RotationSS / calc.SS.CastTime()) / calc.FightLength;
+                + calc.RotationJotP / calc.JotP.CastTime()) / calc.FightLength;
         }
 
         public static float GetSpellCritsPerSec(CharacterCalculationsHealadin calc) { return GetHealingCritsPerSec(calc); }
@@ -130,16 +127,11 @@ namespace Rawr.Healadin
             calc.HL = hl;
             calc.FoL = fol;
             calc.HS = hs;
-            calc.SS = ss;
             calc.JotP = jotp;
             calc.BoL = bol;
 
             calc.RotationJotP = jotp.Time();
             calc.UsageJotP = jotp.Usage();
-
-            calc.RotationSS = ss.Time();
-            calc.UsageSS = ss.Usage();
-            calc.HealedSS = ss.TotalAborb();
 
             calc.RotationBoL = bol.Time();
             calc.UsageBoL = bol.Usage();
@@ -166,7 +158,7 @@ namespace Rawr.Healadin
             {
                 iol_hlcasts = hs.Casts() * hs.ChanceToCrit();
 
-                HolyLight hl_iol = new HolyLight(this) { CastTimeReduction = 0.75f * Talents.InfusionOfLight + Stats.HolyLightCastTimeReductionFromHolyShock };
+                HolyLight hl_iol = new HolyLight(this) { CastTimeReduction = 0.75f * Talents.InfusionOfLight };
 
                 calc.UsageHL += iol_hlcasts * hl_iol.AverageCost();
                 calc.RotationHL += iol_hlcasts * hl_iol.CastTime();
@@ -176,61 +168,17 @@ namespace Rawr.Healadin
             #endregion
 
             float remainingMana = calc.TotalMana = ManaPool(calc);
-            remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL + calc.UsageSS;
+            remainingMana -= calc.UsageJotP + calc.UsageBoL + calc.UsageHS + calc.UsageHL + calc.UsageFoL;
 
             // Meditation
-            remainingMana += Stats.Mp5 * 0.5f * (FightLength / 5f); // TODO: Figure out a way to detect the character's main spec
+            remainingMana += Stats.Mp5 * 0.5f * (FightLength / 5f);
 
             float remainingTime = FightLength * CalcOpts.Activity;
-            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationSS + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
+            remainingTime -= calc.RotationJotP + calc.RotationBoL + calc.RotationHS + calc.RotationFoL + calc.RotationHL;
 
             FoLCasts = 0f;
             if (remainingMana > 0)
             {
-                if (Stats.HolyLightCastTimeReductionFromHolyShock > 0) // Calculations for Holy Light with cost reduction from Holy Shock
-                {
-                    // Get the Holy Light model for cast time reduction from Holy Shock
-                    HolyLight hl_hs = new HolyLight(this) { CastTimeReduction = Stats.HolyLightCastTimeReductionFromHolyShock };
-
-                    // Calculate how much time we have available to cast Holy Lights after Holy Shock
-                    float hl_hs_time_available = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl_hs.MPS() - fol.MPS())));
-
-                    // Calculate the maximum number of casts available with the cast time reduction
-                    float hs_hlcasts = hs.Casts() - iol_hlcasts;
-
-                    // Calculate the amount of time needed for all of the casts
-                    float hl_hs_time_needed = hs_hlcasts * hl_hs.CastTime();
-
-                    float manaCost = 0f;
-                    float timeCost = 0f;
-                    if (hl_hs_time_available > 0 && hl_hs_time_available < hl_hs_time_needed) // We have enough time to cast the Holy Lights needed, cast them all
-                    {
-                        // Calculate mana and time cost
-                        manaCost = hs_hlcasts * hl_hs.AverageCost();
-                        timeCost = hs_hlcasts * hl_hs.CastTime();
-
-                        // Update Holy Light stats
-                        calc.UsageHL += manaCost;
-                        calc.RotationHL += timeCost;
-                        calc.HealedHL += hs_hlcasts * hl_hs.AverageHealed();
-                    }
-                    else if (hl_hs_time_available >= remainingTime) // There's not enough time to cast the Holy Lights needed, so we'll only cast what we can
-                    {
-                        // Calculate mana and time cost
-                        float remainingCasts = remainingTime / hl_hs.CastTime();
-                        manaCost = remainingCasts * hl_hs.AverageCost();
-                        timeCost = remainingCasts * hl_hs.CastTime();
-
-                        // Update Holy Light stats
-                        calc.UsageHL += manaCost;
-                        calc.RotationHL += timeCost;
-                        calc.HealedHL += remainingCasts * hl_hs.AverageHealed();
-                    }
-                    // Update remaining mana and remaining time
-                    remainingMana -= manaCost;
-                    remainingTime -= timeCost;
-                }
-
                 // Calculate how much time we have available to cast regular Holy Lights
                 float hl_time_available = Math.Min(remainingTime, Math.Max(0, (remainingMana - (remainingTime * fol.MPS())) / (hl.MPS() - fol.MPS())));
 
@@ -269,7 +217,6 @@ namespace Rawr.Healadin
             calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealed;
 
             calc.TotalHealed += calc.HealedOther;
-            calc.TotalHealed += calc.HealedSS;
 
             calc.AvgHPS = calc.TotalHealed / FightLength;
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;

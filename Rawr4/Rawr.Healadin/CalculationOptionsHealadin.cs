@@ -32,8 +32,6 @@ namespace Rawr.Healadin
             jotP = true;
             judgement = true;
             loHSelf = false;
-            sSUptime = 1f;
-            folOnTank = 0.25f;
             hitIrrelevant = true;
             spiritIrrelevant = true;
         }
@@ -144,20 +142,6 @@ namespace Rawr.Healadin
         {
             get { return loHSelf; }
             set { loHSelf = value; OnPropertyChanged("LoHSelf"); }
-        }
-
-        private float sSUptime;
-        public float SSUptime
-        {
-            get { return sSUptime; }
-            set { sSUptime = value; OnPropertyChanged("SSUptime"); }
-        }
-
-        private float folOnTank;
-        public float FoLOnTank
-        {
-            get { return folOnTank; }
-            set { folOnTank = value; OnPropertyChanged("FoLOnTank"); }
         }
 
         private bool spiritIrrelevant;

@@ -91,14 +91,6 @@ namespace Rawr.Healadin
             calcOpts.IoLHolyLight = .9f;
         }
 
-        private void btnResetSSUptime_Click(object sender, RoutedEventArgs e) {
-            calcOpts.SSUptime = 1f;
-        }
-
-        private void btnResetFoLOnTank_Click(object sender, RoutedEventArgs e) {
-            calcOpts.FoLOnTank = .25f;
-        }
-
         private void btnResetReplenishment_Click(object sender, RoutedEventArgs e) {
             calcOpts.Replenishment = .9f;
         }

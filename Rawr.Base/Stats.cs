@@ -108,6 +108,8 @@ namespace Rawr {
         TigersFuryCooldownReduction,
         SpellReflectChance,
         MoteOfAnger,
+        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
+        HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #region Added by Rawr.Feral
         BonusRakeDuration,
         BonusRipDamagePerCPPerTick,
@@ -220,24 +222,9 @@ namespace Rawr {
         RestoShamRelicT10,
         #endregion
         #region Added by Rawr.Healadin
-        FlashOfLightSpellPower,
-        FlashOfLightMultiplier,
         FlashOfLightCrit,
-        HolyLightManaReduction,
-        HolyLightSpellPower,
-        HolyLightPercentManaReduction,
         HolyLightCrit,
-        SacredShieldICDReduction,
-        HolyShockHoTOnCrit,
-        HolyShockCrit,
-        Heal1Min,
         Healed,
-        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
-        HealingOmenProc,            // Omen like proc from Soul Preserver and the like
-        BonusJudgementDuration,
-        FlashOfLightHoTMultiplier,
-        DivineIlluminationHealingMultiplier,
-        HolyLightCastTimeReductionFromHolyShock,
         #endregion
         #region Added by Rawr.Retribution
         DivineStormMultiplier,
@@ -256,11 +243,7 @@ namespace Rawr {
         DivineStormRefresh,
         #endregion
         #region Added by Rawr.ProtPaladin
-        BonusShieldOfRighteousnessDamage,
-        DivineProtectionDurationBonus,
-        HolyShieldBlockValue,
-        JudgementBlockValue,
-        ShieldOfRighteousnessBlockValue,        
+        AncientKingsPctDurationBonus,
         #endregion
         #region Added by Rawr.Moonkin
         StarfireProc,
@@ -438,7 +421,6 @@ namespace Rawr {
         BonusSealOfCorruptionDamageMultiplier,
         BonusSealOfRighteousnessDamageMultiplier,
         BonusSealOfVengeanceDamageMultiplier,
-        HammerOfTheRighteousMultiplier,
         #endregion
         #region Added by Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
@@ -2540,43 +2522,6 @@ namespace Rawr {
         }        
         #endregion
         #region Added by Rawr.Healadin
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Flash of Light Spell Power")]
-        [Category("Healadin")]
-        public float FlashOfLightSpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("secs off Sacred Shield ICD")]
-        [Category("Healadin")]
-        public float SacredShieldICDReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SacredShieldICDReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% HoT on Holy Shock Crit")]
-        [Percentage]
-        [Category("Healadin")]
-        public float HolyShockHoTOnCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyShockHoTOnCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Flash of Light Healing")]
-        [Category("Healadin")]
-        public float FlashOfLightMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
-        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -2589,33 +2534,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Holy Light Spell Power")]
-        [Category("Healadin")]
-        public float HolyLightSpellPower
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Holy Light Cost Reduction")]
-        [Category("Healadin")]
-        public float HolyLightPercentManaReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Holy Light Mana Cost Reduction")]
-        [Category("Healadin")]
-        public float HolyLightManaCostReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Holy Light Crit")]
         [Category("Healadin")]
@@ -2623,66 +2541,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.HolyLightCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Holy Shock Crit")]
-        [Category("Healadin")]
-        public float HolyShockCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyShockCrit] = value; }
-        }
-
-        /// <summary>
-        /// Tier 9 2-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("sec Increased Judgement Duration")]
-        [Category("Healadin")]
-        public float BonusJudgementDuration
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusJudgementDuration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusJudgementDuration] = value; }
-        }
-
-        /// <summary>
-        /// Tier 9 4-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Flash of Light HoT")]
-        [Category("Healadin")]
-        public float FlashOfLightHoTMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightHoTMultiplier] = value; }
-        }
-
-        /// <summary>
-        /// Tier 10 2-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Healing with Divine Illumination Active")]
-        [Category("Healadin")]
-        public float DivineIlluminationHealingMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineIlluminationHealingMultiplier] = value; }
-        }
-
-        /// <summary>
-        /// Tier 10 4-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("sec Holy Light Cast Time Reduction after Holy Shock")]
-        [Category("Healadin")]
-        public float HolyLightCastTimeReductionFromHolyShock
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCastTimeReductionFromHolyShock]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyLightCastTimeReductionFromHolyShock] = value; }
         }
 
         #endregion
@@ -3258,61 +3116,13 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.ProtPaladin
 
-        /// <summary>
-        /// Venture Co. Libram of Protection bonus
-        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Bonus ShoR Damage")]
+        [DisplayName("GoAC % Duration Increase")]
         [Category("ProtPaladin")]
-        public float BonusShieldOfRighteousnessDamage {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusShieldOfRighteousnessDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusShieldOfRighteousnessDamage] = value; }
-        }
-
-        /// <summary>
-        /// Tier 7 4-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Divine Protection Duration Bonus")]
-        [Category("ProtPaladin")]
-        public float DivineProtectionDurationBonus {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
-        }
-
-        /// <summary>
-        /// Libram of the Sacred Shield bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Holy Shield Block Value")]
-        [Category("ProtPaladin")]
-        public float HolyShieldBlockValue {
-            get { return _rawAdditiveData[(int)AdditiveStat.HolyShieldBlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HolyShieldBlockValue] = value; }
-        }
-
-        /// <summary>
-        /// Libram of Obstruction bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Judgement Block Value")]
-        [Category("ProtPaladin")]
-        public float JudgementBlockValue
+        public float AncientKingsPctDurationBonus
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
-        }
-        
-        /// <summary>
-        /// Tier 8 4-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("ShoR Block Value")]
-        [Category("ProtPaladin")]
-        public float ShieldOfRighteousnessBlockValue
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ShieldOfRighteousnessBlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ShieldOfRighteousnessBlockValue] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.AncientKingsPctDurationBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.AncientKingsPctDurationBonus] = value; }
         }
         
         #endregion
@@ -4433,20 +4243,13 @@ namespace Rawr {
         }
         
         #endregion
-        #region Added by Rawr.ProtPaladin
 
-        /// <summary>
-        /// Tier 7, 9, and 10 2-piece bonus
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("ProtPaladin")]
-        [DisplayName("% Hammer of the Righteous Damage")]
-        public float BonusHammerOfTheRighteousMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }
-        }
+        /*
+         * This section is no longer in use by ProtPaladin.
+         * Retribution still uses these stats, but the set bonuses have been removed.
+         * As soon as the Retribution model has these stats removed, this section can go away.
+         */
+        #region Added by Rawr.ProtPaladin
         
         /// <summary>
         /// Tier 8 2-piece bonus
@@ -4486,7 +4289,7 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfVengeanceDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfVengeanceDamageMultiplier] = value; }
         }
-        
+
         #endregion
 
         #endregion
