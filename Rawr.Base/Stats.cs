@@ -32,7 +32,7 @@ namespace Rawr {
         DefenseRating,
         Dodge,
         DodgeRating,
-        Expertise,     // Improper use: Not a stat, used as a helper variable in most Melee-based models, needs fixing. There is no Expertise on a naked character nor is there on any item/enchant/buff.
+        Expertise,     // ie: Glyph of Seal of Truth
         ExpertiseRating,
         FireResistance,
         FrostResistance,
@@ -108,6 +108,7 @@ namespace Rawr {
         TigersFuryCooldownReduction,
         SpellReflectChance,
         MoteOfAnger,
+        Healed,                     // This stores Healing values for targets, not self, like Forethought Talisman's Passive Effect
         SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
         HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #region Added by Rawr.Feral
@@ -222,9 +223,7 @@ namespace Rawr {
         RestoShamRelicT10,
         #endregion
         #region Added by Rawr.Healadin
-        FlashOfLightCrit,
         HolyLightCrit,
-        Healed,
         #endregion
         #region Added by Rawr.Retribution
         DivineStormMultiplier,
@@ -2522,16 +2521,6 @@ namespace Rawr {
         }        
         #endregion
         #region Added by Rawr.Healadin
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Flash of Light Crit")]
-        [Category("Healadin")]
-        public float FlashOfLightCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit] = value; }
-        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]

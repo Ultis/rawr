@@ -641,7 +641,6 @@ namespace Rawr.Healadin
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
-                FlashOfLightCrit = stats.FlashOfLightCrit,
                 HolyLightCrit = stats.HolyLightCrit,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
@@ -696,7 +695,6 @@ namespace Rawr.Healadin
                 stats.BonusManaPotion +
                 stats.SpellCrit +
                 stats.SpellHaste +
-                stats.FlashOfLightCrit +
                 stats.HolyLightCrit +
                 stats.HealingReceivedMultiplier +
                 stats.BonusHealingDoneMultiplier +

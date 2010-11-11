@@ -124,11 +124,6 @@ namespace Rawr.Healadin
         public override float BaseCastTime { get { return 1.5f; } }
         public override float BaseMana { get { return 6324f; } } // TODO: Determine exact mana cost.  27% of base mana
 
-        protected override float AbilityCritChance()
-        {
-            return Stats.FlashOfLightCrit;
-        }
-
         protected override float AbilityHealed()
         {
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct
