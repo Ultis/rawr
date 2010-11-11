@@ -45,21 +45,21 @@ namespace Rawr.UI
                     {
                         pt += "\r\n- customInstance != null";
                         itemButtonWithEnchant.ComparisonItemList.SelectedItem = value.Item;
-                        pt += "\r\n- gembuttons1";
+                        /*pt += "\r\n- gembuttons1";
                         gem1Button.ComparisonItemList.SelectedItem = value.Gem1;
                         pt += "\r\n- gembuttons2";
                         gem2Button.ComparisonItemList.SelectedItem = value.Gem2;
                         pt += "\r\n- gembuttons3";
-                        gem3Button.ComparisonItemList.SelectedItem = value.Gem3;
+                        gem3Button.ComparisonItemList.SelectedItem = value.Gem3;*/
                     } else {
                         pt += "\r\n- customInstance == null";
                         itemButtonWithEnchant.ComparisonItemList.SelectedItem = null;
-                        pt += "\r\n- gembuttons1";
+                        /*pt += "\r\n- gembuttons1";
                         gem1Button.ComparisonItemList.SelectedItem = null;
                         pt += "\r\n- gembuttons2";
                         gem2Button.ComparisonItemList.SelectedItem = null;
                         pt += "\r\n- gembuttons3";
-                        gem3Button.ComparisonItemList.SelectedItem = null;
+                        gem3Button.ComparisonItemList.SelectedItem = null;*/
                     }
                     pt += "\r\n- UpdateSockets()";
                     UpdateSockets();
@@ -120,7 +120,7 @@ namespace Rawr.UI
             set { itemButtonWithEnchant.Slot = value; }
         }
 
-        private void gem1Button_Leave(object sender, EventArgs e)
+        /*private void gem1Button_Leave(object sender, EventArgs e)
         {
             if (CustomInstance != null)
             {
@@ -148,7 +148,7 @@ namespace Rawr.UI
                 copy.Gem3 = gem3Button.ComparisonItemList.SelectedItem;
                 itemButtonWithEnchant.Item = copy;
             }
-        }
+        }*/
 
         private void itemButtonWithEnchant_Leave(object sender, EventArgs e)
         {
@@ -174,7 +174,7 @@ namespace Rawr.UI
                     slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
-                SetSocketColor(gem1Button, slot);
+                /*SetSocketColor(gem1Button, slot);
                 slot = item.SocketColor2;
                 if (slot == ItemSlot.None && blacksmithingSocket)
                 {
@@ -188,13 +188,13 @@ namespace Rawr.UI
                     slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
-                SetSocketColor(gem3Button, slot);
+                SetSocketColor(gem3Button, slot);*/
             }
             else
             {
-                SetSocketColor(gem1Button, ItemSlot.None);
+                /*SetSocketColor(gem1Button, ItemSlot.None);
                 SetSocketColor(gem2Button, ItemSlot.None);
-                SetSocketColor(gem3Button, ItemSlot.None);
+                SetSocketColor(gem3Button, ItemSlot.None);*/
             }
             /*itemButtonWithEnchant.ComparisonItemList.IsPopulated = false;
             itemButtonWithEnchant.ComparisonEnchantList.IsPopulated = false;
@@ -208,7 +208,7 @@ namespace Rawr.UI
             gem3Button.ComparisonItemList.IsShown = true;*/
         }
 
-        private void SetSocketColor(ItemButton button, ItemSlot slot)
+        private void SetSocketColor(ItemButtonWithEnchant button, ItemSlot slot)
         {
             switch (slot)
             {

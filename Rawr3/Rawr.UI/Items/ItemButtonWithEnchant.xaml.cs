@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Text;
 using Rawr;
-using System.Windows.Controls.Primitives;
 
 namespace Rawr.UI
 {
@@ -37,6 +40,7 @@ namespace Rawr.UI
             {
                 if (character != null) character.AvailableItemsChanged -= new EventHandler(character_CalculationsInvalidated);
                 character = value;
+                DataContext = character;
                 ComparisonItemList.Character = character;
                 ComparisonItemListGem1.Character = character;
                 ComparisonItemListGem2.Character = character;
@@ -127,6 +131,7 @@ namespace Rawr.UI
             PopupUtilities.RegisterPopup(this, ListPopupGem2, Close);
             PopupUtilities.RegisterPopup(this, ListPopupGem3, Close);
             PopupUtilities.RegisterPopup(this, ReforgePopup, Close);
+            UpdateButtonOptions();
         }
 
         private void Close()
@@ -296,10 +301,59 @@ namespace Rawr.UI
             }*/
         }
 
-        private void AnyButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void AnyButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) { MainPage.Tooltip.Hide(); }
+        #endregion
+
+        private void BSSocket_Checked(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+            BSSocketIsChecked = CK_BSSocket.IsChecked.GetValueOrDefault(false);
         }
-        #endregion
+
+        private bool _ShowGems = true; public bool ShowGems { get { return _ShowGems; } set { _ShowGems = value; UpdateButtonOptions(); } }
+        private bool _ShowGem3 = true; public bool ShowGem3 { get { return _ShowGem3; } set { _ShowGem3 = value; UpdateButtonOptions(); } }
+        private bool _ShowEnchant = true; public bool ShowEnchant { get { return _ShowEnchant; } set { _ShowEnchant = value; UpdateButtonOptions(); } }
+        private bool _ShowReforge = true; public bool ShowReforge { get { return _ShowReforge; } set { _ShowReforge = value; UpdateButtonOptions(); } }
+        private bool _ShowBSSocket = false; public bool ShowBSSocket { get { return _ShowBSSocket; } set { _ShowBSSocket = value; UpdateButtonOptions(); } }
+        private bool _EnableBSSocket = true; public bool EnableBSSocket { get { return _EnableBSSocket; } set { _EnableBSSocket = value; UpdateButtonOptions(); } }
+
+        public Boolean BSSocketIsChecked {
+            get {
+                Boolean retVal = (Boolean)this.GetValue(BSSocketProperty);
+                //if (CK_BSSocket.IsChecked != retVal) { CK_BSSocket.IsChecked = retVal; }
+                return retVal;
+            }
+            set {
+                this.SetValue(BSSocketProperty, value);
+                if (CK_BSSocket.IsChecked != value) { CK_BSSocket.IsChecked = value; }
+            }
+        }
+        public static readonly DependencyProperty BSSocketProperty = DependencyProperty.Register(
+            "BSSocketIsChecked", typeof(Boolean), typeof(ItemButtonWithEnchant), new PropertyMetadata(false));
+
+        public void SetButtonOptions(bool showReforge, bool showEnchant, bool showGems, bool showGem3, bool showBSSocket, bool enableBSSocket)
+        {
+            ShowGems = showGems;
+            ShowGem3 = showGem3;
+            ShowEnchant = showEnchant;
+            ShowReforge = showReforge;
+            ShowBSSocket = showBSSocket;
+            EnableBSSocket = enableBSSocket;
+            //
+            UpdateButtonOptions();
+        }
+        public void UpdateButtonOptions() {
+            GemButton1.Visibility = ShowGems ? Visibility.Visible : Visibility.Collapsed;
+            GemButton2.Visibility = ShowGems ? Visibility.Visible : Visibility.Collapsed;
+            GemButton3.Visibility = (ShowGems && ShowGem3) ? Visibility.Visible : Visibility.Collapsed;
+            EnchantButton.Visibility = ShowEnchant ? Visibility.Visible : Visibility.Collapsed;
+            ReforgeButton.Visibility = ShowReforge ? Visibility.Visible : Visibility.Collapsed;
+            CK_BSSocket.Visibility = ShowBSSocket ? Visibility.Visible : Visibility.Collapsed;
+            CK_BSSocket.IsEnabled = EnableBSSocket;
+            if (CK_BSSocket.IsChecked != BSSocketIsChecked)
+            {
+                CK_BSSocket.IsChecked = BSSocketIsChecked;
+            }
+        }
     }
 }

@@ -7,13 +7,17 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.ItemButtonWithEnchant"
-    Width="90" Height="90">
+    Width="90" Height="Auto">
+
+    <UserControl.DataContext>
+        <Rawr:Character/>
+    </UserControl.DataContext>
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -40,7 +44,7 @@
             <local:ItemListControl x:Name="ComparisonListReforge"/>
         </Popup>
         <!-- Buttons -->
-        <Button x:Name="MainButton" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="70" Margin="0" Click="MainButton_Clicked" MouseEnter="MainButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.RowSpan="3">
+        <Button x:Name="MainButton" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="70" Height="70" Margin="0" Click="MainButton_Clicked" MouseEnter="MainButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.RowSpan="3">
             <Image CacheMode="BitmapCache" x:Name="IconImage" Height="Auto" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill" />
         </Button>
         <Button x:Name="GemButton1" Click="GemButton1_Click" MouseEnter="GemButton1_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="0" MinHeight="20" MinWidth="20" MaxWidth="20" MaxHeight="20" Grid.Column="1" HorizontalAlignment="Stretch">
@@ -52,7 +56,10 @@
         <Button x:Name="GemButton3" Click="GemButton3_Click" MouseEnter="GemButton3_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="2" MinHeight="20" MinWidth="20" MaxWidth="20" MaxHeight="20" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Image CacheMode="BitmapCache" x:Name="IconImageGem3" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Button>
-        <Button x:Name="EnchantButton" Height="20" Width="70" VerticalAlignment="Center" FontSize="10" Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="4" Margin="0" HorizontalAlignment="Left" />
-        <Button x:Name="ReforgeButton" Height="20" Width="20" VerticalAlignment="Center" FontSize="10" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Grid.Row="4" Grid.Column="1" Margin="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" />
+        <StackPanel Width="70" Margin="0" Grid.Row="3">
+            <Button x:Name="EnchantButton" Height="20" Width="70" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
+            <CheckBox x:Name="CK_BSSocket" Height="16" Width="70" Margin="0,2" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="9" Checked="BSSocket_Checked" Unchecked="BSSocket_Checked" Content="BS Socket" Padding="1,2,0,0" />
+        </StackPanel>
+        <Button x:Name="ReforgeButton" Height="20" Width="20" Margin="0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="10" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
     </Grid>
 </UserControl>

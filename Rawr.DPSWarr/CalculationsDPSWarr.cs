@@ -323,8 +323,8 @@ These numbers to do not include racial bonuses.",
 
         private Dictionary<string, Color> _subPointNameColors = null;
         private Dictionary<string, Color> _subPointNameColors_Normal = null;
-        private Dictionary<string, Color> _subPointNameColors_DPSDMG = null;
-        private Dictionary<string, Color> _subPointNameColors_DPSDPR = null;
+        //private Dictionary<string, Color> _subPointNameColors_DPSDMG = null;
+        //private Dictionary<string, Color> _subPointNameColors_DPSDPR = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
                 if (_subPointNameColors_Normal == null) {
@@ -1134,12 +1134,12 @@ These numbers to do not include racial bonuses.",
                 #endregion
                 #region Rage Cost per Damage
                 case "Rage Cost per Damage": {
-                    if (_subPointNameColors_DPSDPR == null) {
+                    /*if (_subPointNameColors_DPSDPR == null) {
                         _subPointNameColors_DPSDPR = new Dictionary<string, Color>();
                         _subPointNameColors_DPSDPR.Add("Damage Per Rage Point", Color.FromArgb(255, 255, 0, 0));
                         _subPointNameColors_DPSDPR.Add("Deep Wounds Bonus", Color.FromArgb(255, 0, 0, 255));
                     }
-                    _subPointNameColors = _subPointNameColors_DPSDPR;
+                    _subPointNameColors = _subPointNameColors_DPSDPR;*/
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     float DeepWoundsDamage = calculations.Rot.DW.TickSize * 6f;
 

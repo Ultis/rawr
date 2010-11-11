@@ -874,45 +874,22 @@ namespace Rawr //O O . .
             }
         }
 
-        private bool waistBSSocket;
-        public bool WaistBlacksmithingSocketEnabled { 
-            get 
-            { 
-                return waistBSSocket; 
-            }            
-            set
-            {
-                waistBSSocket = value;
-                OnCalculationsInvalidated();
-            }
+        private bool waistBSSocket = false;
+        public bool WaistBlacksmithingSocketEnabled {
+            get { return waistBSSocket; }            
+            set { waistBSSocket = value; OnCalculationsInvalidated(); }
         }
 
-        private bool handsBSSocket;
-        public bool HandsBlacksmithingSocketEnabled
-        {
-            get
-            {
-                return handsBSSocket;
-            }
-            set
-            {
-                handsBSSocket = value;
-                OnCalculationsInvalidated();
-            }
+        private bool handsBSSocket = false;
+        public bool HandsBlacksmithingSocketEnabled {
+            get { return handsBSSocket; }
+            set { handsBSSocket = value; OnCalculationsInvalidated(); }
         }
 
-        private bool wristBSSocket;
-        public bool WristBlacksmithingSocketEnabled 
-        {
-            get
-            {
-                return wristBSSocket;
-            }
-            set
-            {
-                wristBSSocket = value;
-                OnCalculationsInvalidated();
-            }
+        private bool wristBSSocket = false;
+        public bool WristBlacksmithingSocketEnabled  {
+            get { return wristBSSocket; }
+            set { wristBSSocket = value; OnCalculationsInvalidated(); }
         }
 
         private Profession _primaryProfession = Profession.None;
@@ -989,7 +966,9 @@ namespace Rawr //O O . .
         public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
         {
             bool blacksmithingSocket = false;
-            if ((slot == CharacterSlot.Waist && WaistBlacksmithingSocketEnabled) || (slot == CharacterSlot.Hands && HandsBlacksmithingSocketEnabled) || (slot == CharacterSlot.Wrist && WristBlacksmithingSocketEnabled))
+            if ((slot == CharacterSlot.Waist && WaistBlacksmithingSocketEnabled)
+                || (slot == CharacterSlot.Hands && HandsBlacksmithingSocketEnabled)
+                || (slot == CharacterSlot.Wrist && WristBlacksmithingSocketEnabled))
             {
                 blacksmithingSocket = true;
             }

@@ -273,10 +273,6 @@
       <Link>Items\ItemBrowser.xaml.cs</Link>
       <DependentUpon>ItemBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemButton.xaml.cs">
-      <Link>Items\ItemButton.xaml.cs</Link>
-      <DependentUpon>ItemButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemButtonWithEnchant.xaml.cs">
       <Link>Items\ItemButtonWithEnchant.xaml.cs</Link>
       <DependentUpon>ItemButtonWithEnchant.xaml</DependentUpon>
@@ -523,11 +519,6 @@
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemBrowser.xaml">
       <Link>Items\ItemBrowser.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemButton.xaml">
-      <Link>Items\ItemButton.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

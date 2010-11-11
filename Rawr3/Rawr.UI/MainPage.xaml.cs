@@ -111,6 +111,10 @@ namespace Rawr.UI
                         ItemCache.OnItemsChanged();
                     }
 
+                    WristButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("WristBlacksmithingSocketEnabled"));
+                    HandButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("HandsBlacksmithingSocketEnabled"));
+                    BeltButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("WaistBlacksmithingSocketEnabled"));
+
                     Character.IsLoading = false;
                     character_CalculationsInvalidated(this, EventArgs.Empty);
 
@@ -215,19 +219,14 @@ namespace Rawr.UI
             //_unsavedChanges = true;
             referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
             UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
-            if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing)
-            {
-                //HandBSCheck.IsChecked = true;
-                //WristBSCheck.IsChecked = true;
-                HandBSCheck.IsEnabled = true;
-                WristBSCheck.IsEnabled = true;
-            }
-            else
-            {
-                HandBSCheck.IsChecked = false;
-                WristBSCheck.IsChecked = false;
-                HandBSCheck.IsEnabled = false;
-                WristBSCheck.IsEnabled = false;
+            if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing) {
+                HandButton.EnableBSSocket = true;
+                WristButton.EnableBSSocket = true;
+            } else {
+                HandButton.BSSocketIsChecked = false;
+                WristButton.BSSocketIsChecked = false;
+                HandButton.EnableBSSocket = false;
+                WristButton.EnableBSSocket = false;
             }
             if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
             {

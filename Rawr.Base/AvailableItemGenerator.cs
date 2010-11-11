@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-#if RAWR3 || RAWR4
 using System.Linq;
-#endif
+using System.Text;
 
 namespace Rawr.Optimizer
 {
@@ -1349,7 +1347,9 @@ namespace Rawr.Optimizer
         public int GetItemGemCount(Item item)
         {
             int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled)
+                                    || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled)
+                                    || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
             switch (item.SocketColor1)
             {
                 case ItemSlot.Meta:
@@ -1752,7 +1752,9 @@ namespace Rawr.Optimizer
 #if RAWR4
             Reforging[] possibleReforgings = null;
 #endif
-            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled) || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled)
+                                    || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled)
+                                    || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
 
             if (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*"))
             {
