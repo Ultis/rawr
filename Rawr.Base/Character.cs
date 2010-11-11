@@ -920,6 +920,11 @@ namespace Rawr //O O . .
             }
         }
 
+        /// <summary>
+        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided profession check
+        /// </summary>
+        /// <param name="p">The Profession to match</param>
+        /// <returns>True if one of the two professions matches, false if no match on either</returns>
         public bool HasProfession(Profession p)
         {
             if (PrimaryProfession == p) { return true; }
@@ -927,6 +932,11 @@ namespace Rawr //O O . .
             return false;
         }
 
+        /// <summary>
+        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided professions check
+        /// </summary>
+        /// <param name="list">The Professions to match</param>
+        /// <returns>True if one of the two professions matches anything in the list, false if no match on either</returns>
         public bool HasProfession(List<Profession> list)
         {
             foreach (Profession p in list)

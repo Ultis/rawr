@@ -123,22 +123,49 @@ namespace Rawr.UI
         }
 
         private void SetSocketColor(Button button, ItemSlot slot) {
-            switch (slot)
-            {
-                case ItemSlot.Blue: button.Background = new SolidColorBrush(Colors.Blue); break;
-                case ItemSlot.Red: button.Background = new SolidColorBrush(Colors.Red); break;
-                case ItemSlot.Yellow: button.Background = new SolidColorBrush(Colors.Yellow); break;
-                case ItemSlot.Prismatic: button.Background = new SolidColorBrush(Colors.LightGray); break;
-                case ItemSlot.Meta: button.Background = new SolidColorBrush(Colors.DarkGray); break;
-                default: button.Background = new SolidColorBrush(SystemColors.ControlColor); break;
+            Brush b;
+            switch (slot) {
+                // Site for colors: http://www.thereforesystems.com/silverlight-predefined-colors-what-color-are-they/
+                case ItemSlot.Blue:      b = new SolidColorBrush(Color.FromArgb(255,000,000,139)); break; // Dark Blue
+                case ItemSlot.Red:       b = new SolidColorBrush(Color.FromArgb(255,139,000,000)); break; // Dark Red
+                case ItemSlot.Yellow:    b = new SolidColorBrush(Color.FromArgb(255,218,165,032)); break; // Goldenrod
+                case ItemSlot.Meta:      b = new SolidColorBrush(Color.FromArgb(255,059,059,059)); break; // Very Dark Gray
+                case ItemSlot.Prismatic: b = new SolidColorBrush(Color.FromArgb(255,097,117,132)); break; // Gray
+                default:                 b = new SolidColorBrush(SystemColors.ControlColor); break;
             }
+            /*b = new LinearGradientBrush(new GradientStopCollection() {
+                new GradientStop(){ Color = Color.FromArgb(255,000,000,139), Offset = 0 },
+                new GradientStop(){ Color = Color.FromArgb(255,000,000,000), Offset = 1 },
+            }, 90);*/
+            button.Background = b;
+            button.BorderBrush = b;
+            button.BorderThickness = new Thickness(2);
         }
         private void SetSocketColors()
         {
-            SetSocketColor(GemButton1, Item.Item.SocketColor1);
-            SetSocketColor(GemButton2, Item.Item.SocketColor2);
-            SetSocketColor(GemButton3, Item.Item.SocketColor3);
+            SetSocketColor(GemButton1, Item.Item.SocketColor1 != ItemSlot.None ? Item.Item.SocketColor1 : ((GetWhichIsBSSocket() == 1) ? ItemSlot.Prismatic : ItemSlot.None));
+            SetSocketColor(GemButton2, Item.Item.SocketColor2 != ItemSlot.None ? Item.Item.SocketColor2 : ((GetWhichIsBSSocket() == 2) ? ItemSlot.Prismatic : ItemSlot.None));
+            SetSocketColor(GemButton3, Item.Item.SocketColor3 != ItemSlot.None ? Item.Item.SocketColor3 : ((GetWhichIsBSSocket() == 3) ? ItemSlot.Prismatic : ItemSlot.None));
         }
+
+        private int GetWhichIsBSSocket() {
+            int retVal = -1;
+            //
+            int nonBSSocketCount = (Item.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
+                                 + (Item.Item.SocketColor2 != ItemSlot.None ? 1 : 0)
+                                 + (Item.Item.SocketColor3 != ItemSlot.None ? 1 : 0);
+            //
+            bool BSSlot_Wrist = Slot == CharacterSlot.Wrist && Character.WristBlacksmithingSocketEnabled && Character.HasProfession(Profession.Blacksmithing);
+            bool BSSlot_Glove = Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled && Character.HasProfession(Profession.Blacksmithing);
+            bool BSSlot_Waist = Slot == CharacterSlot.Waist && Character.WaistBlacksmithingSocketEnabled;
+            // If there is no gem socket there, hide the selector
+            if (nonBSSocketCount == 0 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist)) { retVal = 1; }
+            if (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist)) { retVal = 2; }
+            if (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist)) { retVal = 3; }
+            //
+            return retVal;
+        }
+
 
         public ItemButtonWithEnchant()
         {
@@ -338,18 +365,15 @@ namespace Rawr.UI
         private bool _EnableBSSocket = true; public bool EnableBSSocket { get { return _EnableBSSocket; } set { _EnableBSSocket = value; UpdateButtonOptions(); } }
 
         public Boolean BSSocketIsChecked {
-            get {
-                Boolean retVal = (Boolean)this.GetValue(BSSocketProperty);
-                //if (CK_BSSocket.IsChecked != retVal) { CK_BSSocket.IsChecked = retVal; }
-                return retVal;
-            }
+            get { return (Boolean)this.GetValue(BSSocketProperty); }
             set {
+                // Set the Value
                 this.SetValue(BSSocketProperty, value);
-                // Update Character's slot check, if need be
+                // Update Character's slot check, if need be. The if is to prevent stack overflow
                 if (Slot == CharacterSlot.Wrist && Character.WristBlacksmithingSocketEnabled != value) { Character.WristBlacksmithingSocketEnabled = value; }
                 else if (Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled != value) { Character.HandsBlacksmithingSocketEnabled = value; }
                 else if (Slot == CharacterSlot.Waist && Character.WaistBlacksmithingSocketEnabled != value) { Character.WaistBlacksmithingSocketEnabled = value; }
-                // Update the Checkbox, if need be
+                // Update the Checkbox, if need be. The if is to prevent stack overflow
                 if (CK_BSSocket.IsChecked != value) { CK_BSSocket.IsChecked = value; }
             }
         }
