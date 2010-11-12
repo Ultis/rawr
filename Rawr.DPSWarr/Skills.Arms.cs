@@ -10,15 +10,15 @@ namespace Rawr.DPSWarr.Skills
     public class MortalStrike : Ability
     {
         public static new string SName { get { return "Mortal Strike"; } }
-        public static new string SDesc { get { return "A vicious strike that deals 185% weapon damage plus 423 and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
+        public static new string SDesc { get { return "A vicious strike that deals 150% weapon damage plus 423 and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
         public static new string SIcon { get { return "ability_warrior_savageblow"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// A vicious strike that deals 185% weapon damage plus 423 and wounds the
+        /// A vicious strike that deals 150% weapon damage plus 423 and wounds the
         /// target, reducing the effectiveness of any healing received by 10% for 10 sec.
-        /// <para>Talents: Mortal Strike (Requires Talent), Improved Mortal Strike [+(10-ROUNDUP(10/3*Pts))% Dmg, -(1/3*Pts) Cd]</para>
+        /// <para>Talents: none</para>
         /// <para>Glyphs: Glyph of Mortal Strike [+10% Dmg]</para>
         /// <para>Sets: T8 4P [+Crit %]</para>
         /// </summary>
@@ -28,7 +28,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * 1.85f + 423f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f + 423f;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f));
             Cd = 4.5f; // In Seconds
             RageCost = 25f;
@@ -60,7 +60,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             Cd = 20f;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * 1.50f + 120f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f + 120f;
             UseReact = true;
             //
             Initialize();
@@ -561,7 +561,7 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (!Validated) { return 0f; }
 
-                float DmgBonusBase = (StatS.AttackPower * combatFactors._c_mhItemSpeed) / 14f
+                float DmgBonusBase = (StatS.AttackPower * 3.3f/*combatFactors._c_mhItemSpeed*/) / 14f
                                    + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
                 DmgBonusBase *= 0.25f * 6f; // Not sure where the 0.25 * 5 (now 6) was so adding it in now
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
@@ -581,28 +581,4 @@ namespace Rawr.DPSWarr.Skills
             return result;
         }
     }
-    // Used for... something
-    /*public class FakeWhite : Ability
-    {
-        public static new string SName { get { return "MH White Swing"; } }
-        public static new string SDesc { get { return "White Damage"; } }
-        public override string Name { get { return SName; } }
-        public override string Desc { get { return SDesc; } }
-        public FakeWhite(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
-            //
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
-            Cd = Whiteattacks.MhEffectiveSpeed;
-            RageCost = Whiteattacks.MHSwingRage;
-            StanceOkArms = StanceOkFury = StanceOkDef = true;
-            DamageBase = Whiteattacks.MhDamageOnUse;
-            //DamageBonus = (1f + Talents.UnendingFury * 0.02f) * (1f + StatS.BonusWarrior_T7_2P_SlamDamage);
-            //BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
-            //
-            Initialize();
-            MHAtkTable = Whiteattacks.MHAtkTable;
-        }
-    }*/
 }

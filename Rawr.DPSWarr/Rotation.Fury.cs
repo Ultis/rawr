@@ -415,7 +415,7 @@ namespace Rawr.DPSWarr
                 float other = RageGenOverDur_Other;
                 float needy = RageNeededOverDur;
                 return white + other - needy;*/
-                return WhiteAtks.whiteRageGenOverDurNoHS * (1f - timeLostPerc) +
+                return WhiteAtks.whiteRageGenOverDur * (1f - timeLostPerc) +
                        RageGenOverDur_Other -
                        RageNeededOverDur;
             }

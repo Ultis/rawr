@@ -161,7 +161,7 @@ namespace Rawr.DPSWarr {
         public float HealthBonus { get { return 1f + StatS.BonusHealingReceived; } }
         #endregion
         #region Weapon Damage
-        public float OHDamageReduc { get { return 0.5f; } }
+        public float OHDamageReduc { get { return 0.50f + (FuryStance ? 0.25f : 0f); } }
         public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH) : 0f; } }
         public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) { return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage; }

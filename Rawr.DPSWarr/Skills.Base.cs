@@ -25,8 +25,6 @@ namespace Rawr.DPSWarr.Skills
             FightDuration = BossOpts.BerserkTimer;
             //
             Slam_ActsOverDur = 0f;
-            _uwProcValue_mh = combatFactors._c_mhItemSpeed;// *Talents.UnbridledWrath / 20.0f;
-            _uwProcValue_oh = combatFactors._c_ohItemSpeed;// *Talents.UnbridledWrath / 20.0f;
         }
         public void InvalidateCache()
         {
@@ -41,10 +39,6 @@ namespace Rawr.DPSWarr.Skills
         private BossOptions BossOpts;
         public AttackTable MHAtkTable { get; private set; }
         public AttackTable OHAtkTable { get; private set; }
-        private float _uwProcValue_mh;
-        private float _uwProcValue_oh;
-        public float MHUWProcValue { get { return _uwProcValue_mh; } }
-        public float OHUWProcValue { get { return _uwProcValue_oh; } }
         private float FightDuration;
         private float AvgTargets
         {
@@ -121,15 +115,6 @@ namespace Rawr.DPSWarr.Skills
                 else return 0f;
             }
         }
-        public float MhActivatesNoHS
-        {
-            get
-            {
-                if (MhEffectiveSpeed != 0)
-                    return FightDuration / MhEffectiveSpeed;
-                else return 0f;
-            }
-        }
         public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
         // Off Hand
         public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
@@ -186,7 +171,82 @@ namespace Rawr.DPSWarr.Skills
         }
         public float OhDPS { get { return AvgOhDamageOnUse / FightDuration; } }
         // Rage Calcs
+        // Jothay's in-game testing:
+        // This includes the 25% bonus from Anger Management
+        // And Haste of 10.40% (341 Rating)
+        // 21 rage per swing with a 2.7 speed weapon at level 80
+        // xx rage per swing with a 2.8 speed weapon at level 80 // Need one
+        // 22 rage per swing with a 2.9 speed weapon at level 80
+        // 24 rage per swing with a 3.0 speed weapon at level 80
+        // xx rage per swing with a 3.1 speed weapon at level 80 // Need one
+        // xx rage per swing with a 3.2 speed weapon at level 80 // Need one
+        // 26 rage per swing with a 3.3 speed weapon at level 80
+        // 27 rage per swing with a 3.4 speed weapon at level 80
+        // 28 rage per swing with a 3.5 speed weapon at level 80
+        // 29 rage per swing with a 3.6 speed weapon at level 80
+        // 29 rage per swing with a 3.7 speed weapon at level 80
+        // xx rage per swing with a 3.8 speed weapon at level 80 // Need one
+        //
+        // THIS MEANS:
+        // Anger Mod	25%
+        // Seconds	    600
+        // Rage Const	0.16923077
+        //
+        // Speed	Rage	UnMod	Acts	Rage Over   UnMOD Rage	Rage Consts	  At Normalized
+        // 	    	        Rage		     Time	    Over Time	              Rage Const (3.3)
+        // 2.7	    20	    15.00	222	    4444	        3333	0.18000000	   15.95
+        // 2.8	    21	    15.75	214	    4500	        3375	0.17777778	   16.55
+        // 2.9	    22	    16.50	207	    4552	        3414	0.17575758	   17.14
+        // 3.0	    23	    17.25	200	    4600	        3450	0.17391304	   17.73
+        // 3.1	    24.5	18.38	194	    4742	        3556	0.16870748	   18.32
+        // 3.2	    25.25	18.94	188	    4734	        3551	0.16897690	   18.91
+        // 3.3	    26	    19.50	182	    4727	        3545	0.16923077	   19.50
+        // 3.4	    27	    20.25	176	    4765	        3574	0.16790123	   20.09
+        // 3.5	    28	    21.00	171	    4800	        3600	0.16666667	   20.68
+        // 3.6	    29	    21.75	167	    4833	        3625	0.16551724	   21.27
+        // 3.7	    30	    22.50	162	    4865	        3649	0.16444444	   21.86
+        // 3.8	    31	    23.25	158	    4895	        3671	0.16344086	   22.45
+        private const float RAGEPERSWING = 15f; // 5 Per Swing (Estimated)
+        private float getragefromspeedMH { get { return combatFactors.MHSpeed / RAGEFROMSPEED; } }
+        private float getragefromspeedOH { get { return combatFactors.OHSpeed / RAGEFROMSPEED; } }
+        private const float RAGEFROMSPEED = 0.12656043f; // approx 1/8
+        private const float RAGECRITMOD = 2.00f; // 2x Rage
+        private const float RAGEOHMOD = 0.50f; // 50% Rage
+        private const float RAGEANGERMNGTMOD = 1.25f; // +25% Rage gen for Arms spec
         private float _MHSwingRage = -1f;
+        public float MHSwingRage
+        {
+            get
+            {
+                if (_MHSwingRage == -1f)
+                {
+                    float baserage = getragefromspeedMH;//RAGEPERSWING;                  // Base Rage Per Swing
+                    //baserage *= combatFactors.DamageBonus;      // Global Damage Bonuses // Damage is not a factor
+                    //baserage *= combatFactors.DamageReduction;  // Global Damage Penalties // Damage is not a factor
+
+                    // Work the Attack Table
+                    float rageDrop = (1f
+                        - MHAtkTable.Miss   // no rage when being missed
+                        - MHAtkTable.Dodge  // no rage when being dodged
+                        - MHAtkTable.Parry  // no rage when being parried
+                        - MHAtkTable.Glance // glancing handled below
+                        - MHAtkTable.Block  // blocked handled below
+                        - MHAtkTable.Crit); // crits   handled below
+
+                    float rageGlance = baserage * MHAtkTable.Glance * 1f; //combatFactors.ReducWhGlancedDmg;// Partial Rage when glancing
+                    float rageBlock  = baserage * MHAtkTable.Block  * 1f; //combatFactors.ReducWhBlockedDmg;// Partial Rage when blocked
+                    float rageCrit   = baserage * MHAtkTable.Crit   * RAGECRITMOD;                    // Bonus Rage when critting
+
+                    baserage *= rageDrop;
+
+                    baserage += rageGlance + rageBlock + rageCrit;
+
+                    _MHSwingRage = baserage * (!combatFactors.FuryStance ? RAGEANGERMNGTMOD: 1f);
+                }
+                return _MHSwingRage;
+            }
+        }
+        /*private float _MHSwingRage = -1f;
         public float MHSwingRage
         {
             get
@@ -205,8 +265,41 @@ namespace Rawr.DPSWarr.Skills
                 }
                 return _MHSwingRage;
             }
-        }
+        }*/
         private float _OHSwingRage = -1f;
+        public float OHSwingRage
+        {
+            get
+            {
+                if (_OHSwingRage == -1f)
+                {
+                    float baserage = getragefromspeedOH;//RAGEPERSWING;                  // Base Rage Per Swing
+                    //baserage *= combatFactors.DamageBonus;      // Global Damage Bonuses // Damage is not a factor
+                    //baserage *= combatFactors.DamageReduction;  // Global Damage Penalties // Damage is not a factor
+
+                    // Work the Attack Table
+                    float rageDrop = (1f
+                        - OHAtkTable.Miss   // no rage when being missed
+                        - OHAtkTable.Dodge  // no rage when being dodged
+                        - OHAtkTable.Parry  // no rage when being parried
+                        - OHAtkTable.Glance // glancing handled below
+                        - OHAtkTable.Block  // blocked handled below
+                        - OHAtkTable.Crit); // crits   handled below
+
+                    float rageGlance = baserage * OHAtkTable.Glance * 1f; //combatFactors.ReducWhGlancedDmg;// Partial Rage when glancing
+                    float rageBlock = baserage * OHAtkTable.Block * 1f; //combatFactors.ReducWhBlockedDmg;// Partial Rage when blocked
+                    float rageCrit = baserage * OHAtkTable.Crit * RAGECRITMOD;                    // Bonus Rage when critting
+
+                    baserage *= rageDrop;
+
+                    baserage += rageGlance + rageBlock + rageCrit;
+
+                    _OHSwingRage = baserage * (!combatFactors.FuryStance ? RAGEANGERMNGTMOD : 1f) * RAGEOHMOD;
+                }
+                return _OHSwingRage;
+            }
+        }
+        /*private float _OHSwingRage = -1f;
         public float OHSwingRage
         {
             get
@@ -224,14 +317,12 @@ namespace Rawr.DPSWarr.Skills
                 }
                 return _OHSwingRage;
             }
-        }
-        public float MHRageGenOverDur { get { return MhActivates * (MHSwingRage + MHUWProcValue); } }
-        public float MHRageGenOverDurNoHS { get { return MhActivatesNoHS * (MHSwingRage + MHUWProcValue); } }
-        public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f; } }
+        }*/
+        public float MHRageGenOverDur { get { return MhActivates * MHSwingRage; } }
+        public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * OHSwingRage : 0f; } }
         // Rage generated per second
         private float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }
         public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
-        public float whiteRageGenOverDurNoHS { get { return MHRageGenOverDurNoHS + OHRageGenOverDur; } }
 
         private const float c_const1 = 0.016545334215751158173395102581072f; // 7.5f / 453.3f;
         private const float c_const2 = 0.033090668431502316346790205162144f; // 2*c_const
@@ -247,7 +338,7 @@ namespace Rawr.DPSWarr.Skills
         // Other
         public float RageSlip(float abilInterval, float rageCost) {
             if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
-            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MhActivates * (MHSwingRage + MHUWProcValue) + (combatFactors.useOH ? OhActivates * (OHSwingRage + OHUWProcValue) : 0f)) / FightDuration));
+            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);
@@ -753,5 +844,4 @@ namespace Rawr.DPSWarr.Skills
         }
     }
     #endregion
-
 }

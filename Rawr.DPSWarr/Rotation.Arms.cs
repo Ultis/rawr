@@ -93,7 +93,7 @@ namespace Rawr.DPSWarr {
             bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool clok = BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
                      && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
-            availRage += WhiteAtks.whiteRageGenOverDurNoHS * percTimeInDPS * percTimeOver20;
+            availRage += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * percTimeOver20;
             availRage -= SL.Rage;
             float repassAvailRage = 0f;
             PercFailRage = 1f;
@@ -353,7 +353,7 @@ namespace Rawr.DPSWarr {
             float newHSActs = HS.numActivatesU20 = 0f;
             float newCLActs = CL.numActivatesU20 = 0f;
             float origAvailRage = preloopAvailRage * (/*1f -*/ percTimeUnder20);
-            availRage += WhiteAtks.whiteRageGenOverDurNoHS * percTimeInDPS * (/*1f -*/ percTimeUnder20);
+            availRage += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * (/*1f -*/ percTimeUnder20);
             availRage -= EX.RageU20;
             float repassAvailRage = 0f;
             PercFailRageUnder20 = 1f;

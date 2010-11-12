@@ -50,8 +50,8 @@ namespace Rawr.DPSWarr.Skills
                 // Doing it this way because Deep Wounds triggering off of a MH crit
                 // and Deep Wounds triggering off of an OH crit do diff damage.
                 // Damage stores the average damage of single deep wounds trigger
-                float Damage = combatFactors.AvgMhWeaponDmgUnhasted * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
-                               combatFactors.AvgOhWeaponDmgUnhasted * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
+                float Damage = combatFactors.NormalizedMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
+                               combatFactors.NormalizedOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
 
                 Damage *= (1f + StatS.BonusBleedDamageMultiplier);
                 Damage *= combatFactors.DamageBonus;
