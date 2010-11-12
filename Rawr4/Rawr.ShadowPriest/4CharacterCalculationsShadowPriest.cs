@@ -24,9 +24,11 @@ namespace Rawr.ShadowPriest
         public Spell PowerWordShield;
         public Spell MindSpike;
 
+        public string Rotation;
+        public string RotationDetails;
+
         public Character LocalCharacter { get; set; }
         
-
         private float _overallPoints = 0f;
         public override float OverallPoints
         {
@@ -95,9 +97,7 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Mind Sear", new MindSear().AverageDamage.ToString());
             dictValues.Add("PW Shield", new PowerWordShield().AverageDamage.ToString());
 
-            Rotation r = new Rotation(new SpellBox());
-
-            dictValues.Add("Rotation", r.ToString() + "*" + r.ToDetailedString() );
+            dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
 
             //"Simulation:Castlist",
             //"Simulation:DPS",

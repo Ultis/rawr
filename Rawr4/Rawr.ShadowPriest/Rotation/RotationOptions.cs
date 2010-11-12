@@ -6,7 +6,7 @@ namespace Rawr.ShadowPriest
 {
     public class RotationOptions : IRotationOptions
     {
-        public RotationOptions(bool useXXX)
+        public RotationOptions() //bool useXXX)
         {
             //UseXXX = useFN;
         }

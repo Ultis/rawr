@@ -8,7 +8,36 @@ namespace Rawr.ShadowPriest
 {
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase
-    {    
+    {
+        private List<GemmingTemplate> _defaultGemmingTemplates = null;
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                if (_defaultGemmingTemplates == null)
+                {
+                    _defaultGemmingTemplates = new List<GemmingTemplate>();
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old", false, 40113, 40152, 40155, 0, 40153, 41285);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old (Jewelcrafting)", false, 42144, 40152, 40155, 0, 40153, 41285);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 52207, 52239, 52208, 52205, 52217, 52296);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52217, 52296);
+                }
+                return _defaultGemmingTemplates;
+            }
+        }
+
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int potent, int reckless, int artful, int blue, int meta)
+        {
+            list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = potent, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = reckless, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            if (artful != 0)
+            {
+                list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = artful, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            }
+        }
+
+        /*
         #region Gemming
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -27,7 +56,7 @@ namespace Rawr.ShadowPriest
                     int smoothGW = 59378; //crit
                     int quickGW = 59479; //haste
                     int sparklingGW = 59496; //spirit
-                    */
+                    * /
 
                     // [0] uncommon
                     // [1] rare
@@ -79,6 +108,7 @@ namespace Rawr.ShadowPriest
             list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
         }
         #endregion
+        */
         #region DeserializeDataObject
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
@@ -101,6 +131,7 @@ namespace Rawr.ShadowPriest
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
                     _subPointNameColors.Add("DPS", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 0));
                 }
                 return _subPointNameColors;
             }
@@ -263,6 +294,8 @@ namespace Rawr.ShadowPriest
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
             calculatedStats.BasicStats = stats;
             calculatedStats.LocalCharacter = character;
+            calcOpts.calculatedStats = calculatedStats;
+
 
             Rawr.ShadowPriest.Solver.solve(calculatedStats, calcOpts, bossOpts);
 
@@ -304,6 +337,55 @@ namespace Rawr.ShadowPriest
         {
             Stats s = new Stats()
             {
+                #region Basic stats
+                Intellect = stats.Intellect,
+                Mana = stats.Mana,
+                Spirit = stats.Spirit,
+                SpellCrit = stats.SpellCrit,
+                SpellCritOnTarget = stats.SpellCritOnTarget,
+                SpellHit = stats.SpellHit,
+                SpellHaste = stats.SpellHaste,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                HitRating = stats.HitRating,
+                SpellShadowDamageRating = stats.SpellShadowDamageRating,
+                SpellFrostDamageRating = stats.SpellFrostDamageRating,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                ManaRestore = stats.ManaRestore,
+                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
+                MovementSpeed = stats.MovementSpeed,
+                #endregion
+                #region Multipliers
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                #endregion
+                #region Misc Damage
+                HolyDamage = stats.HolyDamage,
+                FrostDamage = stats.FrostDamage,
+                ShadowDamage = stats.ShadowDamage,
+                #endregion
+                #region Resistance
+                Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
+                ArcaneResistance = stats.ArcaneResistance,
+                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                FireResistance = stats.FireResistance,
+                FireResistanceBuff = stats.FireResistanceBuff,
+                FrostResistance = stats.FrostResistance,
+                FrostResistanceBuff = stats.FrostResistanceBuff,
+                NatureResistance = stats.NatureResistance,
+                NatureResistanceBuff = stats.NatureResistanceBuff,
+                ShadowResistance = stats.ShadowResistance,
+                ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                #endregion
+
+                /*
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Resilience = stats.Resilience,
@@ -364,7 +446,7 @@ namespace Rawr.ShadowPriest
                 TimbalsProc = stats.TimbalsProc,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                */
+                * /
 
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
@@ -378,71 +460,136 @@ namespace Rawr.ShadowPriest
                 NatureResistanceBuff = stats.NatureResistanceBuff,
                 ShadowResistance = stats.ShadowResistance,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                */
             };
-
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use || 
+                    effect.Trigger == Trigger.SpellCast || 
+                    effect.Trigger == Trigger.SpellHit || 
+                    effect.Trigger == Trigger.SpellCrit || 
+                    effect.Trigger == Trigger.SpellMiss || 
+                    effect.Trigger == Trigger.DamageSpellCast || 
+                    effect.Trigger == Trigger.DamageSpellCrit || 
+                    effect.Trigger == Trigger.DamageSpellHit || 
+                    effect.Trigger == Trigger.DoTTick || 
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone)
+                {
+                    if (HasRelevantStats(effect.Stats))
+                    {
+                        s.AddSpecialEffect(effect);
+                    }
+                }
+            }
+            #endregion
             return s;
         }
         public override bool HasRelevantStats(Stats stats)
         {
-            #region Yes
-            bool Yes = (
-                stats.Intellect + stats.Mana + stats.Spirit + stats.SpellPower
-                + stats.SpellShadowDamageRating + stats.CritRating
-                + stats.SpellCrit + stats.HitRating + stats.SpellHit + stats.SpellCritOnTarget
-                + stats.SpellHaste + stats.HasteRating
+            float shadowStats = 0;
+                #region Basic stats
+            shadowStats +=
+                stats.Intellect +
+                stats.Mana +
+                stats.Spirit + 
+                stats.SpellCrit +
+                stats.SpellCritOnTarget +
+                stats.SpellHit +
+                stats.SpellHaste +
+                stats.SpellPower +
+                stats.CritRating +
+                stats.HasteRating +
+                stats.HitRating +
+                stats.SpellShadowDamageRating +
+                stats.SpellFrostDamageRating +
+                stats.ManaRestoreFromMaxManaPerSecond +
+                stats.ManaRestore +
+                stats.ManaRestoreFromBaseManaPPM +
+                stats.MovementSpeed;
+                #endregion
+                #region Multipliers
+                shadowStats +=
+                stats.BonusIntellectMultiplier +
+                stats.BonusSpiritMultiplier +
+                stats.BonusSpellCritMultiplier +
+                stats.BonusSpellPowerMultiplier +
+                stats.BonusShadowDamageMultiplier +
+                stats.BonusFrostDamageMultiplier +
+                stats.BonusDamageMultiplier;
+                #endregion
+                #region Misc Damage
+                shadowStats +=
+                stats.HolyDamage +
+                stats.FrostDamage +
+                stats.ShadowDamage;
+                #endregion
+                #region Resistance
+                shadowStats +=
+                stats.Armor +
+                stats.BonusArmor +
+                stats.ArcaneResistance +
+                stats.ArcaneResistanceBuff +
+                stats.FireResistance +
+                stats.FireResistanceBuff +
+                stats.FrostResistance +
+                stats.FrostResistanceBuff +
+                stats.NatureResistance +
+                stats.NatureResistanceBuff +
+                stats.ShadowResistance +
+                stats.ShadowResistanceBuff;
+                #endregion
 
-                + stats.BonusSpiritMultiplier
-                + stats.BonusIntellectMultiplier + stats.BonusManaPotion
-                + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
-                + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
-                + stats.BonusDiseaseDamageMultiplier
-                + stats.PriestInnerFire + stats.MovementSpeed
+            bool relevant = (shadowStats > 0);
+            #region Trinkets
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.Use ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellMiss ||
+                    effect.Trigger == Trigger.DamageSpellCast ||
+                    effect.Trigger == Trigger.DamageSpellCrit ||
+                    effect.Trigger == Trigger.DamageSpellHit ||
+                    effect.Trigger == Trigger.DoTTick ||
+                    effect.Trigger == Trigger.DamageDone ||
+                    effect.Trigger == Trigger.DamageOrHealingDone)                {
+                    relevant |= HasRelevantStats(effect.Stats);
+                    if (relevant) break;
+                }
+            }
+            #endregion
+            return relevant;
 
-                + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
-                + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
-                + stats.WeakenedSoulDurationDecrease
-                + stats.DevouringPlagueBonusDamage + stats.MindBlastHasteProc
-                + stats.PriestDPS_T9_2pc + stats.PriestDPS_T9_4pc
-                + stats.PriestDPS_T10_2pc + stats.PriestDPS_T10_4pc
-                + stats.ManaRestoreFromBaseManaPPM + stats.BonusSpellCritMultiplier
-                + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
-                + stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage
-                + stats.HolyDamage + stats.NatureDamage + stats.ShadowDamage
-                + stats.ValkyrDamage
-
-                /*+ stats.SpellPowerFor15SecOnUse90Sec
-                + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
-                + stats.HasteRatingFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse5Min
-                + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnHit_10_45
-                + stats.SpellHasteFor10SecOnCast_10_45 + stats.TimbalsProc
-                + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc*/
-            ) > 0;
-            #endregion
-            #region Maybe
-            bool Maybe = (
-                stats.Stamina + stats.Health + stats.Resilience
-                + stats.Armor + stats.BonusArmor + stats.Agility
-                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
-                + stats.FireResistance + stats.FireResistanceBuff
-                + stats.FrostResistance + stats.FrostResistanceBuff
-                + stats.NatureResistance + stats.NatureResistanceBuff
-                + stats.ShadowResistance + stats.ShadowResistanceBuff
-            ) > 0;
-            #endregion
-            #region No
-            bool No = (
-                stats.Strength + stats.AttackPower
-                + stats.ArmorPenetration + stats.ArmorPenetrationRating
-                + stats.TargetArmorReduction
-                + stats.ExpertiseRating
-                + stats.Dodge + stats.DodgeRating
-                + stats.Parry + stats.ParryRating
-                + stats.Defense + stats.DefenseRating
-            ) > 0;
-            #endregion
-            return Yes || (Maybe && !No);
         }
         #endregion
+        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        {
+            return true;
+        }
+        public override void SetDefaults(Character character)
+        {
+            //character.ActiveBuffsAdd(("Sanctified Retribution"));
+        }
+        public override bool IsItemRelevant(Item item)
+        {
+            if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Wand))
+                return false;
+            return base.IsItemRelevant(item);
+        }
+        public override bool IsBuffRelevant(Buff buff, Character character)
+        {
+            string name = buff.Name;
+            if (!buff.AllowedClasses.Contains(CharacterClass.Priest))
+            {
+                return false;
+            }
+            return base.IsBuffRelevant(buff, character);
+        }
+
+
     }
 
     public static class Constants

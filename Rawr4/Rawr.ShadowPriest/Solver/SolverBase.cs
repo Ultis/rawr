@@ -48,7 +48,7 @@ namespace Rawr.ShadowPriest
         private Rotation getPriorityRotation() //TODO: int type)
         {
            
-            return new Rotation(spellbox); //TODO: , talents);
+            return new Rotation(spellbox, talents, new RotationOptions()); //TODO: , talents);
         }
 
         public static void solve(CharacterCalculationsShadowPriest calculatedStats, CalculationOptionsShadowPriest calcOpts, BossOptions bossOpts)
@@ -60,11 +60,7 @@ namespace Rawr.ShadowPriest
             Rotation rot;
             float damage;
             Stats procStats;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float FightDuration = bossOpts.BerserkTimer;
-#else
-            float FightDuration = calcOpts.FightDuration;
-#endif
 
             // WITHOUT PROCS
             e = new Solver(stats, new Stats{}, talents, calcOpts);
@@ -127,7 +123,7 @@ namespace Rawr.ShadowPriest
             #endregion
 
             calculatedStats.DpsPoints = TotalDamage / FightDuration;
-            calculatedStats.SurvivalPoints = stats.Stamina; //TODO: meaningful surv points
+            calculatedStats.SurvivalPoints = stats.Stamina / FightDuration; //TODO: meaningful surv points
 
             calculatedStats.CombatStats = stats.Clone();
             calculatedStats.CombatStats.Accumulate(procStats);

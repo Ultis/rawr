@@ -12,42 +12,18 @@ namespace Rawr.ShadowPriest
             get { return _name; }
             set { _name = value; }
         }
-
         private string _desc = string.Empty;
         public override string Description
         {
             get { return _desc; }
             set { _desc = value; }
         }
+
+        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get
-            {
-                float f = 0f;
-                foreach (float f2 in _subPoints)
-                    if (f2 > 0)
-                        f += f2;
-                return f;
-            }
-            set
-            {
-                float val = value;
-                for (int x = 1; x < _subPoints.Length; x++)
-                    val -= _subPoints[x];
-                _subPoints[0] = val;
-            }
-        }
-
-        public float DpsPoints
-        {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = (value < 0f) ? 0f : value; }
-        }
-
-        public float SurvivalPoints
-        {
-            get { return _subPoints[1]; }
-            set { _subPoints[1] = (value < 0f) ? 0f : value; }
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f };
@@ -56,6 +32,19 @@ namespace Rawr.ShadowPriest
             get { return _subPoints; }
             set { _subPoints = value; }
         }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = (value < 0f) ? 0f : value; }
+        }
+
+        public float DpsPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = (value < 0f) ? 0f : value; }
+        }
+
 
         private Item _item = null;
         public override Item Item

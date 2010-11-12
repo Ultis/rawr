@@ -17,7 +17,7 @@ namespace Rawr.ShadowPriest
             return xml.ToString();
         }
         [XmlIgnore]
-        public Character calculatedStats = null;
+        public CharacterCalculationsShadowPriest calculatedStats = null;
 
         //latency in s
         private float _LatencyGcd = .15f;

@@ -110,7 +110,7 @@ namespace Rawr.ShadowPriest
             spells = new List<Spell>(15);
         }
 
-        public Rotation(SpellBox spellBox) //, PriestTalents talents, IRotationOptions rotOpt)
+        public Rotation(SpellBox spellBox, PriestTalents talents, IRotationOptions rotOpt)
             : this()
         {
             //Talents = talents;
