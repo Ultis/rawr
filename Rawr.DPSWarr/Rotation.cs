@@ -430,16 +430,20 @@ namespace Rawr.DPSWarr {
         protected float RageMOD_DeadlyCalm { get { return 1f - (Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
         private static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.Use, null, 2f, 0f, 0.05f * 1f),
-            new SpecialEffect(Trigger.Use, null, 2f, 0f, 0.05f * 2f),
-            new SpecialEffect(Trigger.Use, null, 2f, 0f, 0.05f * 3f),
+            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 1f),
+            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 2f),
+            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 3f),
         };
         protected float RageMOD_BattleTrance {
             get {
                 AbilWrapper ms = GetWrapper<MortalStrike>();
                 if (Talents.BattleTrance == 0 || ms.allNumActivates <= 0) { return 1f; }
-                float procVal = 0f;// _SE_BattleTrance[Talents.BattleTrance].GetAverageUptime(FightDuration / ms.allNumActivates, ms.ability.MHAtkTable.AnyLand);
-                return 1f - procVal;
+                float FightDurOver20 = FightDuration * (1f - (float)BossOpts.Under20Perc);
+                float numAffectedItems = _SE_BattleTrance[Talents.BattleTrance].GetAverageProcsPerSecond(
+                    FightDurOver20 / ms.allNumActivates, ms.ability.MHAtkTable.AnyLand, 3.3f, FightDurOver20)
+                    * FightDurOver20;
+                float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurMH * (1f - (float)BossOpts.Under20Perc));
+                return 1f - percAffectedVsUnAffected;
             }
         }
         protected float RageMOD_Total { get { return RageMOD_DeadlyCalm; } }

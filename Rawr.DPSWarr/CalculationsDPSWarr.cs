@@ -1270,8 +1270,7 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.Duration = bossOpts.BerserkTimer;
 
                 calculatedStats.AverageStats = stats;
-                if (needsDisplayCalculations)
-                {
+                if (needsDisplayCalculations) {
                     calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                     calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
                     calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts, bossOpts);
@@ -1301,7 +1300,7 @@ These numbers to do not include racial bonuses.",
                 calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
                 calculatedStats.ArmorPenetration = Math.Min(1f, calculatedStats.ArmorPenetrationRating2Perc);
                 calculatedStats.HasteRating = stats.HasteRating;
-                calculatedStats.HastePercent = stats.PhysicalHaste; //talents.BloodFrenzy * (0.05f) + StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Warrior);
+                calculatedStats.HastePercent = stats.PhysicalHaste;
                 calculatedStats.MasteryVal = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior);
                 
                 // DPS
@@ -1461,8 +1460,6 @@ These numbers to do not include racial bonuses.",
 
         
         #endregion
-
-
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
@@ -1912,7 +1909,7 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.HSorSLHit] = fightDuration / charStruct.Rot.CritHsSlamOverDur;
                 triggerChances[Trigger.HSorSLHit] = 1f;
 
-                triggerIntervals[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().allNumActivates;
+                triggerIntervals[Trigger.ExecuteHit] = (fightDuration * (float)charStruct.bossOpts.Under20Perc) / charStruct.Rot.GetWrapper<Skills.Execute>().allNumActivates;
                 triggerChances[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().ability.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
@@ -1921,19 +1918,11 @@ These numbers to do not include racial bonuses.",
                 triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.WhirlWind>().allNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().allNumActivates);
                 triggerChances[Trigger.WWorCleaveHit] = 1f;
                 
-                float MSCritChance = 0f, MSActs = 0f;
-                Rotation.AbilWrapper ms = charStruct.Rot.GetWrapper<Skills.MortalStrike>();
-                MSActs = ms.allNumActivates; MSCritChance = ms.ability.MHAtkTable.Crit;
-                //foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.MortalStrike) { MSActs = aw.allNumActivates; MSCritChance = aw.ability.MHAtkTable.Crit; break; } }
-                triggerIntervals[Trigger.MortalStrikeCrit] = fightDuration / MSActs; // need to verify this worked
-                triggerChances[Trigger.MortalStrikeCrit] = MSCritChance;
+                triggerIntervals[Trigger.MortalStrikeCrit] = fightDuration / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
+                triggerChances[Trigger.MortalStrikeCrit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().ability.MHAtkTable.Crit;
 
-                float CSLandChance = 0f, CSActs = 0f;
-                Rotation.AbilWrapper cs = charStruct.Rot.GetWrapper<Skills.ColossusSmash>();
-                CSActs = cs.allNumActivates; CSLandChance = cs.ability.MHAtkTable.AnyLand;
-                //foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) { if (aw.ability is Skills.ColossusSmash) { CSActs = aw.allNumActivates; CSLandChance = aw.ability.MHAtkTable.AnyLand; break; } }
-                triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / CSActs;
-                triggerChances[Trigger.ColossusSmashHit] = CSLandChance;
+                triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().allNumActivates;
+                triggerChances[Trigger.ColossusSmashHit] = charStruct.Rot.GetWrapper<Skills.ColossusSmash>().ability.MHAtkTable.AnyLand;
                 
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
@@ -1954,8 +1943,7 @@ These numbers to do not include racial bonuses.",
                 //float attemptedAtkInterval = fightDuration / Rot.AttemptedAtksOverDur;
                 //float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
                 //float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
-                float dmgTakenInterval = fightDuration /
-                    charStruct.bossOpts.AoETargsFreq;
+                float dmgTakenInterval = fightDuration / charStruct.bossOpts.AoETargsFreq;
 
                 float attempted = charStruct.Rot.AttemptedAtksOverDur;
                 float land = charStruct.Rot.LandedAtksOverDur;
@@ -1965,15 +1953,13 @@ These numbers to do not include racial bonuses.",
                 List<Trigger> critTriggers = new List<Trigger>();
                 List<float> critWeights = new List<float>();
                 bool needsHitTableReset = false;
-                foreach (SpecialEffect effect in critEffects)
-                {
+                foreach (SpecialEffect effect in critEffects) {
                     needsHitTableReset = true;
-
                     critTriggers.Add(effect.Trigger);
                     critWeights.Add(1f / (effect.Stats.DeathbringerProc > 0f ? 3f : 1f));
-                        
                 }
                 foreach (SpecialEffect effect in specialEffects) {
+                    #region old arp code
                     /*if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
                             ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
@@ -1994,6 +1980,7 @@ These numbers to do not include racial bonuses.",
                         statsProcs.ArmorPenetrationRating += (procArp - originalStats.ArmorPenetrationRating);
                     } 
                     else */
+                    #endregion
                     
                     float numProcs = 0;
                     if (effect.Stats.ManaorEquivRestore > 0f && effect.Stats.HealthRestoreFromMaxHealth > 0f) {
@@ -2021,12 +2008,9 @@ These numbers to do not include racial bonuses.",
                 }
 
                 WeightedStat[] critProcs;
-                if (critEffects.Count == 0)
-                {
+                if (critEffects.Count == 0) {
                     critProcs = new WeightedStat[] { new WeightedStat() { Value = 0f, Chance = 1f } };
-                }
-                else if (critEffects.Count == 1)
-                {
+                } else if (critEffects.Count == 1) {
                     float interval = triggerIntervals[critEffects[0].Trigger];
                     float chance = triggerChances[critEffects[0].Trigger];
                     float upTime = critEffects[0].GetAverageStackSize(interval, chance, charStruct.combatFactors._c_mhItemSpeed,
@@ -2034,14 +2018,11 @@ These numbers to do not include racial bonuses.",
                     upTime *= critWeights[0];
                     critProcs = new WeightedStat[] { new WeightedStat() { Value = critEffects[0].Stats.CritRating + critEffects[0].Stats.DeathbringerProc, Chance = upTime },
                                                      new WeightedStat() { Value = 0f, Chance = 1f - upTime } };
-                }
-                else
-                {
+                } else {
                     float[] intervals = new float[critEffects.Count];
                     float[] chances = new float[critEffects.Count];
                     float[] offset = new float[critEffects.Count];
-                    for (int i = 0; i < critEffects.Count; i++)
-                    {
+                    for (int i = 0; i < critEffects.Count; i++) {
                         intervals[i] = triggerIntervals[critEffects[i].Trigger];
                         chances[i] = triggerChances[critEffects[i].Trigger];
                         if (critEffects[i].Stats.DeathbringerProc > 0f) critEffects[i].Stats.CritRating = critEffects[i].Stats.DeathbringerProc;
@@ -2049,8 +2030,7 @@ These numbers to do not include racial bonuses.",
 
                     critProcs = SpecialEffect.GetAverageCombinedUptimeCombinations(critEffects.ToArray(), intervals, chances, offset, critWeights.ToArray(), charStruct.combatFactors._c_mhItemSpeed,
                         charStruct.bossOpts.BerserkTimer, AdditiveStat.CritRating);
-                    foreach (SpecialEffect se in critEffects)
-                    {
+                    foreach (SpecialEffect se in critEffects) {
                         if (se.Stats.DeathbringerProc > 0f) se.Stats.CritRating = 0f;
                     }
                 }
@@ -2065,8 +2045,7 @@ These numbers to do not include racial bonuses.",
                     
                     float flurryHitsPerSec = charStruct.combatFactors.TotalHaste * (1f + flurryHaste) / (1f + flurryHaste * oldFlurryUptime);
                     float temp = 1f / charStruct.Char.MainHand.Item.Speed;
-                    if (charStruct.Char.OffHand != null && charStruct.Char.OffHand.Item != null)
-                    {
+                    if (charStruct.Char.OffHand != null && charStruct.Char.OffHand.Item != null) {
                         useOffHand = true;
                         temp += 1f / charStruct.Char.OffHand.Item.Speed;
                         mhPerc = (charStruct.Char.MainHand.Speed / charStruct.Char.OffHand.Speed) / (1f + charStruct.Char.MainHand.Speed / charStruct.Char.OffHand.Speed);
@@ -2076,10 +2055,8 @@ These numbers to do not include racial bonuses.",
                     flurryHitsPerSec *= temp;
                     float flurryDuration = numFlurryHits / flurryHitsPerSec;
                     flurryUptime = 1f;
-                    foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
-                    {
-                        if (aw.ability.CanCrit && aw.allNumActivates > 0f)
-                        {
+                    foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) {
+                        if (aw.ability.CanCrit && aw.allNumActivates > 0f) {
                             float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
                             flurryUptime *= tempFactor;
                             if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
@@ -2130,9 +2107,9 @@ These numbers to do not include racial bonuses.",
 
             float upTime = 0f;
             //float avgStack = 1f;
-            if (effect.Stats.TargetArmorReduction > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
+            /*if (effect.Stats.TargetArmorReduction > 0f || effect.Stats.ArmorPenetrationRating > 0f) {
                 //int j = 0;
-            }
+            }*/
             if (effect.Trigger == Trigger.Use) {
                 if (effect.Stats._rawSpecialEffectDataSize == 1) {
                     upTime = effect.GetAverageUptime(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass);
@@ -2150,6 +2127,11 @@ These numbers to do not include racial bonuses.",
                                                          triggerChances[effect.Trigger],
                                                          charStruct.combatFactors._c_mhItemSpeed,
                                                          fightDuration2Pass);
+            } else if (effect.Trigger == Trigger.ExecuteHit) {
+                upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
+                                                         triggerChances[effect.Trigger],
+                                                         charStruct.combatFactors._c_mhItemSpeed,
+                                                         fightDuration2Pass * (float)charStruct.bossOpts.Under20Perc);
             } else if (triggerIntervals.ContainsKey(effect.Trigger)) {
                 upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],

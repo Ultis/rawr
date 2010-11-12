@@ -176,7 +176,7 @@ namespace Rawr.DPSWarr {
                 if (MS.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, MS.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     MS.numActivates = acts * (1f - BLSspace);
-                    availRage -= MS.Rage * RageMOD_Total * RageMOD_BattleTrance;
+                    availRage -= MS.Rage * RageMOD_Total;
                 }
                 MSspace = MS.numActivates / NumGCDs * MS.ability.UseTime / LatentGCD;
 
@@ -185,7 +185,7 @@ namespace Rawr.DPSWarr {
                 if (TB.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, TB.ability.Activates * percTimeInDPSAndOver20 * PercFailRage);
                     TB.numActivates = acts * (1f - BLSspace);
-                    availRage -= TB.Rage * RageMOD_Total * RageMOD_BattleTrance;
+                    availRage -= TB.Rage * RageMOD_Total;
                 }
                 TFBspace = TB.numActivates / NumGCDs * TB.ability.UseTime / LatentGCD;
 
@@ -193,7 +193,7 @@ namespace Rawr.DPSWarr {
                 if (OP.ability.Validated) {
                     acts = Math.Min(GCDsAvailable, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivates) * percTimeInDPSAndOver20 * PercFailRage);
                     OP.numActivates = acts * (1f - TFBspace - RDspace - BLSspace - MSspace);
-                    availRage -= OP.Rage * RageMOD_Total * RageMOD_BattleTrance;
+                    availRage -= OP.Rage * RageMOD_Total;
                 }
                 OPspace = OP.numActivates / NumGCDs * OP.ability.UseTime / LatentGCD;
 
@@ -395,6 +395,7 @@ namespace Rawr.DPSWarr {
                 if (repassAvailRage < 0f || PercFailRageUnder20 != 1f) {
                     // total the amount of rage you really need and turn it into a percentage that we failed
                     PercFailRageUnder20 *= 1f + repassAvailRage / (availRage - repassAvailRage); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                    if (PercFailRageUnder20 > 1f) { PercFailRageUnder20 = 1f; }
                 } else { PercFailRageUnder20 = 1f; }
 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
@@ -403,7 +404,7 @@ namespace Rawr.DPSWarr {
                     CS.numActivatesU20 = acts;
                     availRage -= CS.RageU20 * RageMOD_Total;
                 }
-                CSspace = CS.numActivatesU20 / NumGCDs * CS.ability.UseTime / LatentGCD;
+                CSspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
 
                 // Rend
                 if (RD.ability.Validated) {
@@ -411,7 +412,7 @@ namespace Rawr.DPSWarr {
                     RD.numActivatesU20 = acts;
                     availRage -= RD.RageU20 * RageMOD_Total;
                 }
-                RDspace = RD.numActivatesU20 / NumGCDs * RD.ability.UseTime / LatentGCD;
+                RDspace = RD.numActivatesU20 / NumGCDsU20 * RD.ability.UseTime / LatentGCD;
 
                 // Thunder Clap
                 if (TH.ability.Validated) {
@@ -420,7 +421,7 @@ namespace Rawr.DPSWarr {
                     (RD.ability as Rend).ThunderAppsU20 = TH.numActivatesU20 * Talents.BloodAndThunder * 0.50f;
                     availRage -= TH.RageU20 * RageMOD_Total;
                 }
-                THspace = TH.numActivatesU20 / NumGCDs * TH.ability.UseTime / LatentGCD;
+                THspace = TH.numActivatesU20 / NumGCDsU20 * TH.ability.UseTime / LatentGCD;
 
                 // Bladestorm
                 if (BLS.ability.Validated) {
@@ -428,7 +429,7 @@ namespace Rawr.DPSWarr {
                     BLS.numActivatesU20 = acts * (1f - RDspace);
                     availRage -= BLS.RageU20 * RageMOD_Total;
                 }
-                BLSspace = BLS.numActivatesU20 / NumGCDs * BLS.ability.UseTime / LatentGCD;
+                BLSspace = BLS.numActivatesU20 / NumGCDsU20 * BLS.ability.UseTime / LatentGCD;
 
                 /*// Mortal Strike // MS doesn't get used in Exec phase
                 if (MS.ability.Validated) {
@@ -436,7 +437,7 @@ namespace Rawr.DPSWarr {
                     MS.numActivatesU20 = acts * (1f - BLSspace);
                     availRage -= MS.RageU20 * RageMOD_Total;
                 }
-                MSspace = MS.numActivatesU20 / NumGCDs * MS.ability.UseTime / LatentGCD;*/
+                MSspace = MS.numActivatesU20 / NumGCDsU20 * MS.ability.UseTime / LatentGCD;*/
 
                 // Taste for Blood
                 float OPGCDReduc = (OP.ability.Cd < LatentGCD ? (OP.ability.Cd + CalcOpts.Latency) / LatentGCD : 1f);
@@ -447,7 +448,7 @@ namespace Rawr.DPSWarr {
                         availRage -= TB.RageU20 * RageMOD_Total;
                     }
                 }
-                TFBspace = TB.numActivatesU20 / NumGCDs * TB.ability.UseTime / LatentGCD;
+                TFBspace = TB.numActivatesU20 / NumGCDsU20 * TB.ability.UseTime / LatentGCD;
 
                 // Overpower
                 if (OP.ability.Validated) {
@@ -457,7 +458,7 @@ namespace Rawr.DPSWarr {
                         availRage -= OP.RageU20 * RageMOD_Total;
                     }
                 }
-                OPspace = OP.numActivatesU20 / NumGCDs * OP.ability.UseTime / LatentGCD;
+                OPspace = OP.numActivatesU20 / NumGCDsU20 * OP.ability.UseTime / LatentGCD;
 
                 // Skip Victory Rush, it's useless here
 
@@ -496,11 +497,12 @@ namespace Rawr.DPSWarr {
                 // Execute for remainder of GCDs
                 if (EX.ability.Validated /*&& PercFailRageUnder20 == 1f*/) {
                     acts = Math.Min(GCDsAvailableU20, GCDsAvailableU20 * percTimeInDPS);
-                    if (EX.ability.GetRageUseOverDur(acts) > availRage) acts = Math.Max(0f, availRage) / EX.ability.RageCost;
+                    //if (EX.ability.GetRageUseOverDur(acts) > availRage) acts = Math.Max(0f, availRage) / EX.ability.RageCost;
                     EX.numActivatesU20 = acts;
                     availRage -= EX.RageU20 * RageMOD_Total;
+                    availRage += EX.numActivatesU20 * (Talents.SuddenDeath * 5f);
                 } else { EX.numActivatesU20 = 0f; }
-                EXspace = EX.numActivatesU20 / NumGCDs * EX.ability.UseTime / LatentGCD;
+                EXspace = EX.numActivatesU20 / NumGCDsU20 * EX.ability.UseTime / LatentGCD;
 
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {

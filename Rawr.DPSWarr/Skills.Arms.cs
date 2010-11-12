@@ -213,6 +213,7 @@ namespace Rawr.DPSWarr.Skills
         /// Only usable on enemies that have less than 20% health.
         /// <para>Talents: Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</para>
         /// <para>Glyphs: Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</para>
+        /// <para>Sets: none</para>
         /// </summary>
         public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
@@ -220,7 +221,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = ReqMeleeRange = true;
-            RageCost = 10f - (Talents.SuddenDeath * 5f);
+            RageCost = 10f/* - (Talents.SuddenDeath * 5f)*/;
             DamageBonus = 1f + StatS.BonusExecOPMSDamageMultiplier;
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
@@ -234,12 +235,11 @@ namespace Rawr.DPSWarr.Skills
         public float UsedExtraRage { get { return Math.Min(20f, FreeRage / (ActivatesOverride * (float)BossOpts.Under20Perc)); } }
         public override float DamageOverride {
             get {
-                float damageBase = (10f + StatS.AttackPower * 0.25f) + (UsedExtraRage * (StatS.AttackPower * 0.5f - 1f));
-                return damageBase * DamageBonus * AvgTargets;
+                return ((10f + StatS.AttackPower * 0.25f) + (UsedExtraRage * (StatS.AttackPower * 0.5f - 1f)))
+                       * DamageBonus * AvgTargets;
             }
         }
-        public override float GetRageUseOverDur(float acts)
-        {
+        public override float GetRageUseOverDur(float acts) {
             if (!Validated) { return 0f; }
             return acts * (RageCost + UsedExtraRage);
         }
