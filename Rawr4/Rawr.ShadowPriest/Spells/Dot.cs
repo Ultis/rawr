@@ -5,65 +5,92 @@ namespace Rawr.ShadowPriest.Spells
     /// <summary>
     /// Dot Spell
     /// </summary>
-    public class Dot : Spell
+    public class DoTSpell : Spell
     {
         /// <summary>
         /// Coef for dot ticks
         /// </summary>
-        protected float tickHasteCoEf;
-        /// <summary>
-        /// Numbers of ticks spell has with 0 haste
-        /// </summary>
-        protected float tickNumberBase;
-        /// <summary>
-        /// Number of ticks after haste
-        /// </summary>
-        protected float tickNumber;
-        /// <summary>
-        /// Time between ticks
-        /// </summary>
-        protected float tickPeriod;
+        protected float tickHasteCoEf = 0f;
         /// <summary>
         /// How long the dot stays on the target before haste
         /// </summary>
-        protected float debuffDurationBase;
+        protected float debuffDurationBase = 0f;
         /// <summary>
-        /// How long the dot stays on the target after haste
+        /// Time Between ticks after haste
         /// </summary>
-        protected float debuffDuration;
+        protected float tickPeriodBase = 3f;
+        /// <summary>
+        /// Extra ticks from haste
+        /// </summary>
+        protected float tickExtra =0f;
 
-        public Dot()
+
+        public DoTSpell()
         {
             SetDotValues();
         }
 
         protected virtual void SetDotValues()
         {
-            tickNumber = 2f;
-            tickPeriod = 1f;
-            debuffDuration = 5f;
-            averageDamage = 5000f;
+            tickHasteCoEf = 0f;
+            debuffDurationBase = 0f;
+            tickPeriodBase = 3f;
+            tickExtra = 0f;
         }
 
         /// <summary>
-        /// Time Between ticks after haste
+        /// Time per DoT tick
         /// </summary>
         public float TickPeriod
-        { get { return tickPeriod; } }
+        { get { return tickPeriodBase; } } //-time lost from haste and reset if has extra dot!
 
         /// <summary>
-        /// Time until experation of dot
+        /// Number of ticks with 0 haste
+        /// </summary>
+        public float TickNumberBase
+        { get { return debuffDurationBase / TickPeriod; } }
+
+        /// <summary>
+        /// How long the dot stays on the target after haste
         /// </summary>
         public float DebuffDuration
-        { get { return debuffDuration; } }
+        { get { return debuffDurationBase; } } //-time lost from haste and reset if has extra dot!
 
+        /// <summary>
+        /// Damage per Tick
+        /// </summary>
+        public float TickDamage
+        { get { return (BaseDamage + SpellPowerCoef * spellPower) / TickNumber; } }
+
+        /// <summary>
+        /// CritDamage per Tick
+        /// </summary>
+        public float TickCritDamage
+        { get { return TickDamage * critModifier; } }
+
+        /// <summary>
+        /// Number of ticks after haste
+        /// </summary>
+        public float TickNumber
+        { get { return TickNumberBase + tickExtra; } }
+
+        /// <summary>
+        /// General rule for SP co-ef for dots is duration / 15
+        /// </summary>
+        public override float SpellPowerCoef
+        { get { return debuffDurationBase / 15f; } }
+
+        /// <summary>
+        /// Average Damage for spell
+        /// </summary>
         public override float AverageDamage
-        { get { return averageDamage; } }
+        { get { return ((1f - CritChance) * TickDamage + CritChance * TickCritDamage) * TickNumber; } }
 
         public override void Initialize(ISpellArgs args)
         {
             base.Initialize(args);
-            tickNumber += tickNumberBase + (float)Math.Round(StatConversion.GetHasteFromRating(args.Stats.HasteRating, CharacterClass.Priest) / tickHasteCoEf);
+
+            tickExtra = (float)Math.Round(StatConversion.GetHasteFromRating(args.Stats.HasteRating, CharacterClass.Priest) / tickHasteCoEf,0);
             
         }
 

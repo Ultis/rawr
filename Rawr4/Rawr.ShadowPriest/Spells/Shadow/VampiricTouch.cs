@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class VampiricTouch : Dot
+    public class VampiricTouch : DoTSpell
     {
         /// <summary>
         /// Shadow Word Pain is a dot that lasts for 15 seconds.
@@ -18,15 +18,15 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetDotValues();
 
-            debuffDuration = 18f;
-            tickPeriod = 3f;
+            tickHasteCoEf = 0.2f;
+            debuffDurationBase = 15f;
+
         }
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
 
-            castTime = 1.5f;
-            spCoef = 1.5f / 3.5f / 2f; //Check
+            baseScaling = 0.115000002086163f;
             manaCost = 0.16f * Constants.BaseMana;
             shortName = "VT";
             name = "Vampiric Touch";

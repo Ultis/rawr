@@ -113,7 +113,7 @@ namespace Rawr.ShadowPriest
         public Rotation(SpellBox spellBox, PriestTalents talents, IRotationOptions rotOpt)
             : this()
         {
-            //Talents = talents;
+            Talents = talents;
             DP = spellBox.DP;
             MB = spellBox.MB;
             MF = spellBox.MF;
@@ -146,7 +146,7 @@ namespace Rawr.ShadowPriest
         /// </summary>
         public void CalculateRotation()
         {
-            if (DP == null || MB == null || MF == null || Fiend == null || SWD == null || SWP == null || VT == null)// || Talents == null) 
+            if (DP == null || MB == null || MF == null || Fiend == null || SWD == null || SWP == null || VT == null || Talents == null) 
                 return;
             spells.Clear();
             Invalidate();
@@ -331,8 +331,6 @@ namespace Rawr.ShadowPriest
             mps = 0f; //summing up total manacost
             dps = 0f; //summing up total damage
             lag = 0f;
-            spelldps = new SerializableDictionary<Type, float>(); //dps broken up per spell type
-            spelltype = new SerializableDictionary<Type, Spell>(); //all used spells by type
             for (int i = -2; i < Casts.Count; i++)
             {
                 Spell s = getCast(i);

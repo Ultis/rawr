@@ -47,8 +47,7 @@ namespace Rawr.ShadowPriest
 
         private Rotation getPriorityRotation() //TODO: int type)
         {
-           
-            return new Rotation(spellbox, talents, new RotationOptions()); //TODO: , talents);
+            return new Rotation(spellbox, talents, new RotationOptions());
         }
 
         public static void solve(CharacterCalculationsShadowPriest calculatedStats, CalculationOptionsShadowPriest calcOpts, BossOptions bossOpts)
@@ -56,8 +55,10 @@ namespace Rawr.ShadowPriest
             Stats stats = calculatedStats.BasicStats;
             Character character = calculatedStats.LocalCharacter;
             PriestTalents talents = character.PriestTalents;
+
             Solver e;
             Rotation rot;
+
             float damage;
             Stats procStats;
             float FightDuration = bossOpts.BerserkTimer;
@@ -127,6 +128,20 @@ namespace Rawr.ShadowPriest
 
             calculatedStats.CombatStats = stats.Clone();
             calculatedStats.CombatStats.Accumulate(procStats);
+
+            calculatedStats.DevouringPlauge = rot.DP;
+            calculatedStats.MindBlast = rot.MB;
+            calculatedStats.MindFlay = rot.MF;
+            //calculatedStats.MindSear = rot.sear;
+            //calculatedStats.MindSpike = rot.spike;
+            //calculatedStats.PowerWordShield = rot.shield;
+            calculatedStats.ShadowFiend = rot.Fiend;
+            calculatedStats.ShadowWordDeath = rot.SWD;
+            calculatedStats.ShadowWordPain = rot.SWP;
+            calculatedStats.VampiricTouch = rot.VT;
+
+            calculatedStats.Rotation = rot.ToString();
+            calculatedStats.RotationDetails = rot.ToDetailedString();
 
             //TODO: Add usful stats from rotation
             //calculatedStats.ManaRegenInFSR = ManaRegInFSR;

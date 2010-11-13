@@ -3,7 +3,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class ShadowWordPain : Dot
+    public class ShadowWordPain : DoTSpell
     {
         /// <summary>
         /// Shadow Word Pain is a dot that lasts for 18 seconds.
@@ -22,22 +22,24 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetDotValues();
 
-            debuffDuration = 21;
-            tickPeriod = 3f;
+            tickHasteCoEf = 0.1666666f;
+            debuffDurationBase = 18f;
+
         }
 
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
 
-            spCoef = 1.5f / 3.5f / 2f; //Check
+            baseScaling = 0.233999999737739f;
             manaCost = 0.22f * Constants.BaseMana;
             shortName = "SW:P";
             name = "Shadow Word: Pain";
         }
 
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)
-        {
+        {            
+            base.Initialize(args);
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + critModifier * CritChance)
 
@@ -48,9 +50,9 @@ namespace Rawr.ShadowPriest.Spells
             //totalCoef += .01f + args.Talents.ImprovedShadowWordPain;
             //totalCoef += .01f + args.Talents.Shadowform;
 
-            if (args.Talents.GlyphofShadowWordPain)
+            //if (args.Talents.GlyphofShadowWordPain)
                 //periodicTick *= 1.1f; //Add 10% periodic damage
-            base.Initialize(args);
+
         }
 
         #region hide

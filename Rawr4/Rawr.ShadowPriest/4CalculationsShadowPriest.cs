@@ -209,7 +209,7 @@ namespace Rawr.ShadowPriest
 
 
             Stats statsTotal = new Stats();
-            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin));
+            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race));
 
             // Get the gear/enchants/buffs stats loaded in
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -588,6 +588,178 @@ namespace Rawr.ShadowPriest
             }
             return base.IsBuffRelevant(buff, character);
         }
+
+
+    }
+
+    public class ComparisonCalculationShadowPriest : ComparisonCalculationBase
+    {
+        private string _name = string.Empty;
+        public override string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        private string _desc = string.Empty;
+        public override string Description
+        {
+            get { return _desc; }
+            set { _desc = value; }
+        }
+
+        private float _overallPoints = 0f;
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
+
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = (value < 0f) ? 0f : value; }
+        }
+
+        public float DpsPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = (value < 0f) ? 0f : value; }
+        }
+
+
+        private Item _item = null;
+        public override Item Item
+        {
+            get { return _item; }
+            set { _item = value; }
+        }
+
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
+
+        private bool _equipped = false;
+        public override bool Equipped
+        {
+            get { return _equipped; }
+            set { _equipped = value; }
+        }
+
+        public override bool PartEquipped { get; set; }
+        public override string ToString()
+        {
+            return string.Format("{0}: ({1})", Name, Math.Round(OverallPoints));
+        }
+    }
+
+    public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
+    {
+        public Stats BasicStats { get; set; }
+        public Stats CombatStats { get; set; }
+        public int TargetLevel { get; set; }
+
+        public Spell DevouringPlauge;
+        public Spell MindBlast;
+        public Spell MindFlay;
+        public Spell MindSear;
+        public Spell ShadowFiend;
+        public Spell ShadowWordDeath;
+        public Spell ShadowWordPain;
+        public Spell VampiricTouch;
+        public Spell PowerWordShield;
+        public Spell MindSpike;
+
+        public string Rotation;
+        public string RotationDetails;
+
+        public Character LocalCharacter { get; set; }
+
+        private float _overallPoints = 0f;
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
+
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
+
+        public float DpsPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
+
+        #region the overridden method (GetCharacterDisplayCalculationValues)
+        /// <summary>
+        /// Builds a dictionary containing the values to display for each of the
+        /// calculations defined in CharacterDisplayCalculationLabels. The key
+        /// should be the Label of each display calculation, and the value
+        /// should be the value to display, optionally appended with '*'
+        /// followed by any string you'd like displayed as a tooltip on the
+        /// value.
+        /// </summary>
+        /// <returns>
+        /// A Dictionary<string, string> containing the values to display for
+        /// each of the calculations defined in
+        /// CharacterDisplayCalculationLabels.
+        /// </returns>
+        public override Dictionary<string, string>
+            GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> dictValues
+                = new Dictionary<string, string>();
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
+            dictValues.Add("Hit", BasicStats.HitRating.ToString());
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
+            dictValues.Add("Crit", BasicStats.CritRating.ToString());
+            dictValues.Add("Haste", BasicStats.HasteRating.ToString());
+            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
+
+            dictValues.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString());
+            dictValues.Add("SW Pain", ShadowWordPain.AverageDamage.ToString());
+            dictValues.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString());
+            dictValues.Add("Imp. Devouring Plague", "TBD");
+            dictValues.Add("SW Death", ShadowWordDeath.AverageDamage.ToString());
+            dictValues.Add("Mind Blast", MindBlast.AverageDamage.ToString());
+            dictValues.Add("Mind Flay", MindFlay.AverageDamage.ToString());
+            dictValues.Add("Shadow Fiend", ShadowFiend.AverageDamage.ToString());
+            dictValues.Add("Mind Spike", "TBD"); //MindSpike.AverageDamage.ToString());
+            dictValues.Add("Mind Sear", "TBD"); //  MindSear.AverageDamage.ToString());
+            dictValues.Add("PW Shield", "TBD"); // PowerWordShield.AverageDamage.ToString());
+
+            dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
+
+            //"Simulation:Castlist",
+            //"Simulation:DPS",
+
+            return dictValues;
+        }
+        #endregion
 
 
     }

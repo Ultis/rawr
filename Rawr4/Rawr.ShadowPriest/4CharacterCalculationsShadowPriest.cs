@@ -85,17 +85,17 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", BasicStats.HasteRating.ToString());
             dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
 
-            dictValues.Add("Vampiric Touch", new VampiricTouch().AverageDamage.ToString());
-            dictValues.Add("SW Pain", new ShadowWordPain().AverageDamage.ToString());
-            dictValues.Add("Devouring Plague", new DevouringPlauge().AverageDamage.ToString());
+            dictValues.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString());
+            dictValues.Add("SW Pain",  ShadowWordPain.AverageDamage.ToString());
+            dictValues.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString());
             dictValues.Add("Imp. Devouring Plague", "TBD");
-            dictValues.Add("SW Death", new DevouringPlauge().AverageDamage.ToString());
-            dictValues.Add("Mind Blast", new MindBlast().AverageDamage.ToString());
-            dictValues.Add("Mind Flay", new MindFlay().AverageDamage.ToString());
-            dictValues.Add("Shadow Fiend", new ShadowFiend().AverageDamage.ToString());
-            dictValues.Add("Mind Spike", new MindSpike().AverageDamage.ToString());
-            dictValues.Add("Mind Sear", new MindSear().AverageDamage.ToString());
-            dictValues.Add("PW Shield", new PowerWordShield().AverageDamage.ToString());
+            dictValues.Add("SW Death", ShadowWordDeath.AverageDamage.ToString());
+            dictValues.Add("Mind Blast", MindBlast.AverageDamage.ToString());
+            dictValues.Add("Mind Flay",  MindFlay.AverageDamage.ToString());
+            dictValues.Add("Shadow Fiend",  ShadowFiend.AverageDamage.ToString());
+            dictValues.Add("Mind Spike", "TBD"); //MindSpike.AverageDamage.ToString());
+            dictValues.Add("Mind Sear", "TBD"); //  MindSear.AverageDamage.ToString());
+            dictValues.Add("PW Shield", "TBD"); // PowerWordShield.AverageDamage.ToString());
 
             dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
 
@@ -108,7 +108,4 @@ namespace Rawr.ShadowPriest
 
 
     }
-
-    
-
 }

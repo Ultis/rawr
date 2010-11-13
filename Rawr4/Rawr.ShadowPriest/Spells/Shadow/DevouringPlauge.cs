@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class DevouringPlauge : Dot
+    public class DevouringPlauge : DoTSpell
     {
         /// <summary>
         /// Devouring Plauge is a dot that lasts for 24 seconds.
@@ -19,15 +19,15 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetDotValues();
 
-            debuffDuration = 24f;
-            tickPeriod = 4f;
+            tickHasteCoEf = 0.125f;
+            debuffDurationBase = 24f;
 
         }
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
-        
-            spCoef = 1.5f / 3.5f / 2f; //Check
+
+            baseScaling = 0.164000004529953f;
             manaCost = 0.25f * Constants.BaseMana;
             shortName = "DP";
             name = "Devouring Plauge";

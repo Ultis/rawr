@@ -15,16 +15,21 @@ namespace Rawr.ShadowPriest.Spells
 
         protected float manaCost = 0f;
 
+        protected float crit = 0f;
         protected float critModifier = 1f;
         protected float missChance = .17f;
 
         protected float spCoef = 0f;
-
         protected float spellPower = 0f;
 
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
 
+
+        protected float baseScaling = 0f;
+        //this is number for level 85
+        protected float spellScaling = 945.188842773438f;
+ 
         /// <summary>
         /// Average Damage per Application
         /// </summary>
@@ -94,6 +99,9 @@ namespace Rawr.ShadowPriest.Spells
             nS.spellPower = sp1.spellPower * c;
         }
 
+        public float BaseDamage
+        { get { return baseScaling * spellScaling; } }
+
         /// <summary>
         /// This is to ensure that the constraints on the GCD are met on abilities that have Gcd
         /// </summary>
@@ -152,6 +160,18 @@ namespace Rawr.ShadowPriest.Spells
         { get { return averageDamage; } }
 
         /// <summary>
+        /// SpellPower-Coef
+        /// </summary>
+        public virtual float SpellPowerCoef
+        { get { return spCoef; } }
+
+        /// <summary>
+        /// Crit chance with check that crit isnt bigger than one
+        /// </summary>
+        public float CritChance
+        { get { return Math.Min(1f, crit); } }
+
+        /// <summary>
         /// Initialize Spell based on ISpellArgs (Current stats)
         /// </summary>
         /// <param name="args"></param>
@@ -163,10 +183,9 @@ namespace Rawr.ShadowPriest.Spells
             latencyGcd = args.LatencyGCD;
             latencyCast = args.LatencyCast;
             critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
-            //dotCritModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;
-            //crit += args.Stats.SpellCrit;
+            crit += args.Stats.SpellCrit;
             missChance -= args.Stats.SpellHit;
             //totalCoef *= 1 + args.Stats.BonusDamageMultiplier; //ret + bm + arcane buff
             if (missChance < 0) missChance = 0;

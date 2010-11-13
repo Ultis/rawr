@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Rawr.ShadowPriest
 {
+    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class ComparisonCalculationShadowPriest : ComparisonCalculationBase
     {
         private string _name = string.Empty;
