@@ -40,6 +40,16 @@ namespace Rawr.UI
 			}
 		}
 
+        public int ReforgeId
+        {
+            get
+            {
+                if (_calc.Item == null) return 0;
+                return -_calc.Item.Id - 1000000;
+            }
+        }
+
+
 		public ImageSource Icon
 		{
 			get

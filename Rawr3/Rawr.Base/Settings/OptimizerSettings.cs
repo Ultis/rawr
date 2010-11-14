@@ -23,6 +23,7 @@ namespace Rawr.Properties
             _default.OverrideRegem = false;
             _default.CalculationToOptimize = "";
             _default.OverrideReenchant = false;
+            _default.OverrideReforge = false;
             _default.OptimizationMethod = OptimizationMethod.GeneticAlgorithm;
             _default.TemplateGemsEnabled = true;
             _default.GreedyOptimizationMethod = GreedyOptimizationMethod.AllCombinations;
@@ -40,6 +41,7 @@ namespace Rawr.Properties
         public bool OverrideRegem { get; set; }
         public string CalculationToOptimize { get; set; }
         public bool OverrideReenchant { get; set; }
+        public bool OverrideReforge { get; set; }
         public Rawr.OptimizationMethod OptimizationMethod { get; set; }
         public bool TemplateGemsEnabled { get; set; }
         public Rawr.GreedyOptimizationMethod GreedyOptimizationMethod { get; set; }

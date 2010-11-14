@@ -316,6 +316,7 @@ namespace Rawr.Optimizer
         private bool optimizeElixirs;
         private bool optimizeTalents;
         private bool mutateTalents;
+        private bool mutateGlyphs;
         private bool mixology;
 
         public ItemInstanceOptimizer()
@@ -347,12 +348,12 @@ namespace Rawr.Optimizer
             PopulateAvailableIds(itemGenerator);
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents, bool mutateGlyphs)
         {
-            InitializeItemCache(character, availableItems, overrideRegem, overrideReenchant, templateGemsEnabled, model, optimizeFood, optimizeElixirs, mixology, talentSpecs, mutateTalents, false);
+            InitializeItemCache(character, availableItems, overrideRegem, overrideReenchant, overrideReforge, templateGemsEnabled, model, optimizeFood, optimizeElixirs, mixology, talentSpecs, mutateTalents, mutateGlyphs, false);
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents, bool positiveCostItemsAvailable)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled, CalculationsBase model, bool optimizeFood, bool optimizeElixirs, bool mixology, List<TalentsBase> talentSpecs, bool mutateTalents, bool mutateGlyphs, bool positiveCostItemsAvailable)
         {
             _character = character;
             Model = model;
@@ -399,11 +400,13 @@ namespace Rawr.Optimizer
             this.mixology = mixology;
             this.optimizeTalents = (talentSpecs != null && talentSpecs.Count > 0);
             this.mutateTalents = mutateTalents;
+            this.mutateGlyphs = mutateGlyphs;
 
             if (optimizeTalents)
             {
                 slotItems[characterSlots + 3] = talentSpecs.ConvertAll(spec => (object)spec);
                 talentItem = new TalentItem[100];
+                glyphItem = new GlyphItem[100];
                 TalentsBase talents = talentSpecs[0];
                 foreach (PropertyInfo pi in talents.GetType().GetProperties())
                 {
@@ -414,6 +417,15 @@ namespace Rawr.Optimizer
                         if (td[0].Index + 1 > talentItemCount)
                         {
                             talentItemCount = td[0].Index + 1;
+                        }
+                    }
+                    GlyphDataAttribute[] gd = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
+                    if (gd.Length > 0)
+                    {
+                        glyphItem[gd[0].Index] = new GlyphItem() { pi = pi, glyphData = gd[0] };
+                        if (gd[0].Index + 1 > glyphItemCount)
+                        {
+                            glyphItemCount = gd[0].Index + 1;
                         }
                     }
                 }
@@ -439,7 +451,7 @@ namespace Rawr.Optimizer
                 slotCount = characterSlots;
             }
 
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, positiveCostItemsAvailable);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, positiveCostItemsAvailable);
         }
 
         public CalculationsBase Model
@@ -1208,14 +1220,14 @@ namespace Rawr.Optimizer
             lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString()).ConvertAll(itemInstance => (object)itemInstance);
         }
 
-        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant)
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
         {
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, false);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, false);
         }
 
-        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool positiveCostItemsAvailable)
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool positiveCostItemsAvailable)
         {
-            PopulateAvailableIds(new AvailableItemGenerator(availableItems, GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, templateGemsEnabled, overrideRegem, overrideReenchant, true, positiveCostItemsAvailable, _character, model));
+            PopulateAvailableIds(new AvailableItemGenerator(availableItems, GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, true, positiveCostItemsAvailable, _character, model));
         }
 
         private void PopulateAvailableIds(AvailableItemGenerator itemGenerator)
@@ -2467,7 +2479,7 @@ namespace Rawr.Optimizer
             bool successful;
             OptimizerCharacter mutant = null;
             Random rand = Rnd;
-            if (optimizeTalents && mutateTalents && rand.NextDouble() < 0.5)
+            if (optimizeTalents && (mutateTalents || mutateGlyphs) && rand.NextDouble() < 0.5)
             {
                 return BuildMutateTalentsCharacter(parent, recycledIndividual);
             }
@@ -2501,8 +2513,16 @@ namespace Rawr.Optimizer
             public List<int> childList = new List<int>();
         }
 
+        private class GlyphItem
+        {
+            public PropertyInfo pi;
+            public GlyphDataAttribute glyphData;
+        }
+
         private TalentItem[] talentItem = new TalentItem[100];
+        private GlyphItem[] glyphItem = new GlyphItem[100];
         private int talentItemCount;
+        private int glyphItemCount;
 
         private OptimizerCharacter BuildMutateTalentsCharacter(OptimizerCharacter parent, OptimizerCharacter recycledIndividual)
         {
@@ -2515,78 +2535,134 @@ namespace Rawr.Optimizer
             TalentsBase talents = (TalentsBase)((ICloneable)items[characterSlots + 3]).Clone();
 #endif
             items[characterSlots + 3] = talents;
-            int[,] treeCount = new int[3, 11];
-            for (int j = 0; j < talentItemCount; j++)
-            {
-                treeCount[talentItem[j].talentData.Tree, talentItem[j].talentData.Row - 1] += talents.Data[j];
-            }
-            // add the talent somewhere
-            bool talentAdded = false;
             Random rand = Rnd;
-            do
+
+            if (mutateTalents)
             {
-                int index = rand.Next(talentItemCount);
-                if (talents.Data[index] == talentItem[index].talentData.MaxPoints) continue;
-                int p = talentItem[index].talentData.Prerequisite;
-                if (p >= 0 && talents.Data[p] < talentItem[p].talentData.MaxPoints) continue;
-                int points = 0;
-                for (int k = 0; k < talentItem[index].talentData.Row - 1; k++)
+                int[,] treeCount = new int[3, 11];
+                for (int j = 0; j < talentItemCount; j++)
                 {
-                    points += treeCount[talentItem[index].talentData.Tree, k];
+                    treeCount[talentItem[j].talentData.Tree, talentItem[j].talentData.Row - 1] += talents.Data[j];
                 }
-                if (points < 5 * (talentItem[index].talentData.Row - 1)) continue;
-                // we're good, we can add the talent point
-                talents.Data[index]++;
-                treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]++;
-                talentAdded = true;
-            } while (!talentAdded);
-            // pick a talent with some points invested that we can take points out of
-            bool talentRemoved = false;
-            do
-            {
-                int index = rand.Next(talentItemCount);
-                if (talents.Data[index] == 0) continue;
-                bool locked = false;
-                foreach (int child in talentItem[index].childList)
+                // add the talent somewhere
+                bool talentAdded = false;
+                do
                 {
-                    if (talents.Data[child] > 0)
+                    int index = rand.Next(talentItemCount);
+                    if (talents.Data[index] == talentItem[index].talentData.MaxPoints) continue;
+                    int p = talentItem[index].talentData.Prerequisite;
+                    if (p >= 0 && talents.Data[p] < talentItem[p].talentData.MaxPoints) continue;
+                    int points = 0;
+                    for (int k = 0; k < talentItem[index].talentData.Row - 1; k++)
                     {
-                        locked = true;
+                        points += treeCount[talentItem[index].talentData.Tree, k];
+                    }
+                    if (points < 5 * (talentItem[index].talentData.Row - 1)) continue;
+                    // we're good, we can add the talent point
+                    talents.Data[index]++;
+                    treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]++;
+                    talentAdded = true;
+                } while (!talentAdded);
+                // pick a talent with some points invested that we can take points out of
+                bool talentRemoved = false;
+                do
+                {
+                    int index = rand.Next(talentItemCount);
+                    if (talents.Data[index] == 0) continue;
+                    bool locked = false;
+                    foreach (int child in talentItem[index].childList)
+                    {
+                        if (talents.Data[child] > 0)
+                        {
+                            locked = true;
+                            break;
+                        }
+                    }
+                    if (!locked)
+                    {
+                        int i = 1;
+                        int pts = 0;
+                        int _row = talentItem[index].talentData.Row - 1;
+                        int tree = talentItem[index].talentData.Tree;
+                        for (i = 0; i <= _row; i++) pts += treeCount[tree, i];
+                        pts = pts - 1;
+                        for (i = _row + 1; i < 11; i++)
+                        {
+                            if (treeCount[tree, i] > 0)
+                            {
+                                if (pts >= i * 5)
+                                {
+                                    pts += treeCount[tree, i];
+                                }
+                                else
+                                {
+                                    i = -1;
+                                    break;
+                                }
+                            }
+                        }
+                        if (i >= 0)
+                        {
+                            // we're good, we can remove the talent point
+                            talents.Data[index]--;
+                            treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]--;
+                            talentRemoved = true;
+                        }
+                    }
+                } while (!talentRemoved);
+            }
+
+            if (mutateGlyphs)
+            {
+                bool glyphNonSelected = false;
+                for (int index = 0; index < glyphItemCount; index++)
+                {
+                    if (!talents.GlyphData[index] && glyphItem[index] != null)
+                    {
+                        glyphNonSelected = true;
                         break;
                     }
                 }
-                if (!locked)
+                if (glyphNonSelected)
                 {
-                    int i = 1;
-                    int pts = 0;
-                    int _row = talentItem[index].talentData.Row - 1;
-                    int tree = talentItem[index].talentData.Tree;
-                    for (i = 0; i <= _row; i++) pts += treeCount[tree, i];
-                    pts = pts - 1;
-                    for (i = _row + 1; i < 11; i++)
+                    // pick a glyph to add
+                    GlyphType type;
+                    do
                     {
-                        if (treeCount[tree, i] > 0)
+                        int index = rand.Next(glyphItemCount);
+                        if (!talents.GlyphData[index] && glyphItem[index] != null)
                         {
-                            if (pts >= i * 5)
-                            {
-                                pts += treeCount[tree, i];
-                            }
-                            else
-                            {
-                                i = -1;
-                                break;
-                            }
+                            type = glyphItem[index].glyphData.Type;
+                            talents.GlyphData[index] = true;
+                            break;
+                        }
+                    } while (true);
+                    // count glyphs of that type
+                    int glyphCount = 0;
+                    for (int index = 0; index < glyphItemCount; index++)
+                    {
+                        if (talents.GlyphData[index] && glyphItem[index] != null && glyphItem[index].glyphData.Type == type)
+                        {
+                            glyphCount++;
                         }
                     }
-                    if (i >= 0)
+                    if (glyphCount > 3)
                     {
-                        // we're good, we can remove the talent point
-                        talents.Data[index]--;
-                        treeCount[talentItem[index].talentData.Tree, talentItem[index].talentData.Row - 1]--;
-                        talentRemoved = true;
+                        // pick a glyph to remove
+                        do
+                        {
+                            int index = rand.Next(glyphItemCount);
+                            if (talents.GlyphData[index] && glyphItem[index].glyphData.Type == type)
+                            {
+                                type = glyphItem[index].glyphData.Type;
+                                talents.GlyphData[index] = false;
+                                break;
+                            }
+                        } while (true);
                     }
                 }
-            } while (!talentRemoved);
+            }
+
             character.CurrentTalents = talents;
             return optCharacter;
         }
@@ -2700,11 +2776,11 @@ namespace Rawr.Optimizer
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled, CalculationsBase model)
         {
             _character = character;
             Model = model;
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge);
         }
 
         private enum OptimizationOperation
@@ -3269,9 +3345,9 @@ namespace Rawr.Optimizer
             lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString());
         }
 
-        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant)
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, true, _character, model);
+            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, true, _character, model);
             slotList = itemGenerator.SlotItems;
 
             for (int i = 0; i < characterSlots; i++)

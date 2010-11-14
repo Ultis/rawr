@@ -251,7 +251,7 @@ namespace Rawr.UI
         private List<TalentsBase> GetOptimizeTalentSpecs()
         {
             List<TalentsBase> talentSpecs = null;
-            if (TalentsCheck.IsChecked.GetValueOrDefault(false) || TalentSpecsCheck.IsChecked.GetValueOrDefault(false))
+            if (TalentsCheck.IsChecked.GetValueOrDefault(false) || GlyphsCheck.IsChecked.GetValueOrDefault(false) || TalentSpecsCheck.IsChecked.GetValueOrDefault(false))
             {
                 talentSpecs = new List<TalentsBase>();
                 foreach (SavedTalentSpec spec in SavedTalentSpec.SpecsFor(character.Class))
@@ -381,6 +381,7 @@ namespace Rawr.UI
         {
             bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
             bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
+            bool overrideReforge = OverrideReforgeCheck.IsChecked.GetValueOrDefault();
             int thoroughness = (int)ThoroughnessSlider.Value;
             string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             bool costRequirement;
@@ -389,10 +390,10 @@ namespace Rawr.UI
             optimizer.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;
             optimizer.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
 
-            optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
+            optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant, overrideReforge,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), TalentsCheck.IsChecked.GetValueOrDefault(), costRequirement);
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), TalentsCheck.IsChecked.GetValueOrDefault(), GlyphsCheck.IsChecked.GetValueOrDefault(), costRequirement);
 
             if (OptimizerSettings.Default.WarningsEnabled)
             {
@@ -471,6 +472,7 @@ namespace Rawr.UI
         {
             bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
             bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
+            bool overrideReforge = OverrideReforgeCheck.IsChecked.GetValueOrDefault();
             int thoroughness = (int)Math.Ceiling((float)ThoroughnessSlider.Value / 10f);
             string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             List<OptimizationRequirement> requirements = GetOptimizationRequirements();
@@ -486,10 +488,10 @@ namespace Rawr.UI
             optimizer.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;
             optimizer.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
 
-            optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant,
+            optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant, overrideReforge,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
                 FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false);
+                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false, false);
             if (OptimizerSettings.Default.WarningsEnabled)
             {
                 string prompt = optimizer.GetWarningPromptIfNeeded();

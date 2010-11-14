@@ -210,5 +210,11 @@ namespace Rawr
             }
             return options;
         }
+
+        public override string ToString()
+        {
+            if (Id == 0) return string.Empty;
+            return string.Format("Reforge {0} {1} → {2}", ReforgeAmount, Extensions.SpaceCamel(ReforgeFrom.ToString()), Extensions.SpaceCamel(ReforgeTo.ToString()));
+        }
     }
 }

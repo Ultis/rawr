@@ -194,6 +194,7 @@ namespace Rawr
         public int Thoroughness { get; set; }
         public bool OverrideRegem { get; set; }
         public bool OverrideReenchant { get; set; }
+        public bool OverrideReforge { get; set; }
         public bool TemplateGemsEnabled { get; set; }
         public OptimizationMethod OptimizationMethod {get;set;}
         public GreedyOptimizationMethod GreedyOptimizationMethod { get; set; }
@@ -1073,7 +1074,8 @@ namespace Rawr
                 {
                     bool _overrideRegem = OverrideRegem;
                     bool _overrideReenchant = OverrideReenchant;
-                    optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
+                    bool _overrideReforge = OverrideReforge;
+                    optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, _overrideReforge, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false, false);
                 }
                 optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, _thoroughness, true);
             }
@@ -1116,9 +1118,10 @@ namespace Rawr
             int _thoroughness = Thoroughness;
             bool _overrideRegem = OverrideRegem;
             bool _overrideReenchant = OverrideReenchant;
+            bool _overrideReforge = OverrideReforge;
             if (CurrentBatchCharacter.Character != null)
             {
-                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
+                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, _overrideReforge, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false, false);
                 optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, _thoroughness, SingleItemUpgrade);
             }
         }
@@ -1128,7 +1131,8 @@ namespace Rawr
             int _thoroughness = Thoroughness;
             bool _overrideRegem = OverrideRegem;
             bool _overrideReenchant = OverrideReenchant;
-            if (initializeCache) optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false);
+            bool _overrideReforge = OverrideReforge;
+            if (initializeCache) optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, _overrideReforge, TemplateGemsEnabled, CurrentBatchCharacter.Model, false, false, false, null, false, false);
             optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, _thoroughness, upgradeListEnumerator.Current.Item);
         }
 
@@ -1140,11 +1144,12 @@ namespace Rawr
             int thoroughness = Thoroughness;
             bool overrideRegem = OverrideRegem;
             bool overrideReenchant = OverrideReenchant;
+            bool overrideReforge = OverrideReforge;
 
             List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
             if (batchList[0].Key != null)
             {
-                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, TemplateGemsEnabled);
+                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, overrideReforge, TemplateGemsEnabled);
                 batchOptimizer.OptimizeBatchProgressChanged += new OptimizeCharacterProgressChangedEventHandler(batchOptimizer_OptimizeBatchProgressChanged);
                 batchOptimizer.OptimizeBatchCompleted += new OptimizeBatchCompletedEventHandler(batchOptimizer_OptimizeBatchCompleted);
 
@@ -1206,11 +1211,12 @@ namespace Rawr
             int thoroughness = Thoroughness;
             bool overrideRegem = OverrideRegem;
             bool overrideReenchant = OverrideReenchant;
+            bool overrideReforge = OverrideReforge;
 
             List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
             if (batchList[0].Key != null)
             {
-                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, TemplateGemsEnabled);
+                batchOptimizer = new BatchOptimizer(batchList, overrideRegem, overrideReenchant, overrideReforge, TemplateGemsEnabled);
                 batchOptimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
                 batchOptimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
 
@@ -1288,6 +1294,7 @@ namespace Rawr
         {
             bool _overrideRegem = OverrideRegem;
             bool _overrideReenchant = OverrideReenchant;
+            bool _overrideReforge = OverrideReforge;
             Character[] characterList = new Character[BatchCharacterList.Count];
             CalculationsBase[] modelList = new CalculationsBase[BatchCharacterList.Count];
             for (int i = 0; i < BatchCharacterList.Count; i++)
@@ -1295,7 +1302,7 @@ namespace Rawr
                 characterList[i] = BatchCharacterList[i].Character;
                 modelList[i] = BatchCharacterList[i].Model;
             }
-            itemGenerator = new AvailableItemGenerator(BatchCharacterList[0].Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, TemplateGemsEnabled, _overrideRegem, _overrideReenchant, false, characterList, modelList);
+            itemGenerator = new AvailableItemGenerator(BatchCharacterList[0].Character.AvailableItems, optimizer.GreedyOptimizationMethod != GreedyOptimizationMethod.AllCombinations, TemplateGemsEnabled, _overrideRegem, _overrideReenchant, _overrideReforge, false, characterList, modelList);
             // create item restrictions for locked characters
             for (int i = 0; i < BatchCharacterList.Count; i++)
             {

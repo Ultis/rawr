@@ -1270,11 +1270,11 @@ namespace Rawr.Optimizer
             }
         }
 
-        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, false, new Character[] { character }, new CalculationsBase[] { model }) { }
-        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character[] characters, CalculationsBase[] models) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, false, characters, models) { }
-        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, bool positiveCostItemsAvailable, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, slotFiltering, positiveCostItemsAvailable, new Character[] { character }, new CalculationsBase[] { model }) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool slotFiltering, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, slotFiltering, false, new Character[] { character }, new CalculationsBase[] { model }) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool slotFiltering, Character[] characters, CalculationsBase[] models) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, slotFiltering, false, characters, models) { }
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool slotFiltering, bool positiveCostItemsAvailable, Character character, CalculationsBase model) : this(availableItems, generateDirectUpgrades, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, slotFiltering, positiveCostItemsAvailable, new Character[] { character }, new CalculationsBase[] { model }) { }
 
-        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool slotFiltering, bool positiveCostItemsAvailable, Character[] characters, CalculationsBase[] models)
+        public AvailableItemGenerator(List<string> availableItems, bool generateDirectUpgrades, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool slotFiltering, bool positiveCostItemsAvailable, Character[] characters, CalculationsBase[] models)
         {
             this.availableItems = availableItems;
             if (templateGemsEnabled)
@@ -1330,6 +1330,7 @@ namespace Rawr.Optimizer
             }
             reforgeStatsFrom = combinedReforgingStatsFrom.Distinct().ToArray();
             reforgeStatsTo = combinedReforgingStatsTo.Distinct().ToArray();
+            this.overrideReforge = overrideReforge;
 #endif
 
             bool oldVolatility = Item.OptimizerManagedVolatiliy;

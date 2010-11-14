@@ -130,7 +130,7 @@ namespace Rawr.UI
                     CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
                     if (Character != null && current != null)
                     {
-                        itemCalculations = Calculations.GetReforgeCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
+                        itemCalculations = Calculations.GetReforgeCalculations(Slot, Character, current, false);
                     }
                 }
                 else if (IsGemList)
@@ -175,11 +175,11 @@ namespace Rawr.UI
                     Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
                     if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
                 }
-                else if (IsReforgeList)
+                /*else if (IsReforgeList)
                 {
                     Reforging selectedReforging = Character.GetReforgingBySlot(Slot);
-                    //if (selectedReforging != null) selectedReforgingId = selectedReforging.Id;
-                }
+                    if (selectedReforging != null) selectedReforgingId = selectedReforging.Id;
+                }*/
                 else if (IsGemList)
                 {
                     ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
@@ -212,8 +212,8 @@ namespace Rawr.UI
                     }
                     else if (IsReforgeList)
                     {
-                        /*if (itemListItem.ReforgingId == selectedReforgeId)
-                            selectedListItem = itemListItem;*/
+                        if (itemListItem.Equipped)
+                            selectedListItem = itemListItem;
                     }
                     else if (IsGemList)
                     {
@@ -278,6 +278,17 @@ namespace Rawr.UI
 
                 if (listItem.EnchantId == selectedEnchantId) { this.Close(); }
             }
+            if (!_buildingListItems && IsReforgeList)
+            {
+                FrameworkElement fe = sender as FrameworkElement;
+                ItemListItem listItem = fe.DataContext as ItemListItem;
+
+                int selectedReforgeId = -1;
+                Reforging selectedReforging = Character.GetReforgingBySlot(Slot);
+                if (selectedReforging != null) selectedReforgeId = selectedReforging.Id;
+
+                if (listItem.ReforgeId == selectedReforgeId) { this.Close(); }
+            }
         }
 
         public ItemListControl()
@@ -314,7 +325,7 @@ namespace Rawr.UI
                     {
                         ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                         ItemInstance copy = Character[Slot].Clone();
-                        //copy.ReforgeFromId = listItem.EnchantId;
+                        copy.ReforgeId = listItem.ReforgeId;
                         IsShown = false;
                         IsPopulated = false;
                         Character[Slot] = copy;

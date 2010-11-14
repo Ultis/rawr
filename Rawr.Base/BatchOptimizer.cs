@@ -136,7 +136,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        public BatchOptimizer(List<KeyValuePair<Character, float>> batchList, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
+        public BatchOptimizer(List<KeyValuePair<Character, float>> batchList, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled)
         {
             if (batchList == null || batchList.Count == 0 || batchList[0].Key == null) throw new ArgumentException("Batch list must have at least one element.");
             this.batchList = new List<Character>();
@@ -156,7 +156,7 @@ namespace Rawr.Optimizer
             evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
             evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
 
-            InitializeItemCache(batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, templateGemsEnabled);
+            InitializeItemCache(batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, overrideReforge, templateGemsEnabled);
 
             if (Properties.GeneralSettings.Default.UseMultithreading)
             {
@@ -172,9 +172,9 @@ namespace Rawr.Optimizer
             }
         }
 
-        private void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
+        private void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool overrideReforge, bool templateGemsEnabled)
         {
-            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant);
+            PopulateAvailableIds(availableItems, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge);
         }
 
         private enum OptimizationOperation
@@ -673,9 +673,9 @@ namespace Rawr.Optimizer
             }
         }
 
-        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant)
+        private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, false, batchList.ToArray(), modelList.ToArray());
+            itemGenerator = new AvailableItemGenerator(availableItems, false, templateGemsEnabled, overrideRegem, overrideReenchant, overrideReforge, false, batchList.ToArray(), modelList.ToArray());
             List<ItemInstance>[] slotList = itemGenerator.SlotItems;
             slotItemList = new List<object>[characterSlots];
 

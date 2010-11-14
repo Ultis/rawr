@@ -26,7 +26,7 @@ namespace Rawr.UI
             {
                 slot = value;
                 ComparisonItemList.Slot = slot;
-                //ComparisonListReforge.Slot = slot;
+                ComparisonListReforge.Slot = slot;
                 ComparisonListEnchant.Slot = slot;
             }
         }
@@ -57,6 +57,7 @@ namespace Rawr.UI
 
         private ItemInstance gear;
         private Item enchant;
+        private Item reforge;
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
             if (character != null)
@@ -76,10 +77,24 @@ namespace Rawr.UI
                     gear = Item;
 
                     Item eItem = new Item();
-                    eItem.Name = Item.Enchant.Name;
-                    eItem.Quality = ItemQuality.Temp;
-                    eItem.Stats = Item.Enchant.Stats;
+                    if (Item.Enchant != null)
+                    {
+
+                        eItem.Name = Item.Enchant.Name;
+                        eItem.Quality = ItemQuality.Temp;
+                        eItem.Stats = Item.Enchant.Stats;
+                    }
                     enchant = eItem;
+
+                    Item rItem = new Item();
+                    if (Item.Reforging != null)
+                    {
+                        rItem.Name = Item.Reforging.ToString();
+                        rItem.Quality = ItemQuality.Temp;
+                        rItem.Stats._rawAdditiveData[(int)Item.Reforging.ReforgeFrom] -= Item.Reforging.ReforgeAmount;
+                        rItem.Stats._rawAdditiveData[(int)Item.Reforging.ReforgeTo] += Item.Reforging.ReforgeAmount;
+                    }
+                    reforge = rItem;
 
                     // There are several special sockets, we need to account for them
                     int nonBSSocketCount = (Item.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
@@ -341,11 +356,11 @@ namespace Rawr.UI
         }
         private void ReforgeButton_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            /*if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen && !ReforgePopup.IsOpen)
+            if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen && !ReforgePopup.IsOpen)
             {
-                MainPage.Tooltip.Item = Item.Reforging;
-                MainPage.Tooltip.Show(GemButton3, 22, 0);
-            }*/
+                MainPage.Tooltip.Item = reforge;
+                MainPage.Tooltip.Show(ReforgeButton, 22, 0);
+            }
         }
 
         private void AnyButton_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) { MainPage.Tooltip.Hide(); }

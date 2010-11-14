@@ -1629,22 +1629,11 @@ namespace Rawr //O O . .
 
         public void SetReforgingBySlot(CharacterSlot slot, Reforging reforge)
         {
-            switch (slot)
-            {
-                case Rawr.CharacterSlot.Head: HeadReforging = reforge; break;
-                case Rawr.CharacterSlot.Shoulders: ShouldersReforging = reforge; break;
-                case Rawr.CharacterSlot.Back: BackReforging = reforge; break;
-                case Rawr.CharacterSlot.Chest: ChestReforging = reforge; break;
-                case Rawr.CharacterSlot.Wrist: WristReforging = reforge; break;
-                case Rawr.CharacterSlot.Hands: HandsReforging = reforge; break;
-                case Rawr.CharacterSlot.Legs: LegsReforging = reforge; break;
-                case Rawr.CharacterSlot.Feet: FeetReforging = reforge; break;
-                case Rawr.CharacterSlot.Finger1: Finger1Reforging = reforge; break;
-                case Rawr.CharacterSlot.Finger2: Finger2Reforging = reforge; break;
-                case Rawr.CharacterSlot.MainHand: MainHandReforging = reforge; break;
-                case Rawr.CharacterSlot.OffHand: OffHandReforging = reforge; break;
-                case Rawr.CharacterSlot.Ranged: RangedReforging = reforge; break;
-            }
+            int i = (int)slot;
+            if (i < 0 || i >= SlotCount) return;
+            ItemInstance item = this[slot];
+            if ((object)item != null) item.Reforging = reforge;
+            OnCalculationsInvalidated();
         }
 
         public void SetEnchantBySlot(ItemSlot slot, Enchant enchant)
