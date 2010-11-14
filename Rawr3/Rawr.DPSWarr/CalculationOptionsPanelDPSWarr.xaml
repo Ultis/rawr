@@ -9,7 +9,7 @@
     xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
-    d:DesignWidth="330" d:DesignHeight="600"
+    d:DesignWidth="330" d:DesignHeight="625"
     xmlns:local="clr-namespace:Rawr.DPSWarr"
     x:Class="Rawr.DPSWarr.CalculationOptionsPanelDPSWarr">
 
@@ -103,10 +103,11 @@
                 <StackPanel x:Name="LO_RageGens" Margin="4,4,2,4" Grid.Row="6">
                     <TextBlock x:Name="LB_RageGens" FontWeight="Bold" Text="Rage Generation" TextWrapping="Wrap"/>
                     <CheckBox x:Name="CK_Zerker" Content="Berserker Rage" Margin="0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_BloodRage" Content="Bloodrage" IsChecked="{Binding M_Bloodrage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox x:Name="CK_DeadlyCalm" Content="Deadly Calm" IsChecked="{Binding M_DeadlyCalm, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                 </StackPanel>
                 <StackPanel x:Name="LO_RageDumps" Margin="2,4,4,4" Grid.Column="1" Grid.Row="6">
                     <TextBlock x:Name="LB_RageDumps" FontWeight="Bold" Text="Rage Dumps" TextWrapping="Wrap"/>
+                    <CheckBox x:Name="CK_InnerRage" Content="Inner Rage" IsChecked="{Binding M_InnerRage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     <CheckBox x:Name="CK_Cleave" Content="Cleave" Margin="0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
                     <CheckBox x:Name="CK_HeroicStrike" Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
                 </StackPanel>

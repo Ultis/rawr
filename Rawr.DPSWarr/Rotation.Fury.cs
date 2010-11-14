@@ -22,7 +22,7 @@ namespace Rawr.DPSWarr
             WhiteAtks = wa;
 
             _cachedLatentGCD = 1.5f + CalcOpts.Latency + CalcOpts.AllowedReact;
-            _cachedNumGCDs = FightDuration / LatentGCD;
+            _cachedNumGCDsO20 = FightDuration / LatentGCD;
             // Initialize();
         }
 
@@ -226,9 +226,9 @@ namespace Rawr.DPSWarr
             // Starting Numbers
             float DPS_TTL = 0f, HPS_TTL = 0f;
             float LatentGCD = 1.5f + CalcOpts.Latency;
-            if (_needDisplayCalcs) GCDUsage += "NumGCDs: " + NumGCDs.ToString() + "\n\n";
+            if (_needDisplayCalcs) GCDUsage += "NumGCDs: " + NumGCDsO20.ToString() + "\n\n";
             float GCDsused = 0f;
-            float availGCDs = Math.Max(0f, NumGCDs - GCDsused);
+            float availGCDs = Math.Max(0f, NumGCDsO20 - GCDsused);
             float availRage = 0f;
             float rageadd = 0f;
             //float timelostwhilestunned = 0f;
@@ -284,7 +284,7 @@ namespace Rawr.DPSWarr
                 }
             }*/
             #endregion
-            float otherTimeLost = CalculateTimeLost(null);
+            float otherTimeLost = CalculateTimeLost();
             DoMaintenanceActivates(otherTimeLost);
 
             float timeLostPerc = otherTimeLost;
@@ -299,46 +299,46 @@ namespace Rawr.DPSWarr
 
             // Priority 1 : Whirlwind on every CD
             float WW_GCDs = Math.Min(availGCDs, WW.ability.Activates) * (1f - timeLostPerc);
-            WW.numActivates = WW_GCDs;
-            GCDsused += Math.Min(NumGCDs, WW_GCDs);
+            WW.numActivatesO20 = WW_GCDs;
+            GCDsused += Math.Min(NumGCDsO20, WW_GCDs);
             if (_needDisplayCalcs) GCDUsage += WW.ability.Name + ": " + WW_GCDs.ToString() + "\n";
-            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
-            DPS_TTL += WW.DPS;
-            HPS_TTL += WW.HPS;
+            availGCDs = Math.Max(0f, NumGCDsO20 - GCDsused);
+            DPS_TTL += WW.DPSO20;
+            HPS_TTL += WW.HPSO20;
             rageadd = WW.allRage;
             availRage -= rageadd;
             
             // Priority 2 : Bloodthirst on every CD
             float BT_GCDs = Math.Min(availGCDs, BT.ability.Activates) * (1f - timeLostPerc);
-            BT.numActivates = BT_GCDs;
-            GCDsused += Math.Min(NumGCDs, BT_GCDs);
+            BT.numActivatesO20 = BT_GCDs;
+            GCDsused += Math.Min(NumGCDsO20, BT_GCDs);
             if (_needDisplayCalcs) GCDUsage += BT.ability.Name + ": " + BT_GCDs.ToString() + "\n";
-            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
-            DPS_TTL += BT.DPS;
-            HPS_TTL += BT.HPS;
+            availGCDs = Math.Max(0f, NumGCDsO20 - GCDsused);
+            DPS_TTL += BT.DPSO20;
+            HPS_TTL += BT.HPSO20;
             rageadd = BT.allRage;
             availRage -= rageadd;
             
             doIterations();
             // Priority 3 : Bloodsurge Blood Proc (Do an Instant Slam) if available
             float BS_GCDs = Math.Min(availGCDs, BS.ability.Activates) * (1f - timeLostPerc);
-            BS.numActivates = BS_GCDs;
-            GCDsused += Math.Min(NumGCDs, BS_GCDs);
+            BS.numActivatesO20 = BS_GCDs;
+            GCDsused += Math.Min(NumGCDsO20, BS_GCDs);
             if (_needDisplayCalcs) GCDUsage += BS.ability.Name + ": " + BS_GCDs.ToString() + "\n";
-            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
-            DPS_TTL += BS.DPS;
-            HPS_TTL += BS.HPS;
+            availGCDs = Math.Max(0f, NumGCDsO20 - GCDsused);
+            DPS_TTL += BS.DPSO20;
+            HPS_TTL += BS.HPSO20;
             rageadd = BS.allRage;
             availRage -= rageadd;
             
             // Priority 4 : Raging Blow if available
             float RB_GCDs = Math.Min(availGCDs, RB.ability.Activates) * (1f - timeLostPerc);
-            RB.numActivates = RB_GCDs;
-            GCDsused += Math.Min(NumGCDs, RB_GCDs);
+            RB.numActivatesO20 = RB_GCDs;
+            GCDsused += Math.Min(NumGCDsO20, RB_GCDs);
             if (_needDisplayCalcs) GCDUsage += RB.ability.Name + ": " + RB_GCDs.ToString() + "\n";
-            availGCDs = Math.Max(0f, NumGCDs - GCDsused);
-            DPS_TTL += RB.DPS;
-            HPS_TTL += RB.HPS;
+            availGCDs = Math.Max(0f, NumGCDsO20 - GCDsused);
+            DPS_TTL += RB.DPSO20;
+            HPS_TTL += RB.HPSO20;
             rageadd = RB.allRage;
             availRage -= rageadd;
 
@@ -355,13 +355,13 @@ namespace Rawr.DPSWarr
             // Computing them together as you use HS for single, CL for Multiple
             if (/*PercFailRage == 1f &&*/ (HS.ability.Validated || CL.ability.Validated))
             {
-                float acts = Math.Min(GCDsAvailable, HS.ability.Activates /** percTimeInDPSAndOver20*/);
+                float acts = Math.Min(GCDsAvailableO20, HS.ability.Activates /** percTimeInDPSAndOver20*/);
                 float Abil_GCDs = acts;
-                CL.numActivates = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
-                HS.numActivates = Abil_GCDs - CL.numActivates;
-                (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivates);
+                CL.numActivatesO20 = Abil_GCDs * (BossOpts.MultiTargsTime / FightDuration);
+                HS.numActivatesO20 = Abil_GCDs - CL.numActivatesO20;
+                (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivatesO20);
                 //availGCDs = Math.Max(0f, origNumGCDs - GCDsused);
-                availRage -= HS.Rage + CL.Rage;
+                availRage -= HS.RageO20 + CL.RageO20;
             }
             //HSspace = HS.numActivates / NumGCDs * HS.ability.UseTime / LatentGCD;
             //CLspace = CL.numActivates / NumGCDs * CL.ability.UseTime / LatentGCD;
@@ -377,11 +377,11 @@ namespace Rawr.DPSWarr
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
                 && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];*/
 
-            WhiteAtks.Slam_ActsOverDur = 0f;// _SL_GCDs;
+            WhiteAtks.Slam_ActsOverDurO20 = WhiteAtks.Slam_ActsOverDurU20 = 0f;// _SL_GCDs;
  
             DPS_TTL += WhiteAtks.MhDPS * (1f - timeLostPerc) + WhiteAtks.OhDPS * (1f - timeLostPerc);
-            DPS_TTL += GetWrapper<HeroicStrike>().DPS;
-            DPS_TTL += GetWrapper<Cleave>().DPS;
+            DPS_TTL += GetWrapper<HeroicStrike>().DPSO20;
+            DPS_TTL += GetWrapper<Cleave>().DPSO20;
  
             calcDeepWounds();
             DPS_TTL += DW.DPS;

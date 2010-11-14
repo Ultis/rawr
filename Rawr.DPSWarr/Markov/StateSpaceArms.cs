@@ -313,10 +313,11 @@ namespace Rawr.DPSWarr.Markov
                 double dps = averageDamage / mp.AverageTransitionDuration;
                 dps += gen.Rot.WhiteAtks.MhDPS;
             } catch (Exception ex) {
-                new ErrorBox("Error in creating Arms Markov Calculations",
+                ErrorBox eb = new ErrorBox("Error in creating Arms Markov Calculations",
                     ex.Message, "StateSpaceGeneratorArmsTest1()",
                     "StateSpace Count: " + stateSpace.Count.ToString(),
                     ex.StackTrace);
+                eb.Show();
             }
         }
     }

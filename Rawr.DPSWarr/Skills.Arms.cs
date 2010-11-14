@@ -36,6 +36,11 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+        private float _JuggernautBonusCritChance = 0f;
+        private float _BonusCritChance = 0f;
+        /// <summary>Percent Based Crit chance, from 0% (0 returns +0%, you don't need to set 1f for 100%)</summary>
+        public float JuggernautBonusCritChance { get { return _JuggernautBonusCritChance; } set { _JuggernautBonusCritChance = value; } }
+        public override float BonusCritChance { get { return _BonusCritChance + JuggernautBonusCritChance; } set { _BonusCritChance = value; } }
     }
     public class ColossusSmash : Ability
     {
@@ -208,11 +213,11 @@ namespace Rawr.DPSWarr.Skills
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
-        /// Attempt to finish off a wounded foe, causing (10+AP*0.25) physical damage and
-        /// consumes up to 20 additional rage to deal up to (AP*0.5-1) additional damage.
+        /// Attempt to finish off a wounded foe, causing (10+AP*0.437) physical damage and
+        /// consumes up to 20 additional rage to deal up to (AP*0.874-1) additional damage.
         /// Only usable on enemies that have less than 20% health.
-        /// <para>Talents: Improved Execute [Reduces the rage cost of your Execute ability by (2.5/5).]</para>
-        /// <para>Glyphs: Glyph of Execute [Your Execute ability acts as if it has 10 additional rage.]</para>
+        /// <para>Talents: Executioner [Exec procs Haste], Sudden Death [Keep 5*Pts Rage After Use]</para>
+        /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
         public Execute(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -221,7 +226,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = ReqMeleeRange = true;
-            RageCost = 10f/* - (Talents.SuddenDeath * 5f)*/;
+            RageCost = 10f;
             DamageBonus = 1f + StatS.BonusExecOPMSDamageMultiplier;
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
@@ -232,10 +237,13 @@ namespace Rawr.DPSWarr.Skills
         public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
         private float FREERAGE;
         public float FreeRage { get { return FREERAGE; } set { FREERAGE = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
-        public float UsedExtraRage { get { return Math.Min(20f, FreeRage / (ActivatesOverride * (float)BossOpts.Under20Perc)); } }
+        public float UsedExtraRage { get { return Math.Max(0f, Math.Min(20f, ActivatesOverride == 0 ? 0f : FreeRage / (ActivatesOverride * (float)BossOpts.Under20Perc))); } }
+        private float _DumbActivates = 0f;
+        public float DumbActivates { get { return _DumbActivates; } set { _DumbActivates = value; } }
+        protected override float ActivatesOverride { get { return DumbActivates; } }
         public override float DamageOverride {
             get {
-                return ((10f + StatS.AttackPower * 0.25f) + (UsedExtraRage * (StatS.AttackPower * 0.5f - 1f)))
+                return ((10f + StatS.AttackPower * 0.437f) + ((UsedExtraRage / 20f) * (StatS.AttackPower * 0.874f - 1f)))
                        * DamageBonus * AvgTargets;
             }
         }
@@ -527,7 +535,7 @@ namespace Rawr.DPSWarr.Skills
         protected float addMisses;
         protected float addDodges;
         protected float addParrys;
-        public float ThunderApps = 0f;
+        public float ThunderAppsO20 = 0f;
         public float ThunderAppsU20 = 0f;
         protected override float ActivatesOverride
         {
@@ -576,8 +584,8 @@ namespace Rawr.DPSWarr.Skills
         public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
-            float numticks = NumTicks * ((acts + (ThunderApps * AvgTargets)) - addMisses - addDodges - addParrys);
-            float result = GetDmgOverTickingTime(acts + ThunderApps) / FightDuration;
+            float numticks = NumTicks * ((acts + ((ThunderAppsO20 + ThunderAppsU20) * AvgTargets)) - addMisses - addDodges - addParrys);
+            float result = GetDmgOverTickingTime(acts + ThunderAppsO20 + ThunderAppsU20) / FightDuration;
             return result;
         }
     }

@@ -516,61 +516,30 @@ namespace Rawr.DPSWarr {
                 }
                 #endregion
 
-                dictValues.Add("Description", string.Format("DPS : PerHit : #ActsD"));
+                dictValues.Add("Description 1", string.Format("DPS  : PerHit  : #ActsD"));
+                dictValues.Add("Description 2", string.Format("DPS  : PerHit  : #ActsD"));
                 // DPS Abilities
                 format = "{0:0000} : {1:00000} : {2:000.00}";
                 if (TotalDPS < 0f) { TotalDPS = 0f; }
                 foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList())
                 {
-                    string name = "Invalid";
-                    #region Fury
-                    if (aw.ability.GetType() == typeof(Skills.BloodSurge)) { name = Skills.BloodSurge.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.BloodThirst)) { name = Skills.BloodThirst.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.WhirlWind)) { name = Skills.WhirlWind.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.RagingBlow)) { name = Skills.RagingBlow.SName; }
-                    #endregion
-                    #region Arms
-                    else if (aw.ability.GetType() == typeof(Skills.Bladestorm)) { name = Skills.Bladestorm.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.MortalStrike)) { name = Skills.MortalStrike.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.Rend)) { name = Skills.Rend.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.OverPower)) { name = Skills.OverPower.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.TasteForBlood)) { name = Skills.TasteForBlood.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.Slam)) { name = Skills.Slam.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.ColossusSmash)) { name = Skills.ColossusSmash.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.VictoryRush)) { name = Skills.VictoryRush.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.StrikesOfOpportunity)) { name = Skills.StrikesOfOpportunity.SName; }
-                    #endregion
-                    #region Maintenance
-                    else if (aw.ability.GetType() == typeof(Skills.ThunderClap)) { name = Skills.ThunderClap.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.ShatteringThrow)) { name = Skills.ShatteringThrow.SName; }
-                    #endregion
-                    #region General
-                    else if (aw.ability.GetType() == typeof(Skills.HeroicStrike)) { name = Skills.HeroicStrike.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.Cleave)) { name = Skills.Cleave.SName; }
-                    else if (aw.ability.GetType() == typeof(Skills.Execute)) { name = Skills.Execute.SName; }
-                    #endregion
-                    if (!name.Equals("Invalid")) {
-                        if (aw.ability is Skills.Rend) {
-                            dictValues.Add(name, string.Format(format, aw.allDPS, (aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
-                        } else {
-                            dictValues.Add(name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
-                        }
+                    if (aw.ability is Skills.Rend) {
+                        dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, (aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
+                    } else {
+                        dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
                     }
                 }
-                // Maintenance
-                // General
                 // DPS General
-                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
                 dictValues.Add("Deep Wounds", string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize, Rot.DW.TickSize <= 0f || TotalDPS <= 0f ? 0f : Rot.DW.TickSize / TotalDPS));
                 dictValues.Add("Special DMG Procs", string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
+                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
                 dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (Rot.GCDUsage != "" ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
                 // Rage
                 format = "{0:0000}";
-                dictValues.Add("Total Generated Rage", string.Format("{0:00} = {1:0} + {2:0}", WhiteRage + OtherRage, WhiteRage, OtherRage));
-                dictValues.Add("Needed Rage for Abilities", string.Format(format, NeedyRage));
-                dictValues.Add("Available Free Rage", string.Format(format, FreeRage));
-            }
-            catch (Exception ex) {
+                dictValues.Add("Description 3", string.Format("Gen'd : Need : Avail"));
+                dictValues.Add("Rage Above 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRage + OtherRage, NeedyRage, FreeRage));
+                dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRage + OtherRage, NeedyRage, FreeRage));
+            } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Dictionaries",
                     ex.Message, "GetCharacterDisplayCalculationValues()", "No Additional Info", ex.StackTrace);
                 eb.Show();

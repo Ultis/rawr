@@ -62,9 +62,9 @@ namespace Rawr.DPSWarr {
                 SetUpOther();
                 SetUpToolTips();
             } catch (Exception ex) {
-                new ErrorBox("Error in creating the DPSWarr Options Pane",
-                    ex.Message, "CalculationOptionsPanelDPSWarr()",
-                    ex.InnerException.Message, ex.StackTrace);
+                ErrorBox eb = new ErrorBox("Error in creating the DPSWarr Options Pane",
+                    ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException != null ? ex.InnerException.Message : "", ex.StackTrace);
+                eb.Show();
             }
             _loadingCalculationOptions = false;
         }
@@ -90,8 +90,9 @@ namespace Rawr.DPSWarr {
                 // Abilities to Maintain
                 LoadAbilBools(calcOpts);
             } catch (Exception ex) {
-                new ErrorBox("Error in loading the DPSWarr Options Pane",
+                ErrorBox eb = new ErrorBox("Error in loading the DPSWarr Options Pane",
                     ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
+                eb.Show();
             }
             _loadingCalculationOptions = false;
         }
@@ -971,8 +972,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     //RTB_FAQ.SelectionFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold);
                 }
             /*} catch(Exception ex){
-                new ErrorBoxDPSWarr("Error in setting the FAQ Item",
+                ErrorBox eb = new ErrorBoxDPSWarr("Error in setting the FAQ Item",
                     ex.Message, "CB_FAQ_Questions_SelectedIndexChanged");
+                eb.show();
             }*/
         }
         private void CB_Version_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
@@ -1053,10 +1055,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(CK_M_F_RK);
             // Rage Gen
             settooltip(CK_Zerker);
-            settooltip(CK_BloodRage);
+            settooltip(CK_DeadlyCalm);
             // Rage Dump
             settooltip(CK_Cleave);
             settooltip(CK_HeroicStrike);
+            settooltip(CK_InnerRage);
             // Shout
             settooltip(RB_Shout_Battle);
             settooltip(RB_Shout_Comm);
@@ -1078,14 +1081,14 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == CK_M_A_MS ) tooltip.Setup(Skills.MortalStrike.SName, Skills.MortalStrike.SDesc, Skills.MortalStrike.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_A_RD ) tooltip.Setup(Skills.Rend.SName, Skills.Rend.SDesc, Skills.Rend.SIcon, "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
             else if (sender == CK_M_A_OP ) tooltip.Setup(Skills.OverPower.SName, Skills.OverPower.SDesc, Skills.OverPower.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            else if (sender == CK_M_A_TB) tooltip.Setup(Skills.TasteForBlood.SName, Skills.TasteForBlood.SDesc, Skills.TasteForBlood.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
-            else if (sender == CK_M_A_CS) tooltip.Setup(Skills.ColossusSmash.SName, Skills.ColossusSmash.SDesc, Skills.ColossusSmash.SIcon, "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_A_VR) tooltip.Setup(Skills.VictoryRush.SName, Skills.VictoryRush.SDesc, Skills.VictoryRush.SIcon, "A GCD is consumed and Damage is put out.");
-            else if (sender == CK_M_A_SL) tooltip.Setup(Skills.Slam.SName, Skills.Slam.SDesc, Skills.Slam.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_TB ) tooltip.Setup(Skills.TasteForBlood.SName, Skills.TasteForBlood.SDesc, Skills.TasteForBlood.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+            else if (sender == CK_M_A_CS ) tooltip.Setup(Skills.ColossusSmash.SName, Skills.ColossusSmash.SDesc, Skills.ColossusSmash.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_VR ) tooltip.Setup(Skills.VictoryRush.SName, Skills.VictoryRush.SDesc, Skills.VictoryRush.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_A_SL ) tooltip.Setup(Skills.Slam.SName, Skills.Slam.SDesc, Skills.Slam.SIcon, "A GCD is consumed and Damage is put out.");
             //
-            else if (sender == CK_M_A_TH) tooltip.Setup(Skills.ThunderClap.SName, Skills.ThunderClap.SDesc, Skills.ThunderClap.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period. " + DeActivatesBuff + " " + MultiTargets);
-            else if (sender == CK_M_A_ST) tooltip.Setup(Skills.ShatteringThrow.SName, Skills.ShatteringThrow.SDesc, Skills.ShatteringThrow.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
-            else if (sender == CK_M_A_SW) tooltip.Setup(Skills.SweepingStrikes.SName, Skills.SweepingStrikes.SDesc, Skills.SweepingStrikes.SIcon, "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
+            else if (sender == CK_M_A_TH ) tooltip.Setup(Skills.ThunderClap.SName, Skills.ThunderClap.SDesc, Skills.ThunderClap.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period. " + DeActivatesBuff + " " + MultiTargets);
+            else if (sender == CK_M_A_ST ) tooltip.Setup(Skills.ShatteringThrow.SName, Skills.ShatteringThrow.SDesc, Skills.ShatteringThrow.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
+            else if (sender == CK_M_A_SW ) tooltip.Setup(Skills.SweepingStrikes.SName, Skills.SweepingStrikes.SDesc, Skills.SweepingStrikes.SIcon, "If there are multiple mobs present per the Boss Handler, a GCD will be consumed and the buff will become active after each cooldown period, causing additional damage on other abilities.");
             #endregion
             #region Fury
             // Fury
@@ -1099,11 +1102,13 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #endregion
             #region Rage Gen
             else if (sender == CK_Zerker) tooltip.Setup(Skills.BerserkerRage.SName, Skills.BerserkerRage.SDesc, Skills.BerserkerRage.SIcon, "This affects Boss Handler situations (Fears, Roots) and when taking Boss Damage you will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes).");
-            else if (sender == CK_BloodRage) tooltip.Setup(Skills.Bloodrage.SName, Skills.Bloodrage.SDesc, Skills.Bloodrage.SIcon, "This adds to the total rage for maintaining your rotation (usually resulting in more Heroic Strikes).");
+            else if (sender == CK_DeadlyCalm) tooltip.Setup(Skills.DeadlyCalm.SName, Skills.DeadlyCalm.SDesc, Skills.DeadlyCalm.SIcon, "You will gain extra rage to maintain your rotation (usually resulting in more Heroic Strikes and Execute Damage).");
             #endregion
             #region Rage Dump
             else if (sender == CK_Cleave) tooltip.Setup(Skills.Cleave.SName, Skills.Cleave.SDesc, Skills.Cleave.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Cleaves, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Cleaves, generate more rage. Cleave will also only activate when there are multiple mobs present (per the Boss Handler), otherwise you will Heroic Strike instead (if selected).");
-            else if (sender == CK_HeroicStrike) tooltip.Setup(Skills.HeroicStrike.SName, Skills.HeroicStrike.SDesc, Skills.HeroicStrike.SIcon, "You White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
+            else if (sender == CK_HeroicStrike) tooltip.Setup(Skills.HeroicStrike.SName, Skills.HeroicStrike.SDesc, Skills.HeroicStrike.SIcon, "Your White Attack DPS will go down and you will see new (greater) DPS from Heroic Strikes, this also consumes considerably more rage. However we have assigned only rage that is not used by your rotation. To increase Heroic Strikes, generate more rage. If there are multiple Targets and Cleave is active, Cleave will override Heroc Strike.");
+            else if (sender == CK_InnerRage) tooltip.Setup(Skills.InnerRage.SName, Skills.InnerRage.SDesc, Skills.InnerRage.SIcon,
+                "This is not modeled yet.");
             #endregion
             #region Shout
             else if (sender == RB_Shout_Battle) tooltip.Setup(Skills.BattleShout.SName, Skills.BattleShout.SDesc, Skills.BattleShout.SIcon, "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
@@ -1122,19 +1127,16 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             //tooltip.Setup();
             tooltip.Show((UIElement)sender);
         }
-        private void Element_MouseLeave(object sender, MouseEventArgs e)
-        {
-            tooltip.Hide();
-        }
+        private void Element_MouseLeave(object sender, MouseEventArgs e) { tooltip.Hide(); }
         // Abilities to Maintain Changes
         public static void CheckSize(CalculationOptionsDPSWarr calcOpts)
         {
-            if (calcOpts.Maintenance.Length != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_ + 1)
+            if (calcOpts.Maintenance.Length != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_ + 1)
             {
                 bool[] newArray = new bool[] {
                         true,  // == Rage Gen ==
                             false,  // Berserker Rage
-                            true,   // Bloodrage
+                            true,   // Deadly Calm
                         false, // == Maintenance ==
                             false, // Shout Choice
                                 false, // Battle Shout
@@ -1167,7 +1169,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
                             true,  // Cleave
-                            true   // Heroic Strike
+                            true,  // Heroic Strike
+                            true,  // Inner Rage
                     };
                 calcOpts.Maintenance = newArray;
             }

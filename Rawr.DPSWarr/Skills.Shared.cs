@@ -152,44 +152,6 @@ namespace Rawr.DPSWarr.Skills
         /// </summary>
         public LastStand() { Targets = -1; }
     }
-    public class Bloodrage : BuffEffect
-    {
-        public static new string SName { get { return "Bloodrage"; } }
-        public static new string SDesc { get { return "Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec."; } }
-        public static new string SIcon { get { return "ability_racial_bloodrage"; } }
-        public override string Name { get { return SName; } }
-        public override string Desc { get { return SDesc; } }
-        public override string Icon { get { return SIcon; } }
-        /// <summary>
-        /// Instant, 1 min cd, Self (Any)
-        /// Generates 10 rage at the cost of health and then generates an additional 10 rage over 10 sec.
-        /// <para>Talents: Improved Bloodrge [+(25*Pts)% Rage Generated], Intensify Rage [-(1/9*Pts]% Cooldown]</para>
-        /// <para>Glyphs: Glyph of Bloodrage [-100% Health Cost]</para>
-        /// <para>Sets: none</para>
-        /// </summary>
-        public Bloodrage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
-            //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_;
-            Cd = 60f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
-            Duration = 10f; // In Seconds
-            // Rage is actually reversed in the rotation
-            RageCost = -(20f // Base
-                        + 10f) // Over Time
-                        ;
-            Targets = -1;
-            StanceOkArms = StanceOkDef = StanceOkFury = true;
-            Stats Base = BaseStats.GetBaseStats(Char.Level, CharacterClass.Warrior, Char.Race);
-            float baseHealth = Base.Health + StatConversion.GetHealthFromStamina(Base.Stamina, CharacterClass.Warrior);
-            HealingBase = -1f * (float)Math.Floor(baseHealth) * 0.16f;
-            UseHitTable = false;
-            UsesGCD = false;
-            UseReact = true;
-            //
-            Initialize();
-        }
-    }
     public class BattleShout : BuffEffect
     {
         public static new string SName { get { return "Battle Shout"; } }
@@ -279,7 +241,7 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// When activated you become enraged, increasing your physical damage by 20% but increasing
         /// all damage taken by 5%. Lasts 30 sec.
-        /// <para>Talents: Death Wish [Requires Talent], Intensify Rage [-(1/9*Pts)% Cooldown]</para>
+        /// <para>Talents: Death Wish [Requires Talent], Intensify Rage [-(10*Pts)% CD]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -311,7 +273,7 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// Your next 3 special ability attacks have an additional 100% chance to critically hit
         /// but all damage taken is increased by 20%. Lasts 12 sec.
-        /// <para>Talents: Improved Disciplines [-(30*Pts) sec Cd]</para>
+        /// <para>Talents: none</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -320,7 +282,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
-            Cd = (5f * 60f /*- Talents.ImprovedDisciplines * 30f*/) * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
+            Cd = (5f * 60f) * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
             StanceOkFury = true;
             Targets = -1;
@@ -431,6 +393,81 @@ namespace Rawr.DPSWarr.Skills
                 NUMSTUNSOVERDUR = value;
                 Cd = (FightDuration / NUMSTUNSOVERDUR);
                 if (Effect != null) { Effect.Cooldown = Cd; }
+            }
+        }
+    }
+    public class DeadlyCalm : BuffEffect
+    {
+        public static new string SName { get { return "Deadly Calm"; } }
+        public static new string SDesc { get { return "For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage."; } }
+        public static new string SIcon { get { return "achievement_boss_kingymiron"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        /// <summary>
+        /// Instant, 2 min Cd, Self, Any Stance,
+        /// For the next 10 sec, none of your abilities cost rage, but you
+        /// continue to generate rage. Cannot be used during Inner Rage.
+        /// <para>Talents: Deadly Calm [Requires Talent]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public DeadlyCalm(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Cd = 2 * 60f; // In Seconds
+            Duration = 10f;
+            RageCost = 0f;
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_;
+            StanceOkArms = StanceOkDef = StanceOkFury = true;
+            UseHitTable = false;
+            Targets = -1;
+            UseReact = true;
+            isMaint = true;
+            UsesGCD = false;
+            //
+            Initialize();
+        }
+    }
+    public class InnerRage : BuffEffect
+    {
+        public static new string SName { get { return "Inner Rage"; } }
+        public static new string SDesc { get { return "Usable when you have over 75 Rage to increase all damage you deal by 15% but increase the rage cost of all abilities by 50%. Lasts 15 sec."; } }
+        public static new string SIcon { get { return "warrior_talent_icon_innerrage"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        /// <summary>
+        /// Instant, 1.5 sec Cd
+        /// Usable when you have over 75 Rage to increase all damage you deal by 15%
+        /// but increase the rage cost of all abilities by 50%. Lasts 15 sec.
+        /// <para>Talents: Deadly Calm [Requires Talent]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public InnerRage(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Cd = 1.50f; // In Seconds
+            Duration = 15f;
+            RageCost = 0f;
+            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_;
+            StanceOkArms = StanceOkDef = StanceOkFury = true;
+            UseHitTable = false;
+            Targets = -1;
+            UseReact = true;
+            isMaint = true;
+            UsesGCD = false;
+            //
+            Initialize();
+        }
+        protected override float ActivatesOverride {
+            get {
+                // This ability can only be activated at >75 Rage so we need to limit its chance to activate to that
+                // Using a REALLY dumb approximation right now
+                return base.ActivatesOverride * 0.25f;
             }
         }
     }
@@ -823,7 +860,7 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// Instant, 15 sec cd, 0 Rage, 8-25 yds, (Battle)
         /// Charge an enemy, generate 15 rage, and stun it for 1 sec. Cannot be used in combat.
-        /// <para>Talents: Warbringer [Usable in combat and any stance], Juggernaut [Usable in combat]</para>
+        /// <para>Talents: Blitz [+5 RageGen], Warbringer [Usable in combat and any stance], Juggernaut [Usable in combat]</para>
         /// <para>Glyphs: Glyph of Rapid Charge [-7% Cd], Glyph of Charge [+5 yds MaxRange]</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -890,6 +927,7 @@ namespace Rawr.DPSWarr.Skills
         /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
         /// <para>Talents: Warbringer [Usable in any stance]</para>
         /// <para>Glyphs: Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]</para>
+        /// <para>Sets: none</para>
         /// </summary>
         public Intervene(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
@@ -906,7 +944,6 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
     }
-
     public class HeroicLeap : Ability
     {
         public static new string SName { get { return "Heroic Leap"; } }
@@ -915,11 +952,13 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-
         /// <summary>
         /// Instant, 40 sec Cd, 
+        /// Leap through the air towards a targeted location, slamming down with destructive force to deal 100% weapon damage to all enemies within 5 yards, stunning them for 2 sec.
+        /// <para>Talents: Skirmisher [-[10*Pts] sec CD, Max: 2]</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <para>Talents: Skirmisher [Decreases Cooldown [10s * pts] Max: 2</para>
         public HeroicLeap(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -933,9 +972,7 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = combatFactors.NormalizedMhWeaponDmg;
             Targets = 10f;
             */
-
         }
-
     }
     #endregion
     #region Other Abilities

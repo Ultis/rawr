@@ -4,9 +4,6 @@ using System.Windows.Media;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using Rawr.DPSWarr.Markov;
-using Rawr.Base;
-using Rawr.Bosses;
 
 namespace Rawr.DPSWarr {
     public struct DPSWarrCharacter
@@ -225,7 +222,8 @@ namespace Rawr.DPSWarr {
 Precision 0- 8%-0%=8%=264 Rating soft cap
 Precision 1- 8%-1%=7%=230 Rating soft cap
 Precision 2- 8%-2%=6%=197 Rating soft cap
-Precision 3- 8%-3%=5%=164 Rating soft cap",
+Precision 3- 8%-3%=5%=164 Rating soft cap
+NOTICE: These ratings numbers will be out of date for Cataclysm",
 @"Base Stats:Expertise*Base 6.50% chance to be Dodged (LVL 83 Targ)
 X Axis is Weapon Mastery
 Y Axis is Strength of Arms
@@ -243,14 +241,15 @@ Strength of Arms
 1 |443
 2 |426
 
-These numbers to do not include racial bonuses.",
+These numbers to do not include racial bonuses.
+NOTICE: These ratings numbers will be out of date for Cataclysm",
 "Base Stats:Haste",
-"Base Stats:Armor Penetration*Cata no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
+"Base Stats:Armor Penetration*Cataclysm no longer has ArP Rating but you can still get ArP % from Talents and Abilities",
 "Base Stats:Mastery*Since this is new, it may be off on how it's implemented for a while",
 #endregion
             
 #region Fury
-@"DPS Breakdown (Fury):Description*1st Number is per second or per tick
+@"DPS Breakdown (Fury):Description 1*1st Number is per second or per tick
 2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
 3rd Number is number of times activated over fight duration",
 "DPS Breakdown (Fury):Bloodsurge",
@@ -260,20 +259,21 @@ These numbers to do not include racial bonuses.",
 #endregion
 
 #region Arms
+@"DPS Breakdown (Arms):Description 2*1st Number is per second or per tick
+2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
+3rd Number is number of times activated over fight duration",
+"DPS Breakdown (Arms):Shattering Throw",
+"DPS Breakdown (Arms):Colossus Smash*This ability provides the ArP % you see above",
 "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
 "DPS Breakdown (Arms):Mortal Strike",
-"DPS Breakdown (Arms):Rend",
-"DPS Breakdown (Arms):Overpower",
+"DPS Breakdown (Arms):Rend*The Blood and Thunder Talent can refresh Rend so you will only see approximately one activate but you'll still see the full Rend DPS here.",
+"DPS Breakdown (Arms):Thunder Clap",
 "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
-"DPS Breakdown (Arms):Colossus Smash",
-"DPS Breakdown (Arms):Victory Rush",
+"DPS Breakdown (Arms):Overpower",
+"DPS Breakdown (Arms):Victory Rush*Slam will override this if it does more damage",
+"DPS Breakdown (Arms):Execute*<20% Spamming only",
 "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
 "DPS Breakdown (Arms):Strikes Of Opportunity*The Arms Mastery Rating based ability",
-#endregion
-
-#region Maintenance
-"DPS Breakdown (Maintenance):Thunder Clap",
-"DPS Breakdown (Maintenance):Shattering Throw",
 #endregion
 
 #region General
@@ -281,16 +281,15 @@ These numbers to do not include racial bonuses.",
 "DPS Breakdown (General):Heroic Strike",
 "DPS Breakdown (General):Cleave",
 "DPS Breakdown (General):White DPS",
-"DPS Breakdown (General):Execute*<20% Spamming only",
 "DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
 @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
 #endregion
 
 #region Rage Details
-"Rage Details:Total Generated Rage",
-"Rage Details:Needed Rage for Abilities",
-"Rage Details:Available Free Rage*For Heroic Strikes and Cleaves",
+"Rage Details:Description 3",
+"Rage Details:Rage Above 20%",
+"Rage Details:Rage Below 20%",
 #endregion
 
                     };
@@ -322,20 +321,14 @@ These numbers to do not include racial bonuses.",
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
-        private Dictionary<string, Color> _subPointNameColors_Normal = null;
-        //private Dictionary<string, Color> _subPointNameColors_DPSDMG = null;
-        //private Dictionary<string, Color> _subPointNameColors_DPSDPR = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
-                if (_subPointNameColors_Normal == null) {
-                    _subPointNameColors_Normal = new Dictionary<string, Color>();
-                    _subPointNameColors_Normal.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors_Normal.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
+                if (_subPointNameColors == null) {
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
                 }
-                if (_subPointNameColors == null) { _subPointNameColors = _subPointNameColors_Normal; }
-                Dictionary<string, Color> ret = _subPointNameColors;
-                _subPointNameColors = _subPointNameColors_Normal;
-                return ret;
+                return _subPointNameColors;
             }
         }
 
@@ -806,7 +799,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_]) {
+            if (calcOpts.M_SunderArmor) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
                 buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
@@ -818,8 +811,7 @@ These numbers to do not include racial bonuses.",
 
             // Removes the Shattering Throw Buff if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_])
-            {
+            if (calcOpts.M_ShatteringThrow) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
                 MaintBuffHelper(buffGroup, character, removedBuffs);
@@ -828,7 +820,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_]) {
+            if (calcOpts.M_ThunderClap) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
                 buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
@@ -839,7 +831,7 @@ These numbers to do not include racial bonuses.",
 
             // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_]) {
+            if (calcOpts.M_DemoralizingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
@@ -849,7 +841,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.BattleShout_]) {
+            if (calcOpts.M_BattleShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
@@ -861,7 +853,7 @@ These numbers to do not include racial bonuses.",
             // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blood Pact (+Improved Imp)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_]) {
+            if (calcOpts.M_CommandingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
@@ -1082,7 +1074,7 @@ These numbers to do not include racial bonuses.",
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     #region Rage Generators
                     comparisons.Add(getComp(dpswarchar, "Berserker Rage", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_));
-                    comparisons.Add(getComp(dpswarchar, "Bloodrage", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodrage_));
+                    comparisons.Add(getComp(dpswarchar, "Deadly Calm", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_));
                     #endregion
                     #region Maintenance
                     comparisons.Add(getComp(dpswarchar, "Battle Shout", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_));
@@ -1123,6 +1115,7 @@ These numbers to do not include racial bonuses.",
                     #region Rage Dumps
                     comparisons.Add(getComp(dpswarchar, "Heroic Strike", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_));
                     comparisons.Add(getComp(dpswarchar, "Cleave", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_));
+                    comparisons.Add(getComp(dpswarchar, "Inner Rage", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_));
                     #endregion
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
@@ -1164,7 +1157,6 @@ These numbers to do not include racial bonuses.",
                 #endregion
                 #region Execute Spam
                 case "Execute Spam": {
-                    _subPointNameColors = _subPointNameColors_Normal;
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     {
                         bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
@@ -1207,6 +1199,72 @@ These numbers to do not include racial bonuses.",
         #endregion
 
         #region Character Calcs
+
+        #region Talents That are handled as SpecialEffects
+        // We need these to be static so they aren't re-created 50 bajillion times
+
+        private static SpecialEffect[] _SE_WreckingCrew = {
+            null,
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 1 * (0.10f/3f), }, 12, 0, 1f * (1f/3f)),
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 2 * (0.10f/3f), }, 12, 0, 2f * (1f/3f)),
+            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 3 * (0.10f/3f), }, 12, 0, 3f * (1f/3f)),
+        };
+
+        private static SpecialEffect[] _SE_LambsToTheSlaughter = {
+            null,
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 0, 6),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 0, 6),
+            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 0, 6),
+        };
+
+        private static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
+            null,
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
+        };
+
+        private static SpecialEffect[][] _SE_DeathWish = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),},
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),},
+        };
+
+        private static SpecialEffect[] _SE_Enrage = {
+            null,
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
+        };
+
+        private static SpecialEffect[] _SE_BloodCraze = {
+            null,
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f, 0.10f),
+        };
+
+        private static SpecialEffect[] _SE_Executioner = {
+            null,
+            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
+            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
+        };
+
+        private static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
+        /*private static SpecialEffect[] _SE_ColossusSmash_Outer = {
+            null,//new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 20, 0f * 0.03f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
+            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
+        };*/
+
+        private static SpecialEffect[] _SE_MeatCleaver = {
+            null, //0 Talents
+            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
+            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
+        };
+
+        
+        #endregion
 
         private bool ValidatePlateSpec(DPSWarrCharacter dpswarchar) {
             // Null Check
@@ -1375,8 +1433,8 @@ These numbers to do not include racial bonuses.",
                 }
 
             } catch (Exception ex) {
-                ErrorBox eb = new ErrorBox("Error in creating Stat Pane Calculations",
-                    ex.Message, "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Calculations",
+                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return calculatedStats;
@@ -1388,78 +1446,12 @@ These numbers to do not include racial bonuses.",
             try {
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions);
             } catch (Exception ex) {
-                ErrorBox eb = new ErrorBox("Error in getting Character Stats",
-                    ex.Message, "GetCharacterStats()", "No Additional Info", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in getting Character Stats",
+                    ex.Message, "GetCharacterStats(Character character, Item additionalItem)", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return new Stats() { };
         }
-
-        #region Talents That are handled as SpecialEffects
-        // We need these to be static so they aren't re-created 50 bajillion times
-
-        private static SpecialEffect[] _SE_WreckingCrew = {
-            null,
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 1 * (0.10f/3f), }, 12, 0, 1f * (1f/3f)),
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 2 * (0.10f/3f), }, 12, 0, 2f * (1f/3f)),
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 3 * (0.10f/3f), }, 12, 0, 3f * (1f/3f)),
-        };
-
-        private static SpecialEffect[] _SE_LambsToTheSlaughter = {
-            null,
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 0, 6),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 0, 6),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 0, 6),
-        };
-
-        private static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
-            null,
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
-        };
-
-        private static SpecialEffect[][] _SE_DeathWish = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),},
-        };
-
-        private static SpecialEffect[] _SE_Enrage = {
-            null,
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
-        };
-
-        private static SpecialEffect[] _SE_BloodCraze = {
-            null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f, 0.10f),
-        };
-
-        private static SpecialEffect[] _SE_Executioner = {
-            null,
-            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
-            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
-        };
-
-        private static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
-        /*private static SpecialEffect[] _SE_ColossusSmash_Outer = {
-            null,//new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 20, 0f * 0.03f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
-        };*/
-
-        private static SpecialEffect[] _SE_MeatCleaver = {
-            null, //0 Talents
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
-        };
-
-        
-        #endregion
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
@@ -1504,8 +1496,8 @@ These numbers to do not include racial bonuses.",
                 BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
                     // Two Handed Weapon Spec // NEW! 2H Weap Spec is a passive Arms Spec Bonus in Cata
                     ((!dpswarchar.combatFactors.FuryStance && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1.10f : 1.00f)
-                    // Titan's Grip Penalty
-                    * ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
+                    // Titan's Grip Penalty, this may no longer be in effect in cata, commenting it out for now
+                    //* ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
                     // Convert it back a simple mod number
                     - 1f),
                 BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
@@ -1873,6 +1865,7 @@ These numbers to do not include racial bonuses.",
                     hitRateMH = landMH / attemptedMH;
                 if (attemptedOH != 0f)
                     hitRateOH = landOH / attemptedOH;
+
                 addInfo += "\r\nTriggers started";
                 triggerIntervals[Trigger.Use] = 0f;
                 triggerChances[Trigger.Use] = 1f;
@@ -1926,7 +1919,9 @@ These numbers to do not include racial bonuses.",
                 
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
-                new ErrorBox("Error Calculating Triggers", ex.Message, "CalculateTriggers(...)", addInfo, ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Calculating Triggers",
+                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "CalculateTriggers(...)", addInfo, ex.StackTrace);
+                eb.Show();
             }
         }
 
@@ -2092,8 +2087,9 @@ These numbers to do not include racial bonuses.",
 
                 return statsProcs;
             } catch (Exception ex) {
-                ErrorBox box = new ErrorBox("Error in creating SpecialEffects Stats", ex.Message, ex.InnerException.Message, "GetSpecialEffectsStats()");
-                box.Show();
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating SpecialEffects Stats",
+                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "GetSpecialEffectsStats()");
+                eb.Show();
                 return new Stats();
             }
         }

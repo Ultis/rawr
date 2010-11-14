@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr.Skills
             OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false, false);
             FightDuration = BossOpts.BerserkTimer;
             //
-            Slam_ActsOverDur = 0f;
+            Slam_ActsOverDurO20 = Slam_ActsOverDurU20 = 0f;
         }
         public void InvalidateCache()
         {
@@ -61,7 +61,9 @@ namespace Rawr.DPSWarr.Skills
             }
         }
         // Get/Set
-        public float Slam_ActsOverDur;
+        public float Slam_ActsOverDurO20;
+        public float Slam_ActsOverDurU20;
+        public float Slam_ActsOverDur { get { return Slam_ActsOverDurO20 + Slam_ActsOverDurU20; } }
         #endregion
         // bah
         private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
@@ -520,7 +522,7 @@ namespace Rawr.DPSWarr.Skills
         protected float HealingBase { get; set; }
         protected float HealingBonus { get; set; }
         /// <summary>Percentage Based Crit Chance Bonus (0.5 = 50% Crit Chance, capped between 0%-100%, factoring Boss Level Offsets)</summary>
-        public float BonusCritChance { get; set; }
+        public virtual float BonusCritChance { get; set; }
         /// <summary>Percentage Based Crit Damage Bonus (1.5 = 150% damage)</summary>
         public float BonusCritDamage { get; set; }
         protected bool StanceOkFury { get; set; }
@@ -600,8 +602,8 @@ namespace Rawr.DPSWarr.Skills
                 return Math.Max(0f, FightDuration / Every * (1f - Whiteattacks.AvoidanceStreak));*/
             }
         }
-        protected float Healing { get { return !Validated ? 0f : HealingBase * HealingBonus; } }
-        protected float HealingOnUse { get { return Healing * combatFactors.HealthBonus; } }
+        protected float Healing { get { return !Validated ? 0f : HealingBase * (1f + (HealingBase > 0f ? HealingBonus : 0f)); } }
+        protected float HealingOnUse { get { return Healing * (1f + (HealingBase > 0f ? combatFactors.HealthBonus : 0f)); } }
         //protected float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
         protected float Damage { get { return !Validated ? 0f : DamageOverride; } }
         public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }

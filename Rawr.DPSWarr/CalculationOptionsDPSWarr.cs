@@ -24,7 +24,7 @@ namespace Rawr.DPSWarr {
             _Maintenance = new bool[] {
                 true,  // == Rage Gen ==
                     true,  // Berserker Rage
-                    true,  // Bloodrage
+                    true,  // Deadly Calm
                 false, // == Maintenance ==
                     false, // Shout Choice
                         false, // Battle Shout
@@ -57,7 +57,8 @@ namespace Rawr.DPSWarr {
                     true,  // <20% Execute Spamming
                 true,  // == Rage Dumps ==
                     true,  // Cleave
-                    true   // Heroic Strike
+                    true,  // Heroic Strike
+                    true,  // Inner Rage
             };
             // Latency
             Lag = 179f;
@@ -152,7 +153,7 @@ namespace Rawr.DPSWarr {
         {
             _RageGen__ = 0,
             BerserkerRage_,
-            Bloodrage_,
+            DeadlyCalm_,
             _Maintenance__,
             ShoutChoice_,
             BattleShout_,
@@ -185,16 +186,18 @@ namespace Rawr.DPSWarr {
             ExecuteSpam_,
             _RageDumps__,
             Cleave_,
-            HeroicStrike_
+            HeroicStrike_,
+            InnerRage_,
         };
         public bool[] Maintenance
         {
             get {
-                return _Maintenance ??
-                    (_Maintenance = new bool[] {
+                if (_Maintenance == null || _Maintenance.Length != (int)Maintenances.InnerRage_+1)
+                {
+                    _Maintenance = new bool[] {
                         true,  // == Rage Gen ==
                             true,  // Berserker Rage
-                            true,  // Bloodrage
+                            true,  // Deadly Calm
                         false, // == Maintenance ==
                             false, // Shout Choice
                                 false, // Battle Shout
@@ -227,8 +230,11 @@ namespace Rawr.DPSWarr {
                             true,  // <20% Execute Spamming
                         true,  // == Rage Dumps ==
                             true,  // Cleave
-                            true   // Heroic Strike
-                    });
+                            true,  // Heroic Strike
+                            true,  // Inner Rage
+                    };
+                }
+                return _Maintenance;
             }
             set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
         }
@@ -239,10 +245,10 @@ namespace Rawr.DPSWarr {
             set { Maintenance[(int)Maintenances.BerserkerRage_] = value; OnPropertyChanged("M_BerserkerRage"); }
         }
         [XmlIgnore]
-        public bool M_Bloodrage
+        public bool M_DeadlyCalm
         {
-            get { return Maintenance[(int)Maintenances.Bloodrage_]; }
-            set { Maintenance[(int)Maintenances.Bloodrage_] = value; OnPropertyChanged("M_Bloodrage"); }
+            get { return Maintenance[(int)Maintenances.DeadlyCalm_]; }
+            set { Maintenance[(int)Maintenances.DeadlyCalm_] = value; OnPropertyChanged("M_DeadlyCalm"); }
         }
         [XmlIgnore]
         public bool M_BattleShout
@@ -399,6 +405,12 @@ namespace Rawr.DPSWarr {
         {
             get { return Maintenance[(int)Maintenances.HeroicStrike_]; }
             set { Maintenance[(int)Maintenances.HeroicStrike_] = value; OnPropertyChanged("M_HeroicStrike"); }
+        }
+        [XmlIgnore]
+        public bool M_InnerRage
+        {
+            get { return Maintenance[(int)Maintenances.InnerRage_]; }
+            set { Maintenance[(int)Maintenances.InnerRage_] = value; OnPropertyChanged("M_InnerRage"); }
         }
         #endregion
         #region Latency
