@@ -22,7 +22,7 @@ namespace Rawr.UI
             {
                 itemInstance = value;
                 if (itemInstance != null)
-                    ContextItemName.Header = itemInstance.Item.Name;
+                    ContextItemName.Header = itemInstance.Item != null ? itemInstance.Item.Name : string.Empty;
                 character_AvailableItemsChanged(this, EventArgs.Empty);
             }
         }

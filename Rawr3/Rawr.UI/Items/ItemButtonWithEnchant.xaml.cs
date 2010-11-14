@@ -62,7 +62,7 @@ namespace Rawr.UI
             if (character != null)
             {
                 Item = character[Slot];
-                if (Item == null) {
+                if (Item == null || Item.Item == null) {
                     IconImage.Source = null;
                     EnchantButton.Content = "";
                     gear = null;

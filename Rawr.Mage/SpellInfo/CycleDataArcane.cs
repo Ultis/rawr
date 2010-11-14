@@ -459,13 +459,13 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, AB0T, 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, ABarT, 1 - K3);
-                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 5)
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
+                    cycle.AddPause(ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
                 }
-                if (AB0.CastTime + AM.CastTime + AB0T.CastTime + ABarT.CastTime < 5)
+                if (AB0.CastTime + AM.CastTime + AB0T.CastTime + ABarT.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AB0.CastTime - AM.CastTime - AB0T.CastTime - ABarT.CastTime, 1 - K2);
+                    cycle.AddPause(ABar.Cooldown - AB0.CastTime - AM.CastTime - AB0T.CastTime - ABarT.CastTime, 1 - K2);
                 }
             }
             else
@@ -484,13 +484,13 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AB1, K2);
                 cycle.AddSpell(needsDisplayCalculations, ABar, K3 + 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K3);
-                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 5)
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
+                    cycle.AddPause(ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
                 }
-                if (AM.CastTime + 2 * AB0.CastTime + ABar.CastTime < 5)
+                if (AM.CastTime + 2 * AB0.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AM.CastTime - 2 * AB0.CastTime - ABar.CastTime, 1 - K2);
+                    cycle.AddPause(ABar.Cooldown - AM.CastTime - 2 * AB0.CastTime - ABar.CastTime, 1 - K2);
                 }
             }
 
@@ -563,13 +563,13 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, AB0T, 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, ABarT, 1 - K3);
-                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 5)
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
+                    cycle.AddPause(ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
                 }
-                if (AM.CastTime + AB0T.CastTime + ABarT.CastTime < 5)
+                if (AM.CastTime + AB0T.CastTime + ABarT.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AM.CastTime - AB0T.CastTime - ABarT.CastTime, 1 - K2);
+                    cycle.AddPause(ABar.Cooldown - AM.CastTime - AB0T.CastTime - ABarT.CastTime, 1 - K2);
                 }
             }
             else
@@ -588,13 +588,13 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AB1, K2);
                 cycle.AddSpell(needsDisplayCalculations, ABar, K3 + 1 - K3);
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K3);
-                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 5)
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
+                    cycle.AddPause(ABar.Cooldown - AB0.CastTime - AB1.CastTime - ABar.CastTime, K3);
                 }
-                if (AM.CastTime + AB0.CastTime + ABar.CastTime < 5)
+                if (AM.CastTime + AB0.CastTime + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - AM.CastTime - AB0.CastTime - ABar.CastTime, 1 - K2);
+                    cycle.AddPause(ABar.Cooldown - AM.CastTime - AB0.CastTime - ABar.CastTime, 1 - K2);
                 }
             }
 
@@ -700,9 +700,9 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AM, S0 * MB + S1 * (1 - K4));
                 cycle.AddSpell(needsDisplayCalculations, ABar, S0 * (1 - MB) + S1 * K4);
                 // a bit overkill on pause, but make sure we respect the ABar cooldown
-                if (3 * ABcast + ABar.CastTime < 5)
+                if (3 * ABcast + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - 3 * ABcast - ABar.CastTime, S0 * (1 - MB) + S1 * K4);
+                    cycle.AddPause(ABar.Cooldown - 3 * ABcast - ABar.CastTime, S0 * (1 - MB) + S1 * K4);
                 }
             }
 
@@ -817,9 +817,9 @@ namespace Rawr.Mage
                 cycle.AddSpell(needsDisplayCalculations, AM, 1 - K4);
                 cycle.AddSpell(needsDisplayCalculations, ABar, K2);
                 // a bit overkill on pause, but make sure we respect the ABar cooldown
-                if (3 * ABcast + ABar.CastTime < 5)
+                if (3 * ABcast + ABar.CastTime < ABar.Cooldown)
                 {
-                    cycle.AddPause(5 - 3 * ABcast - ABar.CastTime, K2);
+                    cycle.AddPause(ABar.Cooldown - 3 * ABcast - ABar.CastTime, K2);
                 }
             }
 
@@ -4391,7 +4391,7 @@ w = remaining time on 2T10 effect";
                         Spell = ABar,
                         Pause = s.ArcaneBarrageCooldown,
                         TargetState = GetState(
-                            5.0f - ABar.CastTime,
+                            ABar.Cooldown - ABar.CastTime,
                             0,
                             Math.Max(0.0f, s.Tier10TwoPieceDuration - ABar.CastTime - s.ArcaneBarrageCooldown),
                             true,
@@ -4405,7 +4405,7 @@ w = remaining time on 2T10 effect";
                     Spell = ABar,
                     Pause = s.ArcaneBarrageCooldown,
                     TargetState = GetState(
-                        5.0f - ABar.CastTime,
+                        ABar.Cooldown - ABar.CastTime,
                         0,
                         Math.Max(0.0f, s.Tier10TwoPieceDuration - ABar.CastTime - s.ArcaneBarrageCooldown),
                         s.ArcaneMissilesProcced,

@@ -804,7 +804,7 @@ namespace Rawr
             ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
             itemCalc.ItemInstance = item;
             itemCalc.Item = item.Item;
-            itemCalc.Name = item.Item.Name;
+            itemCalc.Name = item.Item != null ? item.Item.Name : string.Empty;
             itemCalc.Equipped = character[slot] == item;
             itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
             float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];

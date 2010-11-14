@@ -265,7 +265,7 @@ namespace Rawr.Optimizer
                                     foreach (ItemInstance itemInstance in item.Item.AvailabilityInformation.ItemList)
                                     {
 #if RAWR4
-                                        if (itemInstance.MatchesSocketBonus && itemInstance.Enchant == item.Enchant && itemInstance.ReforgeFromId == item.ReforgeFromId && itemInstance.ReforgeToId == item.ReforgeToId)
+                                        if (itemInstance.MatchesSocketBonus && itemInstance.Enchant == item.Enchant && itemInstance.ReforgeId == item.ReforgeId)
 #else
                                         if (itemInstance.MatchesSocketBonus && itemInstance.Enchant == item.Enchant)
 #endif
@@ -389,7 +389,7 @@ namespace Rawr.Optimizer
                     foreach (ItemInstance itemInstance in item.Item.AvailabilityInformation.ItemList)
                     {                        
 #if RAWR4
-                        if (itemInstance.Enchant == item.Enchant && itemInstance.ReforgeFromId == item.ReforgeFromId && itemInstance.ReforgeToId == item.ReforgeToId)
+                        if (itemInstance.Enchant == item.Enchant && itemInstance.ReforgeId == item.ReforgeId)
 #else
                         if (itemInstance.Enchant == item.Enchant)
 #endif
@@ -1536,7 +1536,7 @@ namespace Rawr.Optimizer
                     {
                         for (int reforge = 0; reforge <= reforgeMax; reforge++)
                         {
-                            Array.Copy(ids, idsCopy, 7);
+                            Array.Copy(ids, idsCopy, 6);
                             if (regem == 1)
                             {
                                 idsCopy[1] = "*";
@@ -1550,7 +1550,6 @@ namespace Rawr.Optimizer
                             if (reforge == 1)
                             {
                                 idsCopy[5] = "*";
-                                idsCopy[6] = "*";
                             }
                             map[string.Join(".", idsCopy)] = true;
                         }
@@ -1595,7 +1594,7 @@ namespace Rawr.Optimizer
                                 var map = new Dictionary<string, bool>();
                                 gemmedIdMap[key] = map;
 #if RAWR4
-                                map["C" + key + ".*.*.*.*.*.*"] = true;
+                                map["C" + key + ".*.*.*.*.*"] = true;
 #else
                                 map["C" + key + ".*.*.*.*"] = true;
 #endif
@@ -1862,10 +1861,10 @@ namespace Rawr.Optimizer
                 possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, null) };
             }
 
-            if (ids.Length <= 6 || (ids.Length > 6 && ids[5] == "*" && ids[6] == "*")) {
+            if (ids.Length <= 5 || (ids.Length > 5 && ids[5] == "*")) {
                 possibleReforgings = Reforging.GetReforgingOptions(item, reforgeStatsFrom, reforgeStatsTo).ToArray();
             } else {
-                possibleReforgings = new Reforging[] { new Reforging(item, (AdditiveStat)int.Parse(ids[5]), (AdditiveStat)int.Parse(ids[6])) };
+                possibleReforgings = new Reforging[] { new Reforging(item, int.Parse(ids[5])) };
             }
 
             bool generative = (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*")) && (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*")) && (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*"));
@@ -1911,7 +1910,7 @@ namespace Rawr.Optimizer
                                 {
                                     // any combination is actually available
 #if RAWR4
-                                    gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}", item.Id, gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0, reforging != null ? (int)reforging.ReforgeFrom : 0, reforging != null ? (int)reforging.ReforgeTo : 0);
+                                    gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}", item.Id, gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0, reforging != null ? reforging.Id : 0);
 #else
                                     gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}", item.Id, gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0);
 #endif

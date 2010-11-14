@@ -14,16 +14,136 @@ namespace Rawr
 {
     public class Reforging
     {
-        public AdditiveStat ReforgeFrom { get; set; }
-        public AdditiveStat ReforgeTo { get; set; }
+        private AdditiveStat reforgeFrom;
+        public AdditiveStat ReforgeFrom 
+        { 
+            get
+            {
+                return reforgeFrom;
+            }
+            set
+            {
+                reforgeFrom = value;
+                id = StatsToId(reforgeFrom, reforgeTo);
+            }
+        }
+
+        private AdditiveStat reforgeTo;
+        public AdditiveStat ReforgeTo 
+        {
+            get
+            {
+                return reforgeTo;
+            }
+            set
+            {
+                reforgeTo = value;
+                id = StatsToId(reforgeFrom, reforgeTo);
+            }
+        }
+
+        private int id;
+        public int Id
+        {
+            get
+            {
+                return id;
+            }
+            set
+            {
+                id = value;
+                IdToStats(id, out reforgeFrom, out reforgeTo);
+            }
+        }
+
+        private static AdditiveStat IdToStat(int id)
+        {
+            switch (id)
+            {
+                case 0:
+                    return AdditiveStat.Spirit;
+                case 1:
+                    return AdditiveStat.DodgeRating;
+                case 2:
+                    return AdditiveStat.ParryRating;
+                case 3:
+                    return AdditiveStat.HitRating;
+                case 4:
+                    return AdditiveStat.CritRating;
+                case 5:
+                    return AdditiveStat.HasteRating;
+                case 6:
+                    return AdditiveStat.ExpertiseRating;
+                case 7:
+                    return AdditiveStat.MasteryRating;
+                default:
+                    return 0;
+            }
+        }
+
+        private static int StatToId(AdditiveStat stat)
+        {
+            switch (stat)
+            {
+                case AdditiveStat.Spirit:
+                    return 0;
+                case AdditiveStat.DodgeRating:
+                    return 1;
+                case AdditiveStat.ParryRating:
+                    return 2;
+                case AdditiveStat.HitRating:
+                    return 3;
+                case AdditiveStat.CritRating:
+                    return 4;
+                case AdditiveStat.HasteRating:
+                    return 5;
+                case AdditiveStat.ExpertiseRating:
+                    return 6;
+                case AdditiveStat.MasteryRating:
+                    return 7;
+                default:
+                    return -1;
+            }
+        }
+
+        public static void IdToStats(int id, out AdditiveStat reforgeFrom, out AdditiveStat reforgeTo)
+        {
+            id -= 57;
+            int from = id / 7;
+            reforgeFrom = IdToStat(from);
+            id %= 7;
+            if (from <= id)
+            {
+                id++;
+            }
+            reforgeTo = IdToStat(id);
+        }
+
+        public static int StatsToId(AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
+        {
+            int from = StatToId(reforgeFrom);
+            int to = StatToId(reforgeTo);
+            if (from == -1 || to == -1 || to == from)
+            {
+                return 0;
+            }
+            if (to > from)
+            {
+                to--;
+            }
+            return 57 + 7 * from + to;
+        }
+
+
         public float ReforgeAmount { get; set; }
 
         public Reforging Clone()
         {
             return new Reforging()
             {
-                ReforgeFrom = this.ReforgeFrom,
-                ReforgeTo = this.ReforgeTo,
+                reforgeFrom = this.reforgeFrom,
+                reforgeTo = this.reforgeTo,
+                id = this.id,
                 ReforgeAmount = this.ReforgeAmount
             };
         }
@@ -35,17 +155,28 @@ namespace Rawr
             ApplyReforging(baseItem, reforgeFrom, reforgeTo);
         }
 
+        public Reforging(Item baseItem, int id)
+        {
+            ApplyReforging(baseItem, id);
+        }
+
         public void ApplyReforging(Item baseItem, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
         {
-            ReforgeFrom = reforgeFrom;
-            ReforgeTo = reforgeTo;
+            this.reforgeFrom = reforgeFrom;
+            this.reforgeTo = reforgeTo;
+            id = StatsToId(reforgeFrom, reforgeTo);
+            ApplyReforging(baseItem);
+        }
+
+        public void ApplyReforging(Item baseItem, int id)
+        {
+            Id = id;
             ApplyReforging(baseItem);
         }
 
         public void ApplyReforging(Item baseItem)
         {
-            // 0 is actually Agility, but we're using it as no reforging indicator
-            if (baseItem != null && ReforgeFrom != 0 && ReforgeTo != 0)
+            if (baseItem != null && id != 0)
             {
                 float currentFrom = baseItem.Stats._rawAdditiveData[(int)ReforgeFrom];
                 float currentTo = baseItem.Stats._rawAdditiveData[(int)ReforgeTo];

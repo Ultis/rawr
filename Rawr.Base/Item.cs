@@ -1150,13 +1150,13 @@ namespace Rawr
 		}
 #if RAWR4
         [DefaultValueAttribute(0)]
-        public int ReforgeFromId
+        public int ReforgeId
         {
             get 
             {
                 if (Reforging != null)
                 {
-                    return (int)Reforging.ReforgeFrom;
+                    return (int)Reforging.Id;
                 }
                 return 0; 
             }
@@ -1166,28 +1166,7 @@ namespace Rawr
                 {
                     Reforging = new Reforging();
                 }
-                Reforging.ReforgeFrom = (AdditiveStat)value;
-                OnIdsChanged();
-            }
-        }
-        [DefaultValueAttribute(0)]
-        public int ReforgeToId
-        {
-            get
-            {
-                if (Reforging != null)
-                {
-                    return (int)Reforging.ReforgeTo;
-                }
-                return 0;
-            }
-            set
-            {
-                if (Reforging == null)
-                {
-                    Reforging = new Reforging();
-                }
-                Reforging.ReforgeTo = (AdditiveStat)value;
+                Reforging.Id = value;
                 OnIdsChanged();
             }
         }
@@ -1402,7 +1381,7 @@ namespace Rawr
 				if (_gemmedId.Length == 0) // _gemmedId is never null
 				{
 #if RAWR4
-                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeFromId, ReforgeToId);
+                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeId);
 #else
 					_gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId);
 #endif
@@ -1420,8 +1399,7 @@ namespace Rawr
                 _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
                 _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
 #if RAWR4
-                ReforgeFromId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
-                ReforgeToId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
+                ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
 #endif
                 OnIdsChanged();
             }
@@ -1438,8 +1416,14 @@ namespace Rawr
 			_enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
             UpdateJewelerCount();
 #if RAWR4
-            ReforgeFromId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
-            ReforgeToId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
+            if (ids.Length > 6)
+            {
+                ReforgeId = Reforging.StatsToId((AdditiveStat)int.Parse(ids[5]), (AdditiveStat)int.Parse(ids[6]));
+            }
+            else
+            {
+                ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+            }
             if (Reforging != null)
             {
                 Reforging.ApplyReforging(Item);

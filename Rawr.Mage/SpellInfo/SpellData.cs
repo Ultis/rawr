@@ -1158,13 +1158,14 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Arcane Barrage";
-            InitializeCastTime(false, true, 0, 5);
             if (solver.CalculationOptions.Beta)
             {
+                InitializeCastTime(false, true, 0, 4);
                 InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.25f, 0.200000002980232f, 0, 0.802999973297119f, 0, 1, 1, 0);
             }
             else
             {
+                InitializeCastTime(false, true, 0, 5);
                 InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.19099998474121f, 0.200000002980232f, 0, 0.764999985694885f, 0, 1, 1, 0);
             }
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
