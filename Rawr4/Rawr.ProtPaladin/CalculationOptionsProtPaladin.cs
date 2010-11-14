@@ -7,18 +7,18 @@ using System.Xml.Serialization;
 namespace Rawr.ProtPaladin
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
+    public class CalculationOptionsProtPaladin : ICalculationOptionBase, INotifyPropertyChanged {
 
-        private int _TargetLevel = 83;
+        private int _TargetLevel = 88;
         public int TargetLevel
         {
             get { return _TargetLevel; }
             set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
         }
 
-        private int _TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+        private int _TargetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
         public int TargetArmor
         {
             get { return _TargetArmor; }
@@ -39,21 +39,21 @@ namespace Rawr.ProtPaladin
             set { _BossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
         }
 
-		private int _BossAttackValueMagic = 20000;
+        private int _BossAttackValueMagic = 20000;
         public int BossAttackValueMagic
         {
             get { return _BossAttackValueMagic; }
             set { _BossAttackValueMagic = value; OnPropertyChanged("BossAttackValueMagic"); }
         }
 
-		private float _BossAttackSpeedMagic = 1.0f;
+        private float _BossAttackSpeedMagic = 1.0f;
         public float BossAttackSpeedMagic
         {
             get { return _BossAttackSpeedMagic; }
             set { _BossAttackSpeedMagic = value; OnPropertyChanged("BossAttackSpeedMagic"); }
         }
 
-		private bool _UseParryHaste = false;
+        private bool _UseParryHaste = false;
         public bool UseParryHaste
         {
             get { return _UseParryHaste; }
@@ -61,7 +61,7 @@ namespace Rawr.ProtPaladin
         }
 
         private float _ThreatScale = 10.0f;
-		public float ThreatScale
+        public float ThreatScale
         {
             get { return _ThreatScale; }
             set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); }
@@ -74,7 +74,7 @@ namespace Rawr.ProtPaladin
             set { _MitigationScale = value; OnPropertyChanged("MitigationScale"); }
         }
 
-		private int _RankingMode = 1;
+        private int _RankingMode = 1;
         public int RankingMode
         {
             get { return _RankingMode; }
@@ -88,14 +88,14 @@ namespace Rawr.ProtPaladin
             set { _SealChoice = value; OnPropertyChanged("SealChoice"); }
         }
 
-		private string _TargetType = "Unspecified";
+        private string _TargetType = "Unspecified";
         public string TargetType
         {
             get { return _TargetType; }
             set { _TargetType = value; OnPropertyChanged("TargetType"); }
         }
 
-		private string _MagicDamageType = "None";
+        private string _MagicDamageType = "None";
         public string MagicDamageType
         {
             get { return _MagicDamageType; }
@@ -109,7 +109,7 @@ namespace Rawr.ProtPaladin
             set { _TrinketOnUseHandling = value; OnPropertyChanged("TrinketOnUseHandling"); }
         }
 
-		private PaladinTalents _talents = null;
+        private PaladinTalents _talents = null;
         public PaladinTalents talents
         {
             get { return _talents; }
@@ -130,6 +130,41 @@ namespace Rawr.ProtPaladin
             set { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); }
         }
 
+        private bool _useAoE = false;
+        public bool UseAoE
+        {
+            get { return _useAoE; }
+            set { _useAoE = value; OnPropertyChanged("UseAoE"); }
+        }
+
+        private int _rankAvengersShield = 1;
+        public int RankAvengersShield
+        {
+            get { return _rankAvengersShield; }
+            set { _rankAvengersShield = value; OnPropertyChanged("RankAvengersShield"); }
+        }
+
+        private int _rankHolyWrath = 2;
+        public int RankHolyWrath
+        {
+            get { return _rankHolyWrath; }
+            set { _rankHolyWrath = value; OnPropertyChanged("RankHolyWrath"); }
+        }
+
+        private int _rankConsecration = 3;
+        public int RankConsecration
+        {
+            get { return _rankConsecration; }
+            set { _rankConsecration = value; OnPropertyChanged("RankConsecration"); }
+        }
+
+        private int _rankHammerOfWrath = 4;
+        public int RankHammerOfWrath
+        {
+            get { return _rankHammerOfWrath; }
+            set { _rankHammerOfWrath = value; OnPropertyChanged("RankHammerOfWrath"); }
+        }
+
         #region ICalculationOptionBase members
         public string GetXml()
         {
@@ -148,5 +183,5 @@ namespace Rawr.ProtPaladin
             if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
         #endregion
-	}
+    }
 }

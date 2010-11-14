@@ -308,22 +308,17 @@ focus on Survival Points.",
 
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
 
-            AttackModelMode amm = AttackModelMode.BasicSoV;            
-            if (calcOpts.SealChoice == "Seal of Righteousness")
-                amm = AttackModelMode.BasicSoR;
-
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
-            AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
+            AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
 
             calculatedStats.BasicStats = stats;
 
             // Target Info
             calculatedStats.TargetLevel = bossOpts.Level;
             calculatedStats.TargetArmor = bossOpts.Armor;
-            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating);
+            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, 0f, 0f);
             calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calculatedStats.TargetArmor);
             calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
-            calculatedStats.ArmorPenetrationCap = Lookup.GetArmorPenetrationCap(calculatedStats.TargetLevel, calculatedStats.TargetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
@@ -374,14 +369,6 @@ focus on Survival Points.",
             calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
             calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
             calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
-            calculatedStats.ArmorPenetration = 1.0f - (1.0f - stats.ArmorPenetration) * (1.0f - (float)Math.Min(1.0f, StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating)));
-            calculatedStats.ArmorPenetrationFromRating = (float)Math.Min(1.0f, Lookup.BonusArmorPenetrationPercentage(character, stats));
-            calculatedStats.EffectiveArmorPenetration = (calculatedStats.TargetArmor == 0) ? 0.0f : 1.0f - calculatedStats.EffectiveTargetArmor / calculatedStats.TargetArmor;
-            if ((calculatedStats.ArmorPenetrationFromRating * calculatedStats.TargetArmor) == 0.0f)
-                calculatedStats.EffectiveArmorPenetrationRating = 0.0f;
-            else
-                calculatedStats.EffectiveArmorPenetrationRating = (float)Math.Max(0.0f,
-                    (calculatedStats.ArmorPenetrationFromRating * calculatedStats.ArmorPenetrationCap) / (calculatedStats.ArmorPenetrationFromRating * calculatedStats.TargetArmor));
             float test = calculatedStats.EffectiveTargetArmorDamageReduction / calculatedStats.TargetArmorDamageReduction;
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.AnyMiss;
             calculatedStats.MissedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Miss;
@@ -575,7 +562,6 @@ focus on Survival Points.",
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
             statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength,CharacterClass.Paladin) - 10f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
-            statsTotal.ArmorPenetration = statsBase.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
@@ -601,30 +587,27 @@ focus on Survival Points.",
             if (character.MainHand != null)
                 weaponSpeed = character.MainHand.Speed;
 
-            AttackModelMode amm = AttackModelMode.BasicSoV;
-            if (calcOpts.SealChoice == "Seal of Righteousness")
-                amm = AttackModelMode.BasicSoR;
+            AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
 
-            AttackModel am = new AttackModel(character, stats, amm, calcOpts, bossOpts);
             // temporary combat table, used for the implementation of special effects.
             float hitBonusPhysical = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             float hitBonusSpell = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
             int targetLevel = bossOpts.Level;
             float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - targetLevel, false) - hitBonusSpell);
-            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonusPhysical);
-            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
+            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85] - hitBonusPhysical);
+            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
+            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
 
             float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
                                        + stats.PhysicalCrit
-                                       + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
+                                       + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85];
             float chanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
                                        + stats.SpellCrit + stats.SpellCritOnTarget
-                                       - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0.0f));
+                                       - (0.006f * (targetLevel - character.Level) + (targetLevel == 88 ? 0.03f : 0.0f));
             float chanceHitPhysical = 1.0f - chanceMissPhysicalAny;
             float chanceHitSpell = 1.0f - chanceMissSpell;
             float chanceDoTTick = chanceHitSpell * (character.PaladinTalents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
@@ -1209,7 +1192,6 @@ focus on Survival Points.",
                 PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1259,7 +1241,6 @@ focus on Survival Points.",
 
                 // Threat Stats
                 stats.ArmorPenetration +
-                stats.ArmorPenetrationRating +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +

@@ -109,11 +109,6 @@ namespace Rawr.ProtPaladin
         public float Expertise { get; set; }
         public float PhysicalHaste { get; set; }
         public float SpellHaste { get; set; }
-        public float ArmorPenetration { get; set; }
-        public float ArmorPenetrationFromRating { get; set; }
-        public float EffectiveArmorPenetration { get; set; }
-        public float EffectiveArmorPenetrationRating { get; set; }
-        public float ArmorPenetrationCap { get; set; }
         public float WeaponSpeed { get; set; }
         public float TotalDamagePerSecond { get; set; }
 
@@ -203,18 +198,6 @@ namespace Rawr.ProtPaladin
                               "your Armor Penetration buffs and talents." + Environment.NewLine +
                               "Enemy Damage Reduction depends on your Level.",
                               (float)Math.Floor(EffectiveTargetArmor), EffectiveTargetArmorDamageReduction));
-            
-            dictValues.Add("Effective Armor Penetration",
-                string.Format("{0:0.00%}*Armor Penetration Rating {1} = {2:0.00%}." + Environment.NewLine + "" + Environment.NewLine +
-                              "Your Armor Penetration Cap is {3} Armor, this is" + Environment.NewLine + 
-                              "the highest amount your Arp Rating will ignore." + Environment.NewLine + 
-                              "Your Rating currently reduces Enemy Armor by {4}." + Environment.NewLine + "" + Environment.NewLine + 
-                              "Your Arp Rating is {5:0.00%} effective (GC)."+ Environment.NewLine +
-                              "Note that debuffs like Sunder reduce the Cap.",
-                              EffectiveArmorPenetration, BasicStats.ArmorPenetrationRating, ArmorPenetrationFromRating, 
-                              (float)Math.Floor(ArmorPenetrationCap), 
-                              (float)Math.Floor(ArmorPenetrationCap * ArmorPenetrationFromRating), 
-                              EffectiveArmorPenetrationRating));
             
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}" + Environment.NewLine + "Against a Target of Level {2}",
                                                  Crit, BasicStats.CritRating, TargetLevel));

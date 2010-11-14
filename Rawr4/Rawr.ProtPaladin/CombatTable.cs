@@ -82,41 +82,7 @@ namespace Rawr.ProtPaladin
             Initialize(character, stats, Ability.MeleeSwing, calcOpts, bossOpts);
         }
     }
-/*
-    public class ResistTable : CombatTable
-    {
-        protected override void Calculate()
-        {
-            float tableSize = 0.0f;
 
-            // Miss
-            Miss = Math.Min(1.0f - tableSize,  Lookup.AvoidanceChance(Character, Stats, HitResult.Miss));
-            tableSize += Miss;
-            // Dodge
-            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge));
-            tableSize += Dodge;
-            // Parry
-            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry));
-            tableSize += Parry;
-            // Block
-            if (Character.OffHand != null && Character.OffHand.Type == ItemType.Shield)
-            {
-                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block));
-                tableSize += Block;
-            }
-            // Critical Hit
-            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats));
-            tableSize += Critical;
-            // Normal Hit
-            Hit = Math.Max(0.0f, 1.0f - tableSize);
-        }
-
-        public ResistTable(Character character, Stats stats)
-        {
-            Initialize(character, stats, Ability.None);
-        }
-    }
-*/
     public class AttackTable : CombatTable
     {
         protected override void Calculate()
@@ -131,7 +97,7 @@ namespace Rawr.ProtPaladin
             if (Lookup.IsSpell(Ability))
             {
                 // Miss
-                Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);// - bonusHit));
+                Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);
                 tableSize += Miss;
                 // Crit
                 Critical = Lookup.SpellCritChance(Character, Stats, targetLevel);
@@ -169,7 +135,10 @@ namespace Rawr.ProtPaladin
                 }
                 // Critical Hit
                 Critical = Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, targetLevel, CalcOpts.TargetType));
-                tableSize += Critical;//FIXME: Tablesize must not change when critchance is negative (boss)
+                if (Critical > 0)
+                {
+                    tableSize += Critical;
+                }
             }
 
             // Normal Hit

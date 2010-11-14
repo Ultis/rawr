@@ -8,37 +8,23 @@ namespace Rawr.ProtPaladin
     {
         
         public static float GetEffectiveTargetArmor(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
         {
             float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
             TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
-            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-            float Amount = StatConversion.GetArmorPenetrationFromRating(ArmorPenetrationRating);
-            TargetArmor -= ArPCap * Math.Min(1.0f, Amount);
 
             return TargetArmor;
         }
         
-        public static float GetArmorPenetrationCap(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
-        {
-            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
-            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
-            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-            
-            return ArPCap;
-        }
-        
         public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
-            float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, 0f, stats.ArmorPenetrationRating); 
+            float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, 0f, 0f); 
             return damageReduction;
         }
 
         public static float EffectiveTargetArmorReduction(Character character, Stats stats, int targetArmor, int targetLevel)
         {
-            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor, 0.0f, stats.ArmorPenetration, stats.ArmorPenetrationRating);
+            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor, 0.0f, stats.ArmorPenetration);
             float damageReduction = StatConversion.GetArmorDamageReduction(targetLevel, effectiveTargetArmor, 0f, 0f, 0f); 
             
             return damageReduction;
@@ -54,11 +40,11 @@ namespace Rawr.ProtPaladin
             switch (avoidanceType)
             {
 
-                case HitResult.Miss  : return StatConversion.WHITE_MISS_CHANCE_CAP[  targetLevel - 80];
-                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ targetLevel - 80];
-                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ targetLevel - 80];
-                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
-                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ targetLevel - 80];
+                case HitResult.Miss  : return StatConversion.WHITE_MISS_CHANCE_CAP[  targetLevel - 85];
+                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ targetLevel - 85];
+                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ targetLevel - 85];
+                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 85];
+                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ targetLevel - 85];
                 case HitResult.Resist:
                     // Patial resists don't belong in the combat table, they are a damage multiplier (reduction)
                     // The Chance to get any Partial Resist
@@ -68,7 +54,6 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        public static float StanceDamageMultipler(Character character, Stats stats) { return (1.0f + stats.BonusDamageMultiplier); }
         public static float StanceDamageReduction(Character character, Stats stats) { return StanceDamageReduction(character, stats, DamageType.Physical); }
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
             PaladinTalents talents = character.PaladinTalents;
@@ -90,14 +75,13 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        public static float BonusArmorPenetrationPercentage(Character character, Stats stats) { return StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating,CharacterClass.Paladin); }
         public static float BonusExpertisePercentage(Character character, Stats stats)        { return StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating,CharacterClass.Paladin) + stats.Expertise,CharacterClass.Paladin); }
         public static float BonusPhysicalHastePercentage(Character character, Stats stats)    { return StatConversion.GetHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.PhysicalHaste; }
         public static float BonusSpellHastePercentage(Character character, Stats stats)       { return StatConversion.GetSpellHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.SpellHaste; }
 
         public static float HitChance(Character character, Stats stats, int targetLevel) {
             float physicalHit = StatConversion.GetPhysicalHitFromRating(stats.HitRating,CharacterClass.Paladin) + stats.PhysicalHit;
-            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80]) + physicalHit);
+            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85]) + physicalHit);
         }
 
         public static float SpellHitChance(Character character, Stats stats, int targetLevel) {
@@ -114,7 +98,7 @@ namespace Rawr.ProtPaladin
         public static float CritChance(Character character, Stats stats, int targetLevel) {
             return Math.Max(0f,Math.Min(1f,StatConversion.GetCritFromRating(stats.CritRating,CharacterClass.Paladin)
                                            + StatConversion.GetCritFromAgility(stats.Agility,CharacterClass.Paladin)
-                                           + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]
+                                           + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]
                                            + stats.PhysicalCrit));
         }
 
@@ -129,9 +113,6 @@ namespace Rawr.ProtPaladin
         /// For example, a caster with no spell hit rating gear or talents, 
         /// against a mob 3 levels higher (83% hit chance), and 30% crit rating from gear and talents: 
         /// crit rate over all spell casts = 30%/// 83% = 24.9%
-        /// 
-        /// A level 80 player against a level 83 boss needs +26.232*k hit rating, to achieve +k% chance to hit with spells.
-        /// In addition, direct damage spells suffer from partial resistance, but again, that has no effect on whether a spell hits or not.
         /// </summary>
         /// <param name="character"></param>
         /// <param name="stats"></param>
@@ -144,30 +125,42 @@ namespace Rawr.ProtPaladin
         
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel, string targetType)
         {
-            // Grab base melee crit chance before adding ability-specific crit chance
             float abilityCritChance = CritChance(character, stats, targetLevel);
             float spellCritChance = SpellCritChance(character, stats, targetLevel);
             
             switch (ability)
-            {                
-                case Ability.Consecration:
-                case Ability.Censure:
+            {
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
-                    abilityCritChance = 0.0f;// can't crit
+                    abilityCritChance = 0.0f; // can't crit
                     break;
+                case Ability.AvengersShield:
                 case Ability.MeleeSwing:
+                case Ability.SealOfTruth:
+                case Ability.CensureTick:
+                    // crit chance = melee
+                    break;
                 case Ability.JudgementOfRighteousness:
                 case Ability.JudgementOfTruth:
-                case Ability.AvengersShield:
+                    abilityCritChance += (character.PaladinTalents.ArbiterOfTheLight * 0.06f);
+                    break;
+                case Ability.CrusaderStrike:
                 case Ability.HammerOfTheRighteous:
-                case Ability.ShieldOfTheRighteous:
+                    abilityCritChance += (character.PaladinTalents.RuleOfLaw * 0.05f) + (character.PaladinTalents.GlyphOfCrusaderStrike ? 0.05f : 0f);
+                    break;
                 case Ability.HammerOfWrath:
-                    abilityCritChance *= 1.0f;// crit chance = melee
+                    abilityCritChance += (character.PaladinTalents.WrathOfTheLightbringer * 0.15f);
+                    break;
+                case Ability.ShieldOfTheRighteous:
+                    // This assumes a rotation where every Shield of the Righteous is preceeded by a judgement.  This includes the standrad 939 rotation this model uses.
+                    abilityCritChance = 0.25f * character.PaladinTalents.SacredDuty + (1f - 0.25f * character.PaladinTalents.SacredDuty) * abilityCritChance;
+                    break;
+                case Ability.HammerOfTheRighteousProc:
+                case Ability.Consecration:
+                    abilityCritChance = spellCritChance; // crit chance = spell
                     break;
                 case Ability.HolyWrath:
-                case Ability.SealOfTruth:
-                    abilityCritChance = spellCritChance;// crit chance = spell
+                    abilityCritChance = spellCritChance + (character.PaladinTalents.WrathOfTheLightbringer * 0.15f);
                     break;
             }
             return Math.Min(1.0f, abilityCritChance);
@@ -302,10 +295,10 @@ namespace Rawr.ProtPaladin
         {
             switch (ability)
             {
-                case Ability.MeleeSwing:
+                case Ability.CrusaderStrike:
                 case Ability.HammerOfTheRighteous:
-              //case Ability.SealOfCommand:
-              //case Ability.SealOfBlood:
+                case Ability.MeleeSwing:
+                case Ability.ShieldOfTheRighteous:
                     return true;
                 default:
                     return false;
@@ -316,8 +309,6 @@ namespace Rawr.ProtPaladin
         {   
             switch (ability)
             {
-                case Ability.Consecration:
-                case Ability.Censure:
                 case Ability.SealOfRighteousness:
                 case Ability.RetributionAura:
                     return false;
@@ -330,11 +321,13 @@ namespace Rawr.ProtPaladin
         {   
             switch (ability)
             {
-                case Ability.SealOfTruth: 
-                case Ability.Censure:
-            	case Ability.HolyWrath:
-                case Ability.RetributionAura:
+                case Ability.AvengersShield:
+                case Ability.HammerOfWrath:
+                case Ability.HolyWrath:
+                case Ability.HammerOfTheRighteousProc:
+                case Ability.CensureTick:
                 case Ability.Consecration:
+                case Ability.RetributionAura:
                     return true;
                 default:
                 return false;
@@ -345,20 +338,24 @@ namespace Rawr.ProtPaladin
         {
             switch (ability)
             {
-                case Ability.MeleeSwing: return "Melee Swing";
-                case Ability.HolyWrath: return "Holy Wrath";
-                case Ability.ShieldOfTheRighteous: return "Shield of the Righteous";
-                case Ability.HammerOfTheRighteous: return "Hammer of the Righteous";
-                case Ability.SealOfTruth: return "Seal of Truth";
-                case Ability.Censure: return "Censure";
-                case Ability.JudgementOfTruth: return "Judgement of Truth";
-                case Ability.SealOfRighteousness: return "Seal of Righteousness";
-                case Ability.JudgementOfRighteousness: return "Judgement of Righteousness";
-                case Ability.HammerOfWrath: return "Hammer of Wrath";
                 case Ability.AvengersShield: return "Avenger's Shield";
-                case Ability.RetributionAura: return "Retribution Aura";
-                case Ability.Consecration: return "Consecration";
+                case Ability.HammerOfWrath: return "Hammer of Wrath";
+                case Ability.HolyWrath: return "Holy Wrath";
+
                 case Ability.CrusaderStrike: return "Crusader Strike";
+                case Ability.HammerOfTheRighteous: return "Hammer of the Righteous";
+                case Ability.HammerOfTheRighteousProc: return "Hammer of the Righteous AoE Proc";
+                case Ability.JudgementOfRighteousness: return "Judgement of Righteousness";
+                case Ability.JudgementOfTruth: return "Judgement of Truth";
+                case Ability.MeleeSwing: return "Melee Swing";
+                case Ability.SealOfRighteousness: return "Seal of Righteousness";
+                case Ability.SealOfTruth: return "Seal of Truth";
+                case Ability.ShieldOfTheRighteous: return "Shield of the Righteous";
+                
+                case Ability.CensureTick: return "Censure";
+                case Ability.Consecration: return "Consecration";
+
+                case Ability.RetributionAura: return "Retribution Aura";
                 default: return "";
             }
         }
