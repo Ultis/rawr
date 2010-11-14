@@ -209,15 +209,27 @@ namespace Rawr.ProtPaladin
                 }
             }
 
-            // Model "A"
+            // Model "A", Crusader Strike, Hammer of the Righteous, and Hammer of Righteous procs
             if (CalcOpts.UseAoE)
             {
+                /*
+                 * Hammer of the Righteous actually causes two attacks.
+                 * The first attack is the 30% weapon damage done to the primary target.
+                 * The second attack is the AoE holy damage done to all targets within 8 yards.
+                 * 
+                 * If the first attack does not connect, the second attack is never caused.
+                 * The second attack has its own chance to miss.
+                 * 
+                 * This means that the AoE attack has two "chances" to miss, either by the first attack being avoided or by the second attack being missed.
+                 * 
+                 * This is why the second attack, which already has its own attack table, is multiplied by the hit chance of the first attack.
+                 */
                 modelThreat += 3.0f * (Abilities[Ability.HammerOfTheRighteous].Threat
-                                       + Abilities[Ability.HammerOfTheRighteousProc].Threat);
+                                       + Abilities[Ability.HammerOfTheRighteousProc].Threat * Abilities[Ability.HammerOfTheRighteous].AttackTable.AnyHit);
                 modelDamage += 3.0f * (Abilities[Ability.HammerOfTheRighteous].Damage
-                                       + Abilities[Ability.HammerOfTheRighteousProc].Damage);
+                                       + Abilities[Ability.HammerOfTheRighteousProc].Damage * Abilities[Ability.HammerOfTheRighteous].AttackTable.AnyHit);
                 modelCrits  += 3.0f * (Abilities[Ability.HammerOfTheRighteous].CritPercentage
-                                       + Abilities[Ability.HammerOfTheRighteousProc].CritPercentage);
+                                       + Abilities[Ability.HammerOfTheRighteousProc].CritPercentage * Abilities[Ability.HammerOfTheRighteous].AttackTable.AnyHit);
             }
             else
             {
@@ -226,7 +238,7 @@ namespace Rawr.ProtPaladin
                 modelCrits  += 3.0f * Abilities[Ability.CrusaderStrike].CritPercentage;
             }
 
-            // Model "B"
+            // Model "B", Judgement of Righteousness and Judgement of Truth
             if (CalcOpts.SealChoice == "Truth")
             {
                 modelThreat += Abilities[Ability.JudgementOfTruth].Threat;
@@ -240,7 +252,7 @@ namespace Rawr.ProtPaladin
                 modelCrits  += Abilities[Ability.JudgementOfRighteousness].CritPercentage;
             }
 
-            // Model "C"
+            // Model "C", Avenger's Shield, Holy Wrath, Consecration, and Hammer of Wrath
             modelThreat += usageAvengersShield * Abilities[Ability.AvengersShield].Threat;
             modelThreat += usageHolyWrath * Abilities[Ability.HolyWrath].Threat;
             modelThreat += usageConsecration * Abilities[Ability.Consecration].Threat;
@@ -256,25 +268,25 @@ namespace Rawr.ProtPaladin
             modelCrits  += usageConsecration * Abilities[Ability.Consecration].CritPercentage;
             modelCrits  += usageHammerOfWrath * Abilities[Ability.HammerOfWrath].CritPercentage;
 
-            // Model "D"
+            // Model "D", Shield of the Righteous
             modelThreat = Abilities[Ability.ShieldOfTheRighteous].Threat;
             modelDamage = Abilities[Ability.ShieldOfTheRighteous].Damage;
             modelCrits  = Abilities[Ability.ShieldOfTheRighteous].CritPercentage;
 
-            // White Damage
-            float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.AnyHit), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / ParryModel.BossAttackSpeed));
+            // White Damage, including Reckoning procs
+            float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.Block), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / ParryModel.BossAttackSpeed));
             float weaponSwings = modelLength / ParryModel.WeaponSpeed / (1 - reckoningUptime);
             modelThreat += Abilities[Ability.MeleeSwing].Threat * weaponSwings;
             modelDamage += Abilities[Ability.MeleeSwing].Damage * weaponSwings;
             modelCrits += Abilities[Ability.MeleeSwing].CritPercentage * weaponSwings;
             
-            // Seals
-            float weaponHits = weaponSwings * (1f - Abilities[Ability.MeleeSwing].AttackTable.AnyMiss); // Only count melee hits that landed
-            weaponHits += (CalcOpts.UseAoE ? 0f : 3f * (1f - Abilities[Ability.CrusaderStrike].AttackTable.AnyMiss)); // Only add Crusader Strikes that hit
+            // Seal procs, from melee hits, judgements, and crusader strikes
+            float weaponHits = weaponSwings * Abilities[Ability.MeleeSwing].AttackTable.AnyHit; // Only count melee hits that landed
+            weaponHits += (CalcOpts.UseAoE ? 0f : 3f * Abilities[Ability.CrusaderStrike].AttackTable.AnyHit); // Only add Crusader Strikes that hit
             switch (CalcOpts.SealChoice) {
                 // Seal of Righteousness
                 case "Seal of Righteousness":				
-                    weaponHits  += (1f - Abilities[Ability.JudgementOfRighteousness].AttackTable.AnyMiss); // Only add Judgements that hit
+                    weaponHits  += Abilities[Ability.JudgementOfRighteousness].AttackTable.AnyHit; // Only add Judgements that hit
                     
                     modelThreat += Abilities[Ability.SealOfRighteousness].Threat * weaponHits;
                     modelDamage += Abilities[Ability.SealOfRighteousness].Damage * weaponHits;
@@ -282,16 +294,16 @@ namespace Rawr.ProtPaladin
                     break;
                 //Seal of Truth Mode
                 case "Seal of Truth":
-                    weaponHits  += (1f - Abilities[Ability.JudgementOfTruth].AttackTable.AnyMiss); // Only add Judgements that hit
+                    weaponHits  += Abilities[Ability.JudgementOfTruth].AttackTable.AnyHit; // Only add Judgements that hit
 
                     modelThreat += Abilities[Ability.SealOfTruth].Threat * weaponHits;
                     modelDamage += Abilities[Ability.SealOfTruth].Damage * weaponHits;
                     modelCrits  += Abilities[Ability.SealOfTruth].CritPercentage * weaponHits;
 
-                    //Censure (Seal of Truth DOT)
-                    modelThreat += Abilities[Ability.CensureTick].Threat;
-                    modelDamage += Abilities[Ability.CensureTick].Damage;
-                    modelCrits  += Abilities[Ability.CensureTick].CritPercentage;
+                    // Censure ticks, one every 3 seconds
+                    modelThreat += modelLength / 3f * Abilities[Ability.CensureTick].Threat;
+                    modelDamage += modelLength / 3f * Abilities[Ability.CensureTick].Damage;
+                    modelCrits += modelLength / 3f * Abilities[Ability.CensureTick].CritPercentage;
                     break;
             }
 
