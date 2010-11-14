@@ -262,7 +262,7 @@ namespace Rawr.UI
                     {
                         totalPoints += talents.Data[i];
                     }
-                    if (totalPoints == character.Level - 9)
+                    if (totalPoints == 41/*character.Level - 9*/)//that's the old method
                     {
                         talentSpecs.Add(talents);
                     }
@@ -289,7 +289,7 @@ namespace Rawr.UI
         {
             OptimizeButton.IsEnabled = UpgradesButton.IsEnabled = OverrideRegemCheck.IsEnabled =
                 OverrideReenchantCheck.IsEnabled = ThoroughnessSlider.IsEnabled = MixologyCheck.IsEnabled =
-                ElixirsFlasksCheck.IsEnabled = FoodCheck.IsEnabled = TalentsCheck.IsEnabled = TalentSpecsCheck.IsEnabled =
+                ElixirsFlasksCheck.IsEnabled = FoodCheck.IsEnabled = TalentsCheck.IsEnabled = TalentSpecsCheck.IsEnabled = GlyphsCheck.IsEnabled =
                 CalculationToOptimizeCombo.IsEnabled = AddRequirementButton.IsEnabled = enabled;
             MaxScoreLabel.Text = string.Empty;
             AltProgress.Value = MainProgress.Value = 0;
@@ -401,7 +401,7 @@ namespace Rawr.UI
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
                 }
-                prompt =optimizer.CheckOneHandedWeaponUniqueness();
+                prompt = optimizer.CheckOneHandedWeaponUniqueness();
                 if (prompt != null)
                 {
                     if (MessageBox.Show(prompt, "Optimizer Warning", MessageBoxButton.OKCancel) != MessageBoxResult.OK) { ControlsEnabled(true); return; }
