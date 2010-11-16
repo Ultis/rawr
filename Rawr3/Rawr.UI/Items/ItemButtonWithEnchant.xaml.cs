@@ -91,8 +91,6 @@ namespace Rawr.UI
                     {
                         rItem.Name = Item.Reforging.ToString();
                         rItem.Quality = ItemQuality.Temp;
-                        rItem.Stats._rawAdditiveData[(int)Item.Reforging.ReforgeFrom] -= Item.Reforging.ReforgeAmount;
-                        rItem.Stats._rawAdditiveData[(int)Item.Reforging.ReforgeTo] += Item.Reforging.ReforgeAmount;
                     }
                     reforge = rItem;
 

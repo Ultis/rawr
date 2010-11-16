@@ -548,7 +548,7 @@ namespace Rawr {
     public unsafe class Stats
 #endif
     {
-        public float[] _rawAdditiveData = new float[AdditiveStatCount];
+        internal float[] _rawAdditiveData = new float[AdditiveStatCount];
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
