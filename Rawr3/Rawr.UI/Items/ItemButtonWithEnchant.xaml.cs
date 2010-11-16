@@ -74,7 +74,7 @@ namespace Rawr.UI
                 } else {
                     IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
                     EnchantButton.Content = Item.Enchant.ShortName;
-                    ReforgeButton.Content = Item.Reforging.VeryShortName;
+                    ReforgeButton.Content = Item.Reforging != null ? Item.Reforging.VeryShortName : "NR";
                     gear = Item;
 
                     Item eItem = new Item();

@@ -169,17 +169,17 @@ namespace Rawr.UI
                 Items.Clear();
                 List<ItemListItem> itemListItems = new List<ItemListItem>();
                 ItemListItem selectedListItem = null;
-                int selectedEnchantId = 0;
+                int selectedEnchantId = 0, selectedReforgingId = 0;
                 if (IsEnchantList)
                 {
                     Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
                     if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
                 }
-                /*else if (IsReforgeList)
+                else if (IsReforgeList)
                 {
                     Reforging selectedReforging = Character.GetReforgingBySlot(Slot);
                     if (selectedReforging != null) selectedReforgingId = selectedReforging.Id;
-                }*/
+                }
                 else if (IsGemList)
                 {
                     ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
@@ -212,7 +212,7 @@ namespace Rawr.UI
                     }
                     else if (IsReforgeList)
                     {
-                        if (itemListItem.Equipped)
+                        if (itemListItem.ReforgeId == selectedReforgingId)
                             selectedListItem = itemListItem;
                     }
                     else if (IsGemList)

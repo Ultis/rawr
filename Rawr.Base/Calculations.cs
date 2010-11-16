@@ -970,7 +970,11 @@ namespace Rawr
                     }
                     else
                     {
-                        reforgeCalc.Item = new Item();
+                        reforgeCalc.Name = "Not Reforged";
+                        reforgeCalc.Item = new Item("Not Reforged", ItemQuality.Temp, ItemType.None,
+                            -1000000, null, ItemSlot.None, null,
+                            false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                            0, 0, ItemDamageType.Physical, 0, null);
                     }
                     reforgeCalc.Equipped = isEquipped;
                     reforgeCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
@@ -1011,7 +1015,11 @@ namespace Rawr
                 }
                 else
                 {
-                    reforgeCalc.Item = new Item();
+                    reforgeCalc.Name = "Not Reforged";
+                    reforgeCalc.Item = new Item("Not Reforged", ItemQuality.Temp, ItemType.None,
+                        -1000000, null, ItemSlot.None, null,
+                        false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
                 }
                 reforgeCalc.Equipped = isEquipped;
                 reforgeCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;

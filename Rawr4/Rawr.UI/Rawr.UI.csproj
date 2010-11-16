@@ -349,6 +349,7 @@
       <Link>Talents\TalentTree.xaml.cs</Link>
       <DependentUpon>TalentTree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ReforgingConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

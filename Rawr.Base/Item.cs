@@ -1504,7 +1504,7 @@ namespace Rawr
             if (volatileItem && unsafeStatsAccumulator != null)
             {
                 unsafeStatsAccumulator.AccumulateUnsafe(item.Stats, true);
-                if (Reforging != null)
+                if (Reforging != null && Reforging.Validate)
                 {
                     unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeFrom] -= Reforging.ReforgeAmount;
                     unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeTo] += Reforging.ReforgeAmount;

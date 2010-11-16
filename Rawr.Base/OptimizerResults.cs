@@ -60,14 +60,16 @@ namespace Rawr
                         string gem2name = before.Gem2 == null ? "" : ", " + before.Gem2.Name;
                         string gem3name = before.Gem3 == null ? "" : ", " + before.Gem3.Name;
                         string enchantname = before.Enchant == null ? "" : ", " + before.Enchant.Name;
-                        sb.AppendFormat("{0}: Changed {1} {2}{3}{4}{5}", slot, itemname, gem1name, gem2name, gem3name, enchantname);
+                        string reforgename = before.Reforging == null ? "" : ", " + before.Reforging.ToString();
+                        sb.AppendFormat("{0}: Changed {1} {2}{3}{4}{5}{6}", slot, itemname, gem1name, gem2name, gem3name, enchantname, reforgename);
                         sb.AppendLine();
                         itemname = (after.Item ?? noItem).Name;
                         gem1name = after.Gem1 == null ? "" : "with " + after.Gem1.Name;
                         gem2name = after.Gem2 == null ? "" : ", " + after.Gem2.Name;
                         gem3name = after.Gem3 == null ? "" : ", " + after.Gem3.Name;
                         enchantname = after.Enchant == null ? "" : ", " + after.Enchant.Name;
-                        sb.AppendFormat("               to {0} {1}{2}{3}{4}", itemname, gem1name, gem2name, gem3name, enchantname);
+                        reforgename = after.Reforging == null ? "" : ", " + after.Reforging.ToString();
+                        sb.AppendFormat("               to {0} {1}{2}{3}{4}{5}", itemname, gem1name, gem2name, gem3name, enchantname, reforgename);
                         sb.AppendLine();
                         changes++;
                     }

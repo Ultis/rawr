@@ -213,7 +213,7 @@ namespace Rawr
 
         public override string ToString()
         {
-            if (Id == 0 || !Validate) { return "Empty"; }
+            if (Id <= 0 || !Validate) { return "Not Reforged"; }
             return string.Format("Reforge {0} {1} → {2}", ReforgeAmount, Extensions.SpaceCamel(ReforgeFrom.ToString()), Extensions.SpaceCamel(ReforgeTo.ToString()));
         }
     }
