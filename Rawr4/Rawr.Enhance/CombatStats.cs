@@ -384,7 +384,8 @@ namespace Rawr.Enhance
 //                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
 //                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);  // old formulae
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
-                uWUptime = (float)Math.Max(12f / 15f, 1f);  //FIXME!!!!
+                //uWUptime = (float)Math.Max(12f / 15f, ??f);  //FIXME!!!!
+                uWUptime = 7.5f / 15f;  //Temp Uptime until above line is fixed
 
                 // Maelstrom Weapon time to 5 stacks calc
                 if (unhastedOHSpeed != 0f)

@@ -93,9 +93,6 @@
     <Compile Include="..\..\Rawr.Enhance\FireElemental.cs">
       <Link>FireElemental.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\Gemming.cs">
-      <Link>Gemming.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Enhance\PriorityQueue.cs">
       <Link>PriorityQueue.cs</Link>
     </Compile>
@@ -114,6 +111,7 @@
     <Compile Include="CharacterCalculationsEnhance.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="EnhSim.cs" />
+    <Compile Include="Gemming.cs" />
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

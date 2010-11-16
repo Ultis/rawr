@@ -16,20 +16,20 @@ namespace Rawr.Enhance
             get
             {
                 //Meta
-                int chaotic = 41285;
-                int relentless = 41398;
+                int chaotic = 52291;
+                int fleet = 52289;
 
                 if (_defaultGemmingTemplates == null)
                 {
                     Gemming gemming = new Gemming();
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                 //   _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
+                 //   _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, fleet, false));
                  //   _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, false)); 
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, false));    
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, true));  // Enable Epic gems by default
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, true));     // Enable Epic gems by default
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, fleet, true)); 
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, fleet, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, fleet, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false)); 
                 }
                 return _defaultGemmingTemplates;
