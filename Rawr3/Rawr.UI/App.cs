@@ -18,22 +18,13 @@ namespace Rawr.UI
 #if !SILVERLIGHT
         public Grid RootVisual
         {
-            get
-            {
-                return (Grid)MainWindow.Content;
-            }
-            set
-            {
-                MainWindow.Content = value;
-            }
+            get { return (Grid)MainWindow.Content; }
+            set { MainWindow.Content = value; }
         }
 
         public bool IsRunningOutOfBrowser
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public static object GetFocusedElement()
@@ -55,35 +46,35 @@ namespace Rawr.UI
             }
         }
 
-		#region INotifyPropertyChanged Members
-		public event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string property)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(property));
-		}
-		#endregion
+        #region INotifyPropertyChanged Members
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+        #endregion
 
-		private string _loadProgress = "";
-		public string LoadProgress
-		{
-			get { return _loadProgress; }
-			set
-			{
-				_loadProgress = value;
-				OnPropertyChanged("LoadProgress");
-			}
-		}
+        private string _loadProgress = "";
+        public string LoadProgress
+        {
+            get { return _loadProgress; }
+            set
+            {
+                _loadProgress = value;
+                OnPropertyChanged("LoadProgress");
+            }
+        }
 
-		public void WriteLoadProgress(string message)
-		{
-			LoadProgress += "\r\n" + message;
-		}
+        public void WriteLoadProgress(string message)
+        {
+            LoadProgress += "\r\n" + message;
+        }
 
-		public void ClearLoadProgress()
-		{
-			LoadProgress = string.Empty;
-		}
+        public void ClearLoadProgress()
+        {
+            LoadProgress = string.Empty;
+        }
 
         public virtual void OpenNewWindow(string title, Control control)
         {
@@ -96,5 +87,5 @@ namespace Rawr.UI
         public virtual void CloseWindow(Control control)
         {
         }
-	}
+    }
 }

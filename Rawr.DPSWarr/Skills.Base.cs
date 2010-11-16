@@ -61,13 +61,17 @@ namespace Rawr.DPSWarr.Skills
             }
         }
         // Get/Set
-        public float Slam_ActsOverDurO20;
-        public float Slam_ActsOverDurU20;
+        public float Slam_ActsOverDurO20 = 0f;
+        public float Slam_ActsOverDurU20 = 0f;
         public float Slam_ActsOverDur { get { return Slam_ActsOverDurO20 + Slam_ActsOverDurU20; } }
         #endregion
         // bah
+        private float SlamFreqSpdModO20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurO20 / (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)))))); } }
+        private float SlamFreqSpdModU20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurU20 / (FightDuration * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))))); } }
         private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
         // Main Hand
+        public float MhEffectiveSpeedO20 { get { return combatFactors.MHSpeed + SlamFreqSpdModO20; } }
+        public float MhEffectiveSpeedU20 { get { return combatFactors.MHSpeed + (CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
         public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
         public float MhDamage { get { return combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets; } }
         private float _MhDamageOnUse = -1f;
@@ -104,19 +108,21 @@ namespace Rawr.DPSWarr.Skills
             }
         }
         public float AvgMhDamageOnUse { get { return MhDamageOnUse * MhActivates; } }
-        public float MhActivates
-        {
-            get
-            {
-                if (MhEffectiveSpeed != 0)
-                {
-                    // floating point arithmetic fail, need to do it this way or we get negative numbers at 100% override
-                    float f = FightDuration / MhEffectiveSpeed;
-                    return f;
-                }
-                else return 0f;
+        public float MhActivatesO20 {
+            get {
+                if (MhEffectiveSpeed != 0) {
+                    return (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))) / MhEffectiveSpeedO20;
+                } else return 0f;
             }
         }
+        public float MhActivatesU20 {
+            get {
+                if (MhEffectiveSpeed != 0) {
+                    return (FightDuration * ((CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))) / MhEffectiveSpeedU20;
+                } else return 0f;
+            }
+        }
+        public float MhActivates { get { return MhActivatesO20 + MhActivatesU20; } }
         public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
         // Off Hand
         public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
@@ -283,6 +289,8 @@ namespace Rawr.DPSWarr.Skills
                 return _OHSwingRage;
             }
         }
+        public float MHRageGenOverDurO20 { get { return MhActivatesO20 * MHSwingRage; } }
+        public float MHRageGenOverDurU20 { get { return MhActivatesU20 * MHSwingRage; } }
         public float MHRageGenOverDur { get { return MhActivates * MHSwingRage; } }
         public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * OHSwingRage : 0f; } }
         // Rage generated per second

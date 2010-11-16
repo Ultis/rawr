@@ -74,12 +74,11 @@ namespace Rawr.UI
                 } else {
                     IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
                     EnchantButton.Content = Item.Enchant.ShortName;
+                    ReforgeButton.Content = Item.Reforging.VeryShortName;
                     gear = Item;
 
                     Item eItem = new Item();
-                    if (Item.Enchant != null)
-                    {
-
+                    if (Item.Enchant != null) {
                         eItem.Name = Item.Enchant.Name;
                         eItem.Quality = ItemQuality.Temp;
                         eItem.Stats = Item.Enchant.Stats;
@@ -87,8 +86,7 @@ namespace Rawr.UI
                     enchant = eItem;
 
                     Item rItem = new Item();
-                    if (Item.Reforging != null)
-                    {
+                    if (Item.Reforging != null) {
                         rItem.Name = Item.Reforging.ToString();
                         rItem.Quality = ItemQuality.Temp;
                     }
@@ -178,7 +176,6 @@ namespace Rawr.UI
             //
             return retVal;
         }
-
 
         public ItemButtonWithEnchant()
         {

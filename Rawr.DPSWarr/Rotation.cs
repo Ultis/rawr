@@ -90,7 +90,7 @@ namespace Rawr.DPSWarr {
         protected BossOptions BossOpts { get; set; }
 
         protected float _cachedLatentGCD = 1.5f;
-        protected float LatentGCD { get { return _cachedLatentGCD; } }
+        public float LatentGCD { get { return _cachedLatentGCD; } }
         
         /// <summary>
         /// How many GCDs are in the rotation, based on fight duration and latency, all or if using Exec Spam then just Over 20%
@@ -406,36 +406,40 @@ namespace Rawr.DPSWarr {
                 return (damagePerSec * RageMod * zerkerMOD) * FightDuration;
             }
         }
+
+        protected virtual float RageGenOverDur_AngerO20 { get { return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))); } }
+        protected virtual float RageGenOverDur_AngerU20 { get { return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * (FightDuration * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)); } }
+        /// <summary>
+        /// Anger Management is an Arms Spec Bonus in Cata, 1 rage every 3 seconds
+        /// </summary>
+        protected virtual float RageGenOverDur_Anger { get { return RageGenOverDur_AngerO20 + RageGenOverDur_AngerU20; } }
         
-        protected virtual float RageGenOverDur_Anger {
+        protected virtual float RageGenOverDur_OtherO20 {
             get {
-                return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDuration; // Anger Management is an Arms Spec Bonus in Cata
-            }
-        }
-        
-        protected virtual float RageGenOverDur_Other {
-            get
-            {
-                float rage = RageGenOverDur_Anger               // Anger Management Talent
-                            + RageGenOverDur_IncDmg              // Damage from the bosses
-                            + (100f * StatS.ManaorEquivRestore)  // 0.02f becomes 2f
-                            + StatS.BonusRageGen;                // Bloodrage, Berserker Rage, Mighty Rage Pot
+                float rage = RageGenOverDur_AngerO20               // Anger Management Talent
+                            + RageGenOverDur_IncDmg * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))              // Damage from the bosses
+                            + (100f * StatS.ManaorEquivRestore) * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))  // 0.02f becomes 2f
+                            + StatS.BonusRageGen * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f));                // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                foreach (AbilWrapper aw in GetAbilityList()) {
-                    if (aw.allRage < 0) {
-                        rage += (-1f) * aw.allRage;
-                    }
-                }
+                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage < 0) { rage += (-1f) * aw.RageO20; } }
 
-                // 4pcT7
-                if (StatS.BonusWarrior_T7_4P_RageProc != 0f) {
-                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (Talents.DeepWounds > 0f ? 1f : 0f) * FightDuration;
-                    rage += (StatS.BonusWarrior_T7_4P_RageProc * 0.1f) * (!CombatFactors.FuryStance && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 1f / 3f : 0f) * FightDuration;
-                }
-                    
                 return rage;
             }
         }
+        protected virtual float RageGenOverDur_OtherU20 {
+            get {
+                float rage = RageGenOverDur_AngerU20               // Anger Management Talent
+                            + RageGenOverDur_IncDmg * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)              // Damage from the bosses
+                            + (100f * StatS.ManaorEquivRestore) * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)  // 0.02f becomes 2f
+                            + StatS.BonusRageGen * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f);                // Bloodrage, Berserker Rage, Mighty Rage Pot
+
+                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage < 0) { rage += (-1f) * aw.RageU20; } }
+
+                return rage;
+            }
+        }
+        protected virtual float RageGenOverDur_Other { get { return RageGenOverDur_OtherO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_OtherU20 : 0f); } }
+
 
         protected float RageMOD_DeadlyCalm { get { return 1f - (CalcOpts.M_DeadlyCalm && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
         private static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
@@ -460,24 +464,42 @@ namespace Rawr.DPSWarr {
 
         public int FightDuration { get { return BossOpts.BerserkTimer; } }
 
-        protected float RageNeededOverDur {
+        protected float RageNeededOverDurO20 {
             get {
                 float rage = 0f;
                 foreach (AbilWrapper aw in GetAbilityList()) {
-                    if (aw.allRage > 0f) {
+                    if (aw.RageO20 > 0f) {
                         if (aw.ability.GetType() == typeof(MortalStrike)
-                            || aw.ability.GetType() == typeof(BloodThirst)
-                            /*|| aw.ability.GetType() == typeof(Slam)*/)
+                            || aw.ability.GetType() == typeof(BloodThirst))
                         {
-                            rage += aw.allRage * (1f - Talents.BattleTrance * 0.05f);
+                            rage += aw.RageO20 * (1f - Talents.BattleTrance * 0.05f);
                         } else
-                            rage += aw.allRage;
+                            rage += aw.RageO20;
                     }
                 }
-                if (CalcOpts.M_DeadlyCalm && Talents.DeadlyCalm > 0) { rage *= 1f - 10f / 120f; } // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+                rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
                 return rage;
             }
         }
+        protected float RageNeededOverDurU20 {
+            get {
+                float rage = 0f;
+                foreach (AbilWrapper aw in GetAbilityList()) {
+                    if (aw.RageU20 > 0f) {
+                        if (aw.ability.GetType() == typeof(MortalStrike)
+                            || aw.ability.GetType() == typeof(BloodThirst))
+                        {
+                            rage += aw.RageU20 * (1f - Talents.BattleTrance * 0.05f);
+                        }
+                        else
+                            rage += aw.RageU20;
+                    }
+                }
+                rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+                return rage;
+            }
+        }
+        protected float RageNeededOverDur { get { return RageNeededOverDurO20 + (CalcOpts.M_ExecuteSpam ? RageNeededOverDurU20 : 0f); } }
         #endregion
 
         #region AddAnItem(s)

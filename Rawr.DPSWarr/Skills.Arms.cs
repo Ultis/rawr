@@ -1,4 +1,4 @@
-﻿/**********
+/**********
  * Owner: Jothay
  **********/
 using System;
@@ -576,7 +576,14 @@ namespace Rawr.DPSWarr.Skills
                              * (1f + StatS.BonusDamageMultiplier)
                              * DamageBonus;
 
+
                 float TickSize = ((DamageBase + DmgBonusBase) * DmgMod) / NumTicks;
+
+                float dmgCrit = TickSize * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;
+
+                TickSize *= 1f - MHAtkTable.Crit;
+
+                TickSize += dmgCrit;
 
                 return TickSize;
             }

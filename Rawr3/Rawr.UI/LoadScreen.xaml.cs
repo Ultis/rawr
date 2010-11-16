@@ -81,11 +81,19 @@ namespace Rawr.UI
                         }
                         writer.Close();
                         reader.Close();
-                    }
-                    catch (IsolatedStorageException)
-                    {
+                    } catch (IsolatedStorageException) {
                         // they removed permissions after it was started, just ignore it
                         // next time they will start it they'll be asked for permissions again
+                    } catch (Exception ex) {
+                        Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox()
+                        {
+                            Title = "Error Serializing the Caches",
+                            Function = "LoadScreen.SaveFiles()",
+                            Message = ex.Message,
+                            InnerMessage = ex.InnerException.Message,
+                            StackTrace = ex.StackTrace
+                        };
+                        eb.Show();
                     }
                 }
             }
@@ -93,9 +101,9 @@ namespace Rawr.UI
 
         private void LoadFiles()
         {
-            if (!FileUtils.HasQuota(20480))
+            if (!FileUtils.HasQuota(32768))
             {
-                IncreaseQuota iq = new IncreaseQuota(20480);
+                IncreaseQuota iq = new IncreaseQuota(32768);
                 iq.Closed += new EventHandler(iq_Closed);
                 iq.Show();
             }

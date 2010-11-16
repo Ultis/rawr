@@ -369,6 +369,16 @@ namespace Rawr.DPSWarr {
             float repassAvailRageU20 = 0f;
             PercFailRageU20 = 1f;
 
+            /*
+             * There's two major lines of reasoning here
+             * - If Execute does more damage, use it instead of suchNsuch ability
+             * - If the ability does more damage, use it instead (so that we can gradually shift
+             *   from one rotation to the other based on rising gear levels)
+             * - However, most of these abilities are only coming up so that we can do Taste for Blood.
+             *   If an Overpower isn't doing as much damage as an Execute... there's no point to Rend,
+             *   Thunderclap (refreshing rend), or TfB so we might as well turn them all *off* at once
+             */
+
             int Iterator = 0;
             #region <20%
             while (
@@ -417,8 +427,10 @@ namespace Rawr.DPSWarr {
                 }
                 CSspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
 
+                bool WeWantTfB = TB.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride < TB.ability.DamageOnUseOverride;
+
                 // Rend
-                if (RD.ability.Validated && Talents.BloodAndThunder < 2) { // Ignore Rend when we have BnT at 100%
+                if (RD.ability.Validated && WeWantTfB && Talents.BloodAndThunder < 2) { // Ignore Rend when we have BnT at 100%
                     acts = Math.Min(GCDsAvailableU20, RD.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     RD.numActivatesU20 = acts;
                     availRageU20 -= RD.RageU20 * RageMOD_Total;
@@ -426,7 +438,7 @@ namespace Rawr.DPSWarr {
                 RDspace = RD.numActivatesU20 / NumGCDsU20 * RD.ability.UseTime / LatentGCD;
 
                 // Thunder Clap
-                if (TH.ability.Validated) {
+                if (TH.ability.Validated && WeWantTfB) {
                     acts = Math.Min(GCDsAvailableU20, TH.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     TH.numActivatesU20 = acts * (1f - RDspace);
                     (RD.ability as Rend).ThunderAppsU20 = TH.numActivatesU20 * Talents.BloodAndThunder * 0.50f;
@@ -435,7 +447,8 @@ namespace Rawr.DPSWarr {
                 THspace = TH.numActivatesU20 / NumGCDsU20 * TH.ability.UseTime / LatentGCD;
 
                 // Bladestorm
-                if (BLS.ability.Validated) {
+                if (BLS.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride * EX.ability.AvgTargets < (BLS.ability.DamageOnUseOverride * BLS.ability.AvgTargets / 7f)) {
+                    // We only want to use Bladestorm during Exec phase IF it is going to do more damage, which requires Multiple Targets to be up
                     acts = Math.Min(GCDsAvailableU20, BLS.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     BLS.numActivatesU20 = acts * (1f - RDspace);
                     availRageU20 -= BLS.RageU20 * RageMOD_Total;
@@ -451,7 +464,7 @@ namespace Rawr.DPSWarr {
                 MSspace = MS.numActivatesU20 / NumGCDsU20 * MS.ability.UseTime / LatentGCD;*/
 
                 // Taste for Blood
-                if (TB.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride < TB.ability.DamageOnUseOverride) {
+                if (TB.ability.Validated && WeWantTfB) {
                     acts = Math.Min(GCDsAvailableU20, TB.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     TB.numActivatesU20 = acts * (1f - BLSspace);
                     availRageU20 -= TB.RageU20 * RageMOD_Total;
@@ -459,7 +472,7 @@ namespace Rawr.DPSWarr {
                 TFBspace = TB.numActivatesU20 / NumGCDsU20 * TB.ability.UseTime / LatentGCD;
 
                 // Overpower
-                if (OP.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride < OP.ability.DamageOnUseOverride) {
+                if (OP.ability.Validated && WeWantTfB) { // same check, no need to make it twice
                     acts = Math.Min(GCDsAvailableU20, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesU20) * percTimeInDPSAndU20 * PercFailRageU20);
                     OP.numActivatesU20 = acts * (1f - TFBspace - RDspace - BLSspace /*- MSspace*/);
                     availRageU20 -= OP.RageU20 * RageMOD_Total;
@@ -610,10 +623,14 @@ namespace Rawr.DPSWarr {
                 this.calcs.WhiteDPSMH = WhiteAtks.MhDPS;
                 this.calcs.WhiteDmg = this.WhiteAtks.MhDamageOnUse;
 
-                this.calcs.WhiteRage = WhiteAtks.MHRageGenOverDur;
-                this.calcs.OtherRage = this.RageGenOverDur_Other;
-                this.calcs.NeedyRage = this.RageNeededOverDur;
-                this.calcs.FreeRage = calcs.WhiteRage + calcs.OtherRage - calcs.NeedyRage;
+                this.calcs.WhiteRageO20 = WhiteAtks.MHRageGenOverDurO20;
+                this.calcs.OtherRageO20 = this.RageGenOverDur_OtherO20;
+                this.calcs.NeedyRageO20 = this.RageNeededOverDurO20;
+                this.calcs.FreeRageO20 = calcs.WhiteRageO20 + calcs.OtherRageO20 - calcs.NeedyRageO20;
+                this.calcs.WhiteRageU20 = WhiteAtks.MHRageGenOverDurU20;
+                this.calcs.OtherRageU20 = this.RageGenOverDur_OtherU20;
+                this.calcs.NeedyRageU20 = this.RageNeededOverDurU20;
+                this.calcs.FreeRageU20 = calcs.WhiteRageU20 + calcs.OtherRageU20 - calcs.NeedyRageU20;
             }
         }
 

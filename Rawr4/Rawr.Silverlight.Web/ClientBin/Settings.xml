@@ -8,11 +8,17 @@
     <CountGemmingsShown>3</CountGemmingsShown>
     <UseMultithreading>true</UseMultithreading>
     <Locale>en</Locale>
-    <DisplayBuffSource>false</DisplayBuffSource>
-    <DisplayGemNames>false</DisplayGemNames>
+    <DisplayBuffSource>true</DisplayBuffSource>
+    <DisplayGemNames>true</DisplayGemNames>
     <ProcEffectMode>3</ProcEffectMode>
-    <DisplayItemIds>false</DisplayItemIds>
+    <HideProfEnchants>true</HideProfEnchants>
+    <EnforceGemRequirements>true</EnforceGemRequirements>
+    <EnforceGemRequirements_Meta>true</EnforceGemRequirements_Meta>
+    <EnforceGemRequirements_JC>true</EnforceGemRequirements_JC>
+    <EnforceGemRequirements_Unique>true</EnforceGemRequirements_Unique>
     <CombinationEffectMode>1</CombinationEffectMode>
+    <ItemNameWidthSetting>2</ItemNameWidthSetting>
+    <WelcomeScreenSeen>true</WelcomeScreenSeen>
   </General>
   <Network>
     <ProxyServer />
@@ -43,14 +49,23 @@
     <ItemWowheadUpgradeURI>http://{0}.wowhead.com/?items&amp;filter={1}</ItemWowheadUpgradeURI>
     <ArmoryTalentIconURI>http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}</ArmoryTalentIconURI>
   </Network>
-  <Optimzer>
+  <Optimizer>
     <WarningsEnabled>true</WarningsEnabled>
     <Thoroughness>150</Thoroughness>
     <OverrideRegem>false</OverrideRegem>
-    <CalculationToOptimize />
+    <CalculationToOptimize>[Overall]</CalculationToOptimize>
     <OverrideReenchant>false</OverrideReenchant>
+    <OverrideReforge>false</OverrideReforge>
     <OptimizationMethod>GeneticAlgorithm</OptimizationMethod>
     <TemplateGemsEnabled>true</TemplateGemsEnabled>
     <GreedyOptimizationMethod>AllCombinations</GreedyOptimizationMethod>
-  </Optimzer>
+  </Optimizer>
+  <Recent>
+    <RecentFiles />
+    <RecentModel>Bear</RecentModel>
+    <RecentChars />
+    <RecentServers />
+    <RecentRegion>US</RecentRegion>
+    <RecentCharProfiler>C:\Program Files\World of Warcraft\WTF\Account\</RecentCharProfiler>
+  </Recent>
 </Settings>

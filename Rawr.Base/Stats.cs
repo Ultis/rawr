@@ -4,9 +4,7 @@ using System.Text;
 using System.Reflection;
 using System.ComponentModel;
 using System.Reflection.Emit;
-#if RAWR3 || RAWR4
 using System.Linq;
-#endif
 using System.Xml.Serialization;
 
 namespace Rawr {
@@ -552,14 +550,14 @@ namespace Rawr {
         internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
         internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
         internal float[] _rawNoStackData = new float[NonStackingStatCount];
-        [System.ComponentModel.DefaultValueAttribute(null)]
+        [DefaultValueAttribute(null)]
         [XmlArray("SpecialEffects")]
         [XmlArrayItem(IsNullable = false)]
         public SpecialEffect[] _rawSpecialEffectData = null;
 
         //private static SpecialEffect[] _emptySpecialEffectData = new SpecialEffect[0];
         private const int _defaultSpecialEffectDataCapacity = 4;
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DefaultValueAttribute(0f)]
         [XmlElement("SpecialEffectCount")]
         public int _rawSpecialEffectDataSize;
 

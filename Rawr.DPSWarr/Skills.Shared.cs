@@ -1,4 +1,4 @@
-﻿/**********
+/**********
  * Owner: Jothay
  **********/
 using System;
@@ -496,15 +496,6 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
             ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             isMaint = false;
-            /*{ // OK, SERIOUSLY, I THINK THIS WAS BEING USED WRONG SO I'M INSTIUTING TARGETS AS A "MAX" and letting AvgTargets deal with the rest
-                float value = 0;
-                foreach (TargetGroup tg in BossOpts.Targets) {
-                    if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
-                    float upTime = tg.Frequency / BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance;
-                    value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1))) * upTime;
-                }
-                Targets += value;
-            }*/
             Targets = 10;
             MaxRange = 5f + (Talents.GlyphOfThunderClap ? 2f : 0f); // In Yards 
             Cd = 6f; // In Seconds

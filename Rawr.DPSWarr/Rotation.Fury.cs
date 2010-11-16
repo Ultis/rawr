@@ -1,4 +1,4 @@
-﻿/**********
+/**********
  * Owner: Ebs
  **********/
 using System;
@@ -395,10 +395,10 @@ namespace Rawr.DPSWarr
                 this.calcs.TotalDPS = DPS_TTL;
                 this.calcs.WhiteDPS = (WhiteAtks.MhDPS + WhiteAtks.OhDPS) * (1f - timeLostPerc);
 
-                this.calcs.WhiteRage  = WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
-                this.calcs.OtherRage  = RageGenOverDur_Other;
-                this.calcs.NeedyRage  = RageNeededOverDur;
-                this.calcs.FreeRage   = calcs.WhiteRage + calcs.OtherRage - calcs.NeedyRage;
+                this.calcs.WhiteRageO20  = WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
+                this.calcs.OtherRageO20 = RageGenOverDur_Other;
+                this.calcs.NeedyRageO20 = RageNeededOverDur;
+                this.calcs.FreeRageO20 = calcs.WhiteRageO20 + calcs.OtherRageO20 - calcs.NeedyRageO20;
                 this.calcs.WhiteDPSMH = this.WhiteAtks.MhDPS;
                 this.calcs.WhiteDPSOH = this.WhiteAtks.OhDPS;
                 this.calcs.WhiteDmg   = this.WhiteAtks.MhDamageOnUse + this.WhiteAtks.OhDamageOnUse;

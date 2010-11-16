@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ArrayOfEnchant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Enchant>
     <Id>0</Id>
@@ -12,7 +12,7 @@
     <Slot>Head</Slot>
     <Stats>
       <DodgeRating>17</DodgeRating>
-      <DefenseRating>16</DefenseRating>
+      <ParryRating>16</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -21,7 +21,7 @@
     <Slot>Head</Slot>
     <Stats>
       <Stamina>37</Stamina>
-      <DefenseRating>20</DefenseRating>
+      <DodgeRating>20</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -30,7 +30,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <DodgeRating>10</DodgeRating>
-      <DefenseRating>15</DefenseRating>
+      <ParryRating>15</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -46,8 +46,8 @@
     <Name>Greater Inscription of Warding</Name>
     <Slot>Shoulders</Slot>
     <Stats>
+      <Stamina>15</Stamina>
       <DodgeRating>15</DodgeRating>
-      <DefenseRating>10</DefenseRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -87,6 +87,7 @@
     <Name>Shadow Armor</Name>
     <Slot>Back</Slot>
     <Stats>
+      <Armor>40</Armor>
       <Agility>10</Agility>
     </Stats>
   </Enchant>
@@ -211,7 +212,7 @@
     <Name>Major Defense</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <DefenseRating>15</DefenseRating>
+      <DodgeRating>15</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -219,7 +220,7 @@
     <Name>Greater Defense</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <DefenseRating>22</DefenseRating>
+      <DodgeRating>22</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -243,7 +244,7 @@
     <Name>Major Defense</Name>
     <Slot>Wrist</Slot>
     <Stats>
-      <DefenseRating>12</DefenseRating>
+      <DodgeRating>12</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -692,8 +693,8 @@
     <Slot>Head</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <BlockValue>30</BlockValue>
-      <DefenseRating>10</DefenseRating>
+      <DodgeRating>10</DodgeRating>
+      <ParryRating>10</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -702,8 +703,8 @@
     <Slot>Legs</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <BlockValue>30</BlockValue>
-      <DefenseRating>10</DefenseRating>
+      <DodgeRating>10</DodgeRating>
+      <ParryRating>10</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1426,8 +1427,8 @@
     <Name>Arcanum of Renewal</Name>
     <Slot>Head</Slot>
     <Stats>
-      <SpellPower>19</SpellPower>
-      <Mp5>9</Mp5>
+      <Intellect>16</Intellect>
+      <Spirit>18</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1435,8 +1436,8 @@
     <Name>Arcanum of Blissful Mending</Name>
     <Slot>Head</Slot>
     <Stats>
-      <SpellPower>30</SpellPower>
-      <Mp5>10</Mp5>
+      <Intellect>26</Intellect>
+      <Spirit>20</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1468,8 +1469,8 @@
     <Name>Greater Inscription of Faith</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>18</SpellPower>
-      <Mp5>5</Mp5>
+      <Intellect>15</Intellect>
+      <Spirit>10</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1477,8 +1478,8 @@
     <Name>Greater Inscription of the Oracle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>12</SpellPower>
-      <Mp5>8</Mp5>
+      <Intellect>10</Intellect>
+      <Spirit>16</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1624,7 +1625,7 @@
     <Name>Steelweave</Name>
     <Slot>Back</Slot>
     <Stats>
-      <DefenseRating>12</DefenseRating>
+      <DodgeRating>12</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1632,7 +1633,7 @@
     <Name>Titanweave</Name>
     <Slot>Back</Slot>
     <Stats>
-      <DefenseRating>16</DefenseRating>
+      <DodgeRating>16</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2094,11 +2095,11 @@
     <Name>Inscription of Endurance</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <FrostResistance>4</FrostResistance>
-      <NatureResistance>4</NatureResistance>
-      <FireResistance>4</FireResistance>
-      <ShadowResistance>4</ShadowResistance>
-      <ArcaneResistance>4</ArcaneResistance>
+      <FrostResistance>7</FrostResistance>
+      <NatureResistance>7</NatureResistance>
+      <FireResistance>7</FireResistance>
+      <ShadowResistance>7</ShadowResistance>
+      <ArcaneResistance>7</ArcaneResistance>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2190,7 +2191,7 @@
     <Name>Shield Block</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <BlockRating>15</BlockRating>
+      <ParryRating>15</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2198,7 +2199,7 @@
     <Name>Tough Shield</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <BlockValue>36</BlockValue>
+      <DodgeRating>12</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2206,7 +2207,7 @@
     <Name>Defense</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <DefenseRating>20</DefenseRating>
+      <DodgeRating>20</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2266,8 +2267,8 @@
     <Name>Greater Inscription of the Crag</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>24</SpellPower>
-      <Mp5>8</Mp5>
+      <Intellect>21</Intellect>
+      <Spirit>16</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2275,8 +2276,8 @@
     <Name>Lesser Inscription of the Crag</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>18</SpellPower>
-      <Mp5>5</Mp5>
+      <Intellect>15</Intellect>
+      <Spirit>10</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2284,8 +2285,8 @@
     <Name>Greater Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
+      <Stamina>22</Stamina>
       <DodgeRating>20</DodgeRating>
-      <DefenseRating>15</DefenseRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2294,7 +2295,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <DodgeRating>15</DodgeRating>
-      <DefenseRating>10</DefenseRating>
+      <ParryRating>10</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2740,6 +2741,962 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4207</Id>
+    <Name>Arcanum of Hyjal</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Intellect>60</Intellect>
+      <CritRating>35</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4208</Id>
+    <Name>Arcanum of the Dragonmaw</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Strength>60</Strength>
+      <MasteryRating>35</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4206</Id>
+    <Name>Arcanum of the Earthen Ring</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>90</Stamina>
+      <DodgeRating>35</DodgeRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4209</Id>
+    <Name>Arcanum of the Ramkahen</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Agility>60</Agility>
+      <HasteRating>35</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4208</Id>
+    <Name>Arcanum of the Wildhammer</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Strength>60</Strength>
+      <MasteryRating>35</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4200</Id>
+    <Name>Greater Inscription of Charged Lodestone</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Intellect>50</Intellect>
+      <HasteRating>25</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4202</Id>
+    <Name>Greater Inscription of Jagged Stone</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Strength>50</Strength>
+      <CritRating>25</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4204</Id>
+    <Name>Greater Inscription of Shattered Crystal</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Agility>50</Agility>
+      <MasteryRating>25</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4198</Id>
+    <Name>Greater Inscription of Unbreakable Quartz</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>75</Stamina>
+      <DodgeRating>25</DodgeRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4199</Id>
+    <Name>Lesser Inscription of Charged Lodestone</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Intellect>30</Intellect>
+      <HasteRating>20</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4201</Id>
+    <Name>Lesser Inscription of Jagged Stone</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Strength>30</Strength>
+      <CritRating>20</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4205</Id>
+    <Name>Lesser Inscription of Shattered Crystal</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Agility>30</Agility>
+      <MasteryRating>20</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4197</Id>
+    <Name>Lesser Inscription of Unbreakable Quartz</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>45</Stamina>
+      <DodgeRating>20</DodgeRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>2605</Id>
+    <Name>Zandalar Signet of Mojo</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <SpellPower>18</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4100</Id>
+    <Name>Greater Critical Strike</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <CritRating>65</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4096</Id>
+    <Name>Greater Intellect</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Intellect>50</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4064</Id>
+    <Name>Greater Spell Piercing</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpellPenetration>70</SpellPenetration>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4090</Id>
+    <Name>Protection</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Armor>250</Armor>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4087</Id>
+    <Name>Critical Strike</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <CritRating>50</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4072</Id>
+    <Name>Intellect</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <Intellect>30</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1257</Id>
+    <Name>Greater Arcane Resistance</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <ArcaneResistance>15</ArcaneResistance>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4088</Id>
+    <Name>Exceptional Spirit</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Spirit>40</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4103</Id>
+    <Name>Greater Stamina</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Stamina>75</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4102</Id>
+    <Name>Peerless Stats</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Agility>20</Agility>
+      <Stamina>20</Stamina>
+      <Strength>20</Strength>
+      <Intellect>20</Intellect>
+      <Spirit>20</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4077</Id>
+    <Name>Mighty Resilience</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Resilience>40</Resilience>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4063</Id>
+    <Name>Mighty Stats</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Agility>15</Agility>
+      <Stamina>15</Stamina>
+      <Strength>15</Strength>
+      <Intellect>15</Intellect>
+      <Spirit>15</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4070</Id>
+    <Name>Stamina</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Stamina>55</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1951</Id>
+    <Name>Defense</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <DodgeRating>16</DodgeRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4071</Id>
+    <Name>Critical Strike</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <CritRating>50</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4086</Id>
+    <Name>Dodge</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <DodgeRating>50</DodgeRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4089</Id>
+    <Name>Precision</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <HitRating>50</HitRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4093</Id>
+    <Name>Exceptional Spirit</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Spirit>50</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4095</Id>
+    <Name>Greater Expertise</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4101</Id>
+    <Name>Greater Critical Strike</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <CritRating>65</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4108</Id>
+    <Name>Greater Speed</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <HasteRating>65</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4065</Id>
+    <Name>Speed</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <HasteRating>50</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4068</Id>
+    <Name>Haste</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <HasteRating>50</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4075</Id>
+    <Name>Exceptional Strength</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <Strength>35</Strength>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4082</Id>
+    <Name>Greater Expertise</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <ExpertiseRating>50</ExpertiseRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4107</Id>
+    <Name>Greater Mastery</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <MasteryRating>65</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4106</Id>
+    <Name>Mighty Strength</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <Strength>50</Strength>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4061</Id>
+    <Name>Mastery</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <MasteryRating>50</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4127</Id>
+    <Name>Charscale Leg Armor</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Agility>55</Agility>
+      <Stamina>145</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4126</Id>
+    <Name>Dragonscale Leg Armor</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <AttackPower>190</AttackPower>
+      <CritRating>55</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4124</Id>
+    <Name>Twilight Leg Armor</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Agility>45</Agility>
+      <Stamina>85</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4122</Id>
+    <Name>Scorched Leg Armor</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <AttackPower>110</AttackPower>
+      <CritRating>45</CritRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4112</Id>
+    <Name>Powerful Enchanted Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>80</Stamina>
+      <Intellect>95</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4110</Id>
+    <Name>Powerful Ghostly Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Intellect>95</Intellect>
+      <Spirit>55</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4111</Id>
+    <Name>Enchanted Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>65</Stamina>
+      <Intellect>55</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4109</Id>
+    <Name>Ghostly Spellthread</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Intellect>55</Intellect>
+      <Spirit>45</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4114</Id>
+    <Name>Sanctified Spellthread (Rank 2)</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Intellect>95</Intellect>
+      <Spirit>55</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4113</Id>
+    <Name>Master's Spellthread (Rank 2)</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>80</Stamina>
+      <Intellect>95</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3853</Id>
+    <Name>Earthen Leg Armor</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>28</Stamina>
+      <Resilience>40</Resilience>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3872</Id>
+    <Name>Sanctified Spellthread (Rank 1)</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Spirit>20</Spirit>
+      <SpellPower>50</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3873</Id>
+    <Name>Master's Spellthread (Rank 1)</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>30</Stamina>
+      <SpellPower>50</SpellPower>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4069</Id>
+    <Name>Haste</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <HasteRating>50</HasteRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4076</Id>
+    <Name>Major Agility</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <Agility>35</Agility>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4092</Id>
+    <Name>Precision</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <HitRating>50</HitRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4094</Id>
+    <Name>Mastery</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <MasteryRating>50</MasteryRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4105</Id>
+    <Name>Assassin's Step</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <Agility>25</Agility>
+      <MovementSpeed>0.08</MovementSpeed>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4104</Id>
+    <Name>Lavawalker</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <MasteryRating>35</MasteryRating>
+      <MovementSpeed>0.08</MovementSpeed>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4062</Id>
+    <Name>Earthen Vitality</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <Stamina>30</Stamina>
+      <MovementSpeed>0.08</MovementSpeed>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4079</Id>
+    <Name>Agility</Name>
+    <Slot>Finger</Slot>
+    <Stats>
+      <Agility>40</Agility>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4081</Id>
+    <Name>Greater Stamina</Name>
+    <Slot>Finger</Slot>
+    <Stats>
+      <Stamina>60</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4080</Id>
+    <Name>Intellect</Name>
+    <Slot>Finger</Slot>
+    <Stats>
+      <Intellect>40</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4078</Id>
+    <Name>Strength</Name>
+    <Slot>Finger</Slot>
+    <Stats>
+      <Strength>40</Strength>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4227</Id>
+    <Name>Mighty Agility</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <Agility>130</Agility>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>241</Id>
+    <Name>Minor Impact</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <WeaponDamage>2</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>943</Id>
+    <Name>Lesser Impact</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <WeaponDamage>3</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1897</Id>
+    <Name>Impact</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <WeaponDamage>5</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>963</Id>
+    <Name>Greater Impact</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <WeaponDamage>7</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1896</Id>
+    <Name>Superior Impact</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <WeaponDamage>9</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>2646</Id>
+    <Name>Agility</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <Agility>25</Agility>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1903</Id>
+    <Name>Major Spirit</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <Spirit>9</Spirit>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1904</Id>
+    <Name>Major Intellect</Name>
+    <Slot>TwoHand</Slot>
+    <Stats>
+      <Intellect>9</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4083</Id>
+    <Name>Hurricane</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <HasteRating>450</HasteRating>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <HasteRating>450</HasteRating>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4084</Id>
+    <Name>Heartsong</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <Spirit>200</Spirit>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>20</Cooldown>
+          <Chance>0.25</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4099</Id>
+    <Name>Landslide</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <AttackPower>1000</AttackPower>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4097</Id>
+    <Name>Power Torrent</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageOrHealingDone</Trigger>
+          <Stats>
+            <Intellect>500</Intellect>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>2668</Id>
+    <Name>Windwalk</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <DodgeRating>600</DodgeRating>
+            <MovementSpeed>0.15</MovementSpeed>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4067</Id>
+    <Name>Avalanche</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <NatureDamage>500</NatureDamage>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-5</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4066</Id>
+    <Name>Mending</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageDone</Trigger>
+          <Stats>
+            <HealthRestore>800</HealthRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-4.6</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>3241</Id>
+    <Name>Lifeward</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <HealthRestore>333</HealthRestore>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>-4.6</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>963</Id>
+    <Name>Major Striking</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <WeaponDamage>7</WeaponDamage>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4073</Id>
+    <Name>Protection</Name>
+    <Slot>OffHand</Slot>
+    <Stats>
+      <BonusArmor>160</BonusArmor>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4085</Id>
+    <Name>Blocking</Name>
+    <Slot>OffHand</Slot>
+    <Stats>
+      <BlockRating>40</BlockRating>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4091</Id>
+    <Name>Superior Intellect</Name>
+    <Slot>OffHand</Slot>
+    <Stats>
+      <Intellect>35</Intellect>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>1888</Id>
+    <Name>Resistance</Name>
+    <Slot>OffHand</Slot>
+    <Stats>
+      <FrostResistance>5</FrostResistance>
+      <NatureResistance>5</NatureResistance>
+      <FireResistance>5</FireResistance>
+      <ShadowResistance>5</ShadowResistance>
+      <ArcaneResistance>5</ArcaneResistance>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4121</Id>
+    <Name>Heavy Savage Armor Kit</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>44</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Chest</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4120</Id>
+    <Name>Savage Armor Kit</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>36</Stamina>
+    </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>2543</Id>
+    <Name>Arcanum of Rapidity</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <HasteRating>10</HasteRating>
     </Stats>
   </Enchant>
 </ArrayOfEnchant>

@@ -963,7 +963,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 if (_customChartNames == null) {
                     _customChartNames = new string[] {
                         "Ability DPS",
-                        "Ability Damage",
+                        "Ability Damage per GCD",
                         //"Ability Maintenance Changes",
                         "Rage Cost per Damage",
                         "Execute Spam",
@@ -1041,14 +1041,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 }
                 #endregion
                 #region Ability Damage
-                case "Ability Damage":
+                case "Ability Damage per GCD":
                     {
-                        /*if (_subPointNameColors_DPSDMG == null) {
-                            _subPointNameColors_DPSDMG = new Dictionary<string, Color>();
-                            _subPointNameColors_DPSDMG.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-                            _subPointNameColors_DPSDMG.Add("Damage Per Hit", Color.FromArgb(255, 0, 0, 255));
-                        }
-                        _subPointNameColors = _subPointNameColors_DPSDMG;*/
                         List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                         foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
                         {
@@ -1056,7 +1050,11 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = aw.ability.Name;
                             comparison.Description = aw.ability.Desc;
-                            comparison.DPSPoints = aw.ability.DamageOnUse;
+                            comparison.DPSPoints = (aw.ability is Skills.Bladestorm) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets / (aw.ability.GCDTime / calculations.Rot.LatentGCD))
+                                                 : (aw.ability is Skills.ThunderClap) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets)
+                                                 : (aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
+                                                 : (aw.ability is Skills.OverPower || aw.ability is Skills.TasteForBlood) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets / (aw.ability.GCDTime / calculations.Rot.LatentGCD))
+                                                 : aw.ability.DamageOnUse * aw.ability.AvgTargets;
                             comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
                             comparisons.Add(comparison);
                         }

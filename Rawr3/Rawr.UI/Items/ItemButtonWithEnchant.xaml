@@ -60,6 +60,6 @@
             <Button x:Name="EnchantButton" Height="20" Width="70" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
             <CheckBox x:Name="CK_BSSocket" Height="16" Width="70" Margin="0,2" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="9" Checked="BSSocket_Checked" Unchecked="BSSocket_Checked" Content="BS Socket" Padding="1,2,0,0" />
         </StackPanel>
-        <Button x:Name="ReforgeButton" Height="20" Width="20" Margin="0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="10" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
+        <Button x:Name="ReforgeButton" Height="20" Width="20" Margin="0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="8" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
     </Grid>
 </UserControl>

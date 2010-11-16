@@ -49,13 +49,12 @@
             }
 
             if (errorType != "ImageError") {
-
                 throw new Error(errMsg);
             }
         }
     </script>
 </head>
- 
+
 <body>
     <!-- Runtime errors from Silverlight will be displayed here.
     This will contain debugging information and should be removed or hidden when debugging is completed -->
@@ -76,7 +75,7 @@
         </object><iframe id="_sl_historyFrame" style='visibility:hidden;height:0;width:0;border:0px'></iframe>
     </div>
     
-    <script type="text/javascript">
+<script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>

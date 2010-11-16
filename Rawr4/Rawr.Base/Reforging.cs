@@ -16,13 +16,9 @@ namespace Rawr
     {
         private AdditiveStat reforgeFrom;
         public AdditiveStat ReforgeFrom 
-        { 
-            get
-            {
-                return reforgeFrom;
-            }
-            set
-            {
+        {
+            get { return reforgeFrom; }
+            set {
                 reforgeFrom = value;
                 id = StatsToId(reforgeFrom, reforgeTo);
             }
@@ -31,12 +27,8 @@ namespace Rawr
         private AdditiveStat reforgeTo;
         public AdditiveStat ReforgeTo 
         {
-            get
-            {
-                return reforgeTo;
-            }
-            set
-            {
+            get { return reforgeTo; }
+            set {
                 reforgeTo = value;
                 id = StatsToId(reforgeFrom, reforgeTo);
             }
@@ -45,12 +37,8 @@ namespace Rawr
         private int id;
         public int Id
         {
-            get
-            {
-                return id;
-            }
-            set
-            {
+            get { return id; }
+            set {
                 id = value;
                 IdToStats(id, out reforgeFrom, out reforgeTo);
             }
@@ -77,7 +65,7 @@ namespace Rawr
                 case 7:
                     return AdditiveStat.MasteryRating;
                 default:
-                    return 0;
+                    return (AdditiveStat)(-1);
             }
         }
 
@@ -134,7 +122,6 @@ namespace Rawr
             return 57 + 7 * from + to;
         }
 
-
         public float ReforgeAmount { get; set; }
 
         public Reforging Clone()
@@ -176,7 +163,7 @@ namespace Rawr
 
         public void ApplyReforging(Item baseItem)
         {
-            if (baseItem != null && id != 0)
+            if (baseItem != null && id != 0 && Validate)
             {
                 float currentFrom = baseItem.Stats._rawAdditiveData[(int)ReforgeFrom];
                 float currentTo = baseItem.Stats._rawAdditiveData[(int)ReforgeTo];
@@ -211,9 +198,22 @@ namespace Rawr
             return options;
         }
 
+        public bool Validate { get { return (ReforgeFrom != (AdditiveStat)(-1)) && (ReforgeTo != (AdditiveStat)(-1)); } }
+
+        /// <summary>
+        /// A very short name for the button
+        /// <example>Cr2Ha = Crit to Haste</example>
+        /// </summary>
+        public string VeryShortName {
+            get {
+                if (reforgeFrom == (AdditiveStat)(-1) || reforgeTo == (AdditiveStat)(-1)) { return "NR"; }
+                return ReforgeTo.ToString().Substring(0, 3);
+            }
+        }
+
         public override string ToString()
         {
-            if (Id == 0) return string.Empty;
+            if (Id == 0 || !Validate) { return "Empty"; }
             return string.Format("Reforge {0} {1} → {2}", ReforgeAmount, Extensions.SpaceCamel(ReforgeFrom.ToString()), Extensions.SpaceCamel(ReforgeTo.ToString()));
         }
     }

@@ -51,7 +51,7 @@ namespace Rawr.DPSWarr {
         public float HasteRating { get; set; }
         public float HastePercent { get; set; }
         public float WeaponSpeed { get; set; }
-        public float TeethBonus { get; set; }
+        public float MasteryVal { get; set; }
         #endregion
         #region DPS
         // White
@@ -69,13 +69,16 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Neutral
         public float BaseHealth { get; set; }
-        public float WhiteRage { get; set; }
-        public float OtherRage { get; set; }
-        public float NeedyRage { get; set; }
-        public float FreeRage { get; set; }
+        public float WhiteRageO20 { get; set; }
+        public float OtherRageO20 { get; set; }
+        public float NeedyRageO20 { get; set; }
+        public float FreeRageO20 { get; set; }
+        public float WhiteRageU20 { get; set; }
+        public float OtherRageU20 { get; set; }
+        public float NeedyRageU20 { get; set; }
+        public float FreeRageU20 { get; set; }
         public float Stamina { get; set; }
         public float Health { get; set; }
-        public float MasteryVal { get; set; }
         #endregion
         #region Defensive
         public float Armor { get; set; }
@@ -189,7 +192,7 @@ namespace Rawr.DPSWarr {
                                     BaseHealth,
                                     StatConversion.GetHealthFromStamina(AverageStats.Stamina)));
                 #endregion
-                dictValues.Add("Armor", string.Format("{0}*Increases Attack Power by {1}", Armor, TeethBonus));
+                dictValues.Add("Armor", string.Format("{0}", Armor));
                 #region Strength
                 {
                     int formIter = 1;
@@ -537,8 +540,8 @@ namespace Rawr.DPSWarr {
                 // Rage
                 format = "{0:0000}";
                 dictValues.Add("Description 3", string.Format("Gen'd : Need : Avail"));
-                dictValues.Add("Rage Above 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRage + OtherRage, NeedyRage, FreeRage));
-                dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRage + OtherRage, NeedyRage, FreeRage));
+                dictValues.Add("Rage Above 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageO20 + OtherRageO20, NeedyRageO20, FreeRageO20));
+                dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageU20 + OtherRageU20, NeedyRageU20, FreeRageU20));
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Dictionaries",
                     ex.Message, "GetCharacterDisplayCalculationValues()", "No Additional Info", ex.StackTrace);
