@@ -734,8 +734,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 ) > 0;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                //if (RelevantTriggers.Contains(effect.Trigger))
-                //{
+                //if (RelevantTriggers.Contains(effect.Trigger)) 
                     retVal |= !RelevantTriggers.Contains(effect.Trigger);
                     retVal |= HasIgnoreStats(effect.Stats);
                     if (retVal) break;
@@ -1015,12 +1014,6 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             switch (chartName) {
                 #region Ability DPS
                 case "Ability DPS": {
-                    /*if(_subPointNameColors_DPSDMG == null){
-                        _subPointNameColors_DPSDMG = new Dictionary<string, Color>();
-                        _subPointNameColors_DPSDMG.Add("DPS", Color.FromArgb(255, 255, 0, 0));
-                        _subPointNameColors_DPSDMG.Add("Damage Per Hit", Color.FromArgb(255, 0, 0, 255));
-                    }
-                    _subPointNameColors = _subPointNameColors_DPSDMG;*/
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
                     {
@@ -1050,11 +1043,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = aw.ability.Name;
                             comparison.Description = aw.ability.Desc;
-                            comparison.DPSPoints = (aw.ability is Skills.Bladestorm) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets / (aw.ability.GCDTime / calculations.Rot.LatentGCD))
-                                                 : (aw.ability is Skills.ThunderClap) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets)
-                                                 : (aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
-                                                 : (aw.ability is Skills.OverPower || aw.ability is Skills.TasteForBlood) ? (aw.ability.DamageOnUse * aw.ability.AvgTargets / (aw.ability.GCDTime / calculations.Rot.LatentGCD))
-                                                 : aw.ability.DamageOnUse * aw.ability.AvgTargets;
+                            comparison.DPSPoints = (aw.ability.AvgTargets *
+                                ((aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
+                                : aw.ability.DamageOnUse)) / (aw.ability.GCDTime / calculations.Rot.LatentGCD);
                             comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
                             comparisons.Add(comparison);
                         }
@@ -1125,12 +1116,6 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 #endregion
                 #region Rage Cost per Damage
                 case "Rage Cost per Damage": {
-                    /*if (_subPointNameColors_DPSDPR == null) {
-                        _subPointNameColors_DPSDPR = new Dictionary<string, Color>();
-                        _subPointNameColors_DPSDPR.Add("Damage Per Rage Point", Color.FromArgb(255, 255, 0, 0));
-                        _subPointNameColors_DPSDPR.Add("Deep Wounds Bonus", Color.FromArgb(255, 0, 0, 255));
-                    }
-                    _subPointNameColors = _subPointNameColors_DPSDPR;*/
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     float DeepWoundsDamage = calculations.Rot.DW.TickSize * 6f;
 
@@ -1372,14 +1357,13 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
-                // Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
+                #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
                 CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                 DamageProcs.SpecialDamageProcs SDP;
-                calculatedStats.SpecProcDPS = 0f;
-                if (stats._rawSpecialEffectData != null && character.MainHand != null)
-                {
+                calculatedStats.SpecProcDPS = calculatedStats.SpecProcDMGPerHit = calculatedStats.SpecProcActs = 0f;
+                if (stats._rawSpecialEffectData != null && character.MainHand != null) {
                     SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calculatedStats.TargetLevel - character.Level,
                         new List<SpecialEffect>(stats.SpecialEffects()),
                         triggerIntervals, triggerChances,
@@ -1387,19 +1371,15 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         combatFactors.DamageReduction);
 
                     calculatedStats.SpecProcDPS = SDP.CalculateAll();
-                    /*calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Physical);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Shadow);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Holy);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Arcane);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Nature);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Fire);
-                    calculatedStats.SpecProcDPS += SDP.Calculate(ItemDamageType.Frost);*/
+                    calculatedStats.SpecProcDMGPerHit = SDP.GetDamagePerHit;
+                    calculatedStats.SpecProcActs = SDP.GetTotalNumProcs;
                 }
                 calculatedStats.TotalDPS += calculatedStats.SpecProcDPS;
+                #endregion
 
-                // Survivability
+                #region Survivability
                 if (stats.HealthRestoreFromMaxHealth > 0) {
-                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth/* / 100f*/ * stats.Health * bossOpts.BerserkTimer;
+                    stats.HealthRestore += stats.HealthRestoreFromMaxHealth * stats.Health * bossOpts.BerserkTimer;
                 }
 
                 float Health2Surv  = (stats.Health) / 100f; 
@@ -1414,6 +1394,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                                                                       + BossAttackPower2Surv
                                                                       + BossAttackSpeedMods2Surv
                                                                       + stats.Resilience / 10);
+                #endregion
+
                 calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
@@ -1529,6 +1511,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             if (talents.MeatCleaver > 0 && (dpswarchar.calcOpts.M_Whirlwind || dpswarchar.calcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
             #region Mastery Related
+            /* Strikes of Opportunity is being handled elsewhere
             float MasteryValue = 0f;
             Stats statsMastery = new Stats() { };
             if(!dpswarchar.combatFactors.FuryStance) {
@@ -1537,7 +1520,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     new Stats() { BonusTargets = 0.50f, },
                     0f, 0f, 0.16f + MasteryValue * 0.02f);
                 statsMastery.AddSpecialEffect(StrikesOfOpportunity);
-            }
+            }*/
             #endregion
 
             /*Stats statsGearEnchantsBuffs = new Stats();
@@ -1549,7 +1532,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
             statsTotal.Accumulate(statsOptionsPanel);
-            statsTotal.Accumulate(statsMastery);
+            //statsTotal.Accumulate(statsMastery);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             //Stats statsProcs = new Stats();
 

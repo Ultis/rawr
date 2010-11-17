@@ -125,7 +125,7 @@ namespace Rawr.DPSWarr.Skills
         public float MhActivates { get { return MhActivatesO20 + MhActivatesU20; } }
         public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
         // Off Hand
-        public float OhEffectiveSpeed { get { return combatFactors.OHSpeed + SlamFreqSpdMod; } }
+        public float OhEffectiveSpeed { get { return combatFactors.OHSpeed > 0f ? combatFactors.OHSpeed + SlamFreqSpdMod : 0; } }
         public float OhDamage
         {
             get

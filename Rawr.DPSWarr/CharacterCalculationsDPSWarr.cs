@@ -60,7 +60,11 @@ namespace Rawr.DPSWarr {
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
         public float WhiteDPSOH { get; set; }
+        // Special Damage (Shadow, Fire, etc)
         public float SpecProcDPS { get; set; }
+        public float SpecProcDMGPerHit { get; set; }
+        public float SpecProcActs { get; set; }
+        //
         public float TotalDamagePerSecond { get; set; }
         #endregion
         #region Abilities
@@ -100,7 +104,7 @@ namespace Rawr.DPSWarr {
             int formIter = 2;
             string theFormat = "";
 
-            theFormat += "{0:000.00%} : {1}*"; // Averaged % and Averaged Rating
+            theFormat += "{0:000.00%} : {1:0000.0}*"; // Averaged % and Averaged Rating
             theFormat += "The Pane shows Averaged Values";
             theFormat += "\r\n";
             if (passiveContrs.Length > 0) {
@@ -398,10 +402,10 @@ namespace Rawr.DPSWarr {
                         }
                     }
                     float[] passiveContrsVals = new float[] {
-                    combatFactors.Char.WarriorTalents.BloodFrenzy * 0.025f,
-                    BuffsStats.PhysicalHaste,
-                    heroism,
-                };
+                        combatFactors.Char.WarriorTalents.BloodFrenzy * 0.025f,
+                        BuffsStats.PhysicalHaste,
+                        heroism,
+                    };
                     float passiveContrsTtlVal = (1f + passiveContrsVals[0])
                                               * (1f + passiveContrsVals[1])
                                               * (1f + passiveContrsVals[2])
@@ -534,8 +538,10 @@ namespace Rawr.DPSWarr {
                 }
                 // DPS General
                 dictValues.Add("Deep Wounds", string.Format("{0:0000}*{1:00.0%} of DPS", Rot.DW.TickSize, Rot.DW.TickSize <= 0f || TotalDPS <= 0f ? 0f : Rot.DW.TickSize / TotalDPS));
-                dictValues.Add("Special DMG Procs", string.Format("{0:0000}*{1:00.0%} of DPS", SpecProcDPS, SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
-                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000}", WhiteDPS, WhiteDmg) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
+                dictValues.Add("Special DMG Procs", string.Format("{0:0000} : {1:00000} : {2:000.00}*{3:00.0%} of DPS",
+                    SpecProcDPS, SpecProcDMGPerHit, SpecProcActs,
+                    SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
+                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MhActivates + Whites.OhActivates) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
                 dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (Rot.GCDUsage != "" ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
                 // Rage
                 format = "{0:0000}";

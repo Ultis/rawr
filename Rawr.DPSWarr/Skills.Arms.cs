@@ -414,14 +414,14 @@ namespace Rawr.DPSWarr.Skills
     public class StrikesOfOpportunity : Ability
     {
         public static new string SName { get { return "Strikes Of Opportunity"; } }
-        public static new string SDesc { get { return "Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger an additional melee attack for 100% normal damage. Each point of Mastery increases this chance by 2%."; } }
+        public static new string SDesc { get { return "Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger an additional melee attack for 115% normal damage. Each point of Mastery increases this chance by 2%."; } }
         public static new string SIcon { get { return "ability_backstab"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
         /// <summary>
         /// Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger
-        /// an additional melee attack for 100% normal damage. Each point of Mastery
+        /// an additional melee attack for 115% normal damage. Each point of Mastery
         /// increases this chance by 2%.
         /// <para>Talents: Passive Arms Benefit</para>
         /// <para>Glyphs: none</para>
@@ -436,7 +436,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = ReqMeleeWeap = true;
             //Cd = 6f; // In Seconds
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.00f; // 100% normal damage
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.15f; // 115% normal damage
             //RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
             UsesGCD = false;
             //

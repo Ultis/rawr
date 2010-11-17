@@ -299,7 +299,7 @@ namespace Rawr.DPSWarr {
             float rageNeededO20 = 0f, rageGenOtherO20 = 0f;
             foreach (AbilWrapper aw in GetAbilityList()) {
                 if (aw.ability is Rend) {
-                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesO20 + TH.numActivatesO20);
+                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesO20 + TH.numActivatesO20, percTimeO20);
                 } else {
                     DPS_TTL += aw.DPSO20;
                 }
@@ -308,8 +308,8 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherO20 -= aw.RageO20; }
             }
 
-            DPS_TTL += /*(*/WhiteAtks.MhDPS /*+ (CombatFactors.useOH ? WhiteAtks.OhDPS : 0f))*/ * percTimeInDPSAndO20;
-            // InvalidateCache();
+            DPS_TTL += WhiteAtks.MhDPS * percTimeInDPSAndO20;
+
             return DPS_TTL;
         }
 
@@ -379,6 +379,18 @@ namespace Rawr.DPSWarr {
              *   Thunderclap (refreshing rend), or TfB so we might as well turn them all *off* at once
              */
 
+            bool WeWantBLS = BLS.ability.Validated
+                && EX.ability.Validated
+                && ((EX.ability.DamageOnUseOverride * EX.ability.AvgTargets) / (EX.ability.GCDTime / LatentGCD))
+                    < ((BLS.ability.DamageOnUseOverride * BLS.ability.AvgTargets) / (BLS.ability.GCDTime / LatentGCD))
+                 ;
+
+            bool WeWantTfB = TB.ability.Validated
+                && EX.ability.Validated
+                && ((EX.ability.DamageOnUseOverride * EX.ability.AvgTargets) / (EX.ability.GCDTime / LatentGCD))
+                    < ((TB.ability.DamageOnUseOverride * TB.ability.AvgTargets) / (TB.ability.GCDTime / LatentGCD))
+                 ;
+
             int Iterator = 0;
             #region <20%
             while (
@@ -427,8 +439,6 @@ namespace Rawr.DPSWarr {
                 }
                 CSspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
 
-                bool WeWantTfB = TB.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride < TB.ability.DamageOnUseOverride;
-
                 // Rend
                 if (RD.ability.Validated && WeWantTfB && Talents.BloodAndThunder < 2) { // Ignore Rend when we have BnT at 100%
                     acts = Math.Min(GCDsAvailableU20, RD.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
@@ -447,7 +457,7 @@ namespace Rawr.DPSWarr {
                 THspace = TH.numActivatesU20 / NumGCDsU20 * TH.ability.UseTime / LatentGCD;
 
                 // Bladestorm
-                if (BLS.ability.Validated && EX.ability.Validated && EX.ability.DamageOnUseOverride * EX.ability.AvgTargets < (BLS.ability.DamageOnUseOverride * BLS.ability.AvgTargets / 7f)) {
+                if (WeWantBLS) {
                     // We only want to use Bladestorm during Exec phase IF it is going to do more damage, which requires Multiple Targets to be up
                     acts = Math.Min(GCDsAvailableU20, BLS.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     BLS.numActivatesU20 = acts * (1f - RDspace);
@@ -464,7 +474,7 @@ namespace Rawr.DPSWarr {
                 MSspace = MS.numActivatesU20 / NumGCDsU20 * MS.ability.UseTime / LatentGCD;*/
 
                 // Taste for Blood
-                if (TB.ability.Validated && WeWantTfB) {
+                if (WeWantTfB) {
                     acts = Math.Min(GCDsAvailableU20, TB.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     TB.numActivatesU20 = acts * (1f - BLSspace);
                     availRageU20 -= TB.RageU20 * RageMOD_Total;
@@ -541,7 +551,7 @@ namespace Rawr.DPSWarr {
             float rageNeededU20 = 0f, rageGenOtherU20 = 0f;
             foreach (AbilWrapper aw in GetAbilityList()) {
                 if (aw.ability is Rend) {
-                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesU20 + TH.numActivatesU20);
+                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesU20 + TH.numActivatesU20, percTimeU20);
                 } else {
                     DPS_TTL += aw.DPSU20;
                 }
@@ -550,8 +560,8 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherU20 -= aw.RageU20; }
             }
 
-            DPS_TTL += /*(*/WhiteAtks.MhDPS /*+ (CombatFactors.useOH ? WhiteAtks.OhDPS : 0f))*/ * percTimeInDPSAndU20;
-            // InvalidateCache();
+            DPS_TTL += WhiteAtks.MhDPS * percTimeInDPSAndU20;
+            
             return DPS_TTL;
         }
 
@@ -619,7 +629,7 @@ namespace Rawr.DPSWarr {
             // Return result
             if (setCalcs) {
                 this.calcs.TotalDPS = _DPS_TTL + _DPS_TTL_U20;
-                this.calcs.WhiteDPS = WhiteAtks.MhDPS + WhiteAtks.OhDPS;
+                this.calcs.WhiteDPS = WhiteAtks.MhDPS /*+ WhiteAtks.OhDPS*/;
                 this.calcs.WhiteDPSMH = WhiteAtks.MhDPS;
                 this.calcs.WhiteDmg = this.WhiteAtks.MhDamageOnUse;
 
@@ -638,9 +648,7 @@ namespace Rawr.DPSWarr {
             try {
                 base.MakeRotationandDoDPS(setCalcs, needsDisplayCalculations);
                 float PercTimeUnder20 = 0f;
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_]) {
-                    PercTimeUnder20 = (float)BossOpts.Under20Perc;
-                }
+                if (CalcOpts.M_ExecuteSpam) { PercTimeUnder20 = (float)BossOpts.Under20Perc; }
                 MakeRotationandDoDPS(setCalcs, PercTimeUnder20);
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Arms Rotation Details",
