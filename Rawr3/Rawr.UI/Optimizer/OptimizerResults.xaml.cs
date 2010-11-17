@@ -31,7 +31,7 @@ namespace Rawr.UI
                 if ((oldCharacter[slot] == null && newCharacter[slot] != null) ||
                     (oldCharacter[slot] != null  && !oldCharacter[slot].Equals(newCharacter[slot])))
                 {
-                    //Testing if the ring/trinket items were just swapped and not actually different
+                    // Testing if the ring/trinket items were just swapped and not actually different
                     if (slot == CharacterSlot.Finger1 || slot == CharacterSlot.Finger2)
                     {
                         ItemInstance old1 = oldCharacter[CharacterSlot.Finger1];

@@ -6,7 +6,6 @@ using System.Windows;
 
 namespace Rawr.UI
 {
-
     public class GemVisibilityConverter : IValueConverter
     {
         #region IValueConverter Members
@@ -34,8 +33,6 @@ namespace Rawr.UI
 
         #endregion
     }
-
-
     public class ItemQualityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -71,5 +68,4 @@ namespace Rawr.UI
             return null;
         }
     }
-
 }

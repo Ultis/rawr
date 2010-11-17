@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:local="clr-namespace:Rawr.UI"
+    mc:Ignorable="d"
     x:Class="Rawr.UI.OptimizerResults"
     Title="Optimizer Results"
     Height="600">
@@ -70,8 +70,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    
                     <local:BuffsControl x:Name="CurrentBuffs" Grid.Column="0" Margin="0,0,2,0" />
-
                     <local:BuffsControl x:Name="OptimizedBuffs" Grid.Column="1" Margin="2,0,0,0"/>
                 </Grid>
             </basics:TabItem>

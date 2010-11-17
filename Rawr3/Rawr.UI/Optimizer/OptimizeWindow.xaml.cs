@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -11,8 +13,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Rawr.Optimizer;
 using Rawr.Properties;
-using System.ComponentModel;
-using System.Reflection;
 
 namespace Rawr.UI
 {
@@ -69,8 +69,8 @@ namespace Rawr.UI
             CalculationToOptimizeCombo.SelectedIndex = 0;
 
             ThoroughnessSlider.Value = OptimizerSettings.Default.Thoroughness;
-            OverrideRegemCheck.IsChecked = OptimizerSettings.Default.OverrideRegem;
-            OverrideReenchantCheck.IsChecked = OptimizerSettings.Default.OverrideReenchant;
+            CK_Override_Regem.IsChecked = OptimizerSettings.Default.OverrideRegem;
+            CK_Override_Reenchant.IsChecked = OptimizerSettings.Default.OverrideReenchant;
 
             string calculationString = character.CalculationToOptimize;
             if (string.IsNullOrEmpty(calculationString)) calculationString = OptimizerSettings.Default.CalculationToOptimize;
@@ -251,7 +251,9 @@ namespace Rawr.UI
         private List<TalentsBase> GetOptimizeTalentSpecs()
         {
             List<TalentsBase> talentSpecs = null;
-            if (TalentsCheck.IsChecked.GetValueOrDefault(false) || GlyphsCheck.IsChecked.GetValueOrDefault(false) || TalentSpecsCheck.IsChecked.GetValueOrDefault(false))
+            if (CK_Talents_Points.IsChecked.GetValueOrDefault(false)
+                || CK_Talents_Glyphs.IsChecked.GetValueOrDefault(false)
+                || CK_Talents_Specs.IsChecked.GetValueOrDefault(false))
             {
                 talentSpecs = new List<TalentsBase>();
                 foreach (SavedTalentSpec spec in SavedTalentSpec.SpecsFor(character.Class))
@@ -287,9 +289,11 @@ namespace Rawr.UI
 
         private void ControlsEnabled(bool enabled)
         {
-            OptimizeButton.IsEnabled = UpgradesButton.IsEnabled = OverrideRegemCheck.IsEnabled =
-                OverrideReenchantCheck.IsEnabled = ThoroughnessSlider.IsEnabled = MixologyCheck.IsEnabled =
-                ElixirsFlasksCheck.IsEnabled = FoodCheck.IsEnabled = TalentsCheck.IsEnabled = TalentSpecsCheck.IsEnabled = GlyphsCheck.IsEnabled =
+            BT_Optimize.IsEnabled = BT_Upgrades.IsEnabled =
+                CK_Override_Regem.IsEnabled = CK_Override_Reenchant.IsEnabled = CK_Override_Reforge.IsEnabled =
+                ThoroughnessSlider.IsEnabled =
+                CK_Food.IsEnabled = CK_ElixirsFlasks.IsEnabled = CK_Mixology.IsEnabled =
+                CK_Talents_NoChange.IsEnabled = CK_Talents_Specs.IsEnabled = CK_Talents_Points.IsEnabled = CK_Talents_Glyphs.IsEnabled =
                 CalculationToOptimizeCombo.IsEnabled = AddRequirementButton.IsEnabled = enabled;
             MaxScoreLabel.Text = string.Empty;
             AltProgress.Value = MainProgress.Value = 0;
@@ -365,8 +369,8 @@ namespace Rawr.UI
 
         private void WindowClosed(object sender, EventArgs e)
         {
-            OptimizerSettings.Default.OverrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
-            OptimizerSettings.Default.OverrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
+            OptimizerSettings.Default.OverrideRegem = CK_Override_Regem.IsChecked.GetValueOrDefault();
+            OptimizerSettings.Default.OverrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.Thoroughness = (int)ThoroughnessSlider.Value;
             OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             character.OptimizationRequirements = GetOptimizationRequirements();
@@ -379,9 +383,9 @@ namespace Rawr.UI
 
         private void OptimizeButton_Click(object sender, RoutedEventArgs e)
         {
-            bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
-            bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
-            bool overrideReforge = OverrideReforgeCheck.IsChecked.GetValueOrDefault();
+            bool overrideRegem = CK_Override_Regem.IsChecked.GetValueOrDefault();
+            bool overrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
+            bool overrideReforge = CK_Override_Reforge.IsChecked.GetValueOrDefault();
             int thoroughness = (int)ThoroughnessSlider.Value;
             string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             bool costRequirement;
@@ -392,8 +396,8 @@ namespace Rawr.UI
 
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant, overrideReforge,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
-                FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), TalentsCheck.IsChecked.GetValueOrDefault(), GlyphsCheck.IsChecked.GetValueOrDefault(), costRequirement);
+                CK_Food.IsChecked.GetValueOrDefault(), CK_ElixirsFlasks.IsChecked.GetValueOrDefault(),
+                CK_Mixology.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), CK_Talents_Specs.IsChecked.GetValueOrDefault(), CK_Talents_Glyphs.IsChecked.GetValueOrDefault(), costRequirement);
 
             if (OptimizerSettings.Default.WarningsEnabled)
             {
@@ -456,7 +460,7 @@ namespace Rawr.UI
                 character.IsLoading = true;
                 character.SetItems(results.BestCharacter);
                 character.ActiveBuffs = results.BestCharacter.ActiveBuffs;
-                if (TalentsCheck.IsChecked.GetValueOrDefault())
+                if (CK_Talents_Points.IsChecked.GetValueOrDefault())
                 {
                     character.CurrentTalents = results.BestCharacter.CurrentTalents;
                     MainPage.Instance.TalentPicker.RefreshSpec();
@@ -470,9 +474,9 @@ namespace Rawr.UI
 
         private void UpgradesButton_Click(object sender, RoutedEventArgs e)
         {
-            bool overrideRegem = OverrideRegemCheck.IsChecked.GetValueOrDefault();
-            bool overrideReenchant = OverrideReenchantCheck.IsChecked.GetValueOrDefault();
-            bool overrideReforge = OverrideReforgeCheck.IsChecked.GetValueOrDefault();
+            bool overrideRegem = CK_Override_Regem.IsChecked.GetValueOrDefault();
+            bool overrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
+            bool overrideReforge = CK_Override_Reforge.IsChecked.GetValueOrDefault();
             int thoroughness = (int)Math.Ceiling((float)ThoroughnessSlider.Value / 10f);
             string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             List<OptimizationRequirement> requirements = GetOptimizationRequirements();
@@ -490,8 +494,8 @@ namespace Rawr.UI
 
             optimizer.InitializeItemCache(character, character.AvailableItems, overrideRegem, overrideReenchant, overrideReforge,
                 OptimizerSettings.Default.TemplateGemsEnabled, Calculations.Instance,
-                FoodCheck.IsChecked.GetValueOrDefault(), ElixirsFlasksCheck.IsChecked.GetValueOrDefault(),
-                MixologyCheck.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false, false);
+                CK_Food.IsChecked.GetValueOrDefault(), CK_ElixirsFlasks.IsChecked.GetValueOrDefault(),
+                CK_Mixology.IsChecked.GetValueOrDefault(), GetOptimizeTalentSpecs(), false, false);
             if (OptimizerSettings.Default.WarningsEnabled)
             {
                 string prompt = optimizer.GetWarningPromptIfNeeded();
