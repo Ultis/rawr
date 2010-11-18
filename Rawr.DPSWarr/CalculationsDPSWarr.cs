@@ -1143,20 +1143,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     {
                         bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
-                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = true;
-                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
-                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
-                        comparison.Name = "With Execute Spam";
-                        comparison.Description = "Turning <20% Execute Spam on on the options pane will change your DPS to this";
-                        comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
-                        comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
-                        comparison.Equipped = orig == true;
-                        comparisons.Add(comparison);
-                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
-                    }
-                    {
-                        bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
+                        bool orig2 = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = false;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = false;
                         CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = "Without Execute Spam";
@@ -1166,6 +1155,39 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         comparison.Equipped = orig == false;
                         comparisons.Add(comparison);
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
+                    }
+                    {
+                        bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
+                        bool orig2 = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = true;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = false;
+                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                        comparison.Name = "With Execute Spam";
+                        comparison.Description = "Turning <20% Execute Spam on on the options pane will change your DPS to this";
+                        comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                        comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                        comparison.Equipped = orig == true && orig2 == false;
+                        comparisons.Add(comparison);
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
+                    }
+                    {
+                        bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam;
+                        bool orig2 = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = true;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = true;
+                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                        comparison.Name = "With Execute Spam Stage 2";
+                        comparison.Description = "Turning <20% Execute Spam on on the options pane AND Enforcing Taste for Blood will change your DPS to this";
+                        comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                        comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                        comparison.Equipped = orig == true && orig2 == true;
+                        comparisons.Add(comparison);
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
+                        ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons)
                     {

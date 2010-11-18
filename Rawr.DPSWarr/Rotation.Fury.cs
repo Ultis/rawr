@@ -37,10 +37,10 @@ namespace Rawr.DPSWarr
         {
             initAbilities();
             // doIterations();
-            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool hsok = CalcOpts.M_HeroicStrike;
             bool clok = 
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                && CalcOpts.M_Cleave;
 
             percHS = (hsok ? 1f : 0f);
             if (clok)
@@ -63,10 +63,10 @@ namespace Rawr.DPSWarr
         {
             base.Initialize(calcs);
             
-            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool hsok = CalcOpts.M_HeroicStrike;
             bool clok =
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                && CalcOpts.M_Cleave;
             BloodSurge _BS = GetWrapper<BloodSurge>().ability as BloodSurge;
             percHS = (hsok ? 1f : 0f);
             if (clok)

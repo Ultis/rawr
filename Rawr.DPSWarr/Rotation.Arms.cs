@@ -101,9 +101,9 @@ namespace Rawr.DPSWarr {
             SL.numActivatesO20 = origavailGCDsO20;
             WhiteAtks.Slam_ActsOverDurO20 = SL.numActivatesO20;
             float origAvailRageO20 = preloopAvailRageO20;
-            bool hsok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            bool hsok = CalcOpts.M_HeroicStrike;
             bool clok = BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-                     && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];
+                     && CalcOpts.M_Cleave;
             availRageO20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * percTimeO20;
             availRageO20 -= SL.RageO20;
             float repassAvailRageO20 = 0f;
@@ -153,7 +153,7 @@ namespace Rawr.DPSWarr {
                 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
-                    acts = Math.Min(GCDsAvailableO20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDur) * percTimeInDPSAndO20 * PercFailRageO20);
+                    acts = Math.Min(GCDsAvailableO20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurO20, percTimeO20) * percTimeInDPS * PercFailRageO20);
                     CS.numActivatesO20 = acts;
                     availRageO20 -= CS.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
                 }
@@ -276,7 +276,7 @@ namespace Rawr.DPSWarr {
 
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {
-                    SoO.numActivatesO20 = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDur) * percTimeO20;
+                    SoO.numActivatesO20 = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDurO20, percTimeO20);
                     //availRage -= SoO.Rage; // Not sure if it should affect Rage
                 }
 
@@ -299,7 +299,7 @@ namespace Rawr.DPSWarr {
             float rageNeededO20 = 0f, rageGenOtherO20 = 0f;
             foreach (AbilWrapper aw in GetAbilityList()) {
                 if (aw.ability is Rend) {
-                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesO20 + TH.numActivatesO20, percTimeO20);
+                    DPS_TTL += (aw.ability as Rend).GetDPS(aw.numActivatesO20, TH.numActivatesO20, percTimeO20);
                 } else {
                     DPS_TTL += aw.DPSO20;
                 }
@@ -383,13 +383,13 @@ namespace Rawr.DPSWarr {
                 && EX.ability.Validated
                 && ((EX.ability.DamageOnUseOverride * EX.ability.AvgTargets) / (EX.ability.GCDTime / LatentGCD))
                     < ((BLS.ability.DamageOnUseOverride * BLS.ability.AvgTargets) / (BLS.ability.GCDTime / LatentGCD))
-                 ;
+                && CalcOpts.M_ExecuteSpamStage2;
 
             bool WeWantTfB = TB.ability.Validated
                 && EX.ability.Validated
                 && ((EX.ability.DamageOnUseOverride * EX.ability.AvgTargets) / (EX.ability.GCDTime / LatentGCD))
                     < ((TB.ability.DamageOnUseOverride * TB.ability.AvgTargets) / (TB.ability.GCDTime / LatentGCD))
-                 ;
+                && CalcOpts.M_ExecuteSpamStage2;
 
             int Iterator = 0;
             #region <20%
@@ -433,7 +433,7 @@ namespace Rawr.DPSWarr {
 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
-                    acts = Math.Min(GCDsAvailableU20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDur) * percTimeInDPSAndU20 * PercFailRageU20);
+                    acts = Math.Min(GCDsAvailableU20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurU20, percTimeU20) * percTimeInDPS * PercFailRageU20);
                     CS.numActivatesU20 = acts;
                     availRageU20 -= CS.RageU20 * RageMOD_Total;
                 }
@@ -536,7 +536,7 @@ namespace Rawr.DPSWarr {
 
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {
-                    SoO.numActivatesU20 = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDur) * percTimeU20;
+                    SoO.numActivatesU20 = (SoO.ability as StrikesOfOpportunity).GetActivates(AttemptedAtksOverDurU20, percTimeU20);
                     //availRage -= SoO.RageU20; // Not sure if it should affect Rage
                 }
 
@@ -551,7 +551,7 @@ namespace Rawr.DPSWarr {
             float rageNeededU20 = 0f, rageGenOtherU20 = 0f;
             foreach (AbilWrapper aw in GetAbilityList()) {
                 if (aw.ability is Rend) {
-                    DPS_TTL += aw.ability.GetDPS(aw.numActivatesU20 + TH.numActivatesU20, percTimeU20);
+                    DPS_TTL += (aw.ability as Rend).GetDPS(aw.numActivatesU20, TH.numActivatesU20, percTimeU20);
                 } else {
                     DPS_TTL += aw.DPSU20;
                 }
@@ -587,11 +587,11 @@ namespace Rawr.DPSWarr {
 
             // ==== Standard Priorities ===============
             if (_needDisplayCalcs) GCDUsage += "Abilities: Things that you do to damage the Target. These are not in order of priority.\n";
-            _DPS_TTL = SettleAll(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageOver20);
+            _DPS_TTL_O20 = SettleAll(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageOver20);
             if (percTimeUnder20 != 0f) { _DPS_TTL_U20 = SettleAll_U20(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageUnder20); }
 
             calcDeepWounds();
-            _DPS_TTL += DW.TickSize;
+            _DPS_TTL_O20 += DW.TickSize;
 
             // Add each of the abilities' DPS and HPS values and other aesthetics
             if (_needDisplayCalcs) {
@@ -628,15 +628,17 @@ namespace Rawr.DPSWarr {
 
             // Return result
             if (setCalcs) {
-                this.calcs.TotalDPS = _DPS_TTL + _DPS_TTL_U20;
-                this.calcs.WhiteDPS = WhiteAtks.MhDPS /*+ WhiteAtks.OhDPS*/;
+                this.calcs.WhiteDPS = WhiteAtks.MhDPS;
                 this.calcs.WhiteDPSMH = WhiteAtks.MhDPS;
                 this.calcs.WhiteDmg = this.WhiteAtks.MhDamageOnUse;
+
+                this.calcs.TotalDPS = _DPS_TTL_O20 + _DPS_TTL_U20;
 
                 this.calcs.WhiteRageO20 = WhiteAtks.MHRageGenOverDurO20;
                 this.calcs.OtherRageO20 = this.RageGenOverDur_OtherO20;
                 this.calcs.NeedyRageO20 = this.RageNeededOverDurO20;
                 this.calcs.FreeRageO20 = calcs.WhiteRageO20 + calcs.OtherRageO20 - calcs.NeedyRageO20;
+
                 this.calcs.WhiteRageU20 = WhiteAtks.MHRageGenOverDurU20;
                 this.calcs.OtherRageU20 = this.RageGenOverDur_OtherU20;
                 this.calcs.NeedyRageU20 = this.RageNeededOverDurU20;

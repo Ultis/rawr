@@ -63,7 +63,7 @@ namespace Rawr.DPSWarr {
         public AbilWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
 
         public float _HPS_TTL;
-        public float _DPS_TTL, _DPS_TTL_U20;
+        public float _DPS_TTL_O20, _DPS_TTL_U20;
         public string GCDUsage = "";
         protected CharacterCalculationsDPSWarr calcs = null;
         
@@ -260,15 +260,43 @@ namespace Rawr.DPSWarr {
 
         public void InvalidateCache()
         {
-            for (int i = 0; i < 5; i++) for (int j = 0; j < 3; j++) for (int k = 0; k < 3; k++)
-                _atkOverDurs[i,j,k] = -1f;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        _atkOverDursO20[i, j, k] = -1f;
+                        _atkOverDursU20[i, j, k] = -1f;
+                        _atkOverDurs[i, j, k] = -1f;
+                    }
+                }
+            }
         }
 
         #region Attacks over Duration
         public enum SwingResult : int { Attempt=0, Land, Crit, Parry, Dodge };
         public enum Hand : int { MH=0, OH, Both };
         public enum AttackType : int { Yellow=0, White, Both };
+        private float[,,] _atkOverDursO20 = new float[5, 3, 3];
+        private float[,,] _atkOverDursU20 = new float[5, 3, 3];
         private float[,,] _atkOverDurs = new float[5, 3, 3];
+        public float GetAttackOverDurationO20(SwingResult swingResult, Hand hand, AttackType attackType)
+        {
+            if (_atkOverDursO20[(int)swingResult, (int)hand, (int)attackType] == -1f)
+            {
+                SetTableO20(swingResult, hand, attackType);
+            }
+            return _atkOverDursO20[(int)swingResult, (int)hand, (int)attackType];
+        }
+        public float GetAttackOverDurationU20(SwingResult swingResult, Hand hand, AttackType attackType)
+        {
+            if (_atkOverDursU20[(int)swingResult, (int)hand, (int)attackType] == -1f)
+            {
+                SetTableU20(swingResult, hand, attackType);
+            }
+            return _atkOverDursU20[(int)swingResult, (int)hand, (int)attackType];
+        }
         public float GetAttackOverDuration(SwingResult swingResult, Hand hand, AttackType attackType)
         {
             if (_atkOverDurs[(int)swingResult, (int)hand, (int)attackType] == -1f)
@@ -277,13 +305,89 @@ namespace Rawr.DPSWarr {
             }
             return _atkOverDurs[(int)swingResult, (int)hand, (int)attackType];
         }
-        private void SetTable(SwingResult sr, Hand h, AttackType at)
+        private void SetTableO20(SwingResult sr, Hand h, AttackType at)
         {
             float count = 0f;
             float mod;
             CombatTable table;
 
             if (at != AttackType.White) {
+                foreach (AbilWrapper abil in GetDamagingAbilities())
+                {
+                    if (!abil.ability.Validated) { continue; }
+                    if (h != Hand.OH) {
+                        table = abil.ability.MHAtkTable;
+                        mod = GetTableFromSwingResult(sr, table);
+                        count += abil.numActivatesO20 * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                    }
+                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand) {
+                        table = abil.ability.OHAtkTable;
+                        mod = GetTableFromSwingResult(sr, table);
+                        count += abil.numActivatesO20 * abil.ability.AvgTargets * mod;
+                    }
+                }
+            }
+            if (at != AttackType.Yellow) {
+                if (h != Hand.OH) {
+                    table = WhiteAtks.MHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.MhActivatesO20 * mod;
+                }
+                if (h != Hand.MH && CombatFactors.useOH) {
+                    table = WhiteAtks.OHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.OhActivates * mod;
+                }
+            }
+            
+            _atkOverDursO20[(int)sr, (int)h, (int)at] = count;
+        }
+        private void SetTableU20(SwingResult sr, Hand h, AttackType at)
+        {
+            float count = 0f;
+            float mod;
+            CombatTable table;
+
+            if (at != AttackType.White)
+            {
+                foreach (AbilWrapper abil in GetDamagingAbilities())
+                {
+                    if (!abil.ability.Validated) { continue; }
+                    if (h != Hand.OH) {
+                        table = abil.ability.MHAtkTable;
+                        mod = GetTableFromSwingResult(sr, table);
+                        count += abil.numActivatesU20 * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                    }
+                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand) {
+                        table = abil.ability.OHAtkTable;
+                        mod = GetTableFromSwingResult(sr, table);
+                        count += abil.numActivatesU20 * abil.ability.AvgTargets * mod;
+                    }
+                }
+            }
+            if (at != AttackType.Yellow) {
+                if (h != Hand.OH) {
+                    table = WhiteAtks.MHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.MhActivatesU20 * mod;
+                }
+                if (h != Hand.MH && CombatFactors.useOH) {
+                    table = WhiteAtks.OHAtkTable;
+                    mod = GetTableFromSwingResult(sr, table);
+                    count += WhiteAtks.OhActivates * mod;
+                }
+            }
+
+            _atkOverDursU20[(int)sr, (int)h, (int)at] = count;
+        }
+        private void SetTable(SwingResult sr, Hand h, AttackType at)
+        {
+            float count = 0f;
+            float mod;
+            CombatTable table;
+
+            if (at != AttackType.White)
+            {
                 foreach (AbilWrapper abil in GetDamagingAbilities())
                 {
                     if (!abil.ability.Validated)
@@ -304,7 +408,8 @@ namespace Rawr.DPSWarr {
                     }
                 }
             }
-            if (at != AttackType.Yellow) {
+            if (at != AttackType.Yellow)
+            {
                 if (h != Hand.OH)
                 {
                     table = WhiteAtks.MHAtkTable;
@@ -318,7 +423,7 @@ namespace Rawr.DPSWarr {
                     count += WhiteAtks.OhActivates * mod;
                 }
             }
-            
+
             _atkOverDurs[(int)sr, (int)h, (int)at] = count;
         }
         private float GetTableFromSwingResult(SwingResult sr, CombatTable table)
@@ -335,9 +440,16 @@ namespace Rawr.DPSWarr {
             }
         }
 
+        public float AttemptedAtksOverDurO20 { get { return GetAttackOverDurationO20(SwingResult.Attempt, Hand.Both, AttackType.Both); } }
+        public float AttemptedAtksOverDurU20 { get { return GetAttackOverDurationU20(SwingResult.Attempt, Hand.Both, AttackType.Both); } }
         public float AttemptedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.Both, AttackType.Both); } }
+
         public float AttemptedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.Both, AttackType.Yellow); } }
+
+        public float LandedAtksOverDurO20 { get { return GetAttackOverDurationO20(SwingResult.Land, Hand.Both, AttackType.Both); } }
+        public float LandedAtksOverDurU20 { get { return GetAttackOverDurationU20(SwingResult.Land, Hand.Both, AttackType.Both); } }
         public float LandedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Land, Hand.Both, AttackType.Both); } }
+
         public float CriticalAtksOverDur { get { return GetAttackOverDuration(SwingResult.Crit, Hand.Both, AttackType.Both); } }
 
         public float AttemptedAtksOverDurMH { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.MH, AttackType.Both); } }
@@ -396,7 +508,7 @@ namespace Rawr.DPSWarr {
                 float acts = FightDuration / freq;
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
-                if (CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_]) {
+                if (CalcOpts.M_BerserkerRage) {
                     float upTime = _SE_ZERKERDUMMY.GetAverageUptime(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
                     zerkerMOD *= (1f + upTime);
                 }
@@ -541,7 +653,7 @@ namespace Rawr.DPSWarr {
             }
 
             _HPS_TTL += aw.allHPS;
-            _DPS_TTL += aw.allDPS;
+            _DPS_TTL_O20 += aw.allDPS;
             return aw.ability.GetRageUseOverDur(Abil_GCDs) * (aw.ability.RageCost > 0 ? RageMOD_Total : 1f);
         }
         #endregion

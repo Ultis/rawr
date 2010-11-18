@@ -1071,6 +1071,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             // Other
             settooltip(CK_EnragedRegen);
             settooltip(CK_ExecSpam);
+            settooltip(CK_ExecSpamStage2);
         }
         private void Element_MouseEntered(object sender, MouseEventArgs e)
         {
@@ -1122,7 +1123,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #endregion
             #region Other
             else if (sender == CK_EnragedRegen) tooltip.Setup(Skills.EnragedRegeneration.SName, Skills.EnragedRegeneration.SDesc, Skills.EnragedRegeneration.SIcon, "This provides Survivability Score as Regenerated Health. It also consumes GCDs from your overall time so your DPS will go down. We have not yet implemented the Enrage Effect consumption, meaning your DPS should go down more than what is seen when checking this box.");
-            else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes\nNOTE: This check is presently non-functional due to calculational reasons. We do not presently have an ETA for Execute Spam support. It IS still what you want to be doing during Execute Phase.");
+            else if (sender == CK_ExecSpam) tooltip.Setup("<20% Execute Spam", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching most abilities to Executes.");
+            else if (sender == CK_ExecSpamStage2) tooltip.Setup("<20% Execute Spam (Stage 2)", Skills.Execute.SDesc, Skills.Execute.SIcon, "Changes the rotational code for that period of time, increasing DPS due to the extra damage from switching Slams to Executes and enforces that Taste for Blood continues.");
             #endregion
             //tooltip.Setup();
             tooltip.Show((UIElement)sender);
@@ -1167,6 +1169,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                                 true,  // Victory Rush
                                 true,  // Slam
                             true,  // <20% Execute Spamming
+                            true,  // <20% Execute Spamming (Stage 2)
                         true,  // == Rage Dumps ==
                             true,  // Cleave
                             true,  // Heroic Strike

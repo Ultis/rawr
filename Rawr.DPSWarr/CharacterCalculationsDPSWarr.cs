@@ -531,7 +531,12 @@ namespace Rawr.DPSWarr {
                 foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in Rot.GetAbilityList())
                 {
                     if (aw.ability is Skills.Rend) {
-                        dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, (aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
+                        Rotation.AbilWrapper TH = Rot.GetWrapper<Skills.ThunderClap>();
+                        Skills.Rend rend = (aw.ability as Skills.Rend);
+                        float allDPS = rend.GetDPS(aw.numActivatesO20, TH.numActivatesO20, combatFactors.CalcOpts.M_ExecuteSpam ? 1f - (float)combatFactors.BossOpts.Under20Perc : 1f)
+                                     + rend.GetDPS(aw.numActivatesU20, TH.numActivatesU20, combatFactors.CalcOpts.M_ExecuteSpam ?      (float)combatFactors.BossOpts.Under20Perc : 0f);
+                        dictValues.Add(aw.ability.Name, string.Format(format, allDPS, rend.TickSize * rend.NumTicks, aw.allNumActivates)
+                                                        + rend.GenTooltip(aw.allNumActivates, allDPS / TotalDPS));
                     } else {
                         dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
                     }

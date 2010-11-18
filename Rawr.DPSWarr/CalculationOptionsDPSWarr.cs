@@ -55,6 +55,7 @@ namespace Rawr.DPSWarr {
                         true,  // Victory Rush
                         true,  // Slam
                     true,  // <20% Execute Spamming
+                    true,  // <20% Execute Spamming Stage 2
                 true,  // == Rage Dumps ==
                     true,  // Cleave
                     true,  // Heroic Strike
@@ -184,6 +185,7 @@ namespace Rawr.DPSWarr {
             VictoryRush_,
             Slam_,
             ExecuteSpam_,
+            ExecuteSpamStage2_,
             _RageDumps__,
             Cleave_,
             HeroicStrike_,
@@ -393,6 +395,12 @@ namespace Rawr.DPSWarr {
         {
             get { return Maintenance[(int)Maintenances.ExecuteSpam_]; }
             set { Maintenance[(int)Maintenances.ExecuteSpam_] = value; OnPropertyChanged("M_ExecuteSpam"); }
+        }
+        [XmlIgnore]
+        public bool M_ExecuteSpamStage2
+        {
+            get { return Maintenance[(int)Maintenances.ExecuteSpamStage2_] && M_ExecuteSpam; }
+            set { Maintenance[(int)Maintenances.ExecuteSpamStage2_] = value; OnPropertyChanged("M_ExecuteSpamStage2"); }
         }
         [XmlIgnore]
         public bool M_Cleave

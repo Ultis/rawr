@@ -214,11 +214,11 @@ namespace Rawr.DPSWarr.Skills
         // 3.6	    29	    21.75	167	    4833	        3625	0.16551724	   21.27
         // 3.7	    30	    22.50	162	    4865	        3649	0.16444444	   21.86
         // 3.8	    31	    23.25	158	    4895	        3671	0.16344086	   22.45
-        private const float RAGEPERSWING = 15f; // 5 Per Swing (Estimated)
+        private const float RAGEPERSWING = 15f; // 15 Per Swing (Estimated)
         private float getragefromspeedMH { get { return combatFactors.MH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
         private float getragefromspeedOH { get { return combatFactors.OH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste; } } // on swing speed and haste then INCREASES that
         private const float RAGEFROMSPEED = 6.5f;//0.12656043f; // approx 1/8
-        private const float RAGECRITMOD = 2.00f; // 2x Rage
+        private const float RAGECRITMOD = 1.00f; // 2x Rage
         private const float RAGEOHMOD = 0.50f; // 50% Rage
         private const float RAGEANGERMNGTMOD = 1.25f; // +25% Rage gen for Arms spec
         private float _MHSwingRage = -1f;
@@ -306,9 +306,9 @@ namespace Rawr.DPSWarr.Skills
         public float CriticalAtksOverDurOH { get { return (combatFactors.useOH ? OhActivates * OHAtkTable.Crit : 0f); } }
         
         // Other
-        public float RageSlip(float abilInterval, float rageCost) {
+        public float RageSlip(float abilInterval, float rageCost, float timemod=1f) {
             if (!combatFactors.useOH && MhActivates <= 0f) { return 0f; }
-            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / FightDuration));
+            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MhActivates * MHSwingRage + (combatFactors.useOH ? OhActivates * OHSwingRage : 0f)) / (FightDuration*timemod)));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);

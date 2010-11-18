@@ -127,9 +127,10 @@
                     <TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
                     <CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
                     <CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" />
+                    <CheckBox x:Name="CK_ExecSpamStage2" Content="&lt;20% Execute Spam (Stage 2) *" Margin="0" IsChecked="{Binding M_ExecuteSpamStage2, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" IsEnabled="{Binding ElementName=CK_ExecSpam, Path=IsChecked}" />
                 </StackPanel>
-                </Grid>
-            </controls:TabItem>
+            </Grid>
+        </controls:TabItem>
             <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
                 <Grid x:Name="Page_04_Layout">
                     <Grid.ColumnDefinitions>

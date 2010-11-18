@@ -78,15 +78,16 @@ namespace Rawr.DPSWarr.Skills
         };
         protected SpecialEffect Buff { get { return _buff[Talents.SuddenDeath]; } }
         // Functions
-        public float GetActivates(float landedatksoverdur)
+        public float GetActivates(float landedatksoverdur, float mod)
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
-            float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond(FightDuration / Math.Max(0, landedatksoverdur), 1f, combatFactors._c_mhItemSpeed, FightDuration) * FightDuration : 0f;
-            float min = FightDuration / Cd; // If it follows it's cooldown, no SD procs
+            float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond((FightDuration * mod) / Math.Max(0, landedatksoverdur),
+                1f, combatFactors._c_mhItemSpeed, (FightDuration * mod)) * (FightDuration * mod) : 0f;
+            float min = (FightDuration * mod) / Cd; // If it follows it's cooldown, no SD procs
             //float acts = Math.Max(actsUnderSD, min);
             float acts = actsUnderSD + min;
 
-            return acts * (1f - Whiteattacks.RageSlip(FightDuration / acts, RageCost));
+            return acts * (1f - Whiteattacks.RageSlip((FightDuration * mod) / acts, RageCost));
         }
     }
     public class OverPower : Ability
@@ -195,7 +196,7 @@ namespace Rawr.DPSWarr.Skills
                 float acts = 0f;
 
                 // Chance to activate Requires Rend
-                if (CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_])
+                if (CalcOpts.M_Rend)
                 {
                     acts = base.ActivatesOverride * (1f / 3f * Talents.TasteForBlood);
                 }
@@ -439,14 +440,15 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.15f; // 115% normal damage
             //RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
             UsesGCD = false;
+            GCDTime = 0f;
             //
             Initialize();
-            MHAtkTable = Whiteattacks.MHAtkTable;
+            //MHAtkTable = Whiteattacks.MHAtkTable;
         }
 
         private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
 
-        public float GetActivates(float MeleeAttemptsOverDur)
+        public float GetActivates(float MeleeAttemptsOverDur, float mod)
         {
             if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
                 try {
@@ -457,9 +459,9 @@ namespace Rawr.DPSWarr.Skills
                 } catch (Exception) { }
             }
             // This attack doesn't consume GCDs and doesn't affect the swing timer
-            float rawActs = MeleeAttemptsOverDur / FightDuration;
-            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration);
-            effectActs *= FightDuration;
+            float rawActs = (FightDuration * mod) / MeleeAttemptsOverDur;
+            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
+            effectActs *= FightDuration * mod;
             return effectActs;
         }
         public override string GenTooltip(float acts, float ttldpsperc)
@@ -476,7 +478,7 @@ namespace Rawr.DPSWarr.Skills
             bool showdodge = CanBeDodged && dodges > 0f;
             bool showparry = CanBeParried && parrys > 0f;
             bool showblock = CanBeBlocked && blocks > 0f;
-            bool showglance = true && glance > 0f;
+            bool showglance = false && glance > 0f;
             bool showcrits = CanCrit && crits > 0f;
 
             string tooltip = "*" + Name +
@@ -588,11 +590,18 @@ namespace Rawr.DPSWarr.Skills
                 return TickSize;
             }
         }
-        public override float GetDPS(float acts)
+        /*public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
             float numticks = NumTicks * ((acts + ((ThunderAppsO20 + ThunderAppsU20) * AvgTargets)) - addMisses - addDodges - addParrys);
             float result = GetDmgOverTickingTime(acts + ThunderAppsO20 + ThunderAppsU20) / FightDuration;
+            return result;
+        }*/
+        public float GetDPS(float acts, float thunderapps, float mod)
+        {
+            float dmgonuse = TickSize;
+            float numticks = NumTicks * ((acts + (thunderapps * AvgTargets)) - addMisses - addDodges - addParrys);
+            float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * mod);
             return result;
         }
     }

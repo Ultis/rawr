@@ -125,7 +125,6 @@ namespace Rawr.DPSWarr {
 
         #region Weapon Damage Calcs
         #region Major Damage Factors
-        
         private float _DamageBonus = -1f;
         public float DamageBonus {
             get {
@@ -139,17 +138,11 @@ namespace Rawr.DPSWarr {
                 return _DamageBonus;
             }
         }
-
         private float _DamageReduction = -1f;
         public float DamageReduction {
             get {
                 if (_DamageReduction == -1f) {
                     float arpenBuffs = StatS.ArmorPenetration;
-                    /*if (CalcOpts.M_ColossusSmash) {
-                        if      (Talents.SuddenDeath == 0) { arpenBuffs = 6f/20.0f; // 6 sec every 20.0 sec. Because we have nothing to make it go faster
-                        }else if(Talents.SuddenDeath == 1) { arpenBuffs = 6f/13.3f; // 6 sec every 13.3 sec. According to my rough calcs, this is appropriate
-                        }else if(Talents.SuddenDeath == 2) { arpenBuffs = 6f/ 7.0f;}// 6 sec every  7.0 sec. According to my rough calcs, this is appropriate (it's not 100% uptime sadly)
-                    }*/
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
                         BossOpts.Armor,
