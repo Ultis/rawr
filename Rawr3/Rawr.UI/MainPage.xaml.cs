@@ -28,25 +28,13 @@ namespace Rawr.UI
         private bool _unsavedChanges = false;
 
         private Status status;
-        public Status Status
-        {
+        public Status Status {
             set { status = value; }
-            get
-            {
-                if (status == null) status = new Status();
-                return status;
-            }
+            get { return status ?? (status = new Status()); }
         }
 
         private ItemBrowser itemSearch = null;
-        public ItemBrowser ItemSearch
-        {
-            get
-            {
-                if (itemSearch == null) itemSearch = new ItemBrowser();
-                return itemSearch;
-            }
-        }
+        public ItemBrowser ItemSearch { get { return itemSearch ?? (itemSearch = new ItemBrowser()); } }
 
         private Character character;
         public Character Character
@@ -317,7 +305,7 @@ namespace Rawr.UI
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
             StatusMessaging.Ready = true;
-            //(new WelcomeWindow()).Show();
+            
             new WelcomeWindow();
         }
 

@@ -36,7 +36,7 @@
         </Grid.Background>
         <local:ItemTooltip x:Name="ItemTooltip"/>
         <!--IFSL-->
-        <Rectangle VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="-1,-1,-1,0">
+        <Rectangle VerticalAlignment="Stretch" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Margin="0">
             <Rectangle.Stroke>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFA3AEB9"/>
@@ -348,7 +348,7 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <Grid Margin="0,0,-2,-1" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2">
+        <Grid Margin="0" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2">
             <TextBlock x:Name="StatusText" Margin="8,4,120,4" Text="Status"/>
             <TextBlock x:Name="VersionText" Text="Rawr b3.0.3.20" Foreground="#99393939" Margin="0,4,8,4" HorizontalAlignment="Right" TextAlignment="Right"/>
         </Grid>

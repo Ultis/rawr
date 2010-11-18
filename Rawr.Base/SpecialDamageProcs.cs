@@ -259,6 +259,40 @@ namespace Rawr.DamageProcs
             return retVal;
         }
 
+        public float GetTotalNumProcs {
+            get {
+                float retVal = 0f;
+
+                retVal += TotalNumProcs[ItemDamageType.Physical];
+                retVal += TotalNumProcs[ItemDamageType.Arcane];
+                retVal += TotalNumProcs[ItemDamageType.Holy];
+                retVal += TotalNumProcs[ItemDamageType.Nature];
+                retVal += TotalNumProcs[ItemDamageType.Shadow];
+                retVal += TotalNumProcs[ItemDamageType.Fire];
+                retVal += TotalNumProcs[ItemDamageType.Frost];
+
+                return retVal;
+            }
+        }
+
+        public float GetDamagePerHit {
+            get {
+                float retVal = 0f;
+
+                retVal += TotalDamage[ItemDamageType.Physical];
+                retVal += TotalDamage[ItemDamageType.Arcane];
+                retVal += TotalDamage[ItemDamageType.Holy];
+                retVal += TotalDamage[ItemDamageType.Nature];
+                retVal += TotalDamage[ItemDamageType.Shadow];
+                retVal += TotalDamage[ItemDamageType.Fire];
+                retVal += TotalDamage[ItemDamageType.Frost];
+
+                retVal /= GetTotalNumProcs;
+
+                return retVal;
+            }
+        }
+
         private float CalculateTotalDamagePerSecond(SpecialEffect effect, float baseDamage, ItemDamageType type) {
             float totalDamage = 0f;
             float totalDamagePerSec = 0f;
@@ -332,7 +366,6 @@ namespace Rawr.DamageProcs
         // Equip: Your melee and ranged attacks have a chance to strike your enemy, dealing 1504 to 2256 arcane damage.
         // Hand-Mounted Pyro Rocket
         // Use: Deal 1654 to 2020 Fire damage to an enemy at long range. The rocket can only be fired once every 45 sec.
-
     }
 
     #region Combat Table
