@@ -705,6 +705,20 @@ namespace Rawr.Optimizer
         private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
 
+        void EnableCaches()
+        {
+            SpecialFunction.EnableCaches();
+        }
+
+        void DisableAndClearCaches()
+        {
+            // Clear caches of computationally expensive calculations.
+            SpecialFunction.ClearCaches();
+
+            // Disable caching of values.
+            SpecialFunction.DisableCaches();
+        }
+
         public void OptimizeCharacterAsync(Character character, int thoroughness, bool injectCharacter)
         {
             OptimizeCharacterAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, injectCharacter);
@@ -716,6 +730,7 @@ namespace Rawr.Optimizer
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
+
             ThreadPool.QueueUserWorkItem(delegate
             {
                 OptimizeCharacterThreadStart(character, calculationToOptimize, requirements, thoroughness, injectCharacter);
@@ -729,6 +744,10 @@ namespace Rawr.Optimizer
             float optimizedCharacterValue = 0.0f;
             float currentCharacterValue = 0.0f;
             bool injected = false;
+
+            // Enable caching of computationally intensive calculations.
+            EnableCaches();
+
             try
             {
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
@@ -742,6 +761,10 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
+
+            // Clear caches of computationally intensive calculations.
+            DisableAndClearCaches();
+
             asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, injected, error, cancellationPending));
         }
 
@@ -772,6 +795,10 @@ namespace Rawr.Optimizer
         {
             Exception error = null;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+
+            // Enable caching of computationally intensive calculations.
+            EnableCaches();
+
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -780,6 +807,10 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
+
+            // Clear caches of computationally intensive calculations.
+            DisableAndClearCaches();
+
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
@@ -805,6 +836,10 @@ namespace Rawr.Optimizer
             Exception error = null;
             ComparisonCalculationUpgrades comparisonUpgrade = null;
             float upgradeValue = 0f;
+
+            // Enable caching of computationally intensive calculations.
+            EnableCaches();
+
             try
             {
                 upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error, out comparisonUpgrade);
@@ -813,6 +848,10 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
+
+            // Clear caches of computationally intensive calculations.
+            DisableAndClearCaches();
+
             asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, comparisonUpgrade, error, cancellationPending));
         }
         #endregion
@@ -2808,7 +2847,6 @@ namespace Rawr.Optimizer
 
         private void PrivateOptimizeCharacterCompleted(object state)
         {
-            isBusy = false;
             cancellationPending = false;
             OnOptimizeCharacterCompleted(state as OptimizeCharacterCompletedEventArgs);
         }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Collections.Generic;
+
 /*
 	**************************************************************************
 	**
@@ -1357,6 +1360,109 @@ namespace Rawr
             return (float)Ibeta((double)a, (double)b, (double)x);
         }
 
+        struct BetaCache
+        {
+            public double AA;
+            public double BB;
+            public double XX;
+
+            public BetaCache(double AAVal, double BBVAl, double XXVal)
+            {
+                AA = AAVal;
+                BB = BBVAl;
+                XX = XXVal;
+            }
+
+            public override int GetHashCode()
+            {
+                return AA.GetHashCode() ^ BB.GetHashCode() ^ XX.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                BetaCache Other = (BetaCache)obj;
+
+                return (Other.AA == AA) && (Other.BB == BB) && (Other.XX == XX);
+            }
+        }
+
+        class BetaCacheComparer : IEqualityComparer<BetaCache>
+        {
+            public bool Equals(BetaCache x, BetaCache y)
+            {
+                return x.AA == y.AA && x.BB == y.BB && x.XX == y.XX;
+            }
+
+            public int GetHashCode(BetaCache obj)
+            {
+                return obj.AA.GetHashCode() ^ obj.BB.GetHashCode() ^ obj.XX.GetHashCode();
+            }
+        }
+
+        [ThreadStatic]
+        static Dictionary<BetaCache, double> g_BetaCache;
+        static List<Dictionary<BetaCache, double>> g_BetaCaches = new List<Dictionary<BetaCache, double>>();
+        static bool UseCache = false;
+
+        public static void EnableCaches()
+        {
+            UseCache = true;
+        }
+
+        public static void DisableCaches()
+        {
+            UseCache = false;
+        }
+
+        public static void ClearCaches()
+        {
+            lock (g_BetaCaches)
+            {
+                foreach (Dictionary<BetaCache, double> Cache in g_BetaCaches)
+                {
+                    Cache.Clear();
+                }
+            }
+        }
+
+        public static double Ibeta(double aa, double bb, double xx)
+        {
+            if (UseCache)
+            {
+                double Value;
+
+                aa = Math.Round(aa, 2);
+                bb = Math.Round(bb, 2);
+                xx = Math.Round(xx, 2);
+
+                if (g_BetaCache == null)
+                {
+                    g_BetaCache = new Dictionary<BetaCache, double>(new BetaCacheComparer());
+
+                    lock (g_BetaCaches)
+                    {
+                        g_BetaCaches.Add(g_BetaCache);
+                    }
+                }
+
+                BetaCache CacheValue = new BetaCache(aa, bb, xx);
+
+                if (!g_BetaCache.TryGetValue(CacheValue, out Value))
+                {
+                    Value = IbetaInternal(aa, bb, xx);
+
+                    g_BetaCache.Add(new BetaCache(aa, bb, xx), Value);
+                }
+
+                return Value;
+            }
+            else
+            {
+                return IbetaInternal(aa, bb, xx);
+            }
+
+        }
+
         /// <summary>
         /// Returns the incomplete beta function evaluated from zero to xx.
         /// </summary>
@@ -1364,7 +1470,7 @@ namespace Rawr
         /// <param name="bb"></param>
         /// <param name="xx"></param>
         /// <returns></returns>
-        public static double Ibeta(double aa, double bb, double xx)
+        public static double IbetaInternal(double aa, double bb, double xx)
         {
             double a, b, t, x, xc, w, y;
             bool flag;
@@ -1378,6 +1484,8 @@ namespace Rawr
                 if (xx == 1.0) return 1.0;
                 throw new ArithmeticException("ibeta: Domain error!");
             }
+
+            
 
             flag = false;
             if ((bb * xx) <= 1.0 && xx <= 0.95)
