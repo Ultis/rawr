@@ -22,5 +22,11 @@ namespace Rawr.DK
         public bool m_bAttackingFromBehind;
         public Rotation.Type m_Spec;
         public Presence m_Presence;
+
+        public void ResetCombatState()
+        {
+            m_uDiseaseCount = 0;
+            m_CurrentRP = 0;
+        }
     }
 }

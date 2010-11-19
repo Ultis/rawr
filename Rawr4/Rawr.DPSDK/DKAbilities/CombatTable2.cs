@@ -51,7 +51,7 @@ namespace Rawr.DK
         OtherShadow,
     }
 
-    public class CombatTable2
+    public class DKCombatTable
     {
         // TODO: Setup individual DPS values for each ability.
         #region Member Vars
@@ -60,7 +60,6 @@ namespace Rawr.DK
         public CharacterCalculationsDPSDK m_Calcs;
         public CalculationOptionsDPSDK m_Opts;
         public BossOptions m_BO; 
-        //public Rotation m_Rotation;
         public float physCrits { get { return m_CState.m_Stats.PhysicalCrit; } }
         public float spellCrits { get { return m_CState.m_Stats.SpellCrit; } }
         public float combinedSwingTime { get; set; }
@@ -71,16 +70,11 @@ namespace Rawr.DK
         public float parriedSpecial { get; set; }
         public float totalMHMiss { get; set; }
         public float spellResist { get; set; }
-        #endregion
-
-        // TODO: Find a way to balance 2h vs. DW.
-        public List<AbilityDK_Base> ml_Rot;
-
         public bool DW { get; set; }
-
+        #endregion
         #endregion
 
-        public CombatTable2(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts)
+        public DKCombatTable(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts)
         {
             this.m_CState = new CombatState();
             if (c != null)
@@ -90,10 +84,17 @@ namespace Rawr.DK
                 this.m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
                 m_CState.m_Spec = CalculationsDPSDK.GetSpec(c.DeathKnightTalents);
             }
-            this.m_CState.m_Stats = stats;
+            m_CState.m_Stats = stats;
+            // TODO: Put in check here for null.
             m_Calcs = calcs as CharacterCalculationsDPSDK;
             m_Opts = calcOpts as CalculationOptionsDPSDK;
-            m_CState.m_Presence = Presence.Blood;
+            m_CState.m_Presence = Presence.Frost;
+            if (calcOpts != null && m_Opts == null)
+            {
+//                throw new Exception("Opts not converted properly.");
+                m_Opts = new CalculationOptionsDPSDK();
+                m_Opts.presence = Presence.Blood;
+            }
             try
             {
                 m_CState.m_Presence = m_Opts.presence;
@@ -104,10 +105,14 @@ namespace Rawr.DK
             m_BO = new BossOptions();
             m_CState.m_NumberOfTargets = m_BO.Targets.Count;
             m_CState.m_bAttackingFromBehind = m_BO.InBack;
-            //m_Rotation = calcOpts.m_Rotation;
 
-            float MHExpertise = stats.Expertise;
-            float OHExpertise = stats.Expertise;
+            SetupExpertise(c);
+        }
+
+        private void SetupExpertise(Character c)
+        {
+            float MHExpertise = m_CState.m_Stats.Expertise;
+            float OHExpertise = m_CState.m_Stats.Expertise;
 
             if (c.Race == CharacterRace.Dwarf)
             {
@@ -235,7 +240,7 @@ namespace Rawr.DK
         /// Pass in the AblityCost[] to process the DeathRunes
         /// </summary>
         /// <param name="AbilityCost"></param>
-        public void SpendDeathRunes(int[] AbilityCost, int DRSpent)
+        public static void SpendDeathRunes(int[] AbilityCost, int DRSpent)
         {
             // Need to figure out how to factor in Death Runes
             // Since each death rune replaces any other rune on the rotation,
@@ -243,25 +248,31 @@ namespace Rawr.DK
             // Do not run this if there are no DeathRunes to spend.
             if (Math.Abs(AbilityCost[(int)DKCostTypes.Death]) > DRSpent)
             {
-                int iHighestCostAbilityIndex = 0;
-                int iPreviousCostValue = 0;
-                for (int t = 0; t < (int)DKCostTypes.Death; t++)
-                {
-                    // Is the cost higher than our previous checked value.
-                    if (AbilityCost[t] > iPreviousCostValue)
-                    {
-                        // If so, save off the index of that ability.
-                        iHighestCostAbilityIndex = t;
-                    }
-                    iPreviousCostValue = AbilityCost[t];
-                }
+                int iHighestCostAbilityIndex = GetHighestRuneCountIndex(AbilityCost);
                 // After going through the full list, spend a death rune and 
                 // then iterate through that list again. 
-                AbilityCost[iHighestCostAbilityIndex] -= 1;
+                AbilityCost[iHighestCostAbilityIndex]--;
                 // increment the death runes.
                 DRSpent++;
                 SpendDeathRunes(AbilityCost, DRSpent);
             }
+        }
+
+        public static int GetHighestRuneCountIndex(int[] AbilityCost)
+        {
+            int i = (int)DKCostTypes.None;
+            int iPreviousCostValue = 0;
+            for (int t = 0; t < (int)DKCostTypes.Death; t++)
+            {
+                // Is the cost higher than our previous checked value.
+                if (AbilityCost[t] > iPreviousCostValue)
+                {
+                    // If so, save off the index of that ability.
+                    i = t;
+                }
+                iPreviousCostValue = AbilityCost[t];
+            }
+            return i;
         }
 
         private void PostData(AbilityDK_Base ability)

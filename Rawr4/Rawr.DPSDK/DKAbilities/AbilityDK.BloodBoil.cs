@@ -13,7 +13,14 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Blood Boil";
-            this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+            if ((CS.m_Talents.CrimsonScourge == 2) 
+                && (CS.m_uDiseaseCount >= 2))
+            {
+                this.AbilityCost[(int)DKCostTypes.Blood] = 0;
+            }
+            else
+                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.uBaseDamage = 297;
             this.tDamageType = ItemDamageType.Shadow;

@@ -86,9 +86,8 @@ namespace Rawr.TankDK {
         }
         #endregion
 
-        #region Experimental Threat & DPS info
+        #region Threat & DPS info
         public float DPS { get; set; }
-        public int RSLimit { get; set; }
         public int TotalThreat { get; set; }
 
         #region Costs
@@ -98,6 +97,7 @@ namespace Rawr.TankDK {
         public int Frost { get; set; }
         public int Death { get; set; }
         public int RP { get; set; }
+        public int FreeRERunes { get; set; }
         #endregion
 
         #endregion
@@ -125,11 +125,11 @@ namespace Rawr.TankDK {
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            dict["Miss"] = Miss.ToString("F2") + "%";
-            dict["Dodge"] = Dodge.ToString("F2") + "%";
-            dict["Parry"] = Parry.ToString("F2") + "%";
-            dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
-            dict["Magic Damage Reduction"] = (MagicDamageReduction * 100.0f).ToString("F2") + "%"
+            dict["Miss"] = Miss.ToString("P2") + "%";
+            dict["Dodge"] = Dodge.ToString("P2") + "%";
+            dict["Parry"] = Parry.ToString("P2") + "%";
+            dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("P2") + "%";
+            dict["Magic Damage Reduction"] = (MagicDamageReduction * 100.0f).ToString("P2") + "%"
                 + string.Format("*Arcane: {0:0}\n", BasicStats.ArcaneResistance)
                 + string.Format("Fire: {0:0}\n", BasicStats.FireResistance)
                 + string.Format("Frost: {0:0}\n", BasicStats.FrostResistance)
@@ -151,8 +151,6 @@ namespace Rawr.TankDK {
             dict["Physical Crit"] = (BasicStats.PhysicalCrit * 100f).ToString("F2");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
-            dict["Armor Penetration"] = (BasicStats.ArmorPenetration * 100f).ToString("F2") + "%";
-            dict["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString("F0");
 
             dict["DPS"] = DPS.ToString("F0");
             dict["Rotation Time"] = String.Format("{0:0.00} sec", (RotationTime/1000));
@@ -160,17 +158,6 @@ namespace Rawr.TankDK {
 
             #region Rune Strike Limit
             dict["RS Limited"] = ""; 
-            /*
-            if (RSLimit == (int)RSState.Good)
-                dict["RS Limited"] = "none"; 
-            else
-            {
-                if (1 == (RSLimit & (int)RSState.TimeStarved))
-                    dict["RS Limited"] += "Swing Starved ";
-                if (1 == (RSLimit & (int)RSState.RPStarved))
-                    dict["RS Limited"] += "RP Starved ";
-            }
-             */ 
             #endregion
             #region Ability Costs
             dict["Blood"] = Blood.ToString("F0");
@@ -178,6 +165,7 @@ namespace Rawr.TankDK {
             dict["Unholy"] = Unholy.ToString("F0");
             dict["Death"] = Death.ToString("F0");
             dict["Runic Power"] = RP.ToString("F0");
+            dict["RE Runes"] = FreeRERunes.ToString("F0");
             #endregion
 
 
@@ -189,12 +177,12 @@ namespace Rawr.TankDK {
                 + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival
             dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
 
-            dict["Crit"] = Crit.ToString("F2");
+            dict["Crit"] = Crit.ToString("P2");
             dict["Resilience"] = Resilience.ToString("F0");
 
-            dict["Target Miss"] = (TargetMiss * 100.0f).ToString("F1") + "%";
-            dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("F1") + "%";
-            dict["Target Parry"] = (TargetParry * 100.0f).ToString("F1") + "%";
+            dict["Target Miss"] = (TargetMiss * 100.0f).ToString("P1") + "%";
+            dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("P1") + "%";
+            dict["Target Parry"] = (TargetParry * 100.0f).ToString("P1") + "%";
 
             return dict;
         }

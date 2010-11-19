@@ -21,6 +21,8 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
+            if (CS.m_Spec == Rotation.Type.Blood)
+                this.AbilityCost[(int)DKCostTypes.Death] = -2;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;

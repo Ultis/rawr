@@ -557,7 +557,15 @@ namespace Rawr.DK
                     break;
                 case DKCostTypes.DurationTime:
                     aRunes = a.uDuration;
+                    foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
+                    {
+                        aRunes += TriggerByA.uDuration;
+                    }
                     bRunes = b.uDuration;
+                    foreach (AbilityDK_Base TriggerByB in b.ml_TriggeredAbility)
+                    {
+                        bRunes += TriggerByB.uDuration;
+                    }
                     break;
                 case DKCostTypes.RunicPower:
                     aRunes = a.RunicPower;
@@ -577,13 +585,47 @@ namespace Rawr.DK
                     float bvalue = 0;
                     if (bThreat)
                     {
-                        avalue = a.GetTotalThreat() / aRunes;
-                        bvalue = b.GetTotalThreat() / bRunes;
+                        // Let's expand this to include triggered values as well.
+                        avalue = a.GetTotalThreat();
+                        if (a.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
+                            {
+                                avalue += TriggerByA.GetTotalThreat();
+                            }
+                        }
+                        avalue /= aRunes;
+                        bvalue = b.GetTotalThreat();
+                        if (b.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in b.ml_TriggeredAbility)
+                            {
+                                bvalue += TriggerByA.GetTotalThreat();
+                            }
+                        }
+                        bvalue /= bRunes;
                     }
                     else
                     {
-                        avalue = a.GetTotalDamage() / aRunes;
-                        bvalue = b.GetTotalDamage() / bRunes;
+                        // Let's expand this to include triggered values as well.
+                        avalue = a.TotalDamage;
+                        if (b.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
+                            {
+                                avalue += TriggerByA.TotalDamage;
+                            }
+                        }
+                        avalue /= aRunes;
+                        bvalue = b.TotalDamage;
+                        if (b.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in b.ml_TriggeredAbility)
+                            {
+                                bvalue += TriggerByA.TotalDamage;
+                            }
+                        }
+                        bvalue /= bRunes;
                     }
                     if (avalue != bvalue)
                     {
@@ -650,13 +692,47 @@ namespace Rawr.DK
                     float bvalue = 0;
                     if (bThreat)
                     {
-                        avalue = a.GetTPS() / aRunes;
-                        bvalue = b.GetTPS() / bRunes;
+                        // Let's expand this to include triggered values as well.
+                        avalue = a.GetTPS();
+                        if (a.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
+                            {
+                                avalue += TriggerByA.GetTPS();
+                            }
+                        }
+                        avalue /= aRunes;
+                        bvalue = b.GetTPS();
+                        if (b.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in b.ml_TriggeredAbility)
+                            {
+                                bvalue += TriggerByA.GetTPS();
+                            }
+                        }
+                        bvalue /= bRunes;
                     }
                     else
                     {
-                        avalue = a.GetDPS() / aRunes;
-                        bvalue = b.GetDPS() / bRunes;
+                        // Let's expand this to include triggered values as well.
+                        avalue = a.GetDPS();
+                        if (a.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
+                            {
+                                avalue += TriggerByA.GetDPS();
+                            }
+                        }
+                        avalue /= aRunes;
+                        bvalue = b.TotalDamage;
+                        if (b.ml_TriggeredAbility != null)
+                        {
+                            foreach (AbilityDK_Base TriggerByA in b.ml_TriggeredAbility)
+                            {
+                                bvalue += TriggerByA.GetDPS();
+                            }
+                        }
+                        bvalue /= bRunes;
                     }
                     if (avalue != bvalue)
                     {
@@ -693,6 +769,11 @@ namespace Rawr.DK
             return CompareXPerCost(a, b, DKCostTypes.Death, false);
         }
 
+        public static int CompareDPSByRunes(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareValuePSPerRune(a, b, DKCostTypes.Death, false);
+        }
+
         public static int CompareDamageByRP(AbilityDK_Base a, AbilityDK_Base b)
         {
             return CompareXPerCost(a, b, DKCostTypes.RunicPower, false);
@@ -715,7 +796,10 @@ namespace Rawr.DK
         {
             return CompareXPerCost(a, b, DKCostTypes.Death, true);
         }
-
+        public static int CompareTPSByRunes(AbilityDK_Base a, AbilityDK_Base b)
+        {
+            return CompareValuePSPerRune(a, b, DKCostTypes.Death, true);
+        }
         public static int CompareThreatByRP(AbilityDK_Base a, AbilityDK_Base b)
         {
             return CompareXPerCost(a, b, DKCostTypes.RunicPower, true);

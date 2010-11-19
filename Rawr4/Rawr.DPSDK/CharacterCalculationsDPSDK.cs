@@ -281,6 +281,16 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
+        #region Costs
+        public float RotationTime { get; set; }
+        public int Blood { get; set; }
+        public int Unholy { get; set; }
+        public int Frost { get; set; }
+        public int Death { get; set; }
+        public int RP { get; set; }
+        public float FreeRERunes { get; set; }
+        #endregion
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             float critRating = BasicStats.CritRating;
@@ -335,6 +345,14 @@ namespace Rawr.DPSDK
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
 */
             dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
+
+            dictValues.Add("Rotation Duration", RotationTime.ToString() + " secs");
+            dictValues.Add("Blood", Blood.ToString() );
+            dictValues.Add("Frost", Frost.ToString() );
+            dictValues.Add("Unholy", Unholy.ToString() );
+            dictValues.Add("Death", Death.ToString() );
+            dictValues.Add("Runic Power", Death.ToString() );
+            dictValues.Add("RE Runes", FreeRERunes.ToString("N2"));
 
             PopulateSingleUseValues(dictValues, "BB", DKability.BloodBoil);
             PopulateSingleUseValues(dictValues, "BP", DKability.BloodPlague);

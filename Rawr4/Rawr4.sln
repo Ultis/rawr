@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3E1EB01-42E9-45AB-BEE8-E253A85FFE33}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		Rawr4.vsmdi = Rawr4.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "Rawr.UI\Rawr.UI.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
 EndProject
@@ -58,9 +63,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest", "Rawr.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Warlock", "Rawr.Warlock\Rawr.Warlock.csproj", "{EE625724-2A4E-45F7-806D-584449250C11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShazTest", "ShazTest\ShazTest.csproj", "{59F75F73-36A7-4189-A283-02777366292F}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 25
+		SccNumberOfProjects = 26
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
 		SccLocalPath0 = .
@@ -136,6 +143,12 @@ Global
 		SccProjectUniqueName24 = Rawr.Warlock\\Rawr.Warlock.csproj
 		SccProjectName24 = Rawr.Warlock
 		SccLocalPath24 = Rawr.Warlock
+		SccProjectUniqueName25 = ShazTest\\ShazTest.csproj
+		SccProjectName25 = ShazTest
+		SccLocalPath25 = ShazTest
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Rawr4.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +251,10 @@ Global
 		{EE625724-2A4E-45F7-806D-584449250C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE625724-2A4E-45F7-806D-584449250C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE625724-2A4E-45F7-806D-584449250C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59F75F73-36A7-4189-A283-02777366292F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59F75F73-36A7-4189-A283-02777366292F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59F75F73-36A7-4189-A283-02777366292F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59F75F73-36A7-4189-A283-02777366292F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
