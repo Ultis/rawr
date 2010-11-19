@@ -172,7 +172,7 @@ namespace Rawr.ShadowPriest.Spells
         { get { return Math.Min(1f, crit); } }
 
         /// <summary>
-        /// Initialize Spell based on ISpellArgs (Current stats)
+        /// Initialize Spell based on ISpellArgs
         /// </summary>
         /// <param name="args"></param>
         public virtual void Initialize(ISpellArgs args)

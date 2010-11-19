@@ -125,6 +125,7 @@ namespace Rawr.ShadowPriest
 
             calculatedStats.DpsPoints = TotalDamage / FightDuration;
             calculatedStats.SurvivalPoints = stats.Stamina / FightDuration; //TODO: meaningful surv points
+            calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
 
             calculatedStats.CombatStats = stats.Clone();
             calculatedStats.CombatStats.Accumulate(procStats);

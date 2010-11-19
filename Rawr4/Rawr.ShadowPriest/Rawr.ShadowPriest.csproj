@@ -125,8 +125,8 @@
     </Compile>
     <Compile Include="4CalculationOptionsShadowPriest.cs" />
     <Compile Include="4CalculationsShadowPriest.cs" />
-    <None Include="4CharacterCalculationsShadowPriest.cs" />
-    <None Include="4ComparisonCalculationShadowPriest.cs" />
+    <Compile Include="4CharacterCalculationsShadowPriest.cs" />
+    <Compile Include="4ComparisonCalculationShadowPriest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spells\Holy\PowerWordShield.cs" />
     <Compile Include="Spells\Shadow\DevouringPlauge.cs" />
