@@ -731,9 +731,6 @@ namespace Rawr.Optimizer
             float currentCharacterValue = 0.0f;
             bool injected = false;
 
-            // clear Ibeta caches
-            SpecialFunction.ClearCaches();
-
             try
             {
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
@@ -779,9 +776,6 @@ namespace Rawr.Optimizer
             Exception error = null;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
 
-            // clear Ibeta caches
-            SpecialFunction.ClearCaches();
-
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -816,9 +810,6 @@ namespace Rawr.Optimizer
             Exception error = null;
             ComparisonCalculationUpgrades comparisonUpgrade = null;
             float upgradeValue = 0f;
-
-            // clear Ibeta caches
-            SpecialFunction.ClearCaches();
 
             try
             {

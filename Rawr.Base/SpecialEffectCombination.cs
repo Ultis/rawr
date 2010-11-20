@@ -143,9 +143,6 @@ namespace Rawr
                     default:
                         Ibeta = SpecialFunction.Ibeta;
                         break;
-                    case 3:
-                        Ibeta = SpecialFunction.IbetaRoundedCached;
-                        break;
                 }
             }
         }

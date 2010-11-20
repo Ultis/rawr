@@ -1318,7 +1318,7 @@ namespace Rawr //O O . .
 
         public ItemAvailability GetItemAvailability(Item item)
         {
-            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0.0.0", item.Id.ToString() + ".0.0.0.0");
+            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0.0.0", item.Id.ToString() + ".0.0.0.0.0");
         }
 
         public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
@@ -1330,12 +1330,13 @@ namespace Rawr //O O . .
         {
             string anyGem = id + ".*.*.*";
             List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
-            if (list.Contains(gemId + ".*"))
+            if (list.Contains(fullId))
             {
                 return ItemAvailability.Available;
             }
             else if (list.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
             {
+                // deprecated
                 return ItemAvailability.AvailableWithEnchantRestrictions;
             }
             if (list.Contains(id))
@@ -1344,6 +1345,7 @@ namespace Rawr //O O . .
             }
             else if (list.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
             {
+                // deprecated
                 return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
             }
             else
@@ -1394,19 +1396,34 @@ namespace Rawr //O O . .
             }
             else
             {
-                // enabled toggle
-                if (_availableItems.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
+                Predicate<string> p = (x =>
                 {
-                    _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                    string[] t = x.Split('.');
+                    // alllow disabling of legacy mode availability data
+                    if (t.Length == 5)
+                    {
+                        return x.StartsWith(gemId, StringComparison.Ordinal);
+                    }
+                    else if (t.Length == 6)
+                    {
+                        return x == item.GemmedId;
+                    }
+                    return false;
+                });
+                // enabled toggle
+                if (_availableItems.FindIndex(p) >= 0)
+                {
+                    _availableItems.RemoveAll(p);
                 }
                 else
                 {
-                    _availableItems.Add(gemId + ".*");
+                    _availableItems.Add(item.GemmedId);
                 }
             }
             OnAvailableItemsChanged();
         }
 
+        // deprecated
         public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
         {
             string id = item.Id.ToString();
