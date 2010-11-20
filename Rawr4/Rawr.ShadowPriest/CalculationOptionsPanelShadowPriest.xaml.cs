@@ -25,6 +25,7 @@ namespace Rawr.ShadowPriest
             tbModuleNotes.Text =
                 "Notes:\r\n" +
                "Shadow Priest Notes";
+            /*
             SpellBox spellBox = new SpellBox();
 
             
@@ -32,6 +33,7 @@ namespace Rawr.ShadowPriest
             {
                 lsSpellPriority.Items.Add(s.name);
             }
+            */
         }
         public UserControl PanelControl { get { return this; } }
 
@@ -86,6 +88,7 @@ namespace Rawr.ShadowPriest
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
+        /*
         private void bAdd_Click(object sender, RoutedEventArgs e)
         {
             if (cmbSpells.SelectedItem == null)
@@ -138,6 +141,7 @@ namespace Rawr.ShadowPriest
         {
             character.OnCalculationsInvalidated();
         }
+        */
 
     }
 }

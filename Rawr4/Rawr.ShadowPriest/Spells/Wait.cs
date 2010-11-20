@@ -24,12 +24,11 @@ namespace Rawr.ShadowPriest.Spells
 
             gcd = 0f;
             missChance = 0f;
-            spCoef = 0f;
         }
 
         public void Initialize(float duration)
         {
-            castTime = duration;
+            castTimeBase = duration;
             latencyCast = 0;
             latencyGcd = 0;
         }
@@ -42,7 +41,7 @@ namespace Rawr.ShadowPriest.Spells
 
         public override string ToString()
         {
-            return "W(" + Math.Round(castTime, 2) + ")";
+            return "W(" + Math.Round(castTimeBase, 2) + ")";
         }
     }
 }

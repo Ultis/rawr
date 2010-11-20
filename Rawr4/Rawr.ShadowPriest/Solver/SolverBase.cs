@@ -59,82 +59,22 @@ namespace Rawr.ShadowPriest
             Solver e;
             Rotation rot;
 
-            float damage;
-            Stats procStats;
             float FightDuration = bossOpts.BerserkTimer;
 
             // WITHOUT PROCS
             e = new Solver(stats, new Stats{}, talents, calcOpts);
             rot = e.getPriorityRotation();
-            // WITH PROCS
-            int nPasses = 2, k;
-            for (k = 0; k < nPasses; k++)
-            {
-                procStats = DoSpecialEffects(character, stats, rot, FightDuration);
-                //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
-                e.Update(stats, procStats, talents, calcOpts);
-                rot = e.getPriorityRotation();
-            }
 
-            /* Regen variables: (divide by 5 for regen per second)
-             * While casting: ManaRegInFSR
-             * During regen: ManaRegOutFSR */
-            #region Calculate Regen
-            float spiRegen = 5 * StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
-            float replenishRegen = 5 * stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
-            float judgementRegen = 5 * rot.GetBaseCastTime() / rot.Duration * stats.ManaRestoreFromBaseManaPPM / 60f * BaseStats.GetBaseStats(character).Mana;
-            float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + replenishRegen + judgementRegen;
-            float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen;
-            float ManaRegen = ManaRegInFSR;
-            #endregion
-
-            // TotalDamage, CastFraction, TimeUntilOOM
-            #region Calculate total damage in the fight
-            float TimeUntilOOM = 0;
-            float effectiveMPS = rot.MPS - ManaRegen / 5f;
-            if (effectiveMPS <= 0) TimeUntilOOM = FightDuration;
-            else TimeUntilOOM = (calculatedStats.BasicStats.Mana) / effectiveMPS;
-            if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
-
-            #region SpecialEffects from procs etc.
-            procStats = DoSpecialEffects(character, stats, rot, FightDuration);
-            //procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot);
-            //damage procs (Thunder Capacitor etc.) are effected by spellcrit and damage debuffs
-            damage = procStats.ArcaneDamage * (1 + stats.BonusArcaneDamageMultiplier) + procStats.NatureDamage * (1 + stats.BonusNatureDamageMultiplier) + procStats.FireDamage * (1 + stats.BonusFireDamageMultiplier) + procStats.ShadowDamage * (1 + stats.BonusShadowDamageMultiplier);
-            if (damage > 0)
-            {
-                damage *= (1 + stats.SpellCrit * .5f); // but only with the normal 50% dmg bonus
-                rot.DPS += damage;
-            }
-            #endregion
-
-            float TotalDamage = TimeUntilOOM * rot.DPS;
-            float TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSR;
-            float TimeToBurnAll = calculatedStats.BasicStats.Mana / effectiveMPS;
-            float CastFraction = 1f;
-            if (ManaRegOutFSR > 0 && FightDuration > TimeUntilOOM)
-            {
-                float timeLeft = FightDuration - TimeUntilOOM;
-                if (TimeToRegenFull + TimeToBurnAll == 0)
-                    CastFraction = 0;
-                else
-                    CastFraction = TimeToBurnAll / (TimeToRegenFull + TimeToBurnAll);
-                TotalDamage += timeLeft * rot.DPS * CastFraction;
-            }
-            #endregion
-
-            calculatedStats.DpsPoints = TotalDamage / FightDuration;
+            calculatedStats.DpsPoints = rot.DPS;
             calculatedStats.SurvivalPoints = stats.Stamina / FightDuration; //TODO: meaningful surv points
             calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
 
             calculatedStats.CombatStats = stats.Clone();
-            calculatedStats.CombatStats.Accumulate(procStats);
 
             calculatedStats.DevouringPlauge = rot.DP;
             calculatedStats.MindBlast = rot.MB;
             calculatedStats.MindFlay = rot.MF;
-            //calculatedStats.MindSear = rot.sear;
-            //calculatedStats.MindSpike = rot.spike;
+            calculatedStats.MindSpike = rot.Spike;
             //calculatedStats.PowerWordShield = rot.shield;
             calculatedStats.ShadowFiend = rot.Fiend;
             calculatedStats.ShadowWordDeath = rot.SWD;
@@ -144,9 +84,6 @@ namespace Rawr.ShadowPriest
             calculatedStats.Rotation = rot.ToString();
             calculatedStats.RotationDetails = rot.ToDetailedString();
 
-            //TODO: Add usful stats from rotation
-            //calculatedStats.ManaRegenInFSR = ManaRegInFSR;
-            //calculatedStats.ManaRegenOutFSR = ManaRegOutFSR;
         }
 
         protected static void CalculateTriggers(Rotation rot, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)

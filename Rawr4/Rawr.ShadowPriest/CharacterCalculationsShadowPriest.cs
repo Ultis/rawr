@@ -16,7 +16,6 @@ namespace Rawr.ShadowPriest
         public Spell DevouringPlauge;
         public Spell MindBlast;
         public Spell MindFlay;
-        public Spell MindSear;
         public Spell ShadowFiend;
         public Spell ShadowWordDeath;
         public Spell ShadowWordPain;
@@ -85,24 +84,57 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", BasicStats.HasteRating.ToString());
             dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
 
-            dictValues.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString());
-            dictValues.Add("SW Pain",  ShadowWordPain.AverageDamage.ToString());
-            dictValues.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString());
+            dictValues.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString() + "*" + Spellinfo(VampiricTouch));
+            dictValues.Add("SW Pain", ShadowWordPain.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordPain));
+            dictValues.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString() + "*" + Spellinfo(DevouringPlauge));
             dictValues.Add("Imp. Devouring Plague", "TBD");
-            dictValues.Add("SW Death", ShadowWordDeath.AverageDamage.ToString());
-            dictValues.Add("Mind Blast", MindBlast.AverageDamage.ToString());
-            dictValues.Add("Mind Flay",  MindFlay.AverageDamage.ToString());
-            dictValues.Add("Shadow Fiend",  ShadowFiend.AverageDamage.ToString());
-            dictValues.Add("Mind Spike", "TBD"); //MindSpike.AverageDamage.ToString());
-            dictValues.Add("Mind Sear", "TBD"); //  MindSear.AverageDamage.ToString());
+            dictValues.Add("SW Death", ShadowWordDeath.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordDeath));
+            dictValues.Add("Mind Blast", MindBlast.AverageDamage.ToString() + "*" + Spellinfo(MindBlast));
+            dictValues.Add("Mind Flay", MindFlay.AverageDamage.ToString() + "*" + Spellinfo(MindFlay));
+            dictValues.Add("Shadowfiend", ShadowFiend.AverageDamage.ToString() + "*" + Spellinfo(ShadowFiend));
+            dictValues.Add("Mind Spike", MindSpike.AverageDamage.ToString() + "*" + Spellinfo(MindSpike));
             dictValues.Add("PW Shield", "TBD"); // PowerWordShield.AverageDamage.ToString());
 
             dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
+            //dictValues.Add("DPS", DpsPoints.ToString());
 
             //"Simulation:Castlist",
             //"Simulation:DPS",
 
             return dictValues;
+        }
+
+        private string Spellinfo(Spell spell)
+        {
+            string details = "No Details";
+            string type = spell.GetType().BaseType.Name.ToString();
+            switch (type)
+            {
+                case "DoTSpell":
+                    DoTSpell dot = spell as DoTSpell;
+                    details =
+                        "Damage over time spell" +
+                        "\nNumber of ticks: " + dot.TickNumber.ToString() +
+                        "\nTick Damage:" + dot.TickDamage.ToString() + "|" + dot.TickCritDamage.ToString() +
+                        "\nCast Time:" + dot.CastTime.ToString() + "Secs" +
+                        "\nDebuff Duration:" + dot.DebuffDuration.ToString() +
+                        "\nMana Cost:" + dot.ManaCost.ToString() +
+                        "\nTime Between Ticks:" + dot.TickPeriod.ToString() + "Secs";
+                    break;
+                case "DD":
+                    DD dd = spell as DD;
+                    details =
+                        "Direct Damage Spell" +
+                        "\nMin Damage: " + dd.MinDamage.ToString() + "|" + dd.MinCritDamage.ToString() +
+                        "\nMax Damage:" + dd.MaxDamage.ToString() + "|" + dd.MaxCritDamage.ToString() +
+                        "\nCast Time:" + dd.CastTime.ToString() + "Secs" +
+                        "\nCool Down:" + dd.Cooldown.ToString() + "Secs" +
+                        "\nMana Cost:" + dd.ManaCost.ToString();
+
+
+                    break;
+            }
+            return details;
         }
         #endregion
 

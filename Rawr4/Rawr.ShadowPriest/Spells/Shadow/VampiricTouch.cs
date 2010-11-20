@@ -31,7 +31,13 @@ namespace Rawr.ShadowPriest.Spells
             shortName = "VT";
             name = "Vampiric Touch";
         }
-
+        public override float SpellPowerCoef
+        {
+            get
+            {
+                return 1.400000005960464f;
+            }
+        }
         public override void Initialize(Rawr.ShadowPriest.Spells.ISpellArgs args)
         {
             //for reference

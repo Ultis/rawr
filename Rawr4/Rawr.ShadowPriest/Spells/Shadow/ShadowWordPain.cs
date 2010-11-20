@@ -12,8 +12,9 @@ namespace Rawr.ShadowPriest.Spells
         /// Twin Disciplines, Mental Agility, Dark Evangelism, Darkness (to be handeled in Char stats), Improved Shadow Word:Pain, Shadowform, Pain And suffering, Shadowy Apparition, Harnessed Shadows
         /// Glyphs:
         /// Prime-Shadow Word: Pain
-        //TODO: Pain and suffering, Shadowy Apparition, Get base Values from Beta, Harnessed Shadows (mastery)
         /// </summary>
+        //TODO: Pain and suffering, Shadowy Apparition, Get base Values from Beta, Harnessed Shadows (mastery)
+
         public ShadowWordPain() : base()
         { 
         }

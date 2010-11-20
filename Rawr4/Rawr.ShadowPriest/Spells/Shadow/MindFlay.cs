@@ -2,7 +2,7 @@
 
 namespace Rawr.ShadowPriest.Spells
 {
-    public class MindFlay : DD
+    public class MindFlay : DoTSpell
     {
         /// <summary>
         /// Mind Flay is a dot that lasts 3 seconds.
@@ -17,14 +17,22 @@ namespace Rawr.ShadowPriest.Spells
             : base()
         {
         }
+        protected override void SetDotValues()
+        {
+            base.SetDotValues();
+
+            tickHasteCoEf = 0f;
+            debuffDurationBase = 3f;
+
+        }
+
 
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
 
-            castTime = 3f;
-            spCoef = 1.5f / 3.5f / 2f; //Check
-            manaCost = 0.22f * Constants.BaseMana;
+            baseScaling = 0.177000001072884f;
+            manaCost = 0.08f * Constants.BaseMana;
             shortName = "MF";
             name = "Mind Flay";
         }
@@ -37,10 +45,17 @@ namespace Rawr.ShadowPriest.Spells
             //totalCoef += .01f + args.Talents.Evangelism;
             //totalCoef += .01f + args.Talents.Shadowform;
 
-            if (args.Talents.GlyphofMindFlay)
+           //if (args.Talents.GlyphofMindFlay)
                 //periodicTick *= 1.1f; //Add 10% periodic damage
 
                 base.Initialize(args);
+        }
+        public override float SpellPowerCoef
+        {
+            get
+            {
+                return 1.098f;
+            }
         }
 
         #region hide

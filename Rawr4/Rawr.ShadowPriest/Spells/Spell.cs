@@ -8,7 +8,7 @@ namespace Rawr.ShadowPriest.Spells
     {
 
         protected float gcd = 1.5f;
-        protected float castTime = 0f;
+        protected float castTimeBase = 0f;
         protected float cooldown = 0f;
         public string shortName = "ShortSpellName";
         public string name = "SpellName";
@@ -19,8 +19,8 @@ namespace Rawr.ShadowPriest.Spells
         protected float critModifier = 1f;
         protected float missChance = .17f;
 
-        protected float spCoef = 0f;
         protected float spellPower = 0f;
+        protected float spellPowerModifer = 0f;
 
         protected float latencyGcd = .15f;
         protected float latencyCast = .075f;
@@ -47,14 +47,12 @@ namespace Rawr.ShadowPriest.Spells
 
         protected virtual void SetBaseValues()
         {
-            castTime = 0f;
+            castTimeBase = 0f;
             manaCost = 0f;
             gcd = 1.5f;
             critModifier = 1f;
             cooldown = 0f;
             missChance = .17f;
-            spCoef = 0f;
-            spellPower = 0f;
         }
 
         public void Update(ISpellArgs args)
@@ -71,13 +69,12 @@ namespace Rawr.ShadowPriest.Spells
         /// <param name="nS">spell1+spell2</param>
         protected static void add(Spell sp1, Spell sp2, Spell nS)
         {
-            nS.castTime = (sp1.castTime + sp2.castTime);
+            nS.castTimeBase = (sp1.castTimeBase + sp2.castTimeBase);
             nS.manaCost = (sp1.manaCost + sp2.manaCost);
             nS.gcd = (sp1.gcd + sp2.gcd);
             nS.critModifier = (sp1.critModifier + sp2.critModifier);
             nS.cooldown = (sp1.cooldown + sp2.cooldown);
             nS.missChance = (sp1.missChance + sp2.missChance);
-            nS.spCoef = (sp1.spCoef + sp2.spCoef);
             nS.spellPower = (sp1.spellPower + sp2.spellPower);
         }
 
@@ -89,13 +86,12 @@ namespace Rawr.ShadowPriest.Spells
         /// <param name="nS">Spell * Multiplication Ammount</param>
         protected static void multiply(Spell sp1, float c, Spell nS)
         {
-            nS.castTime = sp1.castTime * c;
+            nS.castTimeBase = sp1.castTimeBase * c;
             nS.manaCost = sp1.manaCost * c;
             nS.gcd = sp1.gcd * c;
             nS.critModifier = sp1.critModifier * c;
             nS.cooldown = sp1.cooldown * c;
             nS.missChance = sp1.missChance * c;
-            nS.spCoef = sp1.spCoef * c;
             nS.spellPower = sp1.spellPower * c;
         }
 
@@ -116,10 +112,10 @@ namespace Rawr.ShadowPriest.Spells
 
             get
             {
-                if (gcd == 0 && castTime == 0)
+                if (gcd == 0 && castTimeBase == 0)
                     return 0;
-                if (castTime > Gcd)
-                    return castTime + Latency;
+                if (castTimeBase > Gcd)
+                    return castTimeBase + Latency;
                 else
                     return Gcd + Latency;
             }
@@ -132,9 +128,9 @@ namespace Rawr.ShadowPriest.Spells
         {
             get
             {
-                if (gcd == 0 && castTime == 0)
+                if (gcd == 0 && castTimeBase == 0)
                     return 0;
-                if (castTime >= gcd)
+                if (castTimeBase >= gcd)
                     return latencyCast;
                 else
                     return latencyGcd;
@@ -163,7 +159,7 @@ namespace Rawr.ShadowPriest.Spells
         /// SpellPower-Coef
         /// </summary>
         public virtual float SpellPowerCoef
-        { get { return spCoef; } }
+        { get { return 0f; } }
 
         /// <summary>
         /// Crit chance with check that crit isnt bigger than one
@@ -179,10 +175,10 @@ namespace Rawr.ShadowPriest.Spells
         {
             float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
             gcd = (float)Math.Round(gcd / Speed, 4);
-            castTime = (float)Math.Round(castTime / Speed, 4);
+            castTimeBase = (float)Math.Round(castTimeBase / Speed, 4);
             latencyGcd = args.LatencyGCD;
             latencyCast = args.LatencyCast;
-            critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
+            critModifier *= (float)Math.Round(1.5f + args.Stats.BonusSpellCritMultiplier, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;
             crit += args.Stats.SpellCrit;

@@ -8,14 +8,23 @@ namespace Rawr.ShadowPriest.Spells
             : base()
         {
         }
+
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
 
+            baseScaling = 0.319000005722046f;
             manaCost = 0.12f * Constants.BaseMana;
             cooldown = 10f;
             shortName = "SW:D";
             name = "Shadow Word: Death";
+        }
+        public override float SpellPowerCoef
+        {
+            get
+            {
+                return 0.282000005245209f;
+            }
         }
         public override void Initialize(ISpellArgs args)
         {

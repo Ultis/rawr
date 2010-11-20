@@ -21,7 +21,6 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.SetBaseValues();
 
-            spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
             shortName = "PW:D";
             name = "Power Word: Shield";

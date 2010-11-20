@@ -7,7 +7,6 @@ namespace Rawr.ShadowPriest.Spells
         DevouringPlauge,
         MindBlast,
         MindFlay,
-        MindSear,
         ShadowFiend,
         ShadowWordDeath,
         ShadowWordPain,
@@ -26,11 +25,10 @@ namespace Rawr.ShadowPriest.Spells
 
         public SpellBox() //ISpellArgs args)
         {
-            spells = new Spell[10];
+            spells = new Spell[9];
             spells[(int)SpellIndex.DevouringPlauge] = new DevouringPlauge();
             spells[(int)SpellIndex.MindBlast] = new MindBlast();
             spells[(int)SpellIndex.MindFlay] = new MindFlay();
-            spells[(int)SpellIndex.MindSear] = new MindSear();
             spells[(int)SpellIndex.ShadowFiend] = new ShadowFiend();
             spells[(int)SpellIndex.ShadowWordDeath] = new ShadowWordDeath();
             spells[(int)SpellIndex.ShadowWordPain] = new ShadowWordPain();
@@ -45,7 +43,6 @@ namespace Rawr.ShadowPriest.Spells
             spells[(int)SpellIndex.DevouringPlauge] = new DevouringPlauge(args);
             spells[(int)SpellIndex.MindBlast] = new MindBlast(args);
             spells[(int)SpellIndex.MindFlay] = new MindFlay(args);
-            spells[(int)SpellIndex.MindSear] = new MindSear(args);
             spells[(int)SpellIndex.ShadowFiend] = new ShadowFiend(args);
             spells[(int)SpellIndex.ShadowWordDeath] = new ShadowWordDeath(args);
             spells[(int)SpellIndex.ShadowWordPain] = new ShadowWordPain(args);
@@ -80,6 +77,11 @@ namespace Rawr.ShadowPriest.Spells
         }
 
         #region Properties for typed access
+        public MindSpike Spike
+        {
+            get { return (MindSpike)spells[(int)SpellIndex.MindSpike]; }
+        }
+
         public DevouringPlauge DP
         {
             get { return (DevouringPlauge)spells[(int)SpellIndex.DevouringPlauge]; }
@@ -93,11 +95,6 @@ namespace Rawr.ShadowPriest.Spells
         public MindFlay MF
         {
             get { return (MindFlay)spells[(int)SpellIndex.MindFlay]; }
-        }
-
-        public MindSear Sear
-        {
-            get { return (MindSear)spells[(int)SpellIndex.MindSear]; }
         }
 
         public ShadowFiend Fiend

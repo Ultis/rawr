@@ -102,6 +102,7 @@ namespace Rawr.ShadowPriest
         public ShadowWordDeath SWD;
         public ShadowWordPain SWP;
         public VampiricTouch VT;
+        public MindSpike Spike;
 
         public PriestTalents Talents;
 
@@ -121,6 +122,7 @@ namespace Rawr.ShadowPriest
             SWD = spellBox.SWD;
             SWP = spellBox.SWP;
             VT = spellBox.VT;
+            Spike = spellBox.Spike;
 
             //useXXX = rotOpt.UseDpsFireTotem;
 
@@ -309,6 +311,7 @@ namespace Rawr.ShadowPriest
             return spells.FindAll(delegate(Spell spell) { return spellType.IsInstanceOfType(spell); });
         }
 
+        /*
         public float waitingPercentage()
         {
             List<Spell> waits = getSpells(typeof(Wait));
@@ -317,10 +320,11 @@ namespace Rawr.ShadowPriest
                 d += s.CastTime;
             return d / GetTime();
         }
+        */
 
         private void calculateCastSpells()
         {
-            casts = spells.FindAll(delegate(Spell s) { return !(s is Wait); });
+            casts = spells.FindAll(delegate(Spell s) { return true; }); //!(s is Wait); });
         }
 
         /// <summary>
@@ -388,7 +392,7 @@ namespace Rawr.ShadowPriest
             int i;
             for (i = 0; castNumber >= 0; i++)
             {
-                if (!(spells[i] is Wait))
+                //if (!(spells[i] is Wait))
                     castNumber--;
                 if (castNumber < 0)
                     break;

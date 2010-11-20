@@ -12,18 +12,29 @@ namespace Rawr.ShadowPriest.Spells
         /// It Benifits from:
         /// Talents:
         /// Twin Disciplines, Archangel, Improved Mind Blast, Shadowform, Paralysis
-        //TODO: Get base Values from Beta, Archangel, Paralysis (though is only a stun so may not be needed)
         /// </summary>
+        //TODO: Get base Values from Beta, Archangel, Paralysis (though is only a stun so may not be needed)
+        protected override void SetDDValues()
+        {
+            base.SetDDValues();
+
+            baseSpread = 0.0549999997019768f;
+        }
+
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
 
+            baseScaling = 1.11899995803833f;
+            castTimeBase = 1.5f;
             cooldown = 8f;
-            spCoef = 0f;
             manaCost = 0.17f * Constants.BaseMana;
             shortName = "MB";
             name = "Mind Blast";
         }
+
+        public override float SpellPowerCoef
+        { get { return 0.428999990224838f; } }
 
         public override void Initialize(ISpellArgs args)
         {

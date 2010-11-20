@@ -179,7 +179,6 @@ namespace Rawr.ShadowPriest
                     "Shadow:Mind Flay",
                     "Shadow:Shadowfiend",
                     "Shadow:Mind Spike",
-                    "Shadow:Mind Sear",
                     "Holy:PW Shield",
                      
                 };
@@ -231,8 +230,10 @@ namespace Rawr.ShadowPriest
             {
                 BonusIntellectMultiplier = (clothSpecialization ? 1.05f : 1f) - 1,
                 BonusShadowDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) *
-                                              (1 + 0.02f * character.PriestTalents.TwistedFaith) - 1,
-                BonusHolyDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) - 1
+                                              (1 + 0.02f * character.PriestTalents.TwistedFaith)  *
+                                              (1 + 0.15f * character.PriestTalents.Shadowform) - 1,
+                BonusHolyDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) - 1 
+                
             };
 
             statsTotal.Accumulate(statsTalents);
@@ -246,6 +247,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
             statsTotal.Mana = (float)Math.Round(statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect));
             statsTotal.Mana = (float)Math.Floor(statsTotal.Mana * (1f + statsTotal.BonusManaMultiplier));
+            statsTotal.SpellPower += statsTotal.Intellect; 
             // Armor
             statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
             statsTotal.BonusArmor += statsTotal.Agility * 2f;
@@ -253,12 +255,14 @@ namespace Rawr.ShadowPriest
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
-            // Crit rating
-            // Application order: Stats, Talents, Gear
             // All spells: Haste% + (0.01 * Darkness)
             statsTotal.SpellHaste += 0.02f * character.PriestTalents.Darkness;
             // All spells: Hit rating + 0.5f * Twisted Faith * Spirit
             statsTotal.HitRating += 0.5f * character.PriestTalents.TwistedFaith * statsTotal.Spirit;
+            //As Shadow model will assume they chose shadow!
+            statsTotal.BonusSpellPowerMultiplier += .25f;
+            statsTotal.BonusSpellCritMultiplier += .5f;
+
 
             return statsTotal;
         }

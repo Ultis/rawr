@@ -12,11 +12,19 @@ namespace Rawr.ShadowPriest.Spells
         /// </summary>
         protected float tickHasteCoEf = 0f;
         /// <summary>
+        /// How long the dot stays on the target
+        /// </summary>
+        protected float debuffDuration = 0f;
+        /// <summary>
         /// How long the dot stays on the target before haste
         /// </summary>
         protected float debuffDurationBase = 0f;
         /// <summary>
         /// Time Between ticks after haste
+        /// </summary>
+        protected float tickPeriod = 3f;
+        /// <summary>
+        /// Time Between ticks
         /// </summary>
         protected float tickPeriodBase = 3f;
         /// <summary>
@@ -42,19 +50,25 @@ namespace Rawr.ShadowPriest.Spells
         /// Time per DoT tick
         /// </summary>
         public float TickPeriod
-        { get { return tickPeriodBase; } } //-time lost from haste and reset if has extra dot!
+        { get { return tickPeriod; } }
 
         /// <summary>
         /// Number of ticks with 0 haste
         /// </summary>
         public float TickNumberBase
-        { get { return debuffDurationBase / TickPeriod; } }
+        { get { return debuffDurationBase / tickPeriodBase; } }
 
         /// <summary>
-        /// How long the dot stays on the target after haste
+        /// How long the dot stays on the target
         /// </summary>
         public float DebuffDuration
-        { get { return debuffDurationBase; } } //-time lost from haste and reset if has extra dot!
+        { 
+            get 
+            {
+                float addedTicks = (float)Math.Round(tickExtra, 0);
+                return (debuffDurationBase) + (addedTicks * tickPeriod) ;
+            }
+        }
 
         /// <summary>
         /// Damage per Tick
@@ -72,7 +86,7 @@ namespace Rawr.ShadowPriest.Spells
         /// Number of ticks after haste
         /// </summary>
         public float TickNumber
-        { get { return TickNumberBase + tickExtra; } }
+        { get { return TickNumberBase + (float)Math.Round(tickExtra,0); } }
 
         /// <summary>
         /// General rule for SP co-ef for dots is duration / 15
@@ -90,8 +104,15 @@ namespace Rawr.ShadowPriest.Spells
         {
             base.Initialize(args);
 
-            tickExtra = (float)Math.Round(StatConversion.GetHasteFromRating(args.Stats.HasteRating, CharacterClass.Priest) / tickHasteCoEf,0);
+            float hasteRating = StatConversion.GetHasteFromRating(args.Stats.HasteRating, CharacterClass.Priest);
+
+            if (tickHasteCoEf != 0f)
+                tickExtra = hasteRating / tickHasteCoEf;
+
+            float remander = (float)Math.IEEERemainder(tickExtra, 1);
             
+            tickPeriod = tickPeriodBase / (1 + hasteRating);
+            debuffDuration = debuffDurationBase / (1 + hasteRating);
         }
 
     }

@@ -274,6 +274,7 @@ namespace Rawr.ShadowPriest {
         //: base("Vampiric Touch", stats, character, SpellRankTable, 16, 1.5f, 0, 15f, 15f / 15f * 1.9f, 30, 0f, Color.FromArgb(255, 0, 0, 255))
             // Testing shows VT to be between 1.965 and 1.97
             : base("Vampiric Touch", stats, character, SpellRankTable, 16, 1.5f, 0, 15f, 1.9685f, 30, 0f, Color.FromArgb(255, 0, 0, 255), baseMana, ptr)
+        //            this(name, stats, character, SpellRankTable, manaCost, castTime, critCoef, dotDuration, damageCoef, range, cooldown, col, MagicSchool.Shadow, baseMana, ptr) { }
         {
             Calculate(stats, character);
         }
@@ -956,6 +957,8 @@ namespace Rawr.ShadowPriest {
         public override float DpS { get { return AvgDamage * Swings / DebuffDuration; } }
         public Shadowfiend(Stats stats, Character character, float baseMana, bool ptr)
             : base("Shadowfiend", stats, character, SpellRankTable, 0, 0f, 2.0f, 10f, 1.5f / 3.5f * 0.9f, 30, (5f - character.PriestTalents.VeiledShadows * 1f) * 60f, Color.FromArgb(255, 0, 0, 0), baseMana, ptr)
+        //        public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, float baseMana, bool ptr) {
+
         {   // Coefficient is Spell Power * 15 seconds over 3.5 seconds, with a 10% penalty.
             Calculate(stats, character);
         }
