@@ -139,8 +139,12 @@ namespace Rawr
                     case 1:
                         Ibeta = SpecialFunction.IbetaInterpolated;
                         break;
+                    case 2:
                     default:
                         Ibeta = SpecialFunction.Ibeta;
+                        break;
+                    case 3:
+                        Ibeta = SpecialFunction.IbetaRoundedCached;
                         break;
                 }
             }

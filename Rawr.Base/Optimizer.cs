@@ -705,20 +705,6 @@ namespace Rawr.Optimizer
         private SendOrPostCallback evaluateUpgradeProgressChangedDelegate;
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
 
-        void EnableCaches()
-        {
-            SpecialFunction.EnableCaches();
-        }
-
-        void DisableAndClearCaches()
-        {
-            // Clear caches of computationally expensive calculations.
-            SpecialFunction.ClearCaches();
-
-            // Disable caching of values.
-            SpecialFunction.DisableCaches();
-        }
-
         public void OptimizeCharacterAsync(Character character, int thoroughness, bool injectCharacter)
         {
             OptimizeCharacterAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, injectCharacter);
@@ -745,8 +731,8 @@ namespace Rawr.Optimizer
             float currentCharacterValue = 0.0f;
             bool injected = false;
 
-            // Enable caching of computationally intensive calculations.
-            EnableCaches();
+            // clear Ibeta caches
+            SpecialFunction.ClearCaches();
 
             try
             {
@@ -761,9 +747,6 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
-
-            // Clear caches of computationally intensive calculations.
-            DisableAndClearCaches();
 
             asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new OptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, character, currentCharacterValue, injected, error, cancellationPending));
         }
@@ -796,8 +779,8 @@ namespace Rawr.Optimizer
             Exception error = null;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
 
-            // Enable caching of computationally intensive calculations.
-            EnableCaches();
+            // clear Ibeta caches
+            SpecialFunction.ClearCaches();
 
             try
             {
@@ -807,9 +790,6 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
-
-            // Clear caches of computationally intensive calculations.
-            DisableAndClearCaches();
 
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
@@ -837,8 +817,8 @@ namespace Rawr.Optimizer
             ComparisonCalculationUpgrades comparisonUpgrade = null;
             float upgradeValue = 0f;
 
-            // Enable caching of computationally intensive calculations.
-            EnableCaches();
+            // clear Ibeta caches
+            SpecialFunction.ClearCaches();
 
             try
             {
@@ -848,9 +828,6 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
-
-            // Clear caches of computationally intensive calculations.
-            DisableAndClearCaches();
 
             asyncOperation.PostOperationCompleted(evaluateUpgradeCompletedDelegate, new EvaluateUpgradeCompletedEventArgs(upgradeValue, comparisonUpgrade, error, cancellationPending));
         }

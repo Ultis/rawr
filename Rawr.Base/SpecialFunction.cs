@@ -1402,17 +1402,6 @@ namespace Rawr
         [ThreadStatic]
         static Dictionary<BetaCache, double> g_BetaCache;
         static List<Dictionary<BetaCache, double>> g_BetaCaches = new List<Dictionary<BetaCache, double>>();
-        static bool UseCache = false;
-
-        public static void EnableCaches()
-        {
-            UseCache = true;
-        }
-
-        public static void DisableCaches()
-        {
-            UseCache = false;
-        }
 
         public static void ClearCaches()
         {
@@ -1425,42 +1414,34 @@ namespace Rawr
             }
         }
 
-        public static double Ibeta(double aa, double bb, double xx)
+        public static float IbetaRoundedCached(int aa, float bb, float xx)
         {
-            if (UseCache)
+            double value;
+
+            double a = aa;
+            double b = Math.Round(bb, 2);
+            double x = Math.Round(xx, 2);
+
+            if (g_BetaCache == null)
             {
-                double Value;
+                g_BetaCache = new Dictionary<BetaCache, double>(new BetaCacheComparer());
 
-                aa = Math.Round(aa, 2);
-                bb = Math.Round(bb, 2);
-                xx = Math.Round(xx, 2);
-
-                if (g_BetaCache == null)
+                lock (g_BetaCaches)
                 {
-                    g_BetaCache = new Dictionary<BetaCache, double>(new BetaCacheComparer());
-
-                    lock (g_BetaCaches)
-                    {
-                        g_BetaCaches.Add(g_BetaCache);
-                    }
+                    g_BetaCaches.Add(g_BetaCache);
                 }
-
-                BetaCache CacheValue = new BetaCache(aa, bb, xx);
-
-                if (!g_BetaCache.TryGetValue(CacheValue, out Value))
-                {
-                    Value = IbetaInternal(aa, bb, xx);
-
-                    g_BetaCache.Add(new BetaCache(aa, bb, xx), Value);
-                }
-
-                return Value;
-            }
-            else
-            {
-                return IbetaInternal(aa, bb, xx);
             }
 
+            BetaCache cacheValue = new BetaCache(a, b, x);
+
+            if (!g_BetaCache.TryGetValue(cacheValue, out value))
+            {
+                value = Ibeta(a, b, x);
+
+                g_BetaCache.Add(cacheValue, value);
+            }
+
+            return (float)value;
         }
 
         /// <summary>
@@ -1470,11 +1451,12 @@ namespace Rawr
         /// <param name="bb"></param>
         /// <param name="xx"></param>
         /// <returns></returns>
-        public static double IbetaInternal(double aa, double bb, double xx)
+        public static double Ibeta(double aa, double bb, double xx)
         {
             double a, b, t, x, xc, w, y;
             bool flag;
 
+            if (bb == 0.0) return 0.0; // can happen when using rounded caching
             if (aa <= 0.0 || bb <= 0.0) throw new
                                             ArithmeticException("ibeta: Domain error!");
 

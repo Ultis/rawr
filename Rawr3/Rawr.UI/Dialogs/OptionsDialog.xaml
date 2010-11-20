@@ -62,6 +62,7 @@
 					<ComboBoxItem Content="Interpolation - Linear"/>
 					<ComboBoxItem Content="Interpolation - Cubic"/>
 					<ComboBoxItem Content="High Precision"/>
+                    <ComboBoxItem Content="Rounded Caching"/>
 				</ComboBox>
 			</StackPanel>
 		</Grid>

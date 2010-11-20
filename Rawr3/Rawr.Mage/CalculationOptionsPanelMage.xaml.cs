@@ -167,7 +167,7 @@ namespace Rawr.Mage
             System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
             clock.Start();
 #endif
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 500; i++)
             {
                 calculations.GetCharacterCalculations(character);
             }

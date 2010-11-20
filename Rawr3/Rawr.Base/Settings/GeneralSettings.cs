@@ -23,8 +23,8 @@ namespace Rawr.Properties
 			_default.DisplayBuffSource = false;
 			_default.DisplayGemNames = false;
             //_default.DisplayExtraItemInfo = false;
-			_default.ProcEffectMode = 0;
-			_default.CombinationEffectMode = 0;
+			_default.ProcEffectMode = 3;
+			_default.CombinationEffectMode = 1;
             _default.ItemNameWidthSetting = 0;
 
             _default.WelcomeScreenSeen = false;
