@@ -56,8 +56,8 @@ namespace Rawr.HealPriest
         
         public virtual void UpdateSpell() {
             bDirty = false;
-            ManaCost = BaseManaCost * priestInformation.baseMana;
-            float hc = 1f / (1f + priestInformation.haste);
+            ManaCost = BaseManaCost * priestInformation.BaseMana;
+            float hc = 1f / (1f + priestInformation.Haste);
             IsInstant = BaseCastTime == 0f;
             if (IsInstant)
                 CastTime = 0f;
