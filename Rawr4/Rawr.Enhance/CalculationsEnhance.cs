@@ -23,14 +23,14 @@ namespace Rawr.Enhance
                 {
                     Gemming gemming = new Gemming();
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                 //   _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, fleet, false));
-                 //   _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, fleet, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, fleet, true)); 
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, fleet, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
+                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, fleet, false));
+                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, fleet, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false)); 
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
                 }
                 return _defaultGemmingTemplates;
             }
@@ -604,7 +604,7 @@ namespace Rawr.Enhance
                             character.ActiveBuffsContains("Rampage");
             float critbuffs = (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f);
             float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + dualWieldSpecialization;
-            float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - meleeHitBonus) + cs.AverageDodge;
+            float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 85] - meleeHitBonus) + cs.AverageDodge;
             float petMeleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
             #endregion
 
@@ -643,7 +643,7 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
             {
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
-                float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 80] - spellHitBonus);
+                float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 85] - spellHitBonus);
                 float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
                 float petCritRate = critbuffs * (1 + stats.BonusCritMultiplier);
                 calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 

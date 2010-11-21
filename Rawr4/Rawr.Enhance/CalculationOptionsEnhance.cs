@@ -14,8 +14,7 @@ namespace Rawr.Enhance
         // Boss parameters
         private BossHandler _boss = new BossHandler();
         private string _bossName = "Custom";
-        //private int _targetLevel = 88;  //Index was outside the bounds of the array.
-        private int _targetLevel = 83;
+        private int _targetLevel = 88;
         private float _targetArmor = StatConversion.NPC_ARMOR[88 - 85];
         private bool _inBack = true;
         private int _inBackPerc = 100;
@@ -71,7 +70,6 @@ namespace Rawr.Enhance
         public bool FireElemental { get { return PriorityInUse(EnhanceAbility.FireElemental); } }
         public bool BaseStatOption { get { return _baseStatOption; } set { _baseStatOption = value; OnPropertyChanged("BaseStatOption"); } }
         public bool UseMana { get { return _useMana; } set { _useMana = value; OnPropertyChanged("UseMana"); } }
-        //public bool UseMana { get { return _useMana; } set { _useMana = false; OnPropertyChanged("UseMana"); } }
         public bool ShowExportMessageBox { get { return _showExportMessageBox; } set { _showExportMessageBox = value; OnPropertyChanged("ShowExportMessageBox"); } }
         public bool MultipleTargets { get { return _multipleTargets; } set { _multipleTargets = value; OnPropertyChanged("MultipleTargets"); } }
         public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
