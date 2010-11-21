@@ -541,106 +541,6 @@ namespace Rawr.UI
         }
 
         #region Menus
-#if SILVERLIGHT
-        /*Obsoleted by implementing MenuButton control
-        private void FileMenu_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (FileMenu != null)
-            {
-                int newIndex = FileMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    FileMenu.IsDropDownOpen = false;
-                    FileMenu.SelectedIndex = 0;
-                    if (newIndex == 1) NewCharacter(null, null);
-                    else if (newIndex == 2) OpenCharacter(null, null);
-                    else if (newIndex == 3) SaveCharacter(null, null);
-                    else if (newIndex == 4) OpenSavedUpgradeList(null, null);
-                    else if (newIndex == 6) LoadFromArmory(null, null);
-                    //else if (newIndex == 7) LoadFromCharacterProfiler(null, null);
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-        }
-
-        private void ToolsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ToolsMenu != null)
-            {
-                int newIndex = ToolsMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    ToolsMenu.IsDropDownOpen = false;
-                    ToolsMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowItemEditor(null, null);
-                    else if (newIndex == 2) ShowGemmingTemplates(null, null);
-                    else if (newIndex == 3) ShowItemRefinement(null, null);
-                    else if (newIndex == 4) ShowItemFilters(null, null);
-                    else if (newIndex == 6) ResetItemCost(null, null);
-                    else if (newIndex == 7) LoadItemCost(null, null);
-                    else if (newIndex == 8) SaveItemCost(null, null);
-                    else if (newIndex == 9) LoadEmblemOfFrostCost(null, null);
-                    else if (newIndex == 11) ShowOptimizer(null, null);
-                    else if (newIndex == 12) ShowBatchTools(null, null);
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-        }
-
-        private void ImportMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ImportMenu != null)
-            {
-                int newIndex = ImportMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    ImportMenu.IsDropDownOpen = false;
-                    ImportMenu.SelectedIndex = 0;
-                    new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-        }
-
-        private void OptionsMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (OptionsMenu != null)
-            {
-                int newIndex = OptionsMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    OptionsMenu.IsDropDownOpen = false;
-                    OptionsMenu.SelectedIndex = 0;
-                    if (newIndex == 1) ShowOptions(null, null);
-                    else if (newIndex == 3) ResetItemCache(null, null);
-                    else if (newIndex == 4) ResetAllCaches(null, null);
-                    else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-
-        }
-
-        private void HelpMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (HelpMenu != null)
-            {
-                int newIndex = HelpMenu.SelectedIndex;
-                if (newIndex > 0)
-                {
-                    HelpMenu.IsDropDownOpen = false;
-                    HelpMenu.SelectedIndex = 0;
-                    //if (newIndex == 1) ShowHelp("http://rawr.codeplex.com/documentation");
-                    //else if (newIndex == 2) ShowHelp("http://www.youtube.com/watch?v=OjRM5SUoOoQ");
-                    //else if (newIndex == 3) ShowHelp("http://rawr.codeplex.com/wikipage?title=Gemmings");
-                    //else if (newIndex == 4) ShowHelp("http://rawr.codeplex.com/wikipage?title=GearOptimization");
-                    //else if (newIndex == 5) ShowHelp("http://rawr.codeplex.com/wikipage?title=ItemFiltering");
-                    //else if (newIndex == 7) ShowHelp("http://rawr.codeplex.com/");
-                    //else if (newIndex == 8) ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
-                    //else new ErrorWindow() { Message = "Not yet implemented." }.Show();
-                }
-            }
-        }
-        */
-#endif
 
         #region File Menu
         private void NewCharacter(object sender, RoutedEventArgs args)
@@ -912,6 +812,11 @@ namespace Rawr.UI
         private void ShowItemFilteringHelp(object sender, RoutedEventArgs args)
         {
             ShowHelp("http://rawr.codeplex.com/wikipage?title=ItemFiltering");
+        }
+
+        private void ShowModelStatusHelp(object sender, RoutedEventArgs args)
+        {
+            ShowHelp("http://rawr.codeplex.com/wikipage?title=Models");
         }
 
         private void ShowRawrWebsite(object sender, RoutedEventArgs args)

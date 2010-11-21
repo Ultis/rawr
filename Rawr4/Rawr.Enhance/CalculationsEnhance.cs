@@ -6,7 +6,7 @@ using System.Reflection;
 namespace Rawr.Enhance
 {
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
-	public class CalculationsEnhance : CalculationsBase
+    public class CalculationsEnhance : CalculationsBase
     {
         private string VERSION = "4.0.0.0";
         #region Gemming Template
@@ -39,36 +39,36 @@ namespace Rawr.Enhance
 
         #region Display labels
         private string[] _characterDisplayCalculationLabels = null;
-		public override string[] CharacterDisplayCalculationLabels
-		{
-			get
-			{
-				if (_characterDisplayCalculationLabels == null)
-					_characterDisplayCalculationLabels = new string[] {
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (_characterDisplayCalculationLabels == null)
+                    _characterDisplayCalculationLabels = new string[] {
                     "Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
                     "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
                     "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
-					"Basic Stats:Health",
+                    "Basic Stats:Health",
                     "Basic Stats:Mana",
                     "Basic Stats:Strength",
                     "Basic Stats:Agility",
                     "Basic Stats:Intellect",
                     //"Basic Stats:Spirit",
-					"Basic Stats:Attack Power",
-					"Basic Stats:Spell Power",
+                    "Basic Stats:Attack Power",
+                    "Basic Stats:Spell Power",
                     "Basic Stats:Mastery",
                     "Basic Stats:Haste Rating",
                     "Basic Stats:Total Expertise",
-   				    "Basic Stats:Hit Rating",
-					"Basic Stats:White Hit",
+                    "Basic Stats:Hit Rating",
+                    "Basic Stats:White Hit",
                     "Basic Stats:Yellow Hit",
                     "Basic Stats:Spell Hit",
                     "Basic Stats:Melee Crit",
                     "Basic Stats:Spell Crit",
-					"Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
-					"Complex Stats:Avg MH Speed",
+                    "Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
+                    "Complex Stats:Avg MH Speed",
                     "Complex Stats:Avg OH Speed",
-					"Complex Stats:Armor Mitigation",
+                    "Complex Stats:Armor Mitigation",
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
@@ -96,44 +96,44 @@ namespace Rawr.Enhance
                     "Attacks:Spirit Wolf",
                     "Attacks:Total DPS",
                     "Module Version:Enhance Version"
-				};
-				return _characterDisplayCalculationLabels;
-			}
-		}
+                };
+                return _characterDisplayCalculationLabels;
+            }
+        }
 
-		private string[] _optimizableCalculationLabels = null;
-		public override string[] OptimizableCalculationLabels
-		{
-			get
-			{
-				if (_optimizableCalculationLabels == null)
-					_optimizableCalculationLabels = new string[] {
-					"Hit Rating",
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+                    "Hit Rating",
                     "Dodged Attacks",
                     "Parried Attacks",
                     "Avoided Attacks",
                     "Health"
-					};
-				return _optimizableCalculationLabels;
-			}
-		}
+                    };
+                return _optimizableCalculationLabels;
+            }
+        }
 
-		private string[] _customChartNames = null;
-		public override string[] CustomChartNames
-		{
-			get
-			{
-				if (_customChartNames == null)
-					_customChartNames = new string[] {
-					"Combat Table (White)",
-					"Combat Table (Yellow)",
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] {
+                    "Combat Table (White)",
+                    "Combat Table (Yellow)",
                     "Combat Table (Spell)",
-					"Relative Gem Values",
+                    "Relative Gem Values",
                     "MH Weapon Speeds",
                     "OH Weapon Speeds",
-					};
-				return _customChartNames;
-			}
+                    };
+                return _customChartNames;
+            }
         }
         #endregion 
 
@@ -165,54 +165,55 @@ namespace Rawr.Enhance
 #if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
-		{
-			get
-			{
-				if (_subPointNameColors == null)
-				{
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
                     _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
                     _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255, 160, 0, 224));
                     _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
                 }
-				return _subPointNameColors;
-			}
-		}
+                return _subPointNameColors;
+            }
+        }
 #else
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-		{
-			get
-			{
-				if (_subPointNameColors == null)
-				{
-					    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					    _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-					    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                        _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                        _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
+                        _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
                 }
-				return _subPointNameColors;
-			}
-		}
+                return _subPointNameColors;
+            }
+        }
 #endif
         public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
-		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
-		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
 
-		public override ICalculationOptionBase DeserializeDataObject(string xml)
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsEnhance));
-			System.IO.StringReader reader = new System.IO.StringReader(xml);
-			CalculationOptionsEnhance calcOpts = serializer.Deserialize(reader) as CalculationOptionsEnhance;
-			return calcOpts;
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsEnhance));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsEnhance calcOpts = serializer.Deserialize(reader) as CalculationOptionsEnhance;
+            return calcOpts;
         }
         #endregion
 
         #region Main Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
+            try {
             #region Applied Stats
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
             calculatedStats.BasicStats = stats;
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
@@ -713,36 +714,42 @@ namespace Rawr.Enhance
 #else
             calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();
 #endif
-            return calculatedStats;
             #endregion
+            } catch (Exception ex) {
+                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Enhance Calculations",
+                    ex.Message, ex.InnerException,
+                    "GetCalculationsEnhance(...)", "No Additional Info", ex.StackTrace);
+                eb.Show();
+            }
+            return calculatedStats;
         }
         #endregion
 
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
-		{
+        {
             Stats statsBase = BaseStats.GetBaseStats(character); 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             float agiBase = (float)Math.Floor((float)(statsBase.Agility));
             float agiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Agility));
-			float strBase = (float)Math.Floor((float)(statsBase.Strength));
+            float strBase = (float)Math.Floor((float)(statsBase.Strength));
             float strBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Strength));
             float intBase = (float)Math.Floor((float)(statsBase.Intellect));
             float intBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Intellect));
             float staBase = (float)Math.Floor((float)(statsBase.Stamina));  
-			float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
+            float staBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Stamina));
             float spiBase = (float)Math.Floor((float)(statsBase.Spirit));  
-			float spiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Spirit));
-						
-			Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
+            float spiBonus = (float)Math.Floor((float)(statsGearEnchantsBuffs.Spirit));
+                        
+            Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
-			statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-			statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
+            statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsBase.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
             statsTotal.BonusCritMultiplier = ((1 + statsBase.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
@@ -775,7 +782,7 @@ namespace Rawr.Enhance
             statsTotal.SpellPower = statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier);
 
             return statsTotal;
-		}
+        }
         #endregion
 
         #region Buff Functions
@@ -884,57 +891,57 @@ namespace Rawr.Enhance
                 if (_relevantItemTypes == null)
                 {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
-						ItemType.None,
+                    {
+                        ItemType.None,
                         //ItemType.Cloth,
-						//ItemType.Leather,
+                        //ItemType.Leather,
                         ItemType.Mail,
-						ItemType.Totem,
-					//	ItemType.Staff,
-					//	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
+                        ItemType.Totem,
+                    //	ItemType.Staff,
+                    //	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
                     //  ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
                         ItemType.Dagger,
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.FistWeapon
-					});
+                    });
                 }
                 return _relevantItemTypes;
             }
         }
 
         public override bool IsItemRelevant(Item item)
-		{
-			if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem)) 
-				return false;
+        {
+            if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem)) 
+                return false;
             if (item.Slot == ItemSlot.OffHand && item.Type == ItemType.None)
                 return false;
-			return base.IsItemRelevant(item);
-		}
+            return base.IsItemRelevant(item);
+        }
 
-		public override Stats GetRelevantStats(Stats stats)
-		{
-			Stats s = new Stats()
-				{
-					Agility = stats.Agility,
-					Strength = stats.Strength,
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats s = new Stats()
+                {
+                    Agility = stats.Agility,
+                    Strength = stats.Strength,
                     Intellect = stats.Intellect,
-					Spirit = stats.Spirit,
+                    Spirit = stats.Spirit,
                     AttackPower = stats.AttackPower,
-					CritRating = stats.CritRating,
-					HitRating = stats.HitRating,
-					Stamina = stats.Stamina,
-					HasteRating = stats.HasteRating,
+                    CritRating = stats.CritRating,
+                    HitRating = stats.HitRating,
+                    Stamina = stats.Stamina,
+                    HasteRating = stats.HasteRating,
                     Expertise = stats.Expertise,
-					ExpertiseRating = stats.ExpertiseRating,
+                    ExpertiseRating = stats.ExpertiseRating,
                     MasteryRating = stats.MasteryRating,
                     TargetArmorReduction = stats.TargetArmorReduction,
-					WeaponDamage = stats.WeaponDamage,
-					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-					BonusCritMultiplier = stats.BonusCritMultiplier,
-					BonusDamageMultiplier = stats.BonusDamageMultiplier,
-					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                    WeaponDamage = stats.WeaponDamage,
+                    BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                    BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                    BonusCritMultiplier = stats.BonusCritMultiplier,
+                    BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                    BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
@@ -947,7 +954,7 @@ namespace Rawr.Enhance
                     BonusManaMultiplier = stats.BonusManaMultiplier,
                     Health = stats.Health,
                     Mana = stats.Mana,
-					SpellPower = stats.SpellPower,
+                    SpellPower = stats.SpellPower,
                     LightningSpellPower = stats.LightningSpellPower,
                     BonusSSDamage = stats.BonusSSDamage,
                     BonusWFAttackPower = stats.BonusWFAttackPower,
@@ -967,7 +974,7 @@ namespace Rawr.Enhance
                     ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                     DeathbringerProc = stats.DeathbringerProc,
                     MoteOfAnger = stats.MoteOfAnger 
-				};
+                };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (HasRelevantTrigger(effect.Trigger))
@@ -983,7 +990,7 @@ namespace Rawr.Enhance
                 }
             }
             return s;
-		}
+        }
 
         public bool HasRelevantTrigger(Trigger trigger)
         {
@@ -1020,8 +1027,8 @@ namespace Rawr.Enhance
                 return false;
         }
 
-		public override bool HasRelevantStats(Stats stats)
-		{
+        public override bool HasRelevantStats(Stats stats)
+        {
             if (relevantStats(stats))
                 return true;
             if (irrelevantStats(stats)) 
@@ -1137,16 +1144,16 @@ namespace Rawr.Enhance
                     //float dpsSta = (GetCharacterCalculations(character, new Item()   { Stats = new Stats() { Stamina = 60 } }).OverallPoints - dpsBase);
 
                     return new ComparisonCalculationBase[] { 
-						//new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsSta, DPSPoints = dpsSta },
-						new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
-						new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
-						new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
-						new ComparisonCalculationEnhance() { Name = "40 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationEnhance() { Name = "40 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
-						new ComparisonCalculationEnhance() { Name = "40 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationEnhance() { Name = "40 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
+                        //new ComparisonCalculationEnhance() { Name = "60 Stamina", OverallPoints = dpsSta, DPSPoints = dpsSta },
+                        new ComparisonCalculationEnhance() { Name = "40 Agility", OverallPoints = dpsAgi, DPSPoints = dpsAgi },
+                        new ComparisonCalculationEnhance() { Name = "40 Strength", OverallPoints = dpsStr, DPSPoints = dpsStr },
+                        new ComparisonCalculationEnhance() { Name = "40 Intellect", OverallPoints = dpsInt, DPSPoints = dpsInt },
+                        new ComparisonCalculationEnhance() { Name = "40 Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
+                        new ComparisonCalculationEnhance() { Name = "40 Expertise Rating", OverallPoints = dpsExp, DPSPoints = dpsExp },
+                        new ComparisonCalculationEnhance() { Name = "40 Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
+                        new ComparisonCalculationEnhance() { Name = "40 Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
                         new ComparisonCalculationEnhance() { Name = "40 Mastery Rating", OverallPoints = dpsMast, DPSPoints = dpsMast }
-					};
+                    };
 
                 case "MH Weapon Speeds":
                     if (character.MainHand == null)

@@ -112,6 +112,7 @@
                     <input:MenuItem Header="Gemmings" Click="ShowGemmingsHelp"/>
                     <input:MenuItem Header="Gear Optimization" Click="ShowGearOptimizationHelp"/>
                     <input:MenuItem Header="Item Filtering" Click="ShowItemFilteringHelp"/>
+                    <input:MenuItem Header="Model Status" Click="ShowModelStatusHelp"/>
                     <input:Separator/>
                     <input:MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
                     <input:MenuItem Header="Donate" Click="ShowDonate"/>
@@ -168,6 +169,7 @@
                 <MenuItem Header="Gemmings" Click="ShowGemmingsHelp"/>
                 <MenuItem Header="Gear Optimization" Click="ShowGearOptimizationHelp"/>
                 <MenuItem Header="Item Filtering" Click="ShowItemFilteringHelp"/>
+                <MenuItem Header="Model Status" Click="ShowModelStatusHelp"/>
                 <Separator/>
                 <MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
                 <MenuItem Header="Donate" Click="ShowDonate"/>
