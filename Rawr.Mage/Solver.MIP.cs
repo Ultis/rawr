@@ -750,11 +750,11 @@ namespace Rawr.Mage
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+                /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
                 {
                     if (!ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, BaseGlobalCooldown)) return false;
                     if (!ValidateCooldown((int)StandardEffect.WaterElemental, WaterElementalDuration + (coldsnapAvailable ? WaterElementalDuration : 0.0), WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0), true, WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
-                }
+                }*/
                 // mirror image
                 if (mirrorImageAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonMirrorImage, BaseGlobalCooldown)) return false;
                 if (mirrorImageAvailable && !ValidateCooldown((int)StandardEffect.MirrorImage, MirrorImageDuration, MirrorImageCooldown, true, MirrorImageDuration, rowSegmentMirrorImage, VariableType.None)) return false;
@@ -820,7 +820,7 @@ namespace Rawr.Mage
                 // ap
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
-                if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater && !ValidateCooldown((int)StandardEffect.WaterElemental, WaterElementalDuration + (coldsnapAvailable ? WaterElementalDuration : 0.0), WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0), true, WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
+                //if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater && !ValidateCooldown((int)StandardEffect.WaterElemental, WaterElementalDuration + (coldsnapAvailable ? WaterElementalDuration : 0.0), WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0), true, WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // mirror image
                 if (mirrorImageAvailable)
                 {
@@ -829,7 +829,7 @@ namespace Rawr.Mage
                 }
 
                 // coldsnap
-                if (icyVeinsAvailable && coldsnapAvailable && !ValidateColdsnap()) return false;
+                //if (icyVeinsAvailable && coldsnapAvailable && !ValidateColdsnap()) return false;
                 // combustion
                 if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, CombustionCooldown + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
@@ -918,7 +918,7 @@ namespace Rawr.Mage
 
             if (segmentCooldowns && advancedConstraintsLevel >= 5)
             {
-                if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+                /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
                 {
                     if (coldsnapAvailable)
                     {
@@ -928,7 +928,7 @@ namespace Rawr.Mage
                     {
                         if (!ValidateActivation((int)StandardEffect.WaterElemental, VariableType.None, WaterElementalDuration, WaterElementalCooldown, VariableType.SummonWaterElemental, 0)) return false;
                     }
-                }
+                }*/
 
                 // advanced cooldown validation 2
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, VariableType.None)) return false;
@@ -2347,9 +2347,9 @@ namespace Rawr.Mage
                 case VariableType.EvocationIVHero:
                     row = rowEvocationIVHero;
                     break;
-                case VariableType.SummonWaterElemental:
+                /*case VariableType.SummonWaterElemental:
                     row = rowSummonWaterElementalCount;
-                    break;
+                    break;*/
                 case VariableType.SummonMirrorImage:
                     row = rowSummonMirrorImageCount;
                     break;
@@ -2378,7 +2378,7 @@ namespace Rawr.Mage
             return true;
         }
 
-        private bool ValidateColdsnap()
+        /*private bool ValidateColdsnap()
         {
             const double eps = 0.000001;
             double[] ivCount = GetSegmentCooldownCount((int)StandardEffect.IcyVeins, VariableType.None);
@@ -2825,7 +2825,7 @@ namespace Rawr.Mage
                 return false;
             }
             return valid;
-        }
+        }*/
 
         private void EnforceRemoteEffectCooldown(int seg1, int seg3, int cooldowns, int effect, double effectCooldown, double effectDuration)
         {
@@ -3580,7 +3580,7 @@ namespace Rawr.Mage
             return ValidateCooldown(effect, effectDuration, cooldownDuration, false, effectDuration, null, VariableType.None);
         }
 
-        private bool ValidateWaterElementalSummon()
+        /*private bool ValidateWaterElementalSummon()
         {
             int cooldown = (int)StandardEffect.WaterElemental;
             double effectDuration = WaterElementalDuration;
@@ -3601,7 +3601,7 @@ namespace Rawr.Mage
             // special summon validation with coldsnap, without coldsnap use ValidateActivation
 
             return valid;
-        }
+        }*/
 
         /// <summary>
         /// Determines if effect in two segments could potentially belong to the same effect activation.

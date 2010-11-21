@@ -161,8 +161,8 @@ namespace Rawr.Mage
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
         public float ArcanePowerDuration;
-        public float WaterElementalCooldown;
-        public float WaterElementalDuration;
+        //public float WaterElementalCooldown;
+        //public float WaterElementalDuration;
         public float EvocationCooldown;
 
         public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
@@ -355,91 +355,6 @@ namespace Rawr.Mage
             }
         }
 
-        private LightningBoltTemplate _LightningBoltTemplate;
-        public LightningBoltTemplate LightningBoltTemplate
-        {
-            get
-            {
-                if (_LightningBoltTemplate == null)
-                {
-                    _LightningBoltTemplate = new LightningBoltTemplate();
-                }
-                if (_LightningBoltTemplate.Dirty)
-                {
-                    _LightningBoltTemplate.Initialize(this);
-                }
-                return _LightningBoltTemplate;
-            }
-        }
-
-        private ThunderBoltTemplate _ThunderBoltTemplate;
-        public ThunderBoltTemplate ThunderBoltTemplate
-        {
-            get
-            {
-                if (_ThunderBoltTemplate == null)
-                {
-                    _ThunderBoltTemplate = new ThunderBoltTemplate();
-                }
-                if (_ThunderBoltTemplate.Dirty)
-                {
-                    _ThunderBoltTemplate.Initialize(this);
-                }
-                return _ThunderBoltTemplate;
-            }
-        }
-
-        private LightweaveBoltTemplate _LightweaveBoltTemplate;
-        public LightweaveBoltTemplate LightweaveBoltTemplate
-        {
-            get
-            {
-                if (_LightweaveBoltTemplate == null)
-                {
-                    _LightweaveBoltTemplate = new LightweaveBoltTemplate();
-                }
-                if (_LightweaveBoltTemplate.Dirty)
-                {
-                    _LightweaveBoltTemplate.Initialize(this);
-                }
-                return _LightweaveBoltTemplate;
-            }
-        }
-
-        private ArcaneBoltTemplate _ArcaneBoltTemplate;
-        public ArcaneBoltTemplate ArcaneBoltTemplate
-        {
-            get
-            {
-                if (_ArcaneBoltTemplate == null)
-                {
-                    _ArcaneBoltTemplate = new ArcaneBoltTemplate();
-                }
-                if (_ArcaneBoltTemplate.Dirty)
-                {
-                    _ArcaneBoltTemplate.Initialize(this);
-                }
-                return _ArcaneBoltTemplate;
-            }
-        }
-
-        private PendulumOfTelluricCurrentsTemplate _PendulumOfTelluricCurrentsTemplate;
-        public PendulumOfTelluricCurrentsTemplate PendulumOfTelluricCurrentsTemplate
-        {
-            get
-            {
-                if (_PendulumOfTelluricCurrentsTemplate == null)
-                {
-                    _PendulumOfTelluricCurrentsTemplate = new PendulumOfTelluricCurrentsTemplate();
-                }
-                if (_PendulumOfTelluricCurrentsTemplate.Dirty)
-                {
-                    _PendulumOfTelluricCurrentsTemplate.Initialize(this);
-                }
-                return _PendulumOfTelluricCurrentsTemplate;
-            }
-        }
-
         private FrostboltTemplate _FrostboltTemplate;
         public FrostboltTemplate FrostboltTemplate
         {
@@ -505,6 +420,23 @@ namespace Rawr.Mage
                     _FireballTemplate.Initialize(this);
                 }
                 return _FireballTemplate;
+            }
+        }
+
+        private FlameOrbTemplate _FlameOrbTemplate;
+        public FlameOrbTemplate FlameOrbTemplate
+        {
+            get
+            {
+                if (_FlameOrbTemplate == null)
+                {
+                    _FlameOrbTemplate = new FlameOrbTemplate();
+                }
+                if (_FlameOrbTemplate.Dirty)
+                {
+                    _FlameOrbTemplate.Initialize(this);
+                }
+                return _FlameOrbTemplate;
             }
         }
 
@@ -746,37 +678,20 @@ namespace Rawr.Mage
             }
         }
 
-        private FireWardTemplate _FireWardTemplate;
-        public FireWardTemplate FireWardTemplate
+        private MageWardTemplate _MageWardTemplate;
+        public MageWardTemplate MageWardTemplate
         {
             get
             {
-                if (_FireWardTemplate == null)
+                if (_MageWardTemplate == null)
                 {
-                    _FireWardTemplate = new FireWardTemplate();
+                    _MageWardTemplate = new MageWardTemplate();
                 }
-                if (_FireWardTemplate.Dirty)
+                if (_MageWardTemplate.Dirty)
                 {
-                    _FireWardTemplate.Initialize(this);
+                    _MageWardTemplate.Initialize(this);
                 }
-                return _FireWardTemplate;
-            }
-        }
-
-        private FrostWardTemplate _FrostWardTemplate;
-        public FrostWardTemplate FrostWardTemplate
-        {
-            get
-            {
-                if (_FrostWardTemplate == null)
-                {
-                    _FrostWardTemplate = new FrostWardTemplate();
-                }
-                if (_FrostWardTemplate.Dirty)
-                {
-                    _FrostWardTemplate.Initialize(this);
-                }
-                return _FrostWardTemplate;
+                return _MageWardTemplate;
             }
         }
 
@@ -996,7 +911,7 @@ namespace Rawr.Mage
         private int rowHeroism;
         private int rowArcanePower;
         private int rowIcyVeins;
-        private int rowWaterElemental;
+        //private int rowWaterElemental;
         private int rowMirrorImage;
         private int rowMoltenFury;
         private int rowMoltenFuryIcyVeins;
@@ -1014,8 +929,8 @@ namespace Rawr.Mage
         private int rowMoltenFuryCombustion;
         private int rowHeroismCombustion;
         private int rowHeroismIcyVeins;
-        private int rowSummonWaterElemental;
-        private int rowSummonWaterElementalCount;
+        //private int rowSummonWaterElemental;
+        //private int rowSummonWaterElementalCount;
         private int rowSummonMirrorImage;
         private int rowSummonMirrorImageCount;
         private int rowThreat;
@@ -1769,14 +1684,9 @@ namespace Rawr.Mage
             effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
             flameCapAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameCap;
             berserkingAvailable = !CalculationOptions.DisableCooldowns && Character.Race == CharacterRace.Troll;
-#if RAWR4
-#else
-            waterElementalAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.SummonWaterElemental == 1);
-#endif
+            waterElementalAvailable = !CalculationOptions.DisableCooldowns && Specialization == Mage.Specialization.Frost;
             mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImageEnabled;
-#if RAWR4
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
-#endif
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
             // in that case we can skip them and possible save some constraints
@@ -2104,13 +2014,13 @@ namespace Rawr.Mage
             StandardEffect = StandardEffect.MoltenFury,
             Color = Color.FromArgb(0xFF, 0xDC, 0x14, 0x3C) //Crimson
         };
-        EffectCooldown cachedEffectWaterElemental = new EffectCooldown()
+        /*EffectCooldown cachedEffectWaterElemental = new EffectCooldown()
         {
             Mask = (int)StandardEffect.WaterElemental,
             Name = "Water Elemental",
             StandardEffect = StandardEffect.WaterElemental,
             Color = Color.FromArgb(0xFF, 0x00, 0x8B, 0x8B) //DarkCyan
-        };
+        };*/
         EffectCooldown cachedEffectMirrorImage = new EffectCooldown()
         {
             Cooldown = MirrorImageCooldown,
@@ -2148,9 +2058,9 @@ namespace Rawr.Mage
                     ArcanePowerCooldown = 120.0f * (1 - 0.25f);
                     break;
             }
-            ArcanePowerDuration = 15.0f + (MageTalents.GlyphOfArcanePower ? 3.0f : 0.0f);
+            ArcanePowerDuration = 15.0f;
             IcyVeinsCooldown = 180.0f * (1 - 0.07f * MageTalents.IceFloes + (MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
-            WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f));
+            /*WaterElementalCooldown = (180.0f - (MageTalents.GlyphOfWaterElemental ? 30.0f : 0.0f));
             if (MageTalents.GlyphOfEternalWater)
             {
                 WaterElementalDuration = float.PositiveInfinity;
@@ -2158,7 +2068,7 @@ namespace Rawr.Mage
             else
             {
                 WaterElementalDuration = 45.0f + 5.0f * MageTalents.EnduringWinter;
-            }
+            }*/
 
             if (evocationAvailable)
             {
@@ -2221,13 +2131,13 @@ namespace Rawr.Mage
                 cooldown.Duration = cooldown.MaximumDuration = CalculationOptions.MoltenFuryPercentage * CalculationOptions.FightDuration;
                 CooldownList.Add(cooldown);
             }
-            if (waterElementalAvailable)
+            /*if (waterElementalAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectWaterElemental);
                 cooldown.Cooldown = WaterElementalCooldown;
                 cooldown.Duration = WaterElementalDuration;
                 CooldownList.Add(cooldown);
-            }
+            }*/
             if (mirrorImageAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectMirrorImage);
@@ -2700,11 +2610,7 @@ namespace Rawr.Mage
             if (_WaterboltTemplate != null) _WaterboltTemplate.Dirty = true;
             if (_MirrorImageTemplate != null) _MirrorImageTemplate.Dirty = true;
             if (_FireBlastTemplate != null) _FireBlastTemplate.Dirty = true;
-            if (_LightningBoltTemplate != null) _LightningBoltTemplate.Dirty = true;
-            if (_ThunderBoltTemplate != null) _ThunderBoltTemplate.Dirty = true;
-            if (_LightweaveBoltTemplate != null) _LightweaveBoltTemplate.Dirty = true;
-            if (_ArcaneBoltTemplate != null) _ArcaneBoltTemplate.Dirty = true;
-            if (_PendulumOfTelluricCurrentsTemplate != null) _PendulumOfTelluricCurrentsTemplate.Dirty = true;
+            if (_FlameOrbTemplate != null) _FlameOrbTemplate.Dirty = true;
             if (_FrostboltTemplate != null) _FrostboltTemplate.Dirty = true;
             if (_FrostfireBoltTemplate != null) _FrostfireBoltTemplate.Dirty = true;
             if (_ArcaneMissilesTemplate != null) _ArcaneMissilesTemplate.Dirty = true;
@@ -2723,8 +2629,7 @@ namespace Rawr.Mage
             if (_ConeOfColdTemplate != null) _ConeOfColdTemplate.Dirty = true;
             if (_SlowTemplate != null) _SlowTemplate.Dirty = true;
             if (_LivingBombTemplate != null) _LivingBombTemplate.Dirty = true;
-            if (_FireWardTemplate != null) _FireWardTemplate.Dirty = true;
-            if (_FrostWardTemplate != null) _FrostWardTemplate.Dirty = true;
+            if (_MageWardTemplate != null) _MageWardTemplate.Dirty = true;
             if (_ConjureManaGemTemplate != null) _ConjureManaGemTemplate.Dirty = true;
             if (_ArcaneDamageTemplate != null) _ArcaneDamageTemplate.Dirty = true;
             if (_FireDamageTemplate != null) _FireDamageTemplate.Dirty = true;
@@ -2838,7 +2743,7 @@ namespace Rawr.Mage
             {
                 lp = new SolverLP();
             }
-            lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseFireWard ? 1 : 0) + (CalculationOptions.UseFrostWard ? 1 : 0))) * manaSegments * SegmentList.Count, this, SegmentList.Count);
+            lp.Initialize(ArraySet, rowCount, 9 + (12 + (CalculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count * (1 + (CalculationOptions.UseMageWard ? 1 : 0))) * manaSegments * SegmentList.Count, this, SegmentList.Count);
 
             SetCalculationReuseReferences();
             AddWardStates();
@@ -2897,7 +2802,7 @@ namespace Rawr.Mage
                 ConstructEvocation(baseStats, threatFactor);
                 ConstructManaPotion(baseStats, threatFactor);
                 ConstructManaGem(baseStats, threatFactor);
-                ConstructSummonWaterElemental();
+                //ConstructSummonWaterElemental();
                 ConstructSummonMirrorImage();
                 ConstructDrinking(maxDrinkingTime, drinkingEnabled);
                 ConstructTimeExtension();
@@ -3299,7 +3204,7 @@ namespace Rawr.Mage
             }
         }
 
-        private void ConstructSummonWaterElemental()
+        /*private void ConstructSummonWaterElemental()
         {
             if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
             {
@@ -3350,7 +3255,7 @@ namespace Rawr.Mage
                     }
                 }
             }
-        }
+        }*/
 
         private void SetSummonWaterElementalColumn(int waterElementalSegments, double mps, int segment, int manaSegment, CastingState state)
         {
@@ -3364,12 +3269,12 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowManaRegen, column, mps);
             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
             lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-            if (!MageTalents.GlyphOfEternalWater)
+            /*if (!MageTalents.GlyphOfEternalWater)
             {
                 lp.SetElementUnsafe(rowSummonWaterElemental, column, -1 / BaseGlobalCooldown);
                 lp.SetElementUnsafe(rowSummonWaterElementalCount, column, 1.0);
                 lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
-            }
+            }*/
             lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
             lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
             if (restrictManaUse)
@@ -3610,7 +3515,7 @@ namespace Rawr.Mage
                     MaxEvocation = Math.Max(1, 1 + (float)Math.Floor((CalculationOptions.FightDuration - 90f) / EvocationCooldown));
                 }
                 int mask = 0;
-                if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                if (waterElementalAvailable)
                 {
                     mask |= (int)StandardEffect.WaterElemental;
                 }
@@ -3618,7 +3523,7 @@ namespace Rawr.Mage
                 CastingState evoStateIV = null;
                 CastingState evoStateHero = null;
                 CastingState evoStateIVHero = null;
-                if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+                if (waterElementalAvailable)
                 {
                     evoState = CastingState.New(this, (int)StandardEffect.Evocation | mask, false, 0);
                     if (CalculationOptions.EnableHastedEvocation)
@@ -3767,7 +3672,7 @@ namespace Rawr.Mage
         private void SetEvocationColumn(float threatFactor, int evocationSegments, float evocationMana, CastingState evoState, int segment, int manaSegment, VariableType evocationType, bool lastTick)
         {
             double dps = 0.0f;
-            if (waterElementalAvailable && MageTalents.GlyphOfEternalWater)
+            if (waterElementalAvailable)
             {
                 dps = evoState.GetSpell(SpellId.Waterbolt).DamagePerSecond;
             }
@@ -4060,23 +3965,16 @@ namespace Rawr.Mage
 
         private void AddWardStates()
         {
-            if (CalculationOptions.UseFireWard || CalculationOptions.UseFrostWard)
+            if (CalculationOptions.UseMageWard)
             {
                 List<CastingState> newStates = new List<CastingState>();
                 foreach (CastingState state in stateList)
                 {
                     newStates.Add(state);
-                    if (CalculationOptions.UseFireWard)
+                    if (CalculationOptions.UseMageWard)
                     {
                         CastingState s = new CastingState(this, state.Effects, false, 0);
-                        s.UseFireWard = true;
-                        s.ReferenceCastingState = state;
-                        newStates.Add(s);
-                    }
-                    if (CalculationOptions.UseFrostWard)
-                    {
-                        CastingState s = new CastingState(this, state.Effects, false, 0);
-                        s.UseFrostWard = true;
+                        s.UseMageWard = true;
                         s.ReferenceCastingState = state;
                         newStates.Add(s);
                     }
@@ -4127,7 +4025,7 @@ namespace Rawr.Mage
                         AddSegmentTicks(ticks, IcyVeinsCooldown);
                         //if (!coldsnapAvailable) AddEffectTicks(ticks, calculationResult.IcyVeinsCooldown, 20.0);
                     }
-                    if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater) AddSegmentTicks(ticks, WaterElementalCooldown);
+                    //if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater) AddSegmentTicks(ticks, WaterElementalCooldown);
                     for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                     {
                         EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
@@ -4281,31 +4179,31 @@ namespace Rawr.Mage
 
         private void SetProblemRHS()
         {
-            int coldsnapCount = coldsnapAvailable ? (1 + (int)((CalculationOptions.FightDuration - WaterElementalDuration) / ColdsnapCooldown)) : 0;
+            int coldsnapCount = coldsnapAvailable ? (1 + (int)((CalculationOptions.FightDuration - 20) / ColdsnapCooldown)) : 0;
 
             // water elemental
             double weDuration = 0.0;
             if (waterElementalAvailable)
             {
-                if (MageTalents.GlyphOfEternalWater)
+                //if (MageTalents.GlyphOfEternalWater)
                 {
                     weDuration = CalculationOptions.FightDuration;
                 }
-                else
+                /*else
                 {
                     weDuration = MaximizeEffectDuration(CalculationOptions.FightDuration, WaterElementalDuration, WaterElementalCooldown);
                     if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(CalculationOptions.FightDuration, ColdsnapCooldown, WaterElementalDuration, WaterElementalCooldown, out coldsnapCount);
-                }
+                }*/
             }
 
             double combustionCount = combustionAvailable ? (1 + (int)((CalculationOptions.FightDuration - 15f) / 195f)) : 0;
 
             double ivlength = 0.0;
-            if ((!waterElementalAvailable || MageTalents.GlyphOfEternalWater) && coldsnapAvailable)
+            if (coldsnapAvailable)
             {
                 ivlength = Math.Floor(MaximizeColdsnapDuration(CalculationOptions.FightDuration, ColdsnapCooldown, 20.0, IcyVeinsCooldown, out coldsnapCount));
             }
-            else if (waterElementalAvailable && coldsnapAvailable)
+            /*else if (waterElementalAvailable && coldsnapAvailable)
             {
                 // TODO recheck this logic
                 double wecount = (weDuration / WaterElementalDuration);
@@ -4313,7 +4211,7 @@ namespace Rawr.Mage
                     ivlength = Math.Ceiling(wecount) * 20.0;
                 else
                     ivlength = Math.Floor(wecount) * 20.0;
-            }
+            }*/
             else
             {
                 double effectiveDuration = CalculationOptions.FightDuration;
@@ -4399,12 +4297,12 @@ namespace Rawr.Mage
             manaConsum = MaxManaGem;
             //lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40.0);
             lp.SetRHSUnsafe(rowBerserking, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration * 10.0 / 180.0 : 10.0 * (1 + (int)((CalculationOptions.FightDuration - 10) / 180)));
-            if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+            /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
             {
                 double duration = CalculationOptions.AverageCooldowns ? (WaterElementalDuration / WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration / ColdsnapCooldown : 0.0)) * CalculationOptions.FightDuration : weDuration;
                 lp.SetRHSUnsafe(rowWaterElemental, duration);
                 lp.SetRHSUnsafe(rowSummonWaterElementalCount, BaseGlobalCooldown * Math.Ceiling(duration / WaterElementalDuration));
-            }
+            }*/
             if (mirrorImageAvailable)
             {
                 double duration = EffectCooldown[(int)StandardEffect.MirrorImage].MaximumDuration;
@@ -4461,7 +4359,7 @@ namespace Rawr.Mage
                     }
                 }
                 // water elemental
-                if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+                /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
                 {
                     foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
                     {
@@ -4471,7 +4369,7 @@ namespace Rawr.Mage
                     {
                         lp.SetRHSUnsafe(constraint.Row, BaseGlobalCooldown + (coldsnapAvailable ? BaseGlobalCooldown : 0.0));
                     }
-                }
+                }*/
                 // mirror image
                 if (mirrorImageAvailable)
                 {
@@ -4574,7 +4472,7 @@ namespace Rawr.Mage
             rowHeroism = -1;
             rowArcanePower = -1;
             rowIcyVeins = -1;
-            rowWaterElemental = -1;
+            //rowWaterElemental = -1;
             rowMirrorImage = -1;
             rowMoltenFury = -1;
             rowMoltenFuryIcyVeins = -1;
@@ -4592,8 +4490,8 @@ namespace Rawr.Mage
             rowMoltenFuryCombustion = -1;
             rowHeroismCombustion = -1;
             rowHeroismIcyVeins = -1;
-            rowSummonWaterElemental = -1;
-            rowSummonWaterElementalCount = -1;
+            //rowSummonWaterElemental = -1;
+            //rowSummonWaterElementalCount = -1;
             rowSummonMirrorImage = -1;
             rowSummonMirrorImageCount = -1;
             rowThreat = -1;
@@ -4707,12 +4605,12 @@ namespace Rawr.Mage
             if (afterFightRegen) rowAfterFightRegenMana = rowCount++;
             //if (afterFightRegen) rowAfterFightRegenHealth = rowCount++;
             if (minimizeTime) rowTargetDamage = rowCount++;
-            if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+            /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
             {
                 rowWaterElemental = rowCount++;
                 rowSummonWaterElemental = rowCount++;
                 rowSummonWaterElementalCount = rowCount++;
-            }
+            }*/
             if (mirrorImageAvailable)
             {
                 rowSummonMirrorImage = rowCount++;
@@ -4922,7 +4820,7 @@ namespace Rawr.Mage
                     }
                 }
             }
-            if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
+            /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
             {
                 List<SegmentConstraint> list = rowSegmentWaterElemental = new List<SegmentConstraint>();
                 double cool = WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0);
@@ -4946,7 +4844,7 @@ namespace Rawr.Mage
                         list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
                     }
                 }
-            }
+            }*/
             if (mirrorImageAvailable)
             {
                 List<SegmentConstraint> list = rowSegmentMirrorImage = new List<SegmentConstraint>();
@@ -5084,11 +4982,11 @@ namespace Rawr.Mage
             {
                 lp.SetElementUnsafe(rowPotion, column, 1.0 / 15.0);
             }
-            if (state.WaterElemental && !MageTalents.GlyphOfEternalWater)
+            /*if (state.WaterElemental && !MageTalents.GlyphOfEternalWater)
             {
                 lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                 lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (WaterElementalDuration - BaseGlobalCooldown));
-            }
+            }*/
             if (state.MirrorImage)
             {
                 lp.SetElementUnsafe(rowMirrorImage, column, 1.0);
@@ -5822,8 +5720,8 @@ namespace Rawr.Mage
             displayCalculations.ColdsnapCooldown = ColdsnapCooldown;
             displayCalculations.ArcanePowerCooldown = ArcanePowerCooldown;
             displayCalculations.ArcanePowerDuration = ArcanePowerDuration;
-            displayCalculations.WaterElementalCooldown = WaterElementalCooldown;
-            displayCalculations.WaterElementalDuration = WaterElementalDuration;
+            //displayCalculations.WaterElementalCooldown = WaterElementalCooldown;
+            //displayCalculations.WaterElementalDuration = WaterElementalDuration;
             displayCalculations.EvocationCooldown = EvocationCooldown;
             displayCalculations.ManaGemEffectDuration = ManaGemEffectDuration;
 

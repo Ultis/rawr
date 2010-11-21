@@ -763,7 +763,7 @@ namespace Rawr.Mage
                 cost -= CritRate * BaseCost * 0.15f * solver.MageTalents.MasterOfElements;
                 // Judgement of Wisdom
                 // this is actually a PPM
-                cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
+                cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
             }
             return cost;
         }
@@ -796,7 +796,7 @@ namespace Rawr.Mage
                 cost -= CritRate * BaseCost * 0.15f * solver.MageTalents.MasterOfElements;
                 // Judgement of Wisdom
                 // this is actually a PPM
-                cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * 3268;
+                cost -= template.BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
             }
             AverageCost = cost;
         }

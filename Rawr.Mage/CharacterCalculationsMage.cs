@@ -141,8 +141,8 @@ namespace Rawr.Mage
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
         public float ArcanePowerDuration;
-        public float WaterElementalCooldown;
-        public float WaterElementalDuration;
+        //public float WaterElementalCooldown;
+        //public float WaterElementalDuration;
         public float EvocationCooldown;
         public float ManaGemEffectDuration;
 
@@ -325,7 +325,7 @@ namespace Rawr.Mage
                 }
             }
             sequence.GroupIcyVeins(); // should come after trinkets because of coldsnap
-            sequence.GroupWaterElemental();
+            //sequence.GroupWaterElemental();
             sequence.GroupMirrorImage();
             sequence.GroupBerserking();
             list = sequence.GroupFlameCap();
@@ -428,7 +428,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.FBScLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);
@@ -462,10 +462,8 @@ namespace Rawr.Mage
             dictValues.Add("Arcane Blast(4)", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.ABCost));
             bs = BaseState.FrozenState.GetSpell(SpellId.DeepFreeze);
             dictValues.Add("Deep Freeze", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
-            Spell abss = BaseState.GetSpell(SpellId.FireWard);
+            Spell abss = BaseState.GetSpell(SpellId.MageWard);
             dictValues.Add("Fire Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
-            abss = BaseState.GetSpell(SpellId.FrostWard);
-            dictValues.Add("Frost Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : BaseCalculations.DpsRating * CalculationOptions.FightDuration;
             dictValues.Add("Total Damage", String.Format("{0:F}*Upper Bound: {1:F}\r\nLower Bound: {2:F}", totalDamage, UpperBound, LowerBound));
             dictValues.Add("Score", String.Format("{0:F}", BaseCalculations.OverallPoints));

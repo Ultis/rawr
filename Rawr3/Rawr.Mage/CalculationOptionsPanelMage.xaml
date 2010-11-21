@@ -455,10 +455,8 @@
                         <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveScore, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="3"/>
                         <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Survivability Attenuation: *" TextWrapping="Wrap" ToolTipService.ToolTip="Final Survivability value is calculated as Survivability Score * Chance To Live ^ Survivability Attenuation." Grid.Row="4"/>
                         <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ChanceToLiveAttenuation, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.Row="4"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Use Fire Ward: *" TextWrapping="Wrap" ToolTipService.ToolTip="Allows use of Fire Ward every 30 seconds." Grid.Row="5"/>
-                        <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=UseFireWard, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height"/>
-                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Use Frost Ward: *" TextWrapping="Wrap" ToolTipService.ToolTip="Allows use of Frost Ward every 30 seconds." Grid.Row="6"/>
-                        <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="6" IsChecked="{Binding Mode=TwoWay, Path=UseFrostWard, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height"/>
+                        <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,0" VerticalAlignment="Top" Width="Auto" Text="Use Mage Ward: *" TextWrapping="Wrap" ToolTipService.ToolTip="Allows use of Mage Ward every 30 seconds." Grid.Row="5"/>
+                        <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=UseMageWard, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height"/>
                     </Grid>
                 </Grid>
             </controls:TabItem>

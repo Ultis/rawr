@@ -35,6 +35,7 @@ namespace Rawr.Mage
         private int playerLevel;
         private float levelScalingFactor;
         private float spellScalingFactor;
+        private float baseMana;
 
         public int PlayerLevel
         {
@@ -336,6 +337,7 @@ namespace Rawr.Mage
                         break;
                 }
                 #endregion
+                baseMana = SpellTemplate.BaseMana[playerLevel];
                 OnPropertyChanged("PlayerLevel");
             }
         }
@@ -353,6 +355,14 @@ namespace Rawr.Mage
             get
             {
                 return spellScalingFactor;
+            }
+        }
+
+        public float BaseMana
+        {
+            get
+            {
+                return baseMana;
             }
         }
 
@@ -375,18 +385,11 @@ namespace Rawr.Mage
             set { _Mode333 = value; OnPropertyChanged("Mode333"); }
         }*/
 
-        private bool _UseFireWard;
-        public bool UseFireWard
+        private bool _UseMageWard;
+        public bool UseMageWard
         {
-            get { return _UseFireWard; }
-            set { _UseFireWard = value; OnPropertyChanged("UseFireWard"); }
-        }
-
-        private bool _UseFrostWard;
-        public bool UseFrostWard
-        {
-            get { return _UseFrostWard; }
-            set { _UseFrostWard = value; OnPropertyChanged("UseFrostWard"); }
+            get { return _UseMageWard; }
+            set { _UseMageWard = value; OnPropertyChanged("UseMageWard"); }
         }
 
         private float _FrostbiteUtilization;

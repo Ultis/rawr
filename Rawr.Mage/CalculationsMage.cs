@@ -125,18 +125,19 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Missiles",
                     "Spell Info:Arcane Blast(4)*Full debuff stack",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
-                    "Spell Info:Arcane Barrage*Requires talent points",
+                    "Spell Info:Arcane Barrage",
                     "Spell Info:Scorch",
                     "Spell Info:Fire Blast",
-                    "Spell Info:Pyroblast*Requires talent points",
+                    "Spell Info:Pyroblast",
                     "Spell Info:Fireball",
+                    "Spell Info:Living Bomb",
+                    "Spell Info:Frostfire Bolt",
+                    "Spell Info:Flame Orb",
                     "Spell Info:FBPyro*Pyroblast on Hot Streak",
                     "Spell Info:FBLBPyro*Pyroblast on Hot Streak, maintain Living Bomb dot",
                     "Spell Info:ScLBPyro*Pyroblast on Hot Streak, maintain Living Bomb dot",
                     "Spell Info:FBScPyro*Maintain Scorch and Pyroblast on Hot Streak",
                     "Spell Info:FBScLBPyro*Maintain Scorch, maintain Living Bomb dot and Pyroblast on Hot Streak",
-                    "Spell Info:Living Bomb",
-                    "Spell Info:Frostfire Bolt",
                     "Spell Info:FFBPyro*Pyroblast on Hot Streak",
                     "Spell Info:FFBLBPyro*Pyroblast on Hot Streak, maintain Living Bomb dot",
                     "Spell Info:FFBScPyro*Maintain Scorch and Pyroblast on Hot Streak",
@@ -166,8 +167,7 @@ namespace Rawr.Mage
                     "Spell Info:Flamestrike*With full dot",
                     "Spell Info:Blast Wave*Requires talent points",
                     "Spell Info:Dragon's Breath*Requires talent points",
-                    "Spell Info:Fire Ward*Set incoming fire damage under survivability settings",
-                    "Spell Info:Frost Ward*Set incoming frost damage under survivability settings",
+                    "Spell Info:Mage Ward*Set incoming fire/frost/arcane damage under survivability settings",
 					"Survivability:Armor",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
@@ -993,8 +993,8 @@ namespace Rawr.Mage
             float allResist = 0;
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + (talents.GlyphOfIceArmor ? 0.5f : 0.0f) + statsTotal.Mage2T9 * 0.2f));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + (talents.GlyphOfIceArmor ? 0.5f : 0.0f)));
+                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + statsTotal.Mage2T9 * 0.2f));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40));
             }
             if (statsTotal.MageMageArmor > 0)
             {
@@ -1009,10 +1009,10 @@ namespace Rawr.Mage
             {
                 statsTotal.SpellCrit += calculationOptions.EffectCritBonus;
             }
-            if (talents.GlyphOfManaGem)
+            /*if (talents.GlyphOfManaGem)
             {
                 statsTotal.BonusManaGem += 0.4f;
-            }
+            }*/
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 

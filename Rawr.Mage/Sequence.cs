@@ -1077,7 +1077,7 @@ namespace Rawr.Mage.SequenceReconstruction
             if (list.Count > 0) GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.IcyVeins], VariableType.None, 0.0);
         }
 
-        public void GroupWaterElemental()
+        /*public void GroupWaterElemental()
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
@@ -1085,7 +1085,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.WaterElemental) list.Add(item);
             }
             if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.WaterElementalDuration, SequenceItem.Calculations.WaterElementalCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.WaterElemental], VariableType.SummonWaterElemental, SequenceItem.Calculations.BaseGlobalCooldown);
-        }
+        }*/
 
         public void GroupMirrorImage()
         {
@@ -1919,9 +1919,9 @@ namespace Rawr.Mage.SequenceReconstruction
                                 {
                                     // check constraints
                                     List<int> icyVeinsStarts = new List<int>();
-                                    List<int> waterElementalStarts = new List<int>();
+                                    //List<int> waterElementalStarts = new List<int>();
                                     SequenceGroup icyVeinsGroup = null;
-                                    SequenceGroup waterElementalGroup = null;
+                                    //SequenceGroup waterElementalGroup = null;
                                     foreach (SequenceGroup group in item.Group)
                                     {
                                         foreach (CooldownConstraint constraint in group.Constraint)
@@ -1947,7 +1947,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 // if we're in group with already placed item then no need to redo all this
                                                 if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
                                                 if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
-                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
+                                                //if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
                                                 int minIndex = i;
                                                 foreach (SequenceItem coldsnapItem in constraint.Group.Item)
                                                 {
@@ -1959,7 +1959,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 if (minIndex < i)
                                                 {
                                                     if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
-                                                    if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
+                                                    //if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
                                                 }
                                             }
                                         }
@@ -1971,30 +1971,30 @@ namespace Rawr.Mage.SequenceReconstruction
                                     // look at the ones that were placed already and sort them by order index
                                     // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
                                     // if we don't need to use coldsnap anyway then adjust coldsnap to 0
-                                    if (icyVeinsGroup != null || waterElementalGroup != null)
+                                    if (icyVeinsGroup != null)
                                     {
                                         // this is only called for first coldsnap item in group
                                         icyVeinsStarts.Sort();
-                                        waterElementalStarts.Sort();
+                                        //waterElementalStarts.Sort();
                                         int lastColdsnap = -1;
                                         for (int j = 0; j < i; j++)
                                         {
                                             if (coldsnap[j] == 1) lastColdsnap = j;
                                         }
-                                        if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
+                                        if (icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps)
                                         {
                                             // we need internal coldsnap
                                             if (coldsnap[i] == 1)
                                             {
                                                 double normalTime = time;
                                                 if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                                if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                                //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                                 double coldsnapReady = 0;
                                                 if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                                 // we have to do first one on normal time and have coldsnap ready in the middle
                                                 time = normalTime;
                                                 if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
-                                                if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
+                                                //if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
                                                 coldsnapTime[i] = Math.Max(time, coldsnapReady);
                                             }
                                             else
@@ -2003,7 +2003,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 valid = false;
                                             }
                                         }
-                                        else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
+                                        else if (icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps)
                                         {
                                             // don't need coldsnap and can start right at time
                                             coldsnap[i] = 0;
@@ -2013,7 +2013,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             // use coldsnap
                                             double normalTime = time;
                                             if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                             double coldsnapReady = 0;
                                             if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                             if (coldsnapReady >= normalTime)
@@ -2028,7 +2028,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                                 time = Math.Max(coldsnapReady, time);
                                                 coldsnapTime[i] = coldsnapReady;
                                                 if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
-                                                if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
+                                                //if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
                                             }
                                         }
                                         else
@@ -2037,7 +2037,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             // make sure to adjust by coldsnap constraints
                                             double normalTime = time;
                                             if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                             time = normalTime;
                                         }
                                     }
@@ -2423,9 +2423,9 @@ namespace Rawr.Mage.SequenceReconstruction
                             {
                                 // check constraints
                                 List<int> icyVeinsStarts = new List<int>();
-                                List<int> waterElementalStarts = new List<int>();
+                                //List<int> waterElementalStarts = new List<int>();
                                 SequenceGroup icyVeinsGroup = null;
-                                SequenceGroup waterElementalGroup = null;
+                                //SequenceGroup waterElementalGroup = null;
                                 foreach (SequenceGroup group in item.Group)
                                 {
                                     foreach (CooldownConstraint constraint in group.Constraint)
@@ -2451,7 +2451,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             // if we're in group with already placed item then no need to redo all this
                                             if (i > 0 && itemList[index[i - 1]].Group.Contains(group)) continue;
                                             if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsGroup = group;
-                                            if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
+                                            //if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalGroup = group;
                                             int minIndex = i;
                                             foreach (SequenceItem coldsnapItem in constraint.Group.Item)
                                             {
@@ -2463,7 +2463,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             if (minIndex < i)
                                             {
                                                 if (constraint.EffectCooldown == (int)StandardEffect.IcyVeins) icyVeinsStarts.Add(minIndex);
-                                                if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
+                                                //if (constraint.EffectCooldown == (int)StandardEffect.WaterElemental) waterElementalStarts.Add(minIndex);
                                             }
                                         }
                                     }
@@ -2475,30 +2475,30 @@ namespace Rawr.Mage.SequenceReconstruction
                                 // look at the ones that were placed already and sort them by order index
                                 // if the last one that needed coldsnap is farther than coldsnap cooldown then we can use it again
                                 // if we don't need to use coldsnap anyway then adjust coldsnap to 0
-                                if (icyVeinsGroup != null || waterElementalGroup != null)
+                                if (icyVeinsGroup != null)
                                 {
                                     // this is only called for first coldsnap item in group
                                     icyVeinsStarts.Sort();
-                                    waterElementalStarts.Sort();
+                                    //waterElementalStarts.Sort();
                                     int lastColdsnap = -1;
                                     for (int j = 0; j < i; j++)
                                     {
                                         if (coldsnap[j] == 1) lastColdsnap = j;
                                     }
-                                    if ((icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps) || (waterElementalGroup != null && waterElementalGroup.Duration > SequenceItem.Calculations.WaterElementalDuration + eps))
+                                    if (icyVeinsGroup != null && icyVeinsGroup.Duration > 20.0 + eps)
                                     {
                                         // we need internal coldsnap
                                         if (coldsnap[i] == 1)
                                         {
                                             double normalTime = time;
                                             if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                            if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                            //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                             double coldsnapReady = 0;
                                             if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                             // we have to do first one on normal time and have coldsnap ready in the middle
                                             time = normalTime;
                                             if (icyVeinsGroup != null) time = Math.Max(time, coldsnapReady - 20.0);
-                                            if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
+                                            //if (waterElementalGroup != null) time = Math.Max(time, coldsnapReady - SequenceItem.Calculations.WaterElementalDuration);
                                             coldsnapTime[i] = Math.Max(time, coldsnapReady);
                                         }
                                         else
@@ -2507,7 +2507,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             valid = false;
                                         }
                                     }
-                                    else if ((icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps) && (waterElementalGroup == null || waterElementalStarts.Count == 0 || time - constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] >= SequenceItem.Calculations.WaterElementalCooldown - eps))
+                                    else if (icyVeinsGroup == null || icyVeinsStarts.Count == 0 || time - constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] >= SequenceItem.Calculations.IcyVeinsCooldown - eps)
                                     {
                                         // don't need coldsnap and can start right at time
                                         coldsnap[i] = 0;
@@ -2517,7 +2517,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         // use coldsnap
                                         double normalTime = time;
                                         if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                        if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                        //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                         double coldsnapReady = 0;
                                         if (lastColdsnap >= 0) coldsnapReady = coldsnapTime[lastColdsnap] + SequenceItem.Calculations.ColdsnapCooldown;
                                         if (coldsnapReady >= normalTime)
@@ -2532,7 +2532,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                             time = Math.Max(coldsnapReady, time);
                                             coldsnapTime[i] = coldsnapReady;
                                             if (icyVeinsStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]]);
-                                            if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
+                                            //if (waterElementalStarts.Count > 0) coldsnapTime[i] = Math.Max(coldsnapTime[i], constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]]);
                                         }
                                     }
                                     else
@@ -2541,7 +2541,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                         // make sure to adjust by coldsnap constraints
                                         double normalTime = time;
                                         if (icyVeinsGroup != null && icyVeinsStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[icyVeinsStarts[icyVeinsStarts.Count - 1]] + SequenceItem.Calculations.IcyVeinsCooldown);
-                                        if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
+                                        //if (waterElementalGroup != null && waterElementalStarts.Count > 0) normalTime = Math.Max(normalTime, constructionTime[waterElementalStarts[waterElementalStarts.Count - 1]] + SequenceItem.Calculations.WaterElementalCooldown);
                                         time = normalTime;
                                     }
                                 }
@@ -3397,7 +3397,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double apCooldown = 0;
             double piCooldown = 0;
             double ivCooldown = 0;
-            double weCooldown = 0;
+            //double weCooldown = 0;
             double miCooldown = 0;
             double combustionCooldown = 0;
 
@@ -3411,7 +3411,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double apTime = double.NegativeInfinity;
             double piTime = double.NegativeInfinity;
             double ivTime = double.NegativeInfinity;
-            double weTime = double.NegativeInfinity;
+            //double weTime = double.NegativeInfinity;
             double miTime = double.NegativeInfinity;
             double manaGemEffectTime = double.NegativeInfinity;
 
@@ -3426,7 +3426,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool piActive = false;
             bool manaGemEffectActive = false;
             bool ivActive = false;
-            bool weActive = false;
+            //bool weActive = false;
             bool miActive = false;
 
             double coldsnapTimeMin = double.NegativeInfinity;
@@ -3438,7 +3438,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool apWarning = false;
             bool piWarning = false;
             bool ivWarning = false;
-            bool weWarning = false;
+            //bool weWarning = false;
             bool miWarning = false;
             bool combustionWarning = false;
             bool berserkingWarning = false;
@@ -4189,7 +4189,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                 }
                 // Water Elemental
-                if (!weActive && state != null && state.WaterElemental)
+                /*if (!weActive && state != null && state.WaterElemental)
                 {
                     if (weCooldown > eps && coldsnap)
                     {
@@ -4265,7 +4265,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         //unexplained += Math.Min(duration, 45 - (time - weTime));
                         if (timing != null) timing.AppendLine("INFO: Water Elemental is still up!");
                     }
-                }
+                }*/
                 // Mirror Image
                 if (!miActive && state != null && state.MirrorImage)
                 {
@@ -4384,7 +4384,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 apCooldown -= duration;
                 piCooldown -= duration;
                 ivCooldown -= duration;
-                weCooldown -= duration;
+                //weCooldown -= duration;
                 miCooldown -= duration;
                 potionCooldown -= duration;
                 gemCooldown -= duration;
@@ -4399,7 +4399,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
                 if (piActive && SequenceItem.Calculations.PowerInfusionDuration - (time - piTime) <= eps) piActive = false;
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
-                if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
+                //if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (miActive && SequenceItem.Calculations.MirrorImageDuration - (time - miTime) <= eps) miActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
                 if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
