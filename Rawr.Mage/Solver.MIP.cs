@@ -787,10 +787,8 @@ namespace Rawr.Mage
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIVHero, EvocationDurationIVHero, EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
                 if (effectPotionAvailable && !ValidateEffectPotion()) return false;
-                // potion of wild magic
-                if (potionOfWildMagicAvailable && !ValidateCooldown((int)StandardEffect.PotionOfWildMagic, 15, -1)) return false;
-                // potion of speed
-                if (potionOfSpeedAvailable && !ValidateCooldown((int)StandardEffect.PotionOfSpeed, 15, -1)) return false;
+                // volcanic potion
+                if (volcanicPotionAvailable && !ValidateCooldown((int)StandardEffect.VolcanicPotion, 25, -1)) return false;
             }
 
             // high resolution
@@ -861,10 +859,8 @@ namespace Rawr.Mage
                     if (heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationHero, EvocationDurationHero, EvocationCooldown, VariableType.EvocationHero, (int)StandardEffect.Evocation | (int)StandardEffect.Heroism)) return false;
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivation((int)StandardEffect.Evocation, VariableType.EvocationIVHero, EvocationDurationIVHero, EvocationCooldown, VariableType.EvocationIVHero, (int)StandardEffect.Evocation | (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism)) return false;
                 }
-                // potion of wild magic
-                if (potionOfWildMagicAvailable && !ValidateCooldown((int)StandardEffect.PotionOfWildMagic, 15, -1)) return false;
-                // potion of speed
-                if (potionOfSpeedAvailable && !ValidateCooldown((int)StandardEffect.PotionOfSpeed, 15, -1)) return false;
+                // volcanic potion
+                if (volcanicPotionAvailable && !ValidateCooldown((int)StandardEffect.VolcanicPotion, 25, -1)) return false;
             }
 
             if (integralMana && advancedConstraintsLevel >= 2)
@@ -1067,12 +1063,12 @@ namespace Rawr.Mage
                 case (int)StandardEffect.ManaGemEffect:
                     ind = 6;
                     break;
-                case (int)StandardEffect.PotionOfSpeed:
+                case (int)StandardEffect.VolcanicPotion:
                     ind = 7;
                     break;
-                case (int)StandardEffect.PotionOfWildMagic:
+                /*case (int)StandardEffect.PotionOfWildMagic:
                     ind = 8;
-                    break;
+                    break;*/
                 case (int)StandardEffect.MirrorImage:
                     ind = 9;
                     break;
@@ -4997,11 +4993,11 @@ namespace Rawr.Mage
         private bool ValidateEffectPotion()
         {
             const double eps = 0.00001;
-            double[] potionOfSpeedCount = GetSegmentCooldownCount((int)StandardEffect.PotionOfSpeed, VariableType.None);
-            double[] potionOfWildMagicCount = GetSegmentCooldownCount((int)StandardEffect.PotionOfWildMagic, VariableType.None);
-            double[][] segCount = new double[][] { potionOfSpeedCount, potionOfWildMagicCount };
-            int[] effect = new int[] { (int)StandardEffect.PotionOfSpeed, (int)StandardEffect.PotionOfWildMagic };
-            double[] total = new double[2];
+            double[] volcanicPotionCount = GetSegmentCooldownCount((int)StandardEffect.VolcanicPotion, VariableType.None);
+            //double[] potionOfWildMagicCount = GetSegmentCooldownCount((int)StandardEffect.PotionOfWildMagic, VariableType.None);
+            double[][] segCount = new double[][] { volcanicPotionCount };
+            int[] effect = new int[] { (int)StandardEffect.VolcanicPotion };
+            double[] total = new double[1];
 
             for (int i = 0; i < total.Length; i++)
             {

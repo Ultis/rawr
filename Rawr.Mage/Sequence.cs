@@ -1108,24 +1108,14 @@ namespace Rawr.Mage.SequenceReconstruction
             return null;
         }
 
-        public void GroupPotionOfWildMagic()
+        public void GroupVolcanicPotion()
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
             {
-                if (item.CastingState.PotionOfWildMagic) list.Add(item);
+                if (item.CastingState.VolcanicPotion) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 15, 120, Calculations.EffectCooldown[(int)StandardEffect.PotionOfWildMagic]);
-        }
-
-        public void GroupPotionOfSpeed()
-        {
-            List<SequenceItem> list = new List<SequenceItem>();
-            foreach (SequenceItem item in sequence)
-            {
-                if (item.CastingState.PotionOfSpeed) list.Add(item);
-            }
-            if (list.Count > 0) GroupCooldown(list, 15, 120, Calculations.EffectCooldown[(int)StandardEffect.PotionOfSpeed]);
+            if (list.Count > 0) GroupCooldown(list, 25, 120, Calculations.EffectCooldown[(int)StandardEffect.VolcanicPotion]);
         }
 
         public void GroupBerserking()
@@ -3156,7 +3146,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }*/
                     if (d > 0 && t >= pot)
                     {
-                        if (sequence[i].CastingState != null && (sequence[i].CastingState.PotionOfWildMagic || sequence[i].CastingState.PotionOfSpeed))
+                        if (sequence[i].CastingState != null && (sequence[i].CastingState.VolcanicPotion))
                         {
                             nextEffectPotion = Math.Min(nextEffectPotion, sequence[i].MaxTime);
                             nextEffectPotionMin = Math.Min(nextEffectPotionMin, sequence[i].MinTime);
@@ -3403,8 +3393,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
             double flameCapTime = double.NegativeInfinity;
             double berserkingTime = double.NegativeInfinity;
-            double potionOfWildMagicTime = double.NegativeInfinity;
-            double potionOfSpeedTime = double.NegativeInfinity;
+            double volcanicPotionTime = double.NegativeInfinity;
             double combustionTime = double.NegativeInfinity;
             double moltenFuryTime = double.NegativeInfinity;
             double heroismTime = double.NegativeInfinity;
@@ -3417,8 +3406,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
             bool flameCapActive = false;
             bool berserkingActive = false;
-            bool potionOfWildMagicActive = false;
-            bool potionOfSpeedActive = false;
+            bool volcanicPotionActive = false;
             bool combustionActive = false;
             bool moltenFuryActive = false;
             bool heroismActive = false;
@@ -3470,7 +3458,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (berserkingActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive || piActive)
+                if (berserkingActive || flameCapActive || volcanicPotionActive || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive || piActive)
                 {
                     cooldownContinuation = true;
                 }
@@ -3812,77 +3800,40 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (timing != null) timing.AppendLine("INFO: Mana Gem Effect is still up!");
                     }
                 }
-                // Potion of Wild Magic
-                if (potionOfWildMagicActive)
+                // Volcanic Potion
+                if (volcanicPotionActive)
                 {
-                    if (state != null && state.PotionOfWildMagic)
+                    if (state != null && state.VolcanicPotion)
                     {
-                        if (time + duration > potionOfWildMagicTime + 15 + eps)
+                        if (time + duration > volcanicPotionTime + 25 + eps)
                         {
-                            unexplained += time + duration - potionOfWildMagicTime - 15;
-                            if (timing != null) timing.AppendLine("WARNING: Potion of Wild Magic duration too long!");
+                            unexplained += time + duration - volcanicPotionTime - 25;
+                            if (timing != null) timing.AppendLine("WARNING: Volcanic Potion duration too long!");
                         }
                     }
-                    else if (duration > 0 && 15 - (time - potionOfWildMagicTime) > eps)
+                    else if (duration > 0 && 25 - (time - volcanicPotionTime) > eps)
                     {
-                        //unexplained += Math.Min(duration, 15 - (time - apTime));
-                        if (timing != null) timing.AppendLine("INFO: Potion of Wild Magic is still up!");
+                        //unexplained += Math.Min(duration, 25 - (time - apTime));
+                        if (timing != null) timing.AppendLine("INFO: Volcanic Potion is still up!");
                     }
                 }
                 else
                 {
-                    if (state != null && state.PotionOfWildMagic)
+                    if (state != null && state.VolcanicPotion)
                     {
                         if (potionCooldown > eps)
                         {
                             unexplained += duration;
-                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Potion of Wild Magic cooldown not ready!");
+                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Volcanic Potion cooldown not ready!");
                             potionWarning = true;
                         }
                         else
                         {
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Potion of Wild Magic (" + Math.Round(manabefore).ToString() + " mana)");
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Volcanic Potion (" + Math.Round(manabefore).ToString() + " mana)");
                             potionCooldown = 120;
-                            potionOfWildMagicTime = time;
+                            volcanicPotionTime = time;
                             potionWarning = false;
-                            potionOfWildMagicActive = true;
-                        }
-                    }
-                }
-                // Potion of Speed
-                if (potionOfSpeedActive)
-                {
-                    if (state != null && state.PotionOfSpeed)
-                    {
-                        if (time + duration > potionOfSpeedTime + 15 + eps)
-                        {
-                            unexplained += time + duration - potionOfSpeedTime - 15;
-                            if (timing != null) timing.AppendLine("WARNING: Potion of Speed duration too long!");
-                        }
-                    }
-                    else if (duration > 0 && 15 - (time - potionOfSpeedTime) > eps)
-                    {
-                        //unexplained += Math.Min(duration, 15 - (time - apTime));
-                        if (timing != null) timing.AppendLine("INFO: Potion of Speed is still up!");
-                    }
-                }
-                else
-                {
-                    if (state != null && state.PotionOfSpeed)
-                    {
-                        if (potionCooldown > eps)
-                        {
-                            unexplained += duration;
-                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Potion of Speed cooldown not ready!");
-                            potionWarning = true;
-                        }
-                        else
-                        {
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Potion of Speed (" + Math.Round(manabefore).ToString() + " mana)");
-                            potionCooldown = 120;
-                            potionOfSpeedTime = time;
-                            potionWarning = false;
-                            potionOfSpeedActive = true;
+                            volcanicPotionActive = true;
                         }
                     }
                 }
@@ -4306,7 +4257,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double aftertime = data[0];
                     if (aftertime >= time && aftertime <= time + duration)
                     {
-                        if (!berserkingActive && !flameCapActive && !potionOfWildMagicActive && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive && !manaGemEffectActive)
+                        if (!berserkingActive && !flameCapActive && !volcanicPotionActive && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive && !manaGemEffectActive)
                         {
                             bool valid = true;
                             foreach (CooldownData d in itemData)
@@ -4402,8 +4353,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 //if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (miActive && SequenceItem.Calculations.MirrorImageDuration - (time - miTime) <= eps) miActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
-                if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
-                if (potionOfSpeedActive && 15 - (time - potionOfSpeedTime) <= eps) potionOfSpeedActive = false;
+                if (volcanicPotionActive && 25 - (time - volcanicPotionTime) <= eps) volcanicPotionActive = false;
                 if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;
                 foreach (CooldownData d in itemData)
                 {

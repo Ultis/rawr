@@ -564,18 +564,11 @@ namespace Rawr.Mage
             set { _PowerInfusionAvailable = value; OnPropertyChanged("PowerInfusionAvailable"); }
         }
 
-        private bool _PotionOfWildMagic;
-        public bool PotionOfWildMagic
+        private bool _VolcanicPotion;
+        public bool VolcanicPotion
         {
-            get { return _PotionOfWildMagic; }
-            set { _PotionOfWildMagic = value; OnPropertyChanged("PotionOfWildMagic"); }
-        }
-
-        private bool _PotionOfSpeed;
-        public bool PotionOfSpeed
-        {
-            get { return _PotionOfSpeed; }
-            set { _PotionOfSpeed = value; OnPropertyChanged("PotionOfSpeed"); }
+            get { return _VolcanicPotion; }
+            set { _VolcanicPotion = value; OnPropertyChanged("VolcanicPotion"); }
         }
 
         private bool _FlameCap;
@@ -1533,8 +1526,7 @@ namespace Rawr.Mage
             FightDuration = 300;
             HeroismAvailable = true;
             MoltenFuryPercentage = 0.3f;
-            PotionOfWildMagic = true;
-            PotionOfSpeed = true;
+            VolcanicPotion = true;
             FlameCap = false;
             DpsTime = 1;
             InterruptFrequency = 0;

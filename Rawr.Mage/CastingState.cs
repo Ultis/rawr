@@ -10,19 +10,18 @@ namespace Rawr.Mage
         None = 0,
         WaterElemental = 0x1,
         PowerInfusion = 0x2,
-        PotionOfSpeed = 0x4,
+        VolcanicPotion = 0x4,
         ArcanePower = 0x8,
         Combustion = 0x10,
-        PotionOfWildMagic = 0x20,
-        Berserking = 0x40,
-        FlameCap = 0x80,
-        Heroism = 0x100,
-        IcyVeins = 0x200,
-        MoltenFury = 0x400,
-        Evocation = 0x800,
-        ManaGemEffect = 0x1000,
-        MirrorImage = 0x2000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
-        NonItemBasedMask = PowerInfusion | PotionOfSpeed | ArcanePower | Combustion | PotionOfWildMagic | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | ManaGemEffect | MirrorImage
+        Berserking = 0x20,
+        FlameCap = 0x40,
+        Heroism = 0x80,
+        IcyVeins = 0x100,
+        MoltenFury = 0x200,
+        Evocation = 0x400,
+        ManaGemEffect = 0x800,
+        MirrorImage = 0x1000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
+        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | ManaGemEffect | MirrorImage
     }
 
     public class CastingState
@@ -118,8 +117,7 @@ namespace Rawr.Mage
         public bool IcyVeins { get; private set; }
         public bool MoltenFury { get; private set; }
         public bool Heroism { get; private set; }
-        public bool PotionOfWildMagic { get; private set; }
-        public bool PotionOfSpeed { get; private set; }
+        public bool VolcanicPotion { get; private set; }
         public bool FlameCap { get; private set; }
         public bool ManaGemEffect { get; private set; }
         public bool Berserking { get; private set; }
@@ -145,8 +143,7 @@ namespace Rawr.Mage
                 IcyVeins = (value & (int)StandardEffect.IcyVeins) != 0;
                 MoltenFury = (value & (int)StandardEffect.MoltenFury) != 0;
                 Heroism = (value & (int)StandardEffect.Heroism) != 0;
-                PotionOfWildMagic = (value & (int)StandardEffect.PotionOfWildMagic) != 0;
-                PotionOfSpeed = (value & (int)StandardEffect.PotionOfSpeed) != 0;
+                VolcanicPotion = (value & (int)StandardEffect.VolcanicPotion) != 0;
                 FlameCap = (value & (int)StandardEffect.FlameCap) != 0;
                 ManaGemEffect = (value & (int)StandardEffect.ManaGemEffect) != 0;
                 Berserking = (value & (int)StandardEffect.Berserking) != 0;
@@ -376,14 +373,9 @@ namespace Rawr.Mage
 
             Effects = effects;
 
-            if (PotionOfWildMagic)
+            if (VolcanicPotion)
             {
-                StateSpellPower += 200;
-                stateCritRating += 200;
-            }
-            if (PotionOfSpeed)
-            {
-                SpellHasteRating += 500;
+                StateSpellPower += 1200;
             }
             if (ManaGemEffect)
             {

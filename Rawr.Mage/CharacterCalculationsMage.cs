@@ -292,8 +292,7 @@ namespace Rawr.Mage
             }
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
-            sequence.GroupPotionOfWildMagic();
-            sequence.GroupPotionOfSpeed();
+            sequence.GroupVolcanicPotion();
             foreach (EffectCooldown cooldown in ItemBasedEffectCooldowns)
             {
                 sequence.GroupSpecialEffect(cooldown);

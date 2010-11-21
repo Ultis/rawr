@@ -131,8 +131,7 @@ namespace Rawr.Mage
         private bool combustionAvailable;
         private bool moltenFuryAvailable;
         private bool coldsnapAvailable;
-        private bool potionOfWildMagicAvailable;
-        private bool potionOfSpeedAvailable;
+        private bool volcanicPotionAvailable;
         private bool effectPotionAvailable;
         private bool berserkingAvailable;
         private bool flameCapAvailable;
@@ -144,7 +143,7 @@ namespace Rawr.Mage
         private bool manaPotionAvailable;
 
         // initialized in InitializeEffectCooldowns
-        private const int standardEffectCount = 14; // can't just compute from enum, because that counts the combined masks also
+        private const int standardEffectCount = 13; // can't just compute from enum, because that counts the combined masks also
         public List<EffectCooldown> CooldownList { get; set; }
         public Dictionary<int, EffectCooldown> EffectCooldown { get; set; }
         private int[] effectExclusionList;
@@ -1679,9 +1678,8 @@ namespace Rawr.Mage
             combustionAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.Combustion == 1);
             moltenFuryAvailable = MageTalents.MoltenFury > 0;
             coldsnapAvailable = !CalculationOptions.DisableCooldowns && (MageTalents.ColdSnap == 1);
-            potionOfWildMagicAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.PotionOfWildMagic;
-            potionOfSpeedAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.PotionOfSpeed;
-            effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
+            volcanicPotionAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.VolcanicPotion;
+            effectPotionAvailable = volcanicPotionAvailable;
             flameCapAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameCap;
             berserkingAvailable = !CalculationOptions.DisableCooldowns && Character.Race == CharacterRace.Troll;
             waterElementalAvailable = !CalculationOptions.DisableCooldowns && Specialization == Mage.Specialization.Frost;
@@ -1693,52 +1691,61 @@ namespace Rawr.Mage
             if (useIncrementalOptimizations)
             {
                 int[] sortedStates = CalculationOptions.IncrementalSetSortedStates;
-                bool usesPotionOfSpeed = false;
-                bool usesPotionOfWildMagic = false;
+                bool usesVolcanicPotion = false;
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < sortedStates.Length; incrementalSortedIndex++)
                 {
                     // incremental index is filtered by non-item based cooldowns
                     int incrementalSetIndex = sortedStates[incrementalSortedIndex];
-                    if ((incrementalSetIndex & (int)StandardEffect.PotionOfSpeed) != 0)
+                    if ((incrementalSetIndex & (int)StandardEffect.VolcanicPotion) != 0)
                     {
-                        usesPotionOfSpeed = true;
-                    }
-                    if ((incrementalSetIndex & (int)StandardEffect.PotionOfSpeed) != 0)
-                    {
-                        usesPotionOfWildMagic = true;
+                        usesVolcanicPotion = true;
                     }
                 }
-                if (!usesPotionOfSpeed)
+                if (!usesVolcanicPotion)
                 {
-                    potionOfSpeedAvailable = false;
-                }
-                if (!usesPotionOfWildMagic)
-                {
-                    potionOfWildMagicAvailable = false;
+                    volcanicPotionAvailable = false;
                 }
             }
 
             if (!CalculationOptions.EffectDisableManaSources)
             {
-                if (CalculationOptions.PlayerLevel < 77)
+                switch (CalculationOptions.PlayerLevel)
                 {
-                    ManaGemValue = 2400.0f;
-                    MaxManaGemValue = 2460.0f;
+                    case 80:
+                        ManaGemValue = 27.3199996948242f * 125f;
+                        break;
+                    case 81:
+                        ManaGemValue = 27.3199996948242f * 305f;
+                        break;
+                    case 82:
+                        ManaGemValue = 27.3199996948242f * 338f;
+                        break;
+                    case 83:
+                        ManaGemValue = 27.3199996948242f * 375f;
+                        break;
+                    case 84:
+                        ManaGemValue = 27.3199996948242f * 407f;
+                        break;
+                    case 85:
+                    default:
+                        ManaGemValue = 27.3199996948242f * 443f;
+                        break;
                 }
-                else
-                {
-                    ManaGemValue = 3415.0f;
-                    MaxManaGemValue = 3500.0f;
-                }
+                MaxManaGemValue = ManaGemValue * 1.025f;
                 if (CalculationOptions.PlayerLevel <= 70)
                 {
                     ManaPotionValue = 2400.0f;
                     MaxManaPotionValue = 3000.0f;
                 }
-                else
+                else if (CalculationOptions.PlayerLevel <= 80)
                 {
                     ManaPotionValue = 4300.0f;
                     MaxManaPotionValue = 4400.0f;
+                }
+                else
+                {
+                    ManaPotionValue = 10000.0f;
+                    MaxManaPotionValue = 10750.0f;
                 }
             }
 
@@ -1925,15 +1932,15 @@ namespace Rawr.Mage
             StandardEffect = StandardEffect.PowerInfusion,
             Color = Color.FromArgb(255, 255, 255, 0),
         };
-        EffectCooldown cachedEffectPotionOfSpeed = new EffectCooldown()
+        EffectCooldown cachedEffectVolcanicPotion = new EffectCooldown()
         {
             Cooldown = float.PositiveInfinity,
-            Duration = 15.0f,
-            MaximumDuration = 15.0f,
+            Duration = 25.0f,
+            MaximumDuration = 25.0f,
             AutomaticStackingConstraints = true,
-            Mask = (int)StandardEffect.PotionOfSpeed,
-            Name = "Potion of Speed",
-            StandardEffect = StandardEffect.PotionOfSpeed,
+            Mask = (int)StandardEffect.VolcanicPotion,
+            Name = "Volcanic Potion",
+            StandardEffect = StandardEffect.VolcanicPotion,
             Color = Color.FromArgb(0xFF, 0xFF, 0xFA, 0xCD) //LemonChiffon
         };
         EffectCooldown cachedEffectArcanePower = new EffectCooldown()
@@ -1952,17 +1959,6 @@ namespace Rawr.Mage
             Name = "Combustion",
             StandardEffect = StandardEffect.Combustion,
             Color = Color.FromArgb(255, 255, 69, 0),
-        };
-        EffectCooldown cachedEffectPotionOfWildMagic = new EffectCooldown()
-        {
-            Cooldown = float.PositiveInfinity,
-            Duration = 15.0f,
-            MaximumDuration = 15.0f,
-            AutomaticStackingConstraints = true,
-            Mask = (int)StandardEffect.PotionOfWildMagic,
-            Name = "Potion of Wild Magic",
-            StandardEffect = StandardEffect.PotionOfWildMagic,
-            Color = Color.FromArgb(255, 128, 0, 128),
         };
         EffectCooldown cachedEffectBerserking = new EffectCooldown()
         {
@@ -2081,9 +2077,9 @@ namespace Rawr.Mage
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPowerInfusion);
                 CooldownList.Add(cooldown);
             }
-            if (potionOfSpeedAvailable)
+            if (volcanicPotionAvailable)
             {
-                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPotionOfSpeed);
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectVolcanicPotion);
                 CooldownList.Add(cooldown);
             }
             if (arcanePowerAvailable)
@@ -2096,11 +2092,6 @@ namespace Rawr.Mage
             if (combustionAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectCombustion);
-                CooldownList.Add(cooldown);
-            }
-            if (potionOfWildMagicAvailable)
-            {
-                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPotionOfWildMagic);
                 CooldownList.Add(cooldown);
             }
             if (berserkingAvailable)
@@ -2305,13 +2296,13 @@ namespace Rawr.Mage
                 effectExclusionList = new int[]
                 {
                     (int)(StandardEffect.ArcanePower | StandardEffect.PowerInfusion),
-                    (int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
+                    //(int)(StandardEffect.PotionOfSpeed | StandardEffect.PotionOfWildMagic),
                     itemBasedMask
                 };
             }
             else
             {
-                effectExclusionList[2] = itemBasedMask;
+                effectExclusionList[1] = itemBasedMask;
             }
         }
 
@@ -3396,7 +3387,7 @@ namespace Rawr.Mage
         {
             if (manaPotionAvailable)
             {
-                int manaPotionSegments = (segmentCooldowns && (potionOfWildMagicAvailable || restrictManaUse)) ? SegmentList.Count : 1;
+                int manaPotionSegments = (segmentCooldowns && (volcanicPotionAvailable || restrictManaUse)) ? SegmentList.Count : 1;
                 double mps = -(1 + baseStats.BonusManaPotion) * ManaPotionValue;
                 double dps = 0;
                 double tps = (1 + baseStats.BonusManaPotion) * ManaPotionValue * 0.5f * threatFactor;
@@ -3931,7 +3922,7 @@ namespace Rawr.Mage
         private void SetCalculationReuseReferences()
         {
             // determine which effects only cause a change in haste, thus allowing calculation reuse (only recalculating cast time)
-            int recalcCastTime = (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | (int)StandardEffect.PotionOfSpeed | (int)StandardEffect.Berserking | (int)StandardEffect.PowerInfusion;
+            int recalcCastTime = (int)StandardEffect.IcyVeins | (int)StandardEffect.Heroism | (int)StandardEffect.Berserking | (int)StandardEffect.PowerInfusion;
             for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
             {
                 EffectCooldown effect = ItemBasedEffectCooldowns[i];
@@ -4000,7 +3991,7 @@ namespace Rawr.Mage
                 {
                     // variable segment durations to get a better grasp on varied cooldown durations
                     // create ticks in intervals of half cooldown duration
-                    if (potionOfSpeedAvailable || potionOfWildMagicAvailable || manaPotionAvailable)
+                    if (volcanicPotionAvailable || manaPotionAvailable)
                     {
                         AddSegmentTicks(ticks, 120.0);
                     }
@@ -4978,9 +4969,9 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
             lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-            if (state.PotionOfWildMagic || state.PotionOfSpeed)
+            if (state.VolcanicPotion)
             {
-                lp.SetElementUnsafe(rowPotion, column, 1.0 / 15.0);
+                lp.SetElementUnsafe(rowPotion, column, 1.0 / 25.0);
             }
             /*if (state.WaterElemental && !MageTalents.GlyphOfEternalWater)
             {
@@ -5177,9 +5168,9 @@ namespace Rawr.Mage
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
             }
-            if (state.PotionOfWildMagic || state.PotionOfSpeed)
+            if (state.VolcanicPotion)
             {
-                bound = Math.Min(bound, 15.0);
+                bound = Math.Min(bound, 25.0);
                 /*for (int ss = 0; ss < segments; ss++)
                 {
                     double cool = 120;
