@@ -91,8 +91,8 @@ namespace Rawr.ProtPaladin
 
             int targetLevel = BossOpts.Level;
 
-            float SpellHitChance = Lookup.SpellHitChance(Character, Stats, targetLevel);
-            float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
+            float SpellHitChance = Lookup.SpellHitChance(Character.Level, Stats, targetLevel);
+            float bonusExpertise = Lookup.BonusExpertisePercentage(Stats);
 
             if (Lookup.IsSpell(Ability))
             {
@@ -100,12 +100,12 @@ namespace Rawr.ProtPaladin
                 Miss = Math.Min(1.0f - tableSize, 1.0f - SpellHitChance);
                 tableSize += Miss;
                 // Crit
-                Critical = Lookup.SpellCritChance(Character, Stats, targetLevel);
+                Critical = Lookup.SpellCritChance(Character.Level, Stats, targetLevel);
                 tableSize += Critical;
             }
             else
             {
-                float bonusHit = Lookup.HitChance(Character, Stats, targetLevel);
+                float bonusHit = Lookup.HitChance(Stats, targetLevel);
                 
                 // Miss
                 // Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));
@@ -115,22 +115,22 @@ namespace Rawr.ProtPaladin
                 if (Lookup.IsAvoidable(Ability))
                 {
                     // Dodge
-                    Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, targetLevel) - bonusExpertise));
+                    Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character.Level, Stats.SpellPenetration, HitResult.Dodge, targetLevel) - bonusExpertise));
                     tableSize += Dodge;
                     // Parry
-                    Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, targetLevel) - bonusExpertise));
+                    Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character.Level, Stats.SpellPenetration, HitResult.Parry, targetLevel) - bonusExpertise));
                     tableSize += Parry;
                 }
                 // Glancing Blow
                 if (Ability == Ability.MeleeSwing)
                 {
-                    Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, targetLevel)));
+                    Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character.Level, Stats.SpellPenetration, HitResult.Glance, targetLevel)));
                     tableSize += Glance;
                 }
                 // Block
                 if (Ability == Ability.MeleeSwing || Ability == Ability.HammerOfTheRighteous)
                 {
-                    Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Block, targetLevel)));
+                    Block = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character.Level, Stats.SpellPenetration, HitResult.Block, targetLevel)));
                     tableSize += Block;
                 }
                 // Critical Hit

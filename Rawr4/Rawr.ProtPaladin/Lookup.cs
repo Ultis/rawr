@@ -6,28 +6,19 @@ namespace Rawr.ProtPaladin
 {
     public static class Lookup
     {
-        
-        public static float GetEffectiveTargetArmor(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
-        {
-            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
-            TargetArmor *= (1f - ArmorIgnoreDebuffs) * (1f - ArmorIgnoreBuffs);
 
-            return TargetArmor;
+        public static float GetEffectiveTargetArmor(float TargetArmor, float ArmorIgnoreBuffs) {
+            return TargetArmor * (1f - ArmorIgnoreBuffs);
         }
         
-        public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
+        public static float TargetArmorReduction(int attackerLevel, float armorPenetration, int targetArmor)
         {
-            float damageReduction = StatConversion.GetArmorDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, 0f, 0f); 
-            return damageReduction;
+            return StatConversion.GetArmorDamageReduction(attackerLevel, targetArmor, armorPenetration, 0f, 0f); 
         }
 
-        public static float EffectiveTargetArmorReduction(Character character, Stats stats, int targetArmor, int targetLevel)
+        public static float EffectiveTargetArmorReduction(float armorPenetration, int targetArmor, int targetLevel)
         {
-            float effectiveTargetArmor = GetEffectiveTargetArmor(character.Level, targetArmor, 0.0f, stats.ArmorPenetration);
-            float damageReduction = StatConversion.GetArmorDamageReduction(targetLevel, effectiveTargetArmor, 0f, 0f, 0f); 
-            
-            return damageReduction;
+            return StatConversion.GetArmorDamageReduction(targetLevel, targetArmor, 0f, armorPenetration, 0f); 
         }
 
         public static float TargetCritChance(Character character, Stats stats, int targetLevel)
@@ -35,7 +26,7 @@ namespace Rawr.ProtPaladin
             return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
         }
 
-        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
+        public static float TargetAvoidanceChance(int attackerLevel, float spellPenetration, HitResult avoidanceType, int targetLevel)
         {
             switch (avoidanceType)
             {
@@ -48,46 +39,37 @@ namespace Rawr.ProtPaladin
                 case HitResult.Resist:
                     // Patial resists don't belong in the combat table, they are a damage multiplier (reduction)
                     // The Chance to get any Partial Resist
-                    float partialChance = 1.0f - StatConversion.GetResistanceTable(character.Level, targetLevel, 0.0f, stats.SpellPenetration)[0];
+                    float partialChance = 1.0f - StatConversion.GetResistanceTable(attackerLevel, targetLevel, 0.0f, spellPenetration)[0];
                     return partialChance;
                 default: return 0.0f;
             }
         }
 
-        public static float StanceDamageReduction(Character character, Stats stats) { return StanceDamageReduction(character, stats, DamageType.Physical); }
-        public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType) {
-            PaladinTalents talents = character.PaladinTalents;
-
-            float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
-            //Talents
-            if (talents.GlyphOfDivinePlea) { damageTaken *= (1f - 0.03f); }
-            			
-            switch (damageType) {
-                case DamageType.Arcane:
-                case DamageType.Fire:
-                case DamageType.Frost:
-                case DamageType.Nature:
-                case DamageType.Shadow:
-                case DamageType.Holy:
-                    return damageTaken * (1.0f - talents.GuardedByTheLight * 0.03f);
-                default:
-                    return damageTaken;
-            }
+        public static float DamageReduction(Stats stats) {
+            return 1.0f * (1.0f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
         }
 
-        public static float BonusExpertisePercentage(Character character, Stats stats)        { return StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating,CharacterClass.Paladin) + stats.Expertise,CharacterClass.Paladin); }
-        public static float BonusPhysicalHastePercentage(Character character, Stats stats)    { return StatConversion.GetHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.PhysicalHaste; }
-        public static float BonusSpellHastePercentage(Character character, Stats stats)       { return StatConversion.GetSpellHasteFromRating(stats.HasteRating,CharacterClass.Paladin) + stats.SpellHaste; }
+        public static float BonusExpertisePercentage(Stats stats) {
+            return StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
+        }
+        
+        public static float BonusPhysicalHastePercentage(Stats stats) {
+            return StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Paladin) + stats.PhysicalHaste;
+        }
 
-        public static float HitChance(Character character, Stats stats, int targetLevel) {
-            float physicalHit = StatConversion.GetPhysicalHitFromRating(stats.HitRating,CharacterClass.Paladin) + stats.PhysicalHit;
+        public static float BonusSpellHastePercentage(Stats stats) {
+            return StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin) + stats.SpellHaste;
+        }
+
+        public static float HitChance(Stats stats, int targetLevel) {
+            float physicalHit = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
             return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85]) + physicalHit);
         }
 
-        public static float SpellHitChance(Character character, Stats stats, int targetLevel) {
+        public static float SpellHitChance(int attackerLevel, Stats stats, int targetLevel) {
             float spellHit = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
 
-            int DeltaLevel = targetLevel - character.Level;
+            int DeltaLevel = targetLevel - attackerLevel;
 
             if      (DeltaLevel == 3) return Math.Min(1f, 0.83f + spellHit); // 83% chance to hit
             else if (DeltaLevel == 2) return Math.Min(1f, 0.94f + spellHit); // 94% chance to hit
@@ -95,11 +77,11 @@ namespace Rawr.ProtPaladin
             else                      return Math.Min(1f, 0.96f + spellHit); // 96% chance to hit
         }
 
-        public static float CritChance(Character character, Stats stats, int targetLevel) {
-            return Math.Max(0f,Math.Min(1f,StatConversion.GetCritFromRating(stats.CritRating,CharacterClass.Paladin)
-                                           + StatConversion.GetCritFromAgility(stats.Agility,CharacterClass.Paladin)
-                                           + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]
-                                           + stats.PhysicalCrit));
+        public static float CritChance(Stats stats, int targetLevel) {
+            return Math.Max(0f, Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Paladin)
+                                             + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Paladin)
+                                             + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]
+                                             + stats.PhysicalCrit));
         }
 
         /// <summary>
@@ -117,16 +99,16 @@ namespace Rawr.ProtPaladin
         /// <param name="character"></param>
         /// <param name="stats"></param>
         /// <returns></returns>
-        public static float SpellCritChance(Character character, Stats stats, int targetLevel) {
+        public static float SpellCritChance(int attackerLevel, Stats stats, int targetLevel) {
             float spellCrit = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + stats.SpellCrit + stats.SpellCritOnTarget);
 
-            return spellCrit * SpellHitChance(character, stats, targetLevel);
+            return spellCrit * SpellHitChance(attackerLevel, stats, targetLevel);
         }
         
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel, string targetType)
         {
-            float abilityCritChance = CritChance(character, stats, targetLevel);
-            float spellCritChance = SpellCritChance(character, stats, targetLevel);
+            float abilityCritChance = CritChance(stats, targetLevel);
+            float spellCritChance = SpellCritChance(character.Level, stats, targetLevel);
             
             switch (ability)
             {
@@ -166,7 +148,7 @@ namespace Rawr.ProtPaladin
             return Math.Min(1.0f, abilityCritChance);
         }
 
-        public static float WeaponDamage(Character character, Stats stats, bool normalized)
+        public static float WeaponDamage(Character character, float attackPower, bool normalized)
         {
             float weaponSpeed     = 0.0f;
             float weaponMinDamage = 0.0f;
@@ -186,50 +168,46 @@ namespace Rawr.ProtPaladin
             }
             // Non-Normalized Hits
             if (!normalized)
-                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f));
+                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * attackPower / 14.0f));
             // Normalized Hits
             // Protection paladins currently do not have normalized instant attacks.
             else
-                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (2.4f * stats.AttackPower / 14.0f));
+                return ((weaponMinDamage + weaponMaxDamage) / 2.0f + (2.4f * attackPower / 14.0f));
         }
 
         public static float WeaponSpeed(Character character, Stats stats) {
             if (character.MainHand != null)
-                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusPhysicalHastePercentage(character, stats)));
+                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusPhysicalHastePercentage(stats)));
             else
-                return Math.Max(1.0f, 2.0f / (1.0f + BonusPhysicalHastePercentage(character, stats)));
+                return Math.Max(1.0f, 2.0f / (1.0f + BonusPhysicalHastePercentage(stats)));
         }
 
-        public static float GlancingReduction(Character character, int targetLevel)
+        public static float GlancingReduction(int attackerLevel, int targetLevel)
         {
             // The character is a melee class, lowEnd is element of [0.01, 0.91]
-            float lowEnd = Math.Max(0.01f, Math.Min(0.91f, 1.3f - (0.05f * (float)(targetLevel - character.Level) * 5.0f)));
+            float lowEnd = Math.Max(0.01f, Math.Min(0.91f, 1.3f - (0.05f * (float)(targetLevel - attackerLevel) * 5.0f)));
             // The character is a melee class, highEnd is element of [0.20, 0.99]
-            float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(targetLevel - character.Level) * 5.0f)));
+            float highEnd = Math.Max(0.20f, Math.Min(0.99f, 1.2f - (0.03f * (float)(targetLevel - attackerLevel) * 5.0f)));
             
             return (lowEnd + highEnd) / 2.0f;
         }
 
-        public static float ArdentDefenderReduction(Character character)
+        public static float ArmorReduction(float armor, int targetLevel) // incoming damage
         {
-            return character.PaladinTalents.ArdentDefender * 0.20f / 3;
+            return Math.Max(0.0f, Math.Min(0.75f, armor / (armor + (2167.5f * targetLevel - 158167.5f))));
         }
 
-        public static float ArmorReduction(Character character, Stats stats, int targetLevel) // incoming damage
+        public static float ActiveBlockReduction(float bonusBlockValueMultiplier)
         {
-            return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * targetLevel - 22167.5f))));
+            return 0.3f + bonusBlockValueMultiplier;
         }
 
-        public static float ActiveBlockReduction(Character character, Stats stats)
+        public static float MagicReduction(Stats stats, DamageType school, int targetLevel)
         {
-            return stats.BlockValue;
-        }
+            float damageReduction = Lookup.DamageReduction(stats);
+            float resistanceConstant = 150f + (targetLevel - 60f) * (targetLevel - 67.5f);
 
-        public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)
-        {
-            float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
             float totalResist = 0.0f;
-            float resistScale = 0.0f;
 
             switch (school)
             {
@@ -240,21 +218,16 @@ namespace Rawr.ProtPaladin
                 case DamageType.Shadow: totalResist += stats.ShadowResistance; break;
             }
 
-            if      ((targetLevel - character.Level) == 0) resistScale = 400.0f;
-            else if ((targetLevel - character.Level) == 1) resistScale = 405.0f;
-            else if ((targetLevel - character.Level) == 2) resistScale = 410.0f;
-            else
-                // This number is still being tested by many and may be slightly higher
-                // update: it seems 510 is a more realistic value
-                // NB: resistScale is the resistance constant for 50% Mean Average Damage depending on Level difference.
-                resistScale = 510.0f;
-
-            return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
+            return totalResist / (totalResist + resistanceConstant);
         }
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
+            float avoidanceChance = StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
+
+            if (avoidanceType == HitResult.Block) { avoidanceChance += StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin) * 0.0225f; }
+
+            return avoidanceChance;
         }
 
         // Combination nCk

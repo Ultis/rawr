@@ -17,47 +17,59 @@ namespace Rawr.ProtPaladin
             {
                 // Relevant Gem IDs for ProtPaladin
                 // Red
-                int[] bold = { 39900, 39996, 40111, 42142 };        // Strength
-                int[] delicate = { 39905, 39997, 40112, 42143 };    // Agility
-                int[] subtle = { 39907, 40000, 40115, 42151 };      // Dodge
-                int[] flashing = { 39908, 40001, 40116, 42152 };    // Parry
-                int[] precise = { 39910, 40003, 40118, 42154 };     // Expertise
+                int[] bold = { 52081, 52176, 52206, 52255 };        // Strength
+                int[] delicate = { 52082, 52175, 52212, 52258 };    // Agility
+                int[] flashing = { 52083, 52174, 52216, 52259 };    // Parry
+                int[] precise = { 52085, 52172, 52230, 52260 };     // Expertise
 
                 // Purple
-                int[] shifting = { 39935, 40023, 40130, 40130 };    // Agility + Stamina
-                int[] sovereign = { 39934, 40022, 40129, 40129 };   // Strength + Stamina
-                int[] regal = { 39938, 40031, 40138, 40138 };       // Dodge + Stamina
-                int[] defender = { 39939, 40032, 40139, 40139 };    // Parry + Stamina
-                int[] guardian = { 39940, 40034, 40141, 40141 };    // Expertise + Stamina
+                int[] accurate = { 52105, 52152, 52203, 52203 };    // Expertise + Hit
+                int[] defender = { 52097, 52160, 52210, 52210 };    // Parry + Stamina
+                int[] etched = { 52101, 52156, 52213, 52213 };      // Strength + Hit
+                int[] glinting = { 52102, 52155, 52220, 52220 };    // Agility + Hit
+                int[] guardian = { 52099, 52158, 52221, 52221 };    // Expertise + Stamina
+                int[] retaliating = { 52103, 52154, 52234, 52234 }; // Parry + Hit
+                int[] shifting = { 52096, 52161, 52238, 52238 };    // Agility + Stamina
+                int[] sovereign = { 52095, 52162, 52243, 52243 };   // Strength + Stamina
 
                 // Blue
-                int[] solid = { 39919, 40008, 40119, 36767 };       // Stamina
+                int[] rigid = { 52089, 52168, 52235, 52264 };       // Hit
+                int[] solid = { 52086, 52171, 52242, 52261 };       // Stamina
 
                 // Green
-                int[] enduring = { 39976, 40089, 40167, 40167 };    // Defense + Stamina
-                int[] vivid = { 39975, 40088, 40166, 40166 };       // Hit + Stamina
+                int[] nimble = { 52120, 52137, 52227, 52227 };      // Dodge + Hit
+                int[] puissant = { 52126, 52131, 52231, 52231 };    // Mastery + Stamina
+                int[] regal = { 52119, 52138, 52233, 52233 };       // Dodge + Stamina
+                int[] sensei = { 52128, 52129, 52237, 52237 };      // Mastery + Hit
 
                 // Yellow
-                int[] thick = { 39916, 40015, 40126, 42157 };       // Defense
-                int[] rigid = { 39915, 40014, 40125, 42156 };       // Hit
+                int[] fractured = { 52094, 52163, 52219, 52269 };   // Mastery
+                int[] subtle = { 52090, 52167, 52247, 52265 };      // Dodge
 
                 // Orange
-                int[] champion = { 39949, 40039, 40144, 40144 };    // Strength + Defense
-                int[] etched = { 39948, 40038, 40143, 40143 };      // Strength + Hit
-                int[] glinting = { 39953, 40044, 40148, 40148 };    // Agility + Hit
-                int[] stalwart = { 39964, 40056, 40160, 40160 };    // Dodge + Defense
-                int[] glimmering = { 39965, 40057, 40161, 40161 };  // Parry + Defense
-                int[] accurate = { 39966, 40058, 40162, 40162 };    // Expertise + Hit
-                int[] resolute = { 39967, 40059, 40163, 40163 };    // Expertise + Defense
+                int[] adept = { 52115, 52142, 52204, 52204 };      // Agility + Mastery
+                int[] fine = { 52116, 52141, 52215, 52215 };       // Parry + Mastery
+                int[] keen = { 52118, 52139, 52224, 52224 };       // Expertise + Mastery
+                int[] polished = { 52106, 52151, 52229, 52229 };   // Agility + Dodge
+                int[] resolute = { 52107, 52150, 52249, 52249 };   // Expertise + Dodge
+                int[] skillful = { 52114, 52143, 52240, 52240 };   // Strength + Mastery
 
                 // Meta
-                int austere = 41380;
-                int eternal = 41396;
+                int austere = 52294;                               // Stamina + Increased Armor Value
+                int eternal = 52293;                               // Stamina + Shield Block Value
+                int fleet = 52289;                                 // Mastery + Minor Run Speed
 
-                string[] qualityGroupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
+                // Cogwheel
+                int cog_flashing = 59491;                          // Parry
+                int cog_fractured = 59480;                         // Mastery
+                int cog_precise = 59489;                           // Expertise
+                int cog_rigid = 59493;                             // Hit
+                int cog_subtle = 59477;                            // Dodge
+
+                string[] qualityGroupNames = new string[] { "Uncommon", "Perfect Uncommon", "Rare", "Jeweler" };
                 string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Agility)", "Mitigation (Dodge)", "Mitigation (Parry)", "Threat" };
                 
-                int[] metaTemplates = new int[] { austere, eternal };
+                int[] metaTemplates = new int[] { austere, eternal, fleet };
 
                 //    Red           Yellow      Blue        Prismatic
                 int[,][] survivabilityTemplates = new int[,][]
@@ -68,37 +80,45 @@ namespace Rawr.ProtPaladin
                 int[,][] agilityTemplates = new int[,][]
                 { // Mitigation (Agility)
                     { delicate,     delicate,   delicate,   delicate },
-                    { delicate,     glinting,   shifting,   delicate },
-                    { glinting,     thick,      enduring,   delicate },
-                    { shifting,     enduring,   solid,      delicate },
+                    { delicate,     polished,   shifting,   delicate },
+                    { polished,     subtle,     regal,      delicate },
+                    { shifting,     regal,      solid,      delicate },
                 };
 
                 int[,][] dodgeTemplates = new int[,][]
                 { // Mitigation (Dodge)
                     { subtle,       subtle,     subtle,     subtle },
-                    { subtle,       stalwart,   regal,      subtle },
-                    { stalwart,     thick,      enduring,   subtle },
-                    { regal,        enduring,   solid,      subtle },
+                    { flashing,     resolute,   defender,   subtle },
+                    { resolute,     subtle,     regal,      subtle },
+                    { defender,     regal,      solid,      subtle },
                 };
 
                 int[,][] parryTemplates = new int[,][]
                 { // Mitigation (Parry)
                     { flashing,     flashing,   flashing,   flashing },
-                    { flashing,     glimmering, defender,   flashing },
-                    { glimmering,   thick,      enduring,   flashing },
-                    { defender,     enduring,   solid,      flashing },
+                    { flashing,     fine,       defender,   flashing },
+                    { fine,         subtle,     regal,      flashing },
+                    { defender,     regal,      solid,      flashing },
+                };
+
+                int[,][] masteryTemplates = new int[,][]
+                { // Mitigation (Mastery)
+                    { fractured,    fractured,  fractured,  fractured },
+                    { flashing,     fine,       defender,   fractured },
+                    { fine,         fractured,  puissant,   fractured },
+                    { defender,     puissant,   solid,      fractured },
                 };
 
                 int[,][] threatTemplates = new int[,][]
                 { // Threat
                     { bold,         bold,       bold,       bold },
-                    { bold,         champion,   sovereign,  bold },
-                    { champion,     thick,      enduring,   bold },
-                    { sovereign,    enduring,   solid,      bold },
+                    { bold,         skillful,   sovereign,  bold },
+                    { skillful,     subtle,     regal,      bold },
+                    { sovereign,    regal,      solid,      bold },
                 };
 
                 int[][,][] gemmingTemplates = new int[][,][]
-                { survivabilityTemplates, agilityTemplates, dodgeTemplates, parryTemplates, threatTemplates };
+                { survivabilityTemplates, agilityTemplates, dodgeTemplates, parryTemplates, masteryTemplates, threatTemplates };
 
                 // Generate List of Gemming Templates
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
@@ -153,13 +173,12 @@ namespace Rawr.ProtPaladin
                     "Base Stats:Intellect",
 
                     "Defensive Stats:Armor",
-                    "Defensive Stats:Defense",
                     "Defensive Stats:Miss",
                     "Defensive Stats:Dodge",
                     "Defensive Stats:Parry",
                     "Defensive Stats:Block",
+                    "Defensive Stats:Mastery",
                     "Defensive Stats:Chance to be Crit",
-                    "Defensive Stats:...Without Holy Shield",
                     "Defensive Stats:Resilience",
                     "Defensive Stats:Block Value",                      
                     "Defensive Stats:Avoidance",
@@ -185,7 +204,6 @@ namespace Rawr.ProtPaladin
                     "Offensive Stats:Glancing Attacks",
                     "Offensive Stats:Total Damage/sec",
                     "Offensive Stats:Threat/sec",
-                    //"Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
 
                     "Resistances:Nature Resist",
                     "Resistances:Fire Resist",
@@ -316,9 +334,9 @@ focus on Survival Points.",
             // Target Info
             calculatedStats.TargetLevel = bossOpts.Level;
             calculatedStats.TargetArmor = bossOpts.Armor;
-            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(character.Level, calculatedStats.TargetArmor, 0f, 0f);
-            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character, stats, calculatedStats.TargetArmor);
-            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(character, stats, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
+            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(calculatedStats.TargetArmor, stats.ArmorPenetration);
+            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character.Level, stats.ArmorPenetration, calculatedStats.TargetArmor);
+            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(stats.ArmorPenetration, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
             
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             calculatedStats.Abilities = am.Abilities;
@@ -329,20 +347,15 @@ focus on Survival Points.",
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
 
-            calculatedStats.Defense = stats.Defense + (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating,CharacterClass.Paladin));
-            calculatedStats.DefenseRating = stats.DefenseRating;
-            calculatedStats.BlockValue = stats.BlockValue;
-
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calculatedStats.TargetLevel);
+            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calculatedStats.TargetLevel); //TODO: Currently relies on a base function that hasn't been updated yet
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
 
-            calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, calculatedStats.TargetLevel);
+            calculatedStats.ArmorReduction = Lookup.ArmorReduction(stats.Armor, calculatedStats.TargetLevel);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
-            calculatedStats.BaseAttackerSpeed = calcOpts.BossAttackSpeed;
-            calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
+            calculatedStats.AttackerSpeed = calcOpts.BossAttackSpeed;
             calculatedStats.DamageTaken = dm.DamageTaken;
             calculatedStats.DPSTaken = dm.DamagePerSecond;
             calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
@@ -350,32 +363,31 @@ focus on Survival Points.",
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
 
             calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calculatedStats.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
-            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane, calculatedStats.TargetLevel));
-            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire, calculatedStats.TargetLevel));
-            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost, calculatedStats.TargetLevel));
-            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature, calculatedStats.TargetLevel));
-            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow, calculatedStats.TargetLevel));
-            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane, calculatedStats.TargetLevel);
-            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire, calculatedStats.TargetLevel);
-            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost, calculatedStats.TargetLevel);
-            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Nature, calculatedStats.TargetLevel);
-            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Shadow, calculatedStats.TargetLevel);
+            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Arcane, calculatedStats.TargetLevel));
+            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(stats, DamageType.Fire, calculatedStats.TargetLevel));
+            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(stats, DamageType.Frost, calculatedStats.TargetLevel));
+            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Nature, calculatedStats.TargetLevel));
+            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Shadow, calculatedStats.TargetLevel));
+            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Arcane, calculatedStats.TargetLevel);
+            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(stats, DamageType.Fire, calculatedStats.TargetLevel);
+            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(stats, DamageType.Frost, calculatedStats.TargetLevel);
+            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Nature, calculatedStats.TargetLevel);
+            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Shadow, calculatedStats.TargetLevel);
 
             // Offensive Stats
-            calculatedStats.Hit = Lookup.HitChance(character, stats, calculatedStats.TargetLevel);
-            calculatedStats.SpellHit = Lookup.SpellHitChance(character, stats, calculatedStats.TargetLevel);
-            calculatedStats.Crit = Lookup.CritChance(character, stats, calculatedStats.TargetLevel);
-            calculatedStats.SpellCrit = Lookup.SpellCritChance(character, stats, calculatedStats.TargetLevel);
-            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
-            calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(character, stats);
-            calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(character, stats);
-            float test = calculatedStats.EffectiveTargetArmorDamageReduction / calculatedStats.TargetArmorDamageReduction;
+            calculatedStats.Hit = Lookup.HitChance(stats, calculatedStats.TargetLevel);
+            calculatedStats.SpellHit = Lookup.SpellHitChance(character.Level, stats, calculatedStats.TargetLevel);
+            calculatedStats.Crit = Lookup.CritChance(stats, calculatedStats.TargetLevel);
+            calculatedStats.SpellCrit = Lookup.SpellCritChance(character.Level, stats, calculatedStats.TargetLevel);
+            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(stats);
+            calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(stats);
+            calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(stats);
             calculatedStats.AvoidedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.AnyMiss;
             calculatedStats.MissedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Miss;
             calculatedStats.DodgedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Parry;
             calculatedStats.GlancingAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Glance;
-            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character, calculatedStats.TargetLevel);
+            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character.Level, calculatedStats.TargetLevel);
             calculatedStats.BlockedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Block;
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
@@ -532,10 +544,6 @@ focus on Survival Points.",
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
-            //if (statsTotal.GreatnessProc > 0)
-            //{
-            //    statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15.0f / 48.0f);
-            //}
             if (talents.GlyphOfSealOfTruth && calcOpts.SealChoice == "Seal of Truth") 
             {
                 statsTotal.Expertise += 10.0f;
@@ -553,21 +561,21 @@ focus on Survival Points.",
             statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.Armor      += statsTotal.BonusArmor;
 
-            statsTotal.AttackPower += (statsTotal.Strength - 20f) * 2f + 20f;
+            statsTotal.AttackPower += (statsTotal.Strength * 2f) + (character.Level * 3) - 20f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
-            statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength,CharacterClass.Paladin) - 10f);
-            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
             statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;
             statsTotal.HitRating = statsBase.HitRating + statsGearEnchantsBuffs.HitRating;
-            statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal, false);
+            statsTotal.MasteryRating = statsBase.MasteryRating + statsGearEnchantsBuffs.MasteryRating;
+            statsTotal.BlockRating = statsBase.BlockRating + statsGearEnchantsBuffs.BlockRating;
+            statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal.AttackPower, false);
             //statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness; // Nerfed in 3.1
 
             // * judgement hit chance ? I personally believe the effect triggers even on a miss.
@@ -612,20 +620,16 @@ focus on Survival Points.",
             float chanceHitSpell = 1.0f - chanceMissSpell;
             float chanceDoTTick = chanceHitSpell * (character.PaladinTalents.GlyphOfConsecration ? 1.0f : 16.0f / 18.0f); // 16 ticks in 18 seconds of 9696 rotation. cba with cons. glyph atm.
             
-            float intervalRotation = 18.0f;
+            float intervalRotation = 9.0f;
             float intervalDoTTick = 1.0f;
             float intervalPhysical = Lookup.WeaponSpeed(character, stats); // + calcOptsTargetsHotR / intervalHotR;
             //float intervalHitPhysical = intervalPhysical / chanceHitPhysical;
-            float intervalSpellCast = 1.5f; // 9696 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
+            float intervalSpellCast = 1.5f; // 939 assumes casting a spell every gcd. Changing auras, and casting a blessing is disregarded.
             //float intervalHitSpell = intervalSpellCast / chanceHitSpell;
-            float intervalDamageSpellCast = 8.0f / intervalRotation;// 9696 has 8 direct damage spell casts in 18 seconds.
-            float intervalDamageDone = 1.0f / (1.0f / intervalPhysical + 1.0f / intervalSpellCast);
+            float intervalDamageSpellCast = 1f / intervalRotation;// 939 has 1 direct damage spell cast in 9 seconds.
+            float intervalDamageDone = 1f / (1f / intervalPhysical + 1f / intervalSpellCast);
             float chanceDamageDone = (intervalPhysical * chanceHitPhysical + intervalSpellCast * chanceHitSpell) / (intervalPhysical + intervalSpellCast);
-            float intervalJudgement = 8f;
-            float intervalShoR = 6.0f;
-            float intervalHotR = 6.0f;
-            float intervalHolyShield = 9.0f;
-            float intervalDivinePlea = 60.0f;
+            float intervalJudgement = 9.0f;
 
             Stats effectsToAdd = new Stats();
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
@@ -724,9 +728,6 @@ focus on Survival Points.",
             statsSpecialEffects.BonusArmor = (float)Math.Floor(statsSpecialEffects.BonusArmor * (1.0f + stats.BonusArmorMultiplier + statsSpecialEffects.BonusArmorMultiplier));
             statsSpecialEffects.Armor += statsSpecialEffects.BonusArmor;
  
-            statsSpecialEffects.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsSpecialEffects.Strength, CharacterClass.Paladin));
-            statsSpecialEffects.BlockValue = (float)Math.Floor(statsSpecialEffects.BlockValue * (1.0f + stats.BonusBlockValueMultiplier + statsSpecialEffects.BonusBlockValueMultiplier));
-
             // Offensive Stats
             statsSpecialEffects.AttackPower += statsSpecialEffects.Strength * 2.0f;
             statsSpecialEffects.AttackPower = (float)Math.Floor(statsSpecialEffects.AttackPower * (1.0f + stats.BonusAttackPowerMultiplier + statsSpecialEffects.BonusAttackPowerMultiplier));
@@ -827,6 +828,7 @@ focus on Survival Points.",
                 #endregion
                 #region Item Budget
                 case "Item Budget":
+                    // TODO: Add Mastery Rating
                     CharacterCalculationsProtPaladin calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 10f } }) as CharacterCalculationsProtPaladin;
@@ -834,7 +836,6 @@ focus on Survival Points.",
                     CharacterCalculationsProtPaladin calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 10f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10f } }) as CharacterCalculationsProtPaladin;
-                    CharacterCalculationsProtPaladin calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = 10f / 0.65f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = (10f * 10f) / 0.667f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 10f } }) as CharacterCalculationsProtPaladin;
 
@@ -890,34 +891,6 @@ focus on Survival Points.",
                         MitigationPoints = 10 * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (strToAdd - strToSubtract),
                         SurvivalPoints = 10 * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (strToAdd - strToSubtract),
                         ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (strToAdd - strToSubtract)
-                    };
-
-
-                    //Differential Calculations for Def
-                    calcAtAdd = calcBaseValue;
-                    float defToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 20)
-                    {
-                        defToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsProtPaladin;
-                    }
-
-                    calcAtSubtract = calcBaseValue;
-                    float defToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -20)
-                    {
-                        defToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsProtPaladin;
-                    }
-                    defToSubtract += 0.01f;
-
-                    ComparisonCalculationProtPaladin comparisonDef = new ComparisonCalculationProtPaladin()
-                    {
-                        Name = "10 Defense Rating",
-                        OverallPoints = 10 * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
-                        MitigationPoints = 10 * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
-                        SurvivalPoints = 10 * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
-                        ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
                     };
 
 
@@ -981,7 +954,6 @@ focus on Survival Points.",
                         comparisonAgi,
                         comparisonAC,
                         comparisonSta,
-                        comparisonDef,
                         new ComparisonCalculationProtPaladin() { Name = "10 Dodge Rating",
                             OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
@@ -1012,11 +984,6 @@ focus on Survival Points.",
                             MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtPaladin() { Name = "15.38 Block Value",
-                            OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcBlockValueValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtPaladin() { Name = "150 Health",
                             OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
@@ -1150,8 +1117,6 @@ focus on Survival Points.",
                 DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
                 BlockRating = stats.BlockRating,
-                BlockValue = stats.BlockValue,
-                DefenseRating = stats.DefenseRating,
                 Resilience = stats.Resilience,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -1224,10 +1189,8 @@ focus on Survival Points.",
                 stats.Armor +
                 stats.BonusArmor +
                 stats.Block +
-                stats.BlockValue +
                 stats.BlockRating +
-                stats.Defense +
-                stats.DefenseRating +
+                stats.MasteryRating +
                 stats.Dodge +
                 stats.DodgeRating +
                 stats.Miss +
@@ -1240,7 +1203,6 @@ focus on Survival Points.",
                 stats.BonusBlockValueMultiplier +
 
                 // Threat Stats
-                stats.ArmorPenetration +
                 stats.AttackPower +
                 stats.SpellPower +
                 stats.CritRating +

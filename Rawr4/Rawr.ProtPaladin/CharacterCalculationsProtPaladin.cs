@@ -54,8 +54,6 @@ namespace Rawr.ProtPaladin
         public float ThreatScale { get; set; }
 
         //Basic Tank Defensive Stats
-        public float Defense { get; set; }
-        public float DefenseRating { get; set; }
         public float Dodge { get; set; }
         public float Parry { get; set; }
         public float Miss { get; set; }
@@ -65,7 +63,6 @@ namespace Rawr.ProtPaladin
         public float GuaranteedReduction { get; set; }
         public float DodgePlusMissPlusParry { get; set; }
         public float TotalMitigation { get; set; }
-        public float BaseAttackerSpeed { get; set; }
         public float AttackerSpeed { get; set; }
         public float DamageTaken { get; set; }
         public float DPSTaken { get; set; }
@@ -77,7 +74,7 @@ namespace Rawr.ProtPaladin
 
         // Shield Tank Defensive Stats
         public float Block { get; set; }
-        public float BlockValue { get; set; }
+        public float Mastery { get; set; }
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float DamageTakenPerBlock { get; set; }
 
@@ -129,21 +126,18 @@ namespace Rawr.ProtPaladin
             dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}" + Environment.NewLine +
                                                   "Armor Damage Reduction depends on Attacker Level.",
                                                   BasicStats.Armor, ArmorReduction));
-            dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
             dictValues.Add("Dodge", string.Format("{0:0.0000%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
             dictValues.Add("Parry", string.Format("{0:0.0000%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
             dictValues.Add("Block", string.Format("{0:0.0000%}*Block Rating {1}", Block, BasicStats.BlockRating));
+            dictValues.Add("Mastery", string.Format("{0}*Mastery Rating {1}" + Environment.NewLine +
+                                                    "Adds {2:0.0000%} Block", Mastery, BasicStats.MasteryRating, Mastery * 0.0225f));
             dictValues.Add("Miss", string.Format("{0:0.0000%}", Miss));
-            dictValues.Add("Block Value", string.Format("{0}", BlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.0000%}*Avoidance Points {1}", DodgePlusMissPlusParry, (DodgePlusMissPlusParry * 10000f)));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.0000%}", DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
 
-            if (AttackerSpeed == BaseAttackerSpeed)
-                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s", AttackerSpeed));
-            else
-                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (reduced by parry haste)", AttackerSpeed, BaseAttackerSpeed));
+            dictValues.Add("Attacker Speed", string.Format("{0:0.00}s", AttackerSpeed));
 
             dictValues.Add("Damage Taken",
                 string.Format("{0:0.0} DPS*{1:0} damage per normal attack" + Environment.NewLine +
@@ -161,11 +155,9 @@ namespace Rawr.ProtPaladin
 
             if (CritVulnerability > 0.0001f)
             {
-                double defenseNeeded = Math.Ceiling((100 * CritVulnerability / StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * StatConversion.RATING_PER_DEFENSE);
-                double resilienceNeeded = Math.Ceiling(CritVulnerability * StatConversion.RATING_PER_RESILIENCE);
                 dictValues.Add("Chance to be Crit",
-                    string.Format("{0:0.00%}*CRITTABLE! Short by approximately {1:0} defense rating or approximately {2:0} resilience rating to be uncrittable.",
-                                    CritVulnerability, defenseNeeded, resilienceNeeded));
+                    string.Format("{0:0.00%}*CRITTABLE! Spec 3 points into the protection talent Sanctuary to be uncrittable.",
+                                    CritVulnerability));
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to be crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
@@ -267,7 +259,6 @@ namespace Rawr.ProtPaladin
                 case "Avoidance Points": return DodgePlusMissPlusParry * 10000.0f;
                 case "% Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
-                case "Block Value": return BlockValue;
                 case "% Block Chance": return Block * 100.0f;
                 case "Burst Time": return BurstTime;
                 case "TankPoints": return TankPoints;

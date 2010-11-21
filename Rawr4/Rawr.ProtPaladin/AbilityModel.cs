@@ -30,9 +30,9 @@ namespace Rawr.ProtPaladin {
 
             #region Ability Base Damage
             switch (Ability) {
-                /************
-                 * Spells
-                 ************/
+
+                #region Spells
+
                 case Ability.AvengersShield:
                     if (Character.OffHand == null || Character.OffHand.Type != ItemType.Shield || (Talents.Divinity == 0 && Talents.SealsOfThePure == 0 && Talents.EternalGlory == 0)) {
                         Damage = 0f;
@@ -61,16 +61,17 @@ namespace Rawr.ProtPaladin {
                     critMultiplier = 0.5f;
                     break;
 
-                /************
-                 * Melee
-                 ************/
+                #endregion
+
+                #region Melee
+
                 case Ability.CrusaderStrike:
                     if (Character.MainHand == null) {
                         Damage = 0f;
                         return;
                     }
 
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, true);
+                    baseDamage = Lookup.WeaponDamage(Character, Stats.AttackPower, true);
                     baseDamage *= 1.2f
                                 + (1.2f * (Talents.Crusade * 0.1f))
                                 + (1.2f * (Talents.WrathOfTheLightbringer * 0.5f));
@@ -86,7 +87,7 @@ namespace Rawr.ProtPaladin {
                         return;
                     }
 
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, true) * 0.3f;
+                    baseDamage = Lookup.WeaponDamage(Character, Stats.AttackPower, true) * 0.3f;
 
                     baseDamage *= (1f + (Talents.Crusade * 0.1f) + (Talents.GlyphOfHammerOfTheRighteous ? 0.1f : 0f))
                                 * (1.0f + Stats.BonusPhysicalDamageMultiplier)
@@ -131,7 +132,7 @@ namespace Rawr.ProtPaladin {
                     baseDamage = Stats.WeaponDamage;
 
                     baseDamage *= (1.0f + Stats.BonusPhysicalDamageMultiplier)
-                                * (1.0f - (Lookup.GlancingReduction(Character, targetLevel) * AttackTable.Glance))
+                                * (1.0f - (Lookup.GlancingReduction(Character.Level, targetLevel) * AttackTable.Glance))
                                 * (1.0f - ArmorReduction);
 
                     critMultiplier = 1.0f;
@@ -171,9 +172,10 @@ namespace Rawr.ProtPaladin {
                     critMultiplier = 1.0f;
                     break;
 
-                /************
-                 * DoTs
-                 ************/
+                #endregion
+
+                #region DoTs
+
                 case Ability.CensureTick:
                     {
                         float censureStacks = 5;
@@ -197,9 +199,10 @@ namespace Rawr.ProtPaladin {
                     critMultiplier = 0.0f;
                     break;
 
-                /************
-                 * Defensive
-                 ************/
+                #endregion
+
+                #region Defensive
+
                 case Ability.RetributionAura:
                     baseDamage = 121.4802229f + (SP * 0.033f);
 
@@ -207,11 +210,15 @@ namespace Rawr.ProtPaladin {
 
                     critMultiplier = 0.0f;
                     break;
+            
+                #endregion
+
             }
-            #endregion
 
             baseDamage *= (1.0f + Stats.BonusDamageMultiplier);
-
+            
+            #endregion
+            
             #region Miss Chance, Avoidance Chance
             if (Lookup.IsSpell(Ability))
             {
@@ -252,7 +259,7 @@ namespace Rawr.ProtPaladin {
             AttackTable = new AttackTable(character, stats, ability, CalcOpts, BossOpts);
 
             if (!Lookup.IsSpell(Ability))
-                ArmorReduction = Lookup.EffectiveTargetArmorReduction(Character, Stats, BossOpts.Armor, BossOpts.Level);
+                ArmorReduction = Lookup.EffectiveTargetArmorReduction(Stats.ArmorPenetration, BossOpts.Armor, BossOpts.Level);
 
             Name        = Lookup.Name(Ability);
 
