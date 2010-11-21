@@ -49,7 +49,7 @@ namespace Rawr.Properties
             _default.ItemSearchURI = "Armory.php?{0}*search.xml*searchQuery={1}&searchType=items";//"http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items";
             _default.ItemWowheadUpgradeURI = "http://{0}.wowhead.com/?items&filter={1}";
             _default.ArmoryTalentIconURI = "http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}";
-
+            _default.WowheadTalentIconURI = "http://static.wowhead.com/images/wow/icons/{0}/{1}"; // {0} = small, medium, large | {1} = iconname.jpg
         }
 
         private static NetworkSettings _default;
@@ -138,6 +138,13 @@ namespace Rawr.Properties
         }
         public string ItemWowheadUpgradeURI { get; set; }
         public string ArmoryTalentIconURI { get; set; }
+
+        /// <summary>
+        /// http://static.wowhead.com/images/wow/icons/{0}/{1}
+        /// <para>{0} = small (List Size), medium (Talent Size), large (Display Size)</para>
+        /// <para>{1} = iconname.jpg</para>
+        /// </summary>
+        public string WowheadTalentIconURI { get; set; }
 
     }
 }
