@@ -668,7 +668,8 @@ namespace Rawr
                 characterWithSlotEmpty = character.Clone();
             Character characterWithNewItem = character.Clone();
 
-            if (slot != CharacterSlot.Metas && slot != CharacterSlot.Gems)
+            if (slot != CharacterSlot.Metas && slot != CharacterSlot.Gems
+                && slot != CharacterSlot.Cogwheels && slot != CharacterSlot.Hydraulics)
             {
                 if (!useCache) characterWithSlotEmpty[slot] = null;
                 characterWithNewItem[slot] = item;

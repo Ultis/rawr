@@ -11,7 +11,8 @@
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     x:Class="Rawr.UI.GemmingTemplates"
     Title="Edit Gemming Templates"
-    Height="540" Width="420">
+    Height="540" Width="520">
+    
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -25,6 +26,12 @@
         <Popup x:Name="GemPopup">
             <local:ItemListControl x:Name="ComparisonGemList"/>
         </Popup>
+        <Popup x:Name="CogwheelPopup">
+            <local:ItemListControl x:Name="ComparisonCogwheelList"/>
+        </Popup>
+        <Popup x:Name="HydraulicPopup">
+            <local:ItemListControl x:Name="ComparisonHydraulicList"/>
+        </Popup>
         <Popup x:Name="MetaPopup">
             <local:ItemListControl x:Name="ComparisonMetaList"/>
         </Popup>
@@ -34,7 +41,7 @@
 
         <ScrollViewer Margin="4,2" VerticalScrollBarVisibility="Auto" Grid.Row="2" >
             <StackPanel>
-                <TextBlock x:Name="ColLabels" Text="                          Red       Yellow       Blue      Prismatic    Meta" TextWrapping="Wrap"/>
+                <TextBlock x:Name="ColLabels" Text="                          Red       Yellow       Blue    Prismatic    Meta   Cogwheel Hydraulic" TextWrapping="Wrap"/>
                 <StackPanel x:Name="GroupStack" Orientation="Vertical">
                     <!-- This is where new templates get added -->
                 </StackPanel>

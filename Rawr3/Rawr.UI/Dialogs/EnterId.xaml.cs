@@ -21,16 +21,8 @@ namespace Rawr.UI
             {
                 String input = textItemId.Text;
 
-                Regex wowhead = new Regex(@"http://www.wowhead.com/\?item=([-+]?\d+)");
+                Regex wowhead = new Regex(@"http://(www|cata|ptr).wowhead.com/\?item=([-+]?\d+)");
                 Match m = wowhead.Match(input);
-
-                if (m.Success)
-                {
-                    return int.Parse(m.Groups[1].Value);
-                }
-
-                Regex wowheadptr = new Regex(@"http://ptr.wowhead.com/\?item=([-+]?\d+)");
-                m = wowheadptr.Match(input);
 
                 if (m.Success)
                 {
@@ -56,6 +48,8 @@ namespace Rawr.UI
                 return 0;
             }
         }
+
+        public bool UsePTR { get { return CK_PTR.IsChecked.GetValueOrDefault(false) || textItemId.Text.Contains("ptr") || textItemId.Text.Contains("cata"); } }
 
         public string ItemName
         {

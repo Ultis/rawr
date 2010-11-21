@@ -518,8 +518,10 @@ namespace Rawr
             {
                 //This is in no way accurate, but it's just intended to get generally the right mix of stats on items. 
                 //Things like removing SP, AP, ArPen, and Def are the big things
-                if (item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Purple ||
-                    item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Meta || item.Slot == ItemSlot.Prismatic)
+                if (item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Yellow ||
+                    item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Purple ||
+                    item.Slot == ItemSlot.Meta || item.Slot == ItemSlot.Prismatic ||
+                    item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic)
                 {
                     if (item.Stats.ArmorPenetrationRating > 0)
                     {

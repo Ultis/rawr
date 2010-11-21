@@ -112,9 +112,9 @@ namespace Rawr.UI
                     ComparisonItemListGem2.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem2_SelectedItemsGemChanged);
                     ComparisonItemListGem3.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem3_SelectedItemsGemChanged);
                     // Set up the selector so that it uses the right slot type
-                    ComparisonItemListGem1.Slot = Item.Item.SocketColor1 == ItemSlot.Meta ? CharacterSlot.Metas : CharacterSlot.Gems;
-                    ComparisonItemListGem2.Slot = CharacterSlot.Gems;
-                    ComparisonItemListGem3.Slot = CharacterSlot.Gems;
+                    ComparisonItemListGem1.Slot = GetProperGemSlot(Item.Item.SocketColor1);
+                    ComparisonItemListGem2.Slot = GetProperGemSlot(Item.Item.SocketColor2);
+                    ComparisonItemListGem3.Slot = GetProperGemSlot(Item.Item.SocketColor3);
                     // Update the socket colors
                     SetSocketColors();
                     // Set the Gem lists' selected items to the core item's gems
@@ -133,6 +133,13 @@ namespace Rawr.UI
             }
         }
 
+        private CharacterSlot GetProperGemSlot(ItemSlot s) {
+            return (s == ItemSlot.Meta ? CharacterSlot.Metas :
+                   (s == ItemSlot.Cogwheel ? CharacterSlot.Cogwheels :
+                   (s == ItemSlot.Hydraulic ? CharacterSlot.Hydraulics :
+                   (CharacterSlot.Gems))));
+        }
+
         private void SetSocketColor(Button button, ItemSlot slot) {
             Brush b;
             switch (slot) {
@@ -142,6 +149,8 @@ namespace Rawr.UI
                 case ItemSlot.Yellow:    b = new SolidColorBrush(Color.FromArgb(255,218,165,032)); break; // Goldenrod
                 case ItemSlot.Meta:      b = new SolidColorBrush(Color.FromArgb(255,059,059,059)); break; // Very Dark Gray
                 case ItemSlot.Prismatic: b = new SolidColorBrush(Color.FromArgb(255,097,117,132)); break; // Gray
+                case ItemSlot.Cogwheel:  b = new SolidColorBrush(Color.FromArgb(255,000,000,000)); break; // Black
+                case ItemSlot.Hydraulic: b = new SolidColorBrush(Color.FromArgb(255,255,255,0255)); break; // White
                 default:                 b = new SolidColorBrush(SystemColors.ControlColor); break;
             }
             /*b = new LinearGradientBrush(new GradientStopCollection() {

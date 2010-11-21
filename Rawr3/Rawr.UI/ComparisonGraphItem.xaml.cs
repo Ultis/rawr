@@ -235,12 +235,12 @@ namespace Rawr.UI
 
         private void RefreshItemFromArmory(object sender, RoutedEventArgs e)
         {
-            Item.LoadFromId(ItemInstance.Id, true, true, false);
+            Item.LoadFromId(ItemInstance.Id, true, true, false, false);
         }
 
         private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)
         {
-            Item.LoadFromId(ItemInstance.Id, true, true, true);
+            Item.LoadFromId(ItemInstance.Id, true, true, true, false);
         }
 
         private void EquipItem(object sender, RoutedEventArgs e)

@@ -50,6 +50,8 @@ namespace Rawr.Optimizer
         private List<ItemInstance>[] slotItems = new List<ItemInstance>[slotCount];
         private Item[] metaGemItems;
         private Item[] gemItems;
+        private Item[] cogWheelItems;
+        private Item[] hydraulicItems;
         private Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
         private List<List<DirectUpgradeEntry>>[] slotDirectUpgrades = new List<List<DirectUpgradeEntry>>[slotCount];
         private List<Item>[] slotRawItems = new List<Item>[slotCount];
@@ -539,7 +541,7 @@ namespace Rawr.Optimizer
             {
                 // check if this combination is a valid selection of bonuses
                 Array.Clear(bonusCountActual, 0, bonusCountActual.Length);
-                int R = 0, Y = 0, B = 0;
+                int R = 0, Y = 0, B = 0, C = 0, H = 0;
                 for (int k = 0; k < selected.Length; k++)
                 {
                     if (selected[k])
@@ -559,6 +561,12 @@ namespace Rawr.Optimizer
                                 case ItemSlot.Yellow:
                                     Y++;
                                     break;
+                                case ItemSlot.Cogwheel:
+                                    C++;
+                                    break;
+                                case ItemSlot.Hydraulic:
+                                    H++;
+                                    break;
                             }
                         }
                     }
@@ -575,7 +583,7 @@ namespace Rawr.Optimizer
 
                 if (valid)
                 {
-                    if (RemainingSocketsCanBeMatched(gems, gemCount, R, B, Y))
+                    if (RemainingSocketsCanBeMatched(gems, gemCount, R, B, Y, C, H))
                     {
                         return true;
                     }
@@ -628,7 +636,7 @@ namespace Rawr.Optimizer
         /// <param name="gemsAll">All gems available.</param>
         /// <param name="gemCount">Proposed gems to use.</param>
         /// <returns>Returns true if we can match the sockets.</returns>
-        private bool RemainingSocketsCanBeMatched(Dictionary<Item, int> gemsAll, Dictionary<Item, int> gemCount, int R, int B, int Y)
+        private bool RemainingSocketsCanBeMatched(Dictionary<Item, int> gemsAll, Dictionary<Item, int> gemCount, int R, int B, int Y, int C, int H)
         {
             // we'll do this by first matching pure colors, then bicolor and prismatic
 
@@ -656,6 +664,12 @@ namespace Rawr.Optimizer
                         break;
                     case ItemSlot.Blue:
                         B = Math.Max(0, B - kvp.Value);
+                        break;
+                    case ItemSlot.Cogwheel:
+                        C = Math.Max(0, C - kvp.Value);
+                        break;
+                    case ItemSlot.Hydraulic:
+                        H = Math.Max(0, H - kvp.Value);
                         break;
                     case ItemSlot.Green:
                         G += kvp.Value;
@@ -1361,11 +1375,12 @@ namespace Rawr.Optimizer
                 case ItemSlot.Blue:
                 case ItemSlot.Purple:
                 case ItemSlot.Prismatic:
+                case ItemSlot.Cogwheel:
+                case ItemSlot.Hydraulic:
                     gemCount++;
                     break;
                 default:
-                    if (blacksmithingSocket)
-                    {
+                    if (blacksmithingSocket) {
                         gemCount++;
                         blacksmithingSocket = false;
                     }
@@ -1381,11 +1396,12 @@ namespace Rawr.Optimizer
                 case ItemSlot.Blue:
                 case ItemSlot.Purple:
                 case ItemSlot.Prismatic:
+                case ItemSlot.Cogwheel:
+                case ItemSlot.Hydraulic:
                     gemCount++;
                     break;
                 default:
-                    if (blacksmithingSocket)
-                    {
+                    if (blacksmithingSocket) {
                         gemCount++;
                         blacksmithingSocket = false;
                     }
@@ -1401,11 +1417,12 @@ namespace Rawr.Optimizer
                 case ItemSlot.Blue:
                 case ItemSlot.Purple:
                 case ItemSlot.Prismatic:
+                case ItemSlot.Cogwheel:
+                case ItemSlot.Hydraulic:
                     gemCount++;
                     break;
                 default:
-                    if (blacksmithingSocket)
-                    {
+                    if (blacksmithingSocket) {
                         gemCount++;
                         blacksmithingSocket = false;
                     }
@@ -1443,6 +1460,8 @@ namespace Rawr.Optimizer
             List<string> removeIds = new List<string>();
             List<Item> metaGemItemList = new List<Item>();
             List<Item> gemItemList = new List<Item>();
+            List<Item> cogWheelItemList = new List<Item>();
+            List<Item> hydraulicItemList = new List<Item>();
             foreach (string xid in availableItems)
             {
                 int dot = xid.IndexOf('.');
@@ -1467,6 +1486,14 @@ namespace Rawr.Optimizer
                             case ItemSlot.Purple:
                             case ItemSlot.Prismatic:
                                 gemItemList.Add(availableItem);
+                                removeIds.Add(xid);
+                                break;
+                            case ItemSlot.Cogwheel:
+                                cogWheelItemList.Add(availableItem);
+                                removeIds.Add(xid);
+                                break;
+                            case ItemSlot.Hydraulic:
+                                hydraulicItemList.Add(availableItem);
                                 removeIds.Add(xid);
                                 break;
                         }
@@ -1749,9 +1776,7 @@ namespace Rawr.Optimizer
             string[] ids = gemmedId.Split('.');
             Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
             Enchant[] possibleEnchants = null;
-#if RAWR4
             Reforging[] possibleReforgings = null;
-#endif
             bool blacksmithingSocket = (item.Slot == ItemSlot.Waist && characters[0].WaistBlacksmithingSocketEnabled)
                                     || (item.Slot == ItemSlot.Hands && characters[0].HandsBlacksmithingSocketEnabled)
                                     || (item.Slot == ItemSlot.Wrist && characters[0].WristBlacksmithingSocketEnabled);
@@ -1772,16 +1797,17 @@ namespace Rawr.Optimizer
                     case ItemSlot.Prismatic:
                         possibleGem1s = gemItems;
                         break;
+                    case ItemSlot.Cogwheel:
+                        possibleGem1s = cogWheelItems;
+                        break;
+                    case ItemSlot.Hydraulic:
+                        possibleGem1s = hydraulicItems;
+                        break;
                     default:
-                        if (blacksmithingSocket)
-                        {
+                        if (blacksmithingSocket) {
                             possibleGem1s = gemItems;
                             blacksmithingSocket = false;
-                        }
-                        else
-                        {
-                            possibleGem1s = new Item[] { null };
-                        }
+                        } else { possibleGem1s = new Item[] { null }; }
                         break;
                 }
             }
@@ -1806,16 +1832,17 @@ namespace Rawr.Optimizer
                     case ItemSlot.Prismatic:
                         possibleGem2s = gemItems;
                         break;
+                    case ItemSlot.Cogwheel:
+                        possibleGem2s = cogWheelItems;
+                        break;
+                    case ItemSlot.Hydraulic:
+                        possibleGem2s = hydraulicItems;
+                        break;
                     default:
-                        if (blacksmithingSocket)
-                        {
+                        if (blacksmithingSocket) {
                             possibleGem2s = gemItems;
                             blacksmithingSocket = false;
-                        }
-                        else
-                        {
-                            possibleGem2s = new Item[] { null };
-                        }
+                        } else { possibleGem2s = new Item[] { null }; }
                         break;
                 }
             }
@@ -1840,13 +1867,17 @@ namespace Rawr.Optimizer
                     case ItemSlot.Prismatic:
                         possibleGem3s = gemItems;
                         break;
+                    case ItemSlot.Cogwheel:
+                        possibleGem3s = cogWheelItems;
+                        break;
+                    case ItemSlot.Hydraulic:
+                        possibleGem3s = hydraulicItems;
+                        break;
                     default:
                         if (blacksmithingSocket) {
                             possibleGem3s = gemItems;
                             blacksmithingSocket = false;
-                        } else {
-                            possibleGem3s = new Item[] { null };
-                        }
+                        } else { possibleGem3s = new Item[] { null }; }
                         break;
                 }
             } else {
@@ -2216,7 +2247,7 @@ namespace Rawr.Optimizer
                     filteredList.Add(gemmedItem);
                     continue;
                 }
-                int meta = 0, red = 0, yellow = 0, blue = 0, jeweler = 0;
+                int meta = 0, red = 0, yellow = 0, blue = 0, jeweler = 0, cog = 0, hyd = 0;
                 bool ignore = false;
                 foreach (Item gem in new Item[] { gemmedItem.Gem1, gemmedItem.Gem2, gemmedItem.Gem3 })
                     if (gem != null)
@@ -2231,6 +2262,8 @@ namespace Rawr.Optimizer
                             case ItemSlot.Blue: blue++; break;
                             case ItemSlot.Purple: blue++; red++; break;
                             case ItemSlot.Prismatic: red++; yellow++; blue++; break;
+                            case ItemSlot.Cogwheel: cog++; break;
+                            case ItemSlot.Hydraulic: hyd++; break;
                         }
                         if (gem.IsJewelersGem)
                         {
@@ -2252,6 +2285,8 @@ namespace Rawr.Optimizer
                     Red = red,
                     Yellow = yellow,
                     Blue = blue,
+                    Cogwheel = cog,
+                    Hydraulic = hyd,
                     Jeweler = jeweler,
                     Ignore = ignore
                 };
@@ -2293,6 +2328,8 @@ namespace Rawr.Optimizer
             public int Red;
             public int Yellow;
             public int Blue;
+            public int Cogwheel;
+            public int Hydraulic;
             public int Jeweler;
             public bool Ignore;
 
@@ -2300,12 +2337,8 @@ namespace Rawr.Optimizer
 
             public string SetName
             {
-                get
-                {
-                    return setName;
-                }
-                set
-                {
+                get { return setName; }
+                set {
                     setName = value;
                     if (setName == null) setName = "";
                 }
@@ -2338,6 +2371,16 @@ namespace Rawr.Optimizer
                 if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
 
                 compare = Blue.CompareTo(other.Blue);
+                haveLessThan |= compare < 0;
+                haveGreaterThan |= compare > 0;
+                if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
+
+                compare = Cogwheel.CompareTo(other.Cogwheel);
+                haveLessThan |= compare < 0;
+                haveGreaterThan |= compare > 0;
+                if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
+
+                compare = Hydraulic.CompareTo(other.Hydraulic);
                 haveLessThan |= compare < 0;
                 haveGreaterThan |= compare > 0;
                 if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;

@@ -103,6 +103,10 @@ namespace Rawr.UI
                     return new SolidColorBrush(Colors.LightGray);
                 case ItemSlot.Meta:
                     return new SolidColorBrush(Colors.Gray);
+                case ItemSlot.Cogwheel:
+                    return new SolidColorBrush(Colors.Black);
+                case ItemSlot.Hydraulic:
+                    return new SolidColorBrush(Colors.White);
                 default:
                     return new SolidColorBrush(Colors.Transparent);
             }

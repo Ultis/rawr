@@ -8,55 +8,55 @@ using System.Text;
 namespace Rawr
 {
     public class GemmingTemplate : INotifyPropertyChanged
-	{
-		[XmlElement("Id")]
-		public string _id;
-		[XmlIgnore]
-		public string Id
-		{
-			get { return _id; }
-			set { _id = value; }
-		}
+    {
+        [XmlElement("Id")]
+        public string _id;
+        [XmlIgnore]
+        public string Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
 
-		[XmlElement("Model")]
-		public string _model;
-		[XmlIgnore]
-		public string Model
-		{
-			get { return _model; }
-			set { _model = value; }
-		}
+        [XmlElement("Model")]
+        public string _model;
+        [XmlIgnore]
+        public string Model
+        {
+            get { return _model; }
+            set { _model = value; }
+        }
 
-		[XmlElement("Enabled")]
-		public bool _enabled;
-		[XmlIgnore]
-		public bool Enabled
-		{
-			get { return _enabled; }
-			set 
+        [XmlElement("Enabled")]
+        public bool _enabled;
+        [XmlIgnore]
+        public bool Enabled
+        {
+            get { return _enabled; }
+            set 
             {
                 _enabled = value;
                 OnPropertyChanged("Enabled");
             }
-		}
+        }
 
-		[XmlElement("Group")]
-		public string _group;
-		[XmlIgnore]
-		public string Group
-		{
-			get { return _group; }
-			set { _group = value; }
-		}
+        [XmlElement("Group")]
+        public string _group;
+        [XmlIgnore]
+        public string Group
+        {
+            get { return _group; }
+            set { _group = value; }
+        }
 
-		[XmlElement("RedId")]
-		public int _redId;
-		[XmlIgnore]
-		public int RedId
-		{
-			get { return _redId; }
-			set { _redId = value; }
-		}
+        [XmlElement("RedId")]
+        public int _redId;
+        [XmlIgnore]
+        public int RedId
+        {
+            get { return _redId; }
+            set { _redId = value; }
+        }
 
         [XmlIgnore]
         private Item _redGem;
@@ -68,7 +68,7 @@ namespace Rawr
                 if (RedId == 0) return null;
                 if (_redGem == null || _redGem.Id != RedId)
                 {
-                    _redGem = Item.LoadFromId(RedId, false, true, true);
+                    _redGem = Item.LoadFromId(RedId, false, true, true, false);
                 }
                 return _redGem;
             }
@@ -83,14 +83,14 @@ namespace Rawr
             }
         }
 
-		[XmlElement("YellowId")]
-		public int _yellowId;
-		[XmlIgnore]
-		public int YellowId
-		{
-			get { return _yellowId; }
-			set { _yellowId = value; }
-		}
+        [XmlElement("YellowId")]
+        public int _yellowId;
+        [XmlIgnore]
+        public int YellowId
+        {
+            get { return _yellowId; }
+            set { _yellowId = value; }
+        }
 
         [XmlIgnore]
         private Item _yellowGem;
@@ -102,7 +102,7 @@ namespace Rawr
                 if (YellowId == 0) return null;
                 if (_yellowGem == null || _yellowGem.Id != YellowId)
                 {
-					_yellowGem = Item.LoadFromId(YellowId, false, true, true);
+                    _yellowGem = Item.LoadFromId(YellowId, false, true, true, false);
                 }
                 return _yellowGem;
             }
@@ -117,14 +117,14 @@ namespace Rawr
             }
         }
 
-		[XmlElement("BlueId")]
-		public int _blueId;
-		[XmlIgnore]
-		public int BlueId
-		{
-			get { return _blueId; }
-			set { _blueId = value; }
-		}
+        [XmlElement("BlueId")]
+        public int _blueId;
+        [XmlIgnore]
+        public int BlueId
+        {
+            get { return _blueId; }
+            set { _blueId = value; }
+        }
 
         [XmlIgnore]
         private Item _blueGem;
@@ -136,7 +136,7 @@ namespace Rawr
                 if (BlueId == 0) return null;
                 if (_blueGem == null || _blueGem.Id != BlueId)
                 {
-					_blueGem = Item.LoadFromId(BlueId, false, true, true);
+                    _blueGem = Item.LoadFromId(BlueId, false, true, true, false);
                 }
                 return _blueGem;
             }
@@ -151,14 +151,82 @@ namespace Rawr
             }
         }
 
-		[XmlElement("MetaId")]
-		public int _metaId;
-		[XmlIgnore]
-		public int MetaId
-		{
-			get { return _metaId; }
-			set { _metaId = value; }
-		}
+        [XmlElement("CogwheelId")]
+        public int _cogwheelId;
+        [XmlIgnore]
+        public int CogwheelId
+        {
+            get { return _cogwheelId; }
+            set { _cogwheelId = value; }
+        }
+
+        [XmlIgnore]
+        private Item _cogwheel;
+        [XmlIgnore]
+        public Item Cogwheel
+        {
+            get
+            {
+                if (CogwheelId == 0) return null;
+                if (_cogwheel == null || _cogwheel.Id != CogwheelId)
+                {
+                    _cogwheel = Item.LoadFromId(CogwheelId, false, true, true, false);
+                }
+                return _cogwheel;
+            }
+            set
+            {
+                if (value == null)
+                    CogwheelId = 0;
+                else
+                    CogwheelId = value.Id;
+                _cogwheel = value;
+                OnPropertyChanged("Cogwheel");
+            }
+        }
+
+        [XmlElement("HydraulicId")]
+        public int _hydraulicId;
+        [XmlIgnore]
+        public int HydraulicId
+        {
+            get { return _hydraulicId; }
+            set { _hydraulicId = value; }
+        }
+
+        [XmlIgnore]
+        private Item _hydraulic;
+        [XmlIgnore]
+        public Item Hydraulic
+        {
+            get
+            {
+                if (HydraulicId == 0) return null;
+                if (_hydraulic == null || _hydraulic.Id != BlueId)
+                {
+                    _hydraulic = Item.LoadFromId(HydraulicId, false, true, true, false);
+                }
+                return _hydraulic;
+            }
+            set
+            {
+                if (value == null)
+                    HydraulicId = 0;
+                else
+                    HydraulicId = value.Id;
+                _hydraulic = value;
+                OnPropertyChanged("Hydraulic");
+            }
+        }
+        
+        [XmlElement("MetaId")]
+        public int _metaId;
+        [XmlIgnore]
+        public int MetaId
+        {
+            get { return _metaId; }
+            set { _metaId = value; }
+        }
 
         [XmlIgnore]
         private Item _metaGem;
@@ -170,7 +238,7 @@ namespace Rawr
                 if (MetaId == 0) return null;
                 if (_metaGem == null || _metaGem.Id != MetaId)
                 {
-					_metaGem = Item.LoadFromId(MetaId, false, true, true);
+                    _metaGem = Item.LoadFromId(MetaId, false, true, true, false);
                 }
                 return _metaGem;
             }
@@ -185,14 +253,14 @@ namespace Rawr
             }
         }
 
-		[XmlElement("PrismaticId")]
-		public int _prismaticId;
-		[XmlIgnore]
-		public int PrismaticId
-		{
-			get { return _prismaticId; }
-			set { _prismaticId = value; }
-		}
+        [XmlElement("PrismaticId")]
+        public int _prismaticId;
+        [XmlIgnore]
+        public int PrismaticId
+        {
+            get { return _prismaticId; }
+            set { _prismaticId = value; }
+        }
 
         [XmlIgnore]
         private Item _prismaticGem;
@@ -204,7 +272,7 @@ namespace Rawr
                 if (PrismaticId == 0) return null;
                 if (_prismaticGem == null || _prismaticGem.Id != PrismaticId)
                 {
-					_prismaticGem = Item.LoadFromId(PrismaticId, false, true, true);
+                    _prismaticGem = Item.LoadFromId(PrismaticId, false, true, true, false);
                 }
                 return _prismaticGem;
             }
@@ -219,27 +287,26 @@ namespace Rawr
             }
         }
 
-#if RAWR4
         public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
         {
             return GetItemInstance(item, enchant, null, blacksmithingSocket);
         }
-		public ItemInstance GetItemInstance(Item item, Enchant enchant, Reforging reforging, bool blacksmithingSocket)
-#else
-		public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
-#endif
+
+        public ItemInstance GetItemInstance(Item item, Enchant enchant, Reforging reforging, bool blacksmithingSocket)
         {
-			if (item == null) return null;
-			Item gem1 = null;
+            if (item == null) return null;
+            Item gem1 = null;
             Item gem2 = null;
             Item gem3 = null;
-			switch (item.SocketColor1)
-			{
-				case ItemSlot.Meta: gem1 = MetaGem; break;
+            switch (item.SocketColor1)
+            {
+                case ItemSlot.Meta: gem1 = MetaGem; break;
                 case ItemSlot.Red: gem1 = RedGem; break;
-				case ItemSlot.Yellow: gem1 = YellowGem; break;
-				case ItemSlot.Blue: gem1 = BlueGem; break;
-				case ItemSlot.Prismatic: gem1 = PrismaticGem; break;
+                case ItemSlot.Yellow: gem1 = YellowGem; break;
+                case ItemSlot.Blue: gem1 = BlueGem; break;
+                case ItemSlot.Prismatic: gem1 = PrismaticGem; break;
+                case ItemSlot.Cogwheel: gem1 = Cogwheel; break;
+                case ItemSlot.Hydraulic: gem1 = Hydraulic; break;
                 case ItemSlot.None: 
                     if (blacksmithingSocket)
                     {
@@ -247,14 +314,16 @@ namespace Rawr
                         blacksmithingSocket = false;
                     }
                     break;
-			}
-			switch (item.SocketColor2)
-			{
-				case ItemSlot.Meta: gem2 = MetaGem; break;
-				case ItemSlot.Red: gem2 = RedGem; break;
-				case ItemSlot.Yellow: gem2 = YellowGem; break;
-				case ItemSlot.Blue: gem2 = BlueGem; break;
-				case ItemSlot.Prismatic: gem2 = PrismaticGem; break;
+            }
+            switch (item.SocketColor2)
+            {
+                case ItemSlot.Meta: gem2 = MetaGem; break;
+                case ItemSlot.Red: gem2 = RedGem; break;
+                case ItemSlot.Yellow: gem2 = YellowGem; break;
+                case ItemSlot.Blue: gem2 = BlueGem; break;
+                case ItemSlot.Prismatic: gem2 = PrismaticGem; break;
+                case ItemSlot.Cogwheel: gem2 = Cogwheel; break;
+                case ItemSlot.Hydraulic: gem2 = Hydraulic; break;
                 case ItemSlot.None:
                     if (blacksmithingSocket)
                     {
@@ -263,13 +332,15 @@ namespace Rawr
                     }
                     break;
             }
-			switch (item.SocketColor3)
-			{
-				case ItemSlot.Meta: gem3 = MetaGem; break;
-				case ItemSlot.Red: gem3 = RedGem; break;
-				case ItemSlot.Yellow: gem3 = YellowGem; break;
-				case ItemSlot.Blue: gem3 = BlueGem; break;
-				case ItemSlot.Prismatic: gem3 = PrismaticGem; break;
+            switch (item.SocketColor3)
+            {
+                case ItemSlot.Meta: gem3 = MetaGem; break;
+                case ItemSlot.Red: gem3 = RedGem; break;
+                case ItemSlot.Yellow: gem3 = YellowGem; break;
+                case ItemSlot.Blue: gem3 = BlueGem; break;
+                case ItemSlot.Prismatic: gem3 = PrismaticGem; break;
+                case ItemSlot.Cogwheel: gem3 = Cogwheel; break;
+                case ItemSlot.Hydraulic: gem3 = Hydraulic; break;
                 case ItemSlot.None:
                     if (blacksmithingSocket)
                     {
@@ -278,12 +349,8 @@ namespace Rawr
                     }
                     break;
             }
-#if RAWR4
             return new ItemInstance(item, gem1, gem2, gem3, enchant, reforging);
-#else
-			return new ItemInstance(item, gem1, gem2, gem3, enchant);
-#endif
-		}
+        }
 
         private static Dictionary<string, List<GemmingTemplate>> _allTemplates = new Dictionary<string, List<GemmingTemplate>>();
         public static Dictionary<string, List<GemmingTemplate>> AllTemplates
@@ -313,5 +380,5 @@ namespace Rawr
 
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
-	}
+    }
 }

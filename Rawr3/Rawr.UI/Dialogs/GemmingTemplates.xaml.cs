@@ -17,6 +17,8 @@ namespace Rawr.UI
     {
 
         private Action<Item> gemCallback;
+        private Action<Item> cogwheelCallback;
+        private Action<Item> hydraulicCallback;
         private Action<Item> metaCallback;
 
         private bool isLoading;
@@ -35,7 +37,15 @@ namespace Rawr.UI
             ComparisonGemList.Slot = CharacterSlot.Gems;
             ComparisonGemList.Character = c;
             ComparisonGemList.SelectedItemChanged += new EventHandler(ComparisonGemList_SelectedItemChanged);
-            
+
+            ComparisonCogwheelList.Slot = CharacterSlot.Cogwheels;
+            ComparisonCogwheelList.Character = c;
+            ComparisonCogwheelList.SelectedItemChanged += new EventHandler(ComparisonCogwheelList_SelectedItemChanged);
+
+            ComparisonHydraulicList.Slot = CharacterSlot.Hydraulics;
+            ComparisonHydraulicList.Character = c;
+            ComparisonHydraulicList.SelectedItemChanged += new EventHandler(ComparisonHydraulicList_SelectedItemChanged);
+
             ComparisonMetaList.Slot = CharacterSlot.Metas;
             ComparisonMetaList.Character = c;
             ComparisonMetaList.SelectedItemChanged += new EventHandler(ComparisonMetaList_SelectedItemChanged);
@@ -83,6 +93,16 @@ namespace Rawr.UI
         private void ComparisonGemList_SelectedItemChanged(object sender, EventArgs e)
         {
             if (gemCallback != null) gemCallback(ComparisonGemList.SelectedItem);
+        }
+
+        private void ComparisonCogwheelList_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (cogwheelCallback != null) cogwheelCallback(ComparisonCogwheelList.SelectedItem);
+        }
+
+        private void ComparisonHydraulicList_SelectedItemChanged(object sender, EventArgs e)
+        {
+            if (hydraulicCallback != null) hydraulicCallback(ComparisonHydraulicList.SelectedItem);
         }
 
         private void groupCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -148,6 +168,60 @@ namespace Rawr.UI
             GemPopup.IsOpen = true;
             ComparisonGemList.Focus();
             gemCallback = callback;
+        }
+
+        public void CogwheelButtonClick(Item cog, Control relativeTo, Action<Item> callback)
+        {
+            cogwheelCallback = null;
+            ComparisonCogwheelList.SelectedItem = cog;
+
+            GeneralTransform gt = relativeTo.TransformToVisual(LayoutRoot);
+            Point offset = gt.Transform(new Point(relativeTo.ActualWidth + 4, 0));
+            CogwheelPopup.VerticalOffset = offset.Y;
+            CogwheelPopup.HorizontalOffset = offset.X;
+
+            ComparisonCogwheelList.Measure(App.Current.RootVisual.RenderSize);
+
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
+            double distBetweenBottomOfPopupAndBottomOfWindow =
+                App.Current.RootVisual.DesiredSize.Height -
+                transform.Transform(new Point(0, ComparisonCogwheelList.DesiredSize.Height)).Y;
+            if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+            {
+                CogwheelPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+            }
+
+            ComparisonCogwheelList.IsShown = true;
+            CogwheelPopup.IsOpen = true;
+            ComparisonCogwheelList.Focus();
+            cogwheelCallback = callback;
+        }
+
+        public void HydraulicButtonClick(Item hyd, Control relativeTo, Action<Item> callback)
+        {
+            hydraulicCallback = null;
+            ComparisonHydraulicList.SelectedItem = hyd;
+
+            GeneralTransform gt = relativeTo.TransformToVisual(LayoutRoot);
+            Point offset = gt.Transform(new Point(relativeTo.ActualWidth + 4, 0));
+            HydraulicPopup.VerticalOffset = offset.Y;
+            HydraulicPopup.HorizontalOffset = offset.X;
+
+            ComparisonHydraulicList.Measure(App.Current.RootVisual.RenderSize);
+
+            GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
+            double distBetweenBottomOfPopupAndBottomOfWindow =
+                App.Current.RootVisual.DesiredSize.Height -
+                transform.Transform(new Point(0, ComparisonHydraulicList.DesiredSize.Height)).Y;
+            if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
+            {
+                HydraulicPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+            }
+
+            ComparisonHydraulicList.IsShown = true;
+            HydraulicPopup.IsOpen = true;
+            ComparisonHydraulicList.Focus();
+            hydraulicCallback = callback;
         }
 
         public void MetaButtonClick(Item meta, Control relativeTo, Action<Item> callback)

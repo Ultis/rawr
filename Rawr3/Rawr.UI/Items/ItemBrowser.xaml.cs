@@ -123,8 +123,8 @@ namespace Rawr.UI
             }
 
 #if SILVERLIGHT
-			PagedCollectionView itemsPCV = new PagedCollectionView(items);
-			itemsPCV.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
+            PagedCollectionView itemsPCV = new PagedCollectionView(items);
+            itemsPCV.GroupDescriptions.Add(new PropertyGroupDescription("Slot"));
             ItemGrid.ItemsSource = itemsPCV;            
 #else
             // TODO implement paging in WPF
@@ -147,9 +147,9 @@ namespace Rawr.UI
                     //WebRequestWrapper.ResetFatalErrorIndicator();
                     int itemId = EnterId.Value;
                     if (itemId > 0)
-                        AddItemById(EnterId.Value, true, true);
+                        AddItemById(EnterId.Value, true, true, true);
                     else
-                        AddItemByName(EnterId.ItemName, true, true);
+                        AddItemByName(EnterId.ItemName, true, true, true);
                 }
                 finally
                 {
@@ -158,7 +158,7 @@ namespace Rawr.UI
             }
         }
 
-        private void AddItemByName(string name, bool useArmory, bool useWowhead)
+        private void AddItemByName(string name, bool useArmory, bool useWowhead, bool usePTR)
         {
             // ignore empty strings
             if (name.Length <= 0) return;
@@ -170,18 +170,18 @@ namespace Rawr.UI
             //}
             else
             {
-                AddItemByName(name, 0, useWowhead);
+                AddItemByName(name, 0, useWowhead, usePTR);
             }
         }
 
-        private void AddItemByName(string name, int armoryId, bool useWowhead)
+        private void AddItemByName(string name, int armoryId, bool useWowhead, bool usePTR)
         {
             Item newItem = null;
 
             // try the armory (if requested)
             if (armoryId > 0)
             {
-                newItem = Item.LoadFromId(armoryId, true, true, false);
+                newItem = Item.LoadFromId(armoryId, true, true, false, false && usePTR);
             }
 
             // try wowhead (if requested)
@@ -211,8 +211,8 @@ namespace Rawr.UI
             }
         }
 
-        private void AddItemById(int id, bool useArmory, bool useWowhead) { AddItemsById(new int[] { id }, useArmory, useWowhead); }
-        private void AddItemsById(int[] ids, bool useArmory, bool useWowhead)
+        private void AddItemById(int id, bool useArmory, bool useWowhead, bool usePTR) { AddItemsById(new int[] { id }, useArmory, useWowhead, usePTR); }
+        private void AddItemsById(int[] ids, bool useArmory, bool useWowhead, bool usePTR)
         {
             foreach (int id in ids)
             {
@@ -221,11 +221,11 @@ namespace Rawr.UI
                 // try the armory (if requested)
                 if (useArmory)
                 {
-                    newItem = Item.LoadFromId(id, true, true, false);
+                    newItem = Item.LoadFromId(id, true, true, false, false && usePTR);
                 }
 
                 // try wowhead (if requested)
-                /*if ((newItem == null) && useWowhead)
+                /*if ((newItem == null) && useWowhead && !usePTR)
                 {
                     newItem = Wowhead.GetItem(id.ToString(), true);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
@@ -297,7 +297,7 @@ namespace Rawr.UI
             Item i = ItemGrid.SelectedItem as Item;
             if (i != null)
             {
-                Item.LoadFromId(i.Id, true, false, false);
+                Item.LoadFromId(i.Id, true, false, false, false);
             }
         }
 

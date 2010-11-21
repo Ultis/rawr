@@ -884,6 +884,10 @@ namespace Rawr
                 }
                 else if (desc.Contains("meta gem slot"))
                     slot = ItemSlot.Meta;
+                else if (desc.Contains("Cogwheel"))
+                    slot = ItemSlot.Cogwheel;
+                else if (desc.Contains("Hydraulic"))
+                    slot = ItemSlot.Hydraulic;
 
                 Item item = new Item()
                 {

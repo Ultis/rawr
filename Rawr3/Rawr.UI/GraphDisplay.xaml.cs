@@ -525,6 +525,8 @@ namespace Rawr.UI
                 case "Yellow":  islot = ItemSlot.Yellow; break;
                 case "Blue":    islot = ItemSlot.Blue; break;
                 case "Meta":    cslot = CharacterSlot.Metas; break;
+                case "Cogwheel": cslot = CharacterSlot.Cogwheels; break;
+                case "Hydraulic": cslot = CharacterSlot.Hydraulics; break;
             }
             Calculations.ClearCache();
             Character.ClearRelevantGems(); // we need to reset relevant items for gems to allow colour selection

@@ -119,6 +119,8 @@ namespace Rawr.UI
 				case ItemSlot.Red: return new SolidColorBrush(Colors.Red);
 				case ItemSlot.Yellow: return new SolidColorBrush(Colors.Yellow);
 				case ItemSlot.Blue: return new SolidColorBrush(Colors.Blue);
+                case ItemSlot.Cogwheel: return new SolidColorBrush(Colors.Black);
+                case ItemSlot.Hydraulic: return new SolidColorBrush(Colors.White);
 				default: return new SolidColorBrush(Colors.Gray);
 			}
 		}

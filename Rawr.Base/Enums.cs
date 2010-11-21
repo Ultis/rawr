@@ -73,6 +73,9 @@ namespace Rawr
 
         Gems = 100,
         Metas = 101,
+        Cogwheels = 102,
+        Hydraulics = 103,
+        
         AutoSelect = 1000,
     }
 
@@ -187,7 +190,11 @@ namespace Rawr
         Green,
         Blue,
         Purple,
-        Prismatic
+        Prismatic,
+
+        // New in Cata for Engineers
+        Cogwheel,
+        Hydraulic,
 
         //None = 0,
         //Head = 1,

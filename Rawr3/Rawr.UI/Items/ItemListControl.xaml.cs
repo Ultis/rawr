@@ -27,6 +27,8 @@ namespace Rawr.UI
         public bool IsEnchantList { get; set; }
         public bool IsReforgeList { get; set; }
         private bool IsGemList { get { return Slot == CharacterSlot.Gems || Slot == CharacterSlot.Metas; } }
+        private bool IsCogwheelList { get { return Slot == CharacterSlot.Cogwheels; } }
+        private bool IsHydraulicList { get { return Slot == CharacterSlot.Hydraulics; } }
         private bool isAnItemsGem = false;
         public bool IsAnItemsGem { get { return isAnItemsGem; } set { isAnItemsGem = true; } }
 
@@ -34,19 +36,13 @@ namespace Rawr.UI
         public CharacterSlot Slot
         {
             get { return _slot; }
-            set
-            {
-                _slot = value;
-                IsPopulated = false;
-            }
+            set { _slot = value; IsPopulated = false; }
         }
 
         private Character character;
-        public Character Character
-        {
+        public Character Character {
             get { return character; }
-            set
-            {
+            set {
                 if (character != null) character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
                 character = value;
                 character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
@@ -58,8 +54,7 @@ namespace Rawr.UI
         public Item SelectedItem
         {
             get { return selectedItem; }
-            set
-            {
+            set {
                 selectedItem = value;
                 IsPopulated = false;
                 if (SelectedItemChanged != null) SelectedItemChanged(this, EventArgs.Empty);
@@ -134,6 +129,38 @@ namespace Rawr.UI
                     }
                 }
                 else if (IsGemList)
+                {
+                    Calculations.ClearCache();
+                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    foreach (Item item in relevantItems)
+                    {
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        if (SelectedItem != null && SelectedItem.Id == item.Id)
+                        {
+                            itemCalc.Equipped = true;
+                            seenEquippedItem = true;
+                        }
+                        itemCalculations.Add(itemCalc);
+                    }
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                }
+                else if (IsCogwheelList)
+                {
+                    Calculations.ClearCache();
+                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    foreach (Item item in relevantItems)
+                    {
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        if (SelectedItem != null && SelectedItem.Id == item.Id)
+                        {
+                            itemCalc.Equipped = true;
+                            seenEquippedItem = true;
+                        }
+                        itemCalculations.Add(itemCalc);
+                    }
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                }
+                else if (IsHydraulicList)
                 {
                     Calculations.ClearCache();
                     List<Item> relevantItems = Character.GetRelevantItems(Slot);

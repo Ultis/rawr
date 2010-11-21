@@ -1761,6 +1761,10 @@ namespace Rawr.Optimizer
                 Enchant bestEnchant = null;
                 float bestOneHandEnchantValue = float.NegativeInfinity;
                 Enchant bestOneHandEnchant = null;
+                float bestCogwheelValue = float.NegativeInfinity;
+                Item bestCogwheel = null;
+                float bestHydraulicValue = float.NegativeInfinity;
+                Item bestHydraulic = null;
                 if (slot == (int)CharacterSlot.Head)
                 {
                     foreach (Item gem in itemGenerator.MetaGemItems)
@@ -1821,6 +1825,16 @@ namespace Rawr.Optimizer
                     {
                         bestNonLimitedValue = value;
                         bestNonLimitedGem = gem;
+                    }
+                    if (Item.GemMatchesSlot(gem, ItemSlot.Cogwheel) && !gem.IsLimitedGem && value > bestCogwheelValue)
+                    {
+                        bestCogwheelValue = value;
+                        bestCogwheel = gem;
+                    }
+                    if (Item.GemMatchesSlot(gem, ItemSlot.Hydraulic) && !gem.IsLimitedGem && value > bestHydraulicValue)
+                    {
+                        bestHydraulicValue = value;
+                        bestHydraulic = gem;
                     }
                 }
                 if (itemGenerator.SlotEnchants[slot] != null)
@@ -1959,6 +1973,14 @@ namespace Rawr.Optimizer
                                     case ItemSlot.Prismatic:
                                         gems[g] = bestNonLimitedGem;
                                         values[g] = bestNonLimitedValue;
+                                        break;
+                                    case ItemSlot.Cogwheel:
+                                        gems[g] = bestCogwheel;
+                                        values[g] = bestCogwheelValue;
+                                        break;
+                                    case ItemSlot.Hydraulic:
+                                        gems[g] = bestHydraulic;
+                                        values[g] = bestHydraulicValue;
                                         break;
                                 }
                             }
@@ -2692,7 +2714,7 @@ namespace Rawr.Optimizer
             set
             {
                 model = value;
-				ThreadPoolValuation = model.SupportsMultithreading && Properties.GeneralSettings.Default.UseMultithreading;
+                ThreadPoolValuation = model.SupportsMultithreading && Properties.GeneralSettings.Default.UseMultithreading;
             }
         }
 

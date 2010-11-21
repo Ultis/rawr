@@ -464,13 +464,13 @@ namespace Rawr.UI
                 {
                     if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
                     string[] s = id.Split('.');
-                    Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, false);
+                    Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, false, false);
                     if (s.Length >= 4)
                     {
                         Item gem;
-                        if (s[1] != "*" && s[1] != "0") gem = Item.LoadFromId(int.Parse(s[1]), false, false, false);
-                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, false);
-                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, false);
+                        if (s[1] != "*" && s[1] != "0") gem = Item.LoadFromId(int.Parse(s[1]), false, false, false, false);
+                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, false, false);
+                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, false, false);
                     }
                     if (newItem != null)
                     {

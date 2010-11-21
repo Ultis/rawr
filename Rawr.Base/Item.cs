@@ -422,6 +422,8 @@ namespace Rawr
                 case CharacterSlot.Shirt: return ItemSlot.Shirt;
                 case CharacterSlot.Gems: return ItemSlot.Prismatic;
                 case CharacterSlot.Metas: return ItemSlot.Meta;
+                case CharacterSlot.Cogwheels: return ItemSlot.Cogwheel;
+                case CharacterSlot.Hydraulics: return ItemSlot.Hydraulic;
                 default: return ItemSlot.None;
             }
         }
@@ -462,6 +464,12 @@ namespace Rawr
             }
         }
 
+        private bool _isCogwheel;
+        public bool IsCogwheel { get { return _isCogwheel; } }
+
+        private bool _isHydraulic;
+        public bool IsHydraulic { get { return _isHydraulic; } }
+
         private bool _isJewelersGem;
         public bool IsJewelersGem
         {
@@ -486,11 +494,17 @@ namespace Rawr
 
         private void UpdateGemInformation()
         {
-            _isGem = Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
+            _isGem = Slot == ItemSlot.Meta
+                || Slot == ItemSlot.Blue || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow
+                || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Purple
+                || Slot == ItemSlot.Prismatic
+                || Slot == ItemSlot.Cogwheel || Slot == ItemSlot.Hydraulic;
             _isJewelersGem = IsJewelersGemId(Id);
             _isRedGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Red);
             _isYellowGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Yellow);
             _isBlueGem = _isGem && Item.GemMatchesSlot(this, ItemSlot.Blue);
+            _isCogwheel = _isGem && Item.GemMatchesSlot(this, ItemSlot.Cogwheel);
+            _isHydraulic = _isGem && Item.GemMatchesSlot(this, ItemSlot.Hydraulic);
         }
 
         public Item() { }
@@ -563,6 +577,10 @@ namespace Rawr
                     return gem != null && (gem.Slot == ItemSlot.Blue || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
                 case ItemSlot.Meta:
                     return gem != null && (gem.Slot == ItemSlot.Meta);
+                case ItemSlot.Cogwheel:
+                    return gem != null && (gem.Slot == ItemSlot.Cogwheel);
+                case ItemSlot.Hydraulic:
+                    return gem != null && (gem.Slot == ItemSlot.Hydraulic);
                 default:
                     return gem == null || gem.Slot != ItemSlot.Meta;
             }
@@ -649,6 +667,10 @@ namespace Rawr
                 //case CharacterSlot.ExtraWristSocket:
                 //case CharacterSlot.ExtraHandsSocket:
                 //case CharacterSlot.ExtraWaistSocket:
+                case CharacterSlot.Cogwheels:
+                    return this.Slot == ItemSlot.Cogwheel;
+                case CharacterSlot.Hydraulics:
+                    return this.Slot == ItemSlot.Hydraulic;
                 case CharacterSlot.Gems:
                     return this.Slot == ItemSlot.Red || this.Slot == ItemSlot.Blue || this.Slot == ItemSlot.Yellow
                         || this.Slot == ItemSlot.Purple || this.Slot == ItemSlot.Green || this.Slot == ItemSlot.Orange
@@ -869,10 +891,10 @@ namespace Rawr
         }
 
 
-        public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, Rawr.Properties.GeneralSettings.Default.Locale); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, locale, "cata"); }
-        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale, string wowheadSite)
+        public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false, false); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, bool usePTR) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, usePTR, Rawr.Properties.GeneralSettings.Default.Locale); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, bool usePTR, string locale) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, usePTR, locale, "cata"); }
+        public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, bool usePTR, string locale, string wowheadSite)
         {
             Item cachedItem = ItemCache.FindItemById(id);
             #if DEBUG
@@ -890,7 +912,6 @@ namespace Rawr
             if (cachedItem != null && !forceRefresh) return cachedItem;
             else
             {
-#if RAWR3 || RAWR4
                 ElitistArmoryService armoryService = new ElitistArmoryService();
                 armoryService.GetItemCompleted += new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
                 armoryService.GetItemAsync(id);
@@ -904,100 +925,6 @@ namespace Rawr
                     ItemCache.AddItem(tempItem, raiseEvent);
                     return tempItem;
                 }
-#else
-                Item newItem = useWowhead ? Wowhead.GetItem(wowheadSite, id.ToString(), false) : Armory.GetItem(id);
-                if (newItem != null)
-                {
-                    if (!locale.Equals("en"))
-                    {
-                        WebRequestWrapper wrw = new WebRequestWrapper();
-                        if (locale.Equals("zhTW"))
-                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "tw");
-                        else if (locale.Equals("zhCN"))
-                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "cn");
-                        else if (locale.Equals("kr"))
-                            newItem.LocalizedName = wrw.GetNameFromArmory(id, "kr");
-                        else
-                        {
-                            Item localItem = Wowhead.GetItem(id, false, locale);
-                            if (localItem != null)
-                                newItem.LocalizedName = localItem.Name;
-                        }
-                    }
-                    if (!useWowhead && newItem.SocketBonus.ToString() == "")
-                    {
-                        Item oldItem = ItemCache.FindItemById(id);
-                        if (oldItem != null)
-                        { //If we loaded from the Armory, and got no socket bonus, and we used to 
-                            //have a socket bonus, just reuse the old one; Armory has been bugged for a while now
-                            //to not show socket bonuses.
-                            newItem.SocketBonus = oldItem.SocketBonus.Clone();
-                        }
-                    }
-                    if (useWowhead && newItem.Faction == ItemFaction.Neutral)
-                    {
-                        Item oldItem = ItemCache.FindItemById(id);
-                        if (oldItem != null)
-                        { //If we loaded from Wowhead, and got no faction, and we used to 
-                            //have a faction, just reuse the old one; Wowhead doesn't support 
-                            //faction-specificity yet
-                            newItem.Faction = oldItem.Faction;
-                        }
-                    }
-                    if (cachedItem != null)
-                    {
-                        // preserve Cost information
-                        newItem.Cost = cachedItem.Cost;
-                    }
-                    #if DEBUG
-                    string newItemStats = newItem.ToString().Split(':')[1];
-                    string newItemSource = newItem.LocationInfo[0].Description
-                        + (newItem.LocationInfo[1] != null ? " and" + newItem.LocationInfo[1].Description.Replace("Purchasable with", "") : "");
-
-                    if (!Rawr.Properties.GeneralSettings.Default.UseMultithreading
-                        && (oldItemStats != newItemStats || oldItemSource != newItemSource))
-                    {
-                        int locationCreated = oldItemSource.IndexOf("Created via");
-                        int locationCrafted = newItemSource.IndexOf("Crafted");
-
-                        if (oldItemSource != "Unknown Location, please refresh" &&
-                            oldItemSource != "Armory reports no source, try Wowhead" &&
-                            ((locationCreated != 0) || (locationCrafted != 0)))
-                        {
-                            switch (MessageBox.Show(
-                                "Do you want to use the New Data and overwrite the Old?"
-                                + "\r\n\r\n"
-                                + (cachedItem != null ? "[" + cachedItem.Id + "] " + cachedItem.Name
-                                : (newItem != null ? "[" + newItem.Id + "] " + newItem.Name
-                                : ""))
-                                + "\r\n\r\n"
-                                + "Old Data:\r\n"
-                                + "Stats:\r\n" + oldItemStats
-                                + "\r\n"
-                                + "Source: " + oldItemSource
-                                + "\r\n\r\n"
-                                + "New Data:\r\n"
-                                + "Stats:\r\n" + newItemStats
-                                + "\r\n"
-                                + "Source: " + newItemSource
-                                , "Update Item Cache",
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1))
-                            {
-                                case DialogResult.Yes: { break; } // Do Nothing, go to AddItem
-                                default:
-                                    {
-                                        // User wants to keep orig data
-                                        LocationFactory.Add(cachedItem.Id.ToString(), oldItemLoc, true);
-                                        return ItemCache.FindItemById(id);
-                                    }
-                            }
-                        }
-                    }
-                    #endif
-                    ItemCache.AddItem(newItem, raiseEvent);
-                }
-                return ItemCache.FindItemById(id);
-#endif
             }
         }
 

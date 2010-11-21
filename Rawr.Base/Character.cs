@@ -1174,7 +1174,9 @@ namespace Rawr //O O . .
                         if ((gemColour == ItemSlot.None) ||
                             (gemColour == ItemSlot.Red && item.IsRedGem) ||
                             (gemColour == ItemSlot.Yellow && item.IsYellowGem) ||
-                            (gemColour == ItemSlot.Blue && item.IsBlueGem))
+                            (gemColour == ItemSlot.Blue && item.IsBlueGem) ||
+                            (gemColour == ItemSlot.Cogwheel && item.IsCogwheel) ||
+                            (gemColour == ItemSlot.Hydraulic && item.IsHydraulic))
                         {
                             items.Add(item);
                         }
@@ -1312,6 +1314,8 @@ namespace Rawr //O O . .
                 case Rawr.ItemSlot.Purple: return CharacterSlot.Gems;
                 case Rawr.ItemSlot.Prismatic: return CharacterSlot.Gems;
                 case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
+                case Rawr.ItemSlot.Cogwheel: return CharacterSlot.Cogwheels;
+                case Rawr.ItemSlot.Hydraulic: return CharacterSlot.Hydraulics;
                 default: return CharacterSlot.None;
             }
         }

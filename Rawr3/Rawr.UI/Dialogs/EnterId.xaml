@@ -25,6 +25,6 @@
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" TextWrapping="Wrap" Text="Enter the Item ID or Database Link (Wowhead, Thottbot):" Margin="4,4,4,4"/>
             <TextBox x:Name="textItemId" Grid.Row="1" Width="235" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,4,4,4" />
         </Grid>
-
+        <CheckBox Content="Use PTR Data" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="8,12,0,0" Name="CK_PTR" VerticalAlignment="Top" />
     </Grid>
 </basics2:ChildWindow>

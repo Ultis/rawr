@@ -232,6 +232,14 @@ namespace Rawr.UI
                     button.Background = new SolidColorBrush(Colors.Gray);
                     button.Slot = CharacterSlot.Metas;
                     break;
+                case ItemSlot.Cogwheel:
+                    button.Background = new SolidColorBrush(Colors.Black);
+                    button.Slot = CharacterSlot.Cogwheels;
+                    break;
+                case ItemSlot.Hydraulic:
+                    button.Background = new SolidColorBrush(Colors.White);
+                    button.Slot = CharacterSlot.Hydraulics;
+                    break;
                 default:
                     button.Background = new SolidColorBrush(SystemColors.ControlColor);
                     button.Slot = CharacterSlot.Gems;

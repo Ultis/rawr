@@ -85,6 +85,10 @@ namespace Rawr.UI
                     return Colors.LightGray;
                 case ItemSlot.Meta:
                     return Colors.Gray;
+                case ItemSlot.Cogwheel:
+                    return Colors.Black;
+                case ItemSlot.Hydraulic:
+                    return Colors.White;
                 default:
                     return Colors.Transparent;
             }

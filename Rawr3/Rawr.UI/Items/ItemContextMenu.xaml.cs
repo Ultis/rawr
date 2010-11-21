@@ -11,11 +11,11 @@ using System.Windows.Shapes;
 namespace Rawr.UI
 {
 #if SILVERLIGHT
-	public partial class ItemContextMenu : UserControl
+    public partial class ItemContextMenu : UserControl
 #else
     public partial class ItemContextMenu : ContextMenu
 #endif
-	{
+    {
 #if SILVERLIGHT
         public bool IsOpen 
         { 
@@ -59,11 +59,11 @@ namespace Rawr.UI
             }
         }
 
-		public ItemContextMenu()
-		{
-			// Required to initialize variables
-			InitializeComponent();
-		}
+        public ItemContextMenu()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+        }
 
 #if SILVERLIGHT
         public void Show(UIElement relativeTo) { Show(relativeTo, 0, 0); }
@@ -126,11 +126,11 @@ namespace Rawr.UI
                 }
                 else if (contextItem == ContextRefreshArmory)
                 {
-                    Item.LoadFromId(SelectedItemInstance.Id, true, true, false);
+                    Item.LoadFromId(SelectedItemInstance.Id, true, true, false, false);
                 }
                 else if (contextItem == ContextRefreshWowhead)
                 {
-                    Item.LoadFromId(SelectedItemInstance.Id, true, true, true);
+                    Item.LoadFromId(SelectedItemInstance.Id, true, true, true, false);
                 }
                 else if (contextItem == ContextDeleteCustom)
                 {
@@ -164,12 +164,12 @@ namespace Rawr.UI
 
         private void RefreshItemFromArmory(object sender, RoutedEventArgs e)
         {
-            Item.LoadFromId(SelectedItemInstance.Id, true, true, false);
+            Item.LoadFromId(SelectedItemInstance.Id, true, true, false, false);
         }
 
         private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)
         {
-            Item.LoadFromId(SelectedItemInstance.Id, true, true, true);
+            Item.LoadFromId(SelectedItemInstance.Id, true, true, true, false);
         }
 
         private void EquipItem(object sender, RoutedEventArgs e)
