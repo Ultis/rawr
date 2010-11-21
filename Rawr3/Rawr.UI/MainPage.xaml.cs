@@ -103,6 +103,8 @@ namespace Rawr.UI
                     HandButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("HandsBlacksmithingSocketEnabled"));
                     BeltButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("WaistBlacksmithingSocketEnabled"));
 
+                    LB_Models.Text = ModelStatus(character.CurrentModel);
+
                     Character.IsLoading = false;
                     character_CalculationsInvalidated(this, EventArgs.Empty);
 
@@ -113,6 +115,49 @@ namespace Rawr.UI
                     ComparisonGraph.Character = character;
                 }
             }
+        }
+
+        private string ModelStatus(string Model) {
+            string retVal = "The Model Status is Unknown, please see the Model Status Page.";
+            string format = "[" + Model + " | Maintained: {0}, Cata Ready: {1}, Developer(s): {2}]";
+
+            string[] maint = { "Never", "New Dev", "Periodically", "Actively" };
+            string[] funct = { "Not", "Partially", "Mostly", "Fully" };
+
+            switch (Model) {
+                // Druids
+                case "Bear"     : { retVal    = string.Format(format, maint[3], funct[2], "Astrylian"); break; }
+                case "Cat"      : { retVal    = string.Format(format, maint[3], funct[1], "Astrylian"); break; }
+                case "Moonkin"  : { retVal    = string.Format(format, maint[3], funct[2], "Dopefish"); break; }
+                case "Tree"     : { retVal    = string.Format(format, maint[2], funct[0], "Hartra34"); break; }
+                // Death Knights
+                case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
+                case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
+                // Hunters
+                case "Hunter"   : { retVal    = string.Format(format, maint[0], funct[0], "None"); break; }
+                // Mages
+                case "Mage"     : { retVal    = string.Format(format, maint[3], funct[2], "Kavan"); break; }
+                // Paladins
+                case "Healadin" : { retVal    = string.Format(format, maint[3], funct[1], "Roncli"); break; }
+                case "ProtPaladin":{retVal    = string.Format(format, maint[2], funct[0], "Roncli"); break; }
+                case "Retribution":{retVal    = string.Format(format, maint[2], funct[0], "OReubens"); break; }
+                // Priests
+                case "HealPriest":{retVal     = string.Format(format, maint[3], funct[1], "TNSe"); break; }
+                case "ShadowPriest":{retVal   = string.Format(format, maint[3], funct[1], "Shep1987"); break; }
+                // Rogues
+                case "Rogue"    : { retVal    = string.Format(format, maint[3], funct[2], "Fes"); break; }
+                // Shamans
+                case "Elemental": { retVal    = string.Format(format, maint[3], funct[0], "Anaerandranax"); break; }
+                case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
+                case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris"); break; }
+                // Warriors
+                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[2]+funct[1], "Jothay/Armourdon"); break; }
+                case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[0], "EvanM"); break; }
+                // Warlocks
+                case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
+                default: { break; }
+            }
+            return retVal;
         }
 
         void character_AvailableItemsChanged(object sender, EventArgs e)

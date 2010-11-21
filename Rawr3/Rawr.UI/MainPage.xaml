@@ -348,9 +348,9 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <Grid Margin="0" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2">
-            <TextBlock x:Name="StatusText" Margin="8,4,120,4" Text="Status"/>
-            <TextBlock x:Name="VersionText" Text="Rawr b3.0.3.20" Foreground="#99393939" Margin="0,4,8,4" HorizontalAlignment="Right" TextAlignment="Right"/>
-        </Grid>
+        <TextBlock x:Name="StatusText" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Margin="8,4" Text="Status"/>
+        <!--<Grid Margin="0" UseLayoutRounding="True" Grid.ColumnSpan="4" Grid.Row="2"></Grid>-->
+        <TextBlock x:Name="LB_Models" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Margin="0,4,120,4" Text="Check the Model Status Page for information on the Development Status" HorizontalAlignment="Right" TextAlignment="Right"/>
+        <TextBlock x:Name="VersionText" Grid.Row="4" Grid.Column="3" Text="Rawr b3.0.3.20" Foreground="#99393939" Margin="8,4" HorizontalAlignment="Right" TextAlignment="Right"/>
     </Grid>
 </UserControl>
