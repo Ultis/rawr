@@ -4,6 +4,27 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    public static class CombustionCycle
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = baseCycle.Name;
+
+            Spell Combustion = castingState.GetSpell(SpellId.Combustion);
+
+            // 1 combustion in 10 seconds
+            // the dot duplication is currently calculated in individual spells
+            // consider splitting that out for display purposes
+
+            cycle.AddSpell(needsDisplayCalculations, Combustion, 1);
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, (10 - Combustion.CastTime) / baseCycle.CastTime);
+            cycle.Calculate();
+
+            return cycle;
+        }
+    }
+
     public static class FBPyro
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

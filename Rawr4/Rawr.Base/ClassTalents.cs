@@ -4435,12 +4435,12 @@ Targets in a cone in front of the caster take 370 to 430 Fire damage and are Dis
 @"Increases damage of all spells against targets with less than 35% health by 12%.",})]
         public int MoltenFury { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
-        /// Increases spell haste by [1 * Pts]% if 3 or more targets are taking Fire damage over time from your spells.
+        /// Increases spell haste by [5 * Pts]% if 3 or more targets are taking Fire damage over time from your spells.
         /// </summary>
         [TalentData(index: 39, name: "Pyromaniac", maxPoints: 2, icon: "spell_fire_burnout",
          tree: 1, column: 1, row: 6, prerequisite: -1, description: new[] {
-@"Increases spell haste by 1% if 3 or more targets are taking Fire damage over time from your spells.",
-@"Increases spell haste by 2% if 3 or more targets are taking Fire damage over time from your spells.",})]
+@"Increases spell haste by 5% if 3 or more targets are taking Fire damage over time from your spells.",
+@"Increases spell haste by 10% if 3 or more targets are taking Fire damage over time from your spells.",})]
         public int Pyromaniac { get { return _data[39]; } set { _data[39] = value; } }
         /// <summary>
         /// Your Living Bomb and Flame Orb spells deal [5 * Pts]% more damage, and your Pyroblast and Scorch spells have a [100 / 3 * Pts]% chance to cause your target to be vulnerable to spell [33 * Pts] increasing spell critical strike chance against that target by 5% and lasts 30 sec.

@@ -159,10 +159,7 @@ namespace Rawr.Mage
             BaseCostAmplifier = baseCostAmplifier;
 
             float baseInterruptProtection = baseStats.InterruptProtection;
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
-            {
-                baseInterruptProtection += 0.35f * mageTalents.BurningSoul;
-            }
+            baseInterruptProtection += 0.23f * mageTalents.BurningSoul + (mageTalents.BurningSoul == 3 ? 0.01f : 0.0f);
             BaseInterruptProtection = baseInterruptProtection;
 
             float realResistance;

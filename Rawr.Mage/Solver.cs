@@ -151,6 +151,7 @@ namespace Rawr.Mage
         public float ManaGemEffectDuration;
         private int availableCooldownMask;
 
+        public const float CombustionDuration = 10.0f;
         public const float CombustionCooldown = 120.0f;
         public const float PowerInfusionDuration = 15.0f;
         public const float PowerInfusionCooldown = 120.0f;
@@ -242,9 +243,6 @@ namespace Rawr.Mage
         public float BaseShadowCritBonus { get; set; }
         public float BaseFrostFireCritBonus { get; set; }
         public float BaseHolyCritBonus { get; set; }
-
-        public float CombustionFireCritBonus { get; set; }
-        public float CombustionFrostFireCritBonus { get; set; }
 
         public float BaseArcaneSpellPower { get; set; }
         public float BaseFireSpellPower { get; set; }
@@ -925,8 +923,8 @@ namespace Rawr.Mage
         private int rowDragonsBreath;
         private int rowCombustion;
         private int rowPowerInfusion;
-        private int rowMoltenFuryCombustion;
-        private int rowHeroismCombustion;
+        //private int rowMoltenFuryCombustion;
+        //private int rowHeroismCombustion;
         private int rowHeroismIcyVeins;
         //private int rowSummonWaterElemental;
         //private int rowSummonWaterElementalCount;
@@ -1955,6 +1953,9 @@ namespace Rawr.Mage
         EffectCooldown cachedEffectCombustion = new EffectCooldown()
         {
             Cooldown = CombustionCooldown,
+            Duration = CombustionDuration,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
             Mask = (int)StandardEffect.Combustion,
             Name = "Combustion",
             StandardEffect = StandardEffect.Combustion,
@@ -2345,7 +2346,7 @@ namespace Rawr.Mage
             BaseArcaneSpellModifier = baseSpellModifier * (1 + baseStats.BonusArcaneDamageMultiplier);
             BaseArcaneAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseFireSpellModifier = baseSpellModifier * (1 + baseStats.BonusFireDamageMultiplier);
-            BaseFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * MageTalents.FirePower;
+            BaseFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.01f * MageTalents.FirePower;
             BaseFrostSpellModifier = baseSpellModifier * (1 + baseStats.BonusFrostDamageMultiplier);
             BaseFrostAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseNatureSpellModifier = baseSpellModifier * (1 + baseStats.BonusNatureDamageMultiplier);
@@ -2355,7 +2356,7 @@ namespace Rawr.Mage
             BaseHolySpellModifier = baseSpellModifier * (1 + baseStats.BonusHolyDamageMultiplier);
             BaseHolyAdditiveSpellModifier = baseAdditiveSpellModifier;
             BaseFrostFireSpellModifier = baseSpellModifier * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
-            BaseFrostFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.02f * MageTalents.FirePower;
+            BaseFrostFireAdditiveSpellModifier = baseAdditiveSpellModifier + 0.01f * MageTalents.FirePower;
             switch (Specialization)
             {
                 case Specialization.Arcane:
@@ -2470,12 +2471,12 @@ namespace Rawr.Mage
             }
             float potencyChance = 1f - (1f - ClearcastingChance) * (1f - ClearcastingChance);
             ArcanePotencyCrit = potencyChance * arcanePotency;
-            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + ArcanePotencyCrit + MageTalents.PiercingIce * 0.01f + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * MageTalents.Pyromaniac;
+            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + ArcanePotencyCrit + MageTalents.PiercingIce * 0.01f + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0));
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;
-            BaseFireCritRate = spellCrit + 0.02f * MageTalents.CriticalMass;
-            BaseFrostFireCritRate = spellCrit + 0.02f * MageTalents.CriticalMass;
+            BaseFireCritRate = spellCrit;
+            BaseFrostFireCritRate = spellCrit;
             BaseFrostCritRate = spellCrit;
             BaseNatureCritRate = spellCrit;
             BaseShadowCritRate = spellCrit;
@@ -2524,7 +2525,7 @@ namespace Rawr.Mage
             }
             Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (Defense - 5 * playerLevel)) / 100f + baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
 
-            IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * 0.08f * MageTalents.Ignite;
+            IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f));
 
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
@@ -2536,17 +2537,7 @@ namespace Rawr.Mage
             BaseShadowCritBonus =
             BaseHolyCritBonus = (1 + mult * baseAddMult); // unknown if affected by burnout
 
-            float combustionCritBonus = 0.5f;
-
-#if RAWR4
-            CombustionFireCritBonus = 0f;
-            CombustionFrostFireCritBonus = 0f;
-#else
-            CombustionFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
-            CombustionFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + combustionCritBonus + MageTalents.IceShards / 3.0f + 0.25f * MageTalents.SpellPower + 0.1f * MageTalents.Burnout + baseStats.CritBonusDamage)) * (1 + IgniteFactor);
-#endif
-
-            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier;
+            CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier * (1f + 0.05f * MageTalents.Pyromaniac * CalculationOptions.PyromaniacUptime);
             BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * CastingSpeedMultiplier;
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
 
@@ -2761,9 +2752,9 @@ namespace Rawr.Mage
                 //lp.SetRowScaleUnsafe(rowPotion, 40.0);
                 //lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
                 //lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
-                lp.SetRowScaleUnsafe(rowCombustion, 10.0);
-                lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
-                lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
+                //lp.SetRowScaleUnsafe(rowCombustion, 10.0);
+                //lp.SetRowScaleUnsafe(rowHeroismCombustion, 10.0);
+                //lp.SetRowScaleUnsafe(rowMoltenFuryCombustion, 10.0);
                 lp.SetRowScaleUnsafe(rowThreat, 0.001);
                 lp.SetRowScaleUnsafe(rowCount, 0.05);
                 if (restrictManaUse)
@@ -4268,8 +4259,8 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowDpsTime, -(1 - dpsTime) * CalculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowAoe, CalculationOptions.AoeDuration * CalculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowCombustion, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / CombustionCooldown : combustionCount);
-            lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
-            lp.SetRHSUnsafe(rowHeroismCombustion, 1);
+            //lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
+            //lp.SetRHSUnsafe(rowHeroismCombustion, 1);
             //lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
             //lp.SetRHSUnsafe(rowHeroismBerserking, 10);
             //lp.SetRHSUnsafe(rowIcyVeinsDrumsOfBattle, drumsivlength);
@@ -4478,8 +4469,8 @@ namespace Rawr.Mage
             rowDragonsBreath = -1;
             rowCombustion = -1;
             rowPowerInfusion = -1;
-            rowMoltenFuryCombustion = -1;
-            rowHeroismCombustion = -1;
+            //rowMoltenFuryCombustion = -1;
+            //rowHeroismCombustion = -1;
             rowHeroismIcyVeins = -1;
             //rowSummonWaterElemental = -1;
             //rowSummonWaterElementalCount = -1;
@@ -4583,9 +4574,9 @@ namespace Rawr.Mage
                 if (MageTalents.BlastWave == 1) rowBlastWave = rowCount++;
                 if (MageTalents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
             }
-            if (combustionAvailable) rowCombustion = rowCount++;
-            if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
-            if (combustionAvailable && heroismAvailable) rowHeroismCombustion = rowCount++;
+            //if (combustionAvailable) rowCombustion = rowCount++;
+            //if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
+            //if (combustionAvailable && heroismAvailable) rowHeroismCombustion = rowCount++;
             //if (berserkingAvailable && moltenFuryAvailable) rowMoltenFuryBerserking = rowCount++;
             //if (berserkingAvailable && heroismAvailable) rowHeroismBerserking = rowCount++;
             //if (drumsOfBattleAvailable && icyVeinsAvailable) rowIcyVeinsDrumsOfBattle = rowCount++;
@@ -5058,12 +5049,12 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDragonsBreath, column, -1.0);
                 }
             }
-            if (state.Combustion)
+            /*if (state.Combustion)
             {
                 lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
                 if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
                 if (state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            }
+            }*/
             if (state.Berserking) lp.SetElementUnsafe(rowBerserking, column, 1.0);
             //if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
             //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);

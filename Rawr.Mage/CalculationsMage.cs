@@ -589,8 +589,8 @@ namespace Rawr.Mage
             return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonSegmentMana, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraintsLevel, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
         }
 
-        public static readonly Buff ImprovedScorchBuff = Buff.GetBuffByName("Improved Scorch");
-        public static readonly Buff WintersChillBuff = Buff.GetBuffByName("Winter's Chill");
+        //public static readonly Buff CriticalMassBuff = Buff.GetBuffByName("Critical Mass");
+        //public static readonly Buff ArcaneTacticsBuff = Buff.GetBuffByName("Arcane Tactics");
         public static readonly Buff MoltenArmorBuff = Buff.GetBuffByName("Molten Armor");
         public static readonly Buff MageArmorBuff = Buff.GetBuffByName("Mage Armor");
         public static readonly Buff IceArmorBuff = Buff.GetBuffByName("Ice Armor");
@@ -606,28 +606,9 @@ namespace Rawr.Mage
             if (!character.DisableBuffAutoActivation)
             {
                 MageTalents talents = character.MageTalents;
-                if (calculationOptions.MaintainScorch)
+                /*if (talents.CriticalMass > 0)
                 {
-                    if (talents.ImprovedScorch > 0)
-                    {
-                        if (!character.ActiveBuffs.Contains(ImprovedScorchBuff) && !character.ActiveBuffs.Contains(WintersChillBuff))
-                        {
-                            if (!activeBuffsCloned)
-                            {
-                                activeBuffs = new List<Buff>(character.ActiveBuffs);
-                                autoActivatedBuffs = new List<Buff>();
-                                activeBuffsCloned = true;
-                            }
-                            activeBuffs.Add(ImprovedScorchBuff);
-                            autoActivatedBuffs.Add(ImprovedScorchBuff);
-                            RemoveConflictingBuffs(activeBuffs, ImprovedScorchBuff);
-                        }
-                    }
-                }
-#if !RAWR4
-                if (talents.WintersChill > 0)
-                {
-                    if (!character.ActiveBuffs.Contains(WintersChillBuff) && !character.ActiveBuffs.Contains(ImprovedScorchBuff))
+                    if (!character.ActiveBuffs.Contains(ImprovedScorchBuff) && !character.ActiveBuffs.Contains(WintersChillBuff))
                     {
                         if (!activeBuffsCloned)
                         {
@@ -635,12 +616,11 @@ namespace Rawr.Mage
                             autoActivatedBuffs = new List<Buff>();
                             activeBuffsCloned = true;
                         }
-                        activeBuffs.Add(WintersChillBuff);
-                        autoActivatedBuffs.Add(WintersChillBuff);
-                        RemoveConflictingBuffs(activeBuffs, WintersChillBuff);
+                        activeBuffs.Add(ImprovedScorchBuff);
+                        autoActivatedBuffs.Add(ImprovedScorchBuff);
+                        RemoveConflictingBuffs(activeBuffs, ImprovedScorchBuff);
                     }
-                }
-#endif
+                }*/
                 if (armor != null)
                 {
                     Buff armorBuff = null;

@@ -1085,6 +1085,13 @@ namespace Rawr.Mage
             set { _FocusMagicTargetCritRate = value; OnPropertyChanged("FocusMagicTargetCritRate"); }
         }
 
+        private float _PyromaniacUptime;
+        public float PyromaniacUptime
+        {
+            get { return _PyromaniacUptime; }
+            set { _PyromaniacUptime = value; OnPropertyChanged("PyromaniacUptime"); }
+        }
+
         private bool _UnlimitedMana;
         public bool UnlimitedMana
         {

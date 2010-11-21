@@ -81,22 +81,22 @@ namespace Rawr.Mage
         public float StateAdditiveSpellModifier { get; set; }
 
         public float ArcaneCritBonus { get { return Solver.BaseArcaneCritBonus; } }
-        public float FireCritBonus { get { return Combustion ? Solver.CombustionFireCritBonus : Solver.BaseFireCritBonus; } }
+        public float FireCritBonus { get { return Solver.BaseFireCritBonus; } }
         public float FrostCritBonus { get { return Solver.BaseFrostCritBonus; } }
         public float NatureCritBonus { get { return Solver.BaseNatureCritBonus; } }
         public float ShadowCritBonus { get { return Solver.BaseShadowCritBonus; } }
-        public float FrostFireCritBonus { get { return Combustion ? Solver.CombustionFrostFireCritBonus : Solver.BaseFrostFireCritBonus; } }
+        public float FrostFireCritBonus { get { return Solver.BaseFrostFireCritBonus; } }
         public float HolyCritBonus { get { return Solver.BaseHolyCritBonus; } }
 
         public float StateCritRate { get; set; }
 
         public float CritRate { get { return StateCritRate + Solver.BaseCritRate; } }
         public float ArcaneCritRate { get { return StateCritRate + Solver.BaseArcaneCritRate; } }
-        public float FireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Solver.BaseFireCritRate; } }
+        public float FireCritRate { get { return StateCritRate + Solver.BaseFireCritRate; } }
         public float FrostCritRate { get { return StateCritRate + Solver.BaseFrostCritRate; } }
         public float NatureCritRate { get { return StateCritRate + Solver.BaseNatureCritRate; } }
         public float ShadowCritRate { get { return StateCritRate + Solver.BaseShadowCritRate; } }
-        public float FrostFireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Solver.BaseFrostFireCritRate; } }
+        public float FrostFireCritRate { get { return StateCritRate + Solver.BaseFrostFireCritRate; } }
         public float HolyCritRate { get { return StateCritRate + Solver.BaseHolyCritRate; } }
 
         public float Mastery { get { return Solver.Mastery; } }
@@ -154,7 +154,6 @@ namespace Rawr.Mage
             }
         }
 
-        public float CombustionDuration { get; set; }
         public float SpellHasteRating { get; set; }
         public float ProcHasteRating { get; set; }
 
@@ -230,10 +229,6 @@ namespace Rawr.Mage
                         frozenState = Clone();
                         frozenState.Frozen = true;
                         frozenState.StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
-                        if (Combustion)
-                        {
-                            frozenState.CombustionDuration = ComputeCombustion(Solver.BaseFireCritRate + frozenState.StateCritRate);
-                        }
                     }
                 }
                 return frozenState;
@@ -326,7 +321,6 @@ namespace Rawr.Mage
             state.StateSpellPower = StateSpellPower;
             state.SpellHasteRating = SpellHasteRating;
             state.StateCritRate = StateCritRate;
-            state.CombustionDuration = CombustionDuration;
             state.Frozen = Frozen;
             state.CastingSpeed = CastingSpeed;
             state.StateAdditiveSpellModifier = StateAdditiveSpellModifier;
@@ -400,15 +394,6 @@ namespace Rawr.Mage
             StateCritRate = stateCritRating / 1400f * levelScalingFactor;
             if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
 
-            if (Combustion)
-            {
-                CombustionDuration = ComputeCombustion(solver.BaseFireCritRate + StateCritRate);
-            }
-            else
-            {
-                CombustionDuration = 0;
-            }
-
             // spell calculations
 
             Frozen = frozen;
@@ -437,7 +422,7 @@ namespace Rawr.Mage
             }
             if (MoltenFury)
             {
-                StateSpellModifier *= (1 + 0.06f * MageTalents.MoltenFury);
+                StateSpellModifier *= (1 + 0.04f * MageTalents.MoltenFury);
             }
             if (MirrorImage && BaseStats.Mage4T10 > 0)
             {
@@ -507,6 +492,11 @@ namespace Rawr.Mage
                 if (UseMageWard)
                 {
                     c = MageWardCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
+                }
+                if (Combustion)
+                {
+                    // add combustion mix-in
+                    c = CombustionCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
                 }
 
                 c.CycleId = cycleId;

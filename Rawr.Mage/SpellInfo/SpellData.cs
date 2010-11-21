@@ -68,6 +68,7 @@ namespace Rawr.Mage
         FireBlast,
         [Description("Flame Orb")]
         FlameOrb,
+        Combustion,
         [Description("Scorch")]
         Scorch,
         ScorchNoCC,
@@ -281,14 +282,17 @@ namespace Rawr.Mage
         }
     }
 
-    // spell id: 82739, scaling id: 572
+    // spell id: 82739/83619, scaling id: 572/583
     public class FlameOrbTemplate : SpellTemplate
     {
         public void Initialize(Solver solver)
         {
+            // TODO consider splitting explosion out for display purposes
             Name = "Flame Orb";
             InitializeCastTime(false, true, 0, 60);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.06f, 15 * 0.277999997138977f, 0.25f, 0, 15 * 0.13400000333786f, 0, 15, 15, 0);
+            float explosion = solver.MageTalents.FirePower == 3 ? 1f : 0.33f * solver.MageTalents.FirePower;
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.06f, 15 * 0.277999997138977f + explosion * 1.317999958992f, 0.25f, 0, 15 * 0.13400000333786f + explosion * 0.193000003695488f, 0, 15 + explosion, 15 + explosion, 0);
+            BaseSpellModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
             Dirty = false;
         }
     }
@@ -638,13 +642,36 @@ namespace Rawr.Mage
         {
             Name = "Living Bomb";
             InitializeCastTime(false, true, 0f, 0f);
-            InitializeScaledDamage(solver, false, 35, MagicSchool.Fire, 0.22f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.22f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
             DotDuration = 12;
             DotTickInterval = 3;
+            BaseSpellModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
             if (solver.MageTalents.GlyphOfLivingBomb)
             {
                 BaseSpellModifier *= 1.03f;
             }
+            Dirty = false;
+        }
+    }
+
+    // spell id: 11129, scaling id: 726
+    public class CombustionTemplate : SpellTemplate
+    {
+        public override Spell GetSpell(CastingState castingState)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState, false, false, false);
+            return spell;
+        }
+
+        public void Initialize(Solver solver)
+        {
+            Name = "Combustion";
+            InitializeCastTime(false, true, 0f, 0f);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.11300003528595f, 0.170000001788139f, 0, 0.428999990224838f, 0, 1, 1, 0);
+            DotDuration = 10;
+            DotTickInterval = 1;
             Dirty = false;
         }
     }

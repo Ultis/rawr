@@ -1016,7 +1016,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 0, SequenceItem.Calculations.CombustionCooldown + 15.0, true, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 0, SequenceItem.Calculations.CombustionCooldown + 15.0, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
         }
 
         public void GroupArcanePower()
@@ -1074,7 +1074,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.IcyVeins) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, false, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.IcyVeins], VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 20.0, SequenceItem.Calculations.IcyVeinsCooldown, SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1, Calculations.EffectCooldown[(int)StandardEffect.IcyVeins], VariableType.None, 0.0);
         }
 
         /*public void GroupWaterElemental()
@@ -1094,7 +1094,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.MirrorImage) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.MirrorImageDuration, SequenceItem.Calculations.MirrorImageCooldown, false, false, Calculations.EffectCooldown[(int)StandardEffect.MirrorImage], VariableType.SummonMirrorImage, SequenceItem.Calculations.BaseGlobalCooldown);
+            if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.MirrorImageDuration, SequenceItem.Calculations.MirrorImageCooldown, false, Calculations.EffectCooldown[(int)StandardEffect.MirrorImage], VariableType.SummonMirrorImage, SequenceItem.Calculations.BaseGlobalCooldown);
         }
 
         public List<SequenceGroup> GroupFlameCap()
@@ -1125,12 +1125,12 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Berserking) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 10, 180, false, false, Calculations.EffectCooldown[(int)StandardEffect.Berserking], VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, 10, 180, false, Calculations.EffectCooldown[(int)StandardEffect.Berserking], VariableType.None, 0.0);
         }
 
         private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, EffectCooldown type)
         {
-            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, false, type, VariableType.None, 0.0);
+            return GroupCooldown(cooldownItems, maxDuration, cooldown, false, type, VariableType.None, 0.0);
         }
 
         private bool ItemsCompatible(List<SequenceItem> item1, List<SequenceItem> item2, double maxCooldown)
@@ -1183,7 +1183,7 @@ namespace Rawr.Mage.SequenceReconstruction
             return SequenceItem.Calculations.SegmentList[seg2].TimeStart - SequenceItem.Calculations.SegmentList[seg1].TimeEnd < effectDuration - 0.00001;
         }
 
-        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, EffectCooldown type, VariableType activation, double activationDuration)
+        private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool coldSnapMode, EffectCooldown type, VariableType activation, double activationDuration)
         {
             const double eps = 0.00001;
             List<SequenceGroup> existingGroup = new List<SequenceGroup>();
@@ -1248,11 +1248,11 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             List<SequenceItem> unchained = new List<SequenceItem>();
             double totalDuration = 0;
-            double combustionCount = 0;
+            //double combustionCount = 0;
             foreach (SequenceItem item in cooldownItems)
             {
                 totalDuration += item.Duration;
-                if (combustionMode) combustionCount += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
+                //if (combustionMode) combustionCount += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                 bool chained = false;
                 foreach (List<SequenceItem> chain in chains)
                 {
@@ -1267,11 +1267,11 @@ namespace Rawr.Mage.SequenceReconstruction
             // at this point we have a number of chains and remaining unchained items
             // chains cannot be split, unchained items can
             int maxChains = 0;
-            if (combustionMode)
+            /*if (combustionMode)
             {
                 maxChains = (int)Math.Ceiling(combustionCount - eps);
             }
-            else
+            else*/
             {
                 maxChains = (int)Math.Ceiling((totalDuration - eps) / maxDuration);
             }
@@ -1297,14 +1297,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 SequenceGroup group = partialGroups[i];
                 double gap = 0.0;
                 double activationGap = 0.0;
-                if (combustionMode)
+                /*if (combustionMode)
                 {
                     double tempSum = 0;
                     foreach (SequenceItem item in group.Item)
                         tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                     gap = 1 - tempSum;
                 }
-                else
+                else*/
                 {
                     gap = maxDuration - group.Duration;
                     if (activationDuration > 0.0)
@@ -1326,20 +1326,20 @@ namespace Rawr.Mage.SequenceReconstruction
                     //int maxSegDistance = (int)Math.Ceiling(maxDuration / 30.0) + 1;
                     //if (combustionMode) maxSegDistance = (int)Math.Ceiling(15.0 / 30.0) + 1;
                     double allowedDistance = maxDuration;
-                    if (combustionMode) allowedDistance = 15.0;
+                    //if (combustionMode) allowedDistance = 15.0;
                     for (int j = i + 1; j < partialGroups.Count; j++)
                     {
                         SequenceGroup subgroup = partialGroups[j];
                         double gapReduction = 0.0;
                         double activationGapReduction = 0.0;
-                        if (combustionMode)
+                        /*if (combustionMode)
                         {
                             double tempSum = 0;
                             foreach (SequenceItem item in subgroup.Item)
                                 tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                             gapReduction = tempSum;
                         }
-                        else
+                        else*/
                         {
                             gapReduction = subgroup.Duration;
                             if (activationDuration > 0.0)
@@ -1377,11 +1377,11 @@ namespace Rawr.Mage.SequenceReconstruction
                             {
                                 double gapReduction = 0.0;
                                 double activationGapReduction = 0.0;
-                                if (combustionMode)
+                                /*if (combustionMode)
                                 {
                                     gapReduction = item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                                 }
-                                else
+                                else*/
                                 {
                                     gapReduction = item.Duration;
                                     if (activationDuration > 0.0 && item.VariableType == activation) activationGapReduction = item.Duration;
@@ -1398,11 +1398,11 @@ namespace Rawr.Mage.SequenceReconstruction
                                 else if ((activationGapReduction > eps && activationGap > eps) || (activationGapReduction == 0.0 && gap > activationGap + eps))
                                 {
                                     double split = 0;
-                                    if (combustionMode)
+                                    /*if (combustionMode)
                                     {
                                         split = gap * (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                                     }
-                                    else if (activationGapReduction > eps && activationGap > eps)
+                                    else*/ if (activationGapReduction > eps && activationGap > eps)
                                     {
                                         split = activationGap;
                                     }
@@ -3439,8 +3439,6 @@ namespace Rawr.Mage.SequenceReconstruction
                 itemData[i].Effect = Calculations.ItemBasedEffectCooldowns[i];
             }
 
-            double combustionLeft = 0;
-
             double unexplained = 0;
 
             if (timing != null) timing.Length = 0;
@@ -3943,25 +3941,22 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.Combustion)
                     {
-                        if (duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs) >= combustionLeft + eps)
+                        if (time + duration > combustionTime + 10 + eps)
                         {
-                            unexplained += time + duration - combustionTime - (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
+                            unexplained += time + duration - combustionTime - 10;
                             if (timing != null) timing.AppendLine("WARNING: Combustion duration too long!");
                         }
-                        combustionLeft -= duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                     }
-                    else if (cycle != null && duration > 0 && combustionLeft > eps)
+                    else if (duration > 0 && 10 - (time - combustionTime) > eps)
                     {
                         //unexplained += Math.Min(duration, 15 - (time - apTime));
                         combustionTime = -1;
-                        combustionLeft = 0;
                         combustionActive = false;
                         if (timing != null) timing.AppendLine("INFO: Combustion is still up!");
                     }
                     else if (duration > 0) // do not cancel for gems/pots
                     {
                         combustionTime = -1;
-                        combustionLeft = 0;
                         combustionActive = false;
                     }
                 }
@@ -3978,11 +3973,9 @@ namespace Rawr.Mage.SequenceReconstruction
                         else
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Combustion (" + Math.Round(manabefore).ToString() + " mana)");
-                            combustionLeft = 1;
-                            combustionCooldown = SequenceItem.Calculations.CombustionCooldown + (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
+                            combustionCooldown = SequenceItem.Calculations.CombustionCooldown;
                             combustionTime = time;
                             combustionWarning = false;
-                            combustionLeft -= duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                             combustionActive = true;
                         }
                     }
