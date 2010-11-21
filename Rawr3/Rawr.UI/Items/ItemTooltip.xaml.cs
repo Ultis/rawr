@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
-using Rawr.Base;
 
 namespace Rawr.UI
 {
@@ -116,11 +115,9 @@ namespace Rawr.UI
             }
         }
 
-        private void NonItemTooltip()
-        {
+        private void NonItemTooltip() {
             RootLayout.Visibility = Visibility.Visible;
-            try
-            {
+            try {
                 string Title = CurrentString.Split('|')[0].Trim();
                 string Desc = CurrentString.Split('|')[1].Trim();
 
@@ -137,17 +134,18 @@ namespace Rawr.UI
                 SocketBonusLabel.Visibility = Visibility.Collapsed;
                 EnchantLabel.Visibility = Visibility.Collapsed;
                 ReforgingLabel.Visibility = Visibility.Collapsed;
+                SetLabel.Visibility = Visibility.Collapsed;
 
                 LocationLabel.Visibility = Visibility.Visible;
                 LocationLabel.Text = Desc;
 
                 ItemsGrid.Visibility = Visibility.Collapsed;
-            }
-            catch (Exception ex) {
-                ErrorBox eb = new ErrorBox(
+            } catch (Exception ex) {
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error setting up a Non-Item Tooltip",
-                    ex.Message, "NonItemTooltip()", "No Additional Info",
+                    ex.Message, ex.InnerException, "NonItemTooltip()", "No Additional Info",
                     ex.StackTrace);
+                eb.Show();
             }
         }
 
@@ -197,8 +195,6 @@ namespace Rawr.UI
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem != null ? actualItem.Quality : ItemQuality.Common));
 
             #region Displaying Item Types
-            //List<string> statsList = new List<string>();
- 
             var liTypes = new List<string>();
 
             if (actualItem != null && (actualItem.Type != ItemType.None || (actualItem.Type == ItemType.None
@@ -269,6 +265,21 @@ namespace Rawr.UI
                 }
             }*/
             List2Panel(StatPanel, statsList, null, true);
+            #endregion
+
+            #region Displaying Item Sets
+
+            if (actualItem != null && actualItem.SetName != "")
+            {
+                SetLabel.Text = string.Format("Set: {0}", actualItem.SetName);
+                SetLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SetLabel.Text = "";
+                SetLabel.Visibility = Visibility.Collapsed;
+            }
+
             #endregion
 
             #region Setting Up Gems

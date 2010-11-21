@@ -892,7 +892,7 @@ namespace Rawr.UI
         }
 
         private static Dictionary<string, List<string>> classAllowableRaces = null;
-        private static Dictionary<string, List<string>> GetClassAllowableRaces
+        public static Dictionary<string, List<string>> GetClassAllowableRaces
         {
             get
             {

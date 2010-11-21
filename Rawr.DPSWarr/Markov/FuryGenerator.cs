@@ -1,10 +1,9 @@
 ﻿//#define TRANSTYPE
 using System;
 using System.Collections.Generic;
-using Rawr.Base.Algorithms;
-using System.Text;
-using Rawr.Base;
 using System.IO;
+using System.Text;
+using Rawr.Base.Algorithms;
 
 namespace Rawr.DPSWarr.Markov
 {
@@ -604,10 +603,9 @@ namespace Rawr.DPSWarr.Markov
                 }
                 catch (Exception ex)
                 {
-                    ErrorBox eb = new ErrorBox("Error in creating Arms Markov Calculations",
-                        ex.Message, "StateSpaceGeneratorArmsTest1()",
-                        "StateSpace Count: " + stateSpace.Count.ToString(),
-                        ex.StackTrace);
+                    Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Arms Markov Calculations",
+                        ex.Message, ex.InnerException,
+                        "StateSpaceGeneratorArmsTest1()", "StateSpace Count: " + stateSpace.Count.ToString(), ex.StackTrace);
                     eb.Show();
                 }
             }

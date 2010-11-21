@@ -2651,10 +2651,12 @@ namespace Rawr //O O . .
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error converting character saved Armory Pets to class form",
                     ex.Message,
+                    ex.InnerException,
                     "GetPetByString(string input)",
                     "No Additional Info",
                     ex.StackTrace
                     );
+                eb.Show();
             }
 
             return new ArmoryPet(family, name, specKey, spec);

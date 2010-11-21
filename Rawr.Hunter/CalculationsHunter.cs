@@ -843,8 +843,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 foreach (Buff b in addedBuffs) { calcOpts.petActiveBuffs.Remove(b); }
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Generating Pet Buff Stats",
-                    ex.Message, "GetPetBuffsStats(...)",
-                    "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "GetPetBuffsStats(...)", "No Additional Info", ex.StackTrace);
                 eb.Show();
                 statsBuffs = new Stats();
             }
@@ -3160,7 +3160,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
                     "Error Generating Character Stats",
-                    ex.Message, "GetCharacterStats(...)", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "GetCharacterStats(...)", "No Additional Info", ex.StackTrace);
                 return new Stats();
             }
         }

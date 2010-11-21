@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Rawr.DPSWarr.Skills;
-using Rawr.Base;
 
 namespace Rawr.DPSWarr
 {
@@ -130,8 +129,9 @@ namespace Rawr.DPSWarr
                     ovdRage = FreeRageOverDur;
                 } while (Math.Abs(1f - (BS.Activates       != 0 ? oldBS / BS.Activates       : 1f)) > 0.005f);
             } catch (Exception ex) {
-                ErrorBox eb = new ErrorBox("Error in performing Fury Iterations",
-                    ex.Message, "doIterations()", "No Additional Info", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in performing Fury Iterations",
+                    ex.Message, ex.InnerException,
+                    "doIterations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
         }

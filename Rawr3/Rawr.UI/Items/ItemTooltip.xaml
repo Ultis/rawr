@@ -58,6 +58,7 @@
                 <TextBlock x:Name="GemNamesLabel2" TextWrapping="Wrap"/>
                 <TextBlock x:Name="GemNamesLabel3" TextWrapping="Wrap"/>
                 <TextBlock x:Name="SocketBonusLabel" TextWrapping="Wrap"/>
+                <TextBlock x:Name="SetLabel" TextWrapping="Wrap"/>
                 <TextBlock x:Name="EnchantLabel" Foreground="#FF3A7414" Visibility="Collapsed" TextWrapping="Wrap"/>
                 <TextBlock x:Name="ReforgingLabel" Visibility="Collapsed" TextWrapping="Wrap"/>
                 <TextBlock x:Name="LocationLabel" TextWrapping="Wrap"/>

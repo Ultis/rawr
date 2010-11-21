@@ -24,14 +24,13 @@ namespace Rawr.Cat
 			return xml.ToString();
 		}
 
-
-        private int _targetLevel = 83;
+        private int _targetLevel = 88;
         public int TargetLevel
         {
             get { return _targetLevel; }
-            set { if (_targetLevel != value) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
+            set { if (_targetLevel != value && value >= 85 && value <= 88) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
         }
-        private int _targetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+        private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
         public int TargetArmor
         {
             get { return _targetArmor; }
@@ -90,14 +89,8 @@ namespace Rawr.Cat
         [XmlIgnore]
         public Character Character
         {
-            get
-            {
-                return _character;
-            }
-            set
-            {
-                _character = value;
-            }
+            get { return _character; }
+            set { _character = value; }
         }
 
         #region INotifyPropertyChanged Members

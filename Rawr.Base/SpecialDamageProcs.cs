@@ -231,7 +231,8 @@ namespace Rawr.DamageProcs
                 }
             }catch(Exception ex){
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, "Calculate(...)", "", ex.StackTrace);
+                    ex.Message, ex.InnerException, "Calculate(...)", "No Additional Info", ex.StackTrace);
+                eb.Show();
             }
             return retVal;
         }
@@ -325,7 +326,8 @@ namespace Rawr.DamageProcs
                 TotalNumProcsPerSec[type] += totalNumProcsPerSec;
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, "CalculateTotalDamagePerSecond(...)", "", ex.StackTrace);
+                    ex.Message, ex.InnerException, "CalculateTotalDamagePerSecond(...)", "", ex.StackTrace);
+                eb.Show();
             }
 
             return totalDamagePerSec;
@@ -356,7 +358,8 @@ namespace Rawr.DamageProcs
                 dmg += dmgGlance + dmgBlock + dmgCrit;
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, "CalculateThisDamage(...)", "", ex.StackTrace);
+                    ex.Message, ex.InnerException, "CalculateThisDamage(...)", "", ex.StackTrace);
+                eb.Show();
             }
 
             return dmg;

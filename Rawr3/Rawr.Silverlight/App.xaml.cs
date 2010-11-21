@@ -16,7 +16,7 @@ namespace Rawr.Silverlight
 {
     public partial class App : UI.App
     {
-		private MainPage _mainPage = null;
+        private MainPage _mainPage = null;
 
         private Dictionary<Control, string> _windows = new Dictionary<Control, string>();
 
@@ -24,20 +24,20 @@ namespace Rawr.Silverlight
         {
 #if DEBUG
 #if SILVERLIGHT
-			//Application.Current.Host.Settings.EnableFrameRateCounter = true;
-			//Application.Current.Host.Settings.EnableRedrawRegions = true;
-			//Application.Current.Host.Settings.EnableCacheVisualization = true;
+            //Application.Current.Host.Settings.EnableFrameRateCounter = true;
+            //Application.Current.Host.Settings.EnableRedrawRegions = true;
+            //Application.Current.Host.Settings.EnableCacheVisualization = true;
 #endif
 #endif
             this.Startup += this.Application_Startup;
             this.Exit += this.Application_Exit;
             this.UnhandledException += this.Application_UnhandledException;
-			this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
+            this.CheckAndDownloadUpdateCompleted += new CheckAndDownloadUpdateCompletedEventHandler(App_CheckAndDownloadUpdateCompleted);
 
-			InitializeComponent();
+            InitializeComponent();
         }
 
-		private void Application_Startup(object sender, StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             Properties.NetworkSettings.UseAspx = e.InitParams.ContainsKey("UseAspx");
             Grid g = new Grid();
@@ -51,18 +51,18 @@ namespace Rawr.Silverlight
         {
             Grid g = RootVisual as Grid;
             g.Children.RemoveAt(0);
-			_mainPage = new MainPage();
+            _mainPage = new MainPage();
             //_mainPage.WindowsComboBox.Items.Add(new ComboBoxItem() { Content = "Character", Tag = _mainPage });
             //_mainPage.WindowsComboBox.SelectionChanged += new SelectionChangedEventHandler(WindowsComboBox_SelectionChanged);
             _windows[_mainPage] = "Character";
             g.Children.Add(_mainPage);
-			ProcessBookmark();
+            ProcessBookmark();
             if (!Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen)
             {
                 new WelcomeWindow().Show();
             }
-			this.CheckAndDownloadUpdateAsync();
-		}
+            this.CheckAndDownloadUpdateAsync();
+        }
 
         /*void WindowsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -79,8 +79,8 @@ namespace Rawr.Silverlight
             }
         }*/
 
-		private void ProcessBookmark()
-		{
+        private void ProcessBookmark()
+        {
             if (HtmlPage.IsEnabled)
             {
                 string bookmark = HtmlPage.Window.CurrentBookmark;
@@ -104,15 +104,15 @@ namespace Rawr.Silverlight
                     }
                 }
             }
-		}
+        }
 
-		private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
-		{
-			if (e.UpdateAvailable)
-				MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
-		}
+        private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
+        {
+            if (e.UpdateAvailable)
+                MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
+        }
 
-		private void Application_Exit(object sender, EventArgs e)
+        private void Application_Exit(object sender, EventArgs e)
         {
             LoadScreen.SaveFiles();
         }
@@ -123,29 +123,28 @@ namespace Rawr.Silverlight
             // If the app is running outside of the debugger then report the exception using
             // the browser's exception mechanism. On IE this will display it a yellow alert 
             // icon in the status bar and Firefox will display a script error.
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-				ChildWindow errorWin = new ChildWindow()
-				{
-					Content = new StackPanel()
-				};
-				(errorWin.Content as StackPanel).Children.Add(
-					new TextBlock() { Text = "An error has occurred. Please check the Issue Tracker on Rawr's development website (http://rawr.codeplex.com) for a solution, or report it there if it hasn't been reported:" });
-				
-				string errorString = string.Empty;
-				Exception ex = e.ExceptionObject;
-				do
-				{
-					errorString += ex.Message + "\r\n\r\n" + ex.StackTrace;
-					ex = ex.InnerException;
-				} while (ex != null);
+            if (!System.Diagnostics.Debugger.IsAttached) {
+                ChildWindow errorWin = new ChildWindow()
+                {
+                    Content = new StackPanel()
+                };
+                (errorWin.Content as StackPanel).Children.Add(
+                    new TextBlock() { Text = "An error has occurred. Please check the Issue Tracker on Rawr's development website (http://rawr.codeplex.com) for a solution, or report it there if it hasn't been reported:" });
+                
+                string errorString = string.Empty;
+                Exception ex = e.ExceptionObject;
+                do
+                {
+                    errorString += ex.Message + "\r\n\r\n" + (ex.InnerException != null ? ex.InnerException.Message + "\r\n\r\n" : "") + ex.StackTrace;
+                    ex = ex.InnerException;
+                } while (ex != null);
 
-				(errorWin.Content as StackPanel).Children.Add(
-					new TextBox() { Text = errorString });
+                (errorWin.Content as StackPanel).Children.Add(
+                    new TextBox() { Text = errorString });
 
-				errorWin.Show();
+                errorWin.Show();
 
-				// NOTE: This will allow the application to continue running after an exception has been thrown
+                // NOTE: This will allow the application to continue running after an exception has been thrown
                 // but not handled. 
                 // For production applications this error handling should be replaced with something that will 
                 // report the error to the website and stop the application.

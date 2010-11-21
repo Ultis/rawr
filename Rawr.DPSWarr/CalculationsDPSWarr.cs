@@ -1436,7 +1436,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Calculations",
-                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return calculatedStats;
@@ -1449,7 +1450,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions);
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in getting Character Stats",
-                    ex.Message, "GetCharacterStats(Character character, Item additionalItem)", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "GetCharacterStats(Character character, Item additionalItem)", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return new Stats() { };
@@ -1923,7 +1925,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Calculating Triggers",
-                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "CalculateTriggers(...)", addInfo, ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "CalculateTriggers(...)", addInfo, ex.StackTrace);
                 eb.Show();
             }
         }
@@ -2091,7 +2094,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 return statsProcs;
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating SpecialEffects Stats",
-                    ex.Message, ex.InnerException != null ? ex.InnerException.Message : "", "GetSpecialEffectsStats()");
+                    ex.Message, ex.InnerException,
+                    "GetSpecialEffectsStats()", "No Additional Info", ex.StackTrace);
                 eb.Show();
                 return new Stats();
             }

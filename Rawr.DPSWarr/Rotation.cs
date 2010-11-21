@@ -234,7 +234,8 @@ namespace Rawr.DPSWarr {
                 AbilityList.Add(abilWrapper.ability.GetType(), abilWrapper);
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in adding an Ability Wrapper",
-                    ex.Message, "AddAbility(...)", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "AddAbility(...)", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
         }
@@ -1170,7 +1171,8 @@ namespace Rawr.DPSWarr {
                 }*/
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Special Effects Caches",
-                    ex.Message, "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
         }

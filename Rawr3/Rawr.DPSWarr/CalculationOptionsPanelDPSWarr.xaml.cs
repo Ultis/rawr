@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Rawr.Base;
 
 /* Things to add:
  * 
@@ -62,8 +61,8 @@ namespace Rawr.DPSWarr {
                 SetUpOther();
                 SetUpToolTips();
             } catch (Exception ex) {
-                ErrorBox eb = new ErrorBox("Error in creating the DPSWarr Options Pane",
-                    ex.Message, "CalculationOptionsPanelDPSWarr()", ex.InnerException != null ? ex.InnerException.Message : "", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating the DPSWarr Options Pane",
+                    ex.Message, ex.InnerException, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             _loadingCalculationOptions = false;
@@ -90,8 +89,9 @@ namespace Rawr.DPSWarr {
                 // Abilities to Maintain
                 LoadAbilBools(calcOpts);
             } catch (Exception ex) {
-                ErrorBox eb = new ErrorBox("Error in loading the DPSWarr Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in loading the DPSWarr Options Pane",
+                    ex.Message, ex.InnerException,
+                    "LoadCalculationOptions()", info, ex.StackTrace);
                 eb.Show();
             }
             _loadingCalculationOptions = false;

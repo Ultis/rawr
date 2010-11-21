@@ -264,6 +264,7 @@ namespace Rawr.UI
                 case "Enchants":            UpdateGraphEnchants(parts[1]); break;
                 case "Gems":                UpdateGraphGems(parts[1]); break;
                 case "Buffs":               UpdateGraphBuffs(parts[1]); break;
+                case "Races":               UpdateGraphRaces(parts[1]); break;
                 case "Talents and Glyphs":  UpdateGraphTalents(parts[1]); break;
                 case "Equipped":            UpdateGraphEquipped(parts[1]); break;
                 case "Available":           UpdateGraphAvailable(parts[1]); break;
@@ -281,10 +282,125 @@ namespace Rawr.UI
             }
         }
 
+        #region Variables
         private int _calculationCount = 0;
         private ComparisonCalculationBase[] _itemCalculations = null;
         private AutoResetEvent _autoResetEvent = null;
         private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
+        public static readonly CharacterRace[] CharacterRaces = {
+            CharacterRace.None,
+            CharacterRace.Human,
+            CharacterRace.Orc,
+            CharacterRace.Dwarf,
+            CharacterRace.NightElf,
+            CharacterRace.Undead,
+            CharacterRace.Tauren,
+            CharacterRace.Gnome,
+            CharacterRace.Troll,
+            CharacterRace.BloodElf,
+            CharacterRace.Draenei,
+            CharacterRace.Worgen,
+            CharacterRace.Goblin,
+        };
+        public static Dictionary<CharacterRace, string[]> CharacterRaceBonuses = new Dictionary<CharacterRace,string[]>()
+        {
+            {CharacterRace.None, new string[] { "No Racial Bonuses" }},
+            {CharacterRace.Human, new string[] {
+                    "Diplomacy: Reputation gains increased by 10%.",
+                    "Every Man for Himself: Removes all movement impairing effects and all effects which cause loss of control of your character. This effect shares a cooldown with other similar effects.",
+                    "Mace Specialization: Expertise with Maces and Two-Handed Maces increased by 3.",
+                    "Sword Specialization: Expertise with Swords and Two-Handed Swords increased by 3.",
+                    "The Human Spirit: Spirit increased by 3%.",
+                }
+            },
+            {CharacterRace.Orc, new string[] {
+                    "Axe Specialization: Expertise with Fist Weapons, Axes and Two-Handed Axes increased by 3.",
+                    "Blood Fury: Increases melee attack power by 1169 and your spell damage by 584. Lasts 15 sec.",
+                    "Command: Damage dealt by Death Knight, Hunter and Warlock pets increased by 5%.",
+                    "Hardiness: Duration of Stun effects reduced by an additional 15%.",
+                }
+            },
+            {CharacterRace.Dwarf, new string[] {
+                    "Explorer: You find additional fragments when looting archaeological finds and you can survey faster than normal archaeologists.",
+                    "Frost Resistance: Increases your resistance to harmful Frost effects by x.",
+                    "Gun Specialization: Your chance to critically hit with Guns is increased by 1%.",
+                    "Mace Specialization: Expertise with Maces and Two-Handed Maces increased by 3.",
+                    "Stoneform: Removes all poison, disease and bleed effects and increases your armor by 10% for 8 sec.",
+                }
+            },
+            {CharacterRace.NightElf, new string[] {
+                    "Nature Resistance: Increases your resistance to harmful Nature effects by x.",
+                    "Quickness: Reduces the chance that melee and ranged attackers will hit you by 2%.",
+                    "Shadowmeld: Activate to slip into the shadows, reducing the chance for enemies to detect your presence. Lasts until cancelled or upon moving. Any threat is restored versus enemies still in combat upon cancellation of this effect.",
+                    "Wisp Spirit: Transform into a wisp upon death, increasing speed by 75%.",
+                }
+            },
+            {CharacterRace.Undead, new string[] {
+                    "Cannibalize: When activated, regenerates 7% of total health and mana every 2 sec for 10 sec. Only works on Humanoig or Undead corpses within 5 yards. Any movement, action, or damage taken while Cannibalizing will cancel the effect.",
+                    "Shadow Resistance: Increases your resistance to harmful Shadow effects by 1.",
+                    "Underwater Breathing: Underwater breath lasts 233% longer than normal.",
+                    "Will of the Forsaken: Removes any Charm, Fear and Sleep effect. This effect shares a 30 sec cooldown with other similar effects. (2 min cd)",
+                }
+            },
+            {CharacterRace.Tauren, new string[] {
+                    "Cultivation: Herbalism skill increased by 15 and you gather herbs faster than normal herbalists.",
+                    "Endurance: Base Health increased by 5%.",
+                    "Nature Resistance: Increases your resistance to harmful Nature effects by 1.",
+                    "War Stomp: Stuns up to 5 enemies within 8 yards for 2 sec. (0.5 sec cast, 2 min cd)",
+                }
+            },
+            {CharacterRace.Gnome, new string[] {
+                    "Arcane Resistance: Increases your resistance to harmful Arcane effects by x.",
+                    "Engineering Specialization: Engineering skill increased by 15.",
+                    "Escape Artist: Escape the effects of any immobilzation or movement speed reduction effect.",
+                    "Expansive Mind: Mana pool increased by 5%.",
+                    "Shortblade Specialization: Expertise with Daggers and One-Handed Swords increased by 3.",
+                }
+            },
+            {CharacterRace.Troll, new string[] {
+                    "Beast Slaying: Damage dealt versus Beasts increased by 5%.",
+                    "Berserking: Increases your attack and casting speed by 20% for 10 sec.",
+                    "Bow Specialization: Your chance to critically hit with Bows is increased by 1%.",
+                    "Da Voodoo Shuffle: Reduces the duration of all movement impairing effects by 15%. Trolls be flippin' out mon!",
+                    "Regeneration: Health regeneration rate increased by 10%. 10% of total Health regeneration may continue during combat.",
+                    "Throwing Specialization: Your chance to critically hit with Throwing Weapons is increased by 1%.",
+                }
+            },
+            {CharacterRace.BloodElf, new string[] {
+                    "Arcane Affinity: Enchanting skill increased by 10.",
+                    "Arcane Resistance: Increases your resistance to harmful Arcane effects by x.",
+                    "Silence all enemies within 8 yards for 2 sec and restores (6% of your mana|15 Runic Power|15 Focus|15 Energy|15 Rage). Non-player victim spellcasting is also interrupted for 3 sec.",
+                }
+            },
+            {CharacterRace.Draenei, new string[] {
+                    "Gemcutting: Jewelcrafting skill increased by 10",
+                    "Gift of the Naaru: Heals the target for x over 15 sec. The amount healed is increased by your attack power.",
+                    "Heroic Presence: Increases your chance to hit with all spells and attacks by 1%.",
+                    "Shadow Resistance: Increases your resistance to harmful Shadow effects by x.",
+                }
+            },
+            {CharacterRace.Worgen, new string[] {
+                    "Aberration: Increases your resistance to harmful Nature and Shadow effects by x.",
+                    "Darkflight: Activates your true form, increasing movement speed by 40% for 10 sec.",
+                    "Enable Worgen Altered Form: Enables Worgens to switch between human and Worgen forms.",
+                    "Flayer: Skinning skill increased by 15 and allows you to skin faster.",
+                    "Running Wild: Drop to all fours to run as fast as a wild animal.",
+                    "Transform: Worgen: Tranform into Worgen Form.",
+                    "Two Forms: Turn into your currently inactive form.",
+                    "Visiousness: Increases critical strike chance by 1%.",
+                }
+            },
+            {CharacterRace.Goblin, new string[] {
+                    "Best Deals Anywhere: Always receive the best possible gold discount, regardless of faction.",
+                    "Better Living Through Chemistry: Alchemy skill increased by 15.",
+                    "Pack Hobgoblin: Calls in your friend, Gobber, allowing you bank access for 1 min.",
+                    "Rocket Barrage: Launches your belt rockets at an enemy, dealing (1+0.25*AP.429*$SPFI+Level*2+$INT*0.50193) fire damage.",
+                    "Rocket Jump: Activates your rocket belt to jump forward.",
+                    "Time is Money: Cash in on a 1% increase to attack and casting speed.",
+                }
+            },
+        };
+        #endregion
 
         #region Update Graph
         private void UpdateGraphGear(string subgraph)
@@ -326,6 +442,59 @@ namespace Rawr.UI
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(_itemCalculations);
+        }
+
+        private void UpdateGraphRaces(string subgraph)
+        {
+            List<ComparisonCalculationBase> raceCalculations = new List<ComparisonCalculationBase>();
+            Character newChar = Character.Clone();
+            CharacterRace origRace = (CharacterRace)((int)(Character.Race));
+            //CharacterCalculationsBase currentCalc = Calculations.GetCharacterCalculations(Character, null, false, true, false);
+            CharacterCalculationsBase newCalc;
+            CharacterCalculationsBase noneCalc;
+            ComparisonCalculationBase compare;
+
+            {
+                newChar.Race = CharacterRace.None;
+                noneCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                compare = Calculations.GetCharacterComparisonCalculations(noneCalc, noneCalc, CharacterRace.None.ToString(), false, false);
+                foreach (string s in CharacterRaceBonuses[CharacterRace.None])
+                {
+                    compare.Description += s + "\n";
+                }
+                compare.Description.TrimEnd('\n');
+                compare.Item = null;
+                raceCalculations.Add(compare);
+            }
+
+            foreach (CharacterRace r in CharacterRaces)
+            {
+                bool isAllowed = false;
+                foreach (string cl in MainPage.GetClassAllowableRaces[Character.CurrentModel])
+                {
+                    if (cl.Replace(" ", "") == r.ToString()/* || r.ToString() == "None"*/)
+                    {
+                        isAllowed = true; break;
+                    } // otherwise skip it as it's not a valid Race/Class combo
+                }
+                if (!isAllowed) { continue; }
+                newChar.Race = r;
+                newCalc = Calculations.GetCharacterCalculations(newChar, null, false, true, false);
+                compare = Calculations.GetCharacterComparisonCalculations(noneCalc, newCalc, r.ToString(), Character.Race == r, false);
+                foreach (string s in CharacterRaceBonuses[r])
+                {
+                    compare.Description += s + "\n";
+                }
+                compare.Description.TrimEnd('\n');
+                compare.Item = null;
+                raceCalculations.Add(compare);
+            }
+
+            Character.Race = origRace;
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            ComparisonGraph.DisplayCalcs(raceCalculations.ToArray());
         }
 
         private void GetItemInstanceCalculations(object item)

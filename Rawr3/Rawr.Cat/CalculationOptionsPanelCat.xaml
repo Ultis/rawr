@@ -30,10 +30,10 @@ x:Class="Rawr.Cat.CalculationOptionsPanelCat"
 
             <TextBlock Text="Target Level: " VerticalAlignment="Center" Margin="2" Grid.Row="0" />
             <ComboBox Margin="2" Grid.Column="1" Grid.Row="0" SelectedItem="{Binding TargetLevel, Mode=TwoWay}">
-                <System:Int32>80</System:Int32>
-                <System:Int32>81</System:Int32>
-                <System:Int32>82</System:Int32>
-                <System:Int32>83</System:Int32>
+                <System:Int32>85</System:Int32>
+                <System:Int32>86</System:Int32>
+                <System:Int32>87</System:Int32>
+                <System:Int32>88</System:Int32>
             </ComboBox>
 
             <TextBlock Text="Target Armor: " VerticalAlignment="Center" Margin="2" Grid.Row="1" />

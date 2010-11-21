@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Rawr.Base;
 
 namespace Rawr.UI
 {
@@ -144,8 +143,8 @@ namespace Rawr.UI
 
                 foreach (string s in bosslist.GetBetterBossNamesAsArray()) { CB_BossList.Items.Add(s); }
             } catch (Exception ex) {
-                new ErrorBox("Error in creating the BossTab Pane",
-                    ex.Message, "BossPicker()", ex.InnerException.Message, ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating the BossTab Pane",
+                    ex.Message, ex.InnerException, "BossPicker()", ex.InnerException.Message, ex.StackTrace);
             }
             isLoading = false;
         }
@@ -359,9 +358,10 @@ namespace Rawr.UI
                     isLoading = false;
                 }
             }catch (Exception ex){
-                new ErrorBox("Error in the Boss Options",
-                    ex.Message, "CB_BL_FilterType_SelectedIndexChanged()",
-                    "No Additional Info", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in the Boss Options",
+                    ex.Message, ex.InnerException,
+                    "CB_BL_FilterType_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
+                eb.Show();
                 isLoading = false;
             }
         }
@@ -389,9 +389,10 @@ namespace Rawr.UI
                     isLoading = false;
                 }
             }catch (Exception ex){
-                new ErrorBox("Error in the Boss Options",
-                    ex.Message, "CB_BL_Filter_SelectedIndexChanged()",
-                    "No Additional Info", ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in the Boss Options",
+                    ex.Message, ex.InnerException,
+                    "CB_BL_Filter_SelectedIndexChanged()", "No Additional Info", ex.StackTrace);
+                eb.Show();
                 isLoading = false;
             }
         }
@@ -433,9 +434,10 @@ namespace Rawr.UI
                     bossOpts_PropertyChanged(null, null);
                 }
             } catch (Exception ex) {
-                new ErrorBox("Error in setting BossPicker Character settings from Boss",
-                    ex.Message, "CB_BossList_SelectedIndexChanged()",
-                    addInfo, ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in setting BossPicker Character settings from Boss",
+                    ex.Message, ex.InnerException,
+                    "CB_BossList_SelectedIndexChanged()", addInfo, ex.StackTrace);
+                eb.Show();
                 isLoading = false;
             }
         }

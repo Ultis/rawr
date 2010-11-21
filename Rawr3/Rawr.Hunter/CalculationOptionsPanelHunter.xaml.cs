@@ -14,7 +14,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Reflection;
 using System.Xml.Serialization;
-using Rawr.Base;
 using System.Text;
 
 namespace Rawr.Hunter {
@@ -833,8 +832,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 CalculationsHunter.HidingBadStuff_PvP = CalcOpts.HideBadItems_PvP;
                 ItemCache.OnItemsChanged();
             } catch (Exception ex) {
-                new ErrorBox("Error in loading the Hunter Options Pane",
-                    ex.Message, "LoadCalculationOptions()", info, ex.StackTrace);
+                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in loading the Hunter Options Pane",
+                    ex.Message, ex.InnerException, "LoadCalculationOptions()", info, ex.StackTrace);
+                eb.Show();
             }
             _loadingCalculationOptions = false;
         }

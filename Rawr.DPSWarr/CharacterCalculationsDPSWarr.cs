@@ -555,7 +555,8 @@ namespace Rawr.DPSWarr {
                 dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageU20 + OtherRageU20, NeedyRageU20, FreeRageU20));
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Dictionaries",
-                    ex.Message, "GetCharacterDisplayCalculationValues()", "No Additional Info", ex.StackTrace);
+                    ex.Message, ex.InnerException,
+                    "GetCharacterDisplayCalculationValues()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
             return dictValues;

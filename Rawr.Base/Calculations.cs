@@ -58,42 +58,6 @@ namespace Rawr
                     _models = new Dictionary<string, Type>();
                     _modelIcons = new Dictionary<string, string>();
                     _modelClasses = new Dictionary<string, CharacterClass>();
-
-#if !RAWR3 && !RAWR4
-                    string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-                    // when running in service the dlls are in relative search path
-                    if (AppDomain.CurrentDomain.RelativeSearchPath != null) 
-                        dir = AppDomain.CurrentDomain.RelativeSearchPath;
-                    DirectoryInfo info = new DirectoryInfo(dir);
-                    foreach (FileInfo file in info.GetFiles("*.dll"))
-                    {
-                        try
-                        {
-                            Assembly assembly = Assembly.LoadFrom(file.FullName);
-
-                            foreach (Type type in assembly.GetTypes())
-                            {
-                                if (type.IsSubclassOf(typeof(CalculationsBase)))
-                                {
-                                    RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
-                                    string[] displayName = type.Name.Split('|');
-                                    //if (displayNameAttributes.Length > 0)
-                                    //	displayName = displayNameAttributes[0].DisplayName.Split('|');
-                                    _models[modelInfos[0].Name] = type;
-                                    _modelIcons[modelInfos[0].Name] = modelInfos[0].IconPath;
-                                    _modelClasses[modelInfos[0].Name] = modelInfos[0].TargetClass;
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            System.Diagnostics.Debug.Write(e.Message);
-                        }
-                    }
-
-                    if (_models.Count == 0)
-                        throw new TypeLoadException("Unable to find any model plug in dlls.  Please check that the files exist and are in the correct location");
-#endif
                 }
                 return _models;
             }
@@ -191,25 +155,11 @@ namespace Rawr
         {
             get { return Instance.CustomChartNames; }
         }
-#if !RAWR3 && !RAWR4
-        public static string[] CustomRenderedChartNames
-        {
-            get { return Instance.CustomRenderedChartNames; }
-        }
-#endif
-#if RAWR3 || RAWR4
         public static Dictionary<string, System.Windows.Media.Color> SubPointNameColors
-#else
-        public static Dictionary<string, System.Drawing.Color> SubPointNameColors
-#endif
         {
             get { return Instance.SubPointNameColors; }
         }
-#if RAWR3 || RAWR4
         public static ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        public static CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get { return Instance.CalculationOptionsPanel; }
         }
@@ -217,12 +167,6 @@ namespace Rawr
         {
             get { return Instance.TargetClass; }
         }
-#if !RAWR3 && !RAWR4
-        public static StatGraphRenderer StatGraphRenderer
-        {
-            get { return Instance.StatGraphRenderer; }
-        }
-#endif
 
         public static ComparisonCalculationBase CreateNewComparisonCalculation()
         {
@@ -302,7 +246,6 @@ namespace Rawr
         {
             return Instance.GetCustomChartData(character, chartName);
         }
-#if RAWR3 || RAWR4
         public static System.Windows.Controls.Control GetCustomChartControl(string chartName)
         {
             return Instance.GetCustomChartControl(chartName);
@@ -312,13 +255,6 @@ namespace Rawr
         {
             Instance.UpdateCustomChartData(character, chartName, control);
         }
-#endif
-#if !RAWR3 && !RAWR4
-        public static void RenderChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
-        {
-            Instance.RenderChart(character, chartName, g, width, height);
-        }
-#endif
         public static void UpdateProfessions(Character character)
         {
             if (Instance != null)
@@ -427,14 +363,6 @@ namespace Rawr
         protected Character _cachedCharacter = null;
         public virtual Character CachedCharacter { get { return _cachedCharacter; } }
         
-#if !RAWR3 && !RAWR4
-        protected StatGraphRenderer _statGraphRenderer = null;
-        public StatGraphRenderer StatGraphRenderer
-        {
-            get { return _statGraphRenderer = _statGraphRenderer ?? new StatGraphRenderer(); }
-        }
-#endif
-
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
         /// and a color for each. These colors will be used in the charts.
@@ -469,13 +397,6 @@ namespace Rawr
         /// The names of all custom charts provided by the model, if any.
         /// </summary>
         public abstract string[] CustomChartNames { get; }
-
-#if !RAWR3 && !RAWR4
-        /// <summary>
-        /// The names of charts for which the model provides custom rendering.
-        /// </summary>
-        public virtual string[] CustomRenderedChartNames { get { return new string[] { }; } }
-#endif
 
         /// <summary>
         /// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
@@ -599,39 +520,6 @@ namespace Rawr
         {
         }
 
-#if !RAWR3 && !RAWR4
-        /// <summary>
-        /// Render a chart, based on the chart name, either Stat Graph, or defined in CustomRenderedChartNames.
-        /// </summary>
-        /// <param name="character">The character to build the chart for.</param>
-        /// <param name="chartName">The name of the custom chart to get data for.</param>
-        /// <param name="g">Graphics object used to render the chart.</param>
-        /// <param name="width">Width of the graph.</param>
-        /// <param name="height">Height of the graph.</param>
-        public void RenderChart(Character character, string chartName,
-            System.Drawing.Graphics g, int width, int height)
-        {
-            if (chartName == "Stat Graph")
-                StatGraphRenderer.Render(character, g, width, height);
-            else
-                RenderCustomChart(character, chartName, g, width, height);
-        }
-
-        /// <summary>
-        /// Render custom chart, based on the chart name, as defined in CustomRenderedChartNames.
-        /// </summary>
-        /// <param name="character">The character to build the chart for.</param>
-        /// <param name="chartName">The name of the custom chart to get data for.</param>
-        /// <param name="g">Graphics object used to render the chart.</param>
-        /// <param name="width">Width of the graph.</param>
-        /// <param name="height">Height of the graph.</param>
-        public virtual void RenderCustomChart(Character character, string chartName,
-            System.Drawing.Graphics g, int width, int height)
-        {
-
-        }
-#endif
-
         /// <summary>
         /// List of default gemming templates recommended by the model
         /// </summary>
@@ -726,7 +614,6 @@ namespace Rawr
         /// <returns>The model's CalculationOptions data object.</returns>
         public abstract ICalculationOptionBase DeserializeDataObject(string xml);
 
-#if RAWR4
         private AdditiveStat[] _reforgeStats;
 
         private AdditiveStat[] GetReforgeStats()
@@ -764,7 +651,6 @@ namespace Rawr
         {
             return GetReforgeStats();
         }
-#endif
 
         public virtual void ClearCache()
         {
@@ -1950,7 +1836,6 @@ namespace Rawr
         public virtual bool getBaseStatOption(Character character) { return false; }
     }
 
-#if RAWR3 || RAWR4
     /// <summary>
     /// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
     /// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
@@ -1973,44 +1858,5 @@ namespace Rawr
 
         System.Windows.Controls.UserControl PanelControl { get; }
     }
-#else
-    /// <summary>
-    /// Base CalculationOptionsPanel class which should be inherited by a custom user control for the model.
-    /// The instance of the custom class returned by CalculationOptionsPanel will be placed in the Options 
-    /// tab on the main form when the model is active. Should contain controls to edit the CalculationOptions
-    /// on the character.
-    /// </summary>
-    public class CalculationOptionsPanelBase : System.Windows.Forms.UserControl
-    {
-        private Character _character = null;
-        /// <summary>
-        /// The current character. Will be set whenever the model loads or a character is loaded.
-        /// 
-        /// IMPORTANT: Call Character.OnItemsChanged() after changing the value of any CalculationOptions,
-        /// other than in LoadCalculationOptions().
-        /// </summary>
-        public Character Character
-        {
-            get
-            {
-                return _character;
-            }
-            set
-            {
-                _character = value;
-                LoadCalculationOptions();
-            }
-        }
-
-        /// <summary>
-        /// Sets default values for each CalculationOption used by the model, if they don't already exist, 
-        /// and then populates the controls with the current values in Character.CalculationOptions. You
-        /// don't need to call Character.OnItemsChanged() at the end of this method, only after changing the
-        /// value of any CalculationOptions from other methods (such as value changing event handlers on
-        /// the controls).
-        /// </summary>
-        protected virtual void LoadCalculationOptions() { }
-    }
-#endif
 }
 //takemyhandigiveittoyounowyouownmealliamyousaidyouwouldneverleavemeibelieveyouibelieve
