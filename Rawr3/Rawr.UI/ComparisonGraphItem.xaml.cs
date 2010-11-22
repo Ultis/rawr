@@ -21,21 +21,18 @@ namespace Rawr.UI
             set
             {
                 itemInstance = value;
-                if (itemInstance != null)
+                if (itemInstance != null) {
                     ContextItemName.Header = itemInstance.Item != null ? itemInstance.Item.Name : string.Empty;
+                    ItemImage.Source = Icons.ItemIcon(ItemInstance.Item.IconPath);
+                } else {
+                    ItemImage.Source = null;
+                }
                 character_AvailableItemsChanged(this, EventArgs.Empty);
             }
         }
 
         private CharacterSlot slot;
-        public CharacterSlot Slot
-        {
-            get { return slot; }
-            set
-            {
-                slot = value;
-            }
-        }
+        public CharacterSlot Slot { get { return slot; } set { slot = value; } }
 
         private Item item;
         public Item OtherItem
@@ -47,7 +44,6 @@ namespace Rawr.UI
                 character_AvailableItemsChanged(this, EventArgs.Empty);
             }
         }
-
 
         private Character character;
         public Character Character
@@ -94,11 +90,7 @@ namespace Rawr.UI
                         break;
                 }
 
-            }
-            else
-            {
-                AvailableImage.Visibility = Visibility.Collapsed;
-            }
+            } else { AvailableImage.Visibility = Visibility.Collapsed; }
         }
 
         public string Title
@@ -159,7 +151,7 @@ namespace Rawr.UI
             NameGrid.Width = GraphBarStart;
         }
 
-        private float _GraphBarStart = 142f;
+        private float _GraphBarStart = 162f;
         public float GraphBarStart
         {
             get { return _GraphBarStart + (Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20); }
@@ -168,7 +160,7 @@ namespace Rawr.UI
 
         private void ChangedSize(object sender, System.Windows.SizeChangedEventArgs e)
         {
-            if (ActualWidth > (GraphBarStart + 8))//150
+            if (ActualWidth > (GraphBarStart + 8))//170
             {
                 NameGridCol.Width = new GridLength(GraphBarStart);
                 NameGrid.Width = GraphBarStart;
@@ -176,7 +168,7 @@ namespace Rawr.UI
                 NegativeStack.Children.Clear();
 
                 int minTick = (int)(-MinScale / (MaxScale - MinScale) * 8);
-                int maxTick = (int)(MaxScale / (MaxScale - MinScale) * 8);
+                int maxTick = (int)( MaxScale / (MaxScale - MinScale) * 8);
 
                 if (minTick == 0) NegativeStack.Visibility = Visibility.Collapsed;
                 else
@@ -193,14 +185,11 @@ namespace Rawr.UI
                 }
                 for (int i = 0; i < values.Count; i++)
                 {
-                    if (values[i] > 0)
-                    {
-                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * (values[i] / (MaxScale - MinScale)); // 151
+                    if (values[i] > 0) {
+                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * ( values[i] / (MaxScale - MinScale)); // 171
                         PositiveStack.Children.Add(rects[i]);
-                    }
-                    else
-                    {
-                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * (-values[i] / (MaxScale - MinScale)); // 151
+                    } else {
+                        rects[i].Width = (ActualWidth - (GraphBarStart + 9)) * (-values[i] / (MaxScale - MinScale)); // 171
                         NegativeStack.Children.Add(rects[i]);
                     }
                 }
@@ -218,7 +207,7 @@ namespace Rawr.UI
             e.Handled = true;
         }
 
-
+        #region Context Menu Items
         private void EditItem(object sender, RoutedEventArgs e)
         {
             new ItemEditor() { CurrentItem = ItemInstance.Item }.Show();
@@ -272,6 +261,7 @@ namespace Rawr.UI
             if (ItemInstance == null)
                 ContextMenuItem.IsOpen = false;
         }
+        #endregion
 
         private void NameGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {

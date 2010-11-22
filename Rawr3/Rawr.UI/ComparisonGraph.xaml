@@ -13,7 +13,7 @@
 
 		<Grid x:Name="ColumnsGrid" Margin="0,0,0,0" VerticalAlignment="Top" Grid.Row="1">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition x:Name="NameColumn" Width="150"/>
+				<ColumnDefinition x:Name="NameColumn" Width="170"/>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
@@ -25,7 +25,7 @@
 				<ColumnDefinition Width="4"/>
 			</Grid.ColumnDefinitions>
 		
-			<Rectangle x:Name="ChartTopLine" Fill="#FF000000" Height="1" Margin="145,24,0,0" VerticalAlignment="Top" StrokeThickness="0" Grid.ColumnSpan="10"/>
+			<Rectangle x:Name="ChartTopLine" Fill="#FF000000" Height="1" Margin="165,24,0,0" VerticalAlignment="Top" StrokeThickness="0" Grid.ColumnSpan="10"/>
 			<Rectangle x:Name="AxisLine1" Fill="#FF000000" Grid.Column="0" StrokeThickness="0" HorizontalAlignment="Right" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="1"/>
 			<Rectangle x:Name="AxisLine2" Fill="#3F000000" Grid.Column="1" StrokeThickness="0" HorizontalAlignment="Right" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="1"/>
 			<Rectangle x:Name="AxisLine3" Fill="#3F000000" Grid.Column="2" StrokeThickness="0" HorizontalAlignment="Right" Margin="0,20,0,0" VerticalAlignment="Stretch" Width="1"/>

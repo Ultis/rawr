@@ -374,7 +374,7 @@ namespace Rawr.UI
                     ComparisonCalculationUpgrades upgrades = calc as ComparisonCalculationUpgrades;
                     MainPage.Tooltip.CharacterItems = upgrades.CharacterItems;
                 }
-                MainPage.Tooltip.Show((Grid)sender, 143, 2);
+                MainPage.Tooltip.Show((Grid)sender, 163, 2);
             }
         }
 
@@ -409,7 +409,7 @@ namespace Rawr.UI
                 {
                     // Reset the width of the name section
                     //ColumnsGrid.ColumnDefinitions[0].Width
-                    int width = 142 + Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20;
+                    int width = 162 + Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20;
                     NameColumn.Width = new GridLength(width, GridUnitType.Pixel);
                     ChartTopLine.Margin = new Thickness(width, 24, 0, 0);
                 }
