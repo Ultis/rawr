@@ -198,12 +198,8 @@
       <DependentUpon>ConfirmationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\EnterId.xaml.cs">
-      <Link>Dialogs\EnterId.xaml.cs</Link>
+      <Link>Items\EnterId.xaml.cs</Link>
       <DependentUpon>EnterId.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ErrorWindow.xaml.cs">
-      <Link>Dialogs\ErrorWindow.xaml.cs</Link>
-      <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\FormChooseCharacter.xaml.cs">
       <Link>Dialogs\FormChooseCharacter.xaml.cs</Link>
@@ -233,7 +229,7 @@
       <DependentUpon>RelevantItemRefinement.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\SpecialEffectEditor.xaml.cs">
-      <Link>Dialogs\SpecialEffectEditor.xaml.cs</Link>
+      <Link>Items\SpecialEffectEditor.xaml.cs</Link>
       <DependentUpon>SpecialEffectEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\StatControl.xaml.cs">
@@ -444,12 +440,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\EnterId.xaml">
-      <Link>Dialogs\EnterId.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\ErrorWindow.xaml">
-      <Link>Dialogs\ErrorWindow.xaml</Link>
+      <Link>Items\EnterId.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -484,7 +475,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\SpecialEffectEditor.xaml">
-      <Link>Dialogs\SpecialEffectEditor.xaml</Link>
+      <Link>Items\SpecialEffectEditor.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

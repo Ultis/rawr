@@ -54,7 +54,7 @@ namespace Rawr.UI
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-		}
+        }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -95,7 +95,8 @@ namespace Rawr.UI
                 TheList.Add(retVal);
                 SetListBox();
             } catch (Exception ex) {
-                new ErrorWindow() { Message = "Didn't work\r\n" + ex.Message }.Show();
+                Base.ErrorBox eb = new Base.ErrorBox("Error Adding a Boss Attack", ex, "BT_Add_Clicked");
+                eb.Show();
             }
         }
 
@@ -106,6 +107,6 @@ namespace Rawr.UI
             TheList.RemoveAt(index);
             SetListBox();
         }
-	}
+    }
 }
 

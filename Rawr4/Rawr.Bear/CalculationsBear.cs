@@ -31,9 +31,7 @@ namespace Rawr.Bear
     public class CalculationsBear : CalculationsBase
     {
         #region Basic Model Properties and Methods
-        /// <summary>
-        /// GemmingTemplates to be used by default, when none are defined
-        /// </summary>
+        /// <summary>GemmingTemplates to be used by default, when none are defined</summary>
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -123,44 +121,11 @@ namespace Rawr.Bear
             }
         }
 
-#if RAWR3 || RAWR4
+        /// <summary>Panel to be placed on the Options tab of the main form</summary>
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelBear()); } }
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        /// <summary>
-        /// Panel to be placed on the Options tab of the main form
-        /// </summary>
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelBear();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        /// <summary>
-        /// Panel to be placed on the Options tab of the main form
-        /// </summary>
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelBear();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
-#endif
 
-        private string[] _characterDisplayCalculationLabels = null;
-        /// <summary>
-        /// Labels of the stats to display on the Stats tab of the main form
-        /// </summary>
+        /// <summary>Labels of the stats to display on the Stats tab of the main form</summary>
         public override string[] CharacterDisplayCalculationLabels
         {
             get
@@ -240,11 +205,9 @@ the Threat Scale defined on the Options tab.",
                 return _characterDisplayCalculationLabels;
             }
         }
+        private string[] _characterDisplayCalculationLabels = null;
 
-        private string[] _optimizableCalculationLabels = null;
-        /// <summary>
-        /// Labels of the stats available to the Optimizer 
-        /// </summary>
+        /// <summary>Labels of the stats available to the Optimizer</summary>
         public override string[] OptimizableCalculationLabels
         {
             get
@@ -279,11 +242,9 @@ the Threat Scale defined on the Options tab.",
                 return _optimizableCalculationLabels;
             }
         }
+        private string[] _optimizableCalculationLabels = null;
 
-        private string[] _customChartNames = null;
-        /// <summary>
-        /// Names of the custom charts that Rawr.Bear provides
-        /// </summary>
+        /// <summary>Names of the custom charts that Rawr.Bear provides</summary>
         public override string[] CustomChartNames
         {
             get
@@ -298,12 +259,9 @@ the Threat Scale defined on the Options tab.",
                 return _customChartNames;
             }
         }
+        private string[] _customChartNames = null;
 
-#if RAWR3 || RAWR4
-        private Dictionary<string, Color> _subPointNameColors = null;
-        /// <summary>
-        /// Names and colors for the SubPoints that Rawr.Bear uses
-        /// </summary>
+        /// <summary>Names and colors for the SubPoints that Rawr.Bear uses</summary>
         public override Dictionary<string, Color> SubPointNameColors
         {
             get
@@ -318,31 +276,9 @@ the Threat Scale defined on the Options tab.",
                 return _subPointNameColors;
             }
         }
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        /// <summary>
-        /// Names and colors for the SubPoints that Rawr.Bear uses
-        /// </summary>
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.FromArgb(255, 0, 128, 0));
-                }
-                return _subPointNameColors;
-            }
-        }
-#endif
+        private Dictionary<string, Color> _subPointNameColors = null;
 
-        private List<ItemType> _relevantItemTypes = null;
-        /// <summary>
-        /// ItemTypes that are relevant to Rawr.Bear
-        /// </summary>
+        /// <summary>ItemTypes that are relevant to Rawr.Bear</summary>
         public override List<ItemType> RelevantItemTypes
         {
             get
@@ -362,25 +298,18 @@ the Threat Scale defined on the Options tab.",
                 return _relevantItemTypes;
             }
         }
+        private List<ItemType> _relevantItemTypes = null;
 
-        /// <summary>
-        /// The class that Rawr.Bear is designed for (Druid)
-        /// </summary>
+        /// <summary>The class that Rawr.Bear is designed for (Druid)</summary>
         public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
-        /// <summary>
-        /// Creates a new ComparisonCalculationBear instance
-        /// </summary>
+        /// <summary>Creates a new ComparisonCalculationBear instance</summary>
         /// <returns>A new ComparisonCalculationBear instance</returns>
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationBear(); }
-        /// <summary>
-        /// Creates a new CharacterCalculationsBear instance
-        /// </summary>
+        /// <summary>Creates a new CharacterCalculationsBear instance</summary>
         /// <returns>A new CharacterCalculationsBear instance</returns>
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsBear(); }
 
-        /// <summary>
-        /// Deserializes the CalculationOptionsBear object contained in xml
-        /// </summary>
+        /// <summary>Deserializes the CalculationOptionsBear object contained in xml</summary>
         /// <param name="xml">The CalculationOptionsBear object, serialized as xml</param>
         /// <returns>The deserialized CalculationOptionsBear object</returns>
         public override ICalculationOptionBase DeserializeDataObject(string xml)

@@ -367,8 +367,7 @@ namespace Rawr.UI
             }
             if (CMP_ClassModel != null)
             {
-                try
-                {
+                try {
                     bool found = false;
                     foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem i in CMP_ClassModel.Items)
                     {
@@ -386,10 +385,9 @@ namespace Rawr.UI
                         }
                         if (found) break;
                     }
-                }
-                catch (Exception ex) {
-                    new ErrorWindow() { Message = string.Format("Message: {0}\r\nInner Exception: {1}\r\n\r\nStack Trace:\r\n{2}",
-                        ex.Message, ex.InnerException, ex.StackTrace) }.Show();
+                } catch (Exception ex) {
+                    Base.ErrorBox eb = new Base.ErrorBox("Error Selecting Class", ex, "Calculations_ModelChanged(...)");
+                    eb.Show();
                 }
             }
             UpdateRaceLimitations();

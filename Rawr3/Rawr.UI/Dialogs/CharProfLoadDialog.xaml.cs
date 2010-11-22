@@ -20,7 +20,7 @@ namespace Rawr.UI
             // Nothing to do here
         }
 
-		public Character Character { get; private set; }
+        public Character Character { get; private set; }
 
         public CharProfLoadDialog()
         {
@@ -50,7 +50,8 @@ namespace Rawr.UI
                     //bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_LoadCharacterProfilerComplete);
                     //bw.DoWork += new DoWorkEventHandler(bw_LoadCharacterProfiler);
                     //bw.RunWorkerAsync(form.Character);
-                    new ErrorWindow() { Message = "Not Yet Implemented" }.Show();
+                    Base.ErrorBox eb = new Base.ErrorBox("Load Character from Character Profiler", "Not Yet Implemented");
+                    eb.Show();
                 }
 
                 //form.Dispose();
@@ -58,10 +59,14 @@ namespace Rawr.UI
             catch (InvalidDataException ex)
             {
                 MessageBox.Show("Unable to parse saved variable file: " + ex.Message);
+                Base.ErrorBox eb = new Base.ErrorBox("Load Character from Character Profiler", "Not Yet Implemented");
+                eb.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error reading saved variable file: " + ex.Message);
+                Base.ErrorBox eb = new Base.ErrorBox("Error reading saved variable file", "Not Yet Implemented");
+                eb.Show();
             }
         }
 
@@ -91,6 +96,6 @@ namespace Rawr.UI
                 }
             }
         }
-	}
+    }
 }
 

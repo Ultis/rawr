@@ -140,14 +140,11 @@ namespace Rawr.UI
 
                 FileUtils f = new FileUtils(files, progressUpdated);
                 f.DownloadIfNotExists(new EventHandler(filesLoaded));
-            }
-            else
-            {
-                new ErrorWindow()
-                {
-                    Message = "Rawr will not work if you do not allow it to increase its available "
-                            + "storage size. Please refresh this page and accept to continue."
-                }.Show();
+            } else {
+                Base.ErrorBox eb = new Base.ErrorBox("Not Enough Storage Space", 
+                      "Rawr will not work if you do not allow it to increase its available "
+                    + "storage size. Please refresh this page and accept to continue.");
+                eb.Show();
             }
         }
 

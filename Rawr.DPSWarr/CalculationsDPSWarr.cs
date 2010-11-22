@@ -27,6 +27,7 @@ namespace Rawr.DPSWarr {
                 //Red slots
                 int[] red_str = { 39996, 40111, 42142 };
                 int[] red_exp = { 40003, 40118, 42154 };
+                int[] red_mst = { 40003, 40118, 42154 };
                 //Blue slots -- All the stat+sta, No haste because str should always be better
                 int[] blu_str = { 40022, 40129, 40129 };
                 int[] blu_exp = { 40034, 40141, 40141 };
@@ -37,6 +38,17 @@ namespace Rawr.DPSWarr {
                                      new int[] { 40038, 40143, 40143 }, // 10hit/10str
                                      new int[] { 40058, 40162, 40162 } }; // 10hit/10exp
                 int[] ylw_has = { 40041, 40146, 40146 }; // 10haste/10str
+                int[] ylw_mas = { 52094, 52094, 52269 };
+
+                // Cogwheels
+                int mastr = 59480; // Fractured Cogwheel
+                int exper = 59489; // Precise Cogwheel
+                int hitrt = 59493; // Rigid Cogwheel
+                int critr = 59478; // Smooth Cogwheel
+                int haste = 59479; // Quick Cogwheel
+                //int spirt = 59496; // Sparkling Cogwheel
+                //int dodge = 59477; // Subtle Cogwheel
+                //int parry = 59491; // Flashing Cogwheel
 
                 string group; bool enabled;
                 List<GemmingTemplate> templates = new List<GemmingTemplate>();
@@ -45,9 +57,18 @@ namespace Rawr.DPSWarr {
                 enabled = true;
                 group = "Strength";
                 // Straight
-                AddTemplates(templates, red_str, red_str, red_str, red_str, group, enabled);
+                AddTemplates(templates, red_str, red_str, red_str, red_str, critr, group, enabled);
                 // Socket Bonus
-                AddTemplates(templates, red_str, blu_str, ylw_str, red_str, group, enabled);
+                AddTemplates(templates, red_str, blu_str, ylw_str, red_str, critr, group, enabled);
+                #endregion
+
+                #region Mastery
+                enabled = true;
+                group = "Mastery";
+                // Straight
+                AddTemplates(templates, red_str, red_str, red_str, red_str, mastr, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates, red_str, blu_str, ylw_str, red_str, mastr, group, enabled);
                 #endregion
 
                 #region Hit/Exp-gemming
@@ -57,24 +78,17 @@ namespace Rawr.DPSWarr {
                 for (int k = 0; k < ylw_hit.Length - 1; k++) // not doing hit/exp here
                 {
                     // Straight
-                    AddTemplates(templates, ylw_hit[k], ylw_hit[k], ylw_hit[k], ylw_hit[k], group, enabled);
+                    AddTemplates(templates, ylw_hit[k], ylw_hit[k], ylw_hit[k], ylw_hit[k], hitrt, group, enabled);
                     // Socket Bonus w/Str
-                    AddTemplates(templates, red_str, blu_hit, ylw_hit[k], red_str, group, enabled);
+                    AddTemplates(templates, red_str, blu_hit, ylw_hit[k], red_str, hitrt, group, enabled);
                 }
                 // Exp
                 group = "Expertise";
                 enabled = false;
                 // Straight
-                AddTemplates(templates, red_exp, red_exp, red_exp, red_exp, group, enabled);
+                AddTemplates(templates, red_exp, red_exp, red_exp, red_exp, exper, group, enabled);
                 // Socket Bonus
-                AddTemplates(templates, red_exp, blu_exp, ylw_hit[2], red_exp, group, enabled);
-                #endregion
-
-                #region Crit-capped
-                group = "Crit-capped";
-                enabled = false;                
-                // Strength
-                AddTemplates(templates, red_str, blu_str, ylw_has, red_str, group, enabled);
+                AddTemplates(templates, red_exp, blu_exp, ylw_hit[2], red_exp, exper, group, enabled);
                 #endregion
 
                 templates.Sort(new Comparison<GemmingTemplate>(
@@ -97,8 +111,9 @@ namespace Rawr.DPSWarr {
                                 // str > arp > hit > exp > crit-capped
                                 switch (group1[1]) {
                                     case "Strength": return -1;
-                                    case "Hit": return (group2[1] == "Strength" ? 1 : -1);
-                                    case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
+                                    case "Mastery": return (group2[1] == "Strength" ? 1 : -1);
+                                    case "Hit": return (group2[1] == "Mastery" ? 1 : -1);
+                                    //case "Expertise": return (group2[1] != "Crit-capped" ? 1 : -1);
                                     default: return 1;
                                 }
                             } else {
@@ -111,14 +126,13 @@ namespace Rawr.DPSWarr {
                                 return first.MetaId.CompareTo(second.MetaId);
                             }
                         }
-                        
                 }));
 
                 return templates;
             }
         }
 
-        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] blu, int[] ylw, int[] pris, string group, bool enabled)
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] blu, int[] ylw, int[] pris, int cog, string group, bool enabled)
         {
             //Meta
             const int chaotic = 41285;
@@ -140,6 +154,7 @@ namespace Rawr.DPSWarr {
                         BlueId = blu[j],
                         YellowId = ylw[j],
                         PrismaticId = pris[j],
+                        CogwheelId = cog,
                         MetaId = chaotic,
                         Enabled = (enabled && j == 1)
                     });
@@ -151,6 +166,7 @@ namespace Rawr.DPSWarr {
                         BlueId = blu[j],
                         YellowId = ylw[j],
                         PrismaticId = pris[j],
+                        CogwheelId = cog,
                         MetaId = relent,
                         Enabled = (enabled && j == 1)
                     });
@@ -165,6 +181,7 @@ namespace Rawr.DPSWarr {
                             BlueId = nightmare,
                             YellowId = ylw[j],
                             PrismaticId = pris[j],
+                            CogwheelId = cog,
                             MetaId = chaotic,
                             Enabled = (enabled && j == 1)
                         });
@@ -176,6 +193,7 @@ namespace Rawr.DPSWarr {
                             BlueId = nightmare,
                             YellowId = ylw[j],
                             PrismaticId = pris[j],
+                            CogwheelId = cog,
                             MetaId = relent,
                             Enabled = (enabled && j == 1)
                         });
