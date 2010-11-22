@@ -771,6 +771,10 @@ namespace Rawr
                         volatileRequirements = true; //More reds than yellows
                         meetsRequirements = redGems > yellowGems;
                         break;
+                    case 52291: // Chaotic Shadowspirit Diamond
+                        volatileRequirements = true; //More blues than reds
+                        meetsRequirements = blueGems > redGems;
+                        break;
                     case 25893:
                     case 32640:
                         volatileRequirements = true; //More blues than yellows
@@ -778,19 +782,24 @@ namespace Rawr
                         break;
                     case 34220:
                     case 41285:
+                    case 52299: // Powerful Shadowspirit Diamond
                         volatileRequirements = true; //2 blues
                         meetsRequirements = blueGems >= 2;
                         break;
                     case 41376:
+                    case 52298: // Destructive Shadowspirit Diamond
                         volatileRequirements = true; //2 reds
                         meetsRequirements = redGems >= 2;
                         break;
-                    case 52296:
+                    case 52289: // Fleet Shadowspirit Diamond
+                    case 52294: // Austere Shadowspirit Diamond
+                    case 52296: // Ember Shadowspirit Diamond
                         volatileRequirements = true; //2 yellows
                         meetsRequirements = yellowGems >= 2;
                         break;
                     case 25896:
                     case 44087:
+                    case 52293: // Eternal Shadowspirit Diamond
                         volatileRequirements = true; //3 blues
                         meetsRequirements = blueGems >= 3;
                         break;
@@ -825,12 +834,27 @@ namespace Rawr
                         volatileRequirements = true; //2 yellow, 1 blue
                         meetsRequirements = yellowGems >= 2 && blueGems >= 1;
                         break;
+                    case 52292: // Bracing Shadowspirit Diamond
+                    case 52297: // Revitalizing Shadowspirit Diamond
+                    case 52300: // Enigmatic Shadowspirit Diamond
+                    case 52301: // Impassive Shadowspirit Diamond
+                        volatileRequirements = true; //1 blue, 1 yellow
+                        meetsRequirements = blueGems >= 1 && yellowGems >= 1;
+                        break;
+                    case 52302: // Forlorn Shadowspirit Diamond
+                        volatileRequirements = true; //1 blue, 1 red
+                        meetsRequirements = blueGems >= 1 && redGems >= 1;
+                        break;
                     case 41380:
                     case 41377:
                     case 44082:
                     case 41385:
                         volatileRequirements = true; //2 blue, 1 red
                         meetsRequirements = blueGems >= 2 && redGems >= 1;
+                        break;
+                    case 52295: // Effulgent Shadowspirit Diamond
+                        volatileRequirements = true; //1 red, 1 yellow
+                        meetsRequirements = redGems >= 1 && yellowGems >= 1;
                         break;
                     case 41335:
                     case 41389:
