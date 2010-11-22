@@ -65,7 +65,7 @@ namespace ShazTest
         {
             Rawr.TankDK.CalculationsTankDK CalcTankDK = new Rawr.TankDK.CalculationsTankDK();
             Character c = new Character();
-            string szXML = System.IO.File.ReadAllText("C:\\Users\\Shazear\\Documents\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Blood2h.xml");
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Blood2h.xml");
             c = Character.LoadFromXml(szXML);
             if (c.Class == CharacterClass.Druid)
             {

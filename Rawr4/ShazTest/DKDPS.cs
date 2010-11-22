@@ -72,7 +72,7 @@ namespace ShazTest
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
             Character c = new Character();
-            string szXML = System.IO.File.ReadAllText("C:\\Users\\Shazear\\Documents\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
             c = Character.LoadFromXml(szXML);
             if (c.Class == CharacterClass.Druid)
             {
@@ -99,7 +99,7 @@ namespace ShazTest
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
             Character c = new Character();
-            string szXML = System.IO.File.ReadAllText("C:\\Users\\Shazear\\Documents\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
             c = Character.LoadFromXml(szXML);
             if (c.Class == CharacterClass.Druid)
             {
