@@ -630,7 +630,8 @@ namespace Rawr.Enhance
 			{
 				case "Health": return BasicStats.Health;
                 case "DPS Points": return DPSPoints;
-				case "Hit Rating": return BasicStats.HitRating;
+				//case "Hit Rating": return BasicStats.HitRating;
+                case "Missed Attacks": return MissedAttacks;
                 case "Dodged Attacks": return DodgedAttacks;
                 case "Parried Attacks": return ParriedAttacks;
                 case "Avoided Attacks": return AvoidedAttacks;
