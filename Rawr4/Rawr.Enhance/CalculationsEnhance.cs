@@ -309,7 +309,7 @@ namespace Rawr.Enhance
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
             float spellPower = stats.SpellPower;
-            float mastery = 1f + ((8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 2.5f);
+            float mastery = 1f + ((8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.025f);
             float wdpsMH = character.MainHand == null ? 46.3f : (stats.WeaponDamage + (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed;
             float wdpsOH = character.OffHand == null ? 46.3f : (stats.WeaponDamage + (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f) / character.OffHand.Speed;
             float dualWieldSpecialization = .06f; //Hit portion of Dual Wield
@@ -465,7 +465,7 @@ namespace Rawr.Enhance
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
                 float lbNormal = lbdps * cs.NatureSpellHitModifier;
                 float lbCrit = lbdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
-                dpsLB = (lbNormal + lbCrit) * bonusNatureDamage * bossNatureResistance;
+                dpsLB = (lbNormal + lbCrit) * mastery * bonusNatureDamage * bossNatureResistance;
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             }
@@ -520,7 +520,7 @@ namespace Rawr.Enhance
                 float FireTotemdps = damageFireTotem / 2f * cs.FireTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * bossFireResistance * cs.MultiTargetMultiplier;
             }
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
@@ -528,7 +528,7 @@ namespace Rawr.Enhance
                 float FireTotemdps = damageFireTotem / 1.65f * cs.SearingTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * bonusFireDamage * bossFireResistance;
+                dpsFireTotem = (FireTotemNormal + FireTotemCrit) * mastery * bonusFireDamage * bossFireResistance;
             }
             dpsFireTotem *= (1f - cs.FireElementalUptime);
             #endregion
@@ -565,7 +565,7 @@ namespace Rawr.Enhance
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit)/* * mastery*/ * bonusFireDamage * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage * bossFireResistance;
             }
             #endregion
 
@@ -687,7 +687,7 @@ namespace Rawr.Enhance
             calculatedStats.OHEnchantUptime = se.GetOHUptime() * 100f;
             calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
-            calculatedStats.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;  //CATA
+            calculatedStats.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
             calculatedStats.ManaRegen = cs.ManaRegen * 5f;
             
             calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
@@ -700,7 +700,7 @@ namespace Rawr.Enhance
             calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
             calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
-            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, -1, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
+            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
             calculatedStats.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
             calculatedStats.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
