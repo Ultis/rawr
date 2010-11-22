@@ -36,42 +36,53 @@ namespace Rawr.Mage
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
-            // S0: no proc, 0 count
-            // FB   => S0   1-c
-            //      => S1   c
-            // S1: no proc, 1 count
-            // FB   => S0   1-c
-            //      => S2   c
-            // S2: proc, 0 count
-            // Pyro  => S0  (1-T8)
-            //       => S2  T8
+            // in cata pyro can also proc hot streak
+            // using T3 hot streak model from http://elitistjerks.com/f75/t104767-fire_cataclysm_discussion/p12/#post1766032
+            // using averaged crit rate model with reset on T3 proc
 
-            // S0 = S0 * (1-c) + S1 * (1 - c) + S2 * (1 - T8)
-            // S1 = S0 * c
-            // S2 = S1 * c + S2 * T8
+            // S0: no proc, 0 count
+            // FB   => S0   1-FBc
+            //      => S1   FBc*(1-FBk)
+            //      => S2   FBc*FBk
+            // S1: no proc, 1 count
+            // FB   => S0   1-FBc
+            //      => S2   FBc
+            // S2: proc, 0 count
+            // Pyro  => S0   1-Pc
+            //       => S1   Pc*(1-Pk)
+            //       => S2   Pc*Pk
+
+            // S0 = S0 * (1-FBc) + S1 * (1 - FBc) + S2 * (1 - Pc)
+            // S1 = S0 * FBc*(1-FBk) + S2 * Pc*(1-Pk)
+            // S2 = S0 * FBc*FBk + S1 * FBc + S2 * Pc*Pk
             // S0 + S1 + S2 = 1
 
-            // no Pyro
-            // FB => no Pyro 1 - c*c/(1+c)
-            //    => Pyro c*c/(1+c)
-            // Pyro
-            // Pyro => no Pyro
+            // full model
 
-            // 1 - c*c/(1+c)
-            // FB
+            // S0=(Pc*(FBc*(Pk-1)-Pk)+1)/(Pc*(FBc*(FBk-1)-Pk)+FBc^2*(1-FBk)+FBc+1)
+            // S1=-(FBc*Pc*(Pk-FBk)+FBc*(FBk-1))/(Pc*(FBc*(FBk-1)-Pk)+FBc^2*(1-FBk)+FBc+1)
+            // S2=-(FBc^2*(FBk-1)-FBc*FBk)/(Pc*(FBc*(FBk-1)-Pk)+FBc^2*(1-FBk)+FBc+1)
 
-            // c*c/(1+c)
+            // averaged crit model
 
-            // c^2/((1 + c)*(1 - T8))
+            // S0=1-c
+            // S1=(c*(1-k))/(1+c*(1-k))
+            // S2=(c*k+c^2*(1-k))/(1+c*(1-k))
 
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+            // pyro per FB ratio
 
-            K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
-#if RAWR4
+            // ((FBc^2-FBc)*FBk-FBc^2)/(Pc*Pk+(FBc-FBc*FBk)*Pc+FBc*FBk-FBc-1)
+
+            // -((c^2-c)*k-c^2)/((c^2-2*c)*k-c^2+c+1)
+
+            //K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
+
+            float FBc = FB.CritRate;
+            float Pc = Pyro.CritRate;
+            float FBk = Math.Max(-1.7106f * FBc + 0.7893f, 0f);
+            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (Pc * Pk + (FBc - FBc * FBk) * Pc + FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
-#else
-            if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
-#endif
 
             float hasteFactor = 1.0f;
             if (castingState.BaseStats.Mage2T10 > 0)
@@ -185,8 +196,7 @@ namespace Rawr.Mage
             float totalChance = k2;
             int n = 2;
 
-            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
-            averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+            averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * k2;
 
             while ((Pyro.CastTime + n * FB.CastTime) / hasteFactor < 12)
             {
@@ -195,9 +205,9 @@ namespace Rawr.Mage
                 k2 = C * (1 - C * HS) * tmp + (1 - C) * k1;
                 totalChance += k2;
                 n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+                averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * k2;
             }
-            averageTicks += 4 * (1 - T8) * (1 - totalChance);
+            averageTicks += 4 * (1 - totalChance);
 
             // ignite ticks
 
@@ -220,8 +230,8 @@ namespace Rawr.Mage
             Spell LB;
             Spell Pyro;
             float X;
-            float K;
-            float C;
+            float K = 0;
+            float C = 0;
             cycle.Name = "FBLBPyro";
 
             FB = castingState.GetSpell(SpellId.Fireball);
@@ -229,7 +239,7 @@ namespace Rawr.Mage
             Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-            float H = castingState.MageTalents.HotStreak / 3.0f;
+            float H = 1;
 
             // 3.0.8 calcs
 
@@ -265,6 +275,20 @@ namespace Rawr.Mage
             // (1 + LBcrit + X * (FBcrit - LBcrit)) * (12 - time(LB) + X * (time(LB) - time(FB) - 12)) = time(Pyro) / (1 - T8) * H * C * C
             // [(1 + LBcrit) * (12 - time(LB)) - time(Pyro) / (1 - T8) * H * LBcrit * LBcrit] + X * [(FBcrit - LBcrit) * (12 - time(LB)) + (time(LB) - time(FB) - 12) * (1 + LBcrit) - time(Pyro) / (1 - T8) * H * 2 * LBcrit * (FBcrit - LBcrit)] + X * X * [(FBcrit - LBcrit) * (time(LB) - time(FB) - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * time(Pyro) / (1 - T8) * H] = 0
 
+            // 4.0 averaged crit model
+
+            // value = (X * value(FB) + (1 - X) * value(LB)) + K * value(Pyro)
+            // time(LB) * (1 - X) / [time(FB) * X + time(LB) * (1 - X) + time(Pyro) * K] = time(LB) / dottime(LB)
+            // K = ((C^2-C)*Ck-C^2)/(Pc*Pk+(C-C*Ck)*Pc+C*Ck-C-1)
+            // C = FBcrit * X + LBcrit * (1 - X)
+
+            // well this is just ugly, we'll go for an iterative solution
+            // X => C => K => X ...
+
+            // and we'll combine this with the LB recast time adjustment model, which just modifies the K => X conversion
+
+            // X = -(PyroCastTime*K-LBrecastInterval+LBCastTime)/(LBrecastInterval-LBCastTime+FBCastTime)
+
             // more accurate LB uptime model
             // LB is cast every 12 + half of average non LB spell duration
             // K := H * C * C / (1 + C) / (1 - T8)
@@ -280,24 +304,26 @@ namespace Rawr.Mage
 
             float FBcrit = FB.CritRate;
             float LBcrit = LB.CritRate;
-#if RAWR4
+            float Pc = Pyro.CritRate;
+            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + FB.CastTime);
             if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
-#else
-            if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-#endif
-            float A2 = (FBcrit - LBcrit) * (LB.CastTime - FB.CastTime - 12) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
-            float A1 = (FBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FBcrit - LBcrit);
-            float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
-            if (Math.Abs(A2) < 0.00001)
+            float hasteFactor = 1.0f;
+
+            for (int iter = 0; iter < 2; iter++)
             {
-                X = -A0 / A1;
+                C = LBcrit + X * (FBcrit - LBcrit);
+                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
+                if (castingState.BaseStats.Mage2T10 > 0)
+                {
+                    // p = K / (1 + K)
+                    // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
+                    hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
+                }
+                float LBrecastInterval = LB.DotFullDuration + 0.5f * ((FB.CastTime * FB.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (FB.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
+                X = -(Pyro.CastTime * K - LBrecastInterval + LB.CastTime) / (LBrecastInterval - LB.CastTime + FB.CastTime);
             }
-            else
-            {
-                X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-            }
-            C = LBcrit + X * (FBcrit - LBcrit);
-            K = H * C * C / (1 + C) / (1 - T8);
 
             // 2T10 doesn't affect the state space, so we can calculate X ignoring 2T10
             // then we can expand the state to include haste to get the actual 2T10 haste distribution
@@ -319,34 +345,6 @@ namespace Rawr.Mage
             // N = average number of spells affected by haste = (haste duration - average cast time of haste generating spell) / (average cast time of hasted spells) + 0.5
             // hasteFactor = 1 / (((1-p)^N) * 1 + (1 - (1-p)^N) * 1/1.12)
             //             = 1.12 / (((1-p)^N) * 0.12 + 1)
-
-            float hasteFactor = 1.0f;
-            if (castingState.BaseStats.Mage2T10 > 0)
-            {
-                // p = K / (1 + K)
-                // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
-                hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
-            }
-
-            // first order correction for lower LB uptime
-
-            // LBrecastInterval = 12 + 0.5 * ((time(FB) * X + time(Pyro) * K) / (X + K))
-            float LBrecastInterval = 12 + 0.5f * ((FB.CastTime * FB.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (FB.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
-
-            // now recalculate the spell distribution under the new uptime assumption
-            A2 = (FBcrit - LBcrit) * (LB.CastTime / hasteFactor - FB.CastTime / hasteFactor - LBrecastInterval) - (FBcrit - LBcrit) * (FBcrit - LBcrit) * Pyro.CastTime / hasteFactor / (1 - T8) * H;
-            A1 = (FBcrit - LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) + (LB.CastTime / hasteFactor - FB.CastTime / hasteFactor - LBrecastInterval) * (1 + LBcrit) - Pyro.CastTime / hasteFactor / (1 - T8) * H * 2 * LBcrit * (FBcrit - LBcrit);
-            A0 = (1 + LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) - Pyro.CastTime / hasteFactor / (1 - T8) * H * LBcrit * LBcrit;
-            if (Math.Abs(A2) < 0.00001)
-            {
-                X = -A0 / A1;
-            }
-            else
-            {
-                X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-            }
-            C = LBcrit + X * (FBcrit - LBcrit);
-            K = H * C * C / (1 + C) / (1 - T8);
 
             // pyro dot uptime 
 
@@ -383,108 +381,6 @@ namespace Rawr.Mage
         }
     }
 
-    public static class FFBLBPyro
-    {
-        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
-        {
-            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
-            Spell FFB;
-            Spell LB;
-            Spell Pyro;
-            float X;
-            float K;
-            cycle.Name = "FFBLBPyro";
-
-            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
-            LB = castingState.GetSpell(SpellId.LivingBomb);
-            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
-
-            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
-
-            float FFBcrit = FFB.CritRate;
-            float LBcrit = LB.CritRate;
-            float LBDotCrit = castingState.FireCritRate;
-            float H = castingState.MageTalents.HotStreak / 3.0f;
-            float C;
-#if RAWR4
-            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
-#else
-            if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-#endif
-
-                float A2 = (FFBcrit - LBcrit) * (LB.CastTime - FFB.CastTime - 12) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
-                float A1 = (FFBcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - FFB.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
-                float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
-                if (Math.Abs(A2) < 0.00001)
-                {
-                    X = -A0 / A1;
-                }
-                else
-                {
-                    X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-                }
-                C = LBcrit + X * (FFBcrit - LBcrit);
-                K = H * C * C / (1 + C) / (1 - T8);
-
-                float hasteFactor = 1.0f;
-                if (castingState.BaseStats.Mage2T10 > 0)
-                {
-                    // p = K / (1 + K)
-                    // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
-                    hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FFB.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
-                }
-
-                float LBrecastInterval = 12 + 0.5f * ((FFB.CastTime * FFB.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (FFB.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
-
-                A2 = (FFBcrit - LBcrit) * (LB.CastTime / hasteFactor - FFB.CastTime / hasteFactor - LBrecastInterval) - (FFBcrit - LBcrit) * (FFBcrit - LBcrit) * Pyro.CastTime / hasteFactor / (1 - T8) * H;
-                A1 = (FFBcrit - LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) + (LB.CastTime / hasteFactor - FFB.CastTime / hasteFactor - LBrecastInterval) * (1 + LBcrit) - Pyro.CastTime / hasteFactor / (1 - T8) * H * 2 * LBcrit * (FFBcrit - LBcrit);
-                A0 = (1 + LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) - Pyro.CastTime / hasteFactor / (1 - T8) * H * LBcrit * LBcrit;
-                if (Math.Abs(A2) < 0.00001)
-                {
-                    X = -A0 / A1;
-                }
-                else
-                {
-                    X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-                }
-                C = LBcrit + X * (FFBcrit - LBcrit);
-                K = H * C * C / (1 + C) / (1 - T8);        
-
-            // pyro dot uptime 
-
-            //A := [x * cFB * DFB + (1 - x) * cLB * DLB]  ~ (x * cFB + (1 - x) * cLB)* D[x * FB + (1 - x) * LB]
-            //B := [x * (1-cFB) * DFB + (1 - x) * (1-cLB) * DLB] ~ (1 - (x * cFB + (1- x) * cLB)) * D[x * FB + (1 - x) * LB]
-
-            float averageTicks = 0f;
-            float k1 = 0;
-            float k2 = C * C * H;
-            float totalChance = k2;
-            float averageCastTime = LB.CastTime + X * (FFB.CastTime - LB.CastTime);
-            int n = 2;
-
-            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
-            averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
-
-            while ((Pyro.CastTime + n * averageCastTime) / hasteFactor < 12)
-            {
-                float tmp = k1;
-                k1 = k2;
-                k2 = C * (1 - C * H) * tmp + (1 - C) * k1;
-                totalChance += k2;
-                n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
-            }
-            averageTicks += 4 * (1 - T8) * (1 - totalChance);
-
-            cycle.AddSpell(needsDisplayCalculations, FFB, X);
-            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
-            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
-            cycle.CastTime /= hasteFactor;
-            cycle.Calculate();
-            return cycle;
-        }
-    }
-
     public static class ScLBPyro
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
@@ -494,9 +390,8 @@ namespace Rawr.Mage
             Spell LB;
             Spell Pyro;
             float X;
-            float K;
+            float K = 0;
             cycle.Name = "ScLBPyro";
-            cycle.ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
 
             Sc = castingState.GetSpell(SpellId.Scorch);
             LB = castingState.GetSpell(SpellId.LivingBomb);
@@ -504,51 +399,32 @@ namespace Rawr.Mage
 
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
-            float SCcrit = Sc.CritRate;
+            float Sccrit = Sc.CritRate;
             float LBcrit = LB.CritRate;
-            float H = castingState.MageTalents.HotStreak / 3.0f;
-#if RAWR4
+            float LBDotCrit = castingState.FireCritRate;
+            float H = 1;
+            float C = 0;
+
+            float Pc = Pyro.CritRate;
+            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + Sc.CastTime);
             if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
-#else
-            if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
-#endif
-            float A2 = (SCcrit - LBcrit) * (LB.CastTime - Sc.CastTime - 12) - (SCcrit - LBcrit) * (SCcrit - LBcrit) * Pyro.CastTime / (1 - T8) * H;
-            float A1 = (SCcrit - LBcrit) * (12 - LB.CastTime) + (LB.CastTime - Sc.CastTime - 12) * (1 + LBcrit) - Pyro.CastTime / (1 - T8) * H * 2 * LBcrit * (SCcrit - LBcrit);
-            float A0 = (1 + LBcrit) * (12 - LB.CastTime) - Pyro.CastTime / (1 - T8) * H * LBcrit * LBcrit;
-            if (Math.Abs(A2) < 0.00001)
-            {
-                X = -A0 / A1;
-            }
-            else
-            {
-                X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-            }
-            float C = LBcrit + X * (SCcrit - LBcrit);
-            K = H * C * C / (1 + C) / (1 - T8);
-
             float hasteFactor = 1.0f;
-            if (castingState.BaseStats.Mage2T10 > 0)
-            {
-                // p = K / (1 + K)
-                // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
-                hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (Sc.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
-            }
 
-            float LBrecastInterval = 12 + 0.5f * ((Sc.CastTime * Sc.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (Sc.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
-
-            A2 = (SCcrit - LBcrit) * (LB.CastTime / hasteFactor - Sc.CastTime / hasteFactor - LBrecastInterval) - (SCcrit - LBcrit) * (SCcrit - LBcrit) * Pyro.CastTime / hasteFactor / (1 - T8) * H;
-            A1 = (SCcrit - LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) + (LB.CastTime / hasteFactor - Sc.CastTime / hasteFactor - LBrecastInterval) * (1 + LBcrit) - Pyro.CastTime / hasteFactor / (1 - T8) * H * 2 * LBcrit * (SCcrit - LBcrit);
-            A0 = (1 + LBcrit) * (LBrecastInterval - LB.CastTime / hasteFactor) - Pyro.CastTime / hasteFactor / (1 - T8) * H * LBcrit * LBcrit;
-            if (Math.Abs(A2) < 0.00001)
+            for (int iter = 0; iter < 2; iter++)
             {
-                X = -A0 / A1;
+                C = LBcrit + X * (Sccrit - LBcrit);
+                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
+                if (castingState.BaseStats.Mage2T10 > 0)
+                {
+                    // p = K / (1 + K)
+                    // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
+                    hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (Sc.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
+                }
+                float LBrecastInterval = LB.DotFullDuration + 0.5f * ((Sc.CastTime * Sc.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (Sc.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
+                X = -(Pyro.CastTime * K - LBrecastInterval + LB.CastTime) / (LBrecastInterval - LB.CastTime + Sc.CastTime);
             }
-            else
-            {
-                X = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
-            }
-            C = LBcrit + X * (SCcrit - LBcrit);
-            K = H * C * C / (1 + C) / (1 - T8);
 
             // pyro dot uptime 
 
@@ -577,6 +453,87 @@ namespace Rawr.Mage
             averageTicks += 4 * (1 - T8) * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, Sc, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.CastTime /= hasteFactor;
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+
+    public static class FFBLBPyro
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            Spell FFB;
+            Spell LB;
+            Spell Pyro;
+            float X;
+            float K = 0;
+            cycle.Name = "FFBLBPyro";
+
+            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
+            LB = castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
+
+            float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
+
+            float FFBcrit = FFB.CritRate;
+            float LBcrit = LB.CritRate;
+            float LBDotCrit = castingState.FireCritRate;
+            float H = 1;
+            float C = 0;
+
+            float Pc = Pyro.CritRate;
+            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + FFB.CastTime);
+            if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
+            float hasteFactor = 1.0f;
+
+            for (int iter = 0; iter < 2; iter++)
+            {
+                C = LBcrit + X * (FFBcrit - LBcrit);
+                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
+                if (castingState.BaseStats.Mage2T10 > 0)
+                {
+                    // p = K / (1 + K)
+                    // N = (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FB.CastTime * X + LB.CastTime * (1-X) + Pyro.CastTime * K)
+                    hasteFactor = 1.12f / ((float)Math.Pow(1 - K / (1.0f + K), (5 * 1.12 - Pyro.CastTime) * (1 + K) / (FFB.CastTime * X + LB.CastTime * (1 - X) + Pyro.CastTime * K) + 0.5f) * 0.12f + 1f);
+                }
+                float LBrecastInterval = LB.DotFullDuration + 0.5f * ((FFB.CastTime * FFB.CastTime * X + Pyro.CastTime * Pyro.CastTime * K) / (FFB.CastTime * X + Pyro.CastTime * K)) / hasteFactor;
+                X = -(Pyro.CastTime * K - LBrecastInterval + LB.CastTime) / (LBrecastInterval - LB.CastTime + FFB.CastTime);
+            }
+
+            // pyro dot uptime 
+
+            //A := [x * cFB * DFB + (1 - x) * cLB * DLB]  ~ (x * cFB + (1 - x) * cLB)* D[x * FB + (1 - x) * LB]
+            //B := [x * (1-cFB) * DFB + (1 - x) * (1-cLB) * DLB] ~ (1 - (x * cFB + (1- x) * cLB)) * D[x * FB + (1 - x) * LB]
+
+            float averageTicks = 0f;
+            float k1 = 0;
+            float k2 = C * C * H;
+            float totalChance = k2;
+            float averageCastTime = LB.CastTime + X * (FFB.CastTime - LB.CastTime);
+            int n = 2;
+
+            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
+            averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+
+            while ((Pyro.CastTime + n * averageCastTime) / hasteFactor < 12)
+            {
+                float tmp = k1;
+                k1 = k2;
+                k2 = C * (1 - C * H) * tmp + (1 - C) * k1;
+                totalChance += k2;
+                n++;
+                averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+            }
+            averageTicks += 4 * (1 - T8) * (1 - totalChance);
+
+            cycle.AddSpell(needsDisplayCalculations, FFB, X);
             cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
             cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
             cycle.CastTime /= hasteFactor;

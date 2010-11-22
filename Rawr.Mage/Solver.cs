@@ -292,6 +292,7 @@ namespace Rawr.Mage
 
         public float Mastery { get; set; }
         public float ManaAdeptBonus { get; set; }
+        public float FlashburnBonus { get; set; }
 
         public float ClearcastingChance { get; set; }
         public float ArcanePotencyCrit { get; set; }
@@ -366,6 +367,23 @@ namespace Rawr.Mage
                     _FrostboltTemplate.Initialize(this);
                 }
                 return _FrostboltTemplate;
+            }
+        }
+
+        private CombustionTemplate _CombustionTemplate;
+        public CombustionTemplate CombustionTemplate
+        {
+            get
+            {
+                if (_CombustionTemplate == null)
+                {
+                    _CombustionTemplate = new CombustionTemplate();
+                }
+                if (_CombustionTemplate.Dirty)
+                {
+                    _CombustionTemplate.Initialize(this);
+                }
+                return _CombustionTemplate;
             }
         }
 
@@ -2579,11 +2597,16 @@ namespace Rawr.Mage
 
             Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;
+            FlashburnBonus = 0.0f;
             if (Specialization == Specialization.Arcane)
             {
                 ManaAdeptBonus = 0.015f * Mastery;
                 needsQuadratic = true;
                 needsSolutionVariables = true;
+            }
+            else if (Specialization == Specialization.Fire)
+            {
+                FlashburnBonus = 0.025f * Mastery;
             }
         }
 
@@ -2891,7 +2914,7 @@ namespace Rawr.Mage
                                             break;
                                         }
                                     }
-                                    if (c.ManaPerSecond < -0.001 && CalculationOptions.DisableManaRegenCycles)
+                                    if (c.ManaPerSecond < -0.001 && (CalculationOptions.DisableManaRegenCycles && Specialization == Mage.Specialization.Arcane))
                                     {
                                         skip = true;
                                     }
@@ -3071,7 +3094,7 @@ namespace Rawr.Mage
                 lp.SetElementUnsafe(rowManaGemEffect, column, ManaGemEffectDuration / 120f);
                 lp.SetElementUnsafe(rowDpsTime, column, -(1 - dpsTime));
                 lp.SetElementUnsafe(rowAoe, column, CalculationOptions.AoeDuration);
-                lp.SetElementUnsafe(rowCombustion, column, 1.0 / CombustionCooldown);
+                lp.SetElementUnsafe(rowCombustion, column, CombustionDuration / CombustionCooldown);
                 lp.SetElementUnsafe(rowBerserking, column, 10.0 / 180.0);
             }
         }
@@ -4178,7 +4201,7 @@ namespace Rawr.Mage
                 }*/
             }
 
-            double combustionCount = combustionAvailable ? (1 + (int)((CalculationOptions.FightDuration - 15f) / 195f)) : 0;
+            //double combustionCount = combustionAvailable ? (1 + (int)((CalculationOptions.FightDuration - 15f) / 195f)) : 0;
 
             double ivlength = 0.0;
             if (coldsnapAvailable)
@@ -4258,7 +4281,7 @@ namespace Rawr.Mage
             if (manaGemEffectAvailable) lp.SetRHSUnsafe(rowManaGemEffect, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration * ManaGemEffectDuration / 120f : MaximizeEffectDuration(CalculationOptions.FightDuration, ManaGemEffectDuration, 120.0));
             lp.SetRHSUnsafe(rowDpsTime, -(1 - dpsTime) * CalculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowAoe, CalculationOptions.AoeDuration * CalculationOptions.FightDuration);
-            lp.SetRHSUnsafe(rowCombustion, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / CombustionCooldown : combustionCount);
+            //lp.SetRHSUnsafe(rowCombustion, CalculationOptions.AverageCooldowns ? CalculationOptions.FightDuration / CombustionCooldown : combustionCount);
             //lp.SetRHSUnsafe(rowMoltenFuryCombustion, 1);
             //lp.SetRHSUnsafe(rowHeroismCombustion, 1);
             //lp.SetRHSUnsafe(rowMoltenFuryBerserking, 10);
@@ -4697,6 +4720,7 @@ namespace Rawr.Mage
             }
             if (heroismAvailable) rowHeroism = EffectCooldown[(int)StandardEffect.Heroism].Row;
             if (arcanePowerAvailable) rowArcanePower = EffectCooldown[(int)StandardEffect.ArcanePower].Row;
+            if (combustionAvailable) rowCombustion = EffectCooldown[(int)StandardEffect.Combustion].Row;
             if (powerInfusionAvailable) rowPowerInfusion = EffectCooldown[(int)StandardEffect.PowerInfusion].Row;
             if (flameCapAvailable) rowFlameCap = EffectCooldown[(int)StandardEffect.FlameCap].Row;
             if (berserkingAvailable) rowBerserking = EffectCooldown[(int)StandardEffect.Berserking].Row;
@@ -5049,12 +5073,12 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDragonsBreath, column, -1.0);
                 }
             }
-            /*if (state.Combustion)
+            if (state.Combustion)
             {
-                lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-                if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-                if (state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
-            }*/
+                lp.SetElementUnsafe(rowCombustion, column, 1.0);
+                //if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+                //if (state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+            }
             if (state.Berserking) lp.SetElementUnsafe(rowBerserking, column, 1.0);
             //if (state.Berserking && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryBerserking, column, 1.0);
             //if (state.Berserking && state.Heroism) lp.SetElementUnsafe(rowHeroismBerserking, column, 1.0);
@@ -5223,262 +5247,46 @@ namespace Rawr.Mage
             }
             if (!CalculationOptions.CustomSpellMixOnly)
             {
-                if (CalculationOptions.MaintainScorch && CalculationOptions.MaintainSnare && MageTalents.ImprovedScorch > 0 && MageTalents.Slow > 0)
+                switch (Specialization)
                 {
-                    // no cycles right now that provide scorch and snare
-                }
-                if (CalculationOptions.MaintainScorch && MageTalents.ImprovedScorch > 0)
-                {
-                    if (useGlobalOptimizations)
-                    {
-                        if (MageTalents.PiercingIce == 3 && MageTalents.IceShards == 3 && CalculationOptions.PlayerLevel >= 75)
-                        {
-                            if (MageTalents.LivingBomb > 0)
-                            {
-                                spellList.Add(CycleId.FFBScLBPyro);
-                            }
-                            spellList.Add(CycleId.FFBScPyro);
-                        }
-                        else
-                        {
-                            if (MageTalents.LivingBomb > 0)
-                            {
-                                spellList.Add(CycleId.FBScLBPyro);
-                            }
-                            spellList.Add(CycleId.FBScPyro);
-                        }
-                    }
-                    else
-                    {
-                        if (MageTalents.LivingBomb > 0)
-                        {
-                            spellList.Add(CycleId.FBScLBPyro);
-                            spellList.Add(CycleId.ScLBPyro);
-                        }
-                        spellList.Add(CycleId.FBScPyro);
-                        if (CalculationOptions.PlayerLevel >= 75)
-                        {
-                            spellList.Add(CycleId.FFBScPyro);
-                            if (MageTalents.LivingBomb > 0)
-                            {
-                                spellList.Add(CycleId.FFBScLBPyro);
-                            }
-                        }
-                    }
-                }
-                // deprecated, if there is demand for this we have to create completely new cycles
-                /*else if (calculationOptions.MaintainSnare && talents.Slow > 0)
-                {
-                    if (useGlobalOptimizations)
-                    {
-                        if (talents.ArcaneBarrage > 0)
-                        {
-                            if (talents.ImprovedFrostbolt > 0)
-                            {
-                                list.Add(CycleId.FrBABarSlow);
-                            }
-                            if (talents.ImprovedFireball > 0)
-                            {
-                                list.Add(CycleId.FBABarSlow);
-                            }
-                            if (talents.ArcaneEmpowerment > 0)
-                            {
-                                list.Add(CycleId.ABABarSlow);
-                            }
-                            if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
-                            {
-                                list.Add(CycleId.FrBABarSlow);
-                                list.Add(CycleId.FBABarSlow);
-                                list.Add(CycleId.ABABarSlow);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        list.Add(CycleId.FrBABarSlow);
-                        list.Add(CycleId.FBABarSlow);
-                        list.Add(CycleId.ABABarSlow);
-                    }
-                }*/
-                else
-                {
-#if RAWR4
-                    switch (Specialization)
-                    {
-                        case Specialization.Arcane:
-                            spellList.Add(CycleId.ArcaneBlastSpam);
-                            spellList.Add(CycleId.ABSpam0234AMABar);
-                            spellList.Add(CycleId.ABSpam0234AMABABar);
-                            spellList.Add(CycleId.AB2ABar2AMABar0AMABABar);
-                            //spellList.Add(CycleId.ABSpam234AM);
-                            spellList.Add(CycleId.AB3ABar023AM);
-                            spellList.Add(CycleId.AB23ABar023AM);
-                            spellList.Add(CycleId.AB2ABar02AMABABar);
-                            spellList.Add(CycleId.AB2ABar12AMABABar);
-                            spellList.Add(CycleId.ABABar1AM);
-                            if (CalculationOptions.IncludeManaNeutralCycleMix)
-                            {
-                                spellList.Add(CycleId.ArcaneManaNeutral);
-                            }
-                            break;
-                        case Specialization.Fire:
-                            break;
-                        case Specialization.Frost:
-                            break;
-                        case Specialization.None:
-                            break;
-                    }
-#else
-                    if (useGlobalOptimizations)
-                    {
-                        if (MageTalents.EmpoweredFire > 0)
-                        {
-                            if (MageTalents.PiercingIce == 3 && MageTalents.IceShards == 3 && CalculationOptions.PlayerLevel >= 75)
-                            {
-                                spellList.Add(CycleId.FFBPyro);
-                                if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FFBLBPyro);
-                            }
-                            else
-                            {
-                                if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
-                                {
-                                    spellList.Add(CycleId.FBPyro);
-                                }
-                                else
-                                {
-                                    spellList.Add(CycleId.Fireball);
-                                }
-                                if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FBLBPyro);
-                            }
-                        }
-                        else if (MageTalents.EmpoweredFrostbolt > 0)
-                        {
-                            if (MageTalents.BrainFreeze > 0)
-                            {
-                                spellList.Add(CycleId.FrBFB);
-                                spellList.Add(CycleId.FrBFBIL);
-                                spellList.Add(CycleId.FrBILFB);
-                            }
-                            if (MageTalents.DeepFreeze > 0)
-                            {
-                                spellList.Add(CycleId.FrBDFFBIL);
-                                spellList.Add(CycleId.FrBDFFFB);
-                            }
-                            spellList.Add(CycleId.FrBIL);
-                            spellList.Add(CycleId.FrostboltFOF);
-                        }
-                        else if (MageTalents.ArcaneEmpowerment > 0)
-                        {
-                            spellList.Add(CycleId.AB2AM);
-                            spellList.Add(CycleId.AB3AM023MBAM);
-                            spellList.Add(CycleId.AB4AM0234MBAM);
-                            if (MageTalents.MissileBarrage > 0)
-                            {
-                                spellList.Add(CycleId.ABSpam0234MBAM);
-                                spellList.Add(CycleId.ABSpam024MBAM);
-                                spellList.Add(CycleId.ABSpam034MBAM);
-                                spellList.Add(CycleId.ABSpam04MBAM);
-                            }
-                            spellList.Add(CycleId.ArcaneBlastSpam);
-                        }
-                        else
-                        {
-                            spellList.Add(CycleId.ArcaneMissiles);
-                            spellList.Add(CycleId.Fireball);
-                            spellList.Add(CycleId.FrostboltFOF);
-                            if (CalculationOptions.PlayerLevel >= 75) spellList.Add(CycleId.FrostfireBoltFOF);
-                        }
-                    }
-                    else
-                    {
-                        spellList.Add(CycleId.ArcaneMissiles);
-                        spellList.Add(CycleId.Scorch);
-                        if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.ScLBPyro);
-                        if (MageTalents.HotStreak > 0 && MageTalents.Pyroblast > 0)
-                        {
-                            spellList.Add(CycleId.FBPyro);
-                        }
-                        else
-                        {
-                            spellList.Add(CycleId.Fireball);
-                        }
-                        if (CalculationOptions.PlayerLevel >= 75)
-                        {
-                            spellList.Add(CycleId.FrostfireBoltFOF);
-                            spellList.Add(CycleId.FFBPyro);
-                            if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FFBLBPyro);
-                        }
-                        if (MageTalents.LivingBomb > 0) spellList.Add(CycleId.FBLBPyro);
-                        spellList.Add(CycleId.FrostboltFOF);
-                        if (MageTalents.BrainFreeze > 0) spellList.Add(CycleId.FrBFB);
-                        if (MageTalents.FingersOfFrost > 0)
-                        {
-                            if (MageTalents.BrainFreeze > 0)
-                            {
-                                spellList.Add(CycleId.FrBFBIL);
-                                spellList.Add(CycleId.FrBILFB);
-                            }
-                            spellList.Add(CycleId.FrBIL);
-                            if (MageTalents.DeepFreeze > 0)
-                            {
-                                spellList.Add(CycleId.FrBDFFBIL);
-                                spellList.Add(CycleId.FrBDFFFB);
-                            }
-                        }
-                        spellList.Add(CycleId.AB2AM);
-                        spellList.Add(CycleId.AB3AM023MBAM);
-                        spellList.Add(CycleId.AB4AM0234MBAM);
-                        if (MageTalents.MissileBarrage > 0)
-                        {
-                            spellList.Add(CycleId.ABSpam0234MBAM);
-                            spellList.Add(CycleId.ABSpam024MBAM);
-                            spellList.Add(CycleId.ABSpam034MBAM);
-                            spellList.Add(CycleId.ABSpam04MBAM);
-                        }
+                    case Specialization.Arcane:
                         spellList.Add(CycleId.ArcaneBlastSpam);
-                        /*list.Add(CycleId.ArcaneBlastSpam);
-                        list.Add(CycleId.ABAM);
-                        list.Add(CycleId.AB2AM);
-                        list.Add(CycleId.AB3AM);
-                        if (talents.MissileBarrage > 0)
+                        spellList.Add(CycleId.ABSpam0234AMABar);
+                        spellList.Add(CycleId.ABSpam0234AMABABar);
+                        spellList.Add(CycleId.AB2ABar2AMABar0AMABABar);
+                        spellList.Add(CycleId.ABSpam234AM);
+                        spellList.Add(CycleId.AB3ABar023AM);
+                        spellList.Add(CycleId.AB23ABar023AM);
+                        spellList.Add(CycleId.AB2ABar02AMABABar);
+                        spellList.Add(CycleId.AB2ABar12AMABABar);
+                        spellList.Add(CycleId.ABABar1AM);
+                        if (CalculationOptions.IncludeManaNeutralCycleMix)
                         {
-                            list.Add(CycleId.AB3AM2MBAM);
-                            list.Add(CycleId.ABSpam03MBAM);
-                            list.Add(CycleId.ABSpam3MBAM);
+                            spellList.Add(CycleId.ArcaneManaNeutral);
                         }
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
-                        {
-                            list.Add(CycleId.ABABar0C);
-                            list.Add(CycleId.ABABar1C);
-                            list.Add(CycleId.ABABar0MBAM);
-                            list.Add(CycleId.AB2ABar2MBAM);
-                            list.Add(CycleId.AB2ABar2C);
-                            list.Add(CycleId.AB2ABar3C);
-                            list.Add(CycleId.AB3ABar3C);
-                            list.Add(CycleId.ABSpam3C);
-                            list.Add(CycleId.ABSpam03C);
-                            list.Add(CycleId.ABABar3C);
-                            list.Add(CycleId.ABABar2C);
-                            list.Add(CycleId.ABABar2MBAM);
-                            list.Add(CycleId.ABABar1MBAM);
-                            list.Add(CycleId.AB3ABar3MBAM);
-                            list.Add(CycleId.AB3AMABar);
-                            list.Add(CycleId.AB3AMABar2C);
-                        }*/
-                    }
-#endif
+                        break;
+                    case Specialization.Fire:
+                        spellList.Add(CycleId.FBPyro);
+                        spellList.Add(CycleId.FBLBPyro);
+                        spellList.Add(CycleId.ScLBPyro);
+                        spellList.Add(CycleId.FFBLBPyro);
+                        break;
+                    case Specialization.Frost:
+                        break;
+                    case Specialization.None:
+                        break;
                 }
-                if (CalculationOptions.AoeDuration > 0)
-                {
-                    spellList.Add(CycleId.ArcaneExplosion);
-                    spellList.Add(CycleId.FlamestrikeSpammed);
-                    spellList.Add(CycleId.FlamestrikeSingle);
-                    spellList.Add(CycleId.Blizzard);
-                    spellList.Add(CycleId.ConeOfCold);
-                    if (MageTalents.BlastWave == 1) spellList.Add(CycleId.BlastWave);
-                    if (MageTalents.DragonsBreath == 1) spellList.Add(CycleId.DragonsBreath);
-                }
-            }            
+            }
+            if (CalculationOptions.AoeDuration > 0)
+            {
+                spellList.Add(CycleId.ArcaneExplosion);
+                spellList.Add(CycleId.FlamestrikeSpammed);
+                spellList.Add(CycleId.FlamestrikeSingle);
+                spellList.Add(CycleId.Blizzard);
+                spellList.Add(CycleId.ConeOfCold);
+                if (MageTalents.BlastWave == 1) spellList.Add(CycleId.BlastWave);
+                if (MageTalents.DragonsBreath == 1) spellList.Add(CycleId.DragonsBreath);
+            }                      
         }
 
         // http://tekpool.wordpress.com/category/bit-count/

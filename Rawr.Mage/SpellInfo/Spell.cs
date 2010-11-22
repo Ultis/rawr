@@ -569,7 +569,7 @@ namespace Rawr.Mage
                 // probably don't want to take into account haste procs as that might skew optimization thresholds as we're averaging cast time over procs
                 // reevaluate this if needed
                 float x = DotTickInterval / DotDuration;
-                DotExtraTicks = (float)Math.Floor(castingState.CastingSpeed / x + 0.5);
+                DotExtraTicks = (float)Math.Floor((castingState.CastingSpeed - 1) / x + 0.5);
                 DotFullDuration = (DotDuration + DotTickInterval * DotExtraTicks) / castingState.CastingSpeed;
                 if (spammedDot)
                 {

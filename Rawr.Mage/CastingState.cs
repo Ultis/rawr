@@ -994,6 +994,9 @@ namespace Rawr.Mage
             {
                 switch (spellId)
                 {
+                    case SpellId.Combustion:
+                        s = Solver.CombustionTemplate.GetSpell(this);
+                        break;
                     case SpellId.FrostboltFOF:
                         s = Solver.FrostboltTemplate.GetSpell(this, false, false, false, true);
                         break;
