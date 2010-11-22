@@ -2397,6 +2397,14 @@ namespace Rawr.Optimizer
                     {
                         newGem = itemGenerator.MetaGemItems[rand.Next(itemGenerator.MetaGemItems.Length)];
                     }
+                    else if (mutation.Socket == ItemSlot.Cogwheel)
+                    {
+                        newGem = itemGenerator.Cogwheeltems[rand.Next(itemGenerator.Cogwheeltems.Length)];
+                    }
+                    else if (mutation.Socket == ItemSlot.Hydraulic)
+                    {
+                        newGem = itemGenerator.HydraulicItems[rand.Next(itemGenerator.HydraulicItems.Length)];
+                    }
                     else
                     {
                         newGem = itemGenerator.GemItems[rand.Next(itemGenerator.GemItems.Length)];

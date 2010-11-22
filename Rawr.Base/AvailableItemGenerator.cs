@@ -50,7 +50,7 @@ namespace Rawr.Optimizer
         private List<ItemInstance>[] slotItems = new List<ItemInstance>[slotCount];
         private Item[] metaGemItems;
         private Item[] gemItems;
-        private Item[] cogWheelItems;
+        private Item[] cogwheelItems;
         private Item[] hydraulicItems;
         private Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
         private List<List<DirectUpgradeEntry>>[] slotDirectUpgrades = new List<List<DirectUpgradeEntry>>[slotCount];
@@ -114,6 +114,22 @@ namespace Rawr.Optimizer
             get
             {
                 return metaGemItems;
+            }
+        }
+
+        public Item[] Cogwheeltems
+        {
+            get
+            {
+                return cogwheelItems;
+            }
+        }
+
+        public Item[] HydraulicItems
+        {
+            get
+            {
+                return hydraulicItems;
             }
         }
 
@@ -1460,7 +1476,7 @@ namespace Rawr.Optimizer
             List<string> removeIds = new List<string>();
             List<Item> metaGemItemList = new List<Item>();
             List<Item> gemItemList = new List<Item>();
-            List<Item> cogWheelItemList = new List<Item>();
+            List<Item> cogwheelItemList = new List<Item>();
             List<Item> hydraulicItemList = new List<Item>();
             foreach (string xid in availableItems)
             {
@@ -1489,7 +1505,7 @@ namespace Rawr.Optimizer
                                 removeIds.Add(xid);
                                 break;
                             case ItemSlot.Cogwheel:
-                                cogWheelItemList.Add(availableItem);
+                                cogwheelItemList.Add(availableItem);
                                 removeIds.Add(xid);
                                 break;
                             case ItemSlot.Hydraulic:
@@ -1505,6 +1521,8 @@ namespace Rawr.Optimizer
             itemIds.RemoveAll(x => x.StartsWith("-", StringComparison.Ordinal) || removeIds.Contains(x));
 
             metaGemItems = metaGemItemList.ToArray();
+            cogwheelItems = cogwheelItemList.ToArray();
+            hydraulicItems = hydraulicItems.ToArray();
             gemItems = FilterList(gemItemList);
 
             for (int i = 0; i < slotCount; i++)
@@ -1798,7 +1816,7 @@ namespace Rawr.Optimizer
                         possibleGem1s = gemItems;
                         break;
                     case ItemSlot.Cogwheel:
-                        possibleGem1s = cogWheelItems;
+                        possibleGem1s = cogwheelItems;
                         break;
                     case ItemSlot.Hydraulic:
                         possibleGem1s = hydraulicItems;
@@ -1833,7 +1851,7 @@ namespace Rawr.Optimizer
                         possibleGem2s = gemItems;
                         break;
                     case ItemSlot.Cogwheel:
-                        possibleGem2s = cogWheelItems;
+                        possibleGem2s = cogwheelItems;
                         break;
                     case ItemSlot.Hydraulic:
                         possibleGem2s = hydraulicItems;
@@ -1868,7 +1886,7 @@ namespace Rawr.Optimizer
                         possibleGem3s = gemItems;
                         break;
                     case ItemSlot.Cogwheel:
-                        possibleGem3s = cogWheelItems;
+                        possibleGem3s = cogwheelItems;
                         break;
                     case ItemSlot.Hydraulic:
                         possibleGem3s = hydraulicItems;
