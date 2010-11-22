@@ -273,7 +273,7 @@ namespace Rawr.UI
 
             #region Displaying Item Sets
 
-            if (actualItem != null && actualItem.SetName != "")
+            if (actualItem != null && actualItem.SetName != null && actualItem.SetName != "")
             {
                 SetLabel.Text = string.Format("Set: {0}", actualItem.SetName);
                 SetLabel.Visibility = Visibility.Visible;
