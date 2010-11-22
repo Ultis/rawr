@@ -459,8 +459,8 @@ namespace Rawr.DPSWarr.Skills
                 } catch (Exception) { }
             }
             // This attack doesn't consume GCDs and doesn't affect the swing timer
-            float rawActs = (FightDuration * mod) / MeleeAttemptsOverDur;
-            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(rawActs, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
+            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(
+                (FightDuration * mod) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
             effectActs *= FightDuration * mod;
             return effectActs;
         }

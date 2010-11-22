@@ -17,17 +17,15 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="LB_Info" Text="Select gems and enchant for the item:" TextWrapping="Wrap" Margin="2"/>
-        <local:ItemButtonWithEnchant x:Name="itemButtonWithEnchant" Grid.Row="1" />
-        <!--<StackPanel Margin="0" Grid.Row="1" Orientation="Horizontal">
-            <local:ItemButtonWithEnchant x:Name="gem1Button" Margin="4,0,0,4" ShowGems="False" ShowReforge="False" ShowEnchant="False" />
-            <local:ItemButtonWithEnchant x:Name="gem2Button" Margin="4,0,0,4" ShowGems="False" ShowReforge="False" ShowEnchant="False" />
-            <local:ItemButtonWithEnchant x:Name="gem3Button" Margin="4,0,0,4" ShowGems="False" ShowReforge="False" ShowEnchant="False" />
-        </StackPanel>-->
-        <StackPanel Margin="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="BT_Cancel" Content="Cancel" Click="CancelButton_Click"  Margin="4,10,4,4" Padding="8,3" Width="60" />
-            <Button x:Name="BT_OK"     Content="OK"     Click="OKButton_Click"      Margin="0,10,4,4" Padding="8,3" Width="60" />
-        </StackPanel>
+        <TextBlock x:Name="LB_Info" Text="Select gems and enchant for the item:" TextWrapping="Wrap" Margin="4" TextAlignment="Center" Grid.ColumnSpan="2" />
+        <local:ItemButtonWithEnchant x:Name="itemButtonWithEnchant" Grid.Row="1" Grid.ColumnSpan="2" Margin="4" />
+
+        <Button x:Name="BT_OK"     Content="OK"     Click="OKButton_Click"      Margin="4,4,2,4" Width="60" Grid.Row="2" />
+        <Button x:Name="BT_Cancel" Content="Cancel" Click="CancelButton_Click"  Margin="2,4,4,4" Width="60" Grid.Row="2" Grid.Column="1" />
     </Grid>
 </basics:ChildWindow>

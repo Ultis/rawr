@@ -31,46 +31,17 @@ namespace Rawr.UI
                 try {
                     customInstance = value;
                     pt += "\r\n- if";
-                    /*itemButtonWithEnchant.ComparisonItemList.IsPopulated = false;
-                    itemButtonWithEnchant.ComparisonEnchantList.IsPopulated = false;
-                    gem1Button.ComparisonItemList.IsPopulated = false;
-                    gem2Button.ComparisonItemList.IsPopulated = false;
-                    gem3Button.ComparisonItemList.IsPopulated = false;
-                    itemButtonWithEnchant.ComparisonItemList.IsShown = true;
-                    itemButtonWithEnchant.ComparisonEnchantList.IsShown = true;
-                    gem1Button.ComparisonItemList.IsShown = true;
-                    gem2Button.ComparisonItemList.IsShown = true;
-                    gem3Button.ComparisonItemList.IsShown = true;*/
                     if (customInstance != null)
                     {
                         pt += "\r\n- customInstance != null";
                         itemButtonWithEnchant.ComparisonItemList.SelectedItem = value.Item;
-                        /*pt += "\r\n- gembuttons1";
-                        gem1Button.ComparisonItemList.SelectedItem = value.Gem1;
-                        pt += "\r\n- gembuttons2";
-                        gem2Button.ComparisonItemList.SelectedItem = value.Gem2;
-                        pt += "\r\n- gembuttons3";
-                        gem3Button.ComparisonItemList.SelectedItem = value.Gem3;*/
                     } else {
                         pt += "\r\n- customInstance == null";
                         itemButtonWithEnchant.ComparisonItemList.SelectedItem = null;
-                        /*pt += "\r\n- gembuttons1";
-                        gem1Button.ComparisonItemList.SelectedItem = null;
-                        pt += "\r\n- gembuttons2";
-                        gem2Button.ComparisonItemList.SelectedItem = null;
-                        pt += "\r\n- gembuttons3";
-                        gem3Button.ComparisonItemList.SelectedItem = null;*/
                     }
                     pt += "\r\n- UpdateSockets()";
                     UpdateSockets();
                     pt += "\r\n- end";
-                    /*new ErrorWindow() {
-                        Message = "Set Custom Instance worked:"
-                                  + "\r\nItem: " + (itemButtonWithEnchant.ComparisonItemList.SelectedItem != null ? itemButtonWithEnchant.ComparisonItemList.SelectedItem.Id.ToString() : "null")
-                                  + "\r\nGem 1: " + (gem1Button.ComparisonItemList.SelectedItem != null ? gem1Button.ComparisonItemList.SelectedItem.Id.ToString() : "null")
-                                  + "\r\nGem 2: " + (gem2Button.ComparisonItemList.SelectedItem != null ? gem2Button.ComparisonItemList.SelectedItem.Id.ToString() : "null")
-                                  + "\r\nGem 3: " + (gem3Button.ComparisonItemList.SelectedItem != null ? gem3Button.ComparisonItemList.SelectedItem.Id.ToString() : "null")
-                    }.Show();*/
                 } catch (Exception ex) {
                     new ErrorWindow() {
                         Message = "Trying to set Custom Item Instance"
@@ -91,17 +62,9 @@ namespace Rawr.UI
             CustomInstance = baseInstance.Clone();
         }
 
-        private void OKButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-        }
+        private void OKButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = true; }
+        private void CancelButton_Click(object sender, RoutedEventArgs e) { this.DialogResult = false; }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-        }
-
-    
         // ================================================================================================
         private ItemListControl _formItemSelection;
         public ItemListControl FormItemSelection
@@ -119,36 +82,6 @@ namespace Rawr.UI
             get { return itemButtonWithEnchant.Slot; }
             set { itemButtonWithEnchant.Slot = value; }
         }
-
-        /*private void gem1Button_Leave(object sender, EventArgs e)
-        {
-            if (CustomInstance != null)
-            {
-                ItemInstance copy = CustomInstance.Clone();
-                copy.Gem1 = gem1Button.ComparisonItemList.SelectedItem;
-                itemButtonWithEnchant.Item = copy;
-            }
-        }
-
-        private void gem2Button_Leave(object sender, EventArgs e)
-        {
-            if (CustomInstance != null)
-            {
-                ItemInstance copy = CustomInstance.Clone();
-                copy.Gem2 = gem2Button.ComparisonItemList.SelectedItem;
-                itemButtonWithEnchant.Item = copy;
-            }
-        }
-
-        private void gem3Button_Leave(object sender, EventArgs e)
-        {
-            if (CustomInstance != null)
-            {
-                ItemInstance copy = CustomInstance.Clone();
-                copy.Gem3 = gem3Button.ComparisonItemList.SelectedItem;
-                itemButtonWithEnchant.Item = copy;
-            }
-        }*/
 
         private void itemButtonWithEnchant_Leave(object sender, EventArgs e)
         {
@@ -174,98 +107,9 @@ namespace Rawr.UI
                     slot = ItemSlot.Prismatic;
                     blacksmithingSocket = false;
                 }
-                /*SetSocketColor(gem1Button, slot);
-                slot = item.SocketColor2;
-                if (slot == ItemSlot.None && blacksmithingSocket)
-                {
-                    slot = ItemSlot.Prismatic;
-                    blacksmithingSocket = false;
-                }
-                SetSocketColor(gem2Button, slot);
-                slot = item.SocketColor3;
-                if (slot == ItemSlot.None && blacksmithingSocket)
-                {
-                    slot = ItemSlot.Prismatic;
-                    blacksmithingSocket = false;
-                }
-                SetSocketColor(gem3Button, slot);*/
-            }
-            else
-            {
-                /*SetSocketColor(gem1Button, ItemSlot.None);
-                SetSocketColor(gem2Button, ItemSlot.None);
-                SetSocketColor(gem3Button, ItemSlot.None);*/
             }
             /*itemButtonWithEnchant.ComparisonItemList.IsPopulated = false;
-            itemButtonWithEnchant.ComparisonEnchantList.IsPopulated = false;
-            gem1Button.ComparisonItemList.IsPopulated = false;
-            gem2Button.ComparisonItemList.IsPopulated = false;
-            gem3Button.ComparisonItemList.IsPopulated = false;
-            itemButtonWithEnchant.ComparisonItemList.IsShown = true;
-            itemButtonWithEnchant.ComparisonEnchantList.IsShown = true;
-            gem1Button.ComparisonItemList.IsShown = true;
-            gem2Button.ComparisonItemList.IsShown = true;
-            gem3Button.ComparisonItemList.IsShown = true;*/
-        }
-
-        private void SetSocketColor(ItemButtonWithEnchant button, ItemSlot slot)
-        {
-            switch (slot)
-            {
-                case ItemSlot.Blue:
-                    button.Background = new SolidColorBrush(Colors.Blue);
-                    button.Slot = CharacterSlot.Gems;
-                    break;
-                case ItemSlot.Red:
-                    button.Background = new SolidColorBrush(Colors.Red);
-                    button.Slot = CharacterSlot.Gems;
-                    break;
-                case ItemSlot.Yellow:
-                    button.Background = new SolidColorBrush(Colors.Yellow);
-                    button.Slot = CharacterSlot.Gems;
-                    break;
-                case ItemSlot.Prismatic:
-                    button.Background = new SolidColorBrush(Colors.LightGray);
-                    button.Slot = CharacterSlot.Gems;
-                    break;
-                case ItemSlot.Meta:
-                    button.Background = new SolidColorBrush(Colors.Gray);
-                    button.Slot = CharacterSlot.Metas;
-                    break;
-                case ItemSlot.Cogwheel:
-                    button.Background = new SolidColorBrush(Colors.Black);
-                    button.Slot = CharacterSlot.Cogwheels;
-                    break;
-                case ItemSlot.Hydraulic:
-                    button.Background = new SolidColorBrush(Colors.White);
-                    button.Slot = CharacterSlot.Hydraulics;
-                    break;
-                default:
-                    button.Background = new SolidColorBrush(SystemColors.ControlColor);
-                    button.Slot = CharacterSlot.Gems;
-                    break;
-            }
-        }
-
-        private void gem1Button_Click(object sender, EventArgs e)
-        {
-            ItemInstance item = CustomInstance.Clone();
-            item.Gem1 = null;
-            SetFormItemSelection(item);
-        }
-
-        private void gem2Button_Click(object sender, EventArgs e)
-        {
-            ItemInstance item = CustomInstance.Clone();
-            item.Gem2 = null;
-            SetFormItemSelection(item);
-        }
-
-        private void gem3Button_Click(object sender, EventArgs e)
-        {
-            ItemInstance item = CustomInstance.Clone();
-            item.Gem3 = null;
-            SetFormItemSelection(item);
+            itemButtonWithEnchant.ComparisonEnchantList.IsPopulated = false;*/
         }
 
         private void SetFormItemSelection(ItemInstance item)

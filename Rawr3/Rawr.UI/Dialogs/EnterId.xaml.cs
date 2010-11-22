@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Text.RegularExpressions;
 
 namespace Rawr.UI
 {
@@ -21,12 +21,12 @@ namespace Rawr.UI
             {
                 String input = textItemId.Text;
 
-                Regex wowhead = new Regex(@"http://(www|cata|ptr).wowhead.com/\?item=([-+]?\d+)");
+                Regex wowhead = new Regex(@"http://(www|cata|ptr).wowhead.com\/item=([-+]?\d+)");
                 Match m = wowhead.Match(input);
 
                 if (m.Success)
                 {
-                    return int.Parse(m.Groups[1].Value);
+                    return int.Parse(m.Groups[2].Value);
                 }
 
                 Regex thottbot = new Regex(@"http://thottbot.com/i([-+]?\d+)");

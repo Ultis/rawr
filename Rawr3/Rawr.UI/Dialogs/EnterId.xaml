@@ -1,30 +1,30 @@
-<basics2:ChildWindow x:Class="Rawr.UI.EnterId"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        	xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-           Title="Add Item">
+<controls:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    x:Class="Rawr.UI.EnterId"
+    Title="Add Item">
+    
     <Grid x:Name="LayoutRoot" Margin="2">
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
-        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="1" />
+        <TextBlock Grid.Row="0" TextWrapping="Wrap" Text="Enter the Item ID or Database Link (Wowhead, Thottbot):" Margin="4,4,4,4" Grid.ColumnSpan="4" />
+        <TextBox x:Name="textItemId" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Grid.ColumnSpan="4" />
 
-        <Grid Margin="4,4,4,4">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" TextWrapping="Wrap" Text="Enter the Item ID or Database Link (Wowhead, Thottbot):" Margin="4,4,4,4"/>
-            <TextBox x:Name="textItemId" Grid.Row="1" Width="235" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,4,4,4" />
-        </Grid>
-        <CheckBox Content="Use PTR Data" Grid.Row="1" Height="16" HorizontalAlignment="Left" Margin="8,12,0,0" Name="CK_PTR" VerticalAlignment="Top" />
+        <CheckBox x:Name="CK_PTR" Content="Use PTR Data" Grid.Row="3" Margin="4" Visibility="Collapsed" VerticalAlignment="Center" />
+        
+        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="4" Grid.Row="3" Grid.Column="3" />
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="4" Grid.Row="3" Grid.Column="2" />
     </Grid>
-</basics2:ChildWindow>
+</controls:ChildWindow>
