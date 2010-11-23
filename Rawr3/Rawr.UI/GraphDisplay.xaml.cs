@@ -1426,10 +1426,10 @@ namespace Rawr.UI
 
         private string GetChartDataCSV()
         {
-            StringBuilder sb = new StringBuilder("Name,Equipped,Slot,Gem1,Gem2,Gem3,Enchant,Source,ItemId,GemmedId,Overall");
+            StringBuilder sb = new StringBuilder("\"Name\",\"Equipped\",\"Slot\",\"Gem1\",\"Gem2\",\"Gem3\",\"Enchant\",\"Source\",\"ItemId\",\"GemmedId\",\"Overall\"");
             foreach (string subPointName in Calculations.SubPointNameColors.Keys)
             {
-                sb.AppendFormat(",{0}", subPointName);
+                sb.AppendFormat(",\"{0}\"", subPointName);
             }
             sb.AppendLine();
             foreach (ComparisonCalculationBase comparisonCalculation in _itemCalculations)
@@ -1438,7 +1438,7 @@ namespace Rawr.UI
                 Item item = comparisonCalculation.Item;
                 if (itemInstance != null)
                 {
-                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
                         itemInstance.Item.Name.Replace(',', ';'),
                         comparisonCalculation.Equipped,
                         itemInstance.Slot,
@@ -1451,12 +1451,12 @@ namespace Rawr.UI
                         itemInstance.GemmedId,
                         comparisonCalculation.OverallPoints);
                     foreach (float subPoint in comparisonCalculation.SubPoints)
-                        sb.AppendFormat(",{0}", subPoint);
+                        sb.AppendFormat(",\"{0}\"", subPoint);
                     sb.AppendLine();
                 }
                 else if (item != null)
                 {
-                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
                         item.Name.Replace(',', ';'),
                         comparisonCalculation.Equipped,
                         item.Slot,
@@ -1469,12 +1469,12 @@ namespace Rawr.UI
                         null,
                         comparisonCalculation.OverallPoints);
                     foreach (float subPoint in comparisonCalculation.SubPoints)
-                        sb.AppendFormat(",{0}", subPoint);
+                        sb.AppendFormat(",\"{0}\"", subPoint);
                     sb.AppendLine();
                 }
                 else
                 {
-                    sb.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
                         comparisonCalculation.Name.Replace(',', ';'),
                         comparisonCalculation.Equipped,
                         null,
@@ -1487,7 +1487,7 @@ namespace Rawr.UI
                         null,
                         comparisonCalculation.OverallPoints);
                     foreach (float subPoint in comparisonCalculation.SubPoints)
-                        sb.AppendFormat(",{0}", subPoint);
+                        sb.AppendFormat(",\"{0}\"", subPoint);
                     sb.AppendLine();
                 }
             }
