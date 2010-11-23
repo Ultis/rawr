@@ -97,6 +97,7 @@
                             <ComboBoxItem Content="Blue"/>
                             <ComboBoxItem Content="Cogwheel"/>
                             <ComboBoxItem Content="Hydraulic"/>
+                            <ComboBoxItem Content="Prismatic"/>
                         </ComboBox>
                         <TextBlock Text="Socket 2:" Grid.Row="1" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="Gem2Combo" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="120">
@@ -107,6 +108,7 @@
                             <ComboBoxItem Content="Blue"/>
                             <ComboBoxItem Content="Cogwheel"/>
                             <ComboBoxItem Content="Hydraulic"/>
+                            <ComboBoxItem Content="Prismatic"/>
                         </ComboBox>
                         <TextBlock Text="Socket 3:" Grid.Row="2" Grid.Column="0" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         <ComboBox x:Name="Gem3Combo" Margin="2,2,2,2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="120" Grid.Row="2" Grid.Column="1">
@@ -117,6 +119,7 @@
                             <ComboBoxItem Content="Blue"/>
                             <ComboBoxItem Content="Cogwheel"/>
                             <ComboBoxItem Content="Hydraulic"/>
+                            <ComboBoxItem Content="Prismatic"/>
                         </ComboBox>
                         <TextBlock Text="Socket Bonus:" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,4,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         <toolkit:DockPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" LastChildFill="True">

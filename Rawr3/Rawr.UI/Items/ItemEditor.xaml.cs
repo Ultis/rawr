@@ -41,6 +41,7 @@ namespace Rawr.UI
                 else if (currentItem.SocketColor1 == ItemSlot.Blue) Gem1Combo.SelectedIndex = 4;
                 else if (currentItem.SocketColor1 == ItemSlot.Cogwheel) Gem1Combo.SelectedIndex = 5;
                 else if (currentItem.SocketColor1 == ItemSlot.Hydraulic) Gem1Combo.SelectedIndex = 6;
+                else if (currentItem.SocketColor1 == ItemSlot.Prismatic) Gem1Combo.SelectedIndex = 7;
                 else Gem1Combo.SelectedIndex = 0;
                 if (currentItem.SocketColor2 == ItemSlot.Meta) Gem2Combo.SelectedIndex = 1;
                 else if (currentItem.SocketColor2 == ItemSlot.Red) Gem2Combo.SelectedIndex = 2;
@@ -48,6 +49,7 @@ namespace Rawr.UI
                 else if (currentItem.SocketColor2 == ItemSlot.Blue) Gem2Combo.SelectedIndex = 4;
                 else if (currentItem.SocketColor2 == ItemSlot.Cogwheel) Gem2Combo.SelectedIndex = 5;
                 else if (currentItem.SocketColor2 == ItemSlot.Hydraulic) Gem2Combo.SelectedIndex = 6;
+                else if (currentItem.SocketColor2 == ItemSlot.Prismatic) Gem2Combo.SelectedIndex = 7;
                 else Gem2Combo.SelectedIndex = 0;
                 if (currentItem.SocketColor3 == ItemSlot.Meta) Gem3Combo.SelectedIndex = 1;
                 else if (currentItem.SocketColor3 == ItemSlot.Red) Gem3Combo.SelectedIndex = 2;
@@ -55,6 +57,7 @@ namespace Rawr.UI
                 else if (currentItem.SocketColor3 == ItemSlot.Blue) Gem3Combo.SelectedIndex = 4;
                 else if (currentItem.SocketColor3 == ItemSlot.Cogwheel) Gem3Combo.SelectedIndex = 5;
                 else if (currentItem.SocketColor3 == ItemSlot.Hydraulic) Gem3Combo.SelectedIndex = 6;
+                else if (currentItem.SocketColor3 == ItemSlot.Prismatic) Gem3Combo.SelectedIndex = 7;
                 else Gem3Combo.SelectedIndex = 0;
                 
                 foreach (CheckBox cb in ClassCheckBoxes.Values) cb.IsChecked = false;
@@ -172,6 +175,7 @@ namespace Rawr.UI
                 else if (Gem1Combo.SelectedIndex == 4) CurrentItem.SocketColor1 = ItemSlot.Blue;
                 else if (Gem1Combo.SelectedIndex == 5) CurrentItem.SocketColor1 = ItemSlot.Cogwheel;
                 else if (Gem1Combo.SelectedIndex == 6) CurrentItem.SocketColor1 = ItemSlot.Hydraulic;
+                else if (Gem1Combo.SelectedIndex == 7) CurrentItem.SocketColor1 = ItemSlot.Prismatic;
                 else CurrentItem.SocketColor1 = ItemSlot.None;
                 if (Gem2Combo.SelectedIndex == 1) CurrentItem.SocketColor2 = ItemSlot.Meta;
                 else if (Gem2Combo.SelectedIndex == 2) CurrentItem.SocketColor2 = ItemSlot.Red;
@@ -179,6 +183,7 @@ namespace Rawr.UI
                 else if (Gem2Combo.SelectedIndex == 4) CurrentItem.SocketColor2 = ItemSlot.Blue;
                 else if (Gem2Combo.SelectedIndex == 5) CurrentItem.SocketColor2 = ItemSlot.Cogwheel;
                 else if (Gem2Combo.SelectedIndex == 6) CurrentItem.SocketColor2 = ItemSlot.Hydraulic;
+                else if (Gem2Combo.SelectedIndex == 7) CurrentItem.SocketColor2 = ItemSlot.Prismatic;
                 else CurrentItem.SocketColor2 = ItemSlot.None;
                 if (Gem3Combo.SelectedIndex == 1) CurrentItem.SocketColor3 = ItemSlot.Meta;
                 else if (Gem3Combo.SelectedIndex == 2) CurrentItem.SocketColor3 = ItemSlot.Red;
@@ -186,6 +191,7 @@ namespace Rawr.UI
                 else if (Gem3Combo.SelectedIndex == 4) CurrentItem.SocketColor3 = ItemSlot.Blue;
                 else if (Gem3Combo.SelectedIndex == 5) CurrentItem.SocketColor3 = ItemSlot.Cogwheel;
                 else if (Gem3Combo.SelectedIndex == 6) CurrentItem.SocketColor3 = ItemSlot.Hydraulic;
+                else if (Gem3Combo.SelectedIndex == 7) CurrentItem.SocketColor3 = ItemSlot.Prismatic;
                 else CurrentItem.SocketColor3 = ItemSlot.None;
 
                 foreach (PropertyInfo info in Stats.PropertyInfoCache)
