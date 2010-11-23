@@ -26,26 +26,26 @@ namespace Rawr.Hunter {
                 #region Red
                 int[] deli = { 41434, 39997, 40112, 42143 }; // Agi
                 int[] brit = { 39906, 39999, 40114, 36766 }; // AP
-                int[] frac = { 39909, 40002, 40117, 42153 }; // ArP
+//                int[] frac = { 39909, 40002, 40117, 42153 }; // ArP
                 #endregion
                 #region Purple
                 int[] shif = { 41460, 40023, 40130, 40130 }; // Agi  /Stam
                 int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
-                int[] puis = { 41456, 40033, 40140, 40140 }; // ArP  /Stam
+//                int[] puis = { 41456, 40033, 40140, 40140 }; // ArP  /Stam
                 int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
-                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
+//                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
                 #endregion
-                #region Blue
-                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
-                #endregion
+//                #region Blue
+//                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
+//                #endregion
                 #region Green
                 int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit  /Stam
                 int[] jagd = { 41468, 40086, 40165, 40165 }; // Crit /Stam
                 int[] forc = { 41466, 40091, 40169, 40169 }; // Haste/Stam
-                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
-                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
-                int[] sndr = { 41477, 40096, 40176, 40176 }; // Crit /Mp5
-                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
+//                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
+//                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
+//                int[] sndr = { 41477, 40096, 40176, 40176 }; // Crit /Mp5
+//                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
                 #endregion
                 #region Yellow
                 int[] rigd = { 41447, 40014, 40125, 42156 }; // Hit
@@ -74,16 +74,16 @@ templates.AddRange(new List<GemmingTemplate>(){
 #region Purity
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=deli[i],BlueId=deli[i],PrismaticId=deli[i],MetaId=metas[j]},//Max Agi
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=frac[i],BlueId=frac[i],PrismaticId=frac[i],MetaId=metas[j]},//Max ArP
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=frac[i],BlueId=frac[i],PrismaticId=frac[i],MetaId=metas[j]},//Max ArP
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=smth[i],YellowId=smth[i],BlueId=smth[i],PrismaticId=smth[i],MetaId=metas[j]},//Max Crit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=quik[i],YellowId=quik[i],BlueId=quik[i],PrismaticId=quik[i],MetaId=metas[j]},//Max Haste
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=lust[i],YellowId=lust[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Max Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=lust[i],YellowId=lust[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Max Mp5
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=rigd[i],YellowId=rigd[i],BlueId=rigd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Max Hit
 #endregion
 #region Consider Socket Bonuses/Meta Activation
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=shif[i],PrismaticId=deli[i],MetaId=metas[j]},//Agi
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=puis[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=puis[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=smth[i],BlueId=jagd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=forc[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Hit
@@ -91,18 +91,18 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],B
 #region Consider Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=glnt[i],MetaId=metas[j]},//Agi  /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP   /Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP  /Hit
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP  /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste/Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=rigd[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Mp5  /Hit
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=rigd[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Mp5  /Hit
 #endregion
-#region Consider Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
-new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
-#endregion
+//#region Consider Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
+//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
+//#endregion
 });
                     }
                     i++;
@@ -316,9 +316,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 Health = stats.Health,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
-                Intellect = stats.Intellect,
-                Mana = stats.Mana,
-                Mp5 = stats.Mp5,
+//                Intellect = stats.Intellect,
+//                Mana = stats.Mana,
+//                Mp5 = stats.Mp5,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 // Ratings
@@ -350,10 +350,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
-                ManaorEquivRestore = stats.ManaorEquivRestore,
-                ManaRestore = stats.ManaRestore,
+ //               ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+ //               ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
+ //               ManaorEquivRestore = stats.ManaorEquivRestore,
+ //               ManaRestore = stats.ManaRestore,
 
                 // Survivability
                 HealthRestore = stats.HealthRestore,
@@ -442,23 +442,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.Agility +
                 stats.Strength +
                 stats.AttackPower + stats.RangedAttackPower + stats.PetAttackPower +
-                stats.Intellect +
+//                stats.Intellect +
                 // Ratings
-                stats.Mp5 +
-                stats.ArmorPenetrationRating +
+//                stats.Mp5 +
+//                stats.ArmorPenetrationRating +
                 stats.CritRating  + stats.RangedCritRating +
                 stats.HasteRating + stats.RangedHasteRating +
                 stats.HitRating   + stats.RangedHitRating +
                 // Bonuses
-                stats.ArmorPenetration +
+//                stats.ArmorPenetration +
                 stats.TargetArmorReduction +
                 stats.PhysicalCrit +
                 stats.RangedHaste +
                 stats.PhysicalHit +
                 stats.MovementSpeed + stats.StunDurReduc + stats.SnareRootDurReduc + stats.FearDurReduc +
-                stats.ManaRestore + // Mana Pots
-                stats.ManaRestoreFromMaxManaPerSecond + // Replenishment Buffs
-                stats.ManaRestoreFromBaseManaPPM + // Judgement of Wisdom Buff
+//                stats.ManaRestore + // Mana Pots
+//                stats.ManaRestoreFromMaxManaPerSecond + // Replenishment Buffs
+//                stats.ManaRestoreFromBaseManaPPM + // Judgement of Wisdom Buff
                 // Target Debuffs
                 // Procs
                 stats.DarkmoonCardDeathProc +
@@ -1034,12 +1034,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 case "Item Budget":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
-                        comparisonFromStat(character, calculations, new Stats() { Intellect = 10f }, "10 Intellect"),
+//                        comparisonFromStat(character, calculations, new Stats() { Intellect = 10f }, "10 Intellect"),
                         comparisonFromStat(character, calculations, new Stats() { Agility = 10f }, "10 Agility"),
                         comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
                         comparisonFromStat(character, calculations, new Stats() { CritRating = 10f }, "10 Crit Rating"),
                         comparisonFromStat(character, calculations, new Stats() { HitRating = 10f }, "10 Hit Rating"),
-                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "10 Armor Penetration Rating"),
+//                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "10 Armor Penetration Rating"),
                         comparisonFromStat(character, calculations, new Stats() { AttackPower = 20f }, "20 Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
