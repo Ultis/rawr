@@ -37,32 +37,32 @@ namespace Rawr.DPSDK
                 int relentless = 41398;
 
                 return new List<GemmingTemplate>()
-				{
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
-						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
-						
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
-						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
-						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
+                {
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
+                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
+                        RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
+                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
+                        
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
+                        RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
+                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
+                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
 
-					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
-						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-						RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
-					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
-						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
-				};
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
+                        RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
+                        RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
+                };
             }
         }
 
@@ -119,21 +119,21 @@ namespace Rawr.DPSDK
                 if (_characterDisplayCalculationLabels == null) {
                     List<string> labels = new List<string>(new string[] {
                         "Basic Stats:Health",
-					    "Basic Stats:Strength",
-					    "Basic Stats:Agility",
-					    "Basic Stats:Attack Power",
-					    "Basic Stats:Crit Rating",
-					    "Basic Stats:Hit Rating",
-					    "Basic Stats:Expertise",
-					    "Basic Stats:Haste Rating",
+                        "Basic Stats:Strength",
+                        "Basic Stats:Agility",
+                        "Basic Stats:Attack Power",
+                        "Basic Stats:Crit Rating",
+                        "Basic Stats:Hit Rating",
+                        "Basic Stats:Expertise",
+                        "Basic Stats:Haste Rating",
                         "Basic Stats:Armor",
                         "Basic Stats:Mastery Rating",
                         "Basic Stats:Mastery",
-					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
-					    "Advanced Stats:Attack Speed",
-					    "Advanced Stats:Crit Chance",
-					    "Advanced Stats:Avoided Attacks",
-					    "Advanced Stats:Enemy Mitigation",
+                        "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
+                        "Advanced Stats:Attack Speed",
+                        "Advanced Stats:Crit Chance",
+                        "Advanced Stats:Avoided Attacks",
+                        "Advanced Stats:Enemy Mitigation",
 /*                        "DPS Breakdown:White",
                         "DPS Breakdown:BCB*Blood Caked Blade",
                         "DPS Breakdown:Necrosis",
@@ -159,13 +159,13 @@ namespace Rawr.DPSDK
  * */
                         "DPS Breakdown:Total DPS",
                         
-						"Rotation Data:Rotation Duration*Duration of the total rotation cycle",
-						"Rotation Data:Blood*Number of Runes consumed",
-						"Rotation Data:Frost*Number of Runes consumed",
-						"Rotation Data:Unholy*Number of Runes consumed",
-						"Rotation Data:Death*Number of Runes consumed",
-						"Rotation Data:Runic Power*Amount of Runic Power left after rotation.\nNegative values mean more RP generated than used.",
-						"Rotation Data:RE Runes*Number of Runes Generated by Runic Empowerment.",
+                        "Rotation Data:Rotation Duration*Duration of the total rotation cycle",
+                        "Rotation Data:Blood*Number of Runes consumed",
+                        "Rotation Data:Frost*Number of Runes consumed",
+                        "Rotation Data:Unholy*Number of Runes consumed",
+                        "Rotation Data:Death*Number of Runes consumed",
+                        "Rotation Data:Runic Power*Amount of Runic Power left after rotation.\nNegative values mean more RP generated than used.",
+                        "Rotation Data:RE Runes*Number of Runes Generated by Runic Empowerment.",
 
                         "Damage Per Use:BB",
                         "Damage Per Use:BP",
@@ -218,7 +218,7 @@ namespace Rawr.DPSDK
         public override List<ItemType> RelevantItemTypes {
             get {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[] {
-						ItemType.None,
+                        ItemType.None,
                         // Removing Leather & Mail items from default list as the extra 5% Plate Spec. is too significant.
 //                        ItemType.Leather,
 //                        ItemType.Mail,
@@ -231,7 +231,7 @@ namespace Rawr.DPSDK
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword
-					}));
+                    }));
             }
         }
 
@@ -263,6 +263,7 @@ namespace Rawr.DPSDK
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
+            if (null == calcOpts) { calcOpts = new CalculationOptionsDPSDK(); }
             StatsDK stats = new StatsDK();
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             DeathKnightTalents talents = character.DeathKnightTalents;
@@ -374,14 +375,7 @@ namespace Rawr.DPSDK
 #endif
             }
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            if (null == calcOpts)
-            {
-#if DEBUG
-                //throw new Exception("calcOpts is Null");
-#else
-                return statsTotal;
-#endif
-            }
+            if (null == calcOpts) { calcOpts = new CalculationOptionsDPSDK(); }
             DeathKnightTalents talents = character.DeathKnightTalents;
             if (null == talents)
             {

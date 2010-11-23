@@ -214,6 +214,7 @@ namespace Rawr.Enhance
             try {
             #region Applied Stats
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            if (calcOpts == null) calcOpts = new CalculationOptionsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
             calculatedStats.BasicStats = stats;
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
@@ -716,9 +717,7 @@ namespace Rawr.Enhance
 #endif
             #endregion
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Enhance Calculations",
-                    ex.Message, ex.InnerException,
-                    "GetCalculationsEnhance(...)", "No Additional Info", ex.StackTrace);
+                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Enhance Calculations", ex, "GetCalculationsEnhance(...)", "No Additional Info");
                 eb.Show();
             }
             return calculatedStats;
